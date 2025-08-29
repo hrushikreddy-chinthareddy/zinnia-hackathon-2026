@@ -3,6 +3,11 @@ export enum PaymentProvider {
   PAYMENTUS = 'PAYMENTUS',
 }
 
+export enum DocumentsVersion {
+  V2 = 'V2',
+  V3 = 'V3',
+}
+
 export enum ManageChange {
   EXTERNAL = 'EXTERNAL',
   INTERNAL = 'INTERNAL',
@@ -36,7 +41,12 @@ export interface PaymentConfig {
   verifyIdentityRequired: boolean;
 }
 
+export interface DocumentsConfig {
+  version: DocumentsVersion;
+}
+
 export interface CarrierConfig {
   payment: PaymentConfig;
   policyProfile: PolicyProfile<ManageChange>;
+  documents: DocumentsConfig;
 }

@@ -66,5 +66,10 @@ export interface CaseTableData {
 const noop = () => {};
 
 export const CaseManagementFiltersContext = createContext<
-    [CaseSearchFilters, (filters: CaseSearchFilters) => void]
->([initialFilters, noop]);
+    [
+        CaseSearchFilters,
+        (filters: CaseSearchFilters) => void,
+        SearchViewQuery,
+        (searchValue: SearchViewQuery) => void
+    ]
+>([initialFilters, noop, SearchBarInitialValues, noop]);

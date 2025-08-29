@@ -16,12 +16,16 @@ import {
 } from '@deps/components/popover/popover.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { ProcessType } from '@deps/models/case/enums';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkFullSurrenderWithdrawal,
@@ -32,8 +36,10 @@ import {
     checkPartialWithdrawalOneTimeEligibilityQuery,
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { searchPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
+import { Source } from '@deps/types/search';
 import {
     DropdownClickedEvent,
     PolicyClickedEvent,
@@ -41,7 +47,9 @@ import {
 } from '@deps/types/segment-analytics';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import styles from './quick-actions-menu.module.css';
 
@@ -93,9 +101,22 @@ export const MenuContextualContent = ({
     t,
     policy,
 }: TranslateProps & QuickActionsMenuProps) => {
-    const { sessionId, partyId: userPartyId } = usePermissionsContext();
+    const limit = 1;
+    const offset = 0;
+    const {
+        sessionId,
+        partyId: userPartyId,
+        hasEditServiceRequestAccess,
+    } = usePermissionsContext();
 
-    const { featureFlags } = useOptimizely();
+    const { featureFlags, featureFlagVariables } = useOptimizely();
+
+    const shouldShowServiceRequestForm = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.SERVICE_REQUEST,
+        OptimizelyVariableKey.Clients,
+        policy?.carrierId?.toLowerCase() || ''
+    );
 
     const freeLookEnabled =
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
@@ -110,8 +131,31 @@ export const MenuContextualContent = ({
             featureFlags
         );
 
+    const { data: policyReference } = useQuery({
+        queryKey: [
+            'policyReference',
+            policy.policyNumber,
+            policy.planCode,
+            policy.carrierId,
+            limit,
+            offset,
+        ],
+        queryFn: () =>
+            searchPoliciesQuery(
+                policy.policyNumber as string,
+                policy.planCode as string,
+                [policy.carrierId as Carrier],
+                limit,
+                offset
+            ),
+        placeholderData: (previousData) => previousData,
+    });
+
     const serviceRequestFormEnabled =
-        featureFlags[FEATURE_FLAGS.SERVICE_REQUEST_FORM_ENABLED];
+        shouldShowServiceRequestForm &&
+        policyReference?.[0]?.source === Source.ZAHARA &&
+        hasEditServiceRequestAccess;
+
     const sendCorrespondenceEnabled =
         featureFlags[FEATURE_FLAGS.SEND_CORRESPONDENCE];
 
@@ -141,7 +185,7 @@ export const MenuContextualContent = ({
 
     const { isPermissioned: isUserPermissionedToDoTransaction } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policy.policyNumber,
             policy.planCode
         );
@@ -561,11 +605,11 @@ export const MenuContextualContent = ({
                 <MenuContextualLabel label={t('additionalActions.label')}>
                     <MenuContextualItem
                         content={t('additionalActions.serviceRequestForm')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/default-case/`}
+                        href={`/policies/${policy.planCode}/${policy.policyNumber}/service-request/`}
                         onClick={() => {
                             trackClick(
                                 'Raise a Service Request',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/default-case/`
+                                `/policies/${policy.planCode}/${policy.policyNumber}/service-request/`
                             );
                         }}
                         openInNewTab={true}

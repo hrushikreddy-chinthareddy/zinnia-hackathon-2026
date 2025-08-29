@@ -13,8 +13,10 @@ export enum FEATURE_FLAGS {
   TRANSACTION_SYSTEMATIC_PREMIUM = 'transaction_systematic_premium',
   WELLABE_AUTH_TOKENS = 'wellabe_auth_tokens',
   ENTERPRISE_POLICY_SEARCH = 'enterprise_policy_search',
+  ENTERPRISE_CASE_SEARCH = 'enterprise_case_search',
   TRANSACTION_FULL_SURRENDER = 'transaction_full_surrender',
   EVERLY_CHILD_RIDER = 'everly_child_rider',
   UPDATED_TRANSACTION_URL = 'updated_transaction_url',
   PAYMENT_METHODS_API = 'payment_methods_api',
+  TRANSACTION_FREE_LOOK_CANCEL = 'transaction_free_look_cancel',
 }

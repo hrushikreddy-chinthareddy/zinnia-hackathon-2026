@@ -22,7 +22,10 @@ import {
     useOptimizely,
 } from '@deps/contexts/OptimizelyContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
-import { PolicyDocument } from '@deps/models/case/document';
+import {
+    PolicyDocument,
+    DocumentType as ExcludeDocumentTypes,
+} from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
@@ -113,6 +116,10 @@ const NormalDocs = ({
             parentCarrierCode: policy?.carrierId,
             orderBy: 'documentDate',
             orderByDirection: SearchRequest.orderByDirection.DESC,
+            excludeDocumentTypes: [
+                ExcludeDocumentTypes.CallLogs,
+                ExcludeDocumentTypes.Spif,
+            ],
         };
     }, [documentType, policy, isFirstYearSelected, yearSelection]);
 

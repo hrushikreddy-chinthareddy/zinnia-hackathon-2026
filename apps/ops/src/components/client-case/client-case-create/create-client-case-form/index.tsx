@@ -16,7 +16,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
@@ -199,7 +199,10 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         useState<Partial<IllustrationsClientCase>>(mergedCase);
     const [currentAge, setCurrentAge] = useState(0);
     const [somethingChanged, setSomethingChanged] = useState(false);
-    const initialSearchAgencySellingCodes = useRef<string[]>([]);
+    const [
+        initialSearchAgencySellingCodes,
+        setInitialSearchAgencySellingCodes,
+    ] = useState<string[]>([]);
     const agencyOptions = useAgencyOptions(clientCaseData, aliases);
     const usStatesSelectList = getStateCodesForSelectInput();
     const insuredDetailsClassname = clsx(
@@ -334,13 +337,10 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             });
         }
 
-        if (
-            agencyOptions?.length &&
-            !initialSearchAgencySellingCodes.current?.length
-        ) {
+        if (agencyOptions?.length && !initialSearchAgencySellingCodes.length) {
             // Set an innitial state to search across all agencies
             const agenciesIds = agencyOptions.map((option) => option.value);
-            initialSearchAgencySellingCodes.current = agenciesIds;
+            setInitialSearchAgencySellingCodes(agenciesIds);
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,7 +422,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         currentAgentData={clientCaseData.agentDetails}
                         onSelectAgent={updateClientCaseData}
                         shouldShowEdit={!isEdit}
-                        agencyIdArray={initialSearchAgencySellingCodes.current}
+                        agencyIdArray={initialSearchAgencySellingCodes}
                     />
                 ) : (
                     <div className={styles.loaderContainer}>

@@ -65,7 +65,7 @@ export async function POST(
 
     throw new Error('Error submitting systematic premium');
   } catch (error) {
-    logError('bpm::systematic-program::validation::POST::error', {
+    logError('bpm::systematic-program::cancellation::POST::error', {
       ...loggingContext,
       planCode,
       policyNumber,
@@ -76,8 +76,8 @@ export async function POST(
       data: null,
       error: {
         status: 500,
-        name: 'Error fetching systematic program validation',
-        message: 'error fetching systematic program validation',
+        name: 'Error fetching systematic program cancellation',
+        message: 'error fetching systematic program cancellation',
       },
     });
   }

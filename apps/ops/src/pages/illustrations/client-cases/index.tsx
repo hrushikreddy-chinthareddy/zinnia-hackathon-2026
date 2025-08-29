@@ -57,8 +57,6 @@ const EXTERNAL_ERROR_LABEL =
 
 //This should be  just a red    ict page or maybe a redirect with urk params read and user/permision validation
 export default function Illustrations({
-    featureFlagDecisions,
-    additionalData,
     fetchingErrorMessage,
     fetchingErrorOrigin,
 }: IllustrationsPageProps) {

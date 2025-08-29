@@ -67,16 +67,14 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       <BloomButton
         {...props}
         data-testid={testId || 'bloom-button'}
-        disabled={loading}
+        disabled={props.disabled || loading}
         className={clsx(styles.content, props.className)}
         onClick={trackAndClick}
         ref={forwardRef || buttonRef}
       >
         <>
           {children}
-          {loading && (
-            <Loader variant={LoaderVariant.CTA} />
-          )}
+          {loading && <Loader variant={LoaderVariant.CTA} />}
         </>
       </BloomButton>
     );

@@ -7,7 +7,8 @@ import { QuickLinksProps } from './quick-links';
 
 export const getPolicyQuickLinks = async (
     t: TFunction,
-    policy: PolicyDetails
+    policy: PolicyDetails,
+    hasCallLogsAccess?: boolean
 ): Promise<QuickLinksProps['links']> => {
     const { policyNumber, planCode, isAnnuity } = policy;
     const { showFundsAndAccounts, showLoans, showWithdrawals, detailLinkType } =
@@ -141,13 +142,22 @@ export const getPolicyQuickLinks = async (
                         { id: policyNumber, planCode }
                     ),
                 },
-                {
-                    name: t(`site.navLinks.activity.subLinks.callLogs.text`),
-                    href: t(`site.navLinks.activity.subLinks.callLogs.link`, {
-                        id: policyNumber,
-                        planCode,
-                    }),
-                },
+                ...(hasCallLogsAccess
+                    ? [
+                          {
+                              name: t(
+                                  `site.navLinks.activity.subLinks.callLogs.text`
+                              ),
+                              href: t(
+                                  `site.navLinks.activity.subLinks.callLogs.link`,
+                                  {
+                                      id: policyNumber,
+                                      planCode,
+                                  }
+                              ),
+                          },
+                      ]
+                    : []),
             ],
         },
         {

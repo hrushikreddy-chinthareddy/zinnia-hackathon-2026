@@ -17,6 +17,7 @@ import { useSelectedIllustration } from '@deps/components/illustrations/provider
 import { TranslationFiles } from '@deps/config/translations';
 import { getIllustrationCalculationStatus } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
+    IllustrationsClientCase,
     IllustrationStatus,
     IllustrationStatuses,
 } from '@deps/types/illustrations';
@@ -25,21 +26,24 @@ import { ProductTypes } from '@deps/types/product';
 import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
 import StatusBadge from '../../case-details/illustration-item/status-badge';
+import { EditSidesheet } from '../edit-sidesheet/edit-sidesheet';
 
 type IllustrationDetailsToolbarProps = {
     isLoading?: boolean;
     status?: IllustrationStatus;
-    clientCaseId: string;
+    clientCase: IllustrationsClientCase;
     illustrationId: string;
+    planCode: string;
     eAppId?: string;
 };
 
 export default function IllustrationDetailsToolbar({
     isLoading = false,
     status = IllustrationStatuses.ACTIVE,
-    clientCaseId,
+    clientCase,
     illustrationId,
     eAppId,
+    planCode,
 }: IllustrationDetailsToolbarProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isPdfGenerationErrorVisible, setIsPdfGenerationErrorVisible] =
@@ -116,11 +120,11 @@ export default function IllustrationDetailsToolbar({
     }, [isError]);
 
     const handleUnarchiveIllustration = () => {
-        if (isLoadingSelectForApplication || !illustrationId || !clientCaseId)
+        if (isLoadingSelectForApplication || !illustrationId || !clientCase.id)
             return;
 
         unarchiveIllustrationMutation.mutateAsync({
-            clientCaseId,
+            clientCaseId: clientCase.id,
             illustrationId,
         });
     };
@@ -156,13 +160,14 @@ export default function IllustrationDetailsToolbar({
                         {t('clientCase.illustrationDetails.unArchive')}
                     </ToolbarButton>
                 ) : status !== IllustrationStatuses.EXPIRED ? (
-                    <ToolbarButton
-                        disabled={true}
-                        icon={IconType.EDIT}
-                        className={styles.linkButton}
-                    >
-                        {t('clientCase.illustrationDetails.edit')}
-                    </ToolbarButton>
+                    <EditSidesheet planCode={planCode} clientCase={clientCase}>
+                        <ToolbarButton
+                            icon={IconType.EDIT}
+                            className={styles.linkButton}
+                        >
+                            {t('clientCase.illustrationDetails.edit')}
+                        </ToolbarButton>
+                    </EditSidesheet>
                 ) : null}
 
                 <div

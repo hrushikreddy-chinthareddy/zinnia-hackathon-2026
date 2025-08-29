@@ -758,3 +758,32 @@ export const checkEligibilityManageRole = async (
         return error?.response?.data || error?.data;
     }
 };
+
+export const checkEligibilityManageBankChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<TransactionResponse> => {
+    try {
+        browserLogInfo('BankInfo::Initiating eligibility check', {
+            payload: { planCode, policyNumber },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/bankaccount/eligibilitycheck`,
+            function: 'checkEligibilityManageBankChange',
+        });
+        const { data } = await client.post<TransactionRequest, AxiosResponse>(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/bankaccount/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityManageBankChange::Error checking eligibility for bank change',
+            {
+                ...parseErrorInformation(error),
+                planCode,
+                policyNumber,
+                file: 'bpm::checkEligibilityManageBankChange',
+            }
+        );
+
+        return error?.response?.data || error?.data;
+    }
+};

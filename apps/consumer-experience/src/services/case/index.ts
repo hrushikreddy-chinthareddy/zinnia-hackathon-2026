@@ -3,9 +3,16 @@ import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
 import { CaseSummary } from '@/types/case';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/log-fns';
+import { CommonLogContext } from '@/utils/logging/server-logging';
+import { withLogging } from '@/utils/logging/with-logging';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import { caseManagementBaseUrl } from '../api-config';
+import {
+  caseManagementBaseUrl,
+  enterpriseCaseSearchBaseUrl,
+} from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
+import { getFeatureFlags } from '../feature-flags';
 
 type CaseSearchServiceResponse = {
   data: CaseSummary[] | null;
@@ -16,14 +23,47 @@ type CaseSearchServiceResponse = {
   } | null;
 };
 
-export const fetchCase = async (caseId: string) => {
-  const url = new URL(caseManagementBaseUrl);
-  url.pathname = `${url.pathname}/${caseId}`;
+const FILE_NAME = '/src/services/case/index.ts';
 
-  try {
-    const rawResponse = await EnterpriseTokenApi.get(url.href, {
-      headers: { 'Content-Type': 'application/json' },
-    });
+// TODO: remove this wrapper
+// and only use `fetchCaseEnterpriseSearch`, renaming it to `fetchCase` when
+// https://zinnia.atlassian.net/browse/ZC-1524 is complete
+export const fetchCase = async (
+  caseId: string,
+  loggingCtx: CommonLogContext
+) => {
+  const featureFlags = await getFeatureFlags();
+
+  if (featureFlags?.[FEATURE_FLAGS.ENTERPRISE_CASE_SEARCH]) {
+    return fetchCaseEnterpriseSearch(caseId, loggingCtx);
+  }
+
+  return fetchCaseLegacy(caseId, loggingCtx);
+};
+
+const fetchCaseEnterpriseSearch = withLogging(
+  async (
+    caseId: string | string[],
+    loggingCtx: CommonLogContext
+  ): Promise<CaseSummary> => {
+    let caseIds: string[] = [];
+    if (Array.isArray(caseId)) {
+      caseIds = caseId;
+    } else {
+      caseIds = [caseId];
+    }
+    const url = new URL(caseManagementBaseUrl);
+
+    const rawResponse = await EnterpriseTokenApi.post(
+      url.href,
+      JSON.stringify({
+        caseIds,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+      loggingCtx
+    );
 
     const response = await parseAPIResponse(rawResponse);
 
@@ -35,84 +75,129 @@ export const fetchCase = async (caseId: string) => {
         )
       );
 
-      throw new Error('Error fetching case');
-    }
-
-    return {
-      data: response,
-      error: null,
-    };
-  } catch {
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        status: 500,
-        name: 'fetchCase Error',
-      },
-    };
-  }
-};
-
-const searchCases = async (
-  searchData: CaseSearchCriteria
-): Promise<CaseSearchServiceResponse> => {
-  const url = `${caseManagementBaseUrl}/search`;
-
-  const rawResponse = await EnterpriseTokenApi.post(
-    url,
-    JSON.stringify(searchData),
-    {
-      headers: { 'Content-Type': 'application/json' },
-    }
-  );
-
-  try {
-    const response = await parseAPIResponse(rawResponse);
-
-    if (!rawResponse?.ok) {
-      logError(
-        'Error searching case by policy number',
-        await logApiNotOkDetails({
-          rawResponse,
-          parsedResponse: response,
-        })
-      );
-
-      throw new Error('Error calling search case', {
-        cause: response.status,
+      throw new Error('Error fetching case', {
+        cause: {
+          details: await logApiNotOkDetails({
+            rawResponse,
+            parsedResponse: response,
+          }),
+          status: rawResponse.status,
+        },
       });
     }
 
     return response;
-  } catch (error) {
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        // TODO: fix this to be the status
-        status: 500,
-        name: 'searchCases Error',
-      },
-    };
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'fetchCaseEnterpriseSearch',
   }
-};
+);
+
+const fetchCaseLegacy = withLogging(
+  async (
+    caseId: string,
+    loggingCtx: CommonLogContext
+  ): Promise<CaseSummary> => {
+    const url = new URL(caseManagementBaseUrl);
+    url.pathname = `${url.pathname}/${caseId}`;
+
+    const rawResponse = await EnterpriseTokenApi.get(
+      url.href,
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+      loggingCtx
+    );
+
+    const response = await parseAPIResponse(rawResponse);
+
+    if (!rawResponse?.ok) {
+      throw new Error('Error fetching case', {
+        cause: {
+          details: await logApiNotOkDetails({
+            rawResponse,
+            parsedResponse: response,
+          }),
+          status: rawResponse.status,
+        },
+      });
+    }
+
+    return response;
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'fetchCaseLegacy',
+  }
+);
+
+const searchCases = withLogging(
+  async (
+    searchData: CaseSearchCriteria,
+    loggingCtx: CommonLogContext
+  ): Promise<CaseSearchServiceResponse> => {
+    // TODO: remove this when https://zinnia.atlassian.net/browse/ZC-1524 is complete
+    // to always use enterpriseCaseSearchBaseUrl
+    // const url = `${enterpriseCaseSearchBaseUrl}/search`;
+    let baseUrl = caseManagementBaseUrl;
+    const featureFlags = await getFeatureFlags();
+    if (featureFlags?.[FEATURE_FLAGS.ENTERPRISE_CASE_SEARCH]) {
+      baseUrl = enterpriseCaseSearchBaseUrl;
+    }
+    const url = `${baseUrl}/search`;
+
+    const rawResponse = await EnterpriseTokenApi.post(
+      url,
+      JSON.stringify(searchData),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+      loggingCtx
+    );
+
+    const response = await parseAPIResponse(rawResponse);
+
+    if (!rawResponse?.ok) {
+      throw new Error('Error calling search case', {
+        cause: {
+          details: await logApiNotOkDetails({
+            rawResponse,
+            parsedResponse: response,
+          }),
+          status: rawResponse.status,
+        },
+      });
+    }
+
+    return response;
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'searchCases',
+  }
+);
 
 export const searchCasesByPolicyNumber = async ({
   policyNumber,
   // TODO: i'm assuming i should include this because policyNumber is not
   // guaranteed unique?
   carrierCode: _carrierCode,
+  loggingCtx,
 }: {
   policyNumber: string;
   carrierCode?: string;
+  loggingCtx: CommonLogContext;
 }): Promise<CaseSearchServiceResponse> => {
   try {
     // TODO: do i need to transform this response at all?
-    const response = await searchCases({ policyNumber });
+    const response = await searchCases({ policyNumber }, loggingCtx);
 
+    if (!response.data?.data) {
+      throw new Error('No data in response');
+    }
     return {
-      data: response.data,
+      data: response.data.data,
       error: null,
     };
   } catch (error) {

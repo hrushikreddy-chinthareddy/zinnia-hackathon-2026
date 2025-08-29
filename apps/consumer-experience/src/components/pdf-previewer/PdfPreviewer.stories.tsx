@@ -6,14 +6,15 @@ import { UserProvider } from '../providers/UserProvider';
 const meta: Meta<typeof PdfPreviewer> = {
   title: 'Components/PdfPreviewer',
   component: PdfPreviewer,
-  decorators: (Story) => (
+  decorators: Story => (
     <UserProvider user={undefined}>
-      <div style={{
-        height: '75vh',
-        width: '75vw',
-        placeItems: 'stretch'
-      }}>
-
+      <div
+        style={{
+          height: '75vh',
+          width: '75vw',
+          placeItems: 'stretch',
+        }}
+      >
         <Story />
       </div>
     </UserProvider>
@@ -21,9 +22,9 @@ const meta: Meta<typeof PdfPreviewer> = {
   parameters: {
     layout: 'centered',
     nextjs: {
-      appDirectory: true
-    }
-  }
+      appDirectory: true,
+    },
+  },
 };
 
 export default meta;
@@ -31,8 +32,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
-    fileName: 'test.pdf',
     defaultRedirectUrl: '/sample-report.pdf',
     documentDownloadUrl: '/sample-report.pdf',
-  }
+  },
 };

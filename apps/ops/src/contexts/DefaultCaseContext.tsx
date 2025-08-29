@@ -37,6 +37,7 @@ export const DefaultCaseContext = createContext<
 >(defaultCorrespondenceState);
 
 const getCaseDetails = (
+    currentData: DefaultDataEntryTask,
     policy: Policy,
     user: UserProfile
 ): DefaultDataEntryTask => {
@@ -47,9 +48,11 @@ const getCaseDetails = (
                 identification.identificationType === IdentificationType.SSN
         )?.identificationValue || undefined;
     return {
+        ...currentData,
         caseDetails: {
-            caseType: '',
+            ...currentData.caseDetails,
             caseSubType: '',
+            lineOfBusiness: policy?.product?.lineOfBusiness || '',
             contractNumber: policy?.policyNumber || '',
             carrier: policy?.carrierId || '',
             customerDetails: {
@@ -73,15 +76,17 @@ type DefaultCaseProviderProps = {
     policy: Policy;
     user: UserProfile;
     correlationId: string;
+    taskData: DefaultDataEntryTask;
 };
 export const DefaultCaseProvider = ({
     children,
     policy,
     user,
     correlationId,
+    taskData,
 }: DefaultCaseProviderProps) => {
     const [defaultCaseData, setDefaultCaseData] =
-        useState<DefaultDataEntryTask>(getCaseDetails(policy, user));
+        useState<DefaultDataEntryTask>(getCaseDetails(taskData, policy, user));
     const [submitFailed, setSubmitFailed] = useState(false);
     return (
         <DefaultCaseContext.Provider

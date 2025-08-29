@@ -23,6 +23,15 @@
     min-width: 0;
 }
 
+.assistiveTextCheckbox {
+    margin-left: var(--measure-dimension-margin-lg);
+    margin-top: var(--measure-dimension-margin-xxs);
+}
+
+.error {
+    border-color: var(--color-status-surface-status-error-border-alt, #db004f);
+}
+
 /* Layout width classes */
 .layout-1 {
     flex: 0 0 8.3333%;

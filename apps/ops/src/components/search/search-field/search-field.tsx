@@ -7,7 +7,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
@@ -29,6 +29,7 @@ export const SearchFieldContainer = ({
     activeLabels,
     onChange,
     onClear,
+    values,
     inputClasses,
 }: SearchFieldProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -40,6 +41,7 @@ export const SearchFieldContainer = ({
         errorMessage,
     } = activeLabels;
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const inputValue = values[activeLabels?.value || ''] || '';
 
     const inputClass = () => {
         switch (activeLabels.value) {
@@ -59,12 +61,11 @@ export const SearchFieldContainer = ({
     };
 
     const [hasValue, setHasValue] = useState(false);
+    useEffect(() => {
+        setHasValue(!!inputValue);
+    }, [inputValue]);
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== '') {
-            setHasValue(true);
-        } else {
-            setHasValue(false);
-        }
         if (onChange) {
             const text = e?.target?.value || '';
             onChange(text, policyKey as PolicySearchKeys);
@@ -89,6 +90,7 @@ export const SearchFieldContainer = ({
                 key={activeLabels.value}
                 ref={inputRef}
                 onChange={handleChange}
+                value={inputValue}
             />
             {hasValue && (
                 <Button

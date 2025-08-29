@@ -74,8 +74,8 @@ export async function POST(
       data: null,
       error: {
         status: 500,
-        name: 'Error fetching systematic program validation',
-        message: 'error fetching systematic program validation',
+        name: 'Error submitting systematic program',
+        message: 'error submitting systematic program',
       },
     });
   }

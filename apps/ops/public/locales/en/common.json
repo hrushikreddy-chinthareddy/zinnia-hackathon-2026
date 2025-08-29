@@ -10,7 +10,7 @@
     "last14Days": "Last 14 days",
     "last30Days": "Last 30 days",
     "yearToDate": "Year-to-date",
-    "caseStatsDashboardTitle": "Carrier Dashboard",
+    "caseStatsDashboardTitle": "Case Stats",
     "customRange": "Custom Range",
     "allAgents": "All Agents",
     "allDistributors": "All Distributors",
@@ -4676,6 +4676,10 @@
                 "mainCta": {
                     "add": "Save {{type}} email",
                     "update": "Update {{type}} email"
+                },
+                "fieldLabels": {
+                    "purpose": "Purpose",
+                    "removeBank": "Remove this bank account"
                 }
             },
             "communicationpreference": {
@@ -4897,11 +4901,30 @@
                     "nameOnAccount": "Name on account",
                     "nameOnCard": "Name on card",
                     "new": "New",
-                    "routingNumber": "Routing number"
+                    "routingNumber": "Routing number",
+                    "edit": "Edit",
+                    "bankAccount": "Bank account",
+                    "permissionDeniedTooltip": "Refer to guidelines for instructions to edit banking details."
                 },
                 "label": "Banking Details",
                 "transactions": {
                     "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
+                },
+                "purpose": {
+                    "loanInterestBilling": "Loan Interest Billing",
+                    "disbursements": "Disbursement",
+                    "loanPrincipalBilling": "Loan Principal Billing",
+                    "premiumBilling": "Premium Billing",
+                    "oneTimePremiumBilling": "One Time Premium Billing",
+                    "payout": "Payout",
+                    "oneTimeWire": "One Time Wire"
+                },
+                "bankOptions": {
+                    "accountType": "Account type",
+                    "bankName": "Bank name",
+                    "routingNumber": "Routing number",
+                    "accountNumber": "Account number",
+                    "endingIn": "Ending in {{accountNumber}}"
                 }
             },
             "email": {
@@ -7490,7 +7513,8 @@
             "cancel": "Cancel",
             "cancelArchiveAriaLabel": "Cancel archive illustration button",
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
-            "addProductAriaLabel": "Add product button"
+            "addProductAriaLabel": "Add product button",
+            "editIllustration": "Edit Illustration"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",

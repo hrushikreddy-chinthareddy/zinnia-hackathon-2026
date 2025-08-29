@@ -1,8 +1,8 @@
 import { PaymentMethod } from '@/types/payment';
 import { PolicyRequestInputs } from '@/types/policy';
-import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
+import { parseAPIResponse } from '@/utils/api';
 import { getSession } from '@/utils/auth';
-import { logInfo, logWarn } from '@/utils/logging/log-fns';
+import { logInfo } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -37,20 +37,25 @@ export const getUserPaymentMethods = withLogging(
     const rawResponse = await ServerApi.get(url, undefined, loggingCtx);
     const response = await parseAPIResponse(rawResponse);
 
-    if (rawResponse.status === 404) {
-      logWarn('No payment details found for user', {
-        ...logApiNotOkDetails({ rawResponse, parsedResponse: response }),
-        ...loggingCtx,
-        planCode,
-        policyNumber,
-        policyPartyId,
-      });
+    // TODO: according to the API spec, a 404 should be "no bank details found"
+    // but we're getting a 404 returned with the error
+    // message: 'Error occurred while calling paymentus client for fetching profile details list'
+    // until we're aligned on the expected API returns, leaving 404 as
+    // an error
+    // if (rawResponse.status === 404) {
+    //   logWarn('No payment methods found for user', {
+    //     ...logApiNotOkDetails({ rawResponse, parsedResponse: response }),
+    //     ...loggingCtx,
+    //     planCode,
+    //     policyNumber,
+    //     policyPartyId,
+    //   });
 
-      return response;
-    }
+    //   return response;
+    // }
 
     if (!rawResponse?.ok) {
-      throw new Error('Error fetching policy.', {
+      throw new Error('Error fetching payment methods.', {
         cause: { policyNumber, planCode },
       });
     }

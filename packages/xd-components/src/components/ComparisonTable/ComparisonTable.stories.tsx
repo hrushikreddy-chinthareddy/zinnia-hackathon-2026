@@ -6,6 +6,7 @@ import { Tag, TagVariant } from '@zinnia/bloom/components';
 const meta: Meta<typeof ComparisonTable> = {
   title: 'Components/ComparisonTable',
   component: ComparisonTable,
+  tags: ['autodocs'],
   parameters: {
     layout: 'centered',
   },

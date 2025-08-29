@@ -54,7 +54,7 @@ export const SelectBank = ({
 
   const defaultSelectedBankId = useMemo(() => {
     return (
-      statePayorBank?.bankId ||
+      statePayorBank.bankId ||
       activeBanks.find(bank => bank.autopayEnabled)?.bankId ||
       activeBanks[0]?.bankId
     );
@@ -82,18 +82,16 @@ export const SelectBank = ({
 
   return (
     <form id="submit-form" onSubmit={handleSubmit(saveAndMove)}>
-      {!activeBanks ||
-        (activeBanks.length === 0 && (
-          <div className={noDataStyles.noBankDetails}>
-            <NoDataAvailable iconType={IconType.BANK}>
-              <p className="typography-content-body">
-                Looks like you haven't added any banking information yet.
-              </p>
-            </NoDataAvailable>
-          </div>
-        ))}
-
-      {activeBanks?.length > 0 && (
+      {activeBanks.length === 0 && (
+        <div className={noDataStyles.noBankDetails}>
+          <NoDataAvailable iconType={IconType.BANK}>
+            <p className="typography-content-body">
+              Looks like you haven't added any banking information yet.
+            </p>
+          </NoDataAvailable>
+        </div>
+      )}
+      {activeBanks.length > 0 && (
         <div
           role="radiogroup"
           aria-label="select payment method"
@@ -125,7 +123,7 @@ export const SelectBank = ({
                         <AccountType accountType={bankDetail.accountType} />{' '}
                         <span>
                           {bankDetail.accountType?.includes('Checking') ||
-                            bankDetail.accountType?.includes('Savings')
+                          bankDetail.accountType?.includes('Savings')
                             ? 'account ending in'
                             : 'ending in'}
                         </span>{' '}

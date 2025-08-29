@@ -1,4 +1,6 @@
 import {
+    AssistiveText,
+    AssistiveTextVariant,
     Checkbox,
     FieldData,
     FieldTypes as FieldDataTypes,
@@ -18,6 +20,7 @@ import {
     RenderingOptionField,
     RenderingFieldOption,
 } from '@zinnia/form-engine-sdk';
+import clsx from 'clsx';
 import { RenderingCustomField } from 'node_modules/@zinnia/form-engine-sdk/dist/esm/questionnaire-engine/renderingTransforms/RenderingQuestionnaire';
 import { ReactElement, useCallback, useEffect, memo } from 'react';
 
@@ -395,7 +398,16 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         options={checkboxGroupOptions}
                         onValueChange={onAnswerChangeForFieldProps}
                         value={field.value}
+                        showError={!!field.validationError?.message}
                     />
+                    {field.validationError?.message && (
+                        <AssistiveText
+                            role="alert"
+                            variant={AssistiveTextVariant.Error}
+                            text={field.validationError?.message}
+                            className={clsx(style.assistiveTextCheckbox)}
+                        />
+                    )}
                 </FieldContainer>
             );
         }

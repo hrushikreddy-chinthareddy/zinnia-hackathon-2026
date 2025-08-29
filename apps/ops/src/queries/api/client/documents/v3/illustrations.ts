@@ -218,7 +218,7 @@ export const createIllustration = async ({
     bodyData: CreateIllustrationQueryBodyValue;
     path: string;
 }) => {
-    return client.post<any, AxiosResponse<any>>(
+    return await client.post<any, AxiosResponse<any>>(
         `${baseAppUrl}/${path}`,
         bodyData
     );

@@ -2,6 +2,7 @@ import {
     AccountStatus,
     AccountType,
     BankAccount,
+    BankAccountPurpose,
     Party,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
@@ -14,27 +15,36 @@ import CaseDocumentSelect, {
     CaseDocumentOption,
     SetStateCaseId,
 } from '@deps/components/case-document-select/case-document-select';
+import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Field, {
     FieldSize,
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
+import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
-import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
+import {
+    handleResponse,
+    ViewState,
+} from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/success-state';
 import { NonFinancialTransactionIdKeys } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
+import WarnState from '@deps/components/side-sheet/side-sheet-transaction/states/warn-state';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     BankDetails,
     Errors,
     getAccountTypeOptions,
+    GetAction,
     getFormErrors,
+    getPurposeOptions,
 } from '@deps/containers/people-data-cards/bank-card/side-sheet/side-sheet-bank.helpers';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
@@ -45,16 +55,19 @@ import {
     NonFinancialTransactionBody,
     NonFinancialTransactions,
     addNonFinancialTransaction,
+    editNonFinancialTransaction,
+    validateNonFinancialTransaction,
 } from '@deps/queries/api/bpm-non-financial';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 export type SideSheetBankProps = {
     onCancel: () => void;
     party?: Party;
     planCode?: string;
     policyNumber?: string;
-
+    updatedBank: BankAccount;
     setCurrentBankAccounts: Dispatch<SetStateAction<BankAccount[]>>;
 };
 
@@ -64,11 +77,15 @@ const SideSheetBank = ({
     policyNumber,
     onCancel,
     setCurrentBankAccounts,
+    updatedBank,
 }: SideSheetBankProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.bank',
     });
     const { t: defaultT } = useTranslation();
+    const { featureFlags } = useOptimizely();
+    const shouldShowBankDelete =
+        featureFlags[FEATURE_FLAGS.BANK_CHANGE_DELETE_TRANSACTION];
 
     const INITIAL_BANK_ACCOUNT: BankAccount = {
         accountType: AccountType.CHECKING,
@@ -82,7 +99,9 @@ const SideSheetBank = ({
         reverseInitiator: false,
     };
 
-    const [bankAccount, setBankAccount] = useState(INITIAL_BANK_ACCOUNT);
+    const [bankAccount, setBankAccount] = useState(
+        updatedBank ?? INITIAL_BANK_ACCOUNT
+    );
     const [body, setBody] = useState(INITIAL_BODY);
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
@@ -94,6 +113,7 @@ const SideSheetBank = ({
     >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
+    const purposeOptions = getPurposeOptions({ t: defaultT });
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -110,22 +130,131 @@ const SideSheetBank = ({
             defaultT
         ).toLowerCase(),
     });
+    const [action, setAction] = useState(
+        updatedBank
+            ? NonFinancialTransactionActions.Edit
+            : NonFinancialTransactionActions.Add
+    );
 
-    const handleSubmit = async () => {
-        const errors = getFormErrors({ bankAccount, caseId, t });
-        setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+    const isAdd = action === NonFinancialTransactionActions.Add;
+    const isDelete = action === NonFinancialTransactionActions.Delete;
+    const getAction = GetAction(isAdd, isDelete);
 
-        const response = await addNonFinancialTransaction({
+    const handleDelete = async () => {
+        const response = await editNonFinancialTransaction({
             body: {
                 ...body,
+                deleteRequest: true,
                 bankAccount,
             },
+            itemId: updatedBank?.bankId,
             partyId,
             planCode,
             policyNumber,
             transaction: NonFinancialTransactions.BankAccount,
         });
+
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            setNewCaseId,
+        });
+    };
+
+    const handleValidation = async () => {
+        const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
+        setCurrentErrors(errors);
+        if (Object.keys(errors).length > 0) return;
+        let response;
+        if (isAdd) {
+            response = await validateNonFinancialTransaction({
+                body: {
+                    ...body,
+                    bankAccount,
+                },
+                partyId,
+                planCode,
+                policyNumber,
+                transaction: NonFinancialTransactions.BankAccount,
+                action: NonFinancialTransactionActions.Add,
+            });
+        } else {
+            delete bankAccount.branchAddress;
+            const extendedBody = isDelete
+                ? {
+                      ...body,
+                      deleteRequest: true,
+                      bankAccount,
+                  }
+                : {
+                      ...body,
+                      bankAccount,
+                  };
+            response = await validateNonFinancialTransaction({
+                body: extendedBody,
+                partyId,
+                planCode,
+                policyNumber,
+                transaction: NonFinancialTransactions.BankAccount,
+                action: isDelete
+                    ? NonFinancialTransactionActions.Delete
+                    : NonFinancialTransactionActions.Edit,
+            });
+        }
+
+        switch (response?.status) {
+            case StatusCode.Okay:
+                if (isDelete) {
+                    setViewState(ViewState.Warn);
+                } else {
+                    handleSubmit();
+                }
+                break;
+            case StatusCode.BadRequest:
+                setValidationResults(
+                    response?.data?.validationResult as ValidationResult[]
+                );
+                setViewState(ViewState.BpmError);
+                break;
+            case StatusCode.InternalServerError:
+            default:
+                setViewState(ViewState.ApiError);
+                break;
+        }
+    };
+
+    const handleSubmit = async () => {
+        const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
+        setCurrentErrors(errors);
+        if (Object.keys(errors).length > 0) return;
+
+        let response;
+        if (isAdd) {
+            response = await addNonFinancialTransaction({
+                body: {
+                    ...body,
+                    bankAccount,
+                },
+                partyId,
+                planCode,
+                policyNumber,
+                transaction: NonFinancialTransactions.BankAccount,
+            });
+        } else {
+            delete bankAccount.branchAddress;
+            response = await editNonFinancialTransaction({
+                body: {
+                    ...body,
+                    bankAccount,
+                },
+                itemId: updatedBank?.bankId,
+                partyId,
+                planCode,
+                policyNumber,
+                transaction: NonFinancialTransactions.BankAccount,
+            });
+        }
 
         switch (response?.status) {
             case StatusCode.Accepted:
@@ -170,17 +299,19 @@ const SideSheetBank = ({
                     transaction={NonFinancialTransactions.BankAccount}
                 />
             );
+        case ViewState.Warn:
+            return (
+                <WarnState
+                    name={getFirstLastName(party)}
+                    onCancel={onCancel}
+                    onContinue={handleDelete}
+                    transaction={NonFinancialTransactions.BankAccount}
+                />
+            );
         case ViewState.Success:
-            updateOptimistically({
-                action: NonFinancialTransactionActions.Add,
-                idKey: NonFinancialTransactionIdKeys.BankAccount,
-                newItem: bankAccount,
-                setState: setCurrentBankAccounts,
-            });
-
             return (
                 <SuccessState
-                    action={NonFinancialTransactionActions.Add}
+                    action={getAction()}
                     name={bankAccount.branchName ?? ''}
                     onCancel={onCancel}
                     transaction={NonFinancialTransactions.BankAccount}
@@ -217,6 +348,7 @@ const SideSheetBank = ({
                         }));
                     }}
                     value={bankAccount.accountType}
+                    disabled={isDelete}
                 />
                 <Field
                     formatOptions={{ format: '#########' }}
@@ -239,6 +371,8 @@ const SideSheetBank = ({
                     variant={
                         currentErrors?.routingNumber
                             ? FieldVariant.Error
+                            : isDelete
+                            ? FieldVariant.Inactive
                             : FieldVariant.Default
                     }
                 />
@@ -261,6 +395,8 @@ const SideSheetBank = ({
                     variant={
                         currentErrors?.branchName
                             ? FieldVariant.Error
+                            : isDelete
+                            ? FieldVariant.Inactive
                             : FieldVariant.Default
                     }
                 />
@@ -285,15 +421,47 @@ const SideSheetBank = ({
                     variant={
                         currentErrors?.accountNumber
                             ? FieldVariant.Error
+                            : isDelete
+                            ? FieldVariant.Inactive
                             : FieldVariant.Default
                     }
                 />
+                <SelectSimple
+                    aria-label={t('fieldLabels.purpose') as string}
+                    disabled={isDelete}
+                    label={t('fieldLabels.purpose') as string}
+                    onChange={(value) => {
+                        setBankAccount((prevState) => ({
+                            ...prevState,
+                            bankAccountPurpose: value as BankAccountPurpose,
+                        }));
+                    }}
+                    options={purposeOptions}
+                    size={FieldSize.Small}
+                    value={bankAccount.bankAccountPurpose}
+                />
             </div>
+
+            {!isAdd && shouldShowBankDelete && (
+                <div className="pt-8">
+                    <CheckboxText
+                        checked={isDelete}
+                        label={t('fieldLabels.removeBank')}
+                        onChange={(e) => {
+                            setAction(
+                                e
+                                    ? NonFinancialTransactionActions.Delete
+                                    : NonFinancialTransactionActions.Edit
+                            );
+                        }}
+                    />
+                </div>
+            )}
 
             <TransactionCta
                 className="mt-10"
                 mainCta={{
-                    onClick: handleSubmit,
+                    onClick: handleValidation,
                     text: mainCtaText,
                 }}
                 secondaryCta={{

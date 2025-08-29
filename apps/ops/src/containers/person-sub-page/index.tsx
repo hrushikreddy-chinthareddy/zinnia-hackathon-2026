@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
@@ -20,6 +21,8 @@ import {
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkManageBankChangeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -84,10 +87,31 @@ export const PersonSubPage = ({
 
     const { isPermissioned: isUserAllowedToEditCards } =
         useTransactionPermissionCheck(
-            TransactionPermission.WriteAllTransactions,
+            TransactionPermission.WritePolicy,
             policyNumber,
             planCode
         );
+
+    const { data: manageBankChangeEligibility } = useQuery({
+        queryKey: [
+            'checkManageJointOwnerEligibilityQuery',
+            planCode,
+            policy.policyNumber,
+        ],
+        queryFn: () =>
+            checkManageBankChangeEligibilityQuery(
+                planCode as string,
+                policy.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleBankChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
 
     if (isAgent) {
         return <AgentSubPage partyId={partyId} />;
@@ -162,6 +186,9 @@ export const PersonSubPage = ({
                     // TODO CB - set these ase vars to be reused above
                     planCode={planCode}
                     policyNumber={policyNumber}
+                    isEligible={
+                        manageBankChangeEligibility?.isEligibleBankChange
+                    }
                 />
 
                 {isInsured && (

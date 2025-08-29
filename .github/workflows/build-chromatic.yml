@@ -1,4 +1,4 @@
-name: 'Chromatic Consumer Experience CI'
+name: 'Chromatic CI'
 
 on:
   workflow_call:
@@ -44,8 +44,8 @@ jobs:
       - name: Install modules
         run: pnpm install
 
-      - name: pnpm run build
-        run: pnpm run build
+      - name: turbo run build
+        run: npx turbo run build --filter=${{ inputs.filter-path }}
 
       - name: Publish to ${{ inputs.project-name }} to Chromatic
         uses: chromaui/action@latest

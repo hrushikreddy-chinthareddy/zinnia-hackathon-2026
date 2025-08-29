@@ -68,7 +68,10 @@ export const NavMenu = ({
       }}
       open={isOpen}
     >
-      <Popover.Trigger className={clsx(isMockOn && styles.mockOn)}>
+      <Popover.Trigger
+        className={clsx(isMockOn && styles.mockOn)}
+        aria-label="navigation menu"
+      >
         <UserBadge
           firstName={userName?.firstName}
           lastName={userName?.lastName}

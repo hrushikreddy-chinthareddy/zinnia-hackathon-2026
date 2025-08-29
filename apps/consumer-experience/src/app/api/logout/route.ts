@@ -19,5 +19,5 @@ export async function GET(req: NextRequest) {
   await deleteSession();
   await deleteCookie(HAD_PREVIOUS_SESSION_COOKIE_KEY);
 
-  return NextResponse.redirect(new URL(`/`, returnTo));
+  return NextResponse.redirect(new URL(returnTo));
 }

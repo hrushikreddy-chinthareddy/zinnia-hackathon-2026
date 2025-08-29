@@ -54,13 +54,6 @@ const SuccessState = ({
             />
         );
 
-    const bankingSubtitle = (
-        <span>
-            <b>{name}</b>
-            {t('subtitle.bank')}
-        </span>
-    );
-
     const defaultSubtitle = (
         <span>
             <b>
@@ -84,10 +77,7 @@ const SuccessState = ({
         </span>
     );
 
-    const subtitle =
-        transaction === NonFinancialTransactions.BankAccount
-            ? bankingSubtitle
-            : defaultSubtitle;
+    const subtitle = defaultSubtitle;
 
     return (
         <CardInfo

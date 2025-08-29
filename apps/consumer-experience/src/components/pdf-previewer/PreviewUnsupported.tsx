@@ -7,14 +7,14 @@ import styles from './PdfPreviewer.module.css';
 import { AnalyticsPageHeader } from '../analytics/AnalyticsPageHeader';
 
 export default function PreviewUnsupported({
-  fileName,
+  documentId,
   url,
 }: {
-  fileName: string;
+  documentId: string;
   url: string;
 }) {
   const saveDocument = () => {
-    saveAs(url, `${fileName}.pdf`);
+    saveAs(url, `${documentId}.pdf`);
   };
   return (
     <div className={styles.container}>

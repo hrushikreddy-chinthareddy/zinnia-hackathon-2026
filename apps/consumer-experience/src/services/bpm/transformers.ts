@@ -124,6 +124,11 @@ export const systematicPremiumsStateToPolicyRequestInput = (
       amount: state.systematicPremiumAmountStep.paymentAmount,
       amountType: AmountType.AMOUNT,
       paymentForm: PaymentForm.ACH,
+      // https://se2llc-global.slack.com/archives/C069ZQ0REET/p1753984107283049?thread_ts=1753978579.055209&cid=C069ZQ0REET
+      // – one time premium requires paymentForm to successfully submit. Use accountType from the bank detail return
+      // paymentForm: state.selectBankStep.bank?.accountType as PaymentForm,
+      // This didn't turn out to be true, we were getting [errors](https://github.com/zinnia/digital-experience-monorepo/pull/2435#issuecomment-3161423796) for subnmitting anything other than ACH
+      // so we will leave hardcoded ACH for now!
       frequency: state.systematicPremiumAmountStep.paymentFrequency,
       party: {
         bankId: state.selectBankStep.bank?.bankId,

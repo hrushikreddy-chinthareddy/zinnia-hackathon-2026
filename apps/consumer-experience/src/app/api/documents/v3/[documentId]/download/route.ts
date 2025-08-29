@@ -30,7 +30,7 @@ export const GET = async (
   const loggingContext = {
     parentCarrierCode,
     documentNumber: params.documentId,
-    file: 'api/documents/v3/[documentId]/download/[fileName]/route.ts',
+    file: 'api/documents/v3/[documentId]/download/route.ts',
     function: 'GET',
     planCode,
     policyNumber,

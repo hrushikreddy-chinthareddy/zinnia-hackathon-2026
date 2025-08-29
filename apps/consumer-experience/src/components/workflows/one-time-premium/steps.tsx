@@ -1,6 +1,5 @@
 import {
   OttpSteps,
-  paymentAmountSchema,
   selectBankSchema,
   summarySchema,
 } from '@/components/providers/one-time-premium-payment/types';
@@ -18,7 +17,6 @@ export const stepsInfo: Record<OttpSteps, StepInfo> = {
     title: 'Make a one-time payment',
     order: 1,
     url: oneTimePremiumUrls[OttpSteps.AMOUNT],
-    requiredData: paymentAmountSchema,
   },
   [OttpSteps.BANK]: {
     title: 'select payment method',

@@ -144,7 +144,6 @@ export enum FEATURE_FLAGS {
     OPS_MANAGER_FEATURE = 'ops-manager-feature',
     DASHBOARD_NIGO_TAB = 'dashboard_nigo_tab',
     BENEFICIARY_CHANGE_TRANSACTION = 'beneficiary_change_transaction',
-    SERVICE_REQUEST_FORM_ENABLED = 'service_request_default_case',
     MARKET_CONNECT_ENABLED = 'market_connect_contacts',
     MARKET_CONNECT_PRODUCT_MATCHER = 'market_connect_product_matcher',
     MARKET_CONNECT_QUICK_QUOTE = 'market_connect_quick_quote',
@@ -166,4 +165,6 @@ export enum FEATURE_FLAGS {
     SHOW_CASE_EVENTS = 'show-case-events',
     CASE_DETAILS_V2 = 'case-details-v2',
     BENE_TRUST_TYPE_ENUM = 'bene_trust_type_enum',
+    BANK_CHANGE_TRANSACTION = 'bank_change_transaction',
+    BANK_CHANGE_DELETE_TRANSACTION = 'bank_change_delete_transaction',
 }
