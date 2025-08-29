@@ -25,12 +25,14 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-key-values-sidesheet.module.css';
-import { PreparedPolicy } from './types';
+import { DataTuple } from './types';
 import {
     formatAsSectionLabel,
     formatDataField,
     generateKeyValueGroups,
     prepareSearchableData,
+    toSections,
+    toFieldsAndSubsections,
 } from './utils';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -41,39 +43,63 @@ import Highlighter from '../highlighter/highlighter';
 import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
 import Popover from '../popover/popover';
 
-const toSections = (
-    tuples: [string, string | number | object][]
-): PreparedPolicy => {
-    return tuples.reduce<PreparedPolicy>(
-        (acc, [currentKey, currentVal]) => {
-            // append to policySections list
-            if (typeof currentVal === 'object' && currentVal !== null) {
-                return {
-                    ...acc,
-                    policySections: [
-                        ...acc.policySections,
-                        [currentKey, currentVal],
-                    ],
-                };
-            }
-
-            // append to policyBasics list
-            return {
-                ...acc,
-                policyBasics: [...acc.policyBasics, [currentKey, currentVal]],
-            };
-        },
-        {
-            policyBasics: [],
-            policySections: [],
-        }
-    );
-};
-
 interface FindKeyValuesSidebarProps {
     planCode?: string;
     policyNumber?: string;
 }
+
+const FindAllKeyValuesSection = ({
+    fields,
+    searchValue,
+}: {
+    fields: DataTuple[];
+    searchValue: string;
+}) => {
+    //const { fields, subSections } = toFieldsAndSubsections(section);
+    //console.log('section', fields);
+    return (
+        <div className={styles.itemsList}>
+            {fields.map((field) => {
+                const [fieldLabel, fieldData] = formatDataField(field);
+                return (
+                    <DotContainer
+                        key={fieldLabel}
+                        dotLeftSide={
+                            <div>
+                                <Highlighter
+                                    text={fieldLabel}
+                                    highlights={[searchValue]}
+                                />
+                                {/*
+                            {item.tooltip && (
+                                <Popover
+                                    placement={
+                                        PopoverPlacement.TopRight
+                                    }
+                                    title={item.tooltip}
+                                    body={
+                                        item.tooltipBody
+                                    }
+                                >
+                                    <CircleInfoIcon
+                                        height={'16px'}
+                                        width={'16px'}
+                                        className="text-primary"
+                                    />
+                                </Popover>
+                            )}
+                            */}
+                            </div>
+                        }
+                        dotLeftSideClassName="typography-content-body-sm"
+                        dotRightSide={fieldData}
+                        dotRightSideClassName="typography-content-body-sm"
+                    />
+                );
+            })}
+        </div>
+    );
+};
 
 export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     planCode,
@@ -139,12 +165,6 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
         }
     };
 
-    // Generate the key values for the policy
-    const keyValues = useMemo(
-        () => prepareSearchableData(policy ?? {}, t),
-        [policy, t]
-    );
-
     /*
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
@@ -156,12 +176,12 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     }, [keyValues, debouncedSearchValue]);
 
     */
-    const normalizedPolicy = Object.entries(policy ?? {});
 
-    const { policyBasics, policySections } = toSections(normalizedPolicy);
+    if (!policy) return null; //FIXME: add loading state
+    const { policyBasics, policySections } = toSections(policy);
 
     //console.log('policyBasics', policyBasics);
-    console.log('policySections', policySections);
+    //console.log('policySections', policySections);
 
     return (
         <SideSheet
@@ -219,59 +239,63 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                             key="policyBasics"
                             sectionLabel="Policy Basics"
                         >
-                            <div className={styles.itemsList}>
-                                {policyBasics.map((field) => {
-                                    const [fieldLabel, fieldData] =
-                                        formatDataField(field);
-                                    return (
-                                        <DotContainer
-                                            key={fieldLabel}
-                                            dotLeftSide={
-                                                <div>
-                                                    <Highlighter
-                                                        text={fieldLabel}
-                                                        highlights={[
-                                                            searchValue,
-                                                        ]}
-                                                    />
-                                                    {/*
-                                                {item.tooltip && (
-                                                    <Popover
-                                                        placement={
-                                                            PopoverPlacement.TopRight
-                                                        }
-                                                        title={item.tooltip}
-                                                        body={
-                                                            item.tooltipBody
-                                                        }
-                                                    >
-                                                        <CircleInfoIcon
-                                                            height={'16px'}
-                                                            width={'16px'}
-                                                            className="text-primary"
-                                                        />
-                                                    </Popover>
-                                                )}
-                                                */}
-                                                </div>
-                                            }
-                                            dotLeftSideClassName="typography-content-body-sm"
-                                            dotRightSide={fieldData}
-                                            dotRightSideClassName="typography-content-body-sm"
-                                        />
-                                    );
-                                })}
-                            </div>
+                            <FindAllKeyValuesSection
+                                fields={policyBasics}
+                                searchValue={searchValue}
+                            />
                         </Accordion>
 
-                        {policySections.map(([sectionLabel, sectionData]) => (
-                            <Accordion
-                                key={sectionLabel}
-                                sectionLabel={formatAsSectionLabel(
-                                    sectionLabel
-                                )}
-                            >
-                                {/*
+                        {policySections.map(([sectionLabel, sectionData]) => {
+                            console.log(
+                                'sectionData',
+                                sectionLabel,
+                                sectionData
+                            );
+                            const { fields, subSections } =
+                                toFieldsAndSubsections([
+                                    sectionLabel,
+                                    sectionData,
+                                ]);
+                            return (
+                                <Accordion
+                                    key={sectionLabel}
+                                    sectionLabel={formatAsSectionLabel(
+                                        sectionLabel
+                                    )}
+                                >
+                                    {fields && (
+                                        <FindAllKeyValuesSection
+                                            fields={fields}
+                                            searchValue={searchValue}
+                                        />
+                                    )}
+                                    {subSections &&
+                                        subSections.map(
+                                            ([
+                                                subSectionLabel,
+                                                subSectionFields,
+                                            ]) => {
+                                                //console.log('subSection', sectionLabel, subSectionLabel, subSectionFields);
+                                                return (
+                                                    <Accordion
+                                                        key={sectionLabel}
+                                                        sectionLabel={formatAsSectionLabel(
+                                                            subSectionLabel
+                                                        )}
+                                                    >
+                                                        <FindAllKeyValuesSection
+                                                            fields={
+                                                                subSectionFields
+                                                            }
+                                                            searchValue={
+                                                                searchValue
+                                                            }
+                                                        />
+                                                    </Accordion>
+                                                );
+                                            }
+                                        )}
+                                    {/*
                                 <div className={styles.itemsList}>
                                     {group.items.map((item) => (
                                         <DotContainer
@@ -310,8 +334,9 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                     ))}
                                 </div>
                                 */}
-                            </Accordion>
-                        ))}
+                                </Accordion>
+                            );
+                        })}
                     </div>
                 </BlurOverlayLoader>
             </div>
@@ -389,7 +414,7 @@ export const FindKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
         [policy, t]
     );
 
-    console.log('keyValues', policy);
+    //console.log('keyValues', policy);
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 

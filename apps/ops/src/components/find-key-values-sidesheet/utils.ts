@@ -25,7 +25,14 @@ import { enums } from './translations/enums';
 import { exactTranslations } from './translations/exact';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
-import { DataTuple } from './types';
+import { sectionTypeToSubsectionTitleFields } from './translations/subsection-field-to-title';
+import {
+    DataTuple,
+    FieldData,
+    PolicySection,
+    PreparedPolicy,
+    PreparedPolicySection,
+} from './types';
 
 /**
  * Takes in a policy and generates the key values search fields for that policy
@@ -115,26 +122,105 @@ const formatAsDataLabel = (label: string) => {
     const asSentence = formatAsSentenceCase(formatted);
     return asSentence;
 };
-const formatAsDataValue = (fieldName: string, fieldData: string | number) => {
+const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
     switch (true) {
+        // Empty values
+        case fieldData === null:
+            return '--';
+
+        // Enums
         case typeof fieldData === 'string' && !!enums[fieldData]:
             return enums[fieldData];
-        case currencyFields.has(fieldName):
-            return numberFormatify(fieldData);
-        case dateFields.has(fieldName):
-            return convertKebabedDateString(
-                (fieldData && String(fieldData)) || undefined
-            );
+
+        // Currency
+        case fieldName && currencyFields.has(fieldName):
+            return numberFormatify(String(fieldData));
+
+        // Dates
+        case fieldName && dateFields.has(fieldName):
+            return convertKebabedDateString(String(fieldData) || undefined);
+
+        case typeof fieldData === 'object' && fieldData !== null:
+            return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
         default:
-            return fieldData;
+            return String(fieldData);
     }
 };
-export const formatDataField = ([
-    fieldName,
-    fieldData,
-]: DataTuple): DataTuple => {
+export const formatDataField = ([fieldName, fieldData]: DataTuple): [
+    string,
+    string
+] => {
     return [
         formatAsDataLabel(fieldName),
-        formatAsDataValue(fieldName, fieldData),
+        formatAsDataValue(fieldData, fieldName),
     ];
+};
+
+export const toSections = (policy: Policy): PreparedPolicy => {
+    const policyTuples = Object.entries(policy);
+    return policyTuples.reduce<PreparedPolicy>(
+        (acc, [currentKey, currentVal]) => {
+            // append to policySections list
+            if (typeof currentVal === 'object' && currentVal !== null) {
+                return {
+                    ...acc,
+                    policySections: [
+                        ...acc.policySections,
+                        [currentKey, currentVal],
+                    ],
+                };
+            }
+
+            // append to policyBasics list
+            return {
+                ...acc,
+                policyBasics: [...acc.policyBasics, [currentKey, currentVal]],
+            };
+        },
+        {
+            policyBasics: [],
+            policySections: [],
+        }
+    );
+};
+
+export const toFieldsAndSubsections = ([
+    sectionName,
+    sectionData,
+]: PolicySection): PreparedPolicySection => {
+    if (sectionData instanceof Array) {
+        return {
+            subSections: sectionData.map((subSection, i) => {
+                const subsectionTitleField =
+                    sectionTypeToSubsectionTitleFields[sectionName];
+                const subSectionTitle =
+                    subSection[subsectionTitleField] ??
+                    `${sectionName} ${i + 1}`;
+                const formattedSubSectionTitle =
+                    formatAsDataValue(subSectionTitle); // format the title as data
+                const subSectionDataTuples = Object.entries(subSection)
+                    .filter(
+                        ([fieldTitle]) => fieldTitle !== subsectionTitleField // remove the title field
+                    )
+                    .map((field) => formatDataField(field)); // use data translations
+
+                const ret: [string, DataTuple[]] = [
+                    formattedSubSectionTitle,
+                    subSectionDataTuples,
+                ];
+                return ret;
+            }),
+        };
+    } else {
+        //FIXME: provision for tests
+        const fields = Object.entries(sectionData).filter(
+            (entries): entries is [string, FieldData] => {
+                const [, fieldValue] = entries;
+                return typeof fieldValue !== 'object' || fieldValue === null;
+            }
+        );
+        return {
+            fields,
+        };
+    }
 };
