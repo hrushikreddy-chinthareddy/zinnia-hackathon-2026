@@ -22,6 +22,7 @@ export type EmailProps = {
     handleEmailChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired: boolean;
 };
 
 const EmailDetails = ({
@@ -29,6 +30,7 @@ const EmailDetails = ({
     handleEmailChange,
     index,
     isReadOnly,
+    isRequired,
 }: EmailProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.email',
@@ -106,7 +108,7 @@ const EmailDetails = ({
                             disabled
                         )}
                         disabled={disabled}
-                        required
+                        required={isRequired}
                     />
                 </div>
             </div>

@@ -41,6 +41,7 @@ export type PhoneProps = {
     handlePhoneChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired: boolean;
 };
 
 function PhoneDetails({
@@ -48,6 +49,7 @@ function PhoneDetails({
     handlePhoneChange,
     index,
     isReadOnly,
+    isRequired,
 }: PhoneProps) {
     const INITIAL_PHONE: Phone = {
         bestTime: ANYTIME,
@@ -173,7 +175,7 @@ function PhoneDetails({
                                 disabled
                             )}
                             disabled={disabled}
-                            required
+                            required={isRequired}
                         />
                         <Transition
                             as="div"
