@@ -263,10 +263,17 @@ export default function Steps({
 } & React.HTMLAttributes<HTMLUListElement>) {
     return (
         <ul {...rest}>
-            {steps.filter(stepFilter).map((step, index) => {
-                step.name = sentenceCase(step?.name);
-                return <Step step={step} key={index} />;
-            })}
+            {steps.filter(stepFilter).map((step, index) => (
+                <Step
+                    key={index}
+                    step={
+                        {
+                            ...step,
+                            name: sentenceCase(step?.name),
+                        } as TransformedStep
+                    }
+                />
+            ))}
         </ul>
     );
 }
