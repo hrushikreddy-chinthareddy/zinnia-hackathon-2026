@@ -362,10 +362,15 @@
             "selectReason": "Sélectionner une raison",
             "cancel": "Annuler",
             "updateStatus": "Mettre à jour le statut",
+            "notes": "Notes",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
                 "awaitingApproval": "En attente d'approbation",
-                "awaitingApplication": "En attente de candidature"
+                "awaitingApplication": "En attente de candidature",
+                "supportTicketRaised": "Ticket de support créé"
+            },
+            "errors": {
+                "notesRequired": "Veuillez entrer des notes."
             }
         },
         "tasksListing": {
@@ -3406,7 +3411,9 @@
                 "withdrawals": "Retraits",
                 "withdrawalsTaken": "Retraits effectués",
                 "yearsRemaining": "années restantes",
-                "ytd": "YTD"
+                "ytd": "YTD",
+                "required": "Requis",
+                "notRequired": "Non requis"
             },
             "contestability": {
                 "activeBadgeTooltip": "Si une demande de décès survient pendant la période de contestation, l'assureur fera preuve d'une vigilance accrue pour vérifier si l'assuré a été honnête lors de sa demande. L'assureur peut même contester la demande.",
@@ -4284,6 +4291,7 @@
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "reasonLabel": "Raison du statut",
+            "scheduledNoteLabel": "Note",
             "inProgress": "En cours",
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",
