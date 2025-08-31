@@ -123,7 +123,7 @@ export default function BeneficiaryDetails({
         currentBene?.party?.info || {}
     );
 
-    const [preferedOption, setPreferredOption] = useState(null);
+    const [preferedOption, setPreferredOption] = useState<string | null>(null);
 
     const preferedOptions = [
         {
@@ -140,9 +140,9 @@ export default function BeneficiaryDetails({
         },
     ];
 
-    const handleChange = (e: any) => {
-        setPreferredOption(e.target.value);
-        currentBene.party.preferredCommunicationType = e.target.value;
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setPreferredOption(event.target.value);
+        currentBene.party.preferredCommunicationType = event.target.value;
     };
 
     useEffect(() => {
@@ -271,7 +271,7 @@ export default function BeneficiaryDetails({
                         <Radio
                             items={preferedOptions}
                             label={t('prefferedMethod') as string}
-                            onChange={(e) => handleChange(e)}
+                            onChange={handleChange}
                             value={preferedOption}
                             orientation={RadioOrientation.Horizontal}
                             variant={

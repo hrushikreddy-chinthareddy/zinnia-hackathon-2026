@@ -160,14 +160,14 @@ const BeneficiaryIdentification = ({
             : FieldVariant.Default;
     };
 
-    const onChangeTrustDate = (event: any) => {
+    const onChangeTrustDate = (event: React.ChangeEvent<HTMLInputElement>) => {
         setParty((prevState: any) => ({
             ...prevState,
             trustDate: event.target.value || null,
         }));
     };
 
-    const onGenderChange = (event: any) => {
+    const onGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setParty((prevState: any) => ({
             ...prevState,
             gender: event.target.value,
