@@ -199,17 +199,20 @@ const IllustrationProductList = ({
         };
     }, [availableProducts, clientCase.eAppId]);
 
-    const productsWithIllustrations: ProductWithIllustration[] =
-        filteredProducts
-            .map((product) => {
-                const associatedIllustrations = illustrations.filter(
-                    (illustration) =>
-                        illustration.productId === product.carrierProductId
-                );
-                return { ...product, illustrations: associatedIllustrations };
-            })
-            .filter((product) => !!product.illustrations.length);
-    const productsWithoutIllustrations = productsWithIllustrations.filter(
+    const productsWithIllustrationsData: ProductWithIllustration[] =
+        filteredProducts.map((product) => {
+            const associatedIllustrations = illustrations.filter(
+                (illustration) =>
+                    illustration.productId === product.carrierProductId
+            );
+            return { ...product, illustrations: associatedIllustrations };
+        });
+    // .filter((product) => !!product.illustrations.length);
+
+    const productsWithIllustrations = productsWithIllustrationsData.filter(
+        (product) => !!product.illustrations.length
+    );
+    const productsWithoutIllustrations = productsWithIllustrationsData.filter(
         (product) => !product.illustrations.length
     );
     const productsWithIllustrationsCount = productsWithIllustrations.length;
@@ -336,7 +339,7 @@ const IllustrationProductList = ({
 
             {showEmptyProducts && (
                 <ul className={styles.productList}>
-                    {productsWithIllustrations
+                    {productsWithIllustrationsData
                         .filter((product) => !product.illustrations.length)
                         .map(
                             (product: ProductWithIllustration, idx: number) => {
