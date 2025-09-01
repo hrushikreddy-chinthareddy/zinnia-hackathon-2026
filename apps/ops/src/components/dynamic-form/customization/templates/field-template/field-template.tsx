@@ -11,6 +11,26 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 
 import styles from './field-template.module.css';
 
+export const helpInformation = (helpText: string) => {
+    if (!helpText) {
+        return null;
+    }
+    return (
+        <Tooltip
+            trigger={
+                <CircleInfoIcon
+                    onClick={(e) => e.preventDefault()}
+                    height={'16px'}
+                    width={'16px'}
+                    className="text-primary"
+                />
+            }
+            placement={TooltipPlacement.TopRight}
+        >
+            {helpText}
+        </Tooltip>
+    );
+};
 export function FieldTemplate(props: FieldTemplateProps) {
     const {
         id,
@@ -36,22 +56,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
     if (uiOptions.label === false) {
         displayLabel = false;
     }
-
-    const helpInformation = helpText && (
-        <Tooltip
-            trigger={
-                <CircleInfoIcon
-                    onClick={(e) => e.preventDefault()}
-                    height={'16px'}
-                    width={'16px'}
-                    className="text-primary"
-                />
-            }
-            placement={TooltipPlacement.TopRight}
-        >
-            {helpText}
-        </Tooltip>
-    );
 
     const fieldLabel = label ? (
         <span className={styles.labelRequired}>
@@ -122,7 +126,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
                             <div className="mb-2 ">
                                 <Label
                                     labelFor={id}
-                                    interactiveElements={[helpInformation]}
+                                    interactiveElements={[
+                                        helpInformation(helpText ?? ''),
+                                    ]}
                                 >
                                     <span
                                         className={clsx(

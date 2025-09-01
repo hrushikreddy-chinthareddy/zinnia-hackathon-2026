@@ -14,6 +14,7 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { DefaultDataEntryTask } from '@deps/models/case/default-case';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -43,6 +44,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 interface ServiceRequestProps extends SegmentTrackedPageProps {
     policy: Policy;
+    defaultTask: DefaultDataEntryTask;
     user: UserProfile;
     taskMetadata: FormMetadata[];
     correlationId: string;
@@ -50,6 +52,7 @@ interface ServiceRequestProps extends SegmentTrackedPageProps {
 
 const ServiceRequest = ({
     policy,
+    defaultTask,
     user,
     taskMetadata,
     correlationId,
@@ -66,6 +69,7 @@ const ServiceRequest = ({
                 policy={policy}
                 user={user}
                 correlationId={correlationId}
+                taskData={defaultTask}
             >
                 <DefaultCaseContainer
                     taskMetadata={taskMetadata}
@@ -197,13 +201,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                     currentTaskMetadata.push(fallbackMetadata ?? {});
                 }
 
+                const defaultTask = {
+                    taskType: TaskType.Default_Case_DataEntry,
+                    carrier: policy.carrierId,
+                };
                 //transform schema options with api
                 await applyDynamicOptions(
-                    {
-                        ...policy,
-                        taskType: TaskType.Default_Case_DataEntry,
-                        carrier: policy.carrierId,
-                    },
+                    defaultTask,
                     accessToken,
                     currentTaskMetadata
                 );
@@ -211,6 +215,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     props: {
                         ...translations,
                         policy,
+                        defaultTask,
                         user,
                         correlationId,
                         taskMetadata: currentTaskMetadata,

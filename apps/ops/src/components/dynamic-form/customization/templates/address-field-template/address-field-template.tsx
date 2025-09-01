@@ -1,38 +1,57 @@
-import { ObjectFieldTemplateProps } from '@rjsf/utils';
+import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
+
+import { helpInformation } from '../field-template/field-template';
+import styles from '../field-template/field-template.module.css';
+
+const widthClass = (width: number) => {
+    return width === 100
+        ? 'w-full lg:basis-[calc(100%-0.25rem)] '
+        : width === 75
+        ? 'w-full lg:basis-[calc(75%-0.25rem)]'
+        : width === 60
+        ? 'w-full lg:basis-[calc(60%-0.25rem)]'
+        : width === 50
+        ? 'w-full lg:basis-[calc(50%-0.25rem)]'
+        : width === 33
+        ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(33%-0.25rem)]'
+        : width === 25
+        ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(25%-0.25rem)]'
+        : 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(20%-0.25rem)]';
+};
 
 export default function AddressFieldTemplate({
     properties,
     uiSchema = {},
+    title,
 }: ObjectFieldTemplateProps): JSX.Element {
+    const { backgroundColor, helpText } = getUiOptions(uiSchema);
+    const DEFAULT_BACKGROUND_COLOR = 'bg-gray-100';
+    const bgColor = backgroundColor ?? DEFAULT_BACKGROUND_COLOR;
     return (
-        <div className="w-full max-w-lg bg-gray-100 p-6 rounded-md">
-            <div className="flex flex-wrap gap-4">
-                {properties.map(({ content, name }) => {
-                    const width = uiSchema[name]?.['ui:options']?.width || 100; // Default to full width
-                    const widthClass =
-                        width === 100
-                            ? 'w-full'
-                            : width === 75
-                            ? 'w-3/4'
-                            : width === 60
-                            ? 'w-3/5'
-                            : width === 50
-                            ? 'w-1/2'
-                            : width === 33
-                            ? 'w-1/3'
-                            : width === 25
-                            ? 'w-1/4'
-                            : 'w-1/5';
-
-                    return (
-                        <div
-                            key={name}
-                            className={`${widthClass} flex flex-col`}
-                        >
-                            {content}
-                        </div>
-                    );
-                })}
+        <div className={`w-full max-w-[800px] rounded-md ${bgColor}`}>
+            {title && (
+                <div className={styles.container + 'flex my-1'}>
+                    <div className={styles.text}>{title} </div>
+                    {helpInformation((helpText as string) ?? '')}
+                </div>
+            )}
+            <div className="flex flex-wrap gap-2">
+                {properties
+                    .filter((element) => {
+                        return !element?.hidden;
+                    })
+                    .map(({ content, name }) => {
+                        const width =
+                            uiSchema[name]?.['ui:options']?.width || 100;
+                        return (
+                            <div
+                                key={name}
+                                className={`${widthClass(width)} flex flex-col`}
+                            >
+                                {content}
+                            </div>
+                        );
+                    })}
             </div>
         </div>
     );

@@ -22,7 +22,6 @@ import { z } from 'zod';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { EditBankSidesheet } from '@/components/edit-bank/EditBankSidesheet';
 import { FieldData } from '@/components/field-data/FieldData';
-import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
@@ -121,16 +120,7 @@ export const SelectBank = ({
         ></AssistiveText>
       )}
       <div radioGroup="payee" className={styles.radioGroup}>
-        <Label
-          interactiveElements={[
-            <LabelPopover key="info" title="popover title">
-              this is some very Who info
-            </LabelPopover>,
-          ]}
-          labelFor="payee"
-        >
-          How should the payment be sent?
-        </Label>
+        <Label labelFor="payee">How should the payment be sent?</Label>
         <Controller
           control={form.control}
           name="distributionType"

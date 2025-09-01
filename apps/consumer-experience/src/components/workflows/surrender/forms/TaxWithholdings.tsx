@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import {
   taxWithHoldingStepSchema,
   SurrenderAction,
@@ -27,7 +28,7 @@ import { default as styles } from '../Surrender.module.css';
 const options = [
   {
     key: 'minimum',
-    label: 'Withhold minimum required (determined by policy)',
+    label: 'Withhold minimum required',
     ariaLabel: 'Mimimum Amount',
     value: 'minimum',
   },
@@ -45,7 +46,7 @@ const options = [
   },
   {
     key: 'none',
-    label: 'Do not Withhold',
+    label: 'Do not withhold',
     ariaLabel: 'None',
     value: 'none',
   },
@@ -150,8 +151,23 @@ export const TaxWithholdings = ({
           className={styles.radioGroup}
           radioGroup="tax-withholdings-federal"
         >
-          <Label labelFor="tax-withholdings-federal">
-            How much Federal tax would you like to withhold?
+          <Label
+            labelFor="tax-withholdings-federal"
+            interactiveElements={[
+              <LabelPopover
+                key="federal-tax-withholding"
+                title="How much federal would you like to withhold? "
+              >
+                <p>
+                  Withdrawals may be subject to federal income tax. We can
+                  “withhold” the tax amount now for you, meaning we can
+                  calculate what you owe and pay them to the IRS for you,
+                  according to your instructions.
+                </p>
+              </LabelPopover>,
+            ]}
+          >
+            How much federal tax would you like to withhold?
           </Label>
           <Controller
             control={form.control}
@@ -200,8 +216,23 @@ export const TaxWithholdings = ({
           )}
         </div>
         <div className={styles.radioGroup} radioGroup="tax-withholdings-state">
-          <Label labelFor="tax-withholdings-state">
-            How much State tax{' '}
+          <Label
+            labelFor="  tax-withholdings-state"
+            interactiveElements={[
+              <LabelPopover
+                key="state-tax-withholding"
+                title="How much state would you like to withhold? "
+              >
+                <p>
+                  Withdrawals may be subject to state income tax. We can
+                  “withhold” the tax amount now for you, meaning we can
+                  calculate what you owe and pay them for you, according to your
+                  instructions and your state.
+                </p>
+              </LabelPopover>,
+            ]}
+          >
+            How much state tax{' '}
             {taxWithholdingState.length > 0 && `(${taxWithholdingState})`} would
             you like to withhold?
           </Label>

@@ -37,27 +37,23 @@ import styles from './illustrations.module.css';
 export type AdditionalDataProps = {
     user: UserProfile;
 };
-type ClientCaseIllustrationsPageProps = {
-    featureFlagDecisions: FeatureFlags;
-    additionalData: AdditionalDataProps;
-};
 
-// eslint-disable-next-line no-empty-pattern
-export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageProps) {
+export default function ClientCaseIllustrations() {
     const clientCaseId = useClientCaseId();
     const searchParams = useSearchParams();
     const carrierProductId = searchParams.get('planCode') || '';
 
     const {
         data: clientCase,
-        isLoading,
+        isLoading: isLoadingClientCase,
         isError,
-        isFetching,
+        isFetching: isFetchingClientCase,
     } = useQuery({
         queryKey: ['clientCaseData', clientCaseId],
         structuralSharing: false,
         queryFn: () => {
             const response = getClientCase(clientCaseId);
+
             return response;
         },
         select: useCallback(
@@ -88,7 +84,7 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
             clientCase={clientCase}
         >
             <div className={clsx(styles.caseIllustrations)}>
-                {((!clientCase && !isFetching) || isError) && (
+                {((!clientCase && !isFetchingClientCase) || isError) && (
                     <div className="flex h-[500px] w-full items-center justify-center rounded border-2 border-dashed border-semantic-warning bg-white shadow-sm">
                         <CardInfo
                             icon={
@@ -105,7 +101,11 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
                 {clientCase && (
                     <>
                         <section className={clsx(styles.caseContainer)}>
-                            <Skeleton loading={isLoading || isFetching}>
+                            <Skeleton
+                                loading={
+                                    isLoadingClientCase || isFetchingClientCase
+                                }
+                            >
                                 <IllustrationCaseSumary
                                     clientCase={
                                         clientCase as IllustrationsClientCase
@@ -128,19 +128,25 @@ export default function ClientCaseIllustrations({}: ClientCaseIllustrationsPageP
                                         </div>
                                     )}
                                 </>
-
-                                <IllustrationProductList
-                                    carrierProductId={carrierProductId}
-                                    clientCase={clientCase}
-                                    illustrations={clientCase?.illustrations}
-                                    products={products}
-                                    isError={isErrorProducts}
-                                />
+                                {!isLoadingProducts &&
+                                    !isFetchingProducts &&
+                                    !isLoadingClientCase &&
+                                    !isFetchingClientCase && (
+                                        <IllustrationProductList
+                                            carrierProductId={carrierProductId}
+                                            clientCase={clientCase}
+                                            illustrations={
+                                                clientCase?.illustrations
+                                            }
+                                            products={products}
+                                            isError={isErrorProducts}
+                                        />
+                                    )}
                             </div>
                         </section>
                         <section className={clsx(styles.illustrationContainer)}>
                             <IllustrationDetails
-                                clientCaseId={clientCase.id}
+                                clientCase={clientCase}
                                 eAppId={clientCase.eAppId}
                             />
                         </section>

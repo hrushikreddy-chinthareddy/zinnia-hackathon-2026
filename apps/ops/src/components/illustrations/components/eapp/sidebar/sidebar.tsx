@@ -1,6 +1,7 @@
 import { Button, Loader } from '@zinnia/bloom/components';
-import { useEffect, useMemo } from 'react';
+import { FC, useEffect, useMemo } from 'react';
 
+import { ButtonType } from '@deps/components/button/button';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import style from './sidebar.module.css';
@@ -29,10 +30,22 @@ const dataToTitleMap: Record<
     termLength: { label: 'Term length', type: 'string' },
 };
 
-export function Sidebar() {
+interface SidebarProps {
+    isEdit?: boolean;
+    illustrationId?: string;
+}
+
+export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
-    const { onSubmit, onQuickQuote, isError, isLoadingQuickQuote } =
-        useSubmit();
+    const {
+        onNewSubmit,
+        onEditSubmit,
+        onQuickQuote,
+        isError,
+        isLoadingQuickQuote,
+        editIllustrationPending,
+        createIllustrationPending,
+    } = useSubmit();
     const { data } = useEapp();
 
     const isCompleted = useMemo(() => {
@@ -89,12 +102,27 @@ export function Sidebar() {
                 <Button
                     expand
                     size="small"
-                    onClick={onSubmit}
-                    disabled={!isCompleted}
+                    onClick={onNewSubmit}
+                    disabled={!isCompleted || createIllustrationPending}
+                    mode={isEdit ? ButtonType.Secondary : ButtonType.Primary}
                 >
-                    Calculate
+                    {isEdit ? 'Create new' : 'Calculate'}
                 </Button>
+                {isEdit && (
+                    <Button
+                        expand
+                        size="small"
+                        onClick={() => {
+                            if (illustrationId) {
+                                onEditSubmit(illustrationId);
+                            }
+                        }}
+                        disabled={!isCompleted || editIllustrationPending}
+                    >
+                        Update
+                    </Button>
+                )}
             </div>
         </div>
     );
-}
+};

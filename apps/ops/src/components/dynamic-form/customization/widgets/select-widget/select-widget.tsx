@@ -194,6 +194,7 @@ function SelectWidget<
             value: option.value,
             label: option.label,
             displayText: option.label,
+            description: option.description,
         })) ?? [];
 
     if (options.placeholder) {

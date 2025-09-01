@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { FieldData } from '@/components/field-data/FieldData';
+import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { PaymentSummaryStep } from '@/components/payment-summary-step/PaymentSummaryStep';
 import { AccountNumber } from '@/components/pii/AccountNumber';
 import { Address } from '@/components/pii/Address';
@@ -244,7 +245,24 @@ export const SummaryPage = () => {
               value: state.dateStep.netSurrenderValue,
             },
             {
-              label: <Label>Surrender charge</Label>,
+              label: (
+                <Label
+                  interactiveElements={[
+                    <LabelPopover
+                      key="surrender-charge"
+                      title="Surrender charge"
+                    >
+                      <p>
+                        Your policy may require a one-time charge for
+                        surrendering the policy before a certain date. For more
+                        details, see your policy documents.
+                      </p>
+                    </LabelPopover>,
+                  ]}
+                >
+                  Surrender charge
+                </Label>
+              ),
               value: calculateFeeAmount,
             },
             {

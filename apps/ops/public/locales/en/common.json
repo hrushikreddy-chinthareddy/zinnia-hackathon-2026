@@ -10,7 +10,7 @@
     "last14Days": "Last 14 days",
     "last30Days": "Last 30 days",
     "yearToDate": "Year-to-date",
-    "caseStatsDashboardTitle": "Carrier Dashboard",
+    "caseStatsDashboardTitle": "Case Stats",
     "customRange": "Custom Range",
     "allAgents": "All Agents",
     "allDistributors": "All Distributors",
@@ -1344,10 +1344,15 @@
             "selectReason": "Select Reason",
             "cancel": "Cancel",
             "updateStatus": "Update Status",
+            "notes": "Notes",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "Awaiting additional information",
                 "awaitingApproval": "Awaiting approval",
-                "awaitingApplication": "Awaiting application"
+                "awaitingApplication": "Awaiting application",
+                "supportTicketRaised": "Support Ticket Raised"
+            },
+            "errors": {
+                "notesRequired": "Notes are required."
             }
         },
         "tasksListing": {
@@ -3448,7 +3453,9 @@
                 "targetbenefitplan": "Target Benefit Plan",
                 "ugma/utma": "UGMA/UTMA Custodial Account",
                 "vulnq": "Non-Qualified Variable Universal Life",
-                "qlacira": "QLAC IRA (Qualified Longevity Annuity Contract)"
+                "qlacira": "QLAC IRA (Qualified Longevity Annuity Contract)",
+                "required": "Required",
+                "notRequired": "Not required"
             },
             "contestability": {
                 "activeBadgeTooltip": "If there's a death claim during the contestability period, the carrier will take extra care to verify the insured was honest during their application. Carrier may even contest the claim.",
@@ -4350,6 +4357,7 @@
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
+            "scheduledNoteLabel": "Note",
             "inProgress": "In Progress",
             "pendinglabel": "Pending until",
             "canceledLabel": "Canceled on",
@@ -4919,12 +4927,12 @@
                     "payout": "Payout",
                     "oneTimeWire": "One Time Wire"
                 },
-                "bankOptions":{
+                "bankOptions": {
                     "accountType": "Account type",
                     "bankName": "Bank name",
                     "routingNumber": "Routing number",
                     "accountNumber": "Account number",
-                    "endingIn":"Ending in {{accountNumber}}"
+                    "endingIn": "Ending in {{accountNumber}}"
                 }
             },
             "email": {
@@ -7513,7 +7521,8 @@
             "cancel": "Cancel",
             "cancelArchiveAriaLabel": "Cancel archive illustration button",
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
-            "addProductAriaLabel": "Add product button"
+            "addProductAriaLabel": "Add product button",
+            "editIllustration": "Edit Illustration"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",

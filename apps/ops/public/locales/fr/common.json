@@ -10,7 +10,7 @@
     "last14Days": "14 derniers jours",
     "last30Days": "30 derniers jours",
     "yearToDate": "Annee en cours",
-    "caseStatsDashboardTitle": "Dashboard du Carrier",
+    "caseStatsDashboardTitle": "Statistiques des cas",
     "customRange": "Periode personnalisée",
     "allAgents": "Tous les agents",
     "allDistributors": "Tous les distributeurs",
@@ -362,10 +362,15 @@
             "selectReason": "Sélectionner une raison",
             "cancel": "Annuler",
             "updateStatus": "Mettre à jour le statut",
+            "notes": "Notes",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "En attente d'informations supplémentaires",
                 "awaitingApproval": "En attente d'approbation",
-                "awaitingApplication": "En attente de candidature"
+                "awaitingApplication": "En attente de candidature",
+                "supportTicketRaised": "Ticket de support créé"
+            },
+            "errors": {
+                "notesRequired": "Veuillez entrer des notes."
             }
         },
         "tasksListing": {
@@ -3403,7 +3408,9 @@
                 "withdrawals": "Retraits",
                 "withdrawalsTaken": "Retraits effectués",
                 "yearsRemaining": "années restantes",
-                "ytd": "YTD"
+                "ytd": "YTD",
+                "required": "Requis",
+                "notRequired": "Non requis"
             },
             "contestability": {
                 "activeBadgeTooltip": "Si une demande de décès survient pendant la période de contestation, l'assureur fera preuve d'une vigilance accrue pour vérifier si l'assuré a été honnête lors de sa demande. L'assureur peut même contester la demande.",
@@ -4281,6 +4288,7 @@
             "detailsLabel": "Détails",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "reasonLabel": "Raison du statut",
+            "scheduledNoteLabel": "Note",
             "inProgress": "En cours",
             "pendinglabel": "En attente jusqu'au",
             "canceledLabel": "Annulé le",
@@ -4847,12 +4855,12 @@
                     "payout": "Paiement",
                     "oneTimeWire": "Fil unique"
                 },
-                "bankOptions":{
+                "bankOptions": {
                     "accountType": "Type de compte",
                     "bankName": "Nom de la banque",
                     "routingNumber": "Numéro de routage",
                     "accountNumber": "Numéro de compte",
-                    "endingIn":"Se terminant par {{accountNumber}}"
+                    "endingIn": "Se terminant par {{accountNumber}}"
                 }
             },
             "email": {
@@ -7386,7 +7394,8 @@
             "cancel": "Annuler",
             "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
-            "addProductAriaLabel": "Bouton pour ajouter un produit"
+            "addProductAriaLabel": "Bouton pour ajouter un produit",
+            "editIllustration": "Modifier l'illustration"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

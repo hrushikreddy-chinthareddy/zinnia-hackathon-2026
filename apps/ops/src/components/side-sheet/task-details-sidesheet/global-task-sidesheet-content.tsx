@@ -677,6 +677,31 @@ export default function GlobalTaskSideSheet({
                                     pii={true}
                                 />
                             </Typography>
+                            {task.data?.scheduledNote && (
+                                <>
+                                    <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                                        {' '}
+                                        {t(
+                                            'sideSheet.task.scheduledNoteLabel'
+                                        )}{' '}
+                                    </div>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="col-span-2"
+                                    >
+                                        <Content
+                                            truncate
+                                            details={task.data?.scheduledNote}
+                                            variant={ContentVariant.BodySm}
+                                            popoverBody={
+                                                task.data?.scheduledNote
+                                            }
+                                            popoverClassName="background-white w-full "
+                                            pii={true}
+                                        />
+                                    </Typography>
+                                </>
+                            )}
                         </>
                     )}
 

@@ -81,6 +81,7 @@ const QuickLinks = ({
                                 <Typography
                                     className="block"
                                     variant={TypographyVariant.NavLinks}
+                                    asTag="p"
                                 >
                                     {name}
                                     <Icon

@@ -67,7 +67,11 @@ export function SelectedIllustrationProvider(props: {
 
             setSelectedIllustration({ illustration, product });
         },
-        [props.clientCaseId, selectedIllustration]
+        [
+            props.clientCaseId,
+            selectedIllustration?.illustration?.id,
+            selectedIllustration?.product?.carrierProductId,
+        ]
     );
 
     return (

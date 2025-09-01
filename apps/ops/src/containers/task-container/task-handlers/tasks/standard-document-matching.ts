@@ -10,7 +10,10 @@ export const DocumentMatchingHandler: TaskHandler<
     Record<string, never>,
     ProcessReferenceData[]
 > = {
-    api: processReferenceDataAdapter,
+    api: (_payload, accessToken, logCtx) => {
+        const CASE_DATA_TYPE = 'PROCESS';
+        return processReferenceDataAdapter(CASE_DATA_TYPE, accessToken, logCtx);
+    },
     getPayload: () => ({}),
     transformResponse: (response, metadata) => {
         if (!response?.length) return;

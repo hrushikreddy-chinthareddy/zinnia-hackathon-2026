@@ -10,7 +10,7 @@
     "last14Days": "Últimos 14 días",
     "last30Days": "Últimos 30 días",
     "yearToDate": "Año hasta la fecha",
-    "caseStatsDashboardTitle": "Tablero de Control de Transportistas",
+    "caseStatsDashboardTitle": "Estadísticas de casos",
     "customRange": "Rango personalizado",
     "allAgents": "Todos los Agentes",
     "allDistributors": "Todos los Distribuidores",
@@ -1329,10 +1329,15 @@
             "selectReason": "Seleccionar Razón",
             "cancel": "Cancelar",
             "updateStatus": "Actualizar Estado",
+            "notes": "Notas",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "Esperando información adicional",
                 "awaitingApproval": "Esperando aprobación",
-                "awaitingApplication": "Esperando aplicación"
+                "awaitingApplication": "Esperando aplicación",
+                "supportTicketRaised": "Ticket de soporte creado"
+            },
+            "errors": {
+                "notesRequired": "Por favor, ingrese notas."
             }
         },
         "tasksListing": {
@@ -3415,7 +3420,9 @@
                 "withdrawals": "Retiros",
                 "withdrawalsTaken": "Retiros realizados",
                 "yearsRemaining": "años restantes",
-                "ytd": "Año hasta la fecha"
+                "ytd": "Año hasta la fecha",
+                "required": "Requerido",
+                "notRequired": "No requerido"
             },
             "contestability": {
                 "activeBadgeTooltip": "Si hay una reclamación por fallecimiento durante el período de contestabilidad, la aseguradora tomará medidas adicionales para verificar que el asegurado fue honesto durante su solicitud. La aseguradora incluso puede impugnar la reclamación.",
@@ -4282,6 +4289,7 @@
             "errorAdditionalDocuments": "Error al obtener documentos adicionales.",
             "commonTaskIssues": "Se encontraron uno o más problemas de {{taskType}}.",
             "reasonLabel": "Razón del estado",
+            "scheduledNoteLabel": "Nota",
             "inProgress": "En progreso",
             "pendingLabel": "Pendiente hasta",
             "canceledLabel": "Cancelado el",
@@ -4834,12 +4842,12 @@
                     "payout": "Pago",
                     "oneTimeWire": "Cable de una sola vez"
                 },
-                "bankOptions":{
+                "bankOptions": {
                     "accountType": "Tipo de cuenta",
                     "bankName": "Nombre del banco",
                     "routingNumber": "Número de ruta",
                     "accountNumber": "Número de cuenta",
-                    "endingIn":"Terminando en {{accountNumber}}"
+                    "endingIn": "Terminando en {{accountNumber}}"
                 }
             },
             "email": {
@@ -7319,7 +7327,8 @@
             "cancel": "Cancelar",
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
-            "addProductAriaLabel": "Boton para agregar un producto"
+            "addProductAriaLabel": "Boton para agregar un producto",
+            "editIllustration": "Editar ilustración"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",
