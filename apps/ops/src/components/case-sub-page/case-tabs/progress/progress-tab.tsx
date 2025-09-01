@@ -41,6 +41,12 @@ import Steps from './steps';
 import Tasks from './tasks';
 
 // Provides a status icon and tooltip for step and stage statuses
+
+const getSentanceCase = (text: string) => {
+    const sentance = text.trim().toLowerCase();
+    return sentance.charAt(0).toUpperCase() + sentance.slice(1);
+};
+
 const getStageStatusIconTooltip = (
     stage: TransformedStage,
     t: TFunction
@@ -211,7 +217,7 @@ const Stage = React.forwardRef(
                                 style={{ textAlign: 'left' }}
                                 variant={TypographyVariant.LabelMdAlt}
                             >
-                                {stage.name}
+                                {getSentanceCase(stage.name)}
                             </Typography>
                         </div>
                         <div className="flex items-center gap-2 pl-6">
