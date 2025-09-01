@@ -289,8 +289,6 @@ const ContactDetailsComponent = ({
                                         roleInfo.party
                                             .preferredCommunicationType ===
                                         t('phone').toUpperCase()
-                                            ? true
-                                            : false
                                     }
                                 />
                             </div>
@@ -336,8 +334,6 @@ const ContactDetailsComponent = ({
                                     roleInfo.party
                                         .preferredCommunicationType ===
                                     t('email').toUpperCase()
-                                        ? true
-                                        : false
                                 }
                             />
                         </div>
