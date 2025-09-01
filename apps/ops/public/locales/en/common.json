@@ -7260,6 +7260,16 @@
             "submitTask": "Submit"
         }
     },
+
+    "feature": {
+        "featureFlags": "Feature Flags",
+        "flag": "Flag",
+        "status": "Status",
+        "value": "Value",
+        "variable": "Variable",
+        "featureVariables": "Feature Variables",
+        "environment": "Environment"
+
     "day150Review": {
         "confirmStep": {
             "title": "Got It!",
@@ -7573,5 +7583,6 @@
     "testHarness": {
         "h1": "Test Harness",
         "description": "Click to generate a new test policy with a random policy number."
+
     }
 }

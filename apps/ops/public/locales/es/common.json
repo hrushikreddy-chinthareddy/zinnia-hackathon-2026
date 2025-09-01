@@ -7084,6 +7084,9 @@
             "cancel": "Cancelar",
             "noChangesRequired": "No se requirieron cambios",
             "yes": "Sí",
+
+     
+
             "name": "Nombre ",
             "phone": "Télefono",
             "contactRole": "Contact Role",
@@ -7091,6 +7094,7 @@
             "callOutcome": "Resultado de la llamada",
             "noChangeRecorded": "No se registraron cambios",
             "changeRecorded": "Se registraron cambios",
+
             "paperMail": "Paper Mail",
             "email": "Email",
             "fax": "Fax",
@@ -7098,8 +7102,12 @@
             "dateOfDeath": "Fecha de Defunción",
             "sourceOfInfo": "Fuente de Información",
             "newInformation": "Nueva información",
+
+            "relationshipToDeceased": "Relación con el fallecido",
+
             "relationshipToDeceased": "Relación con el propietario",
             "relationshipToOwner": "Relación con el fallecido",
+
             "didYouMakeAnyChanges": "¿Hizo algún cambio en el sistema de registro?",
             "addAnotherCall": "Agregar otra llamada",
             "contactRoles": {
@@ -7126,6 +7134,16 @@
             "yes": "Sí"
         }
     },
+
+    "feature": {
+        "featureFlags": "Banderas de Funcionalidad",
+        "flag": "Banderas",
+        "status": "Estado",
+        "variable": "Variable",
+        "value": "Valor",
+        "featureVariables": "Variables de Funcionalidad",
+        "environment": "Environment"
+
     "claimsMatchBeneDocument": {
         "confirmStep": {
             "title": "¡Entendido!",
@@ -7375,5 +7393,6 @@
             "secondaryCta": "Volver al inicio",
             "submitTask": "Enviar"
         }
+
     }
 }

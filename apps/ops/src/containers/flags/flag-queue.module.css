@@ -1,0 +1,10 @@
+.fadedText {
+    color: var(--color-base-text-text-secondary);
+}
+
+.row {
+    position: relative;
+    cursor: pointer;
+    width: 100%;
+    padding: 10px;
+}
