@@ -811,7 +811,6 @@
                 "transferConsideration": "'Transferencia por consideración'"
             },
             "yes": "Sí",
-            "no": "No",
             "entityType": "Tipo de entidad",
             "entityTypeOptions": {
                 "soleProprietorship": "Empresa unipersonal",
@@ -7269,7 +7268,6 @@
             "edit": "Editar",
             "viewPdf": "PDF",
             "pdfError": "Ocurrio un error al cargar el PDF.",
-            "deathBenefitOption": "Opción de beneficio por fallecimiento",
             "premiumMode": "Modo de prima",
             "paymentMode": "Modo de pago",
             "cashValue": "Valor en efectivo",
@@ -7328,7 +7326,8 @@
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
             "addProductAriaLabel": "Boton para agregar un producto",
-            "editIllustration": "Editar ilustración"
+            "editIllustration": "Editar ilustración",
+            "initialDeathBenefitOption": "Opción de beneficio por muerte inicial"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

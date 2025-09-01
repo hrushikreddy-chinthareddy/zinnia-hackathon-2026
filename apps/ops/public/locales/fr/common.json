@@ -7336,7 +7336,6 @@
             "edit": "Modifier",
             "viewPdf": "PDF",
             "pdfError": "Une erreur est survenue lors du chargement du PDF.",
-            "deathBenefitOption": "Option de prestation de décès",
             "premiumMode": "Mode de prime",
             "paymentMode": "Mode de paiement",
             "cashValue": "Valeur de rachat",
@@ -7395,7 +7394,8 @@
             "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
             "addProductAriaLabel": "Bouton pour ajouter un produit",
-            "editIllustration": "Modifier l'illustration"
+            "editIllustration": "Modifier l'illustration",
+            "initialDeathBenefitOption": "Option de prestation de décès"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

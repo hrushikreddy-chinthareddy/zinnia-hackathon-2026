@@ -46,11 +46,16 @@
 
 .contentEntryDetails {
     text-align: end;
-    font: var(--typography-labels-label-sm-alt);
+    font: var(--typography-content-body);
 }
 
 .coverageSection {
     gap: var(--measure-dimension-z-space-4);
+}
+
+.iulCoverageInitialDeathBenefitTitle {
+    margin-block: var(--measure-dimension-z-space-2);
+    font: var(--typography-labels-label-sm);
 }
 
 .iulCoverageTableContainer {

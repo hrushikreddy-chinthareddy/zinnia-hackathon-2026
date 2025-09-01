@@ -949,7 +949,6 @@
         "yes": "Yes",
         "no": "No"
     },
-
     "addressChange": {
         "common": {
             "partyRole": {
@@ -1092,7 +1091,6 @@
             }
         }
     },
-
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -6686,7 +6684,6 @@
             "submitTask": "Submit"
         }
     },
-
     "nbAttachmentNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -7379,7 +7376,6 @@
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
-
         "tabs": {
             "logins": "Logins",
             "pageViews": "Page Views"
@@ -7463,7 +7459,6 @@
             "edit": "Edit",
             "viewPdf": "PDF",
             "pdfError": "An error occured while generating the PDF.",
-            "deathBenefitOption": "Death Benefit Option",
             "premiumMode": "Premium mode",
             "paymentMode": "Payment mode",
             "cashValue": "Cash value",
@@ -7522,7 +7517,8 @@
             "cancelArchiveAriaLabel": "Cancel archive illustration button",
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
             "addProductAriaLabel": "Add product button",
-            "editIllustration": "Edit Illustration"
+            "editIllustration": "Edit Illustration",
+            "initialDeathBenefitOption": "Initial death benefit option"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
