@@ -123,24 +123,37 @@ const FundsCard = ({
                         {featureFlags[
                             FEATURE_FLAGS.FUND_ALLOCATION_TRANSACTION
                         ] && (
-                            <div
-                                className={`flex gap-1 text-[#00628B] ${
+                            <button
+                                className={`flex items-center gap-1 ${
                                     isEligibleToEdit
-                                        ? 'text-[#00628B] cursor-pointer'
-                                        : 'text-[#B3B3B3] cursor-not-allowed'
+                                        ? 'text-[var(--color-base-text-text-link)]'
+                                        : 'text-[var(--color-states-inactive-text-inactive-text)]'
                                 }`}
                                 onClick={
                                     isEligibleToEdit ? openSideBar : undefined
                                 }
+                                disabled={!isEligibleToEdit}
                             >
-                                <SettingsIcon width={16} height={16} />
+                                <SettingsIcon
+                                    width={16}
+                                    height={16}
+                                    className={
+                                        isEligibleToEdit
+                                            ? 'cursor-pointer'
+                                            : 'cursor-not-allowed'
+                                    }
+                                />
                                 <Typography
-                                    className={'cursor-pointer'}
+                                    className={
+                                        isEligibleToEdit
+                                            ? 'cursor-pointer'
+                                            : 'cursor-not-allowed'
+                                    }
                                     variant={TypographyVariant.Label}
                                 >
                                     {t('fundAllocation.editAllocationsTitle')}
                                 </Typography>
-                            </div>
+                            </button>
                         )}
                     </div>
                     <AllocationColorBar colors={getAllocationColors(funds)} />

@@ -101,6 +101,10 @@ export const EditCommunicationPreferences = ({
               <label
                 key={`${index}-${email.emailAddress}`}
                 className={styles.radioSubElement}
+                defaultChecked={
+                  email.emailAddress === currentPreference.email ||
+                  emailOptions.length === 1
+                }
               >
                 <div className={styles.emailContent}>
                   <b>{toSentenceCase(email.emailType)} email</b>

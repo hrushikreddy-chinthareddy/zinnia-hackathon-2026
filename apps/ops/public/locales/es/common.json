@@ -1329,10 +1329,15 @@
             "selectReason": "Seleccionar Razón",
             "cancel": "Cancelar",
             "updateStatus": "Actualizar Estado",
+            "notes": "Notas",
             "pendingReasonOptions": {
                 "awaitingAdditionalInformation": "Esperando información adicional",
                 "awaitingApproval": "Esperando aprobación",
-                "awaitingApplication": "Esperando aplicación"
+                "awaitingApplication": "Esperando aplicación",
+                "supportTicketRaised": "Ticket de soporte creado"
+            },
+            "errors": {
+                "notesRequired": "Por favor, ingrese notas."
             }
         },
         "tasksListing": {
@@ -3415,7 +3420,9 @@
                 "withdrawals": "Retiros",
                 "withdrawalsTaken": "Retiros realizados",
                 "yearsRemaining": "años restantes",
-                "ytd": "Año hasta la fecha"
+                "ytd": "Año hasta la fecha",
+                "required": "Requerido",
+                "notRequired": "No requerido"
             },
             "contestability": {
                 "activeBadgeTooltip": "Si hay una reclamación por fallecimiento durante el período de contestabilidad, la aseguradora tomará medidas adicionales para verificar que el asegurado fue honesto durante su solicitud. La aseguradora incluso puede impugnar la reclamación.",
@@ -4282,6 +4289,7 @@
             "errorAdditionalDocuments": "Error al obtener documentos adicionales.",
             "commonTaskIssues": "Se encontraron uno o más problemas de {{taskType}}.",
             "reasonLabel": "Razón del estado",
+            "scheduledNoteLabel": "Nota",
             "inProgress": "En progreso",
             "pendingLabel": "Pendiente hasta",
             "canceledLabel": "Cancelado el",

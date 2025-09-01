@@ -1,15 +1,16 @@
 import dayjs, { Dayjs } from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import xss from 'xss';
 
 import Button, {
     ButtonSize,
     ButtonType,
     ButtonVariant,
 } from '@deps/components/button/button';
-import { FieldSize, FieldType } from '@deps/components/fields/field';
+import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import CustomLoader from '@deps/components/loader/customLoader';
 import SelectSimple from '@deps/components/select/select';
@@ -48,7 +49,8 @@ function TaskQueueDrawer({
     const [timer] = useState(performance.now());
     const [pendingReason, setPendingReason] = useState('');
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: '' });
-
+    const [notes, setNotes] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter();
     const sideSheet = useSideSheetContext();
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +59,9 @@ function TaskQueueDrawer({
     const handleReasonChange = (val: string) => {
         setPendingReason(val);
     };
+
+    const isSupportTicketRaised =
+        pendingReason === PendingReasonOptions.SupportTicketRaised;
 
     const pendingReasonOptions = [
         {
@@ -75,6 +80,12 @@ function TaskQueueDrawer({
             value: PendingReasonOptions.AwaitingApplication,
             label: t(
                 'taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.awaitingApplication'
+            ),
+        },
+        {
+            value: PendingReasonOptions.SupportTicketRaised,
+            label: t(
+                'taskManagementQueue.updateTaskStatusDrawer.pendingReasonOptions.supportTicketRaised'
             ),
         },
     ];
@@ -101,6 +112,14 @@ function TaskQueueDrawer({
         router.back();
     };
     const updateTaskStatus = async () => {
+        if (isSupportTicketRaised && !notes) {
+            setErrorMessage(
+                t(
+                    'taskManagementQueue.updateTaskStatusDrawer.errors.notesRequired'
+                ) as string
+            );
+            return;
+        }
         if (!taskId) {
             browserLogError('task-queue:handleStartTask::Missing taskId', {
                 taskStatus: taskStatus,
@@ -137,6 +156,10 @@ function TaskQueueDrawer({
                 source: TaskSource.ZinniaTaskManagement,
                 scheduledReason: pendingReason,
                 scheduledDate: formattedDate,
+                data: {
+                    ...taskData.data,
+                    scheduledNote: notes,
+                },
             };
 
             const response = await updateTask(
@@ -225,6 +248,23 @@ function TaskQueueDrawer({
                 name="form-type"
             />
 
+            {isSupportTicketRaised && (
+                <Field
+                    required={true}
+                    label={
+                        t(
+                            `taskManagementQueue.updateTaskStatusDrawer.notes`
+                        ) as string
+                    }
+                    message={errorMessage}
+                    onChange={(e) => setNotes(xss(e.target.value))}
+                    size={FieldSize.Small}
+                    type={FieldType.BaseActive}
+                    value={notes}
+                    data-testid="notes"
+                />
+            )}
+
             <div className="flex justify-end align-middle">
                 <Button
                     className="mr-4"
@@ -240,11 +280,17 @@ function TaskQueueDrawer({
                     onClick={updateTaskStatus}
                     size={startLoader ? ButtonSize.Default : ButtonSize.Small}
                     variant={
-                        !pendingReason || !date
+                        !pendingReason ||
+                        !date ||
+                        (isSupportTicketRaised && !notes)
                             ? ButtonVariant.Inactive
                             : ButtonVariant.Default
                     }
-                    disabled={!pendingReason || !date || startLoader}
+                    disabled={
+                        !pendingReason ||
+                        !date ||
+                        (isSupportTicketRaised && !notes)
+                    }
                     aria-label={
                         t(
                             'taskManagementQueue.updateTaskStatusDrawer.updateStatus'
