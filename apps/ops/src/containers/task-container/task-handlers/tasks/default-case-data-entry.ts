@@ -9,14 +9,12 @@ import { TaskHandler } from '../types';
 const DEFAULT_CASE_TYPE = 'SERVICE REQUEST';
 
 export const processReferenceDataAdapter = async (
-    _payload: Record<string, never>,
+    caseDataType: string,
     accessToken: string,
     logCtx: LoggingContext
 ): Promise<ProcessReferenceData[] | null> => {
-    const PROCESSPROCESS_SUB_TYPE = 'PROCESS_SUB_TYPE/tree';
-
     const response = await getProcessReferenceDataSSR(
-        PROCESSPROCESS_SUB_TYPE,
+        caseDataType,
         '',
         accessToken,
         logCtx
@@ -29,7 +27,10 @@ const DefaultCaseDataEntryHandler: TaskHandler<
     Record<string, never>,
     ProcessReferenceData[]
 > = {
-    api: processReferenceDataAdapter,
+    api: (payload, accessToken, logCtx) => {
+        const CASE_DATA_TYPE = 'PROCESS_SUB_TYPE/tree';
+        return processReferenceDataAdapter(CASE_DATA_TYPE, accessToken, logCtx);
+    },
     getPayload: () => ({}),
     transformResponse: (response, metadata, task?: ManagementTask) => {
         if (!response?.length) return;
