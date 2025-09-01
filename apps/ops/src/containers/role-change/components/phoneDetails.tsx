@@ -142,7 +142,9 @@ function PhoneDetails({
                             label={t('fieldLabels.number') as string}
                             leading={countries[country].emoji}
                             message={
-                                !phone?.dialNumber?.trim()?.length && !disabled
+                                !phone?.dialNumber?.trim()?.length ||
+                                (phone?.dialNumber?.trim()?.length < 7 &&
+                                    !disabled)
                                     ? currentErrors?.phone
                                     : ''
                             }

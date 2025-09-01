@@ -768,7 +768,8 @@ export const validate = (
             const invalidPhone = party.phones.some((phone: ExtendedPhone) => {
                 return (
                     (phone.remove !== true && !phone.dialNumber) ||
-                    phone?.dialNumber?.trim() === ''
+                    phone?.dialNumber?.trim() === '' ||
+                    Number(phone?.dialNumber?.trim().length) < 7
                 );
             });
             if (invalidPhone) {
