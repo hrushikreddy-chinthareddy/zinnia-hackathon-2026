@@ -67,3 +67,4 @@ export const CALL_LOGS_TAB_QUERY_LIMIT = 100;
 
 export const LEGACY_START_DATE = '1900-01-01';
 export const LEGACY_END_DATE = '2999-12-31';
+export const DIAL_NUMBER_MAX_LEN = 7;

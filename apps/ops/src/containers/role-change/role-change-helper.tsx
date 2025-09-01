@@ -35,6 +35,7 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
+    DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
 
 import { newTrustOptions } from '../bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
@@ -755,26 +756,23 @@ export const validate = (
                 currentErrors['email'] = t('formValidations.validEmail');
             }
         }
-    } else if (
-        preferredCommunicationType === PreferredCommunicationType.PHONE
+    }
+    if (
+        !phones ||
+        phones.length === 0 ||
+        !phones.some((phone: ExtendedPhone) => phone.remove !== true)
     ) {
-        if (
-            !phones ||
-            phones.length === 0 ||
-            !phones.some((phone: ExtendedPhone) => phone.remove !== true)
-        ) {
-            currentErrors['phoneRequired'] = t('formValidations.phoneRequired');
-        } else {
-            const invalidPhone = party.phones.some((phone: ExtendedPhone) => {
-                return (
-                    (phone.remove !== true && !phone.dialNumber) ||
-                    phone?.dialNumber?.trim() === '' ||
-                    Number(phone?.dialNumber?.trim().length) < 7
-                );
-            });
-            if (invalidPhone) {
-                currentErrors['phone'] = t('formValidations.validPhone');
-            }
+        currentErrors['phoneRequired'] = t('formValidations.phoneRequired');
+    } else {
+        const invalidPhone = party.phones.some((phone: ExtendedPhone) => {
+            return (
+                (phone.remove !== true && !phone.dialNumber) ||
+                phone?.dialNumber?.trim() === '' ||
+                Number(phone?.dialNumber?.trim().length) < DIAL_NUMBER_MAX_LEN
+            );
+        });
+        if (invalidPhone) {
+            currentErrors['phone'] = t('formValidations.validPhone');
         }
     }
 
