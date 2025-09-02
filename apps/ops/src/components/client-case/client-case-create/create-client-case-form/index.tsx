@@ -305,16 +305,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         );
     };
 
-    useEffect(() => {
-        if (agencyOptions?.length && !isEdit) {
-            // update the agencyId of the client case
-            updateClientCaseData({
-                agencyId: agencyOptions[0].value,
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [agencyOptions]);
-
     const displayAgencyDropdown = agencyOptions && agencyOptions.length > 1;
 
     const onSubmitForm = () => {
@@ -330,7 +320,10 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     };
 
     useEffect(() => {
-        if (agencyOptions?.length && !isEdit) {
+        const matchedAgencies = agencyOptions?.find(
+            (agencyOption) => agencyOption.value === clientCaseData.agencyId
+        );
+        if (agencyOptions?.length && !matchedAgencies) {
             // update the agencyId of the client case
             updateClientCaseData({
                 agencyId: agencyOptions[firstAgencyKey].value,
@@ -421,7 +414,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     <AgentSearch
                         currentAgentData={clientCaseData.agentDetails}
                         onSelectAgent={updateClientCaseData}
-                        shouldShowEdit={!isEdit}
+                        shouldShowEdit
                         agencyIdArray={initialSearchAgencySellingCodes}
                     />
                 ) : (
@@ -583,7 +576,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     />
                 </div>
             </section>
-
             <div className={styles.actionButtons}>
                 <Button
                     onClick={onSubmitForm}

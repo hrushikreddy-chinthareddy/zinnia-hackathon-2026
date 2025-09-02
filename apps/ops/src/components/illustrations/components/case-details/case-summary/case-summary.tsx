@@ -111,9 +111,8 @@ const IllustrationCaseSumary = ({
 
     const { mutate } = useMutation({
         mutationKey: ['clientCase', clientCase?.id],
-        mutationFn: (data: Partial<IllustrationsClientCase>) => {
-            return patchIllustrationsClientCase(data);
-        },
+        mutationFn: (data: Partial<IllustrationsClientCase>) =>
+            patchIllustrationsClientCase(data),
         onSuccess: () => {
             // Refetch clientCaseData to include new entry
             queryClient.invalidateQueries({
