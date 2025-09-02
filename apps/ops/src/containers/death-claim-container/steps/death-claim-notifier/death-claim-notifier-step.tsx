@@ -5,7 +5,7 @@ import {
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import TransactionNavigationButtons, {
     ParentPage,
@@ -155,7 +155,7 @@ export const DeathClaimNotificationStep = ({
         }));
     }, [notifiers, isNewBene, setFormErrors, t]);
 
-    const submit = useCallback(async () => {
+    const submit = async () => {
         setIsLoading(true);
         const payload = buildClaimPaylod(
             policy,
@@ -184,18 +184,9 @@ export const DeathClaimNotificationStep = ({
         }
 
         setIsLoading(false);
-    }, [
-        policy,
-        notifiers,
-        owners,
-        beneficiaries,
-        onbaseCaseId,
-        onbaseDocumentNumber,
-        setCaseId,
-        setSubmitFailed,
-    ]);
+    };
 
-    const handleStepContinue = useCallback(async () => {
+    const handleStepContinue = async () => {
         const errors: FormValidationErrors = {};
         if (!isNullEmptyOrUndefined(notifiers?.notifierRole)) {
             if (
@@ -239,18 +230,7 @@ export const DeathClaimNotificationStep = ({
             }
             goToNext();
         }
-    }, [
-        notifiers?.notifierRole,
-        notifiers?.party?.partyId,
-        owners,
-        formErrors,
-        setFormErrors,
-        isNewBene,
-        t,
-        showNotification,
-        goToNext,
-        submit,
-    ]);
+    };
 
     const handleOwners = (owner: DeceasedParty, position: number) => {
         setOwners((prevState: DeceasedParty[]) => {
