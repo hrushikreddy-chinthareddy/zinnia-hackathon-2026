@@ -11,10 +11,8 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useIllustrationHeader } from '@deps/components/illustrations/helpers/hooks/use-illustration-header';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
 import {
     IllustrationsClientCase,
@@ -24,8 +22,6 @@ import { Product } from '@deps/types/product';
 
 import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
-import EappContainer from '../../eapp/eapp-container';
-import { EAppProviders } from '../../eapp/eapp-providers';
 
 export function isJuvenile(dateOfBirth?: string): boolean {
     const dob = new Date(dateOfBirth || '');
@@ -95,8 +91,7 @@ const IllustrationProductList = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [showEmptyProducts, setShowEmptyProducts] = useState(false);
     const [isProcessingProducts, setIsProcessingProducts] = useState(true);
-    const sideSheet = useSideSheetContext();
-    const { buildIllustrationHeader } = useIllustrationHeader();
+
     const router = useRouter();
     const { illustrationId } = router.query;
 
@@ -106,47 +101,6 @@ const IllustrationProductList = ({
         },
         [router]
     );
-
-    const handleNewIllustration = useCallback(
-        (planCode: string) => {
-            if (!planCode || !clientCase) {
-                console.log('PlanCode is missing.');
-                return;
-            }
-            const actionTitle = t(
-                'clientCase.productList.addIllustration'
-            ) as string;
-            const eappHeader = buildIllustrationHeader(
-                planCode,
-                clientCase,
-                actionTitle
-            );
-            sideSheet.changeSideSheetContent(
-                eappHeader,
-                <EAppProviders planCode={planCode} clientCase={clientCase}>
-                    <EappContainer
-                        planCode={planCode}
-                        clientCase={clientCase}
-                    />
-                </EAppProviders>
-            );
-            sideSheet.handleOpen(true, '50%');
-        },
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- sideSheet changes on mutation
-        [clientCase]
-    );
-
-    // if a carrierProductId is passed to the component, open the new illustraion panel for that product
-    useEffect(() => {
-        if (!isError && products.length > 0 && carrierProductId) {
-            const preselectedProduct = products.find(
-                (product) => product.planCode === carrierProductId
-            );
-            if (preselectedProduct) {
-                handleNewIllustration(preselectedProduct.planCode);
-            }
-        }
-    }, [products, carrierProductId, isError, handleNewIllustration]);
 
     // Handle illustration selection from URL
     useEffect(() => {
@@ -240,6 +194,10 @@ const IllustrationProductList = ({
         }
     }, [productsWithIllustrations, illustrationId, navigateToIllustration]);
 
+    const preselectedProduct = products.find(
+        (product) => product.planCode === carrierProductId
+    );
+
     // Show loader while processing products
     if (isProcessingProducts) {
         return (
@@ -276,9 +234,8 @@ const IllustrationProductList = ({
                                     <IllustrationProductItem
                                         key={idx}
                                         product={product}
-                                        onNewIllustration={
-                                            handleNewIllustration
-                                        }
+                                        clientCase={clientCase}
+                                        preselectedProduct={preselectedProduct}
                                     />
                                 );
                             }
@@ -303,8 +260,9 @@ const IllustrationProductList = ({
                                                 product.illustrations
                                             }
                                             eAppId={clientCase.eAppId}
-                                            onNewIllustration={
-                                                handleNewIllustration
+                                            clientCase={clientCase}
+                                            preselectedProduct={
+                                                preselectedProduct
                                             }
                                         />
                                     );
@@ -353,9 +311,8 @@ const IllustrationProductList = ({
                                     <IllustrationProductItem
                                         key={idx}
                                         product={product}
-                                        onNewIllustration={
-                                            handleNewIllustration
-                                        }
+                                        clientCase={clientCase}
+                                        preselectedProduct={preselectedProduct}
                                     />
                                 );
                             }
