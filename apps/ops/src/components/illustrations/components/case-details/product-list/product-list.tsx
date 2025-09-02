@@ -25,6 +25,7 @@ import { Product } from '@deps/types/product';
 import IllustrationProductItem from './product-item';
 import styles from './product-list.module.css';
 import EappContainer from '../../eapp/eapp-container';
+import { EAppProviders } from '../../eapp/eapp-providers';
 
 export function isJuvenile(dateOfBirth?: string): boolean {
     const dob = new Date(dateOfBirth || '');
@@ -122,7 +123,12 @@ const IllustrationProductList = ({
             );
             sideSheet.changeSideSheetContent(
                 eappHeader,
-                <EappContainer planCode={planCode} clientCase={clientCase} />
+                <EAppProviders planCode={planCode} clientCase={clientCase}>
+                    <EappContainer
+                        planCode={planCode}
+                        clientCase={clientCase}
+                    />
+                </EAppProviders>
             );
             sideSheet.handleOpen(true, '50%');
         },
