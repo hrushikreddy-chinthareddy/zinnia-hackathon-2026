@@ -4568,7 +4568,8 @@
                     "zip": "Código postal",
                     "addressLine1": "Línea de dirección 1",
                     "addressLine2": "Línea de dirección 2",
-                    "addressLine3": "Línea de dirección 3"
+                    "addressLine3": "Línea de dirección 3",
+                    "preferredAddress": "Dirección preferida"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "El correo se enviará a esta dirección en adelante.",
@@ -4639,7 +4640,8 @@
                 "labels": {
                     "email": "Correo electrónico",
                     "removeEmail": "Eliminar este correo electrónico",
-                    "type": "Tipo"
+                    "type": "Tipo",
+                    "preferredEmail": "Correo electrónico preferido"
                 },
                 "mainCta": {
                     "add": "Guardar correo electrónico de {{type}}",
@@ -4659,7 +4661,8 @@
                     "preferredTime": "Hora preferida para contactar",
                     "removeNumber": "Eliminar este número de teléfono",
                     "timeZone": "Zona horaria",
-                    "type": "Tipo"
+                    "type": "Tipo",
+                    "preferredPhone": "Teléfono preferido"
                 },
                 "general": {
                     "cancel": "Cancelar"

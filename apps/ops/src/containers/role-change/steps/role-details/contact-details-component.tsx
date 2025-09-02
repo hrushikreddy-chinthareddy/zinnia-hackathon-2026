@@ -21,8 +21,11 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import {
+    AddressField,
     containerClasses,
+    EmailField,
     fullcontainerClasses,
+    PhoneField,
     PolicyRole,
     RoleField,
     RoleLabel,
@@ -140,6 +143,7 @@ const ContactDetailsComponent = ({
                     zipCode: '',
                     zipCodeExtension: '',
                     country: 'US',
+                    isPreferred: false,
                 },
                 phones: {
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
@@ -151,12 +155,14 @@ const ContactDetailsComponent = ({
                     extension: '',
                     bestTime: null,
                     timeZone: null,
+                    isPreferred: false,
                 },
                 emails: {
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                     endDate: null,
                     emailType: EmailType.PERSONAL,
                     emailAddress: '',
+                    isPreferred: false,
                 },
             };
 
@@ -173,6 +179,28 @@ const ContactDetailsComponent = ({
     };
 
     const roleInfo = roleData;
+
+    const onPreferredValueChange = (
+        key: string,
+        prefix: string,
+        id: string
+    ) => {
+        setRoleData((prevState: any) => {
+            const updatedArray = [...prevState.party[key]];
+            const updatedValue = updatedArray.map((item, index) => ({
+                ...item,
+                isPreferred: `${prefix}-${index}` === id,
+            }));
+
+            return {
+                ...prevState,
+                party: {
+                    ...prevState.party,
+                    [key]: updatedValue,
+                },
+            };
+        });
+    };
 
     return (
         <>
@@ -246,6 +274,17 @@ const ContactDetailsComponent = ({
                                 index={index}
                                 isReadOnly={isReadOnly}
                                 role={role}
+                                onPreferredAddressChange={(id: string) =>
+                                    onPreferredValueChange(
+                                        AddressField.Addresses,
+                                        AddressField.PreferredAddress,
+                                        id
+                                    )
+                                }
+                                disablePreferredAddress={
+                                    roleInfo.party.addresses.length === 1
+                                }
+                                showPreferredCheckbox={true}
                             />
                         </div>
                     </div>
@@ -286,6 +325,17 @@ const ContactDetailsComponent = ({
                                     handlePhoneChange={handleRolePartyChange}
                                     index={index}
                                     isReadOnly={isReadOnly}
+                                    onPreferredPhoneChange={(id: string) =>
+                                        onPreferredValueChange(
+                                            PhoneField.Phones,
+                                            PhoneField.PreferredPhone,
+                                            id
+                                        )
+                                    }
+                                    disablePreferredPhone={
+                                        roleInfo.party.phones.length === 1
+                                    }
+                                    showPreferredCheckbox={true}
                                 />
                             </div>
                         </div>
@@ -326,6 +376,17 @@ const ContactDetailsComponent = ({
                                 handleEmailChange={handleRolePartyChange}
                                 index={index}
                                 isReadOnly={isReadOnly}
+                                onPreferredEmailChange={(id: string) => {
+                                    onPreferredValueChange(
+                                        EmailField.Emails,
+                                        EmailField.PreferredEmail,
+                                        id
+                                    );
+                                }}
+                                disablePreferredEmail={
+                                    roleInfo.party.emails.length === 1
+                                }
+                                showPreferredCheckbox={true}
                             />
                         </div>
                     </div>
