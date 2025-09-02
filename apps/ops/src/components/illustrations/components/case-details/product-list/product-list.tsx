@@ -93,6 +93,7 @@ const IllustrationProductList = ({
     const [isProcessingProducts, setIsProcessingProducts] = useState(true);
 
     const router = useRouter();
+
     const { illustrationId } = router.query;
 
     const navigateToIllustration = useCallback(
@@ -104,7 +105,12 @@ const IllustrationProductList = ({
 
     // Handle illustration selection from URL
     useEffect(() => {
-        if (!illustrationId || !illustrations.length) return;
+        if (
+            !illustrationId ||
+            !illustrations.length ||
+            carrierProductId.length > 0
+        )
+            return;
 
         const targetIllustration = illustrations.find(
             (ill) => ill.id === illustrationId
@@ -183,7 +189,8 @@ const IllustrationProductList = ({
     useEffect(() => {
         if (
             !productsWithIllustrations?.[0]?.illustrations?.length ||
-            illustrationId
+            illustrationId ||
+            carrierProductId.length > 0
         ) {
             return;
         }

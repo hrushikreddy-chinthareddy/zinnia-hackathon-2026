@@ -18,7 +18,6 @@ interface EAppProvidersProps {
     planCode: string;
     versionedAnswers?: VersionedAnswers;
     submitCallback?: () => void;
-    isEdit?: boolean;
     illustrationId?: string;
 }
 

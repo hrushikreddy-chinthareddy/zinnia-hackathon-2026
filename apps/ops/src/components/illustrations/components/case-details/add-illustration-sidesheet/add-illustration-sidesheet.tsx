@@ -46,7 +46,11 @@ export const AddIllustrationSidesheet: FC<
             open={open}
             onOpenChange={setOpen}
         >
-            <EAppProviders clientCase={clientCase} planCode={planCode}>
+            <EAppProviders
+                clientCase={clientCase}
+                planCode={planCode}
+                submitCallback={() => setOpen(false)}
+            >
                 <EappContainer
                     planCode={planCode}
                     clientCase={clientCase}

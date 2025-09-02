@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import {
     createContext,
     PropsWithChildren,
@@ -52,6 +52,7 @@ export function SubmitProvider({
     const { questionnaireEngine } = useQuestionnaireEngine();
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
+    const router = useRouter();
     const [formInputs, setFormInputs] = useState<any>({});
 
     const getIllustrationPayload = async ({
@@ -135,7 +136,8 @@ export function SubmitProvider({
             ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data?.id}`;
-            Router.push(route, undefined, { shallow: true });
+
+            router.push(route);
 
             submitCallback?.();
             sideSheet.onClose();
@@ -192,7 +194,8 @@ export function SubmitProvider({
             ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data?.id}`;
-            Router.push(route, undefined, { shallow: true });
+
+            router.push(route);
 
             submitCallback?.();
             sideSheet.onClose();
