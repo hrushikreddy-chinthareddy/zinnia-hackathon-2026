@@ -237,7 +237,7 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                         {/* FIXME: i18n */}
                         <Accordion
                             key="policyBasics"
-                            sectionLabel="Policy Basics"
+                            sectionLabel="Policy basics"
                         >
                             <FindAllKeyValuesSection
                                 fields={policyBasics}
@@ -277,21 +277,27 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                             ]) => {
                                                 //console.log('subSection', sectionLabel, subSectionLabel, subSectionFields);
                                                 return (
-                                                    <Accordion
-                                                        key={sectionLabel}
-                                                        sectionLabel={formatAsSectionLabel(
-                                                            subSectionLabel
-                                                        )}
+                                                    <div
+                                                        className={
+                                                            styles.subSection
+                                                        }
                                                     >
-                                                        <FindAllKeyValuesSection
-                                                            fields={
-                                                                subSectionFields
-                                                            }
-                                                            searchValue={
-                                                                searchValue
-                                                            }
-                                                        />
-                                                    </Accordion>
+                                                        <Accordion
+                                                            key={sectionLabel}
+                                                            sectionLabel={formatAsSectionLabel(
+                                                                subSectionLabel
+                                                            )}
+                                                        >
+                                                            <FindAllKeyValuesSection
+                                                                fields={
+                                                                    subSectionFields
+                                                                }
+                                                                searchValue={
+                                                                    searchValue
+                                                                }
+                                                            />
+                                                        </Accordion>
+                                                    </div>
                                                 );
                                             }
                                         )}

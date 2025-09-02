@@ -23,6 +23,7 @@ import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
 import { enums } from './translations/enums';
 import { exactTranslations } from './translations/exact';
+import { excludeFields } from './translations/exclude-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { sectionTypeToSubsectionTitleFields } from './translations/subsection-field-to-title';
@@ -162,13 +163,20 @@ export const toSections = (policy: Policy): PreparedPolicy => {
         (acc, [currentKey, currentVal]) => {
             // append to policySections list
             if (typeof currentVal === 'object' && currentVal !== null) {
-                return {
-                    ...acc,
-                    policySections: [
-                        ...acc.policySections,
-                        [currentKey, currentVal],
-                    ],
-                };
+                switch (currentKey) {
+                    case 'allocation':
+                    case 'partyRoles':
+                    case 'parties':
+                        return acc;
+                    default:
+                        return {
+                            ...acc,
+                            policySections: [
+                                ...acc.policySections,
+                                [currentKey, currentVal],
+                            ],
+                        };
+                }
             }
 
             // append to policyBasics list
@@ -193,31 +201,25 @@ export const toFieldsAndSubsections = ([
             subSections: sectionData.map((subSection, i) => {
                 const subsectionTitleField =
                     sectionTypeToSubsectionTitleFields[sectionName];
-                const subSectionTitle =
-                    subSection[subsectionTitleField] ??
-                    `${sectionName} ${i + 1}`;
-                const formattedSubSectionTitle =
-                    formatAsDataValue(subSectionTitle); // format the title as data
-                const subSectionDataTuples = Object.entries(subSection)
-                    .filter(
-                        ([fieldTitle]) => fieldTitle !== subsectionTitleField // remove the title field
+                const subSectionTitle = formatAsDataValue(
+                    String(
+                        subSection[subsectionTitleField] ??
+                            `${sectionName} ${i + 1}`
                     )
-                    .map((field) => formatDataField(field)); // use data translations
+                );
+                const subSectionDataTuples = Object.entries(subSection).filter(
+                    ([fieldName]) =>
+                        fieldName !== subsectionTitleField && // remove the title field
+                        !excludeFields.has(fieldName) // remove excluded fields
+                );
 
-                const ret: [string, DataTuple[]] = [
-                    formattedSubSectionTitle,
-                    subSectionDataTuples,
-                ];
-                return ret;
+                return [subSectionTitle, subSectionDataTuples];
             }),
         };
     } else {
         //FIXME: provision for tests
         const fields = Object.entries(sectionData).filter(
-            (entries): entries is [string, FieldData] => {
-                const [, fieldValue] = entries;
-                return typeof fieldValue !== 'object' || fieldValue === null;
-            }
+            ([fieldName]) => !excludeFields.has(fieldName) // remove excluded fields
         );
         return {
             fields,
