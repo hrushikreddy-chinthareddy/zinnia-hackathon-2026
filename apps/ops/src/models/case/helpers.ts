@@ -96,4 +96,5 @@ export const TaskApiVersionMapper: Record<TaskType, ApiVersion> = {
     [TaskType.Policyupdate_Partydetails_Review]: ApiVersion.v2,
     [TaskType.Cost_Basis_Review]: ApiVersion.v2,
     [TaskType.Update_Suitability_DataEntry]: ApiVersion.v2,
+    [TaskType.Initiate_BeneChange_Transaction]: ApiVersion.v2,
 };

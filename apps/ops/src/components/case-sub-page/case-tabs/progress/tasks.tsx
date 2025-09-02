@@ -48,6 +48,7 @@ export const SupportedTaskMap = [
     TaskType.Bene_Address_Verification,
     TaskType.Claims_Bene_Review,
     TaskType.Bene_Call,
+    TaskType.Initiate_BeneChange_Transaction,
 ];
 
 type StatusConfigItem = {

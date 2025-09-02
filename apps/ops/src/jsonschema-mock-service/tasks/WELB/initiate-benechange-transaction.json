@@ -1,0 +1,1013 @@
+{
+    "formId": "9569c24d-250e-45bd-ab0f-c85f04a192a9",
+    "process": "Policy Update",
+    "taskType": "INITIATE_BENECHANGE_TRANSACTION",
+    "processSubType": "Beneficiary Change",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Form Data",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "details": {
+                            "type": "object",
+                            "title": "Document Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "The paper application is complete.",
+                                "The paper application is incomplete."
+                            ],
+                            "title": "Is the paper application form complete?",
+                            "default": true
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "type": "array",
+                                            "title": "What is the issue with the form?",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
+                    }
+                }
+            },
+            {
+                "title": "Owner Details",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "parties": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "partyRole": {
+                                        "type": "string",
+                                        "title": "Party Role",
+                                        "enum": ["OWNER", "JOINT OWNER"]
+                                    },
+                                    "partyType": {
+                                        "type": "string",
+                                        "title": "Party type",
+                                        "enum": [
+                                            "INDIVIDUAL",
+                                            "TRUST",
+                                            "ORGANIZATION"
+                                        ]
+                                    },
+                                    "dateOfBirth": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "title": "Date of birth"
+                                    },
+                                    "emails": {
+                                        "type": "array",
+                                        "title": "Email",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "emailAddress": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "phones": {
+                                        "title": "Telephone number",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "dialNumber": {
+                                                    "type": "string",
+                                                    "pattern": "^[+]?\\d{7,15}$"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "addresses": {
+                                        "title": "Address",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "addressLine1": {
+                                                    "type": "string",
+                                                    "title": "Address"
+                                                },
+                                                "addressType": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "Residential Address",
+                                                        "Mailing Address"
+                                                    ]
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "title": "City"
+                                                },
+                                                "state": {
+                                                    "type": "string",
+                                                    "title": "State"
+                                                },
+                                                "zipCode": {
+                                                    "type": "string",
+                                                    "title": "Zip"
+                                                },
+                                                "zipCodeExtension": {
+                                                    "type": "string",
+                                                    "title": "Zip+4"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "partyType": {
+                                                    "enum": ["INDIVIDUAL"]
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "firstName": {
+                                                    "type": "string",
+                                                    "title": "First name"
+                                                },
+                                                "middleName": {
+                                                    "type": "string",
+                                                    "title": "Middle name"
+                                                },
+                                                "lastName": {
+                                                    "type": "string",
+                                                    "title": "Last name"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "partyType": {
+                                                    "enum": ["TRUST"]
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "trustName": {
+                                                    "type": "string",
+                                                    "title": "Trust name"
+                                                },
+                                                "trustType": {
+                                                    "type": "string",
+                                                    "title": "Trust type",
+                                                    "enum": [
+                                                        "INDIVIDUALTRUST",
+                                                        "CORPORATETRUST",
+                                                        "TESTAMENTARYTRUST",
+                                                        "INTERVIVOSTRUST",
+                                                        "GRANTORTRUST"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "partyType": {
+                                                    "enum": ["ORGANIZATION"]
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "companyName": {
+                                                    "type": "string",
+                                                    "title": "Company name"
+                                                }
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "parties": {
+                        "ui:options": {
+                            "addable": false,
+                            "orderable": false,
+                            "label": false
+                        },
+                        "items": {
+                            "ui:order": [
+                                "partyType",
+                                "partyRole",
+                                "firstName",
+                                "middleName",
+                                "lastName",
+                                "trustName",
+                                "trustType",
+                                "companyName",
+                                "dateOfBirth",
+                                "emails",
+                                "phones",
+                                "addresses"
+                            ],
+                            "ui:options": {
+                                "label": true,
+                                "title": "{{partyRole}}",
+                                "nobackground": true,
+                                "expandable": true,
+                                "removable": false
+                            },
+                            "partyRole": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "enumNames": ["Owner", "Joint Owner"]
+                                }
+                            },
+                            "partyType": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "enumNames": [
+                                        "Individual",
+                                        "Trust",
+                                        "Estate/Organization"
+                                    ]
+                                }
+                            },
+                            "emails": {
+                                "ui:options": {
+                                    "addable": false,
+                                    "orderable": false,
+                                    "removable": false,
+                                    "label": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "label": true,
+                                        "title": "Email",
+                                        "classNames": "email-item"
+                                    },
+                                    "emailAddress": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    }
+                                }
+                            },
+                            "phones": {
+                                "ui:options": {
+                                    "addable": false,
+                                    "orderable": false,
+                                    "removable": false,
+                                    "label": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "label": true,
+                                        "title": "Telephone number"
+                                    },
+                                    "dialNumber": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    }
+                                }
+                            },
+                            "addresses": {
+                                "ui:options": {
+                                    "addable": false,
+                                    "orderable": false,
+                                    "removable": false,
+                                    "label": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "label": true,
+                                        "title": "{{addressType}}",
+                                        "expandable": true,
+                                        "nobackground": true
+                                    },
+                                    "dialNumber": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    },
+                                    "addressType": {
+                                        "ui:widget": "hidden",
+                                        "ui:options": {
+                                            "enumNames": [
+                                                "Residential Address",
+                                                "Mailing Address"
+                                            ]
+                                        }
+                                    }
+                                }
+                            },
+                            "trustType": {
+                                "ui:options": {
+                                    "enumNames": [
+                                        "Individual Trust",
+                                        "Corporate Trust",
+                                        "Testamentary Trust",
+                                        "Inter Vivos Trust",
+                                        "Grantor Trust"
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Beneficiary Details",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "beneData": {
+                            "type": "array",
+                            "title": "Beneficiaries",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "party": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partyType": {
+                                                "type": "string",
+                                                "title": "Party type",
+                                                "enum": [
+                                                    "INDIVIDUAL",
+                                                    "TRUST",
+                                                    "ORGANIZATION"
+                                                ]
+                                            },
+                                            "identifications": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "identificationValue": {
+                                                            "type": "string",
+                                                            "title": "SSN"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "gender": {
+                                                "type": "string",
+                                                "title": "Gender",
+                                                "enum": ["MALE", "FEMALE"]
+                                            },
+                                            "dateOfBirth": {
+                                                "type": "string",
+                                                "title": "Date of birth",
+                                                "format": "date"
+                                            }
+                                        },
+                                        "allOf": [
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": [
+                                                                "INDIVIDUAL"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "prefix": {
+                                                            "type": "string",
+                                                            "title": "Prefix",
+                                                            "enum": [
+                                                                "Dr.",
+                                                                "Mr.",
+                                                                "Mrs.",
+                                                                "Ms."
+                                                            ]
+                                                        },
+                                                        "firstName": {
+                                                            "type": "string",
+                                                            "title": "First name"
+                                                        },
+                                                        "middleName": {
+                                                            "type": "string",
+                                                            "title": "Middle name"
+                                                        },
+                                                        "lastName": {
+                                                            "type": "string",
+                                                            "title": "Last name"
+                                                        },
+                                                        "suffix": {
+                                                            "type": "string",
+                                                            "title": "Suffix",
+                                                            "enum": [
+                                                                "JR",
+                                                                "SN",
+                                                                "I",
+                                                                "II",
+                                                                "III"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": ["TRUST"]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "trustName": {
+                                                            "type": "string",
+                                                            "title": "Trust name"
+                                                        },
+                                                        "trustType": {
+                                                            "type": "string",
+                                                            "title": "Trust type",
+                                                            "enum": [
+                                                                "INDIVIDUALTRUST",
+                                                                "CORPORATETRUST",
+                                                                "TESTAMENTARYTRUST",
+                                                                "INTERVIVOSTRUST",
+                                                                "GRANTORTRUST"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": [
+                                                                "ORGANIZATION"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "companyName": {
+                                                            "type": "string",
+                                                            "title": "Company name"
+                                                        },
+                                                        "entityType": {
+                                                            "type": "string",
+                                                            "title": "Entity type",
+                                                            "enum": [
+                                                                "SOLEPROPRIETORSHIP",
+                                                                "GENERALPARTNERSHIP",
+                                                                "LIMITEDPARTNERSHIP",
+                                                                "SCORPORATION",
+                                                                "CCORPORATION",
+                                                                "LIMITEDLIABILITYCOMPANY",
+                                                                "CHARITABLEORGANIZATION",
+                                                                "ESTATE",
+                                                                "CORPORATION",
+                                                                "UNKNOWN"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "partyRole": {
+                                        "type": "object",
+                                        "properties": {
+                                            "beneficiaryRole": {
+                                                "type": "string",
+                                                "title": "Party role",
+                                                "enum": [
+                                                    "PRIMARY BENEFICIARY",
+                                                    "CONTINGENT BENEFICIARY"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "beneData": {
+                        "ui:options": {
+                            "addable": true,
+                            "orderable": false,
+                            "label": false,
+                            "removable": true
+                        },
+                        "items": {
+                            "ui:order": ["partyRole", "party"],
+                            "ui:options": {
+                                "label": true,
+                                "title": "{{partyRole.beneficiaryRole}}",
+                                "defaultItemLabel": "New Beneficiary",
+                                "nobackground": true,
+                                "expandable": true,
+                                "removable": true
+                            },
+                            "party": {
+                                "ui:order": [
+                                    "partyType",
+                                    "prefix",
+                                    "firstName",
+                                    "middleName",
+                                    "lastName",
+                                    "suffix",
+                                    "trustName",
+                                    "trustType",
+                                    "companyName",
+                                    "entityType",
+                                    "identifications",
+                                    "gender",
+                                    "dateOfBirth"
+                                ],
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "partyType": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Individual",
+                                            "Trust",
+                                            "Estate/Organization"
+                                        ]
+                                    }
+                                },
+                                "trustType": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Individual Trust",
+                                            "Corporate Trust",
+                                            "Testamentary Trust",
+                                            "Inter Vivos Trust",
+                                            "Grantor Trust"
+                                        ]
+                                    }
+                                },
+                                "entityType": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Sole Proprietorship",
+                                            "General Partnership",
+                                            "Limited Partnership",
+                                            "S Corporation",
+                                            "C Corporation",
+                                            "Limited Liability Company",
+                                            "Charitable Organization",
+                                            "Estate",
+                                            "Corporation",
+                                            "Other"
+                                        ]
+                                    }
+                                },
+                                "identifications": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": false
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    }
+                                },
+                                "gender": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "enumNames": ["Male", "Female"]
+                                    }
+                                }
+                            },
+                            "partyRole": {
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "beneficiaryRole": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Primary Beneficiary",
+                                            "Contingent Beneficiary"
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Signature",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "signatureData": {
+                            "type": "object",
+                            "properties": {
+                                "isIrrevocableBene": {
+                                    "type": "boolean",
+                                    "enum": [true, false],
+                                    "enumNames": ["Yes", "No"],
+                                    "title": "Is there an irrevocable beneficiary?",
+                                    "default": true
+                                },
+                                "signatures": {
+                                    "type": "array",
+                                    "items": [
+                                        {
+                                            "type": "object",
+                                            "title": "Signature 1",
+                                            "properties": {
+                                                "signType": {
+                                                    "type": "string",
+                                                    "title": "Type"
+                                                },
+                                                "isSignedPresent": {
+                                                    "type": "string",
+                                                    "title": "Signed present",
+                                                    "enum": ["Yes", "No"]
+                                                },
+                                                "signDesignation": {
+                                                    "type": "string",
+                                                    "title": "Designation",
+                                                    "enum": [
+                                                        "Trustee",
+                                                        "Executor",
+                                                        "Custodian",
+                                                        "Guardian",
+                                                        "Attorney-in-fact",
+                                                        "Assignee",
+                                                        "NA"
+                                                    ]
+                                                },
+                                                "signDate": {
+                                                    "type": "string",
+                                                    "title": "Sign date",
+                                                    "format": "date"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "type": "object",
+                                            "title": "Signature 2",
+                                            "properties": {
+                                                "signType": {
+                                                    "type": "string",
+                                                    "title": "Type"
+                                                },
+                                                "isSignedPresent": {
+                                                    "type": "string",
+                                                    "title": "Signed present",
+                                                    "enum": ["Yes", "No"]
+                                                },
+                                                "signDesignation": {
+                                                    "type": "string",
+                                                    "title": "Designation",
+                                                    "enum": [
+                                                        "Trustee",
+                                                        "Executor",
+                                                        "Custodian",
+                                                        "Guardian",
+                                                        "Attorney-in-fact",
+                                                        "Assignee",
+                                                        "NA"
+                                                    ]
+                                                },
+                                                "signDate": {
+                                                    "type": "string",
+                                                    "title": "Sign date",
+                                                    "format": "date"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "signatureData": {
+                                        "properties": {
+                                            "isIrrevocableBene": {
+                                                "const": true
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "signatureData": {
+                                        "properties": {
+                                            "signatures": {
+                                                "items": [
+                                                    {},
+                                                    {},
+                                                    {
+                                                        "type": "object",
+                                                        "title": "Signature 3",
+                                                        "properties": {
+                                                            "signType": {
+                                                                "type": "string",
+                                                                "title": "Type"
+                                                            },
+                                                            "isSignedPresent": {
+                                                                "type": "string",
+                                                                "title": "Signed present",
+                                                                "enum": [
+                                                                    "Yes",
+                                                                    "No"
+                                                                ]
+                                                            },
+                                                            "signDesignation": {
+                                                                "type": "string",
+                                                                "title": "Designation",
+                                                                "enum": [
+                                                                    "Trustee",
+                                                                    "Executor",
+                                                                    "Custodian",
+                                                                    "Guardian",
+                                                                    "Attorney-in-fact",
+                                                                    "Assignee",
+                                                                    "NA"
+                                                                ]
+                                                            },
+                                                            "signDate": {
+                                                                "type": "string",
+                                                                "title": "Sign date",
+                                                                "format": "date"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "signatureData": {
+                        "ui:options": { "label": false },
+                        "isIrrevocableBene": { "ui:widget": "radio" },
+                        "signatures": {
+                            "ui:options": {
+                                "addable": false,
+                                "orderable": false,
+                                "removable": false,
+                                "label": false
+                            },
+                            "items": [
+                                {
+                                    "ui:options": {
+                                        "title": "Owner Signature",
+                                        "label": true,
+                                        "expandable": true,
+                                        "nobackground": true
+                                    },
+                                    "signType": {},
+                                    "isSignedPresent": {
+                                        "ui:options": {
+                                            "enumNames": ["Yes", "No"]
+                                        }
+                                    },
+                                    "signDesignation": {
+                                        "ui:widget": "select"
+                                    },
+                                    "signDate": { "ui:widget": "date" }
+                                },
+                                {
+                                    "ui:options": {
+                                        "title": "Joint Owner Signature",
+                                        "label": true,
+                                        "expandable": true,
+                                        "nobackground": true
+                                    },
+                                    "signType": {},
+                                    "isSignedPresent": {
+                                        "ui:options": {
+                                            "enumNames": ["Yes", "No"]
+                                        }
+                                    },
+                                    "signDesignation": {
+                                        "ui:widget": "select"
+                                    },
+                                    "signDate": { "ui:widget": "date" }
+                                },
+                                {
+                                    "ui:options": {
+                                        "title": "Irrevocable Beneficiary Signature",
+                                        "label": true,
+                                        "expandable": true,
+                                        "nobackground": true
+                                    },
+                                    "signType": {},
+                                    "isSignedPresent": {
+                                        "ui:options": {
+                                            "enumNames": ["Yes", "No"]
+                                        }
+                                    },
+                                    "signDesignation": {
+                                        "ui:widget": "select"
+                                    },
+                                    "signDate": { "ui:widget": "date" }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

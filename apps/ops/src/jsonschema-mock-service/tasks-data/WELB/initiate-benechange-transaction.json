@@ -1,0 +1,309 @@
+{
+    "id": "TA000000022112",
+    "caseId": "CA0000402461",
+    "source": "Zinnia.BPMTransactions",
+    "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
+    "process": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "INITIATE_BENECHANGE_TRANSACTION",
+    "taskName": "Beneficiary Change Data Entry",
+    "status": "NEW",
+    "data": {
+        "process": "Policy Update",
+        "policyNumber": "ADA2501506",
+        "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
+        "taskName": "Beneficiary Change Data Entry",
+        "processSubType": "Beneficiary Change",
+        "planCode": "WBFDAV03",
+        "details": {
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "Post issue Application",
+                    "documentExt": "pdf"
+                },
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25g",
+                    "documentName": "Post issue Application",
+                    "documentExt": "pdf"
+                }
+            ]
+        },
+        "parties": [
+            {
+                "partyType": "INDIVIDUAL",
+                "partyRole": "OWNER",
+                "firstName": "ROBYN",
+                "middleName": "S",
+                "lastName": "WILSON",
+                "fullName": "Robyn S Wilson",
+                "dateOfBirth": "1978-11-05",
+                "trustType": "",
+                "trustName": "",
+                "companyName": "",
+                "prefix": "",
+                "phones": [
+                    {
+                        "areaCode": "515",
+                        "bestTime": "",
+                        "countryCode": "USA",
+                        "dialNumber": "2585158",
+                        "endDate": "",
+                        "extension": "",
+                        "isPreferred": false,
+                        "phoneId": "Party_Annuitant_1_Phone0",
+                        "phoneType": "HOME",
+                        "startDate": "2025-05-22",
+                        "timezone": ""
+                    }
+                ],
+                "emails": [
+                    {
+                        "emailAddress": "abhigyan@example.com",
+                        "emailType": "PERSONAL"
+                    }
+                ],
+                "addresses": [
+                    {
+                        "addressLine1": "701 N COLLEGE AVE",
+                        "addressLine2": "",
+                        "addressLine3": "",
+                        "addressType": "Residential Address",
+                        "city": "FAYETTEVILLE",
+                        "country": "US",
+                        "endDate": "",
+                        "startDate": "2025-05-23",
+                        "state": "AR",
+                        "zipCode": "72701",
+                        "zipCodeExtension": "88"
+                    },
+                    {
+                        "addressLine1": "701 N COLLEGE AVE",
+                        "addressLine2": "",
+                        "addressLine3": "",
+                        "addressType": "Mailing Address",
+                        "city": "FAYETTEVILLE",
+                        "country": "US",
+                        "endDate": "",
+                        "startDate": "2025-05-23",
+                        "state": "AR",
+                        "zipCode": "72701",
+                        "zipCodeExtension": "22"
+                    }
+                ]
+            },
+            {
+                "partyType": "INDIVIDUAL",
+                "partyRole": "JOINT OWNER",
+                "firstName": "ROBY",
+                "middleName": "",
+                "lastName": "WILL",
+                "fullName": "Roby Will",
+                "dateOfBirth": "1978-11-05"
+            }
+        ],
+        "beneData": [
+            {
+                "action": "UPDATE",
+                "actionType": "BENE_CHANGE",
+                "isIrrevocable": false,
+                "isPerStirpes": false,
+                "isRestrictedBeneficiary": false,
+                "party": {
+                    "partyId": "Party_PB_Primary_Bene_1",
+                    "partyType": "INDIVIDUAL",
+                    "beneficiaryPercentage": 100,
+                    "dateOfBirth": "1978-11-05",
+                    "endDate": null,
+                    "entityType": "",
+                    "firstName": "WILSON",
+                    "fullName": "Wilson",
+                    "gender": "MALE",
+                    "middleName": "",
+                    "lastName": "",
+                    "prefix": "",
+                    "suffix": "",
+                    "trustType": "",
+                    "addresses": [
+                        {
+                            "addressId": "Party_PB_Primary_Bene_1_Address_0",
+                            "addressLine1": "2110 West Walnut Street",
+                            "addressLine2": "",
+                            "addressLine3": null,
+                            "addressType": "RESIDENCE",
+                            "city": "Rogers",
+                            "country": "USA",
+                            "endDate": null,
+                            "isPreferred": true,
+                            "startDate": "2025-05-22",
+                            "state": "AR",
+                            "zipCode": "72756",
+                            "zipCodeExtension": null
+                        }
+                    ],
+                    "emails": [
+                        {
+                            "emailAddress": "soni.kumari@zinnia.com",
+                            "emailId": "Party_PB_Primary_Bene_1_EmailAddress_1",
+                            "emailType": "PERSONAL",
+                            "endDate": null,
+                            "isPreferred": false,
+                            "startDate": "2025-05-22"
+                        }
+                    ],
+                    "identifications": [
+                        {
+                            "endDate": null,
+                            "identificationDescription": null,
+                            "identificationId": "1",
+                            "identificationKey": null,
+                            "identificationType": "SSN",
+                            "identificationValue": "***-**-2025",
+                            "issueCountry": null,
+                            "issueState": null,
+                            "startDate": null
+                        }
+                    ],
+                    "phones": [
+                        {
+                            "areaCode": "515",
+                            "bestTime": null,
+                            "countryCode": "USA",
+                            "dialNumber": "3585159",
+                            "endDate": null,
+                            "extension": null,
+                            "isPreferred": false,
+                            "phoneId": "Party_PB_Primary_Bene_1_Phone0",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22",
+                            "timezone": null
+                        }
+                    ]
+                },
+                "partyRole": {
+                    "partyId": "Party_PB_Primary_Bene_1",
+                    "beneficiaryRole": "PRIMARY BENEFICIARY",
+                    "partyRoleId": 34,
+                    "relationshipToParty": "SPOUSE"
+                }
+            },
+            {
+                "action": "ADD",
+                "actionType": "BENE_CHANGE",
+                "isIrrevocable": false,
+                "isPerStirpes": false,
+                "isRestrictedBeneficiary": false,
+                "party": {
+                    "partyId": "",
+                    "partyType": "TRUST",
+                    "beneficiaryPercentage": 100,
+                    "dateOfBirth": "2025-09-04",
+                    "endDate": null,
+                    "entityType": "UNKNOWN",
+                    "firstName": "WILSON",
+                    "fullName": "Wilson",
+                    "gender": "MALE",
+                    "middleName": "",
+                    "lastName": "",
+                    "prefix": "",
+                    "suffix": "",
+                    "trustType": "CORPORATETRUST",
+                    "addresses": [
+                        {
+                            "addressLine1": "2110 West Walnut Street",
+                            "addressLine2": "",
+                            "addressType": "RESIDENCE",
+                            "city": "Rogers",
+                            "country": "USA",
+                            "endDate": null,
+                            "state": "AR",
+                            "zipCode": "72756"
+                        }
+                    ],
+                    "emails": [
+                        {
+                            "emailAddress": "soni.kumari@zinnia.com",
+                            "emailType": "PERSONAL",
+                            "startDate": "2025-05-22"
+                        }
+                    ],
+                    "identifications": [
+                        {
+                            "identificationType": "SSN",
+                            "identificationValue": "***-**-2025"
+                        }
+                    ],
+                    "phones": [
+                        {
+                            "areaCode": "515",
+                            "countryCode": "USA",
+                            "dialNumber": "3585159",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22"
+                        }
+                    ]
+                },
+                "partyRole": {
+                    "partyId": "",
+                    "beneficiaryRole": "CONTINGENT BENEFICIARY",
+                    "partyRoleId": null,
+                    "relationshipToParty": "TRUSTEEOFINCOMPETENT"
+                }
+            }
+        ],
+        "signatureData": {
+            "isIrrevocableBene": true,
+            "signatures": [
+                {
+                    "isSignedPresent": "Yes",
+                    "signDate": "2025-07-30",
+                    "signDesignation": "Executor",
+                    "signGurantee": "",
+                    "signPrintName": "",
+                    "signType": "OWNER"
+                },
+                {
+                    "isSignedPresent": "Yes",
+                    "signDate": "2025-07-30",
+                    "signDesignation": "Custodian",
+                    "signGurantee": "",
+                    "signPrintName": "",
+                    "signType": "JOINT OWNER"
+                },
+                {
+                    "isSignedPresent": "Yes",
+                    "signDate": "2025-07-30",
+                    "signDesignation": "Guardian",
+                    "signGurantee": "",
+                    "signPrintName": "",
+                    "signType": "IRREVOCABLE"
+                }
+            ]
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "policy_update",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-24T11:52:37Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-24T11:52:37Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000402461"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501506"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501506"
+        }
+    ],
+    "externalId": "0a805ffe-ef0b-4f4a-ba41-f774df12d820"
+}
