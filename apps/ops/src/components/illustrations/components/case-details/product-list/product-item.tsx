@@ -2,6 +2,7 @@ import { Button, Divider, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { Fragment } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
@@ -71,20 +72,20 @@ const IllustrationProductItem = ({
             {illustrations && illustrations.length ? (
                 <ul className={styles.illustrationsList}>
                     {illustrations.map((illustration, pIdx) => (
-                        <div key={illustration.id}>
-                            <IllustrationItem
-                                product={product}
-                                illustration={illustration}
-                                isSelected={illustration.id === illustrationId}
-                                isSelectableForApplication={!!eAppId}
-                            />
+                        <IllustrationItem
+                            key={illustration.id}
+                            product={product}
+                            illustration={illustration}
+                            isSelected={illustration.id === illustrationId}
+                            isSelectableForApplication={!!eAppId}
+                        >
                             {pIdx < illustrations.length - 1 && (
                                 <Divider
                                     color="default"
                                     direction="horizontal"
                                 />
                             )}
-                        </div>
+                        </IllustrationItem>
                     ))}
                 </ul>
             ) : (
