@@ -146,25 +146,16 @@ const IllustrationProductList = ({
     useEffect(() => {
         if (!illustrationId || !illustrations.length) return;
 
-        const targetIllustration = illustrations.find(
-            (ill) => ill.id === illustrationId
-        );
-        const associatedProduct = products.find(
-            (product) =>
-                product.carrierProductId === targetIllustration?.productId
-        );
-
-        if (
-            targetIllustration &&
-            associatedProduct &&
-            selectedIllustration?.illustration?.id !== illustrationId
-        ) {
-            handleSelectIllustration(associatedProduct, targetIllustration);
+        if (selectedIllustration?.illustration?.id !== illustrationId) {
+            handleSelectIllustration(
+                !Array.isArray(illustrationId)
+                    ? illustrationId
+                    : illustrationId[0]
+            );
         }
     }, [
         illustrationId,
         illustrations,
-        products,
         selectedIllustration?.illustration?.id,
         handleSelectIllustration,
     ]);
