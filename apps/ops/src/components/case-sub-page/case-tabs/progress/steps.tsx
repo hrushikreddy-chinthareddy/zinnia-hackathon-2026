@@ -1,4 +1,5 @@
 import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
+import { sentenceCase } from 'change-case';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
 
@@ -263,7 +264,15 @@ export default function Steps({
     return (
         <ul {...rest}>
             {steps.filter(stepFilter).map((step, index) => (
-                <Step step={step} key={index} />
+                <Step
+                    key={index}
+                    step={
+                        {
+                            ...step,
+                            name: sentenceCase(step?.name),
+                        } as TransformedStep
+                    }
+                />
             ))}
         </ul>
     );
