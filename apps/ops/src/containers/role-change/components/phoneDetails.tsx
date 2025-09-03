@@ -28,7 +28,10 @@ import {
 } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { ExtendedPhone, useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    ZAHARA_API_DATE_FORMAT,
+    DIAL_NUMBER_MAX_LEN,
+} from '@deps/types/constants';
 
 import {
     ANYTIME,
@@ -152,7 +155,10 @@ function PhoneDetails({
                             label={t('fieldLabels.number') as string}
                             leading={countries[country].emoji}
                             message={
-                                !phone?.dialNumber?.trim()?.length && !disabled
+                                !phone?.dialNumber?.trim()?.length ||
+                                (phone?.dialNumber?.trim()?.length <
+                                    DIAL_NUMBER_MAX_LEN &&
+                                    !disabled)
                                     ? currentErrors?.phone
                                     : ''
                             }
