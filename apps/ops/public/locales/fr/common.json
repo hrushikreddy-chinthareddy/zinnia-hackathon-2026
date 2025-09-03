@@ -5268,9 +5268,15 @@
         "paymentMethod": "Mode de Paiement",
         "paymentType": {
             "eft": "EFT",
-            "check": "Chèque"
+            "check": "Chèque",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Carte de crédit",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
+        "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}",
+        "creditCardEndingIn": "Carte de crédit se terminant par {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {

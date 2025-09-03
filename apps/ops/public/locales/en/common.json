@@ -5336,9 +5336,15 @@
         "paymentMethod": "Payment Method",
         "paymentType": {
             "eft": "EFT",
-            "check": "Check"
+            "check": "Check",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Credit Card",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Checking ending in {{ accountNumber }}"
+        "checkingEndingIn": "Checking ending in {{ accountNumber }}",
+        "creditCardEndingIn": "Credit card ending in {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {

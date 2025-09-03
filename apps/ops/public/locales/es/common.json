@@ -5252,9 +5252,15 @@
         "paymentMethod": "Método de Pago",
         "paymentType": {
             "eft": "EFT",
-            "check": "Cheque"
+            "check": "Cheque",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Tarjeta de Crédito",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}"
+        "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}",
+        "creditCardEndingIn": "Tarjeta de crédito terminando en {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {

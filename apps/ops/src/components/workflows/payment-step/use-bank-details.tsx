@@ -9,7 +9,7 @@ import { getPaymentMethods } from '@deps/queries/api/aggregation';
 
 import { PaymentState } from './types';
 
-export const useBankDetails = ({
+export const usePaymentMethods = ({
     state,
     policy,
 }: {

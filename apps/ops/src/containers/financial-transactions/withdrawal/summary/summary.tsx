@@ -4,7 +4,6 @@ import {
 } from '@zinnia/api-types/types/bpm';
 import {
     Address,
-    DisbursementPaymentForm,
     Policy,
     TaxWithheldAmount,
     TransactionType,
@@ -37,7 +36,6 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { getRequestedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helpers';
-import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
@@ -282,11 +280,7 @@ const Summary = ({ policy }: SummaryProps) => {
                             ?.disbursementType
                     }
                     payeeName={payeeFullName}
-                    paymentType={
-                        getDisbursementPaymentForm(
-                            paymentForm
-                        ) as DisbursementPaymentForm
-                    }
+                    paymentType={paymentForm}
                     ownerTaxState={ownerTaxState}
                     requestedAmountDollarAmount={numberFormatify(amount)}
                     // TODO MG: confirm this comment is valid

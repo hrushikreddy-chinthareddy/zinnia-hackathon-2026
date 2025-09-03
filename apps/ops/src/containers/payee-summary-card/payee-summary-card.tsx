@@ -2,6 +2,7 @@ import {
     Address,
     DisbursementPaymentForm,
     DisbursementType,
+    PaymentForm,
 } from '@zinnia/api-types/types/sor';
 import {
     Label,
@@ -60,7 +61,7 @@ interface PaymentProps {
     address?: Address;
     branchName?: string;
     // TODO MG: allow PaymentForm or DisbursementPaymentForm?
-    paymentType: DisbursementPaymentForm;
+    paymentType?: DisbursementPaymentForm | PaymentForm;
     fboFfc?: string;
 }
 
@@ -178,9 +179,9 @@ const PaymentInfo = ({
     t,
 }: PaymentProps & TranslationProps) => {
     switch (paymentType) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        case 'WIRE': // case DisbursementPaymentForm.WIRE:
+        case PaymentForm.WIRE:
+        case PaymentForm.ACH:
+        case DisbursementPaymentForm.WIRE:
         case DisbursementPaymentForm.EFT:
         case DisbursementPaymentForm.ACH:
             return (
@@ -203,6 +204,7 @@ const PaymentInfo = ({
                 </div>
             );
         case DisbursementPaymentForm.CHECK:
+        case PaymentForm.CHECK:
             return (
                 <div className="font-secondary text-md font-normal leading-[22px]">
                     {address ? (
@@ -216,6 +218,23 @@ const PaymentInfo = ({
                     ) : (
                         DEFAULT_ERROR_STRING
                     )}
+                </div>
+            );
+        case PaymentForm.CREDITCARD:
+            return (
+                <div className="flex flex-col">
+                    <Content
+                        pii={true}
+                        details={
+                            t('payeeSummaryCard.creditCardEndingIn', {
+                                accountNumber: formatAccountNumber(
+                                    accountNumber,
+                                    true
+                                ),
+                            }) as string
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
                 </div>
             );
         default:
@@ -301,6 +320,7 @@ const PayeeSummaryCard = ({
     charges,
 }: PayeeSummaryCardProps) => {
     const { t } = useTranslation();
+
     const containerClasses = clsx(
         'flex flex-col',
         'w-full  min-w-[420px] max-w-[512px]',
