@@ -237,6 +237,8 @@ const TaskQueueTableRow = ({
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
     const handleUnassignTask = async (taskId: string) => {
+        setActionLoader(true);
+
         const taskData = await getTaskInstance({ taskId: taskId });
 
         setLoader(true);
@@ -260,6 +262,7 @@ const TaskQueueTableRow = ({
                     'task-queue:handleUnassignTask::Successfully un-assigned task',
                     { taskId: taskId }
                 );
+                setActionLoader(false);
                 getTasks(true);
             } else {
                 browserLogInfo(
