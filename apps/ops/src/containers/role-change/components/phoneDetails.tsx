@@ -41,6 +41,7 @@ export type PhoneProps = {
     handlePhoneChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired?: boolean;
     onPreferredPhoneChange?: (id: string, checked: boolean) => void;
     disablePreferredPhone?: boolean;
     showPreferredCheckbox?: boolean;
@@ -51,6 +52,7 @@ function PhoneDetails({
     handlePhoneChange,
     index,
     isReadOnly,
+    isRequired = true,
     onPreferredPhoneChange,
     disablePreferredPhone,
     showPreferredCheckbox = false,
@@ -181,7 +183,7 @@ function PhoneDetails({
                                 disabled
                             )}
                             disabled={disabled}
-                            required
+                            required={isRequired}
                         />
                         <Transition
                             as="div"

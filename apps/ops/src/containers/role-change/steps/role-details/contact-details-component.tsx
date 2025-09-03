@@ -258,7 +258,6 @@ const ContactDetailsComponent = ({
                     }
                 </div>
             </div>
-
             {roleInfo?.party?.addresses
                 ?.filter((address: any) => !isEndDated(address.endDate))
                 ?.map((address: any, index: number) => (
@@ -325,6 +324,11 @@ const ContactDetailsComponent = ({
                                     handlePhoneChange={handleRolePartyChange}
                                     index={index}
                                     isReadOnly={isReadOnly}
+                                    isRequired={
+                                        roleInfo.party
+                                            .preferredCommunicationType ===
+                                        t('phone').toUpperCase()
+                                    }
                                     onPreferredPhoneChange={(id: string) =>
                                         onPreferredValueChange(
                                             PhoneField.Phones,
@@ -376,6 +380,11 @@ const ContactDetailsComponent = ({
                                 handleEmailChange={handleRolePartyChange}
                                 index={index}
                                 isReadOnly={isReadOnly}
+                                isRequired={
+                                    roleInfo.party
+                                        .preferredCommunicationType ===
+                                    t('email').toUpperCase()
+                                }
                                 onPreferredEmailChange={(id: string) => {
                                     onPreferredValueChange(
                                         EmailField.Emails,

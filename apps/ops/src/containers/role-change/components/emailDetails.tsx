@@ -22,6 +22,7 @@ export type EmailProps = {
     handleEmailChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired?: boolean;
     onPreferredEmailChange?: (id: string, checked: boolean) => void;
     disablePreferredEmail?: boolean;
     showPreferredCheckbox?: boolean;
@@ -32,6 +33,7 @@ const EmailDetails = ({
     handleEmailChange,
     index,
     isReadOnly,
+    isRequired = true,
     onPreferredEmailChange,
     disablePreferredEmail,
     showPreferredCheckbox = false,
@@ -114,7 +116,7 @@ const EmailDetails = ({
                             disabled
                         )}
                         disabled={disabled}
-                        required
+                        required={isRequired}
                     />
                 </div>
                 <div className="flex flex-col w-full mt-4">
