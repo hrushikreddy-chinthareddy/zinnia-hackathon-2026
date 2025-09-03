@@ -637,6 +637,7 @@ export const validate = (
         emails,
     } = party;
     const allowedRolesForRemove: (Roles | PartyRole)[] = [
+        Roles.THIRDPARTYDESIGNEE,
         Roles.NEWTHIRDPARTYDESIGNEE,
     ];
 
