@@ -1,3 +1,6 @@
+/**
+ * Mapping of industry terms to their abbreviations
+ */
 export const industryTermToAbbrev = {
     'Technical And Miscellaneous Revenue Act': 'TAMRA',
     'Tax Equity And Fiscal Responsibility Act': 'TEFRA',

@@ -1,3 +1,6 @@
+/**
+ * Exact translations of known data values
+ */
 export const enums: Record<string, string> = {
     LIFE: 'Life',
     ANNUITY: 'Annuity',

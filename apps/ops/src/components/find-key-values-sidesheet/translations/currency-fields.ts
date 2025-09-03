@@ -1,3 +1,6 @@
+/**
+ * Set of known currency fields
+ */
 export const currencyFields = new Set([
     'projectedLapseIndicator',
     'suppressionIndicator',

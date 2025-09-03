@@ -25,12 +25,9 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-key-values-sidesheet.module.css';
+import { preparePolicy } from './transformations';
 import { DataTuple } from './types';
-import {
-    generateKeyValueGroups,
-    prepareSearchableData,
-    preparePolicy,
-} from './utils';
+import { generateKeyValueGroups, prepareSearchableData } from './utils';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
 import FieldDateSelect, {
@@ -54,8 +51,6 @@ const FindAllKeyValuesSection = ({
     fields: DataTuple[];
     searchValue: string;
 }) => {
-    //const { fields, subSections } = toFieldsAndSubsections(section);
-    //console.log('section', fields);
     return (
         <div className={styles.itemsList}>
             {fields.map((field) => {
@@ -70,25 +65,25 @@ const FindAllKeyValuesSection = ({
                                     text={fieldLabel}
                                     highlights={[searchValue]}
                                 />
-                                {/*
-                            {item.tooltip && (
-                                <Popover
-                                    placement={
-                                        PopoverPlacement.TopRight
-                                    }
-                                    title={item.tooltip}
-                                    body={
-                                        item.tooltipBody
-                                    }
-                                >
-                                    <CircleInfoIcon
-                                        height={'16px'}
-                                        width={'16px'}
-                                        className="text-primary"
-                                    />
-                                </Popover>
-                            )}
-                            */}
+                                {/* FIXME: add tooltip
+                                {item.tooltip && (
+                                    <Popover
+                                        placement={
+                                            PopoverPlacement.TopRight
+                                        }
+                                        title={item.tooltip}
+                                        body={
+                                            item.tooltipBody
+                                        }
+                                    >
+                                        <CircleInfoIcon
+                                            height={'16px'}
+                                            width={'16px'}
+                                            className="text-primary"
+                                        />
+                                    </Popover>
+                                )}
+                                */}
                             </div>
                         }
                         dotLeftSideClassName="typography-content-body-sm"
@@ -180,12 +175,12 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     if (!policy) return null; //FIXME: add loading state
 
     // This retains all the persistent extracted data on the policy
-    const preparedPolicy = preparePolicy(policy);
+    const preparedPolicy = useMemo(() => preparePolicy(policy), [policy]);
 
-    const { policyBasics, policySections } = preparedPolicy.toSections(policy);
-
-    //console.log('policyBasics', policyBasics);
-    //console.log('policySections', policySections);
+    const { policyBasics, policySections } = useMemo(
+        () => preparedPolicy.toSections(policy),
+        [preparePolicy]
+    );
 
     return (
         <SideSheet
@@ -278,7 +273,6 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                 subSectionLabel,
                                                 subSectionFields,
                                             ]) => {
-                                                //console.log('subSection', sectionLabel, subSectionLabel, subSectionFields);
                                                 return (
                                                     <div
                                                         className={
@@ -307,45 +301,6 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                 );
                                             }
                                         )}
-                                    {/*
-                                <div className={styles.itemsList}>
-                                    {group.items.map((item) => (
-                                        <DotContainer
-                                            key={item.label}
-                                            dotLeftSide={
-                                                <div>
-                                                    <Highlighter
-                                                        text={item.label}
-                                                        highlights={[
-                                                            searchValue,
-                                                        ]}
-                                                    />
-                                                    {item.tooltip && (
-                                                        <Popover
-                                                            placement={
-                                                                PopoverPlacement.TopRight
-                                                            }
-                                                            title={item.tooltip}
-                                                            body={
-                                                                item.tooltipBody
-                                                            }
-                                                        >
-                                                            <CircleInfoIcon
-                                                                height={'16px'}
-                                                                width={'16px'}
-                                                                className="text-primary"
-                                                            />
-                                                        </Popover>
-                                                    )}
-                                                </div>
-                                            }
-                                            dotLeftSideClassName="typography-content-body-sm"
-                                            dotRightSide={item.value}
-                                            dotRightSideClassName="typography-content-body-sm"
-                                        />
-                                    ))}
-                                </div>
-                                */}
                                 </Accordion>
                             );
                         })}
@@ -425,8 +380,6 @@ export const FindKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
         () => prepareSearchableData(policy ?? {}, t),
         [policy, t]
     );
-
-    //console.log('keyValues', policy);
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 

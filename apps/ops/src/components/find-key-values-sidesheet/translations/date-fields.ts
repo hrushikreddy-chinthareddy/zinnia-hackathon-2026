@@ -1,3 +1,6 @@
+/**
+ * Set of known date fields
+ */
 export const dateFields = new Set([
     'effectiveDate',
     'policyStartDate',

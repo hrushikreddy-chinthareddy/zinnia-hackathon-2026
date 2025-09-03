@@ -1,3 +1,6 @@
+/**
+ * Translations of commonly used phrases into human-readable form
+ */
 export const grammarCorrections = {
     id: 'ID',
     dob: 'DOB',

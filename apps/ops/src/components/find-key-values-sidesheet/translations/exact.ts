@@ -1,3 +1,9 @@
+/**
+ * Exact translation overrides.
+ *
+ * These are used in exceptional cases where the human-readable translation
+ * cannot be inferred from the machine labels.
+ */
 export const exactTranslations: Record<string, string> = {
     unbornChildIndicator: 'Future children covered',
     status: 'Active status',

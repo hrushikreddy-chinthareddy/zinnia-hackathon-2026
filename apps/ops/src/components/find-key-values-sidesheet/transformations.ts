@@ -1,0 +1,363 @@
+import { Policy, LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+
+import { currencyFields } from './translations/currency-fields';
+import { dateFields } from './translations/date-fields';
+import { enums } from './translations/enums';
+import { exactTranslations } from './translations/exact';
+import { excludeFields } from './translations/exclude-fields';
+import { grammarCorrections } from './translations/grammar-corrections';
+import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
+import { sectionTypeToSubsectionTitleFields } from './translations/subsection-field-to-title';
+import {
+    DataTuple,
+    FieldData,
+    PolicySection,
+    PreparedPolicy,
+    PreparedPolicySection,
+} from './types';
+
+/**
+ * Given a policy, returns a factory that can be used to transform sections and tuples
+ * of that policy into a format suitable for display in the find-key-values sidesheet.
+ *
+ * The returned factory retains the policy's line of business as a closure, and
+ * provides the following methods:
+ *
+ * - `toSections(policyOverride)`: given a policy, returns section tuples
+ * - `toFieldsAndSubsections(policySection)`: given a section of the policy,
+ *   returns field tuples and subsection tuples.
+ * - `formatDataField(dataTuple)`: given a tuple of a field name and its value,
+ *   returns a tuple of a human-readable field name and field value.
+ * - `formatAsSectionLabel(label)`: given a section label, returns a human-readable
+ *   section label.
+ *
+ * @param policy The policy to transform
+ * @returns A factory that can be used to split into sections,
+ *          and transform field labels and values into human-readable strings
+ *
+ */
+export const preparePolicy = (
+    policy: Policy
+): {
+    lineOfBusiness: LineOfBusiness;
+    toSections: (policyOverride?: Policy) => PreparedPolicy;
+    toFieldsAndSubsections: (
+        policySection: PolicySection
+    ) => PreparedPolicySection;
+    formatDataField: (dataTuple: DataTuple) => [string, string];
+    formatAsSectionLabel: (label: string) => string;
+} => {
+    // retain persistent policy descriptors as closure
+    const lineOfBusiness =
+        policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
+    return {
+        lineOfBusiness,
+        toSections: (policyOverride) => toSections(policyOverride ?? policy),
+        toFieldsAndSubsections: (policySection: PolicySection) =>
+            toFieldsAndSubsections(policySection, lineOfBusiness),
+        formatDataField: (dataTuple: DataTuple) =>
+            formatDataField(dataTuple, lineOfBusiness),
+        formatAsSectionLabel: (label: string) =>
+            formatAsSectionLabel(label, lineOfBusiness),
+    };
+};
+
+/**
+ * Given a camel-cased string, returns the same string with each camel-case transition
+ * separated by a space. For example, "camelCase" becomes "camel Case".
+ *
+ * @param label The string to split
+ * @returns The same string, with each camel-case transition separated by a space.
+ */
+const splitIntoWords = (label: string) => {
+    return label.replace(/([a-z])([A-Z])/g, '$1 $2');
+};
+
+/**
+ * Given a string and a line of business, returns the same string with any
+ * instances of "policy" replaced with "contract" for non-life policies.
+ *
+ * @param words The string to modify
+ * @param lineOfBusiness The line of business
+ * @returns "policy" if life policy, otherwise "contract"
+ */
+const replaceLineOfBusinessWords = (
+    words: string,
+    lineOfBusiness: LineOfBusiness
+) => {
+    if (lineOfBusiness !== LineOfBusiness.LIFE) {
+        return words.replace(/(\bpolicy\b)/gi, 'contract');
+    }
+    return words;
+};
+
+/**
+ * Given a string, returns the same string with all words capitalized unless
+ * they are abbreviations. The first letter of the sentence is also capitalized.
+ *
+ * @param words The string of space-separated words to modify
+ * @returns The same string, formatted as sentence case
+ */
+const formatAsSentenceCase = (words: string) => {
+    return words
+        .replace(
+            /\w+/g,
+            (word) => {
+                return word === word.toUpperCase() ? word : word.toLowerCase();
+            } // Convert words to lowercase, unless they are abbreviations
+        )
+        .replace(
+            /^./g,
+            (sentence) => sentence.toUpperCase() // Capitalize the first letter of the sentence
+        );
+};
+
+/**
+ * Formats a section label as a human-readable string
+ *
+ * @param label The section label to format
+ * @param lineOfBusiness The line of business
+ * @returns The formatted section label
+ */
+export const formatAsSectionLabel = (
+    label: string,
+    lineOfBusiness: LineOfBusiness
+) => {
+    const words = splitIntoWords(label);
+
+    // Replace "policy" with "contract" if not a life policy
+    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
+        words,
+        lineOfBusiness
+    );
+
+    return formatAsSentenceCase(lineOfBusinessSpecificWords);
+};
+
+/**
+ * Formats a data label as a human-readable string
+ *
+ * @param label The data label to format
+ * @param lineOfBusiness The line of business
+ * @returns The formatted data label
+ */
+const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
+    if (exactTranslations[label]) {
+        return exactTranslations[label];
+    }
+    const words = splitIntoWords(label);
+
+    // Replace "policy" with "contract" if not a life policy
+    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
+        words,
+        lineOfBusiness
+    );
+
+    // Apply industry term abbreviations and grammar corrections
+    const formatted = Object.entries({
+        ...industryTermToAbbrev,
+        ...grammarCorrections,
+    }).reduce(
+        (acc, [key, val]) =>
+            acc.replace(
+                new RegExp(`\\b${key}\\b`, 'i'), // whole word match, case insensitive
+                val
+            ),
+        lineOfBusinessSpecificWords
+    );
+    return formatAsSentenceCase(formatted);
+};
+
+/**
+ * Formats a field value as a human-readable string.
+ * Depending on the field type, the value will be formatted as a string,
+ * match from a map of known values, currency, date, or "--" for empty values.
+ *
+ * @param fieldData The field data to format
+ * @param lineOfBusiness The line of business
+ * @param fieldName The name of the field being formatted
+ * @returns The formatted field value
+ *
+ */
+const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
+    switch (true) {
+        // Empty values
+        case fieldData === null:
+            return '--';
+
+        // Enums
+        case typeof fieldData === 'string' && !!enums[fieldData]:
+            return enums[fieldData];
+
+        // Currency
+        case fieldName && currencyFields.has(fieldName):
+            return numberFormatify(String(fieldData));
+
+        // Dates
+        case fieldName && dateFields.has(fieldName):
+            return convertKebabedDateString(String(fieldData) || undefined);
+
+        case typeof fieldData === 'object' && fieldData !== null:
+            return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
+        default:
+            return String(fieldData);
+    }
+};
+
+/**
+ * Given a tuple of a field name and its value, and a line of business, returns a tuple of a
+ * human-readable field name and field value.
+ *
+ * The human-readable field name is formatted using {@link formatAsDataLabel}, and the
+ * human-readable field value is formatted using {@link formatAsDataValue}.
+ *
+ * @param fieldData The tuple of a field name and its value
+ * @param lineOfBusiness The line of business
+ * @returns A tuple of a human-readable field name and field value
+ *
+ */
+export const formatDataField = (
+    [fieldName, fieldData]: DataTuple,
+    lineOfBusiness: LineOfBusiness
+): [string, string] => {
+    return [
+        formatAsDataLabel(fieldName, lineOfBusiness),
+        formatAsDataValue(fieldData, fieldName),
+    ];
+};
+
+/**
+ * Given a policy, returns a {@link PreparedPolicy} object containing two lists of data
+ * tuples: `policyBasics` and `policySections`.
+ *
+ * `policyBasics` contains all top-level key-value pairs from the policy, filtered to only
+ * include those that are not objects.
+ *
+ * `policySections` contains key-value pairs of section titles and their corresponding
+ * section data.
+ *
+ * @param policy The policy to transform
+ * @returns A {@link PreparedPolicy} object containing two lists of data tuples
+ *
+ */
+export const toSections = (policy: Policy): PreparedPolicy => {
+    const policyTuples = Object.entries(policy);
+    return policyTuples.reduce<PreparedPolicy>(
+        (acc, [currentKey, currentVal]) => {
+            // append to policySections list
+            if (typeof currentVal === 'object' && currentVal !== null) {
+                switch (currentKey) {
+                    case 'allocation':
+                    case 'partyRoles':
+                    case 'parties':
+                        return acc;
+                    default:
+                        return {
+                            ...acc,
+                            policySections: [
+                                ...acc.policySections,
+                                [currentKey, currentVal],
+                            ],
+                        };
+                }
+            }
+
+            // append to policyBasics list
+            return {
+                ...acc,
+                policyBasics: [...acc.policyBasics, [currentKey, currentVal]],
+            };
+        },
+        {
+            policyBasics: [],
+            policySections: [],
+        }
+    );
+};
+
+/**
+ * Given a policy section, returns a {@link PreparedPolicySection} object
+ * containing an array of field/data tuples and/or an array of subsections.
+ *
+ * If the section data is an array, each item in the array is treated as a
+ * subsection, nested under "subSections". The title of each subsection will
+ * map from a defined field *within* that subsection using the
+ * {@link sectionTypeToSubsectionTitleFields} mapping.
+ *
+ * If the section data is an object, and a value within it is a nested object,
+ * it is also treated as a subsection (also nested under "subSections"), but
+ * the subsection title is mapped to the object key.
+ *
+ * Otherwise, the value is meant to be displayed, so just it is just returned
+ * as key-value pairs of field names and field values, nested under "fields".
+ *
+ * @param policySection The policy section to transform
+ * @param lineOfBusiness The line of business for the policy
+ * @returns A {@link PreparedPolicySection} object containing an array of field/data tuples
+ *          and/or an array of subsections
+ */
+export const toFieldsAndSubsections = (
+    policySection: PolicySection,
+    lineOfBusiness: LineOfBusiness
+): PreparedPolicySection => {
+    const [sectionName, sectionData] = policySection;
+
+    // If sectionData is an array, treat each item as a subsection.
+    // The title of each subsection will map from a defined field *within* that subsection
+    if (sectionData instanceof Array) {
+        return {
+            subSections: sectionData.map((subSection, i) => {
+                const subsectionTitleField =
+                    sectionTypeToSubsectionTitleFields[sectionName];
+                const subSectionTitle = formatAsDataValue(
+                    String(
+                        subSection[subsectionTitleField] ??
+                            `${sectionName} ${i + 1}`
+                    ),
+                    lineOfBusiness
+                );
+                const subSectionDataTuples = Object.entries(subSection).filter(
+                    ([fieldName]) =>
+                        fieldName !== subsectionTitleField && // remove the title field
+                        !excludeFields.has(fieldName) // remove excluded fields
+                );
+
+                console.log('subSectionDataTuples', [
+                    subSectionTitle,
+                    subSectionDataTuples,
+                ]);
+                return [subSectionTitle, subSectionDataTuples];
+            }),
+        };
+    } else {
+        const { fields, subSections } = Object.entries(sectionData)
+            .filter(([fieldName]) => !excludeFields.has(fieldName)) // remove excluded fields
+            .reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
+                // If sectionData is an object, and a value within it is a nested object,
+                // also treat it as a subsection, but map the subsection title to the object key
+                if (typeof fieldData === 'object' && fieldData !== null) {
+                    return {
+                        fields: acc.fields, // keep fields untouched
+                        subSections: [
+                            ...(acc.subSections ?? []),
+                            [fieldName, Object.entries(fieldData)],
+                        ],
+                    };
+                }
+
+                // Otherwise, the value is meant to be displayed, so just output the key-value pair
+                return {
+                    fields: [...(acc.fields ?? []), [fieldName, fieldData]],
+                    subSections: acc.subSections, // keep subsections untouched
+                };
+            }, {});
+
+        return {
+            fields,
+            subSections,
+        };
+    }
+};
