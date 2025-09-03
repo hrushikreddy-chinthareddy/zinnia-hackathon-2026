@@ -10,7 +10,7 @@ export const productTypeVisibilityRules: ProductTypeVisibilityRules = {
     // Term products don't show these features by default
     [ProductType.TERM]: {
         allowsLoans: false,
-        allowsWithdrawals: false,
+        allowsWithdrawals: true,
         allowsFundsAndAccounts: false,
         allowPremiums: false,
         allowRMD: false,
