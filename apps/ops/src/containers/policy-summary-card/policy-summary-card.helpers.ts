@@ -25,6 +25,7 @@ export const deathClaimApplicableStatuses: any[] = [
     PolicyStatus.ACTIVE,
     PolicyStatus.HARDSHIP,
     PolicyStatus.MATURED,
+    PolicyStatus.PAYOUT,
     PolicyStatus.EXTENDEDFREEL,
     PolicyStatus.ACTIVEGUARANTEE,
     PolicyStatus.NONLIFEPAYOUT,

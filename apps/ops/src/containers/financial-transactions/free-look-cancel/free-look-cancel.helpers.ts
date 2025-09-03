@@ -20,12 +20,6 @@ export const buildFreeLookCancelRequestBody = (
             effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(
                 ZAHARA_API_DATE_FORMAT
             ),
-            payeeOrBeneficiary: {
-                allocationPercentage: 100,
-                bankId: withdrawal.paymentBankId,
-                partyId: withdrawal.payeePartyId,
-                paymentForm: withdrawal.paymentForm,
-            },
             parties: [
                 {
                     allocationPercentage: 100,
@@ -53,12 +47,14 @@ export const buildFreeLookCancelRequestBody = (
         effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(
             ZAHARA_API_DATE_FORMAT
         ),
-        payeeOrBeneficiary: {
-            allocationPercentage: 100,
-            bankId: withdrawal.paymentBankId,
-            partyId: withdrawal.payeePartyId,
-            paymentForm: PaymentForm.ACH,
-        },
+        parties: [
+            {
+                allocationPercentage: 100,
+                bankId: withdrawal.paymentBankId,
+                partyId: withdrawal.payeePartyId,
+                paymentForm: PaymentForm.ACH,
+            },
+        ],
         reverseInitiator: false,
         transactionAmounts: {
             disbursementType: withdrawal.disbursementType,

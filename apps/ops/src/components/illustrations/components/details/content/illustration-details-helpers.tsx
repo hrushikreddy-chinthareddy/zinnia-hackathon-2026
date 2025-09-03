@@ -3,9 +3,10 @@ import { TFunction } from 'next-i18next';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
-export const formatIllustrationDetailCurrencyBold = (
+export const formatIllustrationDetailCurrency = (
     t: TFunction,
-    value: number | null
+    value: number | null,
+    bold?: boolean
 ) => {
     if (value == null) {
         return DEFAULT_ERROR_STRING;
@@ -16,8 +17,16 @@ export const formatIllustrationDetailCurrencyBold = (
 
     return (
         <>
-            <span className="typography-content-body-bold">{intSlice}</span>
-            {`.${fracSlice}`}
+            <span
+                className={
+                    bold
+                        ? 'typography-content-body-bold'
+                        : 'typography-content-body'
+                }
+            >
+                {intSlice}
+            </span>
+            <span className="typography-labels-label-sm-alt">{`.${fracSlice}`}</span>
         </>
     );
 };
@@ -45,9 +54,11 @@ export const formatIllustrationDetailYearlyCurrency = (
             >
                 {intSlice}
             </span>
-            {t('clientCase.illustrationDetails.valuePerYear', {
-                value: `.${fracSlice}`,
-            })}
+            <span className="typography-labels-label-sm-alt">
+                {t('clientCase.illustrationDetails.valuePerYear', {
+                    value: `.${fracSlice}`,
+                })}
+            </span>
         </>
     );
 };

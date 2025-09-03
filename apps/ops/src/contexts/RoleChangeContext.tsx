@@ -114,6 +114,7 @@ export const defaultRoleValue: RoleChangeContextType = {
                     endDate: null,
                     country: Country.US,
                     addressType: AddressType.RESIDENCE,
+                    isPreferred: true,
                 },
             ],
             phones: [
@@ -123,6 +124,7 @@ export const defaultRoleValue: RoleChangeContextType = {
                     countryCode: '1',
                     endDate: null,
                     dialNumber: '',
+                    isPreferred: true,
                 },
             ],
             emails: [
@@ -131,6 +133,7 @@ export const defaultRoleValue: RoleChangeContextType = {
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                     endDate: null,
                     emailAddress: '',
+                    isPreferred: true,
                 },
             ],
             entityType: EntityTypeValue.Other,

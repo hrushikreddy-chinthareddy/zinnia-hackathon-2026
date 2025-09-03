@@ -68,11 +68,15 @@ const baseProps = {
         zipCode: '12345',
         zipCodeExtension: '6789',
         remove: false,
+        isPreferred: false,
     },
     handleAddressChange: jest.fn(),
     index: 0,
     isReadOnly: false,
     role: 'Owner',
+    onPreferredAddressChange: jest.fn(),
+    disablePreferredAddress: false,
+    showPreferredCheckbox: false,
 };
 
 describe('AddressDetails', () => {

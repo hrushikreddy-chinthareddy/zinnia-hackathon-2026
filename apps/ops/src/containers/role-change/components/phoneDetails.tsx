@@ -41,6 +41,10 @@ export type PhoneProps = {
     handlePhoneChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired?: boolean;
+    onPreferredPhoneChange?: (id: string, checked: boolean) => void;
+    disablePreferredPhone?: boolean;
+    showPreferredCheckbox?: boolean;
 };
 
 function PhoneDetails({
@@ -48,6 +52,10 @@ function PhoneDetails({
     handlePhoneChange,
     index,
     isReadOnly,
+    isRequired = true,
+    onPreferredPhoneChange,
+    disablePreferredPhone,
+    showPreferredCheckbox = false,
 }: PhoneProps) {
     const INITIAL_PHONE: Phone = {
         bestTime: ANYTIME,
@@ -103,6 +111,8 @@ function PhoneDetails({
             countries[value as keyof typeof countries].phone
         );
     };
+
+    const preferredPhoneId = `preferredPhone-${index}`;
 
     return (
         <div key={`phoneType-${index}`}>
@@ -173,7 +183,7 @@ function PhoneDetails({
                                 disabled
                             )}
                             disabled={disabled}
-                            required
+                            required={isRequired}
                         />
                         <Transition
                             as="div"
@@ -256,6 +266,23 @@ function PhoneDetails({
                                 }
                             />
                         </div>
+                    </div>
+                    <div className="flex flex-col gap-4 mt-4">
+                        {showPreferredCheckbox && (
+                            <CheckboxText
+                                id={preferredPhoneId}
+                                checked={phone.isPreferred}
+                                label={t('fieldLabels.preferredPhone')}
+                                onChange={(checked) =>
+                                    onPreferredPhoneChange?.(
+                                        preferredPhoneId,
+                                        checked
+                                    )
+                                }
+                                isDisabled={disabled || disablePreferredPhone}
+                                readonly={phone.isPreferred ? true : isReadOnly}
+                            />
+                        )}
                     </div>
                 </div>
                 <CheckboxText

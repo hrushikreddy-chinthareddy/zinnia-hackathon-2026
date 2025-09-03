@@ -154,11 +154,11 @@ export default function FormDisbursement({
     const existingBankSelected = isLC
         ? isExistingBankLC(
               bankingDetails as LifeCadBanking[],
-              formDisbursement.bank[0].bankName || ''
+              formDisbursement?.bank[0]?.bankName || ''
           )
         : isExistingBank(
               bankingDetails as BankAccountBase[],
-              formDisbursement.bank[0].bankName || ''
+              formDisbursement?.bank[0].bankName || ''
           );
 
     useEffect(() => {

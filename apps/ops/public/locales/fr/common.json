@@ -4586,7 +4586,8 @@
                     "zip": "Code postal",
                     "addressLine1": "Ligne d'adresse 1",
                     "addressLine2": "Ligne d'adresse 2",
-                    "addressLine3": "Ligne d'adresse 3"
+                    "addressLine3": "Ligne d'adresse 3",
+                    "preferredAddress": "Adresse préférée"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Le courrier sera envoyé à cette adresse à partir de maintenant.",
@@ -4657,7 +4658,8 @@
                     "form": "Sélectionnez les préférences de communication",
                     "email": "Email",
                     "removeEmail": "Supprimer cet e-mail",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredEmail": "E-mail préféré"
                 },
                 "mainCta": {
                     "add": "Enregistrer l'email {{type}}",
@@ -4677,7 +4679,8 @@
                     "preferredTime": "Heure préférée pour contacter",
                     "removeNumber": "Supprimer ce numéro de téléphone",
                     "timeZone": "Fuseau horaire",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredPhone": "Téléphone préféré"
                 },
                 "general": {
                     "cancel": "Annuler"
@@ -7339,7 +7342,6 @@
             "edit": "Modifier",
             "viewPdf": "PDF",
             "pdfError": "Une erreur est survenue lors du chargement du PDF.",
-            "deathBenefitOption": "Option de prestation de décès",
             "premiumMode": "Mode de prime",
             "paymentMode": "Mode de paiement",
             "cashValue": "Valeur de rachat",
@@ -7398,7 +7400,8 @@
             "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
             "addProductAriaLabel": "Bouton pour ajouter un produit",
-            "editIllustration": "Modifier l'illustration"
+            "editIllustration": "Modifier l'illustration",
+            "initialDeathBenefitOption": "Option de prestation de décès"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

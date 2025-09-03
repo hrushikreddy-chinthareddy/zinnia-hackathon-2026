@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { ReactNode, HTMLAttributes } from 'react';
 
+import styles from './content-section.module.css';
+
 interface IllustrationDetailsContentSection
     extends Pick<HTMLAttributes<HTMLDivElement>, 'className'> {
     title: string;
@@ -13,15 +15,8 @@ export default function IllustrationDetailsContentSection({
     children,
 }: IllustrationDetailsContentSection) {
     return (
-        <section
-            className={clsx(
-                className,
-                'grid grid-cols-6 items-center content-start gap-x-3 gap-y-2 pb-6 border-border-light border-b-2'
-            )}
-        >
-            <h3 className="col-span-1 min-w-[165px] [font:var(--typography-titles-subtitle)]">
-                {title}
-            </h3>
+        <section className={clsx(className, styles.section)}>
+            <h3 className={styles.sectionTitle}>{title}</h3>
 
             {children}
         </section>

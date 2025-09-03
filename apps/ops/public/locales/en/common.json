@@ -954,7 +954,6 @@
         "yes": "Yes",
         "no": "No"
     },
-
     "addressChange": {
         "common": {
             "partyRole": {
@@ -1097,7 +1096,6 @@
             }
         }
     },
-
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -4656,7 +4654,8 @@
                     "zip": "Zip",
                     "addressLine1": "Address line 1",
                     "addressLine2": "Address line 2",
-                    "addressLine3": "Address line 3"
+                    "addressLine3": "Address line 3",
+                    "preferredAddress": "Preferred address"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Mail will be sent to this address going forward.",
@@ -4728,7 +4727,8 @@
                     "email": "Email",
                     "removeEmail": "Remove this email",
                     "remove": "Remove email",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredEmail": "Preferred email"
                 },
                 "mainCta": {
                     "add": "Save {{type}} email",
@@ -4749,7 +4749,8 @@
                     "removeNumber": "Remove this phone number",
                     "removePhone": "Remove phone",
                     "timeZone": "Time zone",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredPhone": "Preferred phone"
                 },
                 "general": {
                     "cancel": "Cancel"
@@ -6691,7 +6692,6 @@
             "submitTask": "Submit"
         }
     },
-
     "nbAttachmentNigo": {
         "confirmStep": {
             "title": "Got It!",
@@ -7384,7 +7384,6 @@
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
-
         "tabs": {
             "logins": "Logins",
             "pageViews": "Page Views"
@@ -7468,7 +7467,6 @@
             "edit": "Edit",
             "viewPdf": "PDF",
             "pdfError": "An error occured while generating the PDF.",
-            "deathBenefitOption": "Death Benefit Option",
             "premiumMode": "Premium mode",
             "paymentMode": "Payment mode",
             "cashValue": "Cash value",
@@ -7527,7 +7525,8 @@
             "cancelArchiveAriaLabel": "Cancel archive illustration button",
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
             "addProductAriaLabel": "Add product button",
-            "editIllustration": "Edit Illustration"
+            "editIllustration": "Edit Illustration",
+            "initialDeathBenefitOption": "Initial death benefit option"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
