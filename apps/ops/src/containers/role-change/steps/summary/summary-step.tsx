@@ -355,6 +355,7 @@ const SummaryStep = ({
                             <Label
                                 variant={LabelVariant.FieldLabel}
                                 label={t('uscitizen')}
+                                sentenceCase={false}
                             />
                             <Typography variant={TypographyVariant.BodySm}>
                                 {usCitizen || DEFAULT_ERROR_STRING}
@@ -365,6 +366,7 @@ const SummaryStep = ({
                             <Label
                                 variant={LabelVariant.FieldLabel}
                                 label={t('ssn')}
+                                sentenceCase={false}
                             />
                             <Typography variant={TypographyVariant.BodySm}>
                                 <PiiWrapper>
@@ -393,6 +395,7 @@ const SummaryStep = ({
                                     <Label
                                         variant={LabelVariant.FieldLabel}
                                         label={t('birthdate')}
+                                        sentenceCase={false}
                                     />
                                     <Typography
                                         variant={TypographyVariant.BodySm}

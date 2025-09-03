@@ -494,7 +494,7 @@
                 "partyType": {
                     "individual": "Individual",
                     "trust": "Fideicomiso",
-                    "estate/Organisation": "Patrimonio/Organización"
+                    "estate/Organization": "Patrimonio/Organización"
                 },
                 "trustType": "Tipo de Fideicomiso",
                 "prefixOptions": {
@@ -806,7 +806,7 @@
             "partyOptions": {
                 "individual": "Persona",
                 "trust": "Fideicomiso",
-                "organisation": "Patrimonio/Organización",
+                "organization": "Patrimonio/Organización",
                 "custodian": "Custodio"
             },
             "resonOptions": {

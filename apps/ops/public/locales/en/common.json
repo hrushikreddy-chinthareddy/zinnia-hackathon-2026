@@ -478,7 +478,7 @@
                 "partyType": {
                     "individual": "Individual",
                     "trust": "Trust",
-                    "estate/Organisation": "Estate/Organisation"
+                    "estate/Organization": "Estate/Organization"
                 },
                 "trustType": "Trust Type",
                 "prefixOptions": {
@@ -832,7 +832,7 @@
             "partyOptions": {
                 "individual": "Individual",
                 "trust": "Trust",
-                "organization": "Estate/Organisation",
+                "organization": "Estate/Organization",
                 "custodian": "Custodian"
             },
             "reasonOptions": {
@@ -895,10 +895,10 @@
             "relationshipcurrent": "Relationship to party",
             "relationship": "Relationship to {{roleLabel}}",
             "name": "Name",
-            "uscitizen": "US citizen",
+            "uscitizen": "US Citizen",
             "ssn": "SSN",
             "gender": "Gender",
-            "birthdate": "Birth date",
+            "birthdate": "Birth Date",
             "prefferedMethod": "Preferred Contact Method",
             "contactDetails": "Contact details",
             "email": "Email",

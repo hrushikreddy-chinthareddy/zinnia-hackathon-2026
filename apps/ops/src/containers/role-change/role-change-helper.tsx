@@ -33,6 +33,7 @@ import {
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
+    DEFAULT_DATE_FORMAT,
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
@@ -864,7 +865,7 @@ export const formatDate = (date?: string | null): string => {
     if (!date) {
         return DEFAULT_ERROR_STRING;
     }
-    return dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+    return dayjs(date, DATE_PICKER_FORMAT).format(DEFAULT_DATE_FORMAT);
 };
 
 export const getTrustTypeLabel = (

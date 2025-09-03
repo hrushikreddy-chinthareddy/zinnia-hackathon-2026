@@ -559,7 +559,7 @@
                 "partyType": {
                     "individual": "Individu",
                     "trust": "Fiducie",
-                    "estate/Organisation": "Succession/Organisation"
+                    "estate/Organization": "Succession/Organisation"
                 },
                 "trustType": "Type de confiance",
                 "prefixOptions": {
@@ -887,7 +887,7 @@
             "partyOptions": {
                 "individual": "Individu",
                 "trust": "Fideicomiso",
-                "estate/Organisation": "Estate/Organisation",
+                "estate/Organization": "Estate/Organisation",
                 "custodian": "Tuteur"
             },
             "resonOptions": {

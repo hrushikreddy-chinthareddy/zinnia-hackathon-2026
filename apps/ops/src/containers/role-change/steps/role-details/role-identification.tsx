@@ -41,7 +41,6 @@ import {
 } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { convertToBase64 } from '@deps/containers/people-data-cards/name-card/sidesheet/sidesheet-name-card.helpers';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
-import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import {
     EDS_DATE_DISPLAY_FORMAT,
@@ -176,6 +175,12 @@ const RoleIdentification = ({
         handleChange(RoleField.EntityType, value);
     };
 
+    const handleOnChange =
+        (roleField: RoleField) =>
+        (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleChange(roleField, e.target.value);
+        };
+
     const isRelevantChangeHandler = (
         e: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -185,6 +190,7 @@ const RoleIdentification = ({
             supportingDocumentAttached: e.target.value,
         }));
     };
+
 
     return (
         <div key={index}>
@@ -586,91 +592,89 @@ const RoleIdentification = ({
                 </div>
             </div>
 
-            <div className={containerClasses}>
-                <div className={sectionClasses}>
-                    <div className="grid w-full grid-cols-4 gap-4">
-                        <div>
-                            <div className="mb-6">
-                                <Field
-                                    label={t('ssn') as string}
-                                    onChange={(e) =>
-                                        handleIdentificationChange(
-                                            IDENTIFICATIONS,
-                                            0,
-                                            RoleField.IdentificationValue,
-                                            e.target.value
-                                        )
-                                    }
-                                    formatOptions={{ format: '#########' }}
-                                    size={FieldSize.Small}
-                                    type={FieldType.BaseActive}
-                                    value={
-                                        identification?.identificationValue ||
-                                        ''
-                                    }
-                                    maxLength={9}
-                                    variant={
-                                        isReadOnly
-                                            ? FieldVariant.Inactive
-                                            : FieldVariant.Default
-                                    }
-                                />
-                            </div>
+           {party?.partyType === PartyType.INDIVIDUAL && (
+             <div className={containerClasses}>
+             <div className={sectionClasses}>
+                 <div className="grid w-full grid-cols-4 gap-4">
+                     <div>
+                         <div className="mb-6">
+                             <Field
+                                 label={t('ssn') as string}
+                                 onChange={(e) =>
+                                     handleIdentificationChange(
+                                         IDENTIFICATIONS,
+                                         0,
+                                         RoleField.IdentificationValue,
+                                         e.target.value
+                                     )
+                                 }
+                                 formatOptions={{ format: '#########' }}
+                                 size={FieldSize.Small}
+                                 type={FieldType.BaseActive}
+                                 value={
+                                     identification?.identificationValue ||
+                                     ''
+                                 }
+                                 maxLength={9}
+                                 variant={
+                                     isReadOnly
+                                         ? FieldVariant.Inactive
+                                         : FieldVariant.Default
+                                 }
+                             />
+                         </div>
 
-                            {isRolePartyCheck && (
-                                <>
-                                    <div className="mb-6">
-                                        <Radio
-                                            label={t('gender') as string}
-                                            items={genderOptions}
-                                            onChange={(e) =>
-                                                handleChange(
-                                                    RoleField.Gender,
-                                                    e.target.value
-                                                )
-                                            }
-                                            disabled={isReadOnly}
-                                            value={party?.gender || ''}
-                                            variant={
-                                                isReadOnly
-                                                    ? RadioVariant.Inactive
-                                                    : RadioVariant.Default
-                                            }
-                                            name={'gender' + Math.random()}
-                                        />
-                                    </div>
-                                    <div>
-                                        <FieldDateSelect
-                                            label={t('dateOfBirth') as string}
-                                            id="dateOfBirth"
-                                            data-testid="dateOfBirth"
-                                            isFutureDateDisabled={false}
-                                            onChange={(e) =>
-                                                handleChange(
-                                                    RoleField.DateOfBirth,
-                                                    e.target.value
-                                                )
-                                            }
-                                            size={FieldSize.Small}
-                                            type={FieldType.BaseActive}
-                                            value={
-                                                !newRole
-                                                    ? dob
-                                                    : party?.dateOfBirth || ''
-                                            }
-                                            maxLength={10}
-                                            disabled={isReadOnly}
-                                            variant={
-                                                isReadOnly
-                                                    ? FieldVariant.Inactive
-                                                    : FieldVariant.Default
-                                            }
-                                        />
-                                    </div>
-                                </>
-                            )}
-                        </div>
-                    </div>
+                         {isRolePartyCheck && (
+                             <>
+                                 <div className="mb-6">
+                                     <Radio
+                                         label={t('gender') as string}
+                                         items={genderOptions}
+                                         onChange={handleOnChange(RoleField.Gender)}
+                                         disabled={isReadOnly}
+                                         value={party?.gender || ''}
+                                         variant={
+                                             isReadOnly
+                                                 ? RadioVariant.Inactive
+                                                 : RadioVariant.Default
+                                         }
+                                         name={'gender' + Math.random()}
+                                     />
+                                 </div>
+                                 <div>
+                                     <FieldDateSelect
+                                         label={t('dateOfBirth') as string}
+                                         id="dateOfBirth"
+                                         data-testid="dateOfBirth"
+                                         isFutureDateDisabled={false}
+                                         onChange={handleOnChange(RoleField.DateOfBirth)}
+                                         size={FieldSize.Small}
+                                         type={FieldType.BaseActive}
+                                         value={
+                                             !newRole
+                                                 ? dob
+                                                 : party?.dateOfBirth || ''
+                                         }
+                                         maxLength={10}
+                                         disabled={isReadOnly}
+                                         variant={
+                                             isReadOnly
+                                                 ? FieldVariant.Inactive
+                                                 : FieldVariant.Default
+                                         }
+                                     />
+                                 </div>
+                             </>
+                         )}
+                     </div>
+                 </div>
+             </div>
+         </div>
+
+           )}
+
+            {party?.partyType === PartyType.TRUST && (
+                <div className={containerClasses}>
                     {(role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ||
                         role.toUpperCase() === Roles.NEWTHIRDPARTYDESIGNEE) &&
                         party?.partyType === PartyType.TRUST && (
@@ -691,7 +695,7 @@ const RoleIdentification = ({
                             </>
                         )}
                 </div>
-            </div>
+            )}
         </div>
     );
 };
