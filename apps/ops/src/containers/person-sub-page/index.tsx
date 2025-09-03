@@ -21,9 +21,9 @@ import {
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
-import { TransactionResponseStatus} from '@deps/queries/api/bpm';
-import { checkManageBankChangeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
-import { checkAddressChangeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkManageBankChangeEligibilityQuery, checkPhoneChangeEligibilityQuery ,checkAddressChangeEligibilityQuery} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -114,6 +114,23 @@ export const PersonSubPage = ({
             planCode
         );
 
+    const { data: phoneChangeEligibility } = useQuery({
+        queryKey: ['checkPhoneChangeEligibilityQuery', planCode, policyNumber],
+        queryFn: () =>
+            checkPhoneChangeEligibilityQuery(
+                planCode as string,
+                policy.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligiblePhoneChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+
     const { data: manageBankChangeEligibility } = useQuery({
         queryKey: [
             'checkManageJointOwnerEligibilityQuery',
@@ -172,7 +189,7 @@ export const PersonSubPage = ({
 
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <PhoneCard
-                    editable={editable}
+                    editable={editable && phoneChangeEligibility?.isEligiblePhoneChange}
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}
