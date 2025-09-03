@@ -614,6 +614,7 @@
                     "other": "Autre"
                 }
             },
+            "contactDetails": "Coordonnées",
             "contactInfo": {
                 "title": "Coordonnées",
                 "labels": {

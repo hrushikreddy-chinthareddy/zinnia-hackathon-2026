@@ -549,6 +549,7 @@
                     "other": "Otro"
                 }
             },
+            "contactDetails": "Detalles de contacto",
             "contactInfo": {
                 "title": "Información de Contacto",
                 "labels": {

@@ -534,6 +534,7 @@
                     "other": "Other"
                 }
             },
+            "contactDetails": "Contact Details",
             "contactInfo": {
                 "title": "Contact Info",
                 "labels": {

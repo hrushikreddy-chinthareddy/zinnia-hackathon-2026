@@ -260,7 +260,7 @@ export default function BeneficiaryDetails({
             <div>
                 <div className="my-8">
                     <Typography variant={TypographyVariant.H2}>
-                        Contact Details
+                        {t('contactDetails')}
                     </Typography>
                 </div>
                 <div
