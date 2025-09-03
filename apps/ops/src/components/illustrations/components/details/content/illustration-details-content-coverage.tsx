@@ -6,7 +6,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { formatIllustrationDetailCurrencyBold } from './illustration-details-helpers';
+import { formatIllustrationDetailCurrency } from './illustration-details-helpers';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export default function TermContentCoverage() {
@@ -30,14 +30,14 @@ export default function TermContentCoverage() {
                     )}
                     ddAriaLabel={faceAmountStr}
                 >
-                    {formatIllustrationDetailCurrencyBold(t, faceAmount)}
+                    {formatIllustrationDetailCurrency(t, faceAmount, true)}
                 </ContentEntry>
                 <ContentEntry
                     label={t(
                         'clientCase.illustrationDetails.coverage.termLength'
                     )}
                 >
-                    <span className="[font:var(--typography-content-body-bold)]">
+                    <span className="typography-content-body-bold">
                         {planYears != null
                             ? t('clientCase.illustrationDetails.numYears', {
                                   years: planYears,

@@ -86,7 +86,11 @@ export abstract class IllustrationHandler<TOutputEntities> {
             ...(clientCase?.insuredDetails?.state && {
                 jurisdiction: clientCase.insuredDetails.state,
             }),
+
             insured: {
+                nicotineUser: clientCase.insuredDetails?.nicotineUser
+                    ? 'Nicotine'
+                    : 'Non-Nicotine',
                 ...(clientCase?.insuredDetails?.dateOfBirth && {
                     issueAge: calculateAgeNumber(
                         clientCase.insuredDetails.dateOfBirth.toString()

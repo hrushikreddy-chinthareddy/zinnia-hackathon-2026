@@ -204,6 +204,90 @@ export const farmersBlueprintIU0101 = {
                                     },
                                 },
                                 {
+                                    fieldType: 'custom',
+                                    customName: 'Tags',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'insured-nicotine-tag',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'ca06eb12-f28c-4bc7-b1d5-72630d14f97a',
+                                    partName:
+                                        'f77424d5-24e5-4704-9664-ba1c0fa18079',
+                                    validateAs: 'custom',
+                                    customProperties: {
+                                        tagNodeIds: ['is-nicotine-user'],
+                                    },
+                                },
+                                {
+                                    fieldType: 'radio',
+                                    id: '73968a4c-3cc7-4f56-9f2c-01edb9b4fa69',
+                                    partName:
+                                        'custom-4319e0df-6a1e-45db-b036-b76402b4d572',
+                                    referenceLabel: '',
+                                    text: {
+                                        en: 'Nicotine User',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    platforms: ['consumer'],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    answerNodeId: 'is-nicotine-user',
+                                    outputPath: 'insured.nicotineUser',
+                                    optional: false,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 12,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: 'Nicotine',
+                                            text: {
+                                                en: 'Nicotine',
+                                            },
+                                            isCustom: true,
+                                        },
+                                        {
+                                            value: 'Non-Nicotine',
+                                            text: {
+                                                en: 'Non-Nicotine',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    defaultValue: 'Non-Nicotine',
+                                    disabled: true,
+                                },
+                                {
                                     fieldType: 'number',
                                     text: {
                                         en: '',
@@ -1082,6 +1166,13 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Non-Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
+                                                    },
                                                 ],
                                             },
                                             orderingIndex: 0,
@@ -1102,6 +1193,13 @@ export const farmersBlueprintIU0101 = {
                                                             'insured-issue-age',
                                                         operator:
                                                             'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Non-Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
                                                     },
                                                 ],
                                             },
@@ -1124,6 +1222,13 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Non-Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
+                                                    },
                                                 ],
                                             },
                                             orderingIndex: 0,
@@ -1144,6 +1249,13 @@ export const farmersBlueprintIU0101 = {
                                                             'insured-issue-age',
                                                         operator:
                                                             'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Non-Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
                                                     },
                                                 ],
                                             },
@@ -1167,6 +1279,13 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
+                                                    },
                                                 ],
                                             },
                                         },
@@ -1186,6 +1305,13 @@ export const farmersBlueprintIU0101 = {
                                                             'insured-issue-age',
                                                         operator:
                                                             'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
                                                     },
                                                 ],
                                             },
@@ -1251,6 +1377,13 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'greaterThanOrEqual',
                                                     },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Non-Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
+                                                    },
                                                 ],
                                             },
                                         },
@@ -1271,6 +1404,13 @@ export const farmersBlueprintIU0101 = {
                                                             'insured-issue-age',
                                                         operator:
                                                             'greaterThanOrEqual',
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: 'Nicotine',
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-nicotine-user',
                                                     },
                                                 ],
                                             },

@@ -1,7 +1,7 @@
 import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, {
@@ -42,7 +42,7 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
     } = useDeathClaim();
     const [isLoading, setIsLoading] = useState(false);
 
-    const submit = useCallback(async () => {
+    const submit = async () => {
         setIsLoading(true);
         const payload = buildClaimPaylod(
             policy,
@@ -68,7 +68,7 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
         }
 
         setIsLoading(false);
-    }, [setSubmitFailed, notifiers, owners, beneficiaries, policy, setCaseId]);
+    };
 
     if (isLoading) {
         return (

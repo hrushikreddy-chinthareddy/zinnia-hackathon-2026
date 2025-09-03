@@ -4,6 +4,7 @@ import { useIllustrationDetail } from '@deps/components/illustrations/providers/
 import { TranslationFiles } from '@deps/config/translations';
 import { ProductTypes } from '@deps/types/product';
 
+import styles from './details-content.module.css';
 import ContentCashValue from './illustration-details-content-cash-value';
 import CoverageSection from './illustration-details-content-coverage';
 import IulContentCoverage from './illustration-details-content-iul-coverage';
@@ -21,7 +22,7 @@ export default function IllustrationDetailsContent({
 
     if (illustration?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE) {
         return (
-            <div className="flex flex-col p-6 gap-6">
+            <div className={styles.detailsContent}>
                 <IulContentCoverage />
                 <ContentPremium />
                 <ContentRiders />
@@ -29,8 +30,9 @@ export default function IllustrationDetailsContent({
             </div>
         );
     }
+
     return (
-        <div className="flex flex-col p-6 gap-6">
+        <div className={styles.detailsContent}>
             <CoverageSection />
             <ContentPremium />
             <ContentRiders />

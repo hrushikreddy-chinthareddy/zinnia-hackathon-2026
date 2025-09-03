@@ -811,7 +811,6 @@
                 "transferConsideration": "'Transferencia por consideración'"
             },
             "yes": "Sí",
-            "no": "No",
             "entityType": "Tipo de entidad",
             "entityTypeOptions": {
                 "soleProprietorship": "Empresa unipersonal",
@@ -4569,7 +4568,8 @@
                     "zip": "Código postal",
                     "addressLine1": "Línea de dirección 1",
                     "addressLine2": "Línea de dirección 2",
-                    "addressLine3": "Línea de dirección 3"
+                    "addressLine3": "Línea de dirección 3",
+                    "preferredAddress": "Dirección preferida"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "El correo se enviará a esta dirección en adelante.",
@@ -4640,7 +4640,8 @@
                 "labels": {
                     "email": "Correo electrónico",
                     "removeEmail": "Eliminar este correo electrónico",
-                    "type": "Tipo"
+                    "type": "Tipo",
+                    "preferredEmail": "Correo electrónico preferido"
                 },
                 "mainCta": {
                     "add": "Guardar correo electrónico de {{type}}",
@@ -4660,7 +4661,8 @@
                     "preferredTime": "Hora preferida para contactar",
                     "removeNumber": "Eliminar este número de teléfono",
                     "timeZone": "Zona horaria",
-                    "type": "Tipo"
+                    "type": "Tipo",
+                    "preferredPhone": "Teléfono preferido"
                 },
                 "general": {
                     "cancel": "Cancelar"
@@ -7269,7 +7271,6 @@
             "edit": "Editar",
             "viewPdf": "PDF",
             "pdfError": "Ocurrio un error al cargar el PDF.",
-            "deathBenefitOption": "Opción de beneficio por fallecimiento",
             "premiumMode": "Modo de prima",
             "paymentMode": "Modo de pago",
             "cashValue": "Valor en efectivo",
@@ -7328,7 +7329,8 @@
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
             "addProductAriaLabel": "Boton para agregar un producto",
-            "editIllustration": "Editar ilustración"
+            "editIllustration": "Editar ilustración",
+            "initialDeathBenefitOption": "Opción de beneficio por muerte inicial"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

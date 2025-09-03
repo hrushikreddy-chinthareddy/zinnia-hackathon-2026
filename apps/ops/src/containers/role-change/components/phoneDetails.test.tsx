@@ -37,11 +37,15 @@ const baseProps = {
         timezone: 'Asia/Kolkata',
         extension: '',
         remove: false,
+        isPreferred: false,
     },
     handlePhoneChange: jest.fn(),
     index: 0,
     role: 'user',
     isReadOnly: false,
+    onPreferredPhoneChange: jest.fn,
+    disablePreferredPhone: false,
+    showPreferredCheckbox: false,
 };
 describe('PhoneDetails', () => {
     beforeEach(() => {

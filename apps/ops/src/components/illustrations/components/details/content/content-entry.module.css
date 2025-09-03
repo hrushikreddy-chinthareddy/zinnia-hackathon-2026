@@ -1,0 +1,12 @@
+.label {
+    grid-column-start: 2;
+
+    font: var(--typography-labels-label-sm-alt);
+}
+
+.value {
+    grid-column-start: 3;
+
+    font: var(--typography-content-body);
+    text-align: end;
+}

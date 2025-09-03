@@ -13,7 +13,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
-import { formatIllustrationDetailCurrencyBold } from './illustration-details-helpers';
+import { formatIllustrationDetailCurrency } from './illustration-details-helpers';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
 
 export default function IulContentCoverage() {
@@ -32,7 +32,7 @@ export default function IulContentCoverage() {
                         <TableCell style={{ textAlign: 'left' }}>
                             {option?.value}
                         </TableCell>
-                        <TableCell style={{ textAlign: 'right' }}>
+                        <TableCell style={{ textAlign: 'left' }}>
                             {option?.from}
                         </TableCell>
                         <TableCell style={{ textAlign: 'right' }}>
@@ -55,31 +55,32 @@ export default function IulContentCoverage() {
                     )}
                 >
                     {faceAmount != null
-                        ? formatIllustrationDetailCurrencyBold(t, faceAmount)
+                        ? formatIllustrationDetailCurrency(t, faceAmount, true)
                         : faceAmountStr}
                 </ContentEntry>
-                <ContentEntry
-                    label={t(
-                        `clientCase.illustrationDetails.deathBenefitOption`
-                    )}
-                >
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHeaderCell style={{ textAlign: 'left' }}>
-                                    Value
-                                </TableHeaderCell>
-                                <TableHeaderCell style={{ textAlign: 'right' }}>
-                                    From year
-                                </TableHeaderCell>
-                                <TableHeaderCell style={{ textAlign: 'right' }}>
-                                    Through
-                                </TableHeaderCell>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>{deathBenefitOption}</TableBody>
-                    </Table>
-                </ContentEntry>
+
+                {deathBenefitOption?.length && (
+                    <ContentEntry
+                        className="mt-6 mb-2 col-span-2 ![font:var(--typography-labels-label-sm)]"
+                        ddClassName="!col-start-2 col-span-2"
+                        label={t(
+                            `clientCase.illustrationDetails.initialDeathBenefitOption`
+                        )}
+                    >
+                        <Table>
+                            <TableHeader className="typography-labels-label-sm">
+                                <TableRow>
+                                    <TableHeaderCell>Value</TableHeaderCell>
+                                    <TableHeaderCell>From year</TableHeaderCell>
+                                    <TableHeaderCell>Through</TableHeaderCell>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody className="typography-content-body-sm">
+                                {deathBenefitOption}
+                            </TableBody>
+                        </Table>
+                    </ContentEntry>
+                )}
             </dl>
         </ContentSection>
     );
