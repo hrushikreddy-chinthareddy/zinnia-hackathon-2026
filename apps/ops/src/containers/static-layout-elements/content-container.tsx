@@ -16,6 +16,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
@@ -41,7 +42,7 @@ const ContentContainer = ({
     const { t } = useTranslation();
     const { globalValuesData } = useContentContext();
     const { featureFlags } = useOptimizely();
-    const showAllKeyValues = true; //FIXME: featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
+    const showAllKeyValues = featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
 
     const {
         highlight,
