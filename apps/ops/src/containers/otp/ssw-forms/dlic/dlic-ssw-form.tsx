@@ -21,7 +21,6 @@ import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import {
     Carrier,
     Frequency,
-    FundWithdrawnMethod,
     PartyRoles,
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
@@ -148,9 +147,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isLC={isLC}
             />
             <FormDistribution
-                isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
-                defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions(
                     formProgram?.programSubType?.text || '',
                     isLC

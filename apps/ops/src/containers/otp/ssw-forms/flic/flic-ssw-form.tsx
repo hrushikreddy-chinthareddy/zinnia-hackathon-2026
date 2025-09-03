@@ -20,7 +20,6 @@ import {
     Carrier,
     FASTQualTypes,
     Frequency,
-    FundWithdrawnMethod,
     PaymentMethod,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
@@ -127,9 +126,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
                 glwbApplicable={true}
             />
             <FormDistribution
-                isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
-                defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions(
                     formProgram?.programSubType?.text || ''
                 )}
