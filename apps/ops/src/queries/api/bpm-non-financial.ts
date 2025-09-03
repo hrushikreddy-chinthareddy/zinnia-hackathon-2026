@@ -243,7 +243,7 @@ export const updateEDeliveryPreferenceByPlanCode = async ({
 
 export const checkEligibilityPhoneChange = async (
     planCode: string | undefined,
-    policyNumber: string | undefined,
+    policyNumber: string | undefined
 ): Promise<NonFinancialTransactionResponse> => {
     try {
         const { data } = await client.post<
@@ -266,7 +266,6 @@ export const checkEligibilityPhoneChange = async (
         return error?.data;
     }
 };
-
 
 export const checkEligibilityBeneficiary = async (
     planCode: string | undefined,

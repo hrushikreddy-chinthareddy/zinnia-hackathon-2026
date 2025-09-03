@@ -21,9 +21,12 @@ import {
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
-
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkManageBankChangeEligibilityQuery, checkPhoneChangeEligibilityQuery ,checkAddressChangeEligibilityQuery} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import {
+    checkManageBankChangeEligibilityQuery,
+    checkPhoneChangeEligibilityQuery,
+    checkAddressChangeEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -189,7 +192,10 @@ export const PersonSubPage = ({
 
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <PhoneCard
-                    editable={editable && phoneChangeEligibility?.isEligiblePhoneChange}
+                    editable={
+                        editable &&
+                        phoneChangeEligibility?.isEligiblePhoneChange
+                    }
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}
