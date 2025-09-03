@@ -41,6 +41,7 @@ import {
 } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { convertToBase64 } from '@deps/containers/people-data-cards/name-card/sidesheet/sidesheet-name-card.helpers';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
+import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import {
     EDS_DATE_DISPLAY_FORMAT,
@@ -52,7 +53,6 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import {
     countryOptions,
-    getFileSubtype,
     BooleanOptions,
     getVariant,
     getFormattedDate,

@@ -4701,7 +4701,8 @@
                     "lastNameError": "Falta la información del apellido",
                     "supportingDocumentNotMatchesError": "El nombre del documento de respaldo coincide con el campo Nuevo nombre (es obligatorio)",
                     "signatureNotPresentOnDocument": "El campo Firma presente en el documento para todos los propietarios es obligatorio",
-                    "dateOfSignature": "El campo Fecha de firma es obligatorio"
+                    "dateOfSignature": "El campo Fecha de firma es obligatorio",
+                    "supportingDocumentRequired": "Se requiere al menos un documento de respaldo."
                 },
                 "mainCta": {
                     "updateName": "Nombre de actualización",

@@ -6,20 +6,49 @@ import Typography, {
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/icons_outlined/upload.svg';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/icons_outlined/x-cancel.svg';
 
+import { AllowedExtensions, GetFileExtension } from './file-upload.helpers';
+
 type FileUploadProps = {
     value: File[];
     onChange: (files: File[]) => void;
+    error?: string | null;
 };
 
-const FileUpload: React.FC<FileUploadProps> = ({ value = [], onChange }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+    value = [],
+    onChange,
+    error: externalError,
+}) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+    const [error, setError] = React.useState<string | null>(null);
 
     const handleFiles = (files: FileList | null) => {
         if (!files) return;
-        const newFiles = Array.from(files).filter(
-            (file) => !value.some((f) => f.name === file.name)
-        );
-        onChange([...value, ...newFiles]);
+        const validFiles: File[] = [];
+        let invalidFile: string | null = null;
+        Array.from(files).forEach((file) => {
+            const ext = GetFileExtension(file.name);
+            if (
+                AllowedExtensions.includes(ext) &&
+                !value.some((f) => f.name === file.name)
+            ) {
+                validFiles.push(file);
+            } else if (!AllowedExtensions.includes(ext)) {
+                invalidFile = file.name;
+            }
+        });
+        if (invalidFile) {
+            setError(
+                `File type not allowed: ${invalidFile}. Allowed types: ${AllowedExtensions.join(
+                    ', '
+                )}`
+            );
+        } else {
+            setError(null);
+        }
+        if (validFiles.length > 0) {
+            onChange([...value, ...validFiles]);
+        }
     };
 
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -50,6 +79,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ value = [], onChange }) => {
                 onDragOver={(e) => e.preventDefault()}
                 className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center space-y-4 mt-2"
             >
+                {(error || externalError) && (
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className="text-semantic-error"
+                    >
+                        {error || externalError}
+                    </Typography>
+                )}
                 {value.map((file, index) => (
                     <div
                         key={index}

@@ -4716,7 +4716,8 @@
                     "lastNameError": "Les informations sur le nom de famille sont manquantes",
                     "supportingDocumentNotMatchesError": "Le champ « Nom du document justificatif » correspond au nouveau nom. Il est obligatoire.",
                     "signatureNotPresentOnDocument": "Le champ Signature présente sur le document pour tous les propriétaires est obligatoire",
-                    "dateOfSignature": "Le champ Date de signature est obligatoire"
+                    "dateOfSignature": "Le champ Date de signature est obligatoire",
+                    "supportingDocumentRequired": "Au moins une pièce justificative est requise."
                 },
                 "mainCta": {
                     "updateName": "Mettre à jour le nom",

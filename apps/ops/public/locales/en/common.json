@@ -4784,7 +4784,8 @@
                     "lastNameError": "Last Name info is missing",
                     "supportingDocumentNotMatchesError": "Supporting Document Name matches with New Name field is required",
                     "signatureNotPresentOnDocument": "Signature Present on Document for all Owners field is required",
-                    "dateOfSignature": "Date of Signature field is required"
+                    "dateOfSignature": "Date of Signature field is required",
+                    "supportingDocumentRequired": "At least one supporting document is required."
                 },
                 "mainCta": {
                     "updateName": "Update name",

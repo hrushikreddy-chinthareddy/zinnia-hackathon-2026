@@ -871,13 +871,6 @@ export const getTrustTypeLabel = (
     return option?.label ?? defaultLabel;
 };
 
-export const getFileSubtype = (blob: Blob) => {
-    if (blob && blob.type && blob.type.includes('/')) {
-        return blob.type.split('/')[1];
-    }
-    return blob.type || '';
-};
-
 export const ANYTIME = 'Anytime';
 export const DEFAULT_COUNTRY_CODE = '1';
 export const NEW = 'new';
