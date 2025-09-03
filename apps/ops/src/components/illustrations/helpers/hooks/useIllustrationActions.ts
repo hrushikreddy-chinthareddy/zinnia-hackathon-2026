@@ -115,12 +115,14 @@ export const useIllustrationActions = () => {
         onSuccess: () => {
             const { clientCaseId, illustrationId } = router.query;
 
-            queryClient.invalidateQueries({
-                queryKey: ['illustrationData', illustrationId],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ['clientCaseData', clientCaseId],
-            });
+            return Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: ['illustrationData', illustrationId],
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ['clientCaseData', clientCaseId],
+                }),
+            ]);
         },
         onMutate: () => {},
         onError: () => {},
@@ -141,12 +143,14 @@ export const useIllustrationActions = () => {
         onSuccess: () => {
             const { clientCaseId, illustrationId } = router.query;
 
-            queryClient.invalidateQueries({
-                queryKey: ['illustrationData', illustrationId],
-            });
-            queryClient.invalidateQueries({
-                queryKey: ['clientCaseData', clientCaseId],
-            });
+            return Promise.all([
+                queryClient.invalidateQueries({
+                    queryKey: ['illustrationData', illustrationId],
+                }),
+                queryClient.invalidateQueries({
+                    queryKey: ['clientCaseData', clientCaseId],
+                }),
+            ]);
         },
         onMutate: () => {},
         onError: () => {},

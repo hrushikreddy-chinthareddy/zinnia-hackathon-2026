@@ -204,7 +204,7 @@ export default function getFlicConfig(
     const fundWithdrawnMethodOptions = [
         {
             label: t('distributionInstruction.prorata'),
-            value: FundWithdrawnMethod.Default,
+            value: FundWithdrawnMethod.Prorata,
         },
         {
             label: t('distributionInstruction.specifyFunds'),

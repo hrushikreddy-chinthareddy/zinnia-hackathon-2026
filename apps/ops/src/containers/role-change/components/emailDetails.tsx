@@ -22,6 +22,10 @@ export type EmailProps = {
     handleEmailChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired?: boolean;
+    onPreferredEmailChange?: (id: string, checked: boolean) => void;
+    disablePreferredEmail?: boolean;
+    showPreferredCheckbox?: boolean;
 };
 
 const EmailDetails = ({
@@ -29,6 +33,10 @@ const EmailDetails = ({
     handleEmailChange,
     index,
     isReadOnly,
+    isRequired = true,
+    onPreferredEmailChange,
+    disablePreferredEmail,
+    showPreferredCheckbox = false,
 }: EmailProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.email',
@@ -57,6 +65,8 @@ const EmailDetails = ({
 
     const isDelete = email?.remove == true;
     const disabled = isDelete || isReadOnly;
+
+    const preferredEmailId = `preferredEmail-${index}`;
 
     return (
         <div className="flex justify-between" key={emailType}>
@@ -106,8 +116,25 @@ const EmailDetails = ({
                             disabled
                         )}
                         disabled={disabled}
-                        required
+                        required={isRequired}
                     />
+                </div>
+                <div className="flex flex-col w-full mt-4">
+                    {showPreferredCheckbox && (
+                        <CheckboxText
+                            id={preferredEmailId}
+                            checked={email.isPreferred}
+                            label={t('labels.preferredEmail')}
+                            onChange={(checked) =>
+                                onPreferredEmailChange?.(
+                                    preferredEmailId,
+                                    checked
+                                )
+                            }
+                            isDisabled={disabled || disablePreferredEmail}
+                            readonly={email.isPreferred ? true : isReadOnly}
+                        />
+                    )}
                 </div>
             </div>
             <CheckboxText

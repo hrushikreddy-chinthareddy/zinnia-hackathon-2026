@@ -19,10 +19,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
@@ -146,8 +143,6 @@ export default function UlpcWithdrawalForm() {
                         'distributionInstruction.investmentSelectionForDistribution'
                     ) as string
                 }
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Default}
             />
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}

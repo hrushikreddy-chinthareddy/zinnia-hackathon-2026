@@ -146,25 +146,16 @@ const IllustrationProductList = ({
     useEffect(() => {
         if (!illustrationId || !illustrations.length) return;
 
-        const targetIllustration = illustrations.find(
-            (ill) => ill.id === illustrationId
-        );
-        const associatedProduct = products.find(
-            (product) =>
-                product.carrierProductId === targetIllustration?.productId
-        );
-
-        if (
-            targetIllustration &&
-            associatedProduct &&
-            selectedIllustration?.illustration?.id !== illustrationId
-        ) {
-            handleSelectIllustration(associatedProduct, targetIllustration);
+        if (selectedIllustration?.illustration?.id !== illustrationId) {
+            handleSelectIllustration(
+                !Array.isArray(illustrationId)
+                    ? illustrationId
+                    : illustrationId[0]
+            );
         }
     }, [
         illustrationId,
         illustrations,
-        products,
         selectedIllustration?.illustration?.id,
         handleSelectIllustration,
     ]);
@@ -199,17 +190,20 @@ const IllustrationProductList = ({
         };
     }, [availableProducts, clientCase.eAppId]);
 
-    const productsWithIllustrations: ProductWithIllustration[] =
-        filteredProducts
-            .map((product) => {
-                const associatedIllustrations = illustrations.filter(
-                    (illustration) =>
-                        illustration.productId === product.carrierProductId
-                );
-                return { ...product, illustrations: associatedIllustrations };
-            })
-            .filter((product) => !!product.illustrations.length);
-    const productsWithoutIllustrations = productsWithIllustrations.filter(
+    const productsWithIllustrationsData: ProductWithIllustration[] =
+        filteredProducts.map((product) => {
+            const associatedIllustrations = illustrations.filter(
+                (illustration) =>
+                    illustration.productId === product.carrierProductId
+            );
+            return { ...product, illustrations: associatedIllustrations };
+        });
+    // .filter((product) => !!product.illustrations.length);
+
+    const productsWithIllustrations = productsWithIllustrationsData.filter(
+        (product) => !!product.illustrations.length
+    );
+    const productsWithoutIllustrations = productsWithIllustrationsData.filter(
         (product) => !product.illustrations.length
     );
     const productsWithIllustrationsCount = productsWithIllustrations.length;
@@ -336,7 +330,7 @@ const IllustrationProductList = ({
 
             {showEmptyProducts && (
                 <ul className={styles.productList}>
-                    {productsWithIllustrations
+                    {productsWithIllustrationsData
                         .filter((product) => !product.illustrations.length)
                         .map(
                             (product: ProductWithIllustration, idx: number) => {

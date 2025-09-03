@@ -257,3 +257,14 @@ export const supportedExtensions = [
     ...supportedHtmlExtensions,
     ...supportedImgExtensions,
 ];
+
+export const nameToExt: string[] = ['eml', 'msg', 'pst', 'ost'];
+
+export const mimeToExt: Record<string, string> = {
+    'message/rfc822': 'eml',
+    'message/global': 'eml',
+    'application/vnd.ms-outlook': 'pst',
+    'application/vnd.ms-office': 'msg',
+    'application/x-pst': 'pst',
+    'application/octet-stream': 'pst',
+};

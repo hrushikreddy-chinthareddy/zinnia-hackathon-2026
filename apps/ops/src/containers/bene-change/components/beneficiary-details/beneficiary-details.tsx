@@ -229,6 +229,7 @@ export default function BeneficiaryDetails({
                     setCurrentParty={setCurrentParty}
                     isReadOnly={isReadOnly}
                     existingBene={partyId ? true : false}
+                    policy={policy}
                 />
             </div>
 

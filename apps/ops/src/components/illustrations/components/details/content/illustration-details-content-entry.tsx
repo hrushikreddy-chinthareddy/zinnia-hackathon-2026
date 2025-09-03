@@ -1,13 +1,19 @@
+import clsx from 'clsx';
 import { ReactNode, HTMLAttributes } from 'react';
+
+import styles from './content-entry.module.css';
 
 type IllustrationDetailsContentEntryProps = {
     label?: string | null;
     children?: ReactNode;
     ddAriaLabel?: string;
     ddProps?: HTMLAttributes<HTMLDivElement>;
+    ddClassName?: string;
 } & HTMLAttributes<HTMLDivElement>;
 
 export default function IllustrationDetailsContentEntry({
+    className,
+    ddClassName,
     label,
     children,
     ddAriaLabel,
@@ -16,14 +22,11 @@ export default function IllustrationDetailsContentEntry({
 }: IllustrationDetailsContentEntryProps) {
     return (
         <>
-            <dt
-                className="col-start-3 [font:var(--typography-labels-label-sm-alt)]"
-                {...rest}
-            >
+            <dt className={clsx(styles.label, className)} {...rest}>
                 {label}
             </dt>
             <dd
-                className="col-start-4 col-span-3 text-end [font:var(--typography-labels-label-sm-alt)]"
+                className={clsx(styles.value, ddClassName)}
                 {...ddProps}
                 {...(ddAriaLabel && { 'aria-label': ddAriaLabel })}
             >

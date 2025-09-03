@@ -100,9 +100,9 @@ export const AgentSearch = ({
         setSearchResults([]);
     };
 
-    const updateAgent = (email: string | undefined) => {
+    const updateAgent = (sellingCode: string | undefined) => {
         const selectedAgent = searchResults.find((result) => {
-            return result.email === email;
+            return result.sellingCode === sellingCode;
         }) as IllustrationAgentDetails;
         setCurrentAgent(selectedAgent);
         onSelectAgent({
@@ -133,7 +133,7 @@ export const AgentSearch = ({
                     type="button"
                     size="small"
                     className={styles.addAgentButton}
-                    onClick={() => updateAgent(searchResult.email)}
+                    onClick={() => updateAgent(searchResult.sellingCode)}
                 >
                     <Icon
                         type={IconType.ADD}

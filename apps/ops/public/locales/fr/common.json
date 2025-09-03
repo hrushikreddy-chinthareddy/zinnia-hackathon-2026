@@ -559,7 +559,7 @@
                 "partyType": {
                     "individual": "Individu",
                     "trust": "Fiducie",
-                    "estate/Organisation": "Succession/Organisation"
+                    "estate/Organization": "Succession/Organisation"
                 },
                 "trustType": "Type de confiance",
                 "prefixOptions": {
@@ -610,7 +610,10 @@
                     "estate": "Succession",
                     "corporation": "Société",
                     "other": "Autre"
-                }
+                },
+                "yes": "Oui",
+                "no": "Non",
+                "isRelevant": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?"
             },
             "contactInfo": {
                 "title": "Coordonnées",
@@ -779,6 +782,7 @@
         "roleDetails": {
             "requiredDocuments": "Document(s) de soutien requis disponible(s)?",
             "reasonChange": "Motif du changement",
+            "documentsAvailable": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?",
             "relationshipcurrent": "Relation avec le {{roleLabel}} actuel",
             "header": "{{roleLabel}} Détails",
             "ssn": "NSS",
@@ -883,7 +887,7 @@
             "partyOptions": {
                 "individual": "Individu",
                 "trust": "Fideicomiso",
-                "estate/Organisation": "Estate/Organisation",
+                "estate/Organization": "Estate/Organisation",
                 "custodian": "Tuteur"
             },
             "resonOptions": {
@@ -1912,6 +1916,7 @@
         "tabs": {
             "call-logs": "Journal des appels",
             "closedOn": "Fermé le {{date}}",
+            "canceledOn": "Annulé le {{date}}",
             "documents": "Documents",
             "caseDocuments": "Documents du Dossier",
             "events": "Événements",
@@ -4583,7 +4588,8 @@
                     "zip": "Code postal",
                     "addressLine1": "Ligne d'adresse 1",
                     "addressLine2": "Ligne d'adresse 2",
-                    "addressLine3": "Ligne d'adresse 3"
+                    "addressLine3": "Ligne d'adresse 3",
+                    "preferredAddress": "Adresse préférée"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Le courrier sera envoyé à cette adresse à partir de maintenant.",
@@ -4654,7 +4660,8 @@
                     "form": "Sélectionnez les préférences de communication",
                     "email": "Email",
                     "removeEmail": "Supprimer cet e-mail",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredEmail": "E-mail préféré"
                 },
                 "mainCta": {
                     "add": "Enregistrer l'email {{type}}",
@@ -4674,7 +4681,8 @@
                     "preferredTime": "Heure préférée pour contacter",
                     "removeNumber": "Supprimer ce numéro de téléphone",
                     "timeZone": "Fuseau horaire",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredPhone": "Téléphone préféré"
                 },
                 "general": {
                     "cancel": "Annuler"
@@ -4712,7 +4720,8 @@
                     "lastNameError": "Les informations sur le nom de famille sont manquantes",
                     "supportingDocumentNotMatchesError": "Le champ « Nom du document justificatif » correspond au nouveau nom. Il est obligatoire.",
                     "signatureNotPresentOnDocument": "Le champ Signature présente sur le document pour tous les propriétaires est obligatoire",
-                    "dateOfSignature": "Le champ Date de signature est obligatoire"
+                    "dateOfSignature": "Le champ Date de signature est obligatoire",
+                    "supportingDocumentRequired": "Au moins une pièce justificative est requise."
                 },
                 "mainCta": {
                     "updateName": "Mettre à jour le nom",
@@ -6000,6 +6009,8 @@
             "SystematicPartialWithdrawal": "Retrait partiel systématique",
             "SystematicPartialWithdrawalSetup": "Configuration du retrait partiel systématique",
             "SystematicProgramUpdate": "Mise à jour du programme systématique",
+            "SystematicRequiredMinimumDistribution": "Mise à jour systématique du RMD",
+            "SystematicRequiredMinimumDistributionSetup": "Configuration systématique du RMD",
             "TPDChange": "Changement du désigné par un tiers",
             "UnitExpenseCharge": "Frais par unité"
         }
@@ -7336,7 +7347,6 @@
             "edit": "Modifier",
             "viewPdf": "PDF",
             "pdfError": "Une erreur est survenue lors du chargement du PDF.",
-            "deathBenefitOption": "Option de prestation de décès",
             "premiumMode": "Mode de prime",
             "paymentMode": "Mode de paiement",
             "cashValue": "Valeur de rachat",
@@ -7395,7 +7405,8 @@
             "cancelArchiveAriaLabel": "Annuler archivage de l'illustration",
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
             "addProductAriaLabel": "Bouton pour ajouter un produit",
-            "editIllustration": "Modifier l'illustration"
+            "editIllustration": "Modifier l'illustration",
+            "initialDeathBenefitOption": "Option de prestation de décès"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

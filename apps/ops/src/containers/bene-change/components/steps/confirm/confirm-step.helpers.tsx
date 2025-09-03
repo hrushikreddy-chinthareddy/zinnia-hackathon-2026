@@ -308,6 +308,10 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
                   .join(' ')
             : item?.party?.info?.lastName;
 
+    const documents = item?.party?.info?.documents || [];
+    const supportingDocumentAttached =
+        item?.party?.info?.supportingDocumentAttached;
+
     const record = {
         actionType: item.actionType,
         action: item.action,
@@ -397,6 +401,8 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
                     ? dayjs().format(ZAHARA_API_DATE_FORMAT)
                     : null,
             entityType: item?.party?.info?.entityType ?? EntityTypeValue.Other,
+            documents,
+            supportingDocumentAttached,
         },
         isPerStirpes: item?.beneInfo?.isPerStirpes || false,
         isIrrevocable: item?.beneInfo?.isIrrevocable || false,

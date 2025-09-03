@@ -44,6 +44,9 @@ type AddressDetailsProps = {
     index: number;
     isReadOnly: boolean;
     role: string;
+    onPreferredAddressChange?: (id: string, checked: boolean) => void;
+    disablePreferredAddress?: boolean;
+    showPreferredCheckbox?: boolean;
 };
 
 function AddressDetails({
@@ -52,6 +55,9 @@ function AddressDetails({
     index,
     isReadOnly,
     role,
+    onPreferredAddressChange,
+    disablePreferredAddress,
+    showPreferredCheckbox = false,
 }: AddressDetailsProps) {
     const INITIAL_ADDRESS: Address = {
         addressType: AddressType.RESIDENCE,
@@ -88,6 +94,8 @@ function AddressDetails({
     ) => {
         handleAddressChange(AddressField.Addresses, index, key, value);
     };
+
+    const preferredAddressId = `preferredAddress-${index}`;
 
     return (
         <div>
@@ -317,6 +325,23 @@ function AddressDetails({
                                 />
                             </div>
                         </div>
+                        {showPreferredCheckbox && (
+                            <CheckboxText
+                                id={preferredAddressId}
+                                label={t('labels.preferredAddress')}
+                                checked={address.isPreferred}
+                                onChange={(checked) =>
+                                    onPreferredAddressChange?.(
+                                        preferredAddressId,
+                                        checked
+                                    )
+                                }
+                                isDisabled={disabled || disablePreferredAddress}
+                                readonly={
+                                    address.isPreferred ? true : isReadOnly
+                                }
+                            />
+                        )}
                     </div>
                 </div>
                 <CheckboxText

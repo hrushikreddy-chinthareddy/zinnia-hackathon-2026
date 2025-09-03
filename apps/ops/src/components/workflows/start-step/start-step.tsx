@@ -185,7 +185,7 @@ const StartStep = ({
 
     return (
         <>
-            {task?.data.details.documents?.length && (
+            {task?.data?.details?.documents?.length && (
                 <div className="px-8 pt-8">
                     <Typography
                         variant={TypographyVariant.BodyBold}

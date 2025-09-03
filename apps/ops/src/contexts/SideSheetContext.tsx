@@ -24,7 +24,8 @@ export interface SideSheetContextProps {
     events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,
-        body?: React.ReactNode
+        body?: React.ReactNode,
+        showHeader?: boolean
     ) => void;
     handleLocation: (location: SideSheetLocation) => void;
     handleOpen: (isOpen: boolean, width?: number | string) => void;

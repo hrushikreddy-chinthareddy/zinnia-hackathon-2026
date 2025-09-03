@@ -134,11 +134,18 @@ export const Assignee = ({
 
     return !isOpsManagerView ? (
         <>
-            <div className={`flex items-center`}>
-                {hasAssignee() && <Avatar name={assignee || ''} size="small" />}
+            <div className="w-full flex items-center space-x-2">
+                {hasAssignee() && (
+                    <Avatar
+                        className="!mr-0"
+                        name={assignee || ''}
+                        size="small"
+                    />
+                )}
                 {hasAssignee() ? (
                     <Content
-                        className="truncate"
+                        className="!z-10 !ml-0 min-h-8"
+                        contentClassName="text-left flex-1"
                         details={
                             assignee
                                 ?.split(',')
@@ -154,26 +161,26 @@ export const Assignee = ({
                         variant={ContentVariant.BodySm}
                     />
                 )}
+                {hasAssignee() && (
+                    <Tooltip
+                        placement={TooltipPlacement.TopRight}
+                        tooltipClassName="!w-auto"
+                        triggerClassName="!z-10  justify-end"
+                        trigger={
+                            <IconButton
+                                className="text-secondary"
+                                onClick={() => {
+                                    handleUnassignTask(task?.id);
+                                }}
+                            >
+                                <CancelIcon height={18} width={18} />
+                            </IconButton>
+                        }
+                    >
+                        <span className="text-md">Unassign</span>
+                    </Tooltip>
+                )}
             </div>
-            {hasAssignee() && (
-                <Tooltip
-                    placement={TooltipPlacement.TopRight}
-                    tooltipClassName="!w-auto"
-                    triggerClassName="!z-10"
-                    trigger={
-                        <IconButton
-                            className="text-secondary"
-                            onClick={() => {
-                                handleUnassignTask(task?.id);
-                            }}
-                        >
-                            <CancelIcon height={18} width={18} />
-                        </IconButton>
-                    }
-                >
-                    <span className="text-md">Unassign</span>
-                </Tooltip>
-            )}
         </>
     ) : (
         <AssigneePopover
@@ -230,6 +237,8 @@ const TaskQueueTableRow = ({
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
     const handleUnassignTask = async (taskId: string) => {
+        setActionLoader(true);
+
         const taskData = await getTaskInstance({ taskId: taskId });
 
         setLoader(true);
@@ -253,6 +262,7 @@ const TaskQueueTableRow = ({
                     'task-queue:handleUnassignTask::Successfully un-assigned task',
                     { taskId: taskId }
                 );
+                setActionLoader(false);
                 getTasks(true);
             } else {
                 browserLogInfo(
@@ -383,7 +393,8 @@ const TaskQueueTableRow = ({
                     taskId={id}
                     taskDescription={task?.taskDetails}
                     onTaskClaimSuccess={handleTaskClaimSuccess}
-                />
+                />,
+                true
             );
             sideSheet.handleOpen(true);
         }
@@ -480,12 +491,16 @@ const TaskQueueTableRow = ({
             </TableCell>
             <TableCell>
                 <Content
+                    contentClassName="relative z-10"
+                    triggerClassName="text-left"
                     truncate={true}
                     details={toSentenceCase(task.taskName)}
                     variant={ContentVariant.BodySm}
                 />
                 <Content
                     truncate={true}
+                    contentClassName="relative z-10"
+                    triggerClassName="text-left"
                     className={`${styles.fadedText} truncate w-full`}
                     details={toSentenceCase(task.process)}
                     variant={ContentVariant.BodySm}
@@ -567,7 +582,7 @@ const TaskQueueTableRow = ({
                 </div>
             </TableCell>
             <TableCell colSpan={2}>
-                <div className="flex">
+                <div className={isOpsManagerView ? 'w-full block' : 'flex'}>
                     {actionLoader ? (
                         <div className="w-100 h-8 text-center py-4">
                             <Loader variant={LoaderVariant.CTA} />

@@ -15,6 +15,7 @@ export interface Errors {
     supportingDocumentMatchesWithNewName?: string;
     signaturePresentOnDocumentForAllOwners?: string;
     dateOfSignature?: string;
+    supportingDocumentRequired?: string;
 }
 export interface GetFormErrors {
     caseId?: string;
@@ -26,6 +27,7 @@ export interface GetFormErrors {
     signaturePresentOnDocumentForAllOwners?: string;
     t: TFunction;
     dateOfSignature?: string;
+    uploadedFiles: File[];
 }
 
 interface NameDetailsProps {
@@ -64,6 +66,7 @@ export const getFormErrors = ({
     supportingDocumentMatchesWithNewName,
     signaturePresentOnDocumentForAllOwners,
     dateOfSignature,
+    uploadedFiles,
 }: GetFormErrors): Errors => {
     const errors: Errors = {};
 
@@ -102,6 +105,10 @@ export const getFormErrors = ({
     if (isEmpty(supportingDocumentMatchesWithNewName)) {
         errors.supportingDocumentMatchesWithNewName = String(
             t('people.sideSheet.name.errors.supportingDocumentNotMatchesError')
+        );
+    } else if (uploadedFiles.length === 0) {
+        errors.supportingDocumentRequired = String(
+            t('people.sideSheet.name.errors.supportingDocumentRequired')
         );
     }
 

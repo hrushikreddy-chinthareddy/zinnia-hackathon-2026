@@ -8,7 +8,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import ContentEntry from './content-entry';
 import ContentSection from './content-section';
 import styles from './summary.module.css';
-import { formatIllustrationDetailCurrencyBold } from '../../details/content/illustration-details-helpers';
+import { formatIllustrationDetailCurrency } from '../../details/content/illustration-details-helpers';
 
 export default function IllustrationSelectForApplicationSectionTermCoverage() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -31,7 +31,7 @@ export default function IllustrationSelectForApplicationSectionTermCoverage() {
                     )}
                     ddAriaLabel={faceAmountStr}
                 >
-                    {formatIllustrationDetailCurrencyBold(t, faceAmount)}
+                    {formatIllustrationDetailCurrency(t, faceAmount, true)}
                 </ContentEntry>
                 <ContentEntry
                     label={t(

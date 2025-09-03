@@ -1,11 +1,10 @@
 import clsx from 'clsx';
-import { HTMLAttributes, ReactNode } from 'react';
+import { HTMLAttributes } from 'react';
 
 import styles from './summary.module.css';
 
 type ContentEntryProps = {
     label?: string | null;
-    children?: ReactNode;
     ddAriaLabel?: string;
     ddProps?: HTMLAttributes<HTMLDivElement>;
     ddClassName?: string;
@@ -13,6 +12,7 @@ type ContentEntryProps = {
 
 export default function IllustrationSelectForApplicationContentEntry({
     label,
+    className,
     children,
     ddAriaLabel,
     ddProps = {},
@@ -21,7 +21,7 @@ export default function IllustrationSelectForApplicationContentEntry({
 }: ContentEntryProps) {
     return (
         <>
-            <dt className={styles.contentEntryTerm} {...rest}>
+            <dt className={clsx(styles.contentEntryTerm, className)} {...rest}>
                 {label}
             </dt>
             <dd

@@ -12,10 +12,7 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import getUlpcOftConfig from './ulpc-oft-form.helpers';
 
@@ -101,8 +98,6 @@ export default function UlpcOftWithdrawalForm() {
                         'distributionInstruction.investmentSelectionForDistribution'
                     ) as string
                 }
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Default}
             />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}

@@ -305,16 +305,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         );
     };
 
-    useEffect(() => {
-        if (agencyOptions?.length && !isEdit) {
-            // update the agencyId of the client case
-            updateClientCaseData({
-                agencyId: agencyOptions[0].value,
-            });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [agencyOptions]);
-
     const displayAgencyDropdown = agencyOptions && agencyOptions.length > 1;
 
     const onSubmitForm = () => {
@@ -330,7 +320,10 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     };
 
     useEffect(() => {
-        if (agencyOptions?.length && !isEdit) {
+        const matchedAgencies = agencyOptions?.find(
+            (agencyOption) => agencyOption.value === clientCaseData.agencyId
+        );
+        if (agencyOptions?.length && !matchedAgencies) {
             // update the agencyId of the client case
             updateClientCaseData({
                 agencyId: agencyOptions[firstAgencyKey].value,
@@ -354,9 +347,23 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     }, []);
 
     useEffect(() => {
-        // For Edit client-case we use clientCase data
-        if (isEdit && clientCase?.agentDetails) {
-            updateClientCaseData({
+        const selectedAgentSellingCode =
+            clientCaseData?.agentDetails?.sellingCode;
+
+        if (selectedAgentSellingCode) {
+            // Only do something if we don't have an agent selected
+            return;
+        }
+
+        // for Edit, always use agent details from the client case
+        if (isEdit) {
+            // -------
+            // Edition
+            // -------
+            if (!clientCase?.agentDetails) {
+                return;
+            }
+            return updateClientCaseData({
                 agentDetails: {
                     firstName:
                         clientCase.agentDetails.firstName ??
@@ -371,23 +378,48 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             });
         }
 
-        // for New client-cases we pull the logged in user, who should be an agent, and use their data from the party reference service
-        if (!isEdit && partyReferenceData) {
-            const agentAlias = aliases.length > 0 ? aliases[0] : null;
+        // ------------
+        // Creation
+        // ------------
 
-            if (agentAlias) {
-                updateClientCaseData({
-                    agentDetails: {
-                        firstName: agentAlias.firstName,
-                        lastName: agentAlias.lastName,
-                        email: agentAlias.email,
-                        sellingCode: loggedInUserSellingCode,
-                    },
-                });
-            }
+        // If we have agentDetails (sureify flow). Use these
+        if (clientCase?.agentDetails) {
+            return updateClientCaseData({
+                agentDetails: {
+                    firstName:
+                        clientCase.agentDetails.firstName ??
+                        DEFAULT_ERROR_STRING,
+                    lastName:
+                        clientCase.agentDetails.lastName ??
+                        DEFAULT_ERROR_STRING,
+                    email:
+                        clientCase.agentDetails.email ?? DEFAULT_ERROR_STRING,
+                    sellingCode: clientCase.agentDetails.sellingCode ?? '',
+                },
+            });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEdit, partyReferenceData]);
+
+        // If we don't have agentDetails (anonymous flow), use the authenticated
+        // user data (from party reference service) if available
+        const agentAlias = aliases.length > 0 ? aliases[0] : null;
+
+        updateClientCaseData({
+            agentDetails: {
+                firstName:
+                    agentAlias?.firstName ?? partyReferenceData?.firstName,
+                lastName: agentAlias?.lastName ?? partyReferenceData?.lastName,
+                email: agentAlias?.email ?? partyReferenceData?.email,
+                sellingCode: loggedInUserSellingCode,
+            },
+        });
+    }, [
+        isEdit,
+        partyReferenceData,
+        loggedInUserSellingCode,
+        clientCase?.agentDetails,
+        clientCaseData?.agentDetails?.sellingCode,
+        aliases,
+    ]);
 
     return (
         <form
@@ -421,7 +453,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     <AgentSearch
                         currentAgentData={clientCaseData.agentDetails}
                         onSelectAgent={updateClientCaseData}
-                        shouldShowEdit={!isEdit}
+                        shouldShowEdit
                         agencyIdArray={initialSearchAgencySellingCodes}
                     />
                 ) : (
@@ -583,7 +615,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     />
                 </div>
             </section>
-
             <div className={styles.actionButtons}>
                 <Button
                     onClick={onSubmitForm}

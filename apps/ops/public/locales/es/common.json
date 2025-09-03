@@ -494,7 +494,7 @@
                 "partyType": {
                     "individual": "Individual",
                     "trust": "Fideicomiso",
-                    "estate/Organisation": "Patrimonio/Organización"
+                    "estate/Organization": "Patrimonio/Organización"
                 },
                 "trustType": "Tipo de Fideicomiso",
                 "prefixOptions": {
@@ -545,7 +545,10 @@
                     "estate": "Patrimonio",
                     "corporation": "Corporación",
                     "other": "Otro"
-                }
+                },
+                "yes": "Sí",
+                "no": "No",
+                "isRelevant": "¿Son válidos y relevantes los documentos de respaldo cargados?"
             },
             "contactInfo": {
                 "title": "Información de Contacto",
@@ -699,6 +702,7 @@
         "roleDetails": {
             "requiredDocuments": "¿Están disponibles los documentos de soporte requeridos?",
             "reasonChange": "Motivo del cambio",
+            "documentsAvailable": "¿Son válidos y relevantes los documentos de respaldo cargados?",
             "relationshipcurrent": "Relación con el {{roleLabel}} actual",
             "header": "{{roleLabel}} Detalles",
             "ssn": "SSN",
@@ -802,7 +806,7 @@
             "partyOptions": {
                 "individual": "Persona",
                 "trust": "Fideicomiso",
-                "organisation": "Patrimonio/Organización",
+                "organization": "Patrimonio/Organización",
                 "custodian": "Custodio"
             },
             "resonOptions": {
@@ -811,7 +815,6 @@
                 "transferConsideration": "'Transferencia por consideración'"
             },
             "yes": "Sí",
-            "no": "No",
             "entityType": "Tipo de entidad",
             "entityTypeOptions": {
                 "soleProprietorship": "Empresa unipersonal",
@@ -1925,6 +1928,7 @@
         "tabs": {
             "call-logs": "Registros de llamadas",
             "closedOn": "Cerrado el {{date}}",
+            "canceledOn": "Cancelado el {{date}}",
             "documents": "Documentos",
             "caseDocuments": "Documentos del Caso",
             "events": "Eventos",
@@ -4569,7 +4573,8 @@
                     "zip": "Código postal",
                     "addressLine1": "Línea de dirección 1",
                     "addressLine2": "Línea de dirección 2",
-                    "addressLine3": "Línea de dirección 3"
+                    "addressLine3": "Línea de dirección 3",
+                    "preferredAddress": "Dirección preferida"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "El correo se enviará a esta dirección en adelante.",
@@ -4640,7 +4645,8 @@
                 "labels": {
                     "email": "Correo electrónico",
                     "removeEmail": "Eliminar este correo electrónico",
-                    "type": "Tipo"
+                    "type": "Tipo",
+                    "preferredEmail": "Correo electrónico preferido"
                 },
                 "mainCta": {
                     "add": "Guardar correo electrónico de {{type}}",
@@ -4660,7 +4666,8 @@
                     "preferredTime": "Hora preferida para contactar",
                     "removeNumber": "Eliminar este número de teléfono",
                     "timeZone": "Zona horaria",
-                    "type": "Tipo"
+                    "type": "Tipo",
+                    "preferredPhone": "Teléfono preferido"
                 },
                 "general": {
                     "cancel": "Cancelar"
@@ -4698,7 +4705,8 @@
                     "lastNameError": "Falta la información del apellido",
                     "supportingDocumentNotMatchesError": "El nombre del documento de respaldo coincide con el campo Nuevo nombre (es obligatorio)",
                     "signatureNotPresentOnDocument": "El campo Firma presente en el documento para todos los propietarios es obligatorio",
-                    "dateOfSignature": "El campo Fecha de firma es obligatorio"
+                    "dateOfSignature": "El campo Fecha de firma es obligatorio",
+                    "supportingDocumentRequired": "Se requiere al menos un documento de respaldo."
                 },
                 "mainCta": {
                     "updateName": "Nombre de actualización",
@@ -5909,6 +5917,8 @@
             "SystematicPartialWithdrawalSetup": "Configuración de retiro parcial sistemático",
             "SystematicProgramUpdate": "Actualización de programa sistemático",
             "TPDChange": "Cambio de designado de tercera parte",
+            "SystematicRequiredMinimumDistribution": "Actualización sistemática de RMD",
+            "SystematicRequiredMinimumDistributionSetup": "Configuración sistemática de RMD",
             "UnitExpenseCharge": "Cargo por unidad de gastos"
         }
     },
@@ -7269,7 +7279,6 @@
             "edit": "Editar",
             "viewPdf": "PDF",
             "pdfError": "Ocurrio un error al cargar el PDF.",
-            "deathBenefitOption": "Opción de beneficio por fallecimiento",
             "premiumMode": "Modo de prima",
             "paymentMode": "Modo de pago",
             "cashValue": "Valor en efectivo",
@@ -7328,7 +7337,8 @@
             "cancelArchiveAriaLabel": "Cancelar archivado de ilustración",
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
             "addProductAriaLabel": "Boton para agregar un producto",
-            "editIllustration": "Editar ilustración"
+            "editIllustration": "Editar ilustración",
+            "initialDeathBenefitOption": "Opción de beneficio por muerte inicial"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

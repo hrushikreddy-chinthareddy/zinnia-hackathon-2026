@@ -241,6 +241,33 @@ export const updateEDeliveryPreferenceByPlanCode = async ({
     }
 };
 
+export const checkEligibilityPhoneChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/phonenumber/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityPhoneChange::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber },
+                function: 'webnonfinancial.checkEligibilityPhoneChange',
+            }
+        );
+
+        return error?.data;
+    }
+};
+
+
 export const checkEligibilityBeneficiary = async (
     planCode: string | undefined,
     policyNumber: string | undefined
@@ -260,6 +287,31 @@ export const checkEligibilityBeneficiary = async (
                 ...parseErrorInformation(error),
                 payload: { planCode, policyNumber },
                 function: 'webnonfinancial.checkEligibilityBeneficiary',
+            }
+        );
+        return error?.data;
+    }
+};
+
+export const checkEligibilityAddressChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/address/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityAddressChange::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber },
+                function: 'webnonfinancial.checkEligibilityAddressChange',
             }
         );
         return error?.data;

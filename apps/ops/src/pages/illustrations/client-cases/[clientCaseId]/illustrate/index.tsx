@@ -51,11 +51,7 @@ export default function ClientCaseIllustrations() {
     } = useQuery({
         queryKey: ['clientCaseData', clientCaseId],
         structuralSharing: false,
-        queryFn: () => {
-            const response = getClientCase(clientCaseId);
-
-            return response;
-        },
+        queryFn: () => getClientCase(clientCaseId),
         select: useCallback(
             (data: ApiResponse<IllustrationsClientCase>) => data.data,
             []
@@ -82,6 +78,7 @@ export default function ClientCaseIllustrations() {
         <SelectedIllustrationProvider
             clientCaseId={clientCaseId as string}
             clientCase={clientCase}
+            products={products}
         >
             <div className={clsx(styles.caseIllustrations)}>
                 {((!clientCase && !isFetchingClientCase) || isError) && (

@@ -1,0 +1,21 @@
+.section {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    grid-auto-rows: min-content;
+    align-items: center;
+
+    column-gap: var(--measure-dimension-gap-xl);
+    row-gap: var(--measure-dimension-gap-md);
+
+    padding-bottom: var(--measure-dimension-z-space-6);
+    border-color: var(--color-base-border-border-light);
+    border-bottom-width: 2px;
+}
+
+.sectionTitle {
+    grid-column: span 1 / span 1;
+    align-self: self-start;
+
+    font: var(--typography-titles-subtitle);
+}
