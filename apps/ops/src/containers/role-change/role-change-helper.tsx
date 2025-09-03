@@ -572,10 +572,16 @@ export const buildRoleChangeRequestBody = (
         changeReason: changeReason || null,
         signatures: signatures || [],
         beneDetailsReqInd: false,
-        documents: partyType === PartyType.TRUST ? documents : [],
+        documents:
+            partyType === PartyType.TRUST ||
+            role !== PolicyRole.THIRDPARTYDESIGNEE
+                ? documents
+                : [],
         supportingDocumentAttached:
-            ((!isRoleCheck && partyType === PartyType.TRUST) || isRoleCheck) &&
-            supportingDocumentAttached === BooleanValue.Yes
+            role === PolicyRole.THIRDPARTYDESIGNEE &&
+            partyType !== PartyType.TRUST
+                ? null
+                : supportingDocumentAttached === BooleanValue.Yes
                 ? true
                 : supportingDocumentAttached === BooleanValue.No
                 ? false

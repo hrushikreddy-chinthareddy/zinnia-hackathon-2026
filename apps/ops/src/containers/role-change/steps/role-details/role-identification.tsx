@@ -91,6 +91,8 @@ export interface RoleIdentificationProps {
     index: number;
     existingRoleData: any;
     policy: any;
+    handleFilesChange: (files: File[]) => Promise<void>;
+    uploadedFiles: File[];
 }
 
 const RoleIdentification = ({
@@ -101,6 +103,8 @@ const RoleIdentification = ({
     policy,
     existingRoleData,
     index,
+    handleFilesChange,
+    uploadedFiles,
 }: RoleIdentificationProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.roleDetails',
@@ -131,10 +135,6 @@ const RoleIdentification = ({
     const genderOptions = genderOption(t2);
     const partyTypeOptions = getPartyTypeOptions(t, role);
 
-    const [uploadedFiles, setUploadedFiles] = useState<File[]>(
-        roleData?.documents || []
-    );
-
     const relationshipToPartyOptions = getRelationshipOptions(t);
 
     const options = BooleanOptions(t);
@@ -160,6 +160,9 @@ const RoleIdentification = ({
         party?.partyType as PartyType
     );
     const isRoleCheck = roleCheck(normalizeRole(role));
+    const [documentValid, setDocumentValid] = useState<string | null>(
+        roleData?.supportingDocumentAttached || null
+    );
 
     const showElement = () =>
         ![
@@ -169,73 +172,18 @@ const RoleIdentification = ({
             Roles.NEWTHIRDPARTYDESIGNEE,
         ].includes(role.toUpperCase() as Roles);
 
-    const handleFilesChange = async (files: File[]) => {
-        const documents: any = [];
-        if (!files.length) {
-            setRoleData((prevData: any) => ({
-                ...prevData,
-                documents: [],
-                supportingDocumentAttached: NO,
-            }));
-            setUploadedFiles(files);
-            return;
-        }
-        const base64Results = await Promise.all(
-            files.map((file) => convertToBase64(file))
-        );
-
-        files.forEach(async (file, index) => {
-            const blob: Blob = file;
-            const metaData = {
-                sourceFileName: file.name,
-                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-                fileType: getFileSubtype(blob),
-                docClassification: SearchRequest.documentClassification.INBOUND,
-                sourceSystem: SourceSystem.ZL,
-                zinniaLiveCaseId: '',
-                parentCarrierCode: policy.carrierId ?? '',
-                correlationId: uuidV4() || '',
-                docAccessLevel: CLIENT_COPY,
-                docCategory: NEW_BUSINESS,
-                documentType: '',
-            };
-
-            try {
-                const response = await uploadDocumentV2(
-                    metaData,
-                    base64Results[index]
-                );
-
-                if (response?.documentId) {
-                    const attachment = {
-                        documentId: response?.documentId,
-                        documentDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-                        documentType: metaData?.fileType,
-                        documentName: metaData?.sourceFileName,
-                        name: metaData?.sourceFileName,
-                    };
-                    documents.push(attachment);
-                }
-            } catch (error) {
-                browserLogError(
-                    'sidesheet-name-change: Error uploading document:',
-                    {
-                        ...parseErrorInformation(error),
-                    }
-                );
-            }
-            setRoleData((prevData: any) => ({
-                ...prevData,
-                documents,
-                supportingDocumentAttached: 'Yes',
-            }));
-        });
-
-        setUploadedFiles(files);
-    };
-
     const onEntityTypeChange = (value: string) => {
         handleChange(RoleField.EntityType, value);
+    };
+
+    const isRelevantChangeHandler = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setDocumentValid(e.target.value);
+        setRoleData((prevData) => ({
+            ...prevData,
+            supportingDocumentAttached: e.target.value,
+        }));
     };
 
     return (
@@ -726,12 +674,21 @@ const RoleIdentification = ({
                     {(role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ||
                         role.toUpperCase() === Roles.NEWTHIRDPARTYDESIGNEE) &&
                         party?.partyType === PartyType.TRUST && (
-                            <div className="mb-7 w-[400px]">
-                                <FileUpload
-                                    value={uploadedFiles}
-                                    onChange={handleFilesChange}
+                            <>
+                                <div className="mb-7 w-[400px]">
+                                    <FileUpload
+                                        value={uploadedFiles}
+                                        onChange={handleFilesChange}
+                                    />
+                                </div>
+                                <Radio
+                                    items={options}
+                                    label={t('documentsAvailable') as string}
+                                    value={documentValid}
+                                    onChange={isRelevantChangeHandler}
+                                    orientation={RadioOrientation.Horizontal}
                                 />
-                            </div>
+                            </>
                         )}
                 </div>
             </div>

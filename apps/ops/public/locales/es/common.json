@@ -545,7 +545,10 @@
                     "estate": "Patrimonio",
                     "corporation": "Corporación",
                     "other": "Otro"
-                }
+                },
+                "yes": "Sí",
+                "no": "No",
+                "isRelevant": "¿Son válidos y relevantes los documentos de respaldo cargados?"
             },
             "contactInfo": {
                 "title": "Información de Contacto",
@@ -699,6 +702,7 @@
         "roleDetails": {
             "requiredDocuments": "¿Están disponibles los documentos de soporte requeridos?",
             "reasonChange": "Motivo del cambio",
+            "documentsAvailable": "¿Son válidos y relevantes los documentos de respaldo cargados?",
             "relationshipcurrent": "Relación con el {{roleLabel}} actual",
             "header": "{{roleLabel}} Detalles",
             "ssn": "SSN",

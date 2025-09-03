@@ -529,7 +529,10 @@
                     "estate": "Estate",
                     "corporation": "Corporation",
                     "other": "Other"
-                }
+                },
+                "yes": "Yes",
+                "no": "No",
+                "isRelevant": "Is the uploaded supporting document(s) valid and relevant?"
             },
             "contactInfo": {
                 "title": "Contact Info",
@@ -701,7 +704,7 @@
             "relationshipcurrent": "Relationship to current {{roleLabel}}",
             "header": "{{roleLabel}} Details",
             "changeReason": "Reason for change",
-            "documentsAvailable": "Required supporting document(s) available?",
+            "documentsAvailable": "Is the uploaded supporting document(s) valid and relevant?",
             "permanentResident": "Permanent resident",
             "countryCitizenship": "Country of citizenship",
             "partyType": "Party type",

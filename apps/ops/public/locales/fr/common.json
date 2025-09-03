@@ -610,7 +610,10 @@
                     "estate": "Succession",
                     "corporation": "Société",
                     "other": "Autre"
-                }
+                },
+                "yes": "Oui",
+                "no": "Non",
+                "isRelevant": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?"
             },
             "contactInfo": {
                 "title": "Coordonnées",
@@ -779,6 +782,7 @@
         "roleDetails": {
             "requiredDocuments": "Document(s) de soutien requis disponible(s)?",
             "reasonChange": "Motif du changement",
+            "documentsAvailable": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?",
             "relationshipcurrent": "Relation avec le {{roleLabel}} actuel",
             "header": "{{roleLabel}} Détails",
             "ssn": "NSS",
