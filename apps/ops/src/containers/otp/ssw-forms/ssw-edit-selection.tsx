@@ -74,7 +74,34 @@ const SswEditSelection = ({
         if (route) {
             setSswRequest(val as SswUpdateOption);
             setLoading(true);
-            router.push(`${route}?taskId=${initialForm?.taskId}`);
+
+            if (route === '/ssw-edit/ssw-update') {
+                switch (val as SswUpdateOption) {
+                    case SswUpdateOption.SSW_UPDATE: {
+                        setLoading(true);
+                        router.push(
+                            `${route}?taskId=${initialForm?.taskId}&programType=SSW`
+                        );
+                        break;
+                    }
+                    case SswUpdateOption.RMD_UPDATE: {
+                        setLoading(true);
+                        router.push(
+                            `${route}?taskId=${initialForm?.taskId}&programType=RMD`
+                        );
+                        break;
+                    }
+                    case SswUpdateOption.EFT_DRAW_UPDATE: {
+                        setLoading(true);
+                        router.push(
+                            `${route}?taskId=${initialForm?.taskId}&programType=EFT`
+                        );
+                        break;
+                    }
+                }
+            } else {
+                router.push(`${route}?taskId=${initialForm?.taskId}`);
+            }
         }
     };
 
