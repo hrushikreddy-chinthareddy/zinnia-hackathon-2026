@@ -258,6 +258,9 @@ export const toFieldsAndSubsections = (
     lineOfBusiness: LineOfBusiness
 ): PreparedPolicySection => {
     const [sectionName, sectionData] = policySection;
+
+    // If sectionData is an array, treat each item as a subsection.
+    // The title of each subsection will map from a defined field *within* that subsection
     if (sectionData instanceof Array) {
         return {
             subSections: sectionData.map((subSection, i) => {
@@ -284,24 +287,31 @@ export const toFieldsAndSubsections = (
             }),
         };
     } else {
-        if (policySection[0] === 'testValues') {
-            return {
-                subSections: Object.entries(sectionData).map(
-                    ([subSectionTitle, subSectionTuples]) => [
-                        subSectionTitle,
-                        subSectionTuples && typeof subSectionTuples === 'object'
-                            ? Object.entries(subSectionTuples)
-                            : [],
-                    ]
-                ),
-            };
-        }
+        const { fields, subSections } = Object.entries(sectionData)
+            .filter(([fieldName]) => !excludeFields.has(fieldName)) // remove excluded fields
+            .reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
+                // If sectionData is an object, and a value within it is a nested object,
+                // also treat it as a subsection, but map the subsection title to the object key
+                if (typeof fieldData === 'object' && fieldData !== null) {
+                    return {
+                        fields: acc.fields, // keep fields untouched
+                        subSections: [
+                            ...(acc.subSections ?? []),
+                            [fieldName, Object.entries(fieldData)],
+                        ],
+                    };
+                }
 
-        const fields = Object.entries(sectionData).filter(
-            ([fieldName]) => !excludeFields.has(fieldName) // remove excluded fields
-        );
+                // Otherwise, the value is meant to be displayed, so just output the key-value pair
+                return {
+                    fields: [...(acc.fields ?? []), [fieldName, fieldData]],
+                    subSections: acc.subSections, // keep subsections untouched
+                };
+            }, {});
+
         return {
             fields,
+            subSections,
         };
     }
 };
