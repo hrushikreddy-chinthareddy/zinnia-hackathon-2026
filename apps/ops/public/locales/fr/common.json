@@ -6009,6 +6009,8 @@
             "SystematicPartialWithdrawal": "Retrait partiel systématique",
             "SystematicPartialWithdrawalSetup": "Configuration du retrait partiel systématique",
             "SystematicProgramUpdate": "Mise à jour du programme systématique",
+            "SystematicRequiredMinimumDistribution": "Mise à jour systématique du RMD",
+            "SystematicRequiredMinimumDistributionSetup": "Configuration systématique du RMD",
             "TPDChange": "Changement du désigné par un tiers",
             "UnitExpenseCharge": "Frais par unité"
         }

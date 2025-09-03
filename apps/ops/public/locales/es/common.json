@@ -5917,6 +5917,8 @@
             "SystematicPartialWithdrawalSetup": "Configuración de retiro parcial sistemático",
             "SystematicProgramUpdate": "Actualización de programa sistemático",
             "TPDChange": "Cambio de designado de tercera parte",
+            "SystematicRequiredMinimumDistribution": "Actualización sistemática de RMD",
+            "SystematicRequiredMinimumDistributionSetup": "Configuración sistemática de RMD",
             "UnitExpenseCharge": "Cargo por unidad de gastos"
         }
     },

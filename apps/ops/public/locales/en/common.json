@@ -6098,6 +6098,8 @@
             "SystematicPartialWithdrawal": "Systematic partial withdrawal",
             "SystematicPartialWithdrawalSetup": "Systematic partial withdrawal setup",
             "SystematicProgramUpdate": "Systematic program update",
+            "SystematicRequiredMinimumDistribution": "Systematic RMD update",
+            "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
             "TPDChange": "Third party designee change",
             "UnitExpenseCharge": "Unit expense charge"
         }
