@@ -1924,6 +1924,7 @@
         "tabs": {
             "call-logs": "Registros de llamadas",
             "closedOn": "Cerrado el {{date}}",
+            "canceledOn": "Cancelado el {{date}}",
             "documents": "Documentos",
             "caseDocuments": "Documentos del Caso",
             "events": "Eventos",
