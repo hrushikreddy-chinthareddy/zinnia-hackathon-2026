@@ -254,9 +254,10 @@ export const toSections = (
 };
 
 export const toFieldsAndSubsections = (
-    [sectionName, sectionData]: PolicySection,
+    policySection: PolicySection,
     lineOfBusiness: LineOfBusiness
 ): PreparedPolicySection => {
+    const [sectionName, sectionData] = policySection;
     if (sectionData instanceof Array) {
         return {
             subSections: sectionData.map((subSection, i) => {
@@ -275,11 +276,27 @@ export const toFieldsAndSubsections = (
                         !excludeFields.has(fieldName) // remove excluded fields
                 );
 
+                console.log('subSectionDataTuples', [
+                    subSectionTitle,
+                    subSectionDataTuples,
+                ]);
                 return [subSectionTitle, subSectionDataTuples];
             }),
         };
     } else {
-        //FIXME: provision for tests
+        if (policySection[0] === 'testValues') {
+            return {
+                subSections: Object.entries(sectionData).map(
+                    ([subSectionTitle, subSectionTuples]) => [
+                        subSectionTitle,
+                        subSectionTuples && typeof subSectionTuples === 'object'
+                            ? Object.entries(subSectionTuples)
+                            : [],
+                    ]
+                ),
+            };
+        }
+
         const fields = Object.entries(sectionData).filter(
             ([fieldName]) => !excludeFields.has(fieldName) // remove excluded fields
         );

@@ -253,11 +253,6 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                         </Accordion>
 
                         {policySections.map(([sectionLabel, sectionData]) => {
-                            console.log(
-                                'sectionData',
-                                sectionLabel,
-                                sectionData
-                            );
                             const { fields, subSections } =
                                 preparedPolicy.toFieldsAndSubsections([
                                     sectionLabel,
