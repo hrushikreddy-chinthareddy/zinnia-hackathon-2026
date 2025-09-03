@@ -38,6 +38,7 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
             header={title}
             trigger={children}
             contentClassName={styles.editSidesheetContent}
+            descriptionClassName={styles.editSidesheetDescription}
             open={open}
             onOpenChange={setOpen}
         >

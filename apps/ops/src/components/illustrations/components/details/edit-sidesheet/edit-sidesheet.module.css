@@ -1,3 +1,7 @@
 .editSidesheetContent {
     width: 50%;
+    --sidesheet-padding: var(--measure-dimension-padding-3xl);
+}
+.editSidesheetDescription {
+    --sidesheet-padding: 0;
 }

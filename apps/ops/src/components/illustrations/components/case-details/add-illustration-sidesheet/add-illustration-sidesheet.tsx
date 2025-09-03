@@ -43,6 +43,7 @@ export const AddIllustrationSidesheet: FC<
             header={title}
             trigger={children}
             contentClassName={styles.editSidesheetContent}
+            descriptionClassName={styles.editSidesheetDescription}
             open={open}
             onOpenChange={setOpen}
         >
