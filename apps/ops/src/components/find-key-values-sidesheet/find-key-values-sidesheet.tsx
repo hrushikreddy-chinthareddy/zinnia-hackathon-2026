@@ -27,12 +27,9 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import styles from './find-key-values-sidesheet.module.css';
 import { DataTuple } from './types';
 import {
-    formatAsSectionLabel,
-    formatDataField,
     generateKeyValueGroups,
     prepareSearchableData,
-    toSections,
-    toFieldsAndSubsections,
+    preparePolicy,
 } from './utils';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -49,9 +46,11 @@ interface FindKeyValuesSidebarProps {
 }
 
 const FindAllKeyValuesSection = ({
+    preparedPolicy,
     fields,
     searchValue,
 }: {
+    preparedPolicy: ReturnType<typeof preparePolicy>;
     fields: DataTuple[];
     searchValue: string;
 }) => {
@@ -60,7 +59,8 @@ const FindAllKeyValuesSection = ({
     return (
         <div className={styles.itemsList}>
             {fields.map((field) => {
-                const [fieldLabel, fieldData] = formatDataField(field);
+                const [fieldLabel, fieldData] =
+                    preparedPolicy.formatDataField(field);
                 return (
                     <DotContainer
                         key={fieldLabel}
@@ -178,7 +178,11 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     */
 
     if (!policy) return null; //FIXME: add loading state
-    const { policyBasics, policySections } = toSections(policy);
+
+    // This retains all the persistent extracted data on the policy
+    const preparedPolicy = preparePolicy(policy);
+
+    const { policyBasics, policySections } = preparedPolicy.toSections(policy);
 
     //console.log('policyBasics', policyBasics);
     //console.log('policySections', policySections);
@@ -237,9 +241,12 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                         {/* FIXME: i18n */}
                         <Accordion
                             key="policyBasics"
-                            sectionLabel="Policy basics"
+                            sectionLabel={preparedPolicy.formatAsSectionLabel(
+                                'Policy basics'
+                            )}
                         >
                             <FindAllKeyValuesSection
+                                preparedPolicy={preparedPolicy}
                                 fields={policyBasics}
                                 searchValue={searchValue}
                             />
@@ -252,19 +259,20 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                 sectionData
                             );
                             const { fields, subSections } =
-                                toFieldsAndSubsections([
+                                preparedPolicy.toFieldsAndSubsections([
                                     sectionLabel,
                                     sectionData,
                                 ]);
                             return (
                                 <Accordion
                                     key={sectionLabel}
-                                    sectionLabel={formatAsSectionLabel(
+                                    sectionLabel={preparedPolicy.formatAsSectionLabel(
                                         sectionLabel
                                     )}
                                 >
                                     {fields && (
                                         <FindAllKeyValuesSection
+                                            preparedPolicy={preparedPolicy}
                                             fields={fields}
                                             searchValue={searchValue}
                                         />
@@ -284,11 +292,14 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                     >
                                                         <Accordion
                                                             key={sectionLabel}
-                                                            sectionLabel={formatAsSectionLabel(
+                                                            sectionLabel={preparedPolicy.formatAsSectionLabel(
                                                                 subSectionLabel
                                                             )}
                                                         >
                                                             <FindAllKeyValuesSection
+                                                                preparedPolicy={
+                                                                    preparedPolicy
+                                                                }
                                                                 fields={
                                                                     subSectionFields
                                                                 }

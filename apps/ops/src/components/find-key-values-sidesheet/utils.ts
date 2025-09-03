@@ -83,32 +83,87 @@ export const generateKeyValueGroups = (
         };
     });
 };
+
+export const preparePolicy = (
+    policy: Policy
+): {
+    lineOfBusiness: LineOfBusiness;
+    toSections: (policy: Policy) => PreparedPolicy;
+    toFieldsAndSubsections: (
+        policySection: PolicySection
+    ) => PreparedPolicySection;
+    formatDataField: (dataTuple: DataTuple) => [string, string];
+    formatAsSectionLabel: (label: string) => string;
+} => {
+    // retain persistent policy descriptors as closure
+    const lineOfBusiness =
+        policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
+    return {
+        lineOfBusiness,
+        toSections: (policyOverride?) =>
+            toSections(policyOverride ?? policy, lineOfBusiness),
+        toFieldsAndSubsections: (policySection: PolicySection) =>
+            toFieldsAndSubsections(policySection, lineOfBusiness),
+        formatDataField: (dataTuple: DataTuple) =>
+            formatDataField(dataTuple, lineOfBusiness),
+        formatAsSectionLabel: (label: string) =>
+            formatAsSectionLabel(label, lineOfBusiness),
+    };
+};
+
 const splitIntoWords = (label: string) => {
     return label.replace(/([a-z])([A-Z])/g, '$1 $2');
 };
-const formatAsSentenceCase = (label: string) => {
-    return label
+
+const replaceLineOfBusinessWords = (
+    words: string,
+    lineOfBusiness: LineOfBusiness
+) => {
+    if (lineOfBusiness !== LineOfBusiness.LIFE) {
+        return words.replace(/(\bpolicy\b)/gi, 'contract');
+    }
+    return words;
+};
+const formatAsSentenceCase = (words: string) => {
+    return words
         .replace(
             /\w+/g,
-            (s) => {
-                return s === s.toUpperCase() ? s : s.toLowerCase();
+            (word) => {
+                return word === word.toUpperCase() ? word : word.toLowerCase();
             } // Convert words to lowercase, unless they are abbreviations
         )
         .replace(
             /^./g,
-            (s) => s.toUpperCase() // Capitalize the first letter of the sentence
+            (sentence) => sentence.toUpperCase() // Capitalize the first letter of the sentence
         );
 };
-export const formatAsSectionLabel = (label: string) => {
+export const formatAsSectionLabel = (
+    label: string,
+    lineOfBusiness: LineOfBusiness
+) => {
     const words = splitIntoWords(label);
-    const asSentence = formatAsSentenceCase(words);
-    return asSentence;
+
+    // Replace "policy" with "contract" if not a life policy
+    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
+        words,
+        lineOfBusiness
+    );
+
+    return formatAsSentenceCase(lineOfBusinessSpecificWords);
 };
-const formatAsDataLabel = (label: string) => {
+const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
     if (exactTranslations[label]) {
         return exactTranslations[label];
     }
     const words = splitIntoWords(label);
+
+    // Replace "policy" with "contract" if not a life policy
+    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
+        words,
+        lineOfBusiness
+    );
+
+    // Apply industry term abbreviations and grammar corrections
     const formatted = Object.entries({
         ...industryTermToAbbrev,
         ...grammarCorrections,
@@ -118,12 +173,15 @@ const formatAsDataLabel = (label: string) => {
                 new RegExp(`\\b${key}\\b`, 'i'), // whole word match, case insensitive
                 val
             ),
-        words
+        lineOfBusinessSpecificWords
     );
-    const asSentence = formatAsSentenceCase(formatted);
-    return asSentence;
+    return formatAsSentenceCase(formatted);
 };
-const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
+const formatAsDataValue = (
+    fieldData: FieldData,
+    lineOfBusiness: LineOfBusiness,
+    fieldName?: string
+) => {
     switch (true) {
         // Empty values
         case fieldData === null:
@@ -147,17 +205,20 @@ const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
             return String(fieldData);
     }
 };
-export const formatDataField = ([fieldName, fieldData]: DataTuple): [
-    string,
-    string
-] => {
+export const formatDataField = (
+    [fieldName, fieldData]: DataTuple,
+    lineOfBusiness: LineOfBusiness
+): [string, string] => {
     return [
-        formatAsDataLabel(fieldName),
-        formatAsDataValue(fieldData, fieldName),
+        formatAsDataLabel(fieldName, lineOfBusiness),
+        formatAsDataValue(fieldData, lineOfBusiness, fieldName),
     ];
 };
 
-export const toSections = (policy: Policy): PreparedPolicy => {
+export const toSections = (
+    policy: Policy,
+    lineOfBusiness: LineOfBusiness
+): PreparedPolicy => {
     const policyTuples = Object.entries(policy);
     return policyTuples.reduce<PreparedPolicy>(
         (acc, [currentKey, currentVal]) => {
@@ -192,10 +253,10 @@ export const toSections = (policy: Policy): PreparedPolicy => {
     );
 };
 
-export const toFieldsAndSubsections = ([
-    sectionName,
-    sectionData,
-]: PolicySection): PreparedPolicySection => {
+export const toFieldsAndSubsections = (
+    [sectionName, sectionData]: PolicySection,
+    lineOfBusiness: LineOfBusiness
+): PreparedPolicySection => {
     if (sectionData instanceof Array) {
         return {
             subSections: sectionData.map((subSection, i) => {
@@ -205,7 +266,8 @@ export const toFieldsAndSubsections = ([
                     String(
                         subSection[subsectionTitleField] ??
                             `${sectionName} ${i + 1}`
-                    )
+                    ),
+                    lineOfBusiness
                 );
                 const subSectionDataTuples = Object.entries(subSection).filter(
                     ([fieldName]) =>
