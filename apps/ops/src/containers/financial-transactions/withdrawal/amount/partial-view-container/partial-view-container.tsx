@@ -25,7 +25,7 @@ const getRadioItems = (
     setValue: (value: string) => void,
     onCustomChange: (value: string) => void
 ): RadioItem[] => {
-    const { withdrawalValues: { maximumWithdrawalAmount } = {} } = policy;
+    const { maximumWithdrawalAmount } = policy?.withdrawalValues || {};
     const maxAmountToWithdrawal = numberFormatify(maximumWithdrawalAmount);
 
     return [
