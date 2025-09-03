@@ -21,8 +21,9 @@ import {
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
-import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { TransactionResponseStatus} from '@deps/queries/api/bpm';
 import { checkManageBankChangeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { checkAddressChangeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -74,6 +75,27 @@ export const PersonSubPage = ({
 
     const selectedPartyRoles = selectedPolicyPartyRoles.map((roleObject) => {
         return roleObject.partyRole?.toLowerCase();
+    });
+
+    const { data: addressChangeEligibility } = useQuery({
+        queryKey: [
+            'checkAddressChangeEligibilityQuery',
+            planCode,
+            policyNumber,
+        ],
+        queryFn: () =>
+            checkAddressChangeEligibilityQuery(
+                planCode as string,
+                policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleAddressChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     const isAgent =
@@ -170,7 +192,10 @@ export const PersonSubPage = ({
 
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <AddressCard
-                    editable={editable}
+                    editable={
+                        editable &&
+                        addressChangeEligibility?.isEligibleAddressChange
+                    }
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}

@@ -266,6 +266,31 @@ export const checkEligibilityBeneficiary = async (
     }
 };
 
+export const checkEligibilityAddressChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/address/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityAddressChange::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber },
+                function: 'webnonfinancial.checkEligibilityAddressChange',
+            }
+        );
+        return error?.data;
+    }
+};
+
 export const changePartyName = async ({
     partyId,
     planCode,
