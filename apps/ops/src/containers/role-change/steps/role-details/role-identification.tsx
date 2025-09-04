@@ -679,25 +679,32 @@ const RoleIdentification = ({
 
             {party?.partyType === PartyType.TRUST && (
                 <div className={containerClasses}>
-                    {(role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ||
-                        role.toUpperCase() === Roles.NEWTHIRDPARTYDESIGNEE) &&
-                        party?.partyType === PartyType.TRUST && (
-                            <>
-                                <div className="mb-7 w-[400px]">
-                                    <FileUpload
-                                        value={uploadedFiles}
-                                        onChange={handleFilesChange}
+                    <div className={sectionClasses}>
+                        {(role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ||
+                            role.toUpperCase() ===
+                                Roles.NEWTHIRDPARTYDESIGNEE) &&
+                            party?.partyType === PartyType.TRUST && (
+                                <>
+                                    <div className="mb-7 w-[400px]">
+                                        <FileUpload
+                                            value={uploadedFiles}
+                                            onChange={handleFilesChange}
+                                        />
+                                    </div>
+                                    <Radio
+                                        items={options}
+                                        label={
+                                            t('documentsAvailable') as string
+                                        }
+                                        value={documentValid}
+                                        onChange={isRelevantChangeHandler}
+                                        orientation={
+                                            RadioOrientation.Horizontal
+                                        }
                                     />
-                                </div>
-                                <Radio
-                                    items={options}
-                                    label={t('documentsAvailable') as string}
-                                    value={documentValid}
-                                    onChange={isRelevantChangeHandler}
-                                    orientation={RadioOrientation.Horizontal}
-                                />
-                            </>
-                        )}
+                                </>
+                            )}
+                    </div>
                 </div>
             )}
         </div>

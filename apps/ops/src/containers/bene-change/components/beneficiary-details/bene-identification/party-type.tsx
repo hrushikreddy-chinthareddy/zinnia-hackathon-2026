@@ -36,7 +36,7 @@ const PartyTypes = ({
             value: PartyType.TRUST,
         },
         {
-            label: t('partyType.estate/Organisation'),
+            label: t('partyType.estate/Organization'),
             value: PartyType.ORGANIZATION,
         },
     ];
