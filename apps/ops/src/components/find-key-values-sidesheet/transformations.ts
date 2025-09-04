@@ -55,7 +55,7 @@ export const preparePolicy = (
     toFieldsAndSubsections: (
         policySection: PolicySection
     ) => PreparedPolicySection;
-    formatDataField: (dataTuple: DataTuple) => [string, string];
+    formatDataField: (dataTuple: DataTuple) => [string, string] | null;
     formatAsSectionLabel: (label: string) => string;
 } => {
     // retain persistent policy descriptors as closure
@@ -230,7 +230,8 @@ const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
 export const formatDataField = (
     [fieldName, fieldData]: DataTuple,
     lineOfBusiness: LineOfBusiness
-): [string, string] => {
+): [string, string] | null => {
+    if (fieldData == null) return null;
     return [
         formatAsDataLabel(fieldName, lineOfBusiness),
         formatAsDataValue(fieldData, fieldName),

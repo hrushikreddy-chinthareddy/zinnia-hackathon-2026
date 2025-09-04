@@ -54,8 +54,9 @@ const FindAllKeyValuesSection = ({
     return (
         <div className={styles.itemsList}>
             {fields.map((field) => {
-                const [fieldLabel, fieldData] =
-                    preparedPolicy.formatDataField(field);
+                const formattedField = preparedPolicy.formatDataField(field);
+                if (!formattedField) return null;
+                const [fieldLabel, fieldData] = formattedField;
                 return (
                     <DotContainer
                         key={fieldLabel}
