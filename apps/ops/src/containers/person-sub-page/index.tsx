@@ -26,6 +26,7 @@ import {
     checkManageBankChangeEligibilityQuery,
     checkPhoneChangeEligibilityQuery,
     checkAddressChangeEligibilityQuery,
+    checkEmailChangeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
@@ -78,6 +79,23 @@ export const PersonSubPage = ({
 
     const selectedPartyRoles = selectedPolicyPartyRoles.map((roleObject) => {
         return roleObject.partyRole?.toLowerCase();
+    });
+
+    const { data: emailChangeEligibility } = useQuery({
+        queryKey: ['emailChangeEligibility', planCode, policyNumber],
+        queryFn: () =>
+            checkEmailChangeEligibilityQuery(
+                planCode as string,
+                policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleEmailChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
     });
 
     const { data: addressChangeEligibility } = useQuery({
@@ -205,7 +223,10 @@ export const PersonSubPage = ({
 
                 <hr className="h-0.5 border-none bg-gray-200" />
                 <EmailCard
-                    editable={editable}
+                    editable={
+                        editable &&
+                        phoneChangeEligibility?.isEligiblePhoneChange
+                    }
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
                     partyRoles={selectedPolicyPartyRoles}
