@@ -6,6 +6,7 @@ export const initialCaseSearchCriteria = {
     offset: DEFAULT_OFFSET_COUNT,
     sortDirection: 'desc',
     sortBy: 'createdAt',
+    isIncludeSecondary: true,
 };
 
 export const caseListSearchPageSizeOptions = [
