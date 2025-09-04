@@ -38,7 +38,7 @@ describe('Form Distribution component', () => {
     const fundWithdrawnMethodOptions = [
         {
             label: 'caseWithdrawal.request.distributionInstruction.prorata',
-            value: FundWithdrawnMethod.Default,
+            value: FundWithdrawnMethod.Prorata,
         },
         {
             label: 'caseWithdrawal.request.distributionInstruction.specifyFunds',

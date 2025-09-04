@@ -35,3 +35,27 @@
         }
     }
 }
+
+.opsManagerTaskTable table {
+    overflow-y: visible !important;
+}
+
+.opsManagerTaskTable table thead tr th:global(.sr-only) + th {
+    border-top-left-radius: 8px;
+}
+
+.opsManagerTaskTable table thead tr:first-child th:last-child {
+    border-top-right-radius: 8px;
+}
+
+.opsManagerTaskTable table tbody tr:last-child td.taskLinkContainer + td {
+    border-bottom-left-radius: 8px;
+}
+
+.opsManagerTaskTable table tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 8px;
+}
+
+.loaderCell {
+    border-bottom-left-radius: 8px;
+}

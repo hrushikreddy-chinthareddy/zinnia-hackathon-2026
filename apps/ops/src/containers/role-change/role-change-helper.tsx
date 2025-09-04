@@ -33,8 +33,10 @@ import {
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
+    DEFAULT_DATE_FORMAT,
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
+    DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
 
 import { newTrustOptions } from '../bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
@@ -579,10 +581,16 @@ export const buildRoleChangeRequestBody = (
         changeReason: changeReason || null,
         signatures: signatures || [],
         beneDetailsReqInd: false,
-        documents: partyType === PartyType.TRUST ? documents : [],
+        documents:
+            partyType === PartyType.TRUST ||
+            role !== PolicyRole.THIRDPARTYDESIGNEE
+                ? documents
+                : [],
         supportingDocumentAttached:
-            ((!isRoleCheck && partyType === PartyType.TRUST) || isRoleCheck) &&
-            supportingDocumentAttached === BooleanValue.Yes
+            role === PolicyRole.THIRDPARTYDESIGNEE &&
+            partyType !== PartyType.TRUST
+                ? null
+                : supportingDocumentAttached === BooleanValue.Yes
                 ? true
                 : supportingDocumentAttached === BooleanValue.No
                 ? false
@@ -763,25 +771,23 @@ export const validate = (
                 currentErrors['email'] = t('formValidations.validEmail');
             }
         }
-    } else if (
-        preferredCommunicationType === PreferredCommunicationType.PHONE
+    }
+    if (
+        !phones ||
+        phones.length === 0 ||
+        !phones.some((phone: ExtendedPhone) => phone.remove !== true)
     ) {
-        if (
-            !phones ||
-            phones.length === 0 ||
-            !phones.some((phone: ExtendedPhone) => phone.remove !== true)
-        ) {
-            currentErrors['phoneRequired'] = t('formValidations.phoneRequired');
-        } else {
-            const invalidPhone = party.phones.some((phone: ExtendedPhone) => {
-                return (
-                    (phone.remove !== true && !phone.dialNumber) ||
-                    phone?.dialNumber?.trim() === ''
-                );
-            });
-            if (invalidPhone) {
-                currentErrors['phone'] = t('formValidations.validPhone');
-            }
+        currentErrors['phoneRequired'] = t('formValidations.phoneRequired');
+    } else {
+        const invalidPhone = party.phones.some((phone: ExtendedPhone) => {
+            return (
+                (phone.remove !== true && !phone.dialNumber) ||
+                phone?.dialNumber?.trim() === '' ||
+                Number(phone?.dialNumber?.trim().length) < DIAL_NUMBER_MAX_LEN
+            );
+        });
+        if (invalidPhone) {
+            currentErrors['phone'] = t('formValidations.validPhone');
         }
     }
 
@@ -867,7 +873,7 @@ export const formatDate = (date?: string | null): string => {
     if (!date) {
         return DEFAULT_ERROR_STRING;
     }
-    return dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT);
+    return dayjs(date, DATE_PICKER_FORMAT).format(DEFAULT_DATE_FORMAT);
 };
 
 export const getTrustTypeLabel = (
@@ -878,13 +884,6 @@ export const getTrustTypeLabel = (
     const option = newTrustOptions(t).find((option) => option.value === value);
 
     return option?.label ?? defaultLabel;
-};
-
-export const getFileSubtype = (blob: Blob) => {
-    if (blob && blob.type && blob.type.includes('/')) {
-        return blob.type.split('/')[1];
-    }
-    return blob.type || '';
 };
 
 export const ANYTIME = 'Anytime';

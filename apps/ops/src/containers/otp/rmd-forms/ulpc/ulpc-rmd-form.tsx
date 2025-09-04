@@ -18,11 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-    RMDType,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getUlpcRmdConfig from './ulpc-rmd-form.helpers';
@@ -184,8 +180,6 @@ export default function UlpcRmdWithdrawalForm() {
                         'distributionInstruction.distributionInstruction'
                     ) as string
                 }
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Prorata}
             />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}

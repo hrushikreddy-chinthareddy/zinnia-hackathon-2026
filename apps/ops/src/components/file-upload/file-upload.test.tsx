@@ -1,10 +1,9 @@
 import { render, fireEvent, screen } from '@testing-library/react';
-import React from 'react';
 
 import FileUpload from './file-upload';
 
 describe('FileUpload', () => {
-    const createFile = (name: string, type = 'text/plain') =>
+    const createFile = (name: string, type = 'application/pdf') =>
         new File(['dummy content'], name, { type });
 
     it('renders label and button', () => {
@@ -21,10 +20,13 @@ describe('FileUpload', () => {
     });
 
     it('shows uploaded files', () => {
-        const files = [createFile('foo.txt'), createFile('bar.pdf')];
+        const files = [
+            createFile('foo.pdf'),
+            createFile('bar.jpg', 'image/jpeg'),
+        ];
         render(<FileUpload value={files} onChange={jest.fn()} />);
-        expect(screen.getByText('foo.txt')).toBeInTheDocument();
-        expect(screen.getByText('bar.pdf')).toBeInTheDocument();
+        expect(screen.getByText('foo.pdf')).toBeInTheDocument();
+        expect(screen.getByText('bar.jpg')).toBeInTheDocument();
         expect(screen.getAllByTestId('upload-icon')).toHaveLength(2);
         expect(screen.getAllByTestId('cancel-icon')).toHaveLength(2);
     });
@@ -33,13 +35,13 @@ describe('FileUpload', () => {
         const onChange = jest.fn();
         render(<FileUpload value={[]} onChange={onChange} />);
         const input = screen.getByTestId('file-input') as HTMLInputElement;
-        const file = createFile('test.txt');
+        const file = createFile('test.pdf');
         fireEvent.change(input, { target: { files: [file] } });
         expect(onChange).toHaveBeenCalledWith([file]);
     });
 
     it('removes file when cancel icon is clicked', () => {
-        const file = createFile('remove.txt');
+        const file = createFile('remove.pdf');
         const onChange = jest.fn();
         render(<FileUpload value={[file]} onChange={onChange} />);
         fireEvent.click(screen.getByTestId('cancel-icon'));
@@ -52,7 +54,7 @@ describe('FileUpload', () => {
         const dropZone = screen.getByText(
             /Select a file or drag & drop it here/i
         ).parentElement!;
-        const file = createFile('drop.txt');
+        const file = createFile('drop.pdf');
         fireEvent.drop(dropZone, {
             dataTransfer: { files: [file] },
         });
@@ -63,7 +65,7 @@ describe('FileUpload', () => {
         render(<FileUpload value={[]} onChange={jest.fn()} />);
         const input = screen.getByTestId('file-input') as HTMLInputElement;
         Object.defineProperty(input, 'files', {
-            value: [createFile('clear.txt')],
+            value: [createFile('clear.pdf')],
             writable: false,
         });
         fireEvent.change(input);
@@ -77,5 +79,15 @@ describe('FileUpload', () => {
         const clickSpy = jest.spyOn(input, 'click');
         fireEvent.click(button);
         expect(clickSpy).toHaveBeenCalled();
+    });
+
+    it('shows error if file type is not allowed', () => {
+        render(<FileUpload value={[]} onChange={jest.fn()} />);
+        const input = screen.getByTestId('file-input') as HTMLInputElement;
+        const file = new File(['dummy'], 'bad.exe', {
+            type: 'application/x-msdownload',
+        });
+        fireEvent.change(input, { target: { files: [file] } });
+        expect(screen.getByText(/File type not allowed/i)).toBeInTheDocument();
     });
 });

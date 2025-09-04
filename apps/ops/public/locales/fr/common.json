@@ -559,7 +559,7 @@
                 "partyType": {
                     "individual": "Individu",
                     "trust": "Fiducie",
-                    "estate/Organisation": "Succession/Organisation"
+                    "estate/Organization": "Succession/Organisation"
                 },
                 "trustType": "Type de confiance",
                 "prefixOptions": {
@@ -612,7 +612,10 @@
                     "estate": "Succession",
                     "corporation": "Société",
                     "other": "Autre"
-                }
+                },
+                "yes": "Oui",
+                "no": "Non",
+                "isRelevant": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?"
             },
             "contactDetails": "Coordonnées",
             "contactInfo": {
@@ -783,6 +786,7 @@
         "roleDetails": {
             "requiredDocuments": "Document(s) de soutien requis disponible(s)?",
             "reasonChange": "Motif du changement",
+            "documentsAvailable": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?",
             "relationshipcurrent": "Relation avec le {{roleLabel}} actuel",
             "header": "{{roleLabel}} Détails",
             "ssn": "NSS",
@@ -887,7 +891,7 @@
             "partyOptions": {
                 "individual": "Individu",
                 "trust": "Fideicomiso",
-                "estate/Organisation": "Estate/Organisation",
+                "estate/Organization": "Estate/Organisation",
                 "custodian": "Tuteur"
             },
             "resonOptions": {
@@ -1916,6 +1920,7 @@
         "tabs": {
             "call-logs": "Journal des appels",
             "closedOn": "Fermé le {{date}}",
+            "canceledOn": "Annulé le {{date}}",
             "documents": "Documents",
             "caseDocuments": "Documents du Dossier",
             "events": "Événements",
@@ -4719,7 +4724,8 @@
                     "lastNameError": "Les informations sur le nom de famille sont manquantes",
                     "supportingDocumentNotMatchesError": "Le champ « Nom du document justificatif » correspond au nouveau nom. Il est obligatoire.",
                     "signatureNotPresentOnDocument": "Le champ Signature présente sur le document pour tous les propriétaires est obligatoire",
-                    "dateOfSignature": "Le champ Date de signature est obligatoire"
+                    "dateOfSignature": "Le champ Date de signature est obligatoire",
+                    "supportingDocumentRequired": "Au moins une pièce justificative est requise."
                 },
                 "mainCta": {
                     "updateName": "Mettre à jour le nom",
@@ -5266,9 +5272,15 @@
         "paymentMethod": "Mode de Paiement",
         "paymentType": {
             "eft": "EFT",
-            "check": "Chèque"
+            "check": "Chèque",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Carte de crédit",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}"
+        "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}",
+        "creditCardEndingIn": "Carte de crédit se terminant par {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {
@@ -6007,6 +6019,8 @@
             "SystematicPartialWithdrawal": "Retrait partiel systématique",
             "SystematicPartialWithdrawalSetup": "Configuration du retrait partiel systématique",
             "SystematicProgramUpdate": "Mise à jour du programme systématique",
+            "SystematicRequiredMinimumDistribution": "Mise à jour systématique du RMD",
+            "SystematicRequiredMinimumDistributionSetup": "Configuration systématique du RMD",
             "TPDChange": "Changement du désigné par un tiers",
             "UnitExpenseCharge": "Frais par unité"
         }

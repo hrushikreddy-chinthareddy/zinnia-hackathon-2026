@@ -1,3 +1,4 @@
+import { BankDetailList } from '@zinnia/api-types/types/aggregation';
 import { BankAccount } from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
@@ -11,7 +12,7 @@ import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/a
 import { PaymentMethodType } from './types';
 
 type BankDetailsCardsProps = {
-    bankDetails: BankAccount[];
+    bankDetails: BankAccount[] | BankDetailList;
     bankDetailsError: boolean;
     bankDetailsLoading: boolean;
     paymentBankId?: string;

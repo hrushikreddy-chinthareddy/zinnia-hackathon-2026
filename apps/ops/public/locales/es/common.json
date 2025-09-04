@@ -494,7 +494,7 @@
                 "partyType": {
                     "individual": "Individual",
                     "trust": "Fideicomiso",
-                    "estate/Organisation": "Patrimonio/Organización"
+                    "estate/Organization": "Patrimonio/Organización"
                 },
                 "trustType": "Tipo de Fideicomiso",
                 "prefixOptions": {
@@ -547,7 +547,10 @@
                     "estate": "Patrimonio",
                     "corporation": "Corporación",
                     "other": "Otro"
-                }
+                },
+                "yes": "Sí",
+                "no": "No",
+                "isRelevant": "¿Son válidos y relevantes los documentos de respaldo cargados?"
             },
             "contactDetails": "Detalles de contacto",
             "contactInfo": {
@@ -703,6 +706,7 @@
         "roleDetails": {
             "requiredDocuments": "¿Están disponibles los documentos de soporte requeridos?",
             "reasonChange": "Motivo del cambio",
+            "documentsAvailable": "¿Son válidos y relevantes los documentos de respaldo cargados?",
             "relationshipcurrent": "Relación con el {{roleLabel}} actual",
             "header": "{{roleLabel}} Detalles",
             "ssn": "SSN",
@@ -806,7 +810,7 @@
             "partyOptions": {
                 "individual": "Persona",
                 "trust": "Fideicomiso",
-                "organisation": "Patrimonio/Organización",
+                "organization": "Patrimonio/Organización",
                 "custodian": "Custodio"
             },
             "resonOptions": {
@@ -1928,6 +1932,7 @@
         "tabs": {
             "call-logs": "Registros de llamadas",
             "closedOn": "Cerrado el {{date}}",
+            "canceledOn": "Cancelado el {{date}}",
             "documents": "Documentos",
             "caseDocuments": "Documentos del Caso",
             "events": "Eventos",
@@ -4704,7 +4709,8 @@
                     "lastNameError": "Falta la información del apellido",
                     "supportingDocumentNotMatchesError": "El nombre del documento de respaldo coincide con el campo Nuevo nombre (es obligatorio)",
                     "signatureNotPresentOnDocument": "El campo Firma presente en el documento para todos los propietarios es obligatorio",
-                    "dateOfSignature": "El campo Fecha de firma es obligatorio"
+                    "dateOfSignature": "El campo Fecha de firma es obligatorio",
+                    "supportingDocumentRequired": "Se requiere al menos un documento de respaldo."
                 },
                 "mainCta": {
                     "updateName": "Nombre de actualización",
@@ -5250,9 +5256,15 @@
         "paymentMethod": "Método de Pago",
         "paymentType": {
             "eft": "EFT",
-            "check": "Cheque"
+            "check": "Cheque",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Tarjeta de Crédito",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}"
+        "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}",
+        "creditCardEndingIn": "Tarjeta de crédito terminando en {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {
@@ -5915,6 +5927,8 @@
             "SystematicPartialWithdrawalSetup": "Configuración de retiro parcial sistemático",
             "SystematicProgramUpdate": "Actualización de programa sistemático",
             "TPDChange": "Cambio de designado de tercera parte",
+            "SystematicRequiredMinimumDistribution": "Actualización sistemática de RMD",
+            "SystematicRequiredMinimumDistributionSetup": "Configuración sistemática de RMD",
             "UnitExpenseCharge": "Cargo por unidad de gastos"
         }
     },

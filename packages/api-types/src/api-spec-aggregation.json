@@ -1,0 +1,201 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Zinnia Aggregation Service",
+    "description": "Zinnia Aggregation Service.",
+    "version": "1.0.2"
+  },
+  "servers": [
+    {
+      "url": "https://qa.api.zinnia.io",
+      "description": "QA Environment"
+    },
+    {
+      "url": "https://dev.api.zinnia.io",
+      "description": "DEV Environment"
+    },
+    {
+      "url": "https://uat-bpm.se2.com",
+      "description": "UAT Environment"
+    },
+    {
+      "url": "https://bpm.se2.com",
+      "description": "PROD Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Bank Details",
+      "description": "Bank Details"
+    }
+  ],
+  "paths": {
+    "/aggregation/v1/policies/{planCode}/{policyNumber}/paymentmethods": {
+      "get": {
+        "tags": ["Bank Details"],
+        "summary": "Get Bank details for planCode and policyNumber",
+        "description": "Fetches bank/payment method details for the given plan code and policy number",
+        "operationId": "getPaymentMethods",
+        "parameters": [
+          {
+            "name": "planCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "policyNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of bank accounts details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankDetailList"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed"
+          },
+          "404": {
+            "description": "No bank details found"
+          },
+          "500": {
+            "description": "Internal server error. Please check server logs for more details."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BankDetailList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/BankDetail"
+        }
+      },
+      "BankDetail": {
+        "type": "object",
+        "properties": {
+          "bankId": {
+            "type": "string"
+          },
+          "appliesToPartyId": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "nameOnAccount": {
+            "type": "string"
+          },
+          "accountStatus": {
+            "type": "string"
+          },
+          "accountType": {
+            "type": "string"
+          },
+          "accountNumber": {
+            "type": "string"
+          },
+          "routingNumber": {
+            "type": "string"
+          },
+          "internationalBankAccountNumber": {
+            "type": "string"
+          },
+          "branchName": {
+            "type": "string"
+          },
+          "branchAddress": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "branchPhoneNumber": {
+            "type": "string"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "addressId": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "addressType": {
+            "type": "string"
+          },
+          "addressLine1": {
+            "type": "string"
+          },
+          "addressLine2": {
+            "type": "string"
+          },
+          "addressLine3": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "zipCode": {
+            "type": "string"
+          },
+          "zipCodeExtension": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "isPreferred": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Auth0": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://login.qa.zinnia.com/.well-known/openid-configuration",
+        "x-kong-security-openid-connect": {
+          "config": {
+            "run_on_preflight": true,
+            "scopes_claim": ["https://qa.api.zinnia.io/permissions"],
+            "audience_claim": ["aud"],
+            "audience_required": ["https://qa.api.zinnia.io"],
+            "client_id": ["client_id"],
+            "auth_methods": ["bearer"]
+          },
+          "enabled": true,
+          "protocols": ["grpc", "grpcs", "http", "https"]
+        }
+      }
+    }
+  }
+}

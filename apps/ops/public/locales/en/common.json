@@ -479,7 +479,7 @@
                 "partyType": {
                     "individual": "Individual",
                     "trust": "Trust",
-                    "estate/Organisation": "Estate/Organisation"
+                    "estate/Organization": "Estate/Organization"
                 },
                 "trustType": "Trust Type",
                 "prefixOptions": {
@@ -532,7 +532,10 @@
                     "estate": "Estate",
                     "corporation": "Corporation",
                     "other": "Other"
-                }
+                },
+                "yes": "Yes",
+                "no": "No",
+                "isRelevant": "Is the uploaded supporting document(s) valid and relevant?"
             },
             "contactDetails": "Contact Details",
             "contactInfo": {
@@ -707,7 +710,7 @@
             "relationshipcurrent": "Relationship to current {{roleLabel}}",
             "header": "{{roleLabel}} Details",
             "changeReason": "Reason for change",
-            "documentsAvailable": "Required supporting document(s) available?",
+            "documentsAvailable": "Is the uploaded supporting document(s) valid and relevant?",
             "permanentResident": "Permanent resident",
             "countryCitizenship": "Country of citizenship",
             "partyType": "Party type",
@@ -835,7 +838,7 @@
             "partyOptions": {
                 "individual": "Individual",
                 "trust": "Trust",
-                "organization": "Estate/Organisation",
+                "organization": "Estate/Organization",
                 "custodian": "Custodian"
             },
             "reasonOptions": {
@@ -898,10 +901,10 @@
             "relationshipcurrent": "Relationship to party",
             "relationship": "Relationship to {{roleLabel}}",
             "name": "Name",
-            "uscitizen": "US citizen",
+            "uscitizen": "US Citizen",
             "ssn": "SSN",
             "gender": "Gender",
-            "birthdate": "Birth date",
+            "birthdate": "Birth Date",
             "prefferedMethod": "Preferred Contact Method",
             "contactDetails": "Contact details",
             "email": "Email",
@@ -1946,6 +1949,7 @@
         "tabs": {
             "call-logs": "Call logs",
             "closedOn": "Closed on {{date}}",
+            "canceledOn": "Canceled on {{date}}",
             "documents": "Documents",
             "caseDocuments": "Case Documents",
             "events": "Events",
@@ -4789,7 +4793,8 @@
                     "lastNameError": "Last Name info is missing",
                     "supportingDocumentNotMatchesError": "Supporting Document Name matches with New Name field is required",
                     "signatureNotPresentOnDocument": "Signature Present on Document for all Owners field is required",
-                    "dateOfSignature": "Date of Signature field is required"
+                    "dateOfSignature": "Date of Signature field is required",
+                    "supportingDocumentRequired": "At least one supporting document is required."
                 },
                 "mainCta": {
                     "updateName": "Update name",
@@ -5337,9 +5342,15 @@
         "paymentMethod": "Payment Method",
         "paymentType": {
             "eft": "EFT",
-            "check": "Check"
+            "check": "Check",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Credit Card",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Checking ending in {{ accountNumber }}"
+        "checkingEndingIn": "Checking ending in {{ accountNumber }}",
+        "creditCardEndingIn": "Credit card ending in {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {
@@ -6099,6 +6110,8 @@
             "SystematicPartialWithdrawal": "Systematic partial withdrawal",
             "SystematicPartialWithdrawalSetup": "Systematic partial withdrawal setup",
             "SystematicProgramUpdate": "Systematic program update",
+            "SystematicRequiredMinimumDistribution": "Systematic RMD update",
+            "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
             "TPDChange": "Third party designee change",
             "UnitExpenseCharge": "Unit expense charge"
         }

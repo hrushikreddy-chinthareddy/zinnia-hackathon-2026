@@ -24,10 +24,7 @@ import {
 } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
-import {
-    getMasterAgentNumber,
-    isWellabeAgent,
-} from '@deps/utils/agent-helpers';
+import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useOptimizely } from './OptimizelyContext';
@@ -45,7 +42,7 @@ export interface PermissionsContextProps {
     isAllowReadPolicyAdmin: boolean;
     isAllowReadOtpRenewals: boolean;
     isCallLogAudioPermitted: boolean;
-    showToppanMerrill: boolean;
+    showWelbSalesMaterials: boolean;
     showCommissions: boolean;
     partyReferenceData?: PartyReferenceDataModel;
     permissionsLoadingComplete: boolean;
@@ -182,16 +179,15 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const { data: partyReferenceData, isLoading: showToppanMerrillLoading } =
-        useQuery({
-            queryKey: ['partyReferenceMetaData', partyId],
-            queryFn: () => getPartyMetadataById(partyId),
-            enabled: !!partyId,
-            select: (response) => {
-                const partyRefData = response?.data as PartyReferenceDataModel;
-                return partyRefData;
-            },
-        });
+    const { data: partyReferenceData, isLoading: partyRefLoading } = useQuery({
+        queryKey: ['partyReferenceMetaData', partyId],
+        queryFn: () => getPartyMetadataById(partyId),
+        enabled: !!partyId,
+        select: (response) => {
+            const partyRefData = response?.data as PartyReferenceDataModel;
+            return partyRefData;
+        },
+    });
 
     const {
         data: fgaRoleData,
@@ -212,6 +208,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     user: `party:${partyId}`,
                     relation: FgaRelation.Party,
                     object: FgaRoles.ZINNIA_INTERNAL_VIEWER,
+                },
+                {
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: FgaRoles.WELB_SALES_MATERIALS,
                 },
             ];
             const data = await bulkCheckPermissionsQuery({ tuples });
@@ -253,6 +254,13 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.ZINNIA_INTERNAL_VIEWER,
                 FgaRelation.Party
             );
+
+            const hasWelbSalesMaterials = !!checkRelation(
+                data,
+                FgaRoles.WELB_SALES_MATERIALS,
+                FgaRelation.UiAccess
+            );
+
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -267,6 +275,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasNotesAccess,
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
+                hasWelbSalesMaterials,
             };
         },
         enabled: !!partyId,
@@ -279,7 +288,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         !policyAdminLoading &&
         !otpRenewalsLoading &&
         !hasServiceRequestLoading &&
-        !showToppanMerrillLoading &&
+        !partyRefLoading &&
         !homeCheckLoading &&
         !opsManagerLoading;
     return (
@@ -300,9 +309,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
                 isOpsManagerView: !!opsManagerCheck?.data,
-                showToppanMerrill: partyReferenceData
-                    ? !!isWellabeAgent(partyReferenceData)
-                    : false,
+                showWelbSalesMaterials: !!fgaRoleData?.hasWelbSalesMaterials,
                 showCommissions: partyReferenceData
                     ? !!getMasterAgentNumber(partyReferenceData)
                     : false,

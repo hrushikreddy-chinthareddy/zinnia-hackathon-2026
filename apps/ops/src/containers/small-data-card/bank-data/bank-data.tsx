@@ -1,3 +1,4 @@
+import { BankDetail } from '@zinnia/api-types/types/aggregation';
 import { BankAccount } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -10,14 +11,14 @@ import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export interface BankDataCardProps {
-    bankDetails: BankAccount;
+    bankDetails: BankAccount | BankDetail;
     accessibilityClickText: string;
     onCardClick?: (id: string | undefined) => void;
     selectedId?: string;
 }
 
 interface BranchNameAndTypeProps {
-    bankDetails: BankAccount;
+    bankDetails: BankAccount | BankDetail;
     bankAccountType: string;
 }
 

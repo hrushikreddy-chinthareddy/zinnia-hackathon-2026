@@ -49,6 +49,8 @@ const defaultProps = {
     index: 0,
     existingRoleData: { undefined },
     policy: { undefined },
+    handleFilesChange: jest.fn(),
+    uploadedFiles: [],
 };
 
 describe('RoleIdentification Component', () => {

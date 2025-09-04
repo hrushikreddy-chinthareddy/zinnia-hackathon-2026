@@ -25,6 +25,7 @@ export enum ContentVariant {
 interface ContentProps extends PropsWithChildren<PiiProps> {
     className?: string;
     contentClassName?: string;
+    triggerClassName?: string;
     details?: string;
     highlights?: string[];
     truncate?: boolean;
@@ -45,7 +46,7 @@ export const Content = ({
     pii = false,
     ...rest
 }: ContentProps) => {
-    const { className, contentClassName, ...newRest } = rest;
+    const { className, contentClassName, triggerClassName, ...newRest } = rest;
     const renderedText = highlights ? (
         <Highlighter text={details} highlights={highlights} />
     ) : (
@@ -94,6 +95,7 @@ export const Content = ({
 
     const textContent = truncate ? (
         <PopoverOnTruncate
+            triggerClassName={triggerClassName ? triggerClassName : ''}
             popoverClassName={popoverClassName}
             title={popoverBody ?? details}
         >

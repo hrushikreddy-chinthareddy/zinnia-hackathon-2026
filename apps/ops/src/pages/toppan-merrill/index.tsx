@@ -11,7 +11,7 @@ import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { AgentDataResponse } from '@deps/types/agents';
-import { findCarrierAgents } from '@deps/utils/agent-helpers';
+import { findCarrierAlias } from '@deps/utils/agent-helpers';
 import { encryptWellabeToppanMerrill } from '@deps/utils/crypto/crypto';
 import { ToppanMerrillStorefrontAgent } from '@deps/utils/merrill-toppan/merrill-toppan-xml';
 import {
@@ -103,7 +103,10 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 const partyRef = partyRefReq.data as PartyReferenceDataModel;
 
-                const wellabeAgent = findCarrierAgents(partyRef, 'welb');
+                // const wellabeAgent = findCarrierAlias(partyRef, 'welb');
+                const wellabeAgent = findCarrierAlias(partyRef, 'welb').concat(
+                    findCarrierAlias(partyRef, 'aric')
+                );
 
                 // If the user is a wellabe agent, get the agent metadata
                 if (wellabeAgent.length > 0) {
@@ -112,7 +115,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     // Find all agent aliases for the agent then parse out the ones that are wellabe
                     // MCS only stores the parent company codes. In this case for Wellabe (WELB), the partent is ARIC
                     const parentCompayCodes = 'ARIC'; // TODO: how do we dynamicallyt find this value? // GLCO for testing locally
-                    const externalId = wellabeAgent[0].externalId; // 119350014 for testing locally
+                    const externalId = wellabeAgent[0].externalId; // we don't have a solution for multiple aliases
                     const agentUrlPath = `${apiServerBaseUrl}/api/${parentCompayCodes}/salesentity?idType=external&id=${externalId}&IsClientChild=true&&skip=0&take=10`;
 
                     const agentReq = await serverApi.get<null, AxiosResponse>(

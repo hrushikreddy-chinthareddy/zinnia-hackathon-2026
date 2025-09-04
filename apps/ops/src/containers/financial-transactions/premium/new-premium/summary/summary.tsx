@@ -1,9 +1,4 @@
-import {
-    Address,
-    DisbursementPaymentForm,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
+import { Address, Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -63,6 +58,7 @@ const Summary = ({ policy }: SummaryProps) => {
         payorAddress,
         payorFullName,
         validationResponse,
+        paymentForm,
     } = premium;
 
     const validationSucceeded = useMemo(
@@ -146,7 +142,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     branchName={paymentBranchName}
                     classNames="max-w-[524px]"
                     payeeName={payorFullName}
-                    paymentType={DisbursementPaymentForm.ACH}
+                    paymentType={paymentForm}
                     showFinancialData={false}
                 />
 

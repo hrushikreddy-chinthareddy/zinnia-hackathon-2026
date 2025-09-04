@@ -21,7 +21,6 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
     Carrier,
-    FundWithdrawnMethod,
     OwnerAcknowledgement,
 } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
@@ -135,8 +134,6 @@ export default function RslnWithdrawalForm() {
             )}
 
             <FormDistribution
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Default}
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={

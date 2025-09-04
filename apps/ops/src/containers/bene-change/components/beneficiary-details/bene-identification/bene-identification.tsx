@@ -1,8 +1,10 @@
-import { PartyType } from '@zinnia/api-types/types/sor';
+import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
+import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { v4 as uuidV4 } from 'uuid';
 
 import Field, {
     FieldSize,
@@ -12,14 +14,34 @@ import Field, {
 import FieldDateSelect, {
     DATE_PICKER_FORMAT,
 } from '@deps/components/fields/field-date-select/field-date-select';
-import Radio, { RadioVariant } from '@deps/components/radio/radio';
+import FileUpload from '@deps/components/file-upload/file-upload';
+import Radio, {
+    RadioOrientation,
+    RadioVariant,
+} from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { EntityTypeValue } from '@deps/constants/policy';
-import { entityTypeOptions } from '@deps/containers/role-change/role-change-helper';
+import { convertToBase64 } from '@deps/containers/people-data-cards/name-card/sidesheet/sidesheet-name-card.helpers';
+import {
+    BooleanOptions,
+    CLIENT_COPY,
+    entityTypeOptions,
+    NEW_BUSINESS,
+    NO,
+} from '@deps/containers/role-change/role-change-helper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { getFileSubtype } from '@deps/helpers/document.helpers';
+import { uploadDocumentV2 } from '@deps/queries/api/documents';
+import {
+    EDS_DATE_DISPLAY_FORMAT,
+    SOURCE,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
+import { SourceSystem } from '@deps/types/documents-v3';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import {
     Errors,
@@ -55,6 +77,7 @@ export interface BeneficiaryIdentificationProps {
     updateParty?: any;
     isReadOnly?: boolean;
     existingBene?: boolean;
+    policy: Policy;
 }
 
 const BeneficiaryIdentification = ({
@@ -62,6 +85,7 @@ const BeneficiaryIdentification = ({
     updateParty,
     isReadOnly,
     existingBene = false,
+    policy,
 }: BeneficiaryIdentificationProps) => {
     const containerClasses = clsx(
         'flex flex-col',
@@ -87,6 +111,12 @@ const BeneficiaryIdentification = ({
     const { featureFlags } = useOptimizely();
 
     const trustEnumFlag = featureFlags[FEATURE_FLAGS.BENE_TRUST_TYPE_ENUM];
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>(
+        updateParty.documents || []
+    );
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const options = BooleanOptions(t);
+    const [documentValid, setDocumentValid] = useState<string | null>(null);
 
     useEffect(() => {
         if (
@@ -152,6 +182,15 @@ const BeneficiaryIdentification = ({
         setParty((prevState: any) => ({ ...prevState, dateOfBirth: dob }));
     }, [dateOfBirth]);
 
+    useEffect(() => {
+        if (partyIdentification === PartyType.TRUST) {
+            setCurrentParty((prevData: any) => ({
+                ...prevData,
+                supportingDocumentAttached: documentValid === 'Yes',
+            }));
+        }
+    }, [documentValid, partyIdentification]);
+
     const getVariant = (key: string) => {
         return isReadOnly
             ? FieldVariant.Inactive
@@ -189,6 +228,106 @@ const BeneficiaryIdentification = ({
             ...prevState,
             entityType: value,
         }));
+    };
+
+    const handleFilesChange = async (files: File[]) => {
+        const isSameFile = (a: File, b: File) =>
+            a.name === b.name &&
+            a.size === b.size &&
+            a.lastModified === b.lastModified;
+
+        const newFiles = files.filter(
+            (newFile) =>
+                !uploadedFiles.some((uploadedFile) =>
+                    isSameFile(newFile, uploadedFile)
+                )
+        );
+
+        if (!files.length) {
+            setCurrentParty((prevData: any) => ({
+                ...prevData,
+                documents: [],
+                supportingDocumentAttached: NO,
+            }));
+            setUploadedFiles([]);
+            return;
+        }
+
+        if (newFiles.length === 0) {
+            setUploadedFiles(files);
+            return;
+        }
+
+        const base64Results = await Promise.all(
+            newFiles.map((file) => convertToBase64(file))
+        );
+
+        const updatedDocuments: {
+            documentId: string;
+            documentDate: string;
+            documentType: string;
+            documentName: string;
+            name: string;
+        }[] = [];
+
+        await Promise.all(
+            newFiles.map(async (file, index) => {
+                const blob: Blob = file;
+
+                const metaData = {
+                    policyNumber: policy.policyNumber || '',
+                    planCode: policy.product?.planCode || '',
+                    displayName: 'Bene Change Supporting Document',
+                    source: SOURCE,
+                    sourceFileName: file.name,
+                    documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                    fileType: getFileSubtype(blob),
+                    docClassification:
+                        SearchRequest.documentClassification.INBOUND,
+                    sourceSystem: SourceSystem.ZL,
+                    zinniaLiveCaseId: '',
+                    parentCarrierCode: policy.carrierId ?? '',
+                    correlationId: uuidV4() || '',
+                    docAccessLevel: CLIENT_COPY,
+                    docCategory: NEW_BUSINESS,
+                    documentType: '',
+                };
+
+                try {
+                    const response = await uploadDocumentV2(
+                        metaData,
+                        base64Results[index]
+                    );
+
+                    if (response?.documentId) {
+                        const attachment = {
+                            documentId: response?.documentId,
+                            documentDate: dayjs().format(
+                                ZAHARA_API_DATE_FORMAT
+                            ),
+                            documentType: metaData?.fileType,
+                            documentName: metaData?.sourceFileName,
+                            name: metaData?.sourceFileName,
+                        };
+                        updatedDocuments.push(attachment);
+                    }
+                } catch (error) {
+                    setUploadError('Failed to upload file. Please try again.');
+                    browserLogError(
+                        'sidesheet-name-change: Error uploading document:',
+                        {
+                            ...parseErrorInformation(error),
+                        }
+                    );
+                }
+            })
+        );
+        setCurrentParty((prevData: any) => ({
+            ...prevData,
+            documents: updatedDocuments,
+            supportingDocumentAttached: 'Yes',
+        }));
+        setUploadedFiles(files);
     };
 
     return (
@@ -300,54 +439,68 @@ const BeneficiaryIdentification = ({
                         </div>
                     )}
                     {partyIdentification === PartyType.TRUST && (
-                        <div className="my-4 grid w-full grid-cols-2">
-                            <div className="flex flex-col gap-4">
-                                <Field
-                                    label={t(`trustName`) as string}
-                                    message={currentErrors?.lastName}
-                                    onChange={(event) => {
-                                        setCurrentErrors((prevState: any) => {
-                                            const { lastName, ...errors } =
-                                                prevState ?? {};
-                                            return errors;
-                                        });
-                                        setParty((prevState: any) => ({
-                                            ...prevState,
-                                            lastName: event.target.value,
-                                        }));
-                                    }}
-                                    size={FieldSize.Small}
-                                    type={FieldType.BaseActive}
-                                    value={party?.lastName || ''}
-                                    maxLength={40}
-                                    variant={
-                                        isReadOnly
-                                            ? FieldVariant.Inactive
-                                            : currentErrors?.lastName
-                                            ? FieldVariant.Error
-                                            : FieldVariant.Default
-                                    }
-                                    required
-                                />
-                                <SelectSimple
-                                    label={t('trustType') as string}
-                                    options={
-                                        trustEnumFlag
-                                            ? trustOption(t)
-                                            : newTrustOptions(t)
-                                    }
-                                    onChange={(value) =>
-                                        setParty((prevState: any) => ({
-                                            ...prevState,
-                                            trustType: value,
-                                        }))
-                                    }
-                                    size={FieldSize.Small}
-                                    value={
-                                        party.trustType ?? TrustType.Individual
-                                    }
-                                    variant={FieldVariant.Default}
-                                    disabled={isReadOnly}
+                        <>
+                            <div className="my-4 grid w-full grid-cols-2">
+                                <div className="flex flex-col gap-4">
+                                    <Field
+                                        label={t(`trustName`) as string}
+                                        message={currentErrors?.lastName}
+                                        onChange={(event) => {
+                                            setCurrentErrors(
+                                                (prevState: any) => {
+                                                    const {
+                                                        lastName,
+                                                        ...errors
+                                                    } = prevState ?? {};
+                                                    return errors;
+                                                }
+                                            );
+                                            setParty((prevState: any) => ({
+                                                ...prevState,
+                                                lastName: event.target.value,
+                                            }));
+                                        }}
+                                        size={FieldSize.Small}
+                                        type={FieldType.BaseActive}
+                                        value={party?.lastName || ''}
+                                        maxLength={40}
+                                        variant={
+                                            isReadOnly
+                                                ? FieldVariant.Inactive
+                                                : currentErrors?.lastName
+                                                ? FieldVariant.Error
+                                                : FieldVariant.Default
+                                        }
+                                        required
+                                    />
+                                    <SelectSimple
+                                        label={t('trustType') as string}
+                                        options={
+                                            trustEnumFlag
+                                                ? trustOption(t)
+                                                : newTrustOptions(t)
+                                        }
+                                        onChange={(value) =>
+                                            setParty((prevState: any) => ({
+                                                ...prevState,
+                                                trustType: value,
+                                            }))
+                                        }
+                                        size={FieldSize.Small}
+                                        value={
+                                            party.trustType ??
+                                            TrustType.Individual
+                                        }
+                                        variant={FieldVariant.Default}
+                                        disabled={isReadOnly}
+                                    />
+                                </div>
+                            </div>
+                            <div className="mb-7 w-[400px]">
+                                <FileUpload
+                                    value={uploadedFiles}
+                                    onChange={handleFilesChange}
+                                    error={uploadError}
                                 />
                                 <FieldDateSelect
                                     label={t('trustDate') as string}
@@ -370,7 +523,16 @@ const BeneficiaryIdentification = ({
                                     required
                                 />
                             </div>
-                        </div>
+                            <Radio
+                                items={options}
+                                label={t('isRelevant') as string}
+                                value={documentValid}
+                                onChange={(e) => {
+                                    setDocumentValid(e.target.value);
+                                }}
+                                orientation={RadioOrientation.Horizontal}
+                            />
+                        </>
                     )}
 
                     {partyIdentification === PartyType.ORGANIZATION && (

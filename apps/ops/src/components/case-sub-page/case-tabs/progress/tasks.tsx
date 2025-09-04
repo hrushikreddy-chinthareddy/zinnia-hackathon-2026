@@ -98,6 +98,11 @@ export function Task({ task }: { task: TaskView }) {
             dateField: 'createdAt',
         },
         {
+            check: (status: Statuses) => status === 'CANCELED',
+            key: 'caseOverview.tabs.canceledOn',
+            dateField: 'updatedAt',
+        },
+        {
             check: () => true,
             key: 'caseOverview.tabs.closedOn',
             dateField: 'updatedAt',

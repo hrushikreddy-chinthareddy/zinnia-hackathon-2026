@@ -46,7 +46,7 @@ const AssigneePopover = ({
     hasAssignee,
     task,
 }: any) => {
-    const POPOVER_HEIGHT = 300;
+    const POPOVER_HEIGHT = 170;
     const TBODY = 'tbody';
 
     const [open, setOpen] = useState(false);
@@ -146,51 +146,62 @@ const AssigneePopover = ({
         [handleSearch]
     );
 
+    const triggerClassName = '!z-10  justify-end';
+    const assigneePopoverBtnClassName =
+        'w-full flex items-center space-x-2 py-1.5 z-10';
+
     return (
-        <div className="relative inline-block" ref={popoverRef}>
+        <div className="w-full relative block" ref={popoverRef}>
             <button
                 ref={buttonRef}
                 type="button"
-                className="flex items-center space-x-2 py-1.5 z-10"
+                className={assigneePopoverBtnClassName}
                 onClick={handlePopoverToggle}
+                aria-label="Open assignee popover"
             >
-                {hasAssignee() && <Avatar name={assignee || ''} size="small" />}
+                {hasAssignee() && (
+                    <Avatar
+                        className="!mr-0"
+                        name={assignee || ''}
+                        size="small"
+                    />
+                )}
                 {hasAssignee() ? (
-                    <div className="flex items-center">
-                        <Content
-                            className="!z-10 !ml-0"
-                            details={
-                                assignee
-                                    ?.split(',')
-                                    .map((x: string) => x.trim())
-                                    .reverse()
-                                    .join(' ') || ''
-                            }
-                            variant={ContentVariant.BodySm}
-                        />
-                        {isPopoverAllowed && (
-                            <Tooltip
-                                placement={TooltipPlacement.TopRight}
-                                tooltipClassName="!w-auto"
-                                triggerClassName="!z-10"
-                                trigger={
-                                    <IconButton
-                                        className="text-secondary"
-                                        onClick={handleUnassignClick}
-                                    >
-                                        <CancelIcon height={18} width={18} />
-                                    </IconButton>
-                                }
-                            >
-                                <span className="text-md">Unassign</span>
-                            </Tooltip>
-                        )}
-                    </div>
+                    <Content
+                        className="!z-10 !ml-0 min-h-8"
+                        contentClassName="text-left flex-1"
+                        details={
+                            assignee
+                                ?.split(',')
+                                .map((x: string) => x.trim())
+                                .reverse()
+                                .join(' ') || ''
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
                 ) : (
                     <Content
                         details={assignee}
                         variant={ContentVariant.ArticleReferences}
                     />
+                )}
+                {hasAssignee() && isPopoverAllowed && (
+                    <Tooltip
+                        placement={TooltipPlacement.TopRight}
+                        tooltipClassName="!w-auto"
+                        triggerClassName={triggerClassName}
+                        trigger={
+                            <IconButton
+                                aria-label="Unassign"
+                                className="text-secondary"
+                                onClick={handleUnassignClick}
+                            >
+                                <CancelIcon height={18} width={18} />
+                            </IconButton>
+                        }
+                    >
+                        <span className="text-md">Unassign</span>
+                    </Tooltip>
                 )}
             </button>
 
@@ -208,12 +219,12 @@ const AssigneePopover = ({
                             value={searchValue}
                             type="text"
                             placeholder="Find a person"
-                            className="w-full px-3 py-1.5 border border-gray-200 rounded-md outline-none focus:ring-2 focus:ring-gray-300 text-gray-500"
+                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-gray-300 text-gray-500"
                         />
                     </div>
-                    <div className="py-2 max-h-[20rem] overflow-y-auto">
+                    <div className="max-h-[8rem] overflow-y-auto">
                         {assigneeLoading ? (
-                            <div className="w-full h-8 text-center py-4">
+                            <div className="w-full h-10 text-center py-4">
                                 <Loader variant={LoaderVariant.CTA} />
                             </div>
                         ) : (
