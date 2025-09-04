@@ -18,11 +18,13 @@ import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { sectionTypeToSubsectionTitleFields } from './translations/subsection-field-to-title';
 import {
+    DataRecord,
     DataTuple,
     FieldData,
     PolicySection,
     PreparedPolicy,
     PreparedPolicySection,
+    SubSection,
 } from './types';
 
 /**
@@ -63,7 +65,7 @@ export const preparePolicy = (
         lineOfBusiness,
         toSections: (policyOverride) => toSections(policyOverride ?? policy),
         toFieldsAndSubsections: (policySection: PolicySection) =>
-            toFieldsAndSubsections(policySection, lineOfBusiness),
+            toFieldsAndSubsections(policySection),
         formatDataField: (dataTuple: DataTuple) =>
             formatDataField(dataTuple, lineOfBusiness),
         formatAsSectionLabel: (label: string) =>
@@ -255,7 +257,12 @@ export const toSections = (policy: Policy): PreparedPolicy => {
         (acc, [currentKey, currentVal]) => {
             // append to policySections list
             if (typeof currentVal === 'object' && currentVal !== null) {
-                switch (currentKey) {
+                const sectionTitle = currentKey;
+
+                // find the field within the subsection tuples to use as the subsection title
+                const subsectionTitleField =
+                    sectionTypeToSubsectionTitleFields[sectionTitle];
+                switch (sectionTitle) {
                     case 'allocation':
                         // combine fundAllocationsInvestments and funds into a flat map
                         const combinedFunds = policy.allocation?.funds?.map(
@@ -268,17 +275,18 @@ export const toSections = (policy: Policy): PreparedPolicy => {
                             }
                         );
                         const funds = combinedFunds
-                            ? convertListToMap<Fund & FundAllocation>(
-                                  combinedFunds,
-                                  currentKey
-                              )
+                            ? convertListToMap<Fund & FundAllocation>({
+                                  subSectionList: combinedFunds,
+                                  subsectionTitleField,
+                                  fallbackTitle: sectionTitle,
+                              })
                             : undefined;
                         return {
                             ...acc,
                             policySections: [
                                 ...acc.policySections,
                                 [
-                                    'Funds',
+                                    'Funds', // TODO: maybe convert from another map
                                     {
                                         ...currentVal,
                                         ...funds,
@@ -291,10 +299,12 @@ export const toSections = (policy: Policy): PreparedPolicy => {
                         return acc;
                     case 'loanValues':
                         const loanSegments = policy.allocation?.loanSegments
-                            ? convertListToMap<LoanSegment>(
-                                  policy.allocation?.loanSegments,
-                                  currentKey
-                              )
+                            ? convertListToMap<LoanSegment>({
+                                  subSectionList:
+                                      policy.allocation?.loanSegments,
+                                  subsectionTitleField,
+                                  fallbackTitle: sectionTitle,
+                              })
                             : undefined;
                         return {
                             ...acc,
@@ -333,15 +343,23 @@ export const toSections = (policy: Policy): PreparedPolicy => {
     );
 };
 
-const convertListToMap = <T extends object>(
-    subSectionList: T[],
-    fallbackTitle: string
-) => {
+// TODO: this could actually be useful as a util
+const convertListToMap = <T extends DataRecord>({
+    subSectionList,
+    subsectionTitleField,
+    fallbackTitle,
+}: {
+    subSectionList: T[];
+    subsectionTitleField: string;
+    fallbackTitle: string;
+}) => {
     const subSectionMap = subSectionList?.reduce<Record<string, T>>(
         (acc, currentSubSection, i) => {
             // Grab the first value to represent the title of the segment
-            const subSectionTitle = String(
-                Object.values(currentSubSection)[0] ??
+
+            const subSectionTitle = formatAsDataValue(
+                currentSubSection[subsectionTitleField] ??
+                    Object.values(currentSubSection)[0] ??
                     `${fallbackTitle} ${i + 1}`
             );
 
@@ -378,31 +396,38 @@ const convertListToMap = <T extends object>(
  *          and/or an array of subsections
  */
 
-export const toFieldsAndSubsections = (
-    [sectionName, sectionData]: PolicySection,
-    lineOfBusiness: LineOfBusiness
-): PreparedPolicySection => {
+export const toFieldsAndSubsections = ([
+    sectionName,
+    sectionData,
+]: PolicySection): PreparedPolicySection => {
     // If sectionData is an array, treat each item as a subsection.
     // The title of each subsection will map from a defined field *within* that subsection
     if (sectionData instanceof Array) {
-        convertListToMap<LoanSegment>(sectionData, sectionName);
-        return {
-            subSections: sectionData.map((subSection, i) => {
-                const subsectionTitleField =
-                    sectionTypeToSubsectionTitleFields[sectionName];
-                const subSectionTitle = formatAsDataValue(
-                    String(
-                        subSection[subsectionTitleField] ??
-                            `${sectionName} ${i + 1}`
-                    )
-                );
-                const subSectionDataTuples = removeExcludedFields(
-                    Object.entries(subSection),
-                    [subsectionTitleField] // and also the title field
-                );
+        const subsectionTitleField =
+            sectionTypeToSubsectionTitleFields[sectionName];
+        const subSectionDataMap = convertListToMap({
+            subSectionList: sectionData,
+            subsectionTitleField,
+            fallbackTitle: sectionName,
+        });
+        const subSections = removeExcludedFields(
+            Object.entries(subSectionDataMap), // remove excluded subsections
+            [subsectionTitleField] // and also the title field
+        ).map<SubSection>(([subSectionTitle, subSectionData]) => {
+            return [
+                subSectionTitle,
+                Array.isArray(subSectionData)
+                    ? subSectionData
+                    : subSectionData === null
+                    ? []
+                    : // map subsection fields to tuples and
+                      // remove excluded fields within subsection
+                      removeExcludedFields(Object.entries(subSectionData)),
+            ];
+        });
 
-                return [subSectionTitle, subSectionDataTuples];
-            }),
+        return {
+            subSections,
         };
     } else {
         const { fields, subSections } = removeExcludedFields(

@@ -12,6 +12,6 @@ export const excludeFields = new Set([
     'funds',
     'fundAllocationsInvestments',
     'fundSegments',
-    'matchSegment',
+    //'matchSegment',
     'loanSegments',
 ]);

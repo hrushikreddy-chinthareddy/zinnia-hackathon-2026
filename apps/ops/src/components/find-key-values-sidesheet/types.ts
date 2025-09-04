@@ -6,6 +6,7 @@ export type NestedTuple = [string, FieldData | Record<string, object>];
 export type PolicySectionData = Record<string, FieldData> | DataRecord[];
 export type PolicySection = [string, PolicySectionData];
 export type SubSection = [string, DataTuple[]];
+export type SubSectionRecord = Record<string, DataTuple[]>;
 
 export type PreparedPolicy = {
     policyBasics: DataTuple[]; // Array of fieldName -> fieldValue
