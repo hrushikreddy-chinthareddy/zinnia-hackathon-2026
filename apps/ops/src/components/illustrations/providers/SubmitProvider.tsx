@@ -82,7 +82,6 @@ export function SubmitProvider({
             );
             return Promise.reject();
         }
-        console.log('createIllustrationPayload', createIllustrationPayload);
         return {
             value: createIllustrationPayload.value,
             formInputs: answers,
