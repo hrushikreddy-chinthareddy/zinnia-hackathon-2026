@@ -7329,7 +7329,7 @@
             },
             "selectForApplication": "Seleccione para la aplicación",
             "expired": "Venció",
-            "archived": "Archivar",
+            "archived": "Archivado",
             "selected": "Seleccionado",
             "unArchive": "Desarchivar",
             "valuePerYear": "{{value}} / año",
@@ -7344,7 +7344,8 @@
             "confirmArchiveAriaLabel": "Confirmar archivado de ilustración",
             "addProductAriaLabel": "Boton para agregar un producto",
             "editIllustration": "Editar ilustración",
-            "initialDeathBenefitOption": "Opción de beneficio por muerte inicial"
+            "initialDeathBenefitOption": "Opción de beneficio por muerte inicial",
+            "archive": "Archivar"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

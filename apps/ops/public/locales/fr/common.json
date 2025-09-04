@@ -7412,7 +7412,8 @@
             "confirmArchiveAriaLabel": "Confirmer archivage de l'illustration",
             "addProductAriaLabel": "Bouton pour ajouter un produit",
             "editIllustration": "Modifier l'illustration",
-            "initialDeathBenefitOption": "Option de prestation de décès"
+            "initialDeathBenefitOption": "Option de prestation de décès",
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

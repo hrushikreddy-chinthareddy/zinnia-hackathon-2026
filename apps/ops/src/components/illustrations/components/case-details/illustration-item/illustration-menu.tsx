@@ -150,7 +150,7 @@ const IllustrationMenu = ({
                     IllustrationStatuses.ACTIVE && (
                     <MenuContextualItem
                         onClick={() => setOpenArchiveConfirmation(true)}
-                        content={t('clientCase.illustrationDetails.archived')}
+                        content={t('clientCase.illustrationDetails.archive')}
                         icon={
                             <Icon
                                 type={IconType.ARCHIVE}

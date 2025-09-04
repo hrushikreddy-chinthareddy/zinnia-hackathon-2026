@@ -8,24 +8,6 @@ type IllustrationDetailsStatusBadgeProps = {
     status: IllustrationStatus;
 };
 
-const statusMap = {
-    Submitted: {
-        variant: BadgeVariant.SUCCESS,
-        labelPath: 'clientCase.illustrationDetails.selected',
-        icon: IconType.CIRCLE_CHECKMARK,
-    },
-    Archived: {
-        variant: BadgeVariant.INACTIVE,
-        labelPath: 'clientCase.illustrationDetails.archived',
-        icon: IconType.BOOKMARK,
-    },
-    Expired: {
-        variant: BadgeVariant.ERROR,
-        labelPath: 'clientCase.illustrationDetails.expired',
-        icon: IconType.CLOCK,
-    },
-} as const;
-
 function keyNarrower<T extends object>(
     obj: T,
     key: PropertyKey
@@ -37,6 +19,24 @@ export default function IllustrationDetailsStatusBadge({
     status,
 }: IllustrationDetailsStatusBadgeProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+
+    const statusMap = {
+        Submitted: {
+            variant: BadgeVariant.SUCCESS,
+            labelPath: t('clientCase.illustrationDetails.selected'),
+            icon: IconType.CIRCLE_CHECKMARK,
+        },
+        Archived: {
+            variant: BadgeVariant.INACTIVE,
+            labelPath: t('clientCase.illustrationDetails.archived'),
+            icon: IconType.BOOKMARK,
+        },
+        Expired: {
+            variant: BadgeVariant.ERROR,
+            labelPath: t('clientCase.illustrationDetails.expired'),
+            icon: IconType.CLOCK,
+        },
+    } as const;
 
     if (!keyNarrower(statusMap, status)) {
         return null;

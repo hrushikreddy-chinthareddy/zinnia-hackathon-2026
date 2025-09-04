@@ -7519,7 +7519,7 @@
             },
             "unArchive": "Un-archive",
             "selected": "Selected",
-            "archived": "Archive",
+            "archived": "Archived",
             "expired": "Expired",
             "selectForApplication": "Select for application",
             "valuePerYear": "{{value}} / year",
@@ -7534,7 +7534,8 @@
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
-            "initialDeathBenefitOption": "Initial death benefit option"
+            "initialDeathBenefitOption": "Initial death benefit option",
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
