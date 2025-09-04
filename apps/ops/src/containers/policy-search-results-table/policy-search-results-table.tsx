@@ -90,6 +90,7 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
                                     href="https://zinnia.atlassian.net/servicedesk/customer/portal/6/user/login?destination=portal%2F6"
                                     target="_blank"
                                     rel="noreferrer"
+                                    className="underline-offset-4 underline text-link"
                                 >
                                     {t('dashboard.search.results.helpDesk')}
                                 </Link>

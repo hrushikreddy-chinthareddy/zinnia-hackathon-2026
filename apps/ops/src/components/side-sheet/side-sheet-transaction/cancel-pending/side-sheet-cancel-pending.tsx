@@ -110,6 +110,7 @@ export default function SidesheetCancelPending({
                                 href={HELP_DESK_LINK}
                                 target="_blank"
                                 type={NavElementType.Link}
+                                underline
                             >
                                 {t(
                                     'policy.history.cancelSidesheet.apiError.submitHelpDeskTicket'

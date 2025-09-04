@@ -40,6 +40,7 @@ const SearchResultsEmptyCard = () => {
                             target="_blank"
                             type={NavElementType.Link}
                             variant={NavElementVariant.Text}
+                            underline
                         >
                             {t('dashboard.search.empty.action.linkText')}
                         </NavElement>

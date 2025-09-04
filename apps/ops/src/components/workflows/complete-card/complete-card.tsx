@@ -52,6 +52,7 @@ const CompleteCard = ({ leaveRoute }: CompleteCardProps) => {
                             rel="noopener noreferrer"
                             target="_blank"
                             type={NavElementType.Link}
+                            underline
                         >
                             {t('helpDesk.text')}
                         </NavElement>
