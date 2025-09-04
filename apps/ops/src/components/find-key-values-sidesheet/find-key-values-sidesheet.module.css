@@ -22,6 +22,7 @@
 
 .subSection {
     padding: var(--measure-dimension-padding-xl);
+    margin-top: var(--measure-dimension-margin-xs);
     margin-bottom: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-xs) solid
         var(--color-base-border-border-light);

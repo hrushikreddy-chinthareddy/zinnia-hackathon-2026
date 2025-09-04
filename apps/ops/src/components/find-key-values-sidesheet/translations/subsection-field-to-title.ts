@@ -11,4 +11,5 @@ export const sectionTypeToSubsectionTitleFields: Record<string, string> = {
     loans: 'loanType',
     people: 'FIXME',
     systematicPrograms: 'arrangementType',
+    loanSegments: 'segmentId',
 };

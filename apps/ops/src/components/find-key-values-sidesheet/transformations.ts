@@ -1,4 +1,10 @@
-import { Policy, LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import {
+    Policy,
+    LineOfBusiness,
+    LoanSegment,
+    Fund,
+    FundAllocation,
+} from '@xd/api-types/dist/generated-types/sor';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
@@ -251,9 +257,58 @@ export const toSections = (policy: Policy): PreparedPolicy => {
             if (typeof currentVal === 'object' && currentVal !== null) {
                 switch (currentKey) {
                     case 'allocation':
+                        // combine fundAllocationsInvestments and funds into a flat map
+                        const combinedFunds = policy.allocation?.funds?.map(
+                            (fund, i) => {
+                                return {
+                                    ...policy.allocation
+                                        ?.fundAllocationsInvestments?.[i],
+                                    ...fund,
+                                };
+                            }
+                        );
+                        const funds = combinedFunds
+                            ? convertListToMap<Fund & FundAllocation>(
+                                  combinedFunds,
+                                  currentKey
+                              )
+                            : undefined;
+                        return {
+                            ...acc,
+                            policySections: [
+                                ...acc.policySections,
+                                [
+                                    'Funds',
+                                    {
+                                        ...currentVal,
+                                        ...funds,
+                                    },
+                                ],
+                            ],
+                        };
                     case 'partyRoles':
                     case 'parties':
                         return acc;
+                    case 'loanValues':
+                        const loanSegments = policy.allocation?.loanSegments
+                            ? convertListToMap<LoanSegment>(
+                                  policy.allocation?.loanSegments,
+                                  currentKey
+                              )
+                            : undefined;
+                        return {
+                            ...acc,
+                            policySections: [
+                                ...acc.policySections,
+                                [
+                                    'Loans',
+                                    {
+                                        ...currentVal,
+                                        ...loanSegments,
+                                    },
+                                ],
+                            ],
+                        };
                     default:
                         return {
                             ...acc,
@@ -278,6 +333,29 @@ export const toSections = (policy: Policy): PreparedPolicy => {
     );
 };
 
+const convertListToMap = <T extends object>(
+    subSectionList: T[],
+    fallbackTitle: string
+) => {
+    const subSectionMap = subSectionList?.reduce<Record<string, T>>(
+        (acc, currentSubSection, i) => {
+            // Grab the first value to represent the title of the segment
+            const subSectionTitle = String(
+                Object.values(currentSubSection)[0] ??
+                    `${fallbackTitle} ${i + 1}`
+            );
+
+            return {
+                ...acc,
+                [subSectionTitle]: currentSubSection,
+            };
+        },
+        {}
+    );
+
+    return subSectionMap;
+};
+
 /**
  * Given a policy section, returns a {@link PreparedPolicySection} object
  * containing an array of field/data tuples and/or an array of subsections.
@@ -299,15 +377,15 @@ export const toSections = (policy: Policy): PreparedPolicy => {
  * @returns A {@link PreparedPolicySection} object containing an array of field/data tuples
  *          and/or an array of subsections
  */
+
 export const toFieldsAndSubsections = (
-    policySection: PolicySection,
+    [sectionName, sectionData]: PolicySection,
     lineOfBusiness: LineOfBusiness
 ): PreparedPolicySection => {
-    const [sectionName, sectionData] = policySection;
-
     // If sectionData is an array, treat each item as a subsection.
     // The title of each subsection will map from a defined field *within* that subsection
     if (sectionData instanceof Array) {
+        convertListToMap<LoanSegment>(sectionData, sectionName);
         return {
             subSections: sectionData.map((subSection, i) => {
                 const subsectionTitleField =
@@ -316,48 +394,62 @@ export const toFieldsAndSubsections = (
                     String(
                         subSection[subsectionTitleField] ??
                             `${sectionName} ${i + 1}`
-                    ),
-                    lineOfBusiness
+                    )
                 );
-                const subSectionDataTuples = Object.entries(subSection).filter(
-                    ([fieldName]) =>
-                        fieldName !== subsectionTitleField && // remove the title field
-                        !excludeFields.has(fieldName) // remove excluded fields
+                const subSectionDataTuples = removeExcludedFields(
+                    Object.entries(subSection),
+                    [subsectionTitleField] // and also the title field
                 );
 
-                console.log('subSectionDataTuples', [
-                    subSectionTitle,
-                    subSectionDataTuples,
-                ]);
                 return [subSectionTitle, subSectionDataTuples];
             }),
         };
     } else {
-        const { fields, subSections } = Object.entries(sectionData)
-            .filter(([fieldName]) => !excludeFields.has(fieldName)) // remove excluded fields
-            .reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
-                // If sectionData is an object, and a value within it is a nested object,
-                // also treat it as a subsection, but map the subsection title to the object key
-                if (typeof fieldData === 'object' && fieldData !== null) {
-                    return {
-                        fields: acc.fields, // keep fields untouched
-                        subSections: [
-                            ...(acc.subSections ?? []),
-                            [fieldName, Object.entries(fieldData)],
-                        ],
-                    };
-                }
-
-                // Otherwise, the value is meant to be displayed, so just output the key-value pair
+        const { fields, subSections } = removeExcludedFields(
+            Object.entries(sectionData)
+        ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
+            // If sectionData is an object, and a value within it is a nested object,
+            // also treat it as a subsection, but map the subsection title to the object key
+            if (typeof fieldData === 'object' && fieldData !== null) {
                 return {
-                    fields: [...(acc.fields ?? []), [fieldName, fieldData]],
-                    subSections: acc.subSections, // keep subsections untouched
+                    fields: acc.fields, // keep fields untouched
+                    subSections: [
+                        ...(acc.subSections ?? []),
+                        [
+                            fieldName,
+                            removeExcludedFields(Object.entries(fieldData)),
+                        ],
+                    ],
                 };
-            }, {});
+            }
+
+            // Otherwise, the value is meant to be displayed, so just append the key-value pair
+            return {
+                fields: removeExcludedFields([
+                    ...(acc.fields ?? []),
+                    [fieldName, fieldData],
+                ]),
+                subSections: acc.subSections, // keep subsections untouched
+            };
+        }, {});
 
         return {
             fields,
             subSections,
         };
     }
+};
+
+const removeExcludedFields = (
+    tuples: DataTuple[],
+    additionalFieldsToExclude?: string[]
+) => {
+    return tuples.filter(
+        ([key]) =>
+            !excludeFields.has(key) &&
+            !(
+                additionalFieldsToExclude &&
+                new Set(additionalFieldsToExclude).has(key)
+            )
+    );
 };

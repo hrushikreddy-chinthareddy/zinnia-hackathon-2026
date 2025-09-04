@@ -4,7 +4,14 @@
 export const excludeFields = new Set([
     'coverageLayers',
     'riderParticipants',
-    'coveredParty',
+    'riderParticipant',
     'charge',
     'base',
+    'party',
+    'parties',
+    'funds',
+    'fundAllocationsInvestments',
+    'fundSegments',
+    'matchSegment',
+    'loanSegments',
 ]);
