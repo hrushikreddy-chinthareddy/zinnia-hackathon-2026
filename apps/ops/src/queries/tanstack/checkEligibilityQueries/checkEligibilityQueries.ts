@@ -13,6 +13,7 @@ import {
 import {
     checkEligibilityAddressChange,
     checkEligibilityBeneficiary,
+    checkEligibilityEmailChange,
     checkEligibilityPhoneChange,
 } from '@deps/queries/api/bpm-non-financial';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
@@ -85,6 +86,13 @@ export const checkAddressChangeEligibilityQuery = async (
     policyNumber: string
 ) => {
     return await checkEligibilityAddressChange(planCode, policyNumber);
+};
+
+export const checkEmailChangeEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string
+) => {
+    return await checkEligibilityEmailChange(planCode, policyNumber);
 };
 
 export const checkFullSurrenderWithdrawal = async (
