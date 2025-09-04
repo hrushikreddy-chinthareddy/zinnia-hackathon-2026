@@ -16,6 +16,7 @@ export default function ContractReplacement({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.amountDetails.contractReplacement',
     });
+
     const [isContractReplaced, setIsContractReplaced] = useState(
         formProgram?.isContractReplaced?.text || false
     );
@@ -35,18 +36,15 @@ export default function ContractReplacement({
                 classNames="font-secondary text-md !mb-4"
                 label={t('title') as string}
             />
-            <div className="flex flex-wrap gap-8 max-md:flex-col">
-                <div className="flex-1">
-                    <CheckboxText
-                        data-testid="isContractReplaced"
-                        label={t('isContractReplaced')}
-                        checked={isContractReplaced}
-                        onChange={() =>
-                            setIsContractReplaced(!isContractReplaced)
-                        }
-                        isDisabled={isFormStateReadOnly}
-                    />
-                </div>
+
+            <div className="my-4 flex flex-wrap gap-8 max-md:flex-col">
+                <CheckboxText
+                    label={t('isContractReplaced')}
+                    checked={isContractReplaced}
+                    onChange={() => setIsContractReplaced(!isContractReplaced)}
+                    data-testid="isContractReplaced"
+                    isDisabled={isFormStateReadOnly}
+                />
             </div>
         </div>
     );
