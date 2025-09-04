@@ -175,7 +175,6 @@
                     "properties": {
                         "parties": {
                             "type": "array",
-                            "title": "",
                             "items": {
                                 "type": "object",
                                 "properties": {
@@ -217,8 +216,7 @@
                                             "type": "object",
                                             "properties": {
                                                 "dialNumber": {
-                                                    "type": "string",
-                                                    "pattern": "^[+]?\\d{7,15}$"
+                                                    "type": "string"
                                                 }
                                             }
                                         }
@@ -246,7 +244,68 @@
                                                 },
                                                 "state": {
                                                     "type": "string",
-                                                    "title": "State"
+                                                    "title": "State",
+                                                    "enum": [
+                                                        "AA",
+                                                        "AE",
+                                                        "AK",
+                                                        "AL",
+                                                        "AP",
+                                                        "AR",
+                                                        "AZ",
+                                                        "CA",
+                                                        "CD",
+                                                        "CO",
+                                                        "CT",
+                                                        "DC",
+                                                        "DE",
+                                                        "FL",
+                                                        "FN",
+                                                        "GA",
+                                                        "GU",
+                                                        "HI",
+                                                        "IA",
+                                                        "ID",
+                                                        "IL",
+                                                        "IN",
+                                                        "KS",
+                                                        "KY",
+                                                        "LA",
+                                                        "MA",
+                                                        "MD",
+                                                        "ME",
+                                                        "MI",
+                                                        "MN",
+                                                        "MO",
+                                                        "MS",
+                                                        "MT",
+                                                        "NC",
+                                                        "ND",
+                                                        "NE",
+                                                        "NH",
+                                                        "NJ",
+                                                        "NM",
+                                                        "NV",
+                                                        "NY",
+                                                        "OH",
+                                                        "OK",
+                                                        "OR",
+                                                        "PA",
+                                                        "PR",
+                                                        "RI",
+                                                        "SC",
+                                                        "SD",
+                                                        "TN",
+                                                        "TX",
+                                                        "UT",
+                                                        "VA",
+                                                        "VI",
+                                                        "VT",
+                                                        "WA",
+                                                        "WI",
+                                                        "WV",
+                                                        "WY"
+                                                    ]
                                                 },
                                                 "zipCode": {
                                                     "type": "string",
@@ -302,14 +361,7 @@
                                                 },
                                                 "trustType": {
                                                     "type": "string",
-                                                    "title": "Trust type",
-                                                    "enum": [
-                                                        "INDIVIDUALTRUST",
-                                                        "CORPORATETRUST",
-                                                        "TESTAMENTARYTRUST",
-                                                        "INTERVIVOSTRUST",
-                                                        "GRANTORTRUST"
-                                                    ]
+                                                    "title": "Trust type"
                                                 }
                                             }
                                         }
@@ -400,8 +452,7 @@
                                 "items": {
                                     "ui:options": {
                                         "label": true,
-                                        "title": "Email",
-                                        "classNames": "email-item"
+                                        "title": "Email"
                                     },
                                     "emailAddress": {
                                         "ui:options": {
@@ -460,13 +511,29 @@
                                 }
                             },
                             "trustType": {
+                                "ui:widget": "SelectWidget",
                                 "ui:options": {
-                                    "enumNames": [
-                                        "Individual Trust",
-                                        "Corporate Trust",
-                                        "Testamentary Trust",
-                                        "Inter Vivos Trust",
-                                        "Grantor Trust"
+                                    "enumOptions": [
+                                        {
+                                            "label": "Individual Trust",
+                                            "value": "INDIVIDUALTRUST"
+                                        },
+                                        {
+                                            "label": "Corporate Trust",
+                                            "value": "CORPORATETRUST"
+                                        },
+                                        {
+                                            "label": "Testamentary Trust",
+                                            "value": "TESTAMENTARYTRUST"
+                                        },
+                                        {
+                                            "label": "Inter Vivos Trust",
+                                            "value": "INTERVIVOSTRUST"
+                                        },
+                                        {
+                                            "label": "Grantor Trust",
+                                            "value": "GRANTORTRUST"
+                                        }
                                     ]
                                 }
                             }
@@ -497,6 +564,20 @@
                                                     "ORGANIZATION"
                                                 ]
                                             },
+                                            "beneficiaryPercentage": {
+                                                "type": "number",
+                                                "title": "Allocation"
+                                            },
+                                            "isPerStirpes": {
+                                                "type": "string",
+                                                "title": "Per Stirpes",
+                                                "enum": ["Yes", "No"]
+                                            },
+                                            "isIrrevocable": {
+                                                "type": "string",
+                                                "title": "Irrevocable",
+                                                "enum": ["Yes", "No"]
+                                            },
                                             "identifications": {
                                                 "type": "array",
                                                 "title": "",
@@ -519,6 +600,150 @@
                                                 "type": "string",
                                                 "title": "Date of birth",
                                                 "format": "date"
+                                            },
+                                            "addresses": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "addressType": {
+                                                            "type": "string",
+                                                            "title": "Address type",
+                                                            "enum": [
+                                                                "RESIDENCE",
+                                                                "BUSINESS",
+                                                                "SECONDARY",
+                                                                "DEFAULT"
+                                                            ]
+                                                        },
+                                                        "addressLine1": {
+                                                            "type": "string",
+                                                            "title": "Address line 1"
+                                                        },
+                                                        "addressLine2": {
+                                                            "type": "string",
+                                                            "title": "Address line 2"
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "title": "City"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "title": "State",
+                                                            "enum": [
+                                                                "AA",
+                                                                "AE",
+                                                                "AK",
+                                                                "AL",
+                                                                "AP",
+                                                                "AR",
+                                                                "AZ",
+                                                                "CA",
+                                                                "CD",
+                                                                "CO",
+                                                                "CT",
+                                                                "DC",
+                                                                "DE",
+                                                                "FL",
+                                                                "FN",
+                                                                "GA",
+                                                                "GU",
+                                                                "HI",
+                                                                "IA",
+                                                                "ID",
+                                                                "IL",
+                                                                "IN",
+                                                                "KS",
+                                                                "KY",
+                                                                "LA",
+                                                                "MA",
+                                                                "MD",
+                                                                "ME",
+                                                                "MI",
+                                                                "MN",
+                                                                "MO",
+                                                                "MS",
+                                                                "MT",
+                                                                "NC",
+                                                                "ND",
+                                                                "NE",
+                                                                "NH",
+                                                                "NJ",
+                                                                "NM",
+                                                                "NV",
+                                                                "NY",
+                                                                "OH",
+                                                                "OK",
+                                                                "OR",
+                                                                "PA",
+                                                                "PR",
+                                                                "RI",
+                                                                "SC",
+                                                                "SD",
+                                                                "TN",
+                                                                "TX",
+                                                                "UT",
+                                                                "VA",
+                                                                "VI",
+                                                                "VT",
+                                                                "WA",
+                                                                "WI",
+                                                                "WV",
+                                                                "WY"
+                                                            ]
+                                                        },
+                                                        "zipCode": {
+                                                            "type": "string",
+                                                            "title": "Zip"
+                                                        },
+                                                        "zipCodeExtension": {
+                                                            "type": "string",
+                                                            "title": "Zip+4"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "phones": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "phoneType": {
+                                                            "type": "string",
+                                                            "title": "Phone type",
+                                                            "enum": [
+                                                                "FAX",
+                                                                "BUSINESS",
+                                                                "MOBILE",
+                                                                "HOMEFAX",
+                                                                "MODEM",
+                                                                "HOME",
+                                                                "SECONDARYHOME",
+                                                                "OTHER"
+                                                            ]
+                                                        },
+                                                        "dialNumber": {
+                                                            "type": "string",
+                                                            "title": "Number"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "emails": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "emailAddress": {
+                                                            "type": "string",
+                                                            "title": "Email"
+                                                        }
+                                                    }
+                                                }
                                             }
                                         },
                                         "allOf": [
@@ -645,6 +870,35 @@
                                                     "PRIMARY BENEFICIARY",
                                                     "CONTINGENT BENEFICIARY"
                                                 ]
+                                            },
+                                            "relationshipToParty": {
+                                                "type": "string",
+                                                "title": "Relationship to party",
+                                                "enum": [
+                                                    "TRUSTEE",
+                                                    "TRUSTEEOFMINOR",
+                                                    "TRUSTEEOFINCOMPETENT",
+                                                    "POWEROFATTORNEY",
+                                                    "CONTROLLINGPERSONOFENTITY",
+                                                    "BROTHER",
+                                                    "CHILD",
+                                                    "DAUGHTER",
+                                                    "DOMESTICPARTNER",
+                                                    "EXECUTORS",
+                                                    "FATHER",
+                                                    "FIANCE",
+                                                    "GRANDCHILD",
+                                                    "LIFEPARTNER",
+                                                    "MOTHER",
+                                                    "SISTER",
+                                                    "SON",
+                                                    "SPOUSE",
+                                                    "STEPFATHER",
+                                                    "STEPMOTHER",
+                                                    "SELF",
+                                                    "LEGALGUARDIAN",
+                                                    "OTHER"
+                                                ]
                                             }
                                         }
                                     }
@@ -694,7 +948,13 @@
                                     "entityType",
                                     "identifications",
                                     "gender",
-                                    "dateOfBirth"
+                                    "dateOfBirth",
+                                    "addresses",
+                                    "phones",
+                                    "emails",
+                                    "beneficiaryPercentage",
+                                    "isPerStirpes",
+                                    "isIrrevocable"
                                 ],
                                 "ui:options": {
                                     "label": false
@@ -754,6 +1014,149 @@
                                     "ui:options": {
                                         "enumNames": ["Male", "Female"]
                                     }
+                                },
+                                "addresses": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": true,
+                                        "title": "Address"
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "label": false
+                                        },
+                                        "addressType": {
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "Home address",
+                                                    "Business address",
+                                                    "Secondary address",
+                                                    "Default"
+                                                ]
+                                            }
+                                        },
+                                        "state": {
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "AA",
+                                                    "AE",
+                                                    "AK",
+                                                    "AL",
+                                                    "AP",
+                                                    "AR",
+                                                    "AZ",
+                                                    "CA",
+                                                    "CD",
+                                                    "CO",
+                                                    "CT",
+                                                    "DC",
+                                                    "DE",
+                                                    "FL",
+                                                    "FN",
+                                                    "GA",
+                                                    "GU",
+                                                    "HI",
+                                                    "IA",
+                                                    "ID",
+                                                    "IL",
+                                                    "IN",
+                                                    "KS",
+                                                    "KY",
+                                                    "LA",
+                                                    "MA",
+                                                    "MD",
+                                                    "ME",
+                                                    "MI",
+                                                    "MN",
+                                                    "MO",
+                                                    "MS",
+                                                    "MT",
+                                                    "NC",
+                                                    "ND",
+                                                    "NE",
+                                                    "NH",
+                                                    "NJ",
+                                                    "NM",
+                                                    "NV",
+                                                    "NY",
+                                                    "OH",
+                                                    "OK",
+                                                    "OR",
+                                                    "PA",
+                                                    "PR",
+                                                    "RI",
+                                                    "SC",
+                                                    "SD",
+                                                    "TN",
+                                                    "TX",
+                                                    "UT",
+                                                    "VA",
+                                                    "VI",
+                                                    "VT",
+                                                    "WA",
+                                                    "WI",
+                                                    "WV",
+                                                    "WY"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "phones": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": true,
+                                        "title": "Phone"
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "label": false
+                                        },
+                                        "phoneType": {
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "Business fax",
+                                                    "Business telephone",
+                                                    "Cellular car/telephone",
+                                                    "Home fax",
+                                                    "Modem",
+                                                    "Home telephone",
+                                                    "Secondary home telephone",
+                                                    "Default"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "emails": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": true,
+                                        "title": "Email"
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "label": false
+                                        }
+                                    }
+                                },
+                                "isPerStirpes": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"]
+                                    }
+                                },
+                                "isIrrevocable": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"]
+                                    }
                                 }
                             },
                             "partyRole": {
@@ -765,6 +1168,35 @@
                                         "enumNames": [
                                             "Primary Beneficiary",
                                             "Contingent Beneficiary"
+                                        ]
+                                    }
+                                },
+                                "relationshipToParty": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Trustee",
+                                            "Trustee of Minor",
+                                            "Trustee of Incompetent",
+                                            "Power of Attorney",
+                                            "Controlling Person of Entity",
+                                            "Brother",
+                                            "Child",
+                                            "Daughter",
+                                            "Domestic Partner",
+                                            "Executors",
+                                            "Father",
+                                            "Fiance",
+                                            "Grandchild",
+                                            "Life Partner",
+                                            "Mother",
+                                            "Sister",
+                                            "Son",
+                                            "Spouse",
+                                            "Stepfather",
+                                            "Stepmother",
+                                            "Self",
+                                            "Legal Guardian",
+                                            "Other"
                                         ]
                                     }
                                 }

@@ -106,15 +106,15 @@
             {
                 "action": "UPDATE",
                 "actionType": "BENE_CHANGE",
-                "isIrrevocable": false,
-                "isPerStirpes": false,
+                "isIrrevocable": "Yes",
+                "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
                 "party": {
                     "partyId": "Party_PB_Primary_Bene_1",
                     "partyType": "INDIVIDUAL",
                     "beneficiaryPercentage": 100,
                     "dateOfBirth": "1978-11-05",
-                    "endDate": null,
+                    "endDate": "",
                     "entityType": "",
                     "firstName": "WILSON",
                     "fullName": "Wilson",
@@ -129,16 +129,16 @@
                             "addressId": "Party_PB_Primary_Bene_1_Address_0",
                             "addressLine1": "2110 West Walnut Street",
                             "addressLine2": "",
-                            "addressLine3": null,
+                            "addressLine3": "",
                             "addressType": "RESIDENCE",
                             "city": "Rogers",
                             "country": "USA",
-                            "endDate": null,
+                            "endDate": "",
                             "isPreferred": true,
                             "startDate": "2025-05-22",
                             "state": "AR",
                             "zipCode": "72756",
-                            "zipCodeExtension": null
+                            "zipCodeExtension": ""
                         }
                     ],
                     "emails": [
@@ -146,7 +146,7 @@
                             "emailAddress": "soni.kumari@zinnia.com",
                             "emailId": "Party_PB_Primary_Bene_1_EmailAddress_1",
                             "emailType": "PERSONAL",
-                            "endDate": null,
+                            "endDate": "",
                             "isPreferred": false,
                             "startDate": "2025-05-22"
                         }
@@ -167,16 +167,16 @@
                     "phones": [
                         {
                             "areaCode": "515",
-                            "bestTime": null,
+                            "bestTime": "",
                             "countryCode": "USA",
                             "dialNumber": "3585159",
-                            "endDate": null,
-                            "extension": null,
+                            "endDate": "",
+                            "extension": "",
                             "isPreferred": false,
                             "phoneId": "Party_PB_Primary_Bene_1_Phone0",
                             "phoneType": "HOME",
                             "startDate": "2025-05-22",
-                            "timezone": null
+                            "timezone": ""
                         }
                     ]
                 },
@@ -190,15 +190,15 @@
             {
                 "action": "ADD",
                 "actionType": "BENE_CHANGE",
-                "isIrrevocable": false,
-                "isPerStirpes": false,
+                "isIrrevocable": "No",
+                "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
                 "party": {
                     "partyId": "",
                     "partyType": "TRUST",
                     "beneficiaryPercentage": 100,
                     "dateOfBirth": "2025-09-04",
-                    "endDate": null,
+                    "endDate": "",
                     "entityType": "UNKNOWN",
                     "firstName": "WILSON",
                     "fullName": "Wilson",
@@ -215,7 +215,7 @@
                             "addressType": "RESIDENCE",
                             "city": "Rogers",
                             "country": "USA",
-                            "endDate": null,
+                            "endDate": "",
                             "state": "AR",
                             "zipCode": "72756"
                         }
@@ -246,7 +246,7 @@
                 "partyRole": {
                     "partyId": "",
                     "beneficiaryRole": "CONTINGENT BENEFICIARY",
-                    "partyRoleId": null,
+                    "partyRoleId": 32,
                     "relationshipToParty": "TRUSTEEOFINCOMPETENT"
                 }
             }

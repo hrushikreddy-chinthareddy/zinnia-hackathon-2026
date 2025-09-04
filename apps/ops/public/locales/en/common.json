@@ -7078,6 +7078,15 @@
             "submitTask": "Submit"
         }
     },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Beneficary Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "fundAllocation": {
         "submitted": "Submitted!",
         "editAllocationNigoSummary1": "We submitted this request for ",
