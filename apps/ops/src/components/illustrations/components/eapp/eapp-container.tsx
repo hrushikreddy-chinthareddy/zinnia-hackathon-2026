@@ -1,24 +1,16 @@
-import { VersionedAnswers, Language, Timezone } from '@zinnia/form-engine-sdk';
+import { Timezone } from '@zinnia/form-engine-sdk';
 import { FC } from 'react';
 
-import CardInfo from '@deps/components/card/card-info/card-info';
-import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
 import { Eapp } from './Eapp';
 import { IllustrationHandlerFactory } from '../../helpers/factory/illustrationsHandlerFactory';
-import { ActiveSectionProvider } from '../../providers/ActiveSectionProvider';
-import { EAppProvider } from '../../providers/EAppProvider';
-import { QuestionnaireEngineProvider } from '../../providers/QuestionnaireEngineProvider';
-import { SubmitProvider } from '../../providers/SubmitProvider';
 // TODO: timezone needs to be taken from the user
 const DEFAULT_TIMEZONE_NAME = 'America/Toronto';
 
 interface EappContainer {
     clientCase?: IllustrationsClientCase;
     planCode: string;
-    versionedAnswers?: VersionedAnswers;
-    submitCallback?: () => void;
     isEdit?: boolean;
     illustrationId?: string;
 }
@@ -26,8 +18,6 @@ interface EappContainer {
 const EappContainer: FC<EappContainer> = ({
     clientCase,
     planCode,
-    versionedAnswers = new VersionedAnswers({ v1: {}, v2: {} }),
-    submitCallback,
     isEdit,
     illustrationId,
 }) => {
@@ -44,56 +34,18 @@ const EappContainer: FC<EappContainer> = ({
 
     if (!illustrationHandlerFactory) {
         console.log(`Plan code ${planCode} not found.`);
+        return null;
     }
 
     return (
-        <>
-            {(!clientCase || !planCode) && (
-                <CardInfo
-                    className="mt-8"
-                    icon={
-                        <ErrorIcon
-                            className="text-semantic-warning"
-                            height={50}
-                            width={50}
-                        />
-                    }
-                    title="Plan code not found"
-                />
-            )}
-            {illustrationHandlerFactory && (
-                <QuestionnaireEngineProvider
-                    blueprint={illustrationHandlerFactory.getBlueprint()}
-                    clientCase={clientCase || ({} as IllustrationsClientCase)}
-                    planCode={planCode}
-                    language={Language.en}
-                    versionedAnswers={versionedAnswers}
-                    subscribers={[]}
-                    timezone={timezoneResult.value}
-                    prePopulateData={illustrationHandlerFactory?.mapClientCaseInsuredData()}
-                >
-                    <EAppProvider>
-                        <SubmitProvider
-                            factoryHandler={illustrationHandlerFactory}
-                            submitCallback={submitCallback}
-                        >
-                            <ActiveSectionProvider
-                                handleNextSectionActionsOnChangeSection
-                            >
-                                <Eapp
-                                    carrier={illustrationHandlerFactory.getCarrier()}
-                                    label={illustrationHandlerFactory.getLabel()}
-                                    planCode={illustrationHandlerFactory.getPlanCode()}
-                                    planType={illustrationHandlerFactory.getPlanType()}
-                                    isEdit={isEdit}
-                                    illustrationId={illustrationId}
-                                />
-                            </ActiveSectionProvider>
-                        </SubmitProvider>
-                    </EAppProvider>
-                </QuestionnaireEngineProvider>
-            )}
-        </>
+        <Eapp
+            carrier={illustrationHandlerFactory.getCarrier()}
+            label={illustrationHandlerFactory.getLabel()}
+            planCode={illustrationHandlerFactory.getPlanCode()}
+            planType={illustrationHandlerFactory.getPlanType()}
+            isEdit={isEdit}
+            illustrationId={illustrationId}
+        />
     );
 };
 

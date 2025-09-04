@@ -8,25 +8,31 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { IllustrationSummary } from '@deps/types/illustrations';
+import {
+    IllustrationsClientCase,
+    IllustrationSummary,
+} from '@deps/types/illustrations';
 import { Product, ProductTypeLabel } from '@deps/types/product';
 
 import CarrierIcon from './carrier-icon';
 import styles from './product-item.module.css';
+import { AddIllustrationSidesheet } from '../add-illustration-sidesheet/add-illustration-sidesheet';
 import IllustrationItem from '../illustration-item/illustration-item';
 
 interface IllustrationProductItemProps {
     product: Product;
     illustrations?: IllustrationSummary[];
     eAppId?: string;
-    onNewIllustration?: (planCode: string) => void;
+    clientCase?: IllustrationsClientCase;
+    preselectedProduct?: Product | undefined;
 }
 
 const IllustrationProductItem = ({
     product,
     illustrations,
     eAppId,
-    onNewIllustration,
+    clientCase,
+    preselectedProduct,
 }: IllustrationProductItemProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustrationsCount = (illustrations ?? []).length;
@@ -52,21 +58,26 @@ const IllustrationProductItem = ({
                 >
                     {product.productMarketingName}
                 </span>
-                <Button
-                    mode="link"
-                    data-testid="add-illustration-btn"
-                    aria-label={
-                        t(
-                            'clientCase.productList.addIllustrationButton'
-                        ) as string
-                    }
-                    type="button"
-                    size="small"
-                    onClick={() => onNewIllustration?.(product.planCode)}
-                    className={styles.addIllustration}
+                <AddIllustrationSidesheet
+                    planCode={product.planCode}
+                    clientCase={clientCase}
+                    overrideOpen={!!preselectedProduct}
                 >
-                    <Icon type={IconType.ADD} />
-                </Button>
+                    <Button
+                        mode="link"
+                        data-testid="add-illustration-btn"
+                        aria-label={
+                            t(
+                                'clientCase.productList.addIllustrationButton'
+                            ) as string
+                        }
+                        type="button"
+                        size="small"
+                        className={styles.addIllustration}
+                    >
+                        <Icon type={IconType.ADD} />
+                    </Button>
+                </AddIllustrationSidesheet>
             </div>
 
             {illustrations && illustrations.length ? (

@@ -148,7 +148,7 @@ const getEventHandlingFunction = (
 
                     if (nextRow) {
                         if (previousRow.through) {
-                            nextRow.fromYear = previousRow.through;
+                            nextRow.fromYear = previousRow.through + 1;
                         } else if (nextRow.fromYear) {
                             previousRow.through = nextRow.fromYear - 1;
                         }
@@ -190,7 +190,7 @@ const getEventHandlingFunction = (
                 }
 
                 if (event.row - 1 >= 0) {
-                    answer[event.row - 1].through = event.value;
+                    answer[event.row - 1].through = event.value - 1;
                 }
                 break;
             }
@@ -202,7 +202,7 @@ const getEventHandlingFunction = (
                 }
 
                 if (event.row + 1 < answer.length) {
-                    answer[event.row + 1].fromYear = event.value;
+                    answer[event.row + 1].fromYear = event.value + 1;
                 }
                 break;
             }
@@ -258,11 +258,11 @@ function validateSequence(
                 cells: [[i, 'fromYear']],
             };
         }
-        if (row.fromYear >= customProperties.through.max) {
+        if (row.fromYear > customProperties.through.max) {
             return {
                 message: `${pluralize(i + 1)} row "${
                     customProperties.fromYear.label['en']
-                }" value is greater or equal to the max of ${
+                }" value is greater than the max of ${
                     customProperties.through.max
                 }.`,
                 cells: [[i, 'fromYear']],
@@ -277,11 +277,11 @@ function validateSequence(
             };
         }
 
-        if (row.fromYear >= row.through) {
+        if (row.fromYear > row.through) {
             return {
                 message: `${pluralize(i + 1)} row "${
                     customProperties.fromYear.label['en']
-                }" can't be greater or equal than its "${
+                }" can't be greater than its "${
                     customProperties.through.label['en']
                 }" value.`,
                 cells: [
@@ -291,36 +291,37 @@ function validateSequence(
             };
         }
 
-        if (i === answer.length - 1) {
-            // Last row validations
-        } else {
-            // All other rows validations
-            const nextRow = answer[i + 1];
-            if (!nextRow) {
-                continue;
-            }
-            if (row.through >= customProperties.through.max) {
-                return {
-                    message: `${pluralize(i + 1)} row "${
-                        customProperties.through.label['en']
-                    }" value is greater or equal to the max of ${
-                        customProperties.through.max
-                    }.`,
-                    cells: [[i, 'through']],
-                };
-            }
+        const isLastRow = i === answer.length - 1;
 
-            if (row.through !== nextRow.fromYear) {
-                return {
-                    message: `${pluralize(i + 1)} row "${
-                        customProperties.fromYear.label['en']
-                    }" value should be ${nextRow.fromYear}.`,
-                    cells: [
-                        [i, 'through'],
-                        [i + 1, 'fromYear'],
-                    ],
-                };
-            }
+        if (isLastRow) {
+            // Last row validations
+            break;
+        }
+
+        // All other rows validations
+        const nextRow = answer[i + 1];
+
+        if (row.through >= customProperties.through.max) {
+            return {
+                message: `${pluralize(i + 1)} row "${
+                    customProperties.through.label['en']
+                }" value is greater or equal to the max of ${
+                    customProperties.through.max
+                }.`,
+                cells: [[i, 'through']],
+            };
+        }
+
+        if (row.through + 1 !== nextRow.fromYear) {
+            return {
+                message: `${pluralize(i + 1)} row "${
+                    customProperties.fromYear.label['en']
+                }" value should be ${nextRow.fromYear}.`,
+                cells: [
+                    [i, 'through'],
+                    [i + 1, 'fromYear'],
+                ],
+            };
         }
     }
 

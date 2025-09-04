@@ -48,7 +48,12 @@ export const EditAllocationsSystemDown = ({
                     variant={TypographyVariant.Body}
                     className="!underline text-[#00628B]"
                 >
-                    <Link href="/">{t('fundAllocation.systemErrorDes2')}</Link>
+                    <Link
+                        href="/"
+                        className="underline-offset-4 underline text-link"
+                    >
+                        {t('fundAllocation.systemErrorDes2')}{' '}
+                    </Link>
                 </Typography>
             </Typography>
             <div className="pt-10 min-w-[100px]">

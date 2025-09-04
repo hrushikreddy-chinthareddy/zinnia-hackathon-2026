@@ -24,7 +24,7 @@ import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/a
 
 import { BankDetailsCards } from './bank-details-cards';
 import { PaymentMethodType, PaymentStepProps } from './types';
-import { useBankDetails } from './use-bank-details';
+import { usePaymentMethods } from './use-bank-details';
 import WorkflowCard from '../workflow-card/workflow-card';
 
 const PaymentStepMoneyOut = ({
@@ -64,7 +64,7 @@ const PaymentStepMoneyOut = ({
         data: bankDetails,
         isLoading: bankDetailsLoading,
         isError: bankDetailsError,
-    } = useBankDetails({
+    } = usePaymentMethods({
         state,
         policy,
     });
@@ -150,6 +150,7 @@ const PaymentStepMoneyOut = ({
                 paymentAccountNumber: undefined,
                 paymentBranchName: undefined,
                 paymentBankId: undefined,
+                paymentForm: undefined,
             }));
         } else {
             const newState: PaymentMethodType = {

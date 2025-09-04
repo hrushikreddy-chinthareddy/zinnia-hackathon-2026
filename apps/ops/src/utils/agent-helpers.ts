@@ -40,6 +40,18 @@ export const findCarrierAgents = (
     return agents;
 };
 
+export const findCarrierAlias = (
+    partyRefData: PartyReferenceDataModel,
+    carrier: string
+): AliasModel[] => {
+    const agents =
+        partyRefData.alias?.filter((v) => {
+            return v.carrier?.toLowerCase() === carrier.toLowerCase();
+        }) || [];
+
+    return agents;
+};
+
 export const getMasterAgentNumber = (
     partyRefData?: PartyReferenceDataModel
 ) => {

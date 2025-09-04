@@ -553,7 +553,7 @@ export const MenuContextualContent = ({
                     />
                     <MenuContextualItem
                         content={t('documents.sendStatements')}
-                        href={`/contact-center/send-statement?planCode=${
+                        href={`/contact-center/send-correspondence?planCode=${
                             policy.planCode
                         }&policyNumber=${
                             policy.policyNumber
@@ -561,7 +561,7 @@ export const MenuContextualContent = ({
                         onClick={() => {
                             trackClick(
                                 'Send Statements',
-                                `/contact-center/send-statement?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                             );
                         }}
                         openInNewTab={true}
@@ -584,7 +584,7 @@ export const MenuContextualContent = ({
                     {sendCorrespondenceEnabled && (
                         <MenuContextualItem
                             content={t('documents.sendCorrespondence')}
-                            href={`/contact-center/send-correspondence?planCode=${
+                            href={`/contact-center/send-letter?planCode=${
                                 policy.planCode
                             }&policyNumber=${
                                 policy.policyNumber
@@ -592,7 +592,7 @@ export const MenuContextualContent = ({
                             onClick={() => {
                                 trackClick(
                                     'Send Correspondence',
-                                    `/contact-center/send-correspondence?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
+                                    `/contact-center/send-letter?planCode=${policy.planCode}&policyNumber=${policy.policyNumber}`
                                 );
                             }}
                             openInNewTab={true}

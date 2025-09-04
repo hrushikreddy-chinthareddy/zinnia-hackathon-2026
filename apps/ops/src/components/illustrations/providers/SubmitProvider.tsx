@@ -1,13 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
-import Router from 'next/router';
-import {
-    createContext,
-    PropsWithChildren,
-    useContext,
-    useMemo,
-    useState,
-} from 'react';
+import { useRouter } from 'next/router';
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { createIllustration } from '@deps/queries/api/client/documents/v3/illustrations';
@@ -52,7 +46,7 @@ export function SubmitProvider({
     const { questionnaireEngine } = useQuestionnaireEngine();
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
-    const [formInputs, setFormInputs] = useState<any>({});
+    const router = useRouter();
 
     const getIllustrationPayload = async ({
         engine,
@@ -77,7 +71,6 @@ export function SubmitProvider({
                 .toISOString()
                 .slice(0, 10);
         }
-        setFormInputs(answers);
 
         const createIllustrationPayload =
             factoryHandler.createIllustrationPayloadFromAnswerOutput(answers);
@@ -89,8 +82,10 @@ export function SubmitProvider({
             );
             return Promise.reject();
         }
-
-        return createIllustrationPayload.value;
+        return {
+            value: createIllustrationPayload.value,
+            formInputs: answers,
+        };
     };
 
     const createIllustrationMutation = useMutation({
@@ -102,7 +97,7 @@ export function SubmitProvider({
             });
             const inputs = engine.getAnswerResolverInstance().export();
             const createResponse = await createIllustration({
-                bodyData: payload,
+                bodyData: payload.value,
                 path: factoryHandler.getIllustrationApiPath(),
             });
             const clientCase = factoryHandler.getClientCase();
@@ -111,7 +106,7 @@ export function SubmitProvider({
                 clientCase.id,
                 createResponse.data.id,
                 factoryHandler.generateTitle(createResponse.data, {
-                    ...formInputs,
+                    ...payload.formInputs,
                     illustrationType: 'SINGLE_ILLUSTRATION',
                 }),
                 factoryHandler.getPlanType(), // product type
@@ -135,7 +130,8 @@ export function SubmitProvider({
             ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data?.id}`;
-            Router.push(route, undefined, { shallow: true });
+
+            router.push(route);
 
             submitCallback?.();
             sideSheet.onClose();
@@ -158,7 +154,7 @@ export function SubmitProvider({
             const clientCase = factoryHandler.getClientCase();
             const inputs = engine.getAnswerResolverInstance().export();
             const createResponse = await createIllustration({
-                bodyData: payload,
+                bodyData: payload.value,
                 path: factoryHandler.getIllustrationApiPath(),
             });
 
@@ -167,7 +163,7 @@ export function SubmitProvider({
                 oldIllustrationId || '',
                 createResponse.data.id,
                 factoryHandler.generateTitle(createResponse.data, {
-                    ...formInputs,
+                    ...payload.formInputs,
                     illustrationType: 'SINGLE_ILLUSTRATION',
                 }),
                 factoryHandler.getPlanType(), // product type
@@ -192,7 +188,8 @@ export function SubmitProvider({
             ]);
 
             const route = `/illustrations/client-cases/${clientCase.id}/illustrate/${data?.id}`;
-            Router.push(route, undefined, { shallow: true });
+
+            router.push(route);
 
             submitCallback?.();
             sideSheet.onClose();
@@ -210,12 +207,17 @@ export function SubmitProvider({
                 illustrationType: 'QUICK_QUOTE',
             });
 
-            return createIllustration({
-                bodyData: payload,
+            const createResponse = await createIllustration({
+                bodyData: payload.value,
                 path: factoryHandler.getIllustrationApiPath(),
             });
+
+            return {
+                data: createResponse.data,
+                formInputs: payload.formInputs,
+            };
         },
-        onSuccess: ({ data }) => {
+        onSuccess: ({ data, formInputs }) => {
             const illustrationData =
                 factoryHandler.getIllustrationDataFromResponse(data, {
                     ...formInputs,

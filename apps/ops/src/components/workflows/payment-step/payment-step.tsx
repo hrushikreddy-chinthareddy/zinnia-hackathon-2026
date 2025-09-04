@@ -15,6 +15,7 @@ import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
+import { convertAggregationAccountTypeToPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -89,6 +90,9 @@ const PaymentStep = ({
             paymentAccountNumber: selectedBank?.accountNumber,
             paymentBankId: selectedBank?.bankId,
             paymentBranchName: selectedBank?.branchName,
+            paymentForm: convertAggregationAccountTypeToPaymentForm(
+                selectedBank?.accountType
+            ),
         }));
         // We only want to run this on mount. Removing the dependency array will result in an infinate loop
         // eslint-disable-next-line react-hooks/exhaustive-deps

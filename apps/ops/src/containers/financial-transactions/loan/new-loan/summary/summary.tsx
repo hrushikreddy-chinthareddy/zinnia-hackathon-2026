@@ -1,9 +1,4 @@
-import {
-    Address,
-    DisbursementPaymentForm,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
+import { Address, Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -28,7 +23,6 @@ import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import {
@@ -158,11 +152,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     branchName={paymentBranchName}
                     classNames="max-w-[524px]"
                     payeeName={payeeFullName}
-                    paymentType={
-                        getDisbursementPaymentForm(
-                            paymentForm
-                        ) as DisbursementPaymentForm
-                    }
+                    paymentType={paymentForm}
                     showFinancialData={false}
                     fboFfc={fboFfc}
                 />

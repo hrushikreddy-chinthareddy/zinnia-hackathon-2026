@@ -44,6 +44,7 @@ const WithdrawalApiErrorState = ({
                 target="_blank"
                 type={NavElementType.Link}
                 variant={NavElementVariant.Default}
+                underline
             >
                 {t('subtitle3')}
             </NavElement>

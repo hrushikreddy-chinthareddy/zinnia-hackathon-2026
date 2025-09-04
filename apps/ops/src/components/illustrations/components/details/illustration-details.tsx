@@ -14,6 +14,7 @@ import IllustrationDetailsToolbar from './toolbar/illustration-details-toolbar';
 import { getProductCarrierName } from '../../helpers/get-product-carrier-name';
 import { IllustrationDetailProvider } from '../../providers/IllustrationDetailProvider';
 import { useSelectedIllustration } from '../../providers/SelectedIllustrationProvider';
+import { EAppProviders } from '../eapp/eapp-providers';
 
 type IllustrationDetailsProps = {
     clientCase: IllustrationsClientCase;
@@ -71,30 +72,40 @@ export default function IllustrationDetails({
         return !!newBusinesResponse?.illustrations?.illustrationId;
     };
 
+    const versionedAnswers = illustration.inputs
+        ? JSON.parse(illustration.inputs)
+        : undefined;
+
     return (
-        <IllustrationDetailProvider value={fullIllustration ?? null}>
-            <div>
-                <Skeleton loading={isLoading}>
-                    <IllustrationDetailsHeader
-                        title={illustration.title}
-                        carrier={getProductCarrierName(product)}
-                        eAppId={eAppId}
-                        eAppLink={getEAppLink()}
-                        hasIllustrationSelected={hasIllustrationSelected()}
-                    />
-                </Skeleton>
-                <Skeleton loading={isLoading}>
-                    <IllustrationDetailsToolbar
-                        status={illustration.status}
-                        isLoading={isLoading}
-                        clientCase={clientCase}
-                        illustrationId={illustration.id}
-                        eAppId={eAppId}
-                        planCode={product.planCode}
-                    />
-                </Skeleton>
-                <IllustrationDetailsContent isLoading={true} />
-            </div>
-        </IllustrationDetailProvider>
+        <EAppProviders
+            clientCase={clientCase}
+            planCode={product.planCode}
+            versionedAnswers={versionedAnswers}
+        >
+            <IllustrationDetailProvider value={fullIllustration ?? null}>
+                <div>
+                    <Skeleton loading={isLoading}>
+                        <IllustrationDetailsHeader
+                            title={illustration.title}
+                            carrier={getProductCarrierName(product)}
+                            eAppId={eAppId}
+                            eAppLink={getEAppLink()}
+                            hasIllustrationSelected={hasIllustrationSelected()}
+                        />
+                    </Skeleton>
+                    <Skeleton loading={isLoading}>
+                        <IllustrationDetailsToolbar
+                            status={illustration.status}
+                            isLoading={isLoading}
+                            clientCase={clientCase}
+                            illustrationId={illustration.id}
+                            eAppId={eAppId}
+                            planCode={product.planCode}
+                        />
+                    </Skeleton>
+                    <IllustrationDetailsContent isLoading={true} />
+                </div>
+            </IllustrationDetailProvider>
+        </EAppProviders>
     );
 }

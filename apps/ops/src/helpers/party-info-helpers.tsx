@@ -247,7 +247,7 @@ export const getRelationshipToInsured = (
 };
 
 export const getBankAccountType = (
-    accountType: AccountType | undefined,
+    accountType: AccountType | string | undefined,
     t: TFunction,
     appendAccount = false
 ): string => {

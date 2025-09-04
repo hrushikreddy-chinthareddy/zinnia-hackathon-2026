@@ -3132,7 +3132,7 @@ export const farmersBlueprintIU0101 = {
                                             id: '2b7d2fb8-5186-4986-b8c4-60d12ee191db',
                                             firstColumn: 0,
                                             fromYear: 1,
-                                            through: 120,
+                                            through: 100,
                                         },
                                     ],
                                     customProperties: {
@@ -3155,7 +3155,7 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         },
                                         through: {
-                                            max: 120,
+                                            max: 100,
                                             label: {
                                                 en: 'Through',
                                             },

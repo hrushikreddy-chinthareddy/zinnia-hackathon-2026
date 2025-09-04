@@ -1,4 +1,4 @@
-import { BankAccount } from '@xd/api-types/dist/generated-types/sor';
+import { BankDetailList } from '@zinnia/api-types/types/aggregation';
 import { AxiosResponse } from 'axios';
 
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
@@ -19,7 +19,7 @@ type GetPaymentMethodsProps = Omit<
 
 type GetPaymentMethodsResponse =
     | {
-          data: BankAccount[];
+          data: BankDetailList;
           error: null;
       }
     | {
@@ -34,7 +34,7 @@ export const getPaymentMethods = async ({
     planCode,
     policyNumber,
     partyId,
-}: GetPaymentMethodsProps): Promise<BankAccount[] | Error> => {
+}: GetPaymentMethodsProps): Promise<BankDetailList | Error> => {
     try {
         browserLogInfo('aggregation::getPaymentMethods', {
             policyNumber,
