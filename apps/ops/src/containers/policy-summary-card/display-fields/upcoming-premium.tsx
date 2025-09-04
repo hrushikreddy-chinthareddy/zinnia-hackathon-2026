@@ -1,3 +1,4 @@
+import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { Reason } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
@@ -11,6 +12,7 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import BankingDetails from '@deps/components/side-sheet/banking-details/banking-details';
 import { TranslationFiles } from '@deps/config/translations';
@@ -19,6 +21,7 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -49,7 +52,12 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
         () => policyDataToGlobalValues(policy, t),
         [policy, t]
     );
-
+    const { isPermissioned: isUserPermissionedToTransact } =
+        useTransactionPermissionCheck(
+            TransactionPermission.WritePolicy,
+            policy.policyNumber,
+            policy.planCode
+        );
     const amountAndDate = `${numberFormatify(amount || '')} - ${
         dayjs(paymentDate).format(DEFAULT_EXTENDED_DATE_FORMAT) || ''
     }`;
@@ -66,7 +74,20 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
         sideSheet.handleOpen(true);
     };
 
-    if (!bankDetails?.accountNumber) {
+    if (!isUserPermissionedToTransact) {
+        transactionLink = (
+            <TempNavInactive
+                tooltipBody={t(
+                    'colDefs:policySummary.permissionDeniedTooltip',
+                    {
+                        carrier: policy.carrierName,
+                    }
+                )}
+            >
+                {t('colDefs:policySummary.makePayment')}
+            </TempNavInactive>
+        );
+    } else if (!bankDetails?.accountNumber) {
         transactionLink = (
             <NavElement
                 size={NavElementSize.Small}

@@ -41,7 +41,8 @@
         "reinstatementMinPayment": "Paiement minimum de réintégration",
         "reinstatementMinPaymentTooltip": "Il s’agit du montant minimum que le propriétaire doit payer en prime pendant la période d’approbation de remise en vigueur pour que sa police redevienne active.",
         "qualificationType": "Type de diplôme",
-        "policyTerm": "Durée de la police"
+        "policyTerm": "Durée de la police",
+        "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
     },
     "policyDetails": {
         "issueDate": "Date de Publication",

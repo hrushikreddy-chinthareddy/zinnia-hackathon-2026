@@ -41,7 +41,8 @@
         "reinstatementMinPayment": "Reinstatement min payment",
         "reinstatementMinPaymentTooltip": "This is the minimum amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
         "qualificationType": "Qualification type",
-        "policyTerm": "Policy Term"
+        "policyTerm": "Policy Term",
+        "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
     },
     "policyDetails": {
         "issueDate": "Issue date",
