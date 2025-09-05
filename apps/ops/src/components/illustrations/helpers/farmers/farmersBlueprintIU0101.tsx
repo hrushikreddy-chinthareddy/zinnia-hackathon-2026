@@ -3147,6 +3147,7 @@ export const farmersBlueprintIU0101 = {
                                             tooltip: {
                                                 en: 'Modal Premium',
                                             },
+                                            default: 0,
                                         },
                                         fromYear: {
                                             min: 1,

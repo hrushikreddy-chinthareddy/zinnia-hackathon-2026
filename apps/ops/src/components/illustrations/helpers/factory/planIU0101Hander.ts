@@ -305,7 +305,7 @@ const FARMERS_HARDCODED_DATA = {
     individualPartyTypeRoleCode: IllustrationPartyTypeCode.INDIVIDUAL,
     premiumBasis: IllustrationFaceAmountAndPremiumBasis.DURATION,
     premiumFrom: 1,
-    premiumThrough: 120,
+    premiumThrough: 100,
     baseCoverageId: 'BASE_COVERAGE',
     revisedIllustration: true,
     solveForFrequency: 'ANNUAL',
