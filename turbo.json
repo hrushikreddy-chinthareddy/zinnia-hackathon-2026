@@ -1,11 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    "**/.env.*local"
-  ],
-  "globalEnv": [
-    "NODE_ENV"
-  ],
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": ["NODE_ENV"],
   "tasks": {
     "build": {
       "outputs": [
@@ -52,9 +48,7 @@
         "VERCEL_BRANCH_URL",
         "NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL"
       ],
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "ops#build": {
       "env": [
@@ -74,6 +68,7 @@
         "NEXT_PUBLIC_DATADOG_CLIENT_TOKEN",
         "NEXT_PUBLIC_DATADOG_ENV",
         "NEXT_PUBLIC_GIT_SHA",
+        "NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL",
         "NEXT_PUBLIC_GOOGLEANALYTICS_ENV",
         "NEXT_PUBLIC_MOCK_API_REQUEST",
         "NEXT_PUBLIC_S3_BUCKET_BASE_URL",
@@ -91,74 +86,48 @@
         "CARRIER_ROLE",
         "NEXT_PUBLIC_FAVICON_PATH"
       ],
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "@zinnia/utils#build": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "@zinnia/pom#build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "env": [
-        "NEXT_PUBLIC_BASE_URL"
-      ]
+      "dependsOn": ["^build"],
+      "env": ["NEXT_PUBLIC_BASE_URL"]
     },
     "lint": {},
     "prettier": {},
     "prettier:fix": {},
     "consumer-experience#lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
     "pre-commit": {
-      "dependsOn": [
-        "^build",
-        "lint",
-        "prettier"
-      ]
+      "dependsOn": ["^build", "lint", "prettier"]
     },
     "pre-push": {},
     "consumer-experience#pre-commit": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "consumer-experience#dev": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "@zinnia/utils#dev": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "ops#test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "test": {},
     "build-storybook": {},
     "consumer-experience#test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "ops#dev": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     }
   }
 }
