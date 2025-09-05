@@ -120,6 +120,7 @@ const CaseManagementDashboard = ({
         currentSearchValue,
         setCurrentSearchValue,
     ] = useCaseFilterQueryStore();
+
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
@@ -563,7 +564,7 @@ const CaseManagementDashboard = ({
                                         offset: 0,
                                         searchValue: {
                                             // set this to the current search value in the input field
-                                            currentSearchValue,
+                                            ...currentSearchValue,
                                         },
                                         additionalFilters: {
                                             ...prev.additionalFilters,
