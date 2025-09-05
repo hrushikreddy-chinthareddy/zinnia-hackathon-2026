@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -25,8 +25,6 @@ export interface DistributionInstructionsFormData {
 }
 
 type FormDistributionProps = {
-    isDerivedMethodFromFunds?: boolean;
-    defaultMethod?: FundWithdrawnMethod;
     fundWithdrawnMethodOptions?: {
         label: string;
         value: FundWithdrawnMethod;
@@ -37,8 +35,6 @@ type FormDistributionProps = {
 };
 export default function FormDistribution({
     isFormStateReadOnly,
-    defaultMethod,
-    isDerivedMethodFromFunds,
     fundWithdrawnMethodOptions = [],
     moneyTypeOptions = [],
     title,
@@ -54,28 +50,49 @@ export default function FormDistribution({
         setFormDistribution,
     } = useContext(FormDataContext);
 
-    useEffect(() => {
-        if (isDerivedMethodFromFunds) {
-            const funds = formDistribution?.funds.filter(
-                (fund) => !!fund.amount.text
-            );
-            const method =
-                funds.length > 0
-                    ? FundWithdrawnMethod.SpecifyFunds
-                    : defaultMethod ?? '';
-            setFundWithdrawnMethod(method);
+    const activeValueForToggle = () => {
+        const funds = formDistribution?.funds?.filter(
+            (fund) => !!fund.amount.text
+        );
+        const moneyType = formDistribution?.moneyType?.text;
+
+        let method: FundWithdrawnMethod | '';
+        method =
+            moneyType === MoneyType.ProRata
+                ? FundWithdrawnMethod.Prorata
+                : moneyType === MoneyType.Specific
+                ? FundWithdrawnMethod.SpecifyFunds
+                : '';
+
+        if (
+            method === FundWithdrawnMethod.SpecifyFunds &&
+            funds?.length === 0 &&
+            isFormStateReadOnly
+        ) {
+            method = '';
         }
-    }, [defaultMethod]);
+        setFundWithdrawnMethod(method);
+        return method;
+    };
 
     const handleFundWithdrawnMethod = (val: string) => {
         setFundWithdrawnMethod(val);
-        if (val !== FundWithdrawnMethod.SpecifyFunds) {
+        if (val === FundWithdrawnMethod.Prorata) {
+            setFormDistribution((fdd) => ({
+                ...fdd,
+                moneyType: { text: MoneyType.ProRata },
+            }));
+        } else if (val === FundWithdrawnMethod.SpecifyFunds) {
             setFormDistribution((fdd) => ({
                 ...fdd,
                 funds: fdd.funds.map((fund) => ({
                     ...fund,
-                    amount: { text: '', amountType: fund.amount.amountType },
+                    amount: {
+                        text: fund.amount.text,
+                        amountType: fund.amount.amountType,
+                    },
                 })),
+                moneyType: { text: MoneyType.Specific },
             }));
         }
     };
@@ -94,7 +111,7 @@ export default function FormDistribution({
             {!!fundWithdrawnMethodOptions.length && (
                 <div className="mt-4">
                     <ButtonGrp
-                        activeValue={fundWithdrawnMethod || ''}
+                        activeValue={activeValueForToggle()}
                         groupLabel={t(`fundWithdrawnMethod`)}
                         toggle={handleFundWithdrawnMethod}
                         labels={fundWithdrawnMethodOptions}

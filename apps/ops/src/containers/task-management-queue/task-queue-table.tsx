@@ -18,6 +18,7 @@ import { AssignedTask, UnassignedTask } from '@deps/models/case/task-instance';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
 
+import taskManagmentStyles from './task-management-queue.module.css';
 import TaskQueueTableHeader from './task-queue-table-header';
 import TaskQueueTableRow from './task-queue-table-row';
 const PaginationControls = dynamic(
@@ -142,12 +143,19 @@ const TaskQueueTable = ({
 
     return (
         <div className="my-1">
-            <Table>
+            <Table
+                className={
+                    isOpsManagerView
+                        ? `!overflow-y-visible ${taskManagmentStyles.opsManagerTaskTable}`
+                        : ''
+                }
+            >
                 <TaskQueueTableHeader isOpsManagerView={isOpsManagerView} />
                 <TableBody>
                     {isLoading && (
                         <TableRow>
                             <TableCell
+                                className={taskManagmentStyles.loaderCell}
                                 colSpan={
                                     isOpsManagerView
                                         ? ColSpanConfig.OpsManager

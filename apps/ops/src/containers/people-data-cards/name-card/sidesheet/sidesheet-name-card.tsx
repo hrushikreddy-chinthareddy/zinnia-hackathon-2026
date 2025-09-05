@@ -35,6 +35,7 @@ import {
 } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
+import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
@@ -46,7 +47,11 @@ import {
 } from '@deps/queries/api/bpm-non-financial';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import {
+    CLIENT_COPY,
+    DISPLAY_NAME,
     EDS_DATE_DISPLAY_FORMAT,
+    NEW_BUSINESS,
+    SOURCE,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
@@ -200,6 +205,7 @@ export const SidesheetNameCard = ({
         selectedPolicyParty?.partyId ?? ''
     );
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+    const [uploadError, setUploadError] = useState<string | null>(null);
 
     useEffect(() => {
         if (uploadedFiles.length > 0) {
@@ -209,66 +215,83 @@ export const SidesheetNameCard = ({
         }
     }, [uploadedFiles.length]);
 
-    function getFileSubtype(blob: Blob) {
-        if (blob && blob.type && blob.type.includes('/')) {
-            return blob.type.split('/')[1];
-        }
-        return blob.type || '';
-    }
-
-    // based on the document upload need to update this
     const handleFilesChange = async (files: File[]) => {
-        const base64Results = await Promise.all(
-            files.map((file) => convertToBase64(file))
+        const newFiles = files.filter(
+            (file) =>
+                !uploadedFiles.some(
+                    (uf) =>
+                        uf.name === file.name &&
+                        uf.size === file.size &&
+                        uf.lastModified === file.lastModified
+                )
         );
-        const attachments: any = [];
 
-        files.forEach(async (file, index) => {
-            const blob: Blob = file;
-            const metaData = {
-                sourceFileName: file.name,
-                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-                fileType: getFileSubtype(blob),
-                docClassification: SearchRequest.documentClassification.INBOUND,
-                sourceSystem: SourceSystem.ZL,
-                zinniaLiveCaseId: '',
-                parentCarrierCode: policyDetails.carrierId ?? '',
-                correlationId: uuidV4() || '',
-                docAccessLevel: 'CLIENT_COPY',
-                docCategory: 'NEW_BUSINESS',
-                documentType: '',
-            };
+        if (newFiles.length === 0) {
+            setUploadedFiles(files);
+            return;
+        }
 
-            try {
-                const response = await uploadDocumentV2(
-                    metaData,
-                    base64Results[index]
-                );
+        try {
+            const base64Results = await Promise.all(
+                newFiles.map((file) => convertToBase64(file))
+            );
+            const newAttachments: any[] = [];
 
-                if (response?.documentId) {
-                    const attachment = {
-                        documentId: response.documentId,
-                        documentDate:
-                            dateOfSignature.length > 0
-                                ? dateOfSignature
-                                : dayjs().format(ZAHARA_API_DATE_FORMAT),
-                        documentType: metaData?.documentType,
-                    };
-                    attachments.push(attachment);
-                }
-            } catch (error) {
-                // Log the error and track the failed file
-                browserLogError(
-                    'sidesheet-name-change: Error uploading document:',
-                    {
-                        ...parseErrorInformation(error),
+            for (let i = 0; i < newFiles.length; i++) {
+                const file = newFiles[i];
+                const blob: Blob = file;
+                const metaData = {
+                    policyNumber: policyDetails.policyNumber || '',
+                    planCode: policyDetails.planCode || '',
+                    displayName: DISPLAY_NAME,
+                    source: SOURCE,
+                    sourceFileName: file.name,
+                    documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                    fileType: getFileSubtype(blob),
+                    docClassification:
+                        SearchRequest.documentClassification.INBOUND,
+                    sourceSystem: SourceSystem.ZL,
+                    zinniaLiveCaseId: '',
+                    parentCarrierCode: policyDetails.carrierId ?? '',
+                    correlationId: uuidV4() || '',
+                    docAccessLevel: CLIENT_COPY,
+                    docCategory: NEW_BUSINESS,
+                    documentType: '',
+                };
+
+                try {
+                    const response = await uploadDocumentV2(
+                        metaData,
+                        base64Results[i]
+                    );
+
+                    if (response?.documentId) {
+                        const attachment = {
+                            documentId: response.documentId,
+                            documentDate:
+                                dateOfSignature.length > 0
+                                    ? dateOfSignature
+                                    : dayjs().format(ZAHARA_API_DATE_FORMAT),
+                            documentType: metaData?.documentType,
+                        };
+                        newAttachments.push(attachment);
                     }
-                );
+                } catch (error) {
+                    setUploadError('Failed to upload file. Please try again.');
+                    browserLogError(
+                        'sidesheet-name-change: Error uploading document:',
+                        {
+                            ...parseErrorInformation(error),
+                        }
+                    );
+                }
             }
-            setDocuments(attachments);
-        });
 
-        setUploadedFiles(files);
+            setDocuments((prev) => [...(prev || []), ...newAttachments]);
+            setUploadedFiles(files);
+        } catch (error) {
+            setUploadError('Failed to process files. Please try again.');
+        }
     };
 
     const handleSupportingDocumentMatchesWithNewName = (
@@ -318,6 +341,7 @@ export const SidesheetNameCard = ({
             supportingDocumentMatchesWithNewName,
             signaturePresentOnDocumentForAllOwners,
             dateOfSignature,
+            uploadedFiles,
         });
 
         setCurrentErrors(errors);
@@ -351,8 +375,6 @@ export const SidesheetNameCard = ({
             partyType: selectedPolicyParty?.partyType,
             documents,
         };
-
-        console.log('nameChangePayload', nameChangePayload);
 
         const response = await changePartyName({
             partyId: party?.partyId ?? '',
@@ -605,6 +627,11 @@ export const SidesheetNameCard = ({
                     <FileUpload
                         value={uploadedFiles}
                         onChange={handleFilesChange}
+                        error={uploadError}
+                    />
+                    <AssistiveText
+                        variant={AssistiveTextVariant.Error}
+                        text={currentErrors?.supportingDocumentRequired ?? ''}
                     />
 
                     <Radio

@@ -31,15 +31,6 @@ const SignatureStep = ({
         keyPrefix: 'roleChange.signature',
     });
 
-    console.log(
-        'SignatureStep policy',
-        policy,
-        'role',
-        role,
-        'case',
-        toTitleCase(role)
-    );
-
     const { goToNext } = useWorkflow();
 
     const {

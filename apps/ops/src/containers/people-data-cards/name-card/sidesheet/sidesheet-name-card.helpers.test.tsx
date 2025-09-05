@@ -16,6 +16,7 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
         });
         expect(errors.caseId).toBe(
             'people.sideSheet.email.errors.missingCaseDocument'
@@ -33,6 +34,7 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
         });
         expect(errors.fullName).toBe(
             'people.sideSheet.name.errors.organizationError'
@@ -50,6 +52,7 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
         });
         expect(errors.fullName).toBe('people.sideSheet.name.errors.trustError');
     });
@@ -65,6 +68,7 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
         });
         expect(errors.firstName).toBe(
             'people.sideSheet.name.errors.firstNameError'
@@ -85,10 +89,12 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: '',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
         });
         expect(errors.supportingDocumentMatchesWithNewName).toBe(
             'people.sideSheet.name.errors.supportingDocumentNotMatchesError'
         );
+        expect(errors.supportingDocumentRequired).toBeUndefined();
     });
 
     it('returns signaturePresentOnDocumentForAllOwners error if missing', () => {
@@ -102,6 +108,7 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: '',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
         });
         expect(errors.signaturePresentOnDocumentForAllOwners).toBe(
             'people.sideSheet.name.errors.signatureNotPresentOnDocument'
@@ -119,6 +126,7 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '',
+            uploadedFiles: [],
         });
         expect(errors.dateOfSignature).toBe(
             'people.sideSheet.name.errors.dateOfSignature'
@@ -136,8 +144,29 @@ describe('getFormErrors', () => {
             supportingDocumentMatchesWithNewName: 'Yes',
             signaturePresentOnDocumentForAllOwners: 'Yes',
             dateOfSignature: '2023-01-01',
+            uploadedFiles: [
+                new File(['x'], 'doc.pdf', { type: 'application/pdf' }),
+            ],
         });
         expect(errors).toEqual({});
+    });
+    it('returns supportingDocumentRequired error if supportingDocumentMatchesWithNewName is set but uploadedFiles is empty', () => {
+        const errors = getFormErrors({
+            caseId: '123',
+            firstName: 'John',
+            lastName: 'Doe',
+            fullName: 'John Doe',
+            t,
+            type: 'INDIVIDUAL',
+            supportingDocumentMatchesWithNewName: 'Yes',
+            signaturePresentOnDocumentForAllOwners: 'Yes',
+            dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
+        });
+        expect(errors.supportingDocumentRequired).toBe(
+            'people.sideSheet.name.errors.supportingDocumentRequired'
+        );
+        expect(errors.supportingDocumentMatchesWithNewName).toBeUndefined();
     });
 });
 

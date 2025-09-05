@@ -27,6 +27,7 @@ import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
 import StatusBadge from '../../case-details/illustration-item/status-badge';
 import { EditSidesheet } from '../edit-sidesheet/edit-sidesheet';
+import { useSubmit } from '@deps/components/illustrations/providers/SubmitProvider';
 
 type IllustrationDetailsToolbarProps = {
     isLoading?: boolean;
@@ -54,6 +55,7 @@ export default function IllustrationDetailsToolbar({
     const { unarchiveIllustrationMutation } = useIllustrationActions();
 
     const handleSelectForApplication = useSelectIllustrationForApplication();
+    const { onNewSubmit } = useSubmit();
 
     const { data: isPdfReportAvailable, isError } = useQuery({
         queryKey: ['illustrationProcessingStatus', illustrationId],
@@ -142,10 +144,11 @@ export default function IllustrationDetailsToolbar({
                         {t('clientCase.illustrationDetails.viewPdf')}
                     </ToolbarButton>
                 )}
+
                 <ToolbarButton
-                    disabled={true}
                     icon={IconType.DOCUMENT_DUPLICATE}
                     className={styles.linkButton}
+                    onClick={onNewSubmit}
                 >
                     {t('clientCase.illustrationDetails.duplicate')}
                 </ToolbarButton>

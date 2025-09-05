@@ -17,6 +17,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/analytics',
     'src/generated-types/contact-management',
     'src/generated-types/correspondence',
+    'src/generated-types/aggregation',
   ],
   clean: true,
   dts: true,

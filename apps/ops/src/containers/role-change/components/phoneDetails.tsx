@@ -28,7 +28,10 @@ import {
 } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { ExtendedPhone, useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    ZAHARA_API_DATE_FORMAT,
+    DIAL_NUMBER_MAX_LEN,
+} from '@deps/types/constants';
 
 import {
     ANYTIME,
@@ -41,6 +44,10 @@ export type PhoneProps = {
     handlePhoneChange: any;
     index: number;
     isReadOnly: boolean;
+    isRequired?: boolean;
+    onPreferredPhoneChange?: (id: string, checked: boolean) => void;
+    disablePreferredPhone?: boolean;
+    showPreferredCheckbox?: boolean;
 };
 
 function PhoneDetails({
@@ -48,6 +55,10 @@ function PhoneDetails({
     handlePhoneChange,
     index,
     isReadOnly,
+    isRequired = true,
+    onPreferredPhoneChange,
+    disablePreferredPhone,
+    showPreferredCheckbox = false,
 }: PhoneProps) {
     const INITIAL_PHONE: Phone = {
         bestTime: ANYTIME,
@@ -104,6 +115,8 @@ function PhoneDetails({
         );
     };
 
+    const preferredPhoneId = `preferredPhone-${index}`;
+
     return (
         <div key={`phoneType-${index}`}>
             <div
@@ -142,7 +155,10 @@ function PhoneDetails({
                             label={t('fieldLabels.number') as string}
                             leading={countries[country].emoji}
                             message={
-                                !phone?.dialNumber?.trim()?.length && !disabled
+                                !phone?.dialNumber?.trim()?.length ||
+                                (phone?.dialNumber?.trim()?.length <
+                                    DIAL_NUMBER_MAX_LEN &&
+                                    !disabled)
                                     ? currentErrors?.phone
                                     : ''
                             }
@@ -173,7 +189,7 @@ function PhoneDetails({
                                 disabled
                             )}
                             disabled={disabled}
-                            required
+                            required={isRequired}
                         />
                         <Transition
                             as="div"
@@ -256,6 +272,23 @@ function PhoneDetails({
                                 }
                             />
                         </div>
+                    </div>
+                    <div className="flex flex-col gap-4 mt-4">
+                        {showPreferredCheckbox && (
+                            <CheckboxText
+                                id={preferredPhoneId}
+                                checked={phone.isPreferred}
+                                label={t('fieldLabels.preferredPhone')}
+                                onChange={(checked) =>
+                                    onPreferredPhoneChange?.(
+                                        preferredPhoneId,
+                                        checked
+                                    )
+                                }
+                                isDisabled={disabled || disablePreferredPhone}
+                                readonly={phone.isPreferred ? true : isReadOnly}
+                            />
+                        )}
                     </div>
                 </div>
                 <CheckboxText

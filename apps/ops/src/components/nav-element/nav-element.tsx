@@ -25,16 +25,22 @@ export type NavElementProps = {
     type: NavElementType;
     variant?: NavElementVariant;
     size?: NavElementSize;
+    underline?: boolean;
 } & (NavLinkProps | NavButtonProps);
 
-export default function NavElement({ type, ...rest }: NavElementProps) {
+export default function NavElement({
+    type,
+    underline,
+    ...rest
+}: NavElementProps) {
     const { className, startIcon, variant, size, ...newRest } = rest;
 
     const classes = clsx(
         `${styles.navLink} text-links default-focus focus-visible:rounded ${className}`,
         newRest.disabled && styles.disabled,
         variant === NavElementVariant.Text && styles.text,
-        size === NavElementSize.Small && 'text-links-sm'
+        size === NavElementSize.Small && 'text-links-sm',
+        underline && '!underline underline-offset-4'
     );
     const iconClone = startIcon
         ? cloneElement(startIcon as React.ReactElement<any>, {

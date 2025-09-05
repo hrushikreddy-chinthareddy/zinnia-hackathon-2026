@@ -10,10 +10,11 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { convertAggregationAccountTypeToPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 
 import { BankDetailsCards } from './bank-details-cards';
 import { PaymentMethodType, PaymentStepProps } from './types';
-import { useBankDetails } from './use-bank-details';
+import { usePaymentMethods } from './use-bank-details';
 import WorkflowCard from '../workflow-card/workflow-card';
 
 const PaymentStepUS = ({
@@ -35,25 +36,29 @@ const PaymentStepUS = ({
     const { paymentBankId } = state;
 
     const {
-        data: bankDetails = [],
-        isLoading: bankDetailsLoading,
-        isError: bankDetailsError,
-    } = useBankDetails({
+        data: paymentMethods = [],
+        isLoading: paymentMethodsLoading,
+        isError: paymentMethodsError,
+    } = usePaymentMethods({
         state,
         policy,
     });
 
-    if (bankDetails.length > 0) {
-        const selectedBank =
-            bankDetails?.find((bank) => bank.bankId === paymentBankId) ||
-            bankDetails?.[0];
+    if (paymentMethods.length > 0) {
+        const selectedPaymentMethod =
+            paymentMethods?.find(
+                (paymentMethod) => paymentMethod.bankId === paymentBankId
+            ) || paymentMethods?.[0];
 
-        if (selectedBank.bankId !== state.paymentBankId) {
+        if (selectedPaymentMethod.bankId !== state.paymentBankId) {
             setState((prevState) => ({
                 ...prevState,
-                paymentAccountNumber: selectedBank?.accountNumber,
-                paymentBankId: selectedBank?.bankId,
-                paymentBranchName: selectedBank?.branchName,
+                paymentAccountNumber: selectedPaymentMethod?.accountNumber,
+                paymentBankId: selectedPaymentMethod?.bankId,
+                paymentBranchName: selectedPaymentMethod?.branchName,
+                paymentForm: convertAggregationAccountTypeToPaymentForm(
+                    selectedPaymentMethod?.accountType
+                ),
             }));
         }
     }
@@ -87,17 +92,22 @@ const PaymentStepUS = ({
                 paymentAccountNumber: '',
                 paymentBranchName: '',
                 paymentBankId: '',
+                paymentForm: undefined,
             }));
         } else {
-            const selectedBank = bankDetails?.find(
-                (bank) => bank.bankId === paymentBankId
+            const selectedPaymentMethod = paymentMethods?.find(
+                (paymentMethod) => paymentMethod.bankId === paymentBankId
             );
 
             setState((prevState) => ({
                 ...prevState,
-                paymentAccountNumber: selectedBank?.accountNumber,
-                paymentBranchName: selectedBank?.branchName,
-                paymentBankId: selectedBank?.bankId,
+                paymentAccountNumber: selectedPaymentMethod?.accountNumber,
+                paymentBranchName: selectedPaymentMethod?.branchName,
+                paymentBankId: selectedPaymentMethod?.bankId,
+                selectedPaymentAccount: selectedPaymentMethod,
+                paymentForm: convertAggregationAccountTypeToPaymentForm(
+                    selectedPaymentMethod?.accountType
+                ),
             }));
             setFormError(false);
         }
@@ -143,9 +153,9 @@ const PaymentStepUS = ({
                         </Typography>
 
                         <BankDetailsCards
-                            bankDetails={bankDetails}
-                            bankDetailsError={bankDetailsError}
-                            bankDetailsLoading={bankDetailsLoading}
+                            bankDetails={paymentMethods}
+                            bankDetailsError={paymentMethodsError}
+                            bankDetailsLoading={paymentMethodsLoading}
                             paymentBankId={paymentBankId}
                             handleSelection={handleSelection}
                             t={t}

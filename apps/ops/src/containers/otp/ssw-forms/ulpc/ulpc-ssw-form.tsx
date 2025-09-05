@@ -14,10 +14,7 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
@@ -96,9 +93,7 @@ export function UlpcSSWForm({ planCode }: UlpcSSWFormProps) {
                 jointCoveredPlanCodes={jointCoveredPlanCodes}
             />
             <FormDistribution
-                isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
-                defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={
                     t(

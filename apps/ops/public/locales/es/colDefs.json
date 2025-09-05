@@ -39,7 +39,8 @@
         "reinstatementPaymentPeriodTooltip": "Estas fechas indican cuánto tiempo tiene el propietario para realizar el pago de reinstalación requerido una vez aprobado a través de suscripción. La primera fecha es cuando el propietario fue aprobado para la reinstalación, y la segunda es la fecha límite para realizar el pago de reinstalación requerido.",
         "reinstatementMinPayment": "Pago mínimo de reinstalación",
         "reinstatementMinPaymentTooltip": "Este es el monto mínimo que el propietario debe pagar en primas dentro del período de aprobación de la reinstalación para que su póliza vuelva a estar activa.",
-        "policyTerm": "Plazo de la póliza"
+        "policyTerm": "Plazo de la póliza",
+        "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
     },
     "policyDetails": {
         "issueDate": "Fecha de emisión",

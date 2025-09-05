@@ -16,10 +16,7 @@ import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdin
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
@@ -101,9 +98,7 @@ export function UsaaSSWForm() {
                 options={systematicWithdrawalOptions}
             />
             <FormDistribution
-                isDerivedMethodFromFunds={true}
                 isFormStateReadOnly={isFormStateReadOnly}
-                defaultMethod={FundWithdrawnMethod.Prorata}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions}
                 title={
                     t(

@@ -30,6 +30,7 @@ const ApiErrorState = ({ onCancel, onContinue }: ApiErrorStateProps) => {
                 target="_blank"
                 type={NavElementType.Link}
                 variant={NavElementVariant.Default}
+                underline
             >
                 {t('subtitle.3')}
             </NavElement>

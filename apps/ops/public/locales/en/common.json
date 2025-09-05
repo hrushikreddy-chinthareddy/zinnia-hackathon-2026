@@ -478,7 +478,7 @@
                 "partyType": {
                     "individual": "Individual",
                     "trust": "Trust",
-                    "estate/Organisation": "Estate/Organisation"
+                    "estate/Organization": "Estate/Organization"
                 },
                 "trustType": "Trust Type",
                 "prefixOptions": {
@@ -529,7 +529,10 @@
                     "estate": "Estate",
                     "corporation": "Corporation",
                     "other": "Other"
-                }
+                },
+                "yes": "Yes",
+                "no": "No",
+                "isRelevant": "Is the uploaded supporting document(s) valid and relevant?"
             },
             "contactInfo": {
                 "title": "Contact Info",
@@ -701,7 +704,7 @@
             "relationshipcurrent": "Relationship to current {{roleLabel}}",
             "header": "{{roleLabel}} Details",
             "changeReason": "Reason for change",
-            "documentsAvailable": "Required supporting document(s) available?",
+            "documentsAvailable": "Is the uploaded supporting document(s) valid and relevant?",
             "permanentResident": "Permanent resident",
             "countryCitizenship": "Country of citizenship",
             "partyType": "Party type",
@@ -829,7 +832,7 @@
             "partyOptions": {
                 "individual": "Individual",
                 "trust": "Trust",
-                "organization": "Estate/Organisation",
+                "organization": "Estate/Organization",
                 "custodian": "Custodian"
             },
             "reasonOptions": {
@@ -892,10 +895,10 @@
             "relationshipcurrent": "Relationship to party",
             "relationship": "Relationship to {{roleLabel}}",
             "name": "Name",
-            "uscitizen": "US citizen",
+            "uscitizen": "US Citizen",
             "ssn": "SSN",
             "gender": "Gender",
-            "birthdate": "Birth date",
+            "birthdate": "Birth Date",
             "prefferedMethod": "Preferred Contact Method",
             "contactDetails": "Contact details",
             "email": "Email",
@@ -1940,6 +1943,7 @@
         "tabs": {
             "call-logs": "Call logs",
             "closedOn": "Closed on {{date}}",
+            "canceledOn": "Canceled on {{date}}",
             "documents": "Documents",
             "caseDocuments": "Case Documents",
             "events": "Events",
@@ -2935,7 +2939,7 @@
             "title": "Commission Statements",
             "carrierSelectPlaceholder": "-- Select a carrier --",
             "notFound": "We couldn't find commission statements that match your search.",
-            "selectACarrer": "Select a carrier to view commission statements",
+            "selectACarrier": "Select a carrier to view commission statements",
             "documentId": "Document/ID",
             "receivedDate": "Received Date",
             "createdDate": "Created date",
@@ -4649,7 +4653,8 @@
                     "zip": "Zip",
                     "addressLine1": "Address line 1",
                     "addressLine2": "Address line 2",
-                    "addressLine3": "Address line 3"
+                    "addressLine3": "Address line 3",
+                    "preferredAddress": "Preferred address"
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Mail will be sent to this address going forward.",
@@ -4721,7 +4726,8 @@
                     "email": "Email",
                     "removeEmail": "Remove this email",
                     "remove": "Remove email",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredEmail": "Preferred email"
                 },
                 "mainCta": {
                     "add": "Save {{type}} email",
@@ -4742,7 +4748,8 @@
                     "removeNumber": "Remove this phone number",
                     "removePhone": "Remove phone",
                     "timeZone": "Time zone",
-                    "type": "Type"
+                    "type": "Type",
+                    "preferredPhone": "Preferred phone"
                 },
                 "general": {
                     "cancel": "Cancel"
@@ -4780,7 +4787,8 @@
                     "lastNameError": "Last Name info is missing",
                     "supportingDocumentNotMatchesError": "Supporting Document Name matches with New Name field is required",
                     "signatureNotPresentOnDocument": "Signature Present on Document for all Owners field is required",
-                    "dateOfSignature": "Date of Signature field is required"
+                    "dateOfSignature": "Date of Signature field is required",
+                    "supportingDocumentRequired": "At least one supporting document is required."
                 },
                 "mainCta": {
                     "updateName": "Update name",
@@ -5328,9 +5336,15 @@
         "paymentMethod": "Payment Method",
         "paymentType": {
             "eft": "EFT",
-            "check": "Check"
+            "check": "Check",
+            "wire": "Wire",
+            "ach": "ACH",
+            "dtcc": "DTCC",
+            "creditcard": "Credit Card",
+            "exchange": "Exchange"
         },
-        "checkingEndingIn": "Checking ending in {{ accountNumber }}"
+        "checkingEndingIn": "Checking ending in {{ accountNumber }}",
+        "creditCardEndingIn": "Credit card ending in {{ accountNumber }}"
     },
     "autopay": {
         "pendingBanner": {
@@ -6090,6 +6104,8 @@
             "SystematicPartialWithdrawal": "Systematic partial withdrawal",
             "SystematicPartialWithdrawalSetup": "Systematic partial withdrawal setup",
             "SystematicProgramUpdate": "Systematic program update",
+            "SystematicRequiredMinimumDistribution": "Systematic RMD update",
+            "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
             "TPDChange": "Third party designee change",
             "UnitExpenseCharge": "Unit expense charge"
         }
@@ -7513,7 +7529,7 @@
             },
             "unArchive": "Un-archive",
             "selected": "Selected",
-            "archived": "Archive",
+            "archived": "Archived",
             "expired": "Expired",
             "selectForApplication": "Select for application",
             "valuePerYear": "{{value}} / year",
@@ -7528,7 +7544,8 @@
             "confirmArchiveAriaLabel": "Confirm archive illustration button",
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
-            "initialDeathBenefitOption": "Initial death benefit option"
+            "initialDeathBenefitOption": "Initial death benefit option",
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",

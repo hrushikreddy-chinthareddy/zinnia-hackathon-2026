@@ -5,7 +5,7 @@ import {
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { RadioItem } from '@deps/components/radio/radio';
 import TransactionNavigationButtons, {
@@ -77,7 +77,7 @@ const NotificationMethodStep = ({
         }
     }, [beneficiaries.length, policyBeneficiaries, setBeneficiaries]);
 
-    const handleStepContinue = useCallback(async () => {
+    const handleStepContinue = async () => {
         const asArray = Object.entries(formErrors);
         const filterCb = asArray.filter(
             ([key, value]) => value !== '' || key === 'submit'
@@ -89,7 +89,7 @@ const NotificationMethodStep = ({
             await submit();
             goToNext();
         }
-    }, [formErrors, goToNext]);
+    };
 
     const handleNotification = (data: any, index: number) => {
         setBeneficiaries((prevState) => {
@@ -102,7 +102,7 @@ const NotificationMethodStep = ({
         });
     };
 
-    const submit = useCallback(async () => {
+    const submit = async () => {
         setIsLoading(true);
         const payload = buildClaimPaylod(
             policy,
@@ -128,7 +128,7 @@ const NotificationMethodStep = ({
         }
 
         setIsLoading(false);
-    }, [policy, notifiers, owners, beneficiaries, setCaseId, setSubmitFailed]);
+    };
 
     return (
         <WorkflowCard

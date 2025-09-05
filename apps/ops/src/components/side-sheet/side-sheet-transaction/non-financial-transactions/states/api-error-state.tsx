@@ -66,6 +66,7 @@ const ApiErrorState = ({
                 target="_blank"
                 type={NavElementType.Link}
                 variant={NavElementVariant.Default}
+                underline
             >
                 {t('subtitle.4')}
             </NavElement>

@@ -3,6 +3,7 @@ import {
     ReactNode,
     useCallback,
     useContext,
+    useMemo,
     useState,
 } from 'react';
 
@@ -22,11 +23,7 @@ type SelectedIllustrationContextValue = {
     isLoadingSelectForApplication: boolean;
     newBusinessCaseId: string | null;
     eAppLink: string | undefined;
-    onSelectedIllustrationChange: (data: SelectedIllustrationsState) => void;
-    handleSelectIllustration: (
-        product: Product,
-        illustration: IllustrationSummary
-    ) => void;
+    handleSelectIllustration: (illustrationId: string) => void;
     setIsLoadingSelectForApplication: (isLoading: boolean) => void;
     setNewBusinessCaseId: (caseId: string) => void;
     setEAppLink: (eAppLink: string | undefined) => void;
@@ -41,9 +38,11 @@ export function SelectedIllustrationProvider(props: {
     children: ReactNode;
     clientCaseId: string;
     clientCase: IllustrationsClientCase | null | undefined;
+    products: Product[];
 }) {
-    const [selectedIllustration, setSelectedIllustration] =
-        useState<SelectedIllustrationsState | null>(null);
+    const [selectedIllustrationId, setSelectedIllustrationId] = useState<
+        string | null
+    >(null);
     const [isLoadingSelectForApplication, setIsLoadingSelectForApplication] =
         useState(false);
     const [newBusinessCaseId, setNewBusinessCaseId] = useState<string | null>(
@@ -52,27 +51,34 @@ export function SelectedIllustrationProvider(props: {
     const [eAppLink, setEAppLink] = useState<string | undefined>(undefined);
 
     const handleSelectIllustration = useCallback(
-        (product: Product, illustration: IllustrationSummary) => {
-            if (!props.clientCaseId || Array.isArray(props.clientCaseId))
-                return;
+        (illustrationId: string) => {
+            if (!props.clientCaseId) return;
 
-            if (
-                selectedIllustration?.illustration?.id === illustration.id &&
-                selectedIllustration?.product?.carrierProductId ===
-                    product.carrierProductId
-            ) {
-                // Already selected; skip
-                return;
-            }
-
-            setSelectedIllustration({ illustration, product });
+            setSelectedIllustrationId(illustrationId);
         },
-        [
-            props.clientCaseId,
-            selectedIllustration?.illustration?.id,
-            selectedIllustration?.product?.carrierProductId,
-        ]
+        [props.clientCaseId]
     );
+
+    const targetIllustration =
+        props.clientCase?.illustrations?.find(
+            (ill) => ill.id === selectedIllustrationId
+        ) ?? null;
+    const associatedProduct =
+        props.products.find(
+            (product) =>
+                product.carrierProductId === targetIllustration?.productId
+        ) ?? null;
+
+    const selectedIllustration = useMemo(() => {
+        if (!targetIllustration || !associatedProduct) {
+            return null;
+        }
+
+        return {
+            illustration: targetIllustration,
+            product: associatedProduct,
+        };
+    }, [targetIllustration, associatedProduct]);
 
     return (
         <SelectedIllustrationContext.Provider
@@ -81,8 +87,6 @@ export function SelectedIllustrationProvider(props: {
                 isLoadingSelectForApplication,
                 newBusinessCaseId,
                 eAppLink,
-                onSelectedIllustrationChange: (data) =>
-                    setSelectedIllustration(data),
                 handleSelectIllustration,
                 setIsLoadingSelectForApplication: (isLoading: boolean) =>
                     setIsLoadingSelectForApplication(isLoading),

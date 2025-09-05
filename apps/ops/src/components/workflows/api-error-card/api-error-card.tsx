@@ -62,6 +62,7 @@ const ApiErrorCard = ({ leaveRoute, submit }: ApiErrorCardProps) => {
                             rel="noopener noreferrer"
                             target="_blank"
                             type={NavElementType.Link}
+                            underline
                         >
                             {t('helpDesk.text')}
                         </NavElement>

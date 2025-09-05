@@ -15,10 +15,7 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getRslnRmdConfig from './rsln-rmd-form.helpers';
@@ -97,8 +94,6 @@ export default function RslnRmdWithdrawalForm() {
                         'distributionInstruction.distributionInstruction'
                     ) as string
                 }
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Prorata}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
             <IrsWithholding

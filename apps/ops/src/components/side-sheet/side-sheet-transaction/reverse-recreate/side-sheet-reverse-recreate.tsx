@@ -157,6 +157,7 @@ export default function SidesheetReverseRecreate({
                                 href={HELP_DESK_LINK}
                                 target="_blank"
                                 type={NavElementType.Link}
+                                underline
                             >
                                 {t(
                                     'policy.history.reverseRecreateSidesheet.apiError.submitHelpDeskTicket'

@@ -23,7 +23,7 @@ export const useMainNavItems = (): NavGroup[] => {
         isSuperAdmin,
         hasHomeExperience,
         isOpsManagerView,
-        showToppanMerrill,
+        showWelbSalesMaterials,
         isAllowReadIllustrations,
         hasUsagePermission,
         hasTestHarnessAccess,
@@ -244,7 +244,7 @@ export const useMainNavItems = (): NavGroup[] => {
             items: [
                 ...(hasUsagePermission ? [usageLink] : []),
                 ...(isSuperAdmin ? [accessManagementLink] : []),
-                ...(showToppanMerrill ? [toppanMerrillLink] : []),
+                ...(showWelbSalesMaterials ? [toppanMerrillLink] : []),
                 ...(showTestHarness ? [testHarnessLink] : []),
                 userContextMenu,
             ],

@@ -26,11 +26,15 @@ const baseProps = {
         emailAddress: 'test@example.com',
         emailType: EmailType.PERSONAL,
         remove: false,
+        isPreferred: false,
     },
     handleEmailChange: jest.fn(),
     index: 0,
     role: 'user',
     isReadOnly: false,
+    onPreferredEmailChange: jest.fn(),
+    disablePreferredEmail: false,
+    showPreferredCheckbox: false,
 };
 describe('EmailDetails', () => {
     beforeEach(() => {

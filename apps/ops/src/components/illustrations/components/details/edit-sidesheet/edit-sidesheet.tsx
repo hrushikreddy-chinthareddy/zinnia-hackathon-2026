@@ -31,14 +31,6 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
         t('clientCase.illustrationDetails.editIllustration') ||
             'Edit Illustration'
     );
-    const illustration = clientCase.illustrations?.find(
-        (illustration) =>
-            illustration.id === selectedIllustration?.illustration.id
-    );
-
-    const versionedAnswers = illustration?.inputs
-        ? JSON.parse(illustration?.inputs)
-        : undefined;
 
     return (
         <SideSheet
@@ -46,14 +38,13 @@ export const EditSidesheet: FC<PropsWithChildren<EditSidesheetProps>> = ({
             header={title}
             trigger={children}
             contentClassName={styles.editSidesheetContent}
+            descriptionClassName={styles.editSidesheetDescription}
             open={open}
             onOpenChange={setOpen}
         >
             <EappContainer
                 planCode={planCode}
                 clientCase={clientCase}
-                versionedAnswers={versionedAnswers}
-                submitCallback={() => setOpen(false)}
                 isEdit
                 illustrationId={selectedIllustration?.illustration.id}
             />

@@ -16,11 +16,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-    RMDType,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
 import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
@@ -199,7 +195,6 @@ const DlicRmdWithdrawalForm = () => {
                         'distributionInstruction.distributionInstruction'
                     ) as string
                 }
-                defaultMethod={FundWithdrawnMethod.Default}
             />
 
             <SignatureValidations

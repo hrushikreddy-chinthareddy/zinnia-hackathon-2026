@@ -4,6 +4,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
 import DeathClaimContainer from '@deps/containers/death-claim-container/death-claim-container';
+import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
 import { DeathClaimProvider } from '@deps/contexts/DeathClaimContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
@@ -120,21 +121,27 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ...response,
                 });
 
-                if (response.isNewRequest === false) {
+                if (
+                    response.isNewRequest === true &&
+                    deathClaimApplicableStatuses.includes(policy?.policyStatus)
+                ) {
+                    logInfo('d-notification::Showing death claim IDN page', {
+                        ...logCtx,
+                    });
+                    return {
+                        props: {
+                            ...translations,
+                            policy,
+                            user,
+                        },
+                    };
+                } else {
                     return {
                         redirect: {
                             destination: response?.zlCaseId
                                 ? `/cases/${response?.zlCaseId}/progress`
                                 : '/policies',
                             permanent: false,
-                        },
-                    };
-                } else {
-                    return {
-                        props: {
-                            ...translations,
-                            policy,
-                            user,
                         },
                     };
                 }

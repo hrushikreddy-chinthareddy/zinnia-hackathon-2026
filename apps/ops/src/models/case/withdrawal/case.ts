@@ -851,6 +851,7 @@ export enum MoneyType {
     PreTaxBalance = 'Pre Tax',
     AfterTaxRothBalance = 'After Tax',
     ProRata = 'Prorata',
+    Specific = 'Specific',
 }
 
 export enum FundWithdrawnMethod {

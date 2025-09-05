@@ -40,20 +40,27 @@ export const findCarrierAgents = (
     return agents;
 };
 
+export const findCarrierAlias = (
+    partyRefData: PartyReferenceDataModel,
+    carrier: string
+): AliasModel[] => {
+    const agents =
+        partyRefData.alias?.filter((v) => {
+            return v.carrier?.toLowerCase() === carrier.toLowerCase();
+        }) || [];
+
+    return agents;
+};
+
 export const getMasterAgentNumber = (
     partyRefData?: PartyReferenceDataModel
 ) => {
-    const alias = partyRefData?.alias?.find((v) =>
-        v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
-    );
-
+    const alias = partyRefData?.alias?.find((v) => v?.masterAgentNumber);
     return alias?.masterAgentNumber;
 };
 
 export const getExternalAgentId = (partyRefData?: PartyReferenceDataModel) => {
-    const alias = partyRefData?.alias?.find((v) =>
-        v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
-    );
+    const alias = partyRefData?.alias?.find((v) => v?.masterAgentNumber);
 
     return alias?.externalId;
 };

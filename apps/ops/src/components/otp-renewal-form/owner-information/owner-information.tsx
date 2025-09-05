@@ -56,10 +56,20 @@ export default function OwnerInfo({
         setPartyInfo((parties) => {
             return parties?.map((party, j) => {
                 if (i !== j) {
-                    return party;
+                    return {
+                        ...party,
+                        fullName: party.middleName
+                            ? `${party.firstName} ${party.middleName} ${party.lastName}`.trim()
+                            : `${party.firstName} ${party.lastName}`.trim(),
+                    };
                 }
 
-                return val;
+                return {
+                    ...val,
+                    fullName: val.middleName
+                        ? `${val?.firstName} ${val?.middleName} ${val?.lastName}`.trim()
+                        : `${val?.firstName} ${val?.lastName}`.trim(),
+                };
             });
         });
     };
@@ -68,7 +78,12 @@ export default function OwnerInfo({
         const parties = partyInfo.map((party) => {
             const mappedparty = { ...party };
             delete mappedparty.id;
-            return mappedparty;
+            return {
+                ...mappedparty,
+                fullName: party.middleName
+                    ? `${party.firstName} ${party.middleName} ${party.lastName}`.trim()
+                    : `${party.firstName} ${party.lastName}`.trim(),
+            };
         });
         setOwnerInformation(parties);
     }, [partyInfo]);

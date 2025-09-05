@@ -108,6 +108,7 @@ export enum AddressField {
     ZipCodeExtension = 'zipCodeExtension',
     Country = 'country',
     Remove = 'remove',
+    PreferredAddress = 'preferredAddress',
 }
 
 export enum PhoneField {
@@ -121,6 +122,7 @@ export enum PhoneField {
     BestTime = 'bestTime',
     Timezone = 'timezone',
     DialNumber = 'dialNumber',
+    PreferredPhone = 'preferredPhone',
 }
 
 export enum EmailField {
@@ -128,6 +130,7 @@ export enum EmailField {
     EmailType = 'emailType',
     EmailAddress = 'emailAddress',
     Remove = 'remove',
+    PreferredEmail = 'preferredEmail',
 }
 
 export enum RoleField {

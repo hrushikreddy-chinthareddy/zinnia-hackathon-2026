@@ -16,11 +16,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
-import {
-    Carrier,
-    FundWithdrawnMethod,
-    RMDType,
-} from '@deps/models/case/withdrawal/case';
+import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getGdmnRmdConfig from './gdmn-rmd-form.helpers';
@@ -165,8 +161,6 @@ export default function GdmnRmdWithdrawalForm() {
                         'distributionInstruction.distributionInstruction'
                     ) as string
                 }
-                isDerivedMethodFromFunds={true}
-                defaultMethod={FundWithdrawnMethod.Prorata}
             />
 
             <SignatureValidations

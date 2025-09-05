@@ -150,7 +150,7 @@ export default function SideSheet({
                             style={{ width: widthStyle, transform }}
                         >
                             <div className="flex h-full flex-col bg-white">
-                                <div className="z-20 px-8 py-6 shadow-elevation-light-08">
+                                <div className="z-10 px-8 py-6 shadow-elevation-light-08">
                                     <div className="flex flex-row-reverse items-center justify-between">
                                         <div className="min-w-content ml-4 flex h-7 shrink-0 transition-all duration-300 ease-in-out">
                                             <IconButton

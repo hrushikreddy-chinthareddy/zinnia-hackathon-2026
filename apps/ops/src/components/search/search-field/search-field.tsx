@@ -57,6 +57,7 @@ export const SearchFieldContainer = ({
         if (inputRef?.current && onClear) {
             onClear(activeLabels.value);
             inputRef.current.value = '';
+            setHasValue(false);
         }
     };
 

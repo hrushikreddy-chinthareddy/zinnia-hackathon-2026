@@ -242,6 +242,6 @@ export const initialDeathClaimExistsSsr = async (
             'webonofinancial::initialDeathClaimExistsSsr::Failed claim exists check',
             { ...parseErrorInformation(error), ...loggingContext }
         );
-        return null;
+        throw error;
     }
 };

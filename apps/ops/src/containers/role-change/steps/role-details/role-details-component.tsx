@@ -1,9 +1,13 @@
+import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidV4 } from 'uuid';
 
 import InputCheckBox from '@deps/components/checkbox-v2/input-checkbox';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
+import FileUpload from '@deps/components/file-upload/file-upload';
 import NavElement, {
     NavElementSize,
     NavElementType,
@@ -19,15 +23,26 @@ import {
     RoleLabel,
     Roles,
 } from '@deps/constants/policy';
+import { convertToBase64 } from '@deps/containers/people-data-cards/name-card/sidesheet/sidesheet-name-card.helpers';
 import {
     useRoleChange,
     defaultRoleValue,
     RoleData,
 } from '@deps/contexts/RoleChangeContext';
+import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { Policy } from '@deps/models/policy/sor-policy';
+import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as ChevronUp } from '@deps/styles/elements/icons/icons_outlined/chevron-up.svg';
+import {
+    EDS_DATE_DISPLAY_FORMAT,
+    SOURCE,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
+import { SourceSystem } from '@deps/types/documents-v3';
+import { browserLogError } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import ContactDetailsComponent from './contact-details-component';
 import RoleIdentification from './role-identification';
@@ -37,6 +52,9 @@ import {
     ReasonOptions,
     NEW,
     GetIsReadOnly,
+    NEW_BUSINESS,
+    CLIENT_COPY,
+    NO,
 } from '../../role-change-helper';
 
 const RoleDetailsComponent = ({
@@ -57,6 +75,10 @@ const RoleDetailsComponent = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.roleDetails',
     });
+    const [uploadedFiles, setUploadedFiles] = useState<File[]>(
+        roleData?.documents || []
+    );
+    const [uploadError, setUploadError] = useState<string | null>(null);
 
     const {
         setRoleData,
@@ -132,6 +154,126 @@ const RoleDetailsComponent = ({
                 },
             };
         });
+    };
+
+    const handleFilesChange = async (files: File[]) => {
+        // Helper to check if two files are the same
+        const isSameFile = (a: File, b: File) =>
+            a.name === b.name &&
+            a.size === b.size &&
+            a.lastModified === b.lastModified;
+
+        const newFiles = files.filter(
+            (newFile) =>
+                !uploadedFiles.some((uploadedFile) =>
+                    isSameFile(newFile, uploadedFile)
+                )
+        );
+
+        if (!files.length) {
+            setRoleData((prevData: any) => ({
+                ...prevData,
+                documents: [],
+                supportingDocumentAttached: NO,
+            }));
+            setUploadedFiles([]);
+            return;
+        }
+
+        if (newFiles.length === 0) {
+            setUploadedFiles(files);
+            return;
+        }
+
+        const base64Results = await Promise.all(
+            newFiles.map((file) => convertToBase64(file))
+        );
+
+        const updatedDocuments = (roleData?.documents || []).slice();
+
+        const getSupportingDocumentType = (role: PolicyRole) => {
+            switch (role.toUpperCase()) {
+                case Roles.NEWOWNER:
+                    return 'Owner Change Supporting Document';
+                case Roles.NEWJOINTOWNER:
+                    return 'Joint Owner Change Supporting Document';
+                case Roles.NEWPAYOR:
+                    return 'Payor Change Supporting Document';
+                case Roles.NEWTHIRDPARTYDESIGNEE:
+                    return 'Third Party Designee Change Supporting Document';
+                default:
+                    return 'Unknown Supporting Document';
+            }
+        };
+
+        await Promise.all(
+            newFiles.map(async (file, index) => {
+                const blob: Blob = file;
+
+                const metaData = {
+                    policyNumber: policy.policyNumber || '',
+                    planCode: policy.product?.planCode || '',
+                    displayName: getSupportingDocumentType(role),
+                    source: SOURCE,
+                    sourceFileName: file.name,
+                    documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                    fileType: getFileSubtype(blob),
+                    docClassification:
+                        SearchRequest.documentClassification.INBOUND,
+                    sourceSystem: SourceSystem.ZL,
+                    zinniaLiveCaseId: '',
+                    parentCarrierCode: policy.carrierId ?? '',
+                    correlationId: uuidV4() || '',
+                    docAccessLevel: CLIENT_COPY,
+                    docCategory: NEW_BUSINESS,
+                    documentType: '',
+                };
+
+                try {
+                    const response = await uploadDocumentV2(
+                        metaData,
+                        base64Results[index]
+                    );
+
+                    if (response?.documentId) {
+                        const attachment = {
+                            documentId: response?.documentId,
+                            documentDate: dayjs().format(
+                                ZAHARA_API_DATE_FORMAT
+                            ),
+                            documentType: metaData?.fileType,
+                            documentName: metaData?.sourceFileName,
+                            name: metaData?.sourceFileName,
+                        };
+                        updatedDocuments.push(attachment);
+                    }
+                } catch (error) {
+                    setUploadError('Failed to upload file. Please try again.');
+                    browserLogError(
+                        'sidesheet-name-change: Error uploading document:',
+                        {
+                            ...parseErrorInformation(error),
+                        }
+                    );
+                }
+            })
+        );
+
+        setRoleData((prevData: any) => ({
+            ...prevData,
+            documents: updatedDocuments,
+        }));
+        setUploadedFiles(files);
+    };
+
+    const isRelevantChangeHandler = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        handleChange(RoleField.SupportingDocument, e.target.value);
+        setRoleData((prevData) => ({
+            ...prevData,
+            supportingDocumentAttached: e.target.value,
+        }));
     };
 
     return (
@@ -227,6 +369,29 @@ const RoleDetailsComponent = ({
 
             {showRole && (
                 <>
+                    {[Roles.NEWPAYOR].includes(role.toUpperCase() as Roles) && (
+                        <div className={containerClasses}>
+                            <div className={sectionClasses}>
+                                <div className="mb-7 w-[400px]">
+                                    <FileUpload
+                                        value={uploadedFiles}
+                                        onChange={handleFilesChange}
+                                        error={uploadError}
+                                    />
+                                </div>
+                                <Radio
+                                    items={options}
+                                    label={t('documentsAvailable') as string}
+                                    value={
+                                        roleData?.supportingDocumentAttached ||
+                                        null
+                                    }
+                                    onChange={isRelevantChangeHandler}
+                                    orientation={RadioOrientation.Horizontal}
+                                />
+                            </div>
+                        </div>
+                    )}
                     {[Roles.NEWOWNER, Roles.NEWJOINTOWNER].includes(
                         role.toUpperCase() as Roles
                     ) && (
@@ -261,6 +426,13 @@ const RoleDetailsComponent = ({
                                         }
                                     />
                                 </div>
+                                <div className="mb-7 w-[400px]">
+                                    <FileUpload
+                                        value={uploadedFiles}
+                                        onChange={handleFilesChange}
+                                        error={uploadError}
+                                    />
+                                </div>
                                 <Radio
                                     items={options}
                                     label={t('documentsAvailable') as string}
@@ -288,6 +460,8 @@ const RoleDetailsComponent = ({
                             index={index}
                             existingRoleData={roleData}
                             policy={policy}
+                            handleFilesChange={handleFilesChange}
+                            uploadedFiles={uploadedFiles}
                         />
                         <ContactDetailsComponent
                             handleChange={handleChange}
