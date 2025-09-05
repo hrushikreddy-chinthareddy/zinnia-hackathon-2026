@@ -16,15 +16,12 @@ import { getTaxDocumentsV3, searchDocumentsV3 } from '@/services/document/v3';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyDetails } from '@/services/policy';
 import { DocumentsVersion } from '@/types/carrier-config';
-import {
-  DocumentCategory,
-  DocumentV3SearchItem,
-  ExtendedDocumentMeta,
-} from '@/types/document';
+import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { DocumentsTabs } from './DocumentsTabs';
+import { extensionsFilter, filterDocuments, filterStatements } from './utils';
 
 const pageTitle = getPageTitle(RouteKey.DOCUMENTS);
 // disable because NextJS needs this to be exported from this file
@@ -33,10 +30,6 @@ export const metadata: Metadata = {
   title: pageTitle,
 };
 
-// DocumentTypes for both Old and New Correspondence APIs that map to a statement-y doctype
-// https://zinnia.atlassian.net/wiki/spaces/SISED/pages/3834871816/SED+New+Document+Types+-+Next+Gen+Correspondence
-// https://zinnia.atlassian.net/wiki/spaces/SISED/pages/3013640218/SED+Document+Types
-const StatementDocumentTypes = ['ANNSTM', 'ANNSTME', 'ANN', 'SOA'];
 // This is the maximum number of years retrievable by the API
 const maxTaxYears = 5;
 
@@ -60,11 +53,11 @@ export const DocumentsView = async ({
     },
     loggingContext
   );
-  const { documents } = await getCarrierConfig();
+  const { documents: documentsConfig } = await getCarrierConfig();
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV2 =
     !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
-    documents.version === DocumentsVersion.V2;
+    documentsConfig.version === DocumentsVersion.V2;
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
     shouldUseV2
       ? getDocumentsV2({
@@ -103,24 +96,16 @@ export const DocumentsView = async ({
   const taxDocs =
     taxDocsRes.status === 'fulfilled' ? taxDocsRes.value.data : null;
 
-  /**
-   * Checks if a document type is a statement type.
-   * @param doc the document to check
-   * @returns true if the document type is a statement type, false otherwise
-   */
-  const statementsFilter = (doc: ExtendedDocumentMeta | DocumentV3SearchItem) =>
-    StatementDocumentTypes.includes(doc.documentType as string);
+  const filteredCorrespondenceDocs =
+    correspondenceDocs?.documents?.filter(extensionsFilter);
 
   const activeTab = currentView || DocumentCategory.DOCUMENTS;
   const currentViewDocs = () => {
     switch (activeTab) {
       case DocumentCategory.DOCUMENTS:
-        return (correspondenceDocs?.documents?.filter(
-          doc => !statementsFilter(doc)
-        ) ?? []) as ExtendedDocumentMeta[] | DocumentV3SearchItem[];
+        return filterDocuments(filteredCorrespondenceDocs);
       case DocumentCategory.STATEMENTS:
-        return (correspondenceDocs?.documents?.filter(statementsFilter) ??
-          []) as ExtendedDocumentMeta[] | DocumentV3SearchItem[];
+        return filterStatements(filteredCorrespondenceDocs);
       case DocumentCategory.TAX:
         return taxDocs?.items ?? [];
       default:
