@@ -7,7 +7,6 @@ import { isValidDate } from '@xd/utils/dist';
 import {
     Button,
     ButtonGroup,
-    Checkbox,
     FieldData,
     FieldSize,
     Label,
@@ -584,18 +583,51 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     )}
                 </div>
                 {currentAge >= 18 && (
-                    <Checkbox
+                    <ButtonGroup
                         id="nicotine-user"
-                        name="nicotineUser"
+                        className={styles.buttonGroup}
+                        items={[
+                            {
+                                children: (
+                                    <span>
+                                        {t(
+                                            'clientCase.createClientCaseForm.nonNicotine'
+                                        )}
+                                    </span>
+                                ),
+                                id: 'Non-Nicotine',
+                                value: 'Non-Nicotine',
+                            },
+                            {
+                                children: (
+                                    <span>
+                                        {t(
+                                            'clientCase.createClientCaseForm.nicotine'
+                                        )}
+                                    </span>
+                                ),
+                                id: 'Nicotine',
+                                value: 'Nicotine',
+                            },
+                        ]}
                         onClick={(v) => {
-                            updateClientCaseData({ nicotineUser: v });
+                            updateClientCaseData({
+                                nicotineUser: v === 'Nicotine',
+                            });
                         }}
-                        isCheckedByDefault={
-                            clientCaseData.insuredDetails?.nicotineUser
+                        label={
+                            <Label labelFor="nicotine-user">
+                                {t(
+                                    'clientCase.createClientCaseForm.nicotineUserLabel'
+                                )}
+                            </Label>
                         }
-                    >
-                        {t('clientCase.createClientCaseForm.nicotineUserLabel')}
-                    </Checkbox>
+                        defaultValue={
+                            clientCaseData.insuredDetails?.nicotineUser
+                                ? 'Nicotine'
+                                : 'Non-Nicotine'
+                        }
+                    />
                 )}
                 <div className={styles.clientState}>
                     <Select

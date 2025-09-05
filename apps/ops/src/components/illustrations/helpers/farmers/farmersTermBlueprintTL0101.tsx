@@ -1520,7 +1520,7 @@ export const farmersTermBlueprintTL0101 = {
                                                         conditions: [
                                                             {
                                                                 type: 'numberComparisonCondition',
-                                                                value: 15,
+                                                                value: 10,
                                                                 targetNodeId:
                                                                     'temporary-flat-extra',
                                                                 operator:
@@ -1553,7 +1553,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The temporary flat extra must be less than or equal to $15.00 and a multiple of $0.50.',
+                                                en: 'The temporary flat extra must be less than or equal to $10.00 and a multiple of $0.50.',
                                                 fr: '',
                                             },
                                         },
@@ -1758,7 +1758,7 @@ export const farmersTermBlueprintTL0101 = {
                                                         conditions: [
                                                             {
                                                                 type: 'numberComparisonCondition',
-                                                                value: 15,
+                                                                value: 10,
                                                                 targetNodeId:
                                                                     'permanent-flat-extra',
                                                                 operator:
@@ -1791,7 +1791,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The permanent flat extra must be less than or equal to $15.00 and a multiple of $0.50.',
+                                                en: 'The permanent flat extra must be less than or equal to $10.00 and a multiple of $0.50.',
                                                 fr: '',
                                             },
                                         },

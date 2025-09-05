@@ -7449,6 +7449,8 @@
             "ageLabel": "Âge actuel",
             "riskLabel": "Classe de risque",
             "nicotineUserLabel": "Utilisateur de nicotine",
+            "nicotine": "Nicotine",
+            "nonNicotine": "Non nicotine",
             "stateLabel": "État",
             "continueButton": "Continuer",
             "cancelButton": "Annuler",
