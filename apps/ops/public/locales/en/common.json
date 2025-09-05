@@ -3629,7 +3629,10 @@
             "taxYear": "Tax year",
             "view": "View",
             "xToYOfZ": "Results: {{x}}-{{y}} of {{z}}",
-            "pdfError": "An error occured while loading the PDF."
+            "pdfError": "An error occured while loading the PDF.",
+            "zoomIn": "Zoom In",
+            "zoomOut": "Zoom Out",
+            "rotate": "Rotate"
         },
         "funds": {
             "matchCard": {

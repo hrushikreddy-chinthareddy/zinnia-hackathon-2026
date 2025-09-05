@@ -3591,7 +3591,10 @@
             "taxDocuments": "Documentos fiscales",
             "taxYear": "Año fiscal",
             "view": "Ver",
-            "xToYOfZ": "Resultados: {{x}}-{{y}} de {{z}}"
+            "xToYOfZ": "Resultados: {{x}}-{{y}} de {{z}}",
+            "zoomIn": "Dar un golpe de zoom",
+            "zoomOut": "Alejar",
+            "rotate": "Girar"
         },
         "funds": {
             "matchCard": {
