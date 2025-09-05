@@ -1,8 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
-import {
-    AliasModel,
-    PartyReferenceDataModel,
-} from '@xd/api-types/dist/generated-types/partyreference';
 import { isValidDate } from '@xd/utils/dist';
 import {
     Button,
@@ -15,10 +10,12 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
+import { useAgencyOptions } from '@deps/components/illustrations/helpers/hooks/use-agency-options';
+import { useUserIdentity } from '@deps/components/illustrations/helpers/hooks/user-user-identity';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -26,19 +23,13 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
 import { formatDateDescriptionList } from '@deps/helpers/string.helpers';
-import { getUserHierarchyListBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
-import { MAIN_AGENCY_ROLE } from '@deps/types/producers';
 
-import {
-    AgencyOption,
-    getAgentAgenciesForSelectOptions,
-} from './create-client-case-form.helpers';
 import styles from './create-client-case-form.module.css';
 import { AgentSearch } from '../agent-search/agent-search';
 
@@ -71,109 +62,12 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
     },
 };
 
-const SELLING_CODE = 'SELLING_CODE';
-
 function calculateIssueAge(dateOfBirth: Date | null): number {
     if (!dateOfBirth) return 0;
 
     const today = dayjs();
     return today.diff(dateOfBirth, 'year');
 }
-
-export function findAllAliasesWithSellingCode(
-    party: PartyReferenceDataModel | undefined
-): AliasModel[] {
-    if (!party) {
-        return [];
-    }
-    return party.alias.filter((alias) =>
-        alias.externalPartyIds?.some((id) => id.key === SELLING_CODE)
-    );
-}
-
-export function getAllSellingCodes(
-    party: PartyReferenceDataModel | undefined
-): string[] {
-    if (!party) {
-        return [];
-    }
-    return party.alias.flatMap(
-        (alias) =>
-            alias.externalPartyIds
-                ?.filter((id) => id.key === SELLING_CODE)
-                .map((id) => id.value) || []
-    );
-}
-
-function findSellingCodeFromAlias(alias: AliasModel): string {
-    return alias.externalPartyIds?.find((id) => id.key === SELLING_CODE)?.value;
-}
-
-const getLoggedInAgentSellingCode = (aliases: AliasModel[]) => {
-    const firstAlias = aliases[0];
-    const loggedInAgentAlias = aliases.length > 0 ? firstAlias : null;
-    return loggedInAgentAlias
-        ? findSellingCodeFromAlias(loggedInAgentAlias)
-        : '';
-};
-
-const useAgencyOptions = (
-    clientCase: Partial<IllustrationsClientCase> | undefined,
-    aliases: AliasModel[]
-) => {
-    const loggedInUserSellingCode = getLoggedInAgentSellingCode(aliases);
-    const clientCaseAgentDetails = clientCase?.agentDetails;
-    const firstAlias = aliases[0];
-
-    const involvedAgents = [
-        {
-            sellingCode: loggedInUserSellingCode,
-            fullName:
-                firstAlias?.fullName ||
-                `${firstAlias?.firstName} ${firstAlias?.lastName}`,
-        },
-        {
-            sellingCode: clientCaseAgentDetails?.sellingCode,
-            fullName: `${clientCaseAgentDetails?.firstName} ${clientCaseAgentDetails?.lastName}`,
-        },
-    ].filter((item) => item?.sellingCode) as {
-        sellingCode: string;
-        fullName: string;
-    }[];
-
-    const involvedAgentSellingCodes = involvedAgents.map(
-        ({ sellingCode }) => sellingCode
-    );
-
-    const { data: agencyOptions } = useQuery({
-        queryKey: ['agentHierarchy', ...involvedAgentSellingCodes],
-        queryFn: () =>
-            getUserHierarchyListBySellingCode(involvedAgentSellingCodes),
-        enabled: !!involvedAgentSellingCodes.length,
-        select: (response) => {
-            const rootAgencyOptions = response
-                .filter(({ role }) => role === MAIN_AGENCY_ROLE)
-                .map(({ sellingCode }) => {
-                    const agentData = involvedAgents.find(
-                        (item) => item.sellingCode === sellingCode
-                    )!;
-
-                    return {
-                        value: sellingCode,
-                        textValue: agentData.fullName,
-                    } as AgencyOption;
-                });
-
-            if (rootAgencyOptions.length) {
-                return [rootAgencyOptions[0]];
-            }
-
-            return getAgentAgenciesForSelectOptions(response);
-        },
-    });
-
-    return agencyOptions;
-};
 
 const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     onSubmit,
@@ -183,10 +77,15 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 }: CreateClientCaseFormProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { partyReferenceData } = usePermissionsContext();
-
-    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
-    const loggedInUserSellingCode = getLoggedInAgentSellingCode(aliases);
-    const isAgent = aliases.length > 0;
+    const { findAllAliasesWithSellingCode, getMainIdentyfiers } =
+        useUserIdentity();
+    const aliasesWithSellingCodes =
+        findAllAliasesWithSellingCode(partyReferenceData);
+    const {
+        mainAlias: loggedInUserMainAlias,
+        mainSellingCode: loggedInUserMainSellingCode,
+    } = getMainIdentyfiers(aliasesWithSellingCodes);
+    const isAgent = !!loggedInUserMainSellingCode;
     const firstAgencyKey = 0;
 
     const mergedCase = {
@@ -196,28 +95,41 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const [clientCaseData, setClientCaseData] =
         useState<Partial<IllustrationsClientCase>>(mergedCase);
-    const [currentAge, setCurrentAge] = useState(0);
+
+    const { dateOfBirth } = clientCaseData?.insuredDetails ?? {};
+    const currentAge = useMemo(
+        () => calculateIssueAge(dateOfBirth ?? null) ?? 0,
+        [dateOfBirth]
+    );
+
     const [somethingChanged, setSomethingChanged] = useState(false);
     const [
         initialSearchAgencySellingCodes,
         setInitialSearchAgencySellingCodes,
     ] = useState<string[]>([]);
-    const agencyOptions = useAgencyOptions(clientCaseData, aliases);
+
+    //this needs a better name like agencysAvailableAgencies o agencies to search
+    const agencyOptions = useAgencyOptions(
+        clientCaseData,
+        aliasesWithSellingCodes
+    );
     const usStatesSelectList = getStateCodesForSelectInput();
     const insuredDetailsClassname = clsx(
         styles.formSection,
         styles.insuredDetails
     );
 
+    //This could be in a hook
     const updateClientCaseData = (
         dataToUpdate:
             | Partial<IllustrationInsuredDetails>
             | Partial<IllustrationsClientCase>
+            | Partial<IllustrationAgentDetails>
     ) => {
         setSomethingChanged(true);
 
         setClientCaseData((prev) => {
-            const insuredFields: (keyof IllustrationInsuredDetails)[] = [
+            const insuredFields = [
                 'firstName',
                 'lastName',
                 'sexAtBirth',
@@ -226,21 +138,21 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 'state',
                 'illustrateAtOlderAge',
                 'issueAge',
-            ];
+            ] satisfies (keyof IllustrationInsuredDetails)[];
 
-            const agentFields: (keyof IllustrationAgentDetails)[] = [
+            const agentFields = [
                 'firstName',
                 'lastName',
                 'sellingCode',
                 'email',
-            ];
+            ] satisfies (keyof IllustrationAgentDetails)[];
 
             const updateKeys = Object.keys(dataToUpdate);
             const isInsuredUpdate = updateKeys.every((key) =>
-                insuredFields.includes(key as keyof IllustrationInsuredDetails)
+                (insuredFields as string[]).includes(key)
             );
             const isAgentUpdate = updateKeys.every((key) =>
-                agentFields.includes(key as keyof IllustrationAgentDetails)
+                (agentFields as string[]).includes(key)
             );
 
             if (isInsuredUpdate) {
@@ -270,13 +182,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         });
     };
 
-    const getDataToUpdate = (event: ChangeEvent<HTMLInputElement>) => {
+    const updateClientCaseField = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         updateClientCaseData({ [name]: value });
     };
 
-    const calculateCurrentAge = (birthDate: Date) => {
-        setCurrentAge(calculateIssueAge(birthDate));
+    const handleDateChange = (birthDate: Date) => {
+        updateClientCaseData({ dateOfBirth: birthDate });
     };
 
     const canSubmitForm = () => {
@@ -307,43 +219,66 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const displayAgencyDropdown = agencyOptions && agencyOptions.length > 1;
 
     const onSubmitForm = () => {
-        if (onSubmit) {
-            onSubmit(clientCaseData);
-        }
+        onSubmit?.(clientCaseData);
     };
 
-    const onCancelForm = () => {
-        if (onCancel) {
-            onCancel();
-        }
-    };
+    const onCancelForm = useCallback(() => {
+        onCancel?.();
+    }, [onCancel]);
+
+    const selectedAgencyOption = useMemo(
+        () =>
+            agencyOptions?.find(
+                (agencyOption) => agencyOption.value === clientCaseData.agencyId
+            ),
+        [agencyOptions, clientCaseData.agencyId]
+    );
 
     useEffect(() => {
-        const matchedAgencies = agencyOptions?.find(
-            (agencyOption) => agencyOption.value === clientCaseData.agencyId
-        );
-        if (agencyOptions?.length && !matchedAgencies) {
-            // update the agencyId of the client case
-            updateClientCaseData({
-                agencyId: agencyOptions[firstAgencyKey].value,
-            });
+        const agentSellingCode = clientCaseData.agentDetails?.sellingCode;
+        const hasAgencyOptions = !!agencyOptions?.length;
+        const hasInitialSearchAgencySellingcodes =
+            !!initialSearchAgencySellingCodes.length;
+
+        if (!hasAgencyOptions) {
+            // Do nothing if we don't have agency options to select
+            return;
         }
 
-        if (agencyOptions?.length && !initialSearchAgencySellingCodes.length) {
-            // Set an innitial state to search across all agencies
+        if (!hasInitialSearchAgencySellingcodes) {
+            // Set an initial state to search across all agencies
             const agenciesIds = agencyOptions.map((option) => option.value);
             setInitialSearchAgencySellingCodes(agenciesIds);
         }
 
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [agencyOptions]);
+        if (selectedAgencyOption) {
+            const selectedAgencyAgentSellingCode =
+                selectedAgencyOption?.agentSellingCode;
+            if (
+                selectedAgencyAgentSellingCode &&
+                selectedAgencyAgentSellingCode != agentSellingCode
+            ) {
+                return updateClientCaseData({
+                    sellingCode: selectedAgencyAgentSellingCode,
+                });
+            }
 
-    useEffect(() => {
-        setCurrentAge(
-            calculateIssueAge(mergedCase.insuredDetails?.dateOfBirth || null)
-        );
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+            // Do nothing if AgencyId is valid
+            return;
+        }
+
+        // Select any of available agencies by default
+        updateClientCaseData({
+            agencyId: agencyOptions[firstAgencyKey].value,
+        });
+    }, [
+        agencyOptions,
+        selectedAgencyOption,
+        initialSearchAgencySellingCodes.length,
+        clientCaseData.agencyId,
+        clientCaseData.agentDetails?.sellingCode,
+        isEdit,
+    ]);
 
     useEffect(() => {
         const selectedAgentSellingCode =
@@ -400,24 +335,26 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
         // If we don't have agentDetails (anonymous flow), use the authenticated
         // user data (from party reference service) if available
-        const agentAlias = aliases.length > 0 ? aliases[0] : null;
-
         updateClientCaseData({
             agentDetails: {
                 firstName:
-                    agentAlias?.firstName ?? partyReferenceData?.firstName,
-                lastName: agentAlias?.lastName ?? partyReferenceData?.lastName,
-                email: agentAlias?.email ?? partyReferenceData?.email,
-                sellingCode: loggedInUserSellingCode,
+                    loggedInUserMainAlias?.firstName ??
+                    partyReferenceData?.firstName,
+                lastName:
+                    loggedInUserMainAlias?.lastName ??
+                    partyReferenceData?.lastName,
+                email:
+                    loggedInUserMainAlias?.email ?? partyReferenceData?.email,
+                sellingCode: loggedInUserMainSellingCode,
             },
         });
     }, [
         isEdit,
         partyReferenceData,
-        loggedInUserSellingCode,
         clientCase?.agentDetails,
+        loggedInUserMainAlias,
+        loggedInUserMainSellingCode,
         clientCaseData?.agentDetails?.sellingCode,
-        aliases,
     ]);
 
     return (
@@ -437,7 +374,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 <FieldData
                     fieldSize={FieldSize.Small}
                     name="title"
-                    onChange={getDataToUpdate}
+                    onChange={updateClientCaseField}
                     id="client-case-title"
                     label={
                         <Label>
@@ -471,8 +408,24 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )}
                                 </Label>
                             }
-                            onValueChange={(v) => {
-                                updateClientCaseData({ agencyId: v });
+                            onValueChange={(agencyId: string) => {
+                                updateClientCaseData({ agencyId });
+
+                                const newSelectedAgencyOption =
+                                    agencyOptions?.find(
+                                        (agencyOption) =>
+                                            agencyOption.value ===
+                                            clientCaseData.agencyId
+                                    )!;
+
+                                const newAgentSellingcode =
+                                    newSelectedAgencyOption.agentSellingCode;
+
+                                if (newAgentSellingcode) {
+                                    updateClientCaseData({
+                                        sellingCode: newAgentSellingcode,
+                                    });
+                                }
                             }}
                             defaultValue={
                                 isEdit
@@ -494,7 +447,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     className={styles.inputItem}
                     fieldSize={FieldSize.Small}
                     name="firstName"
-                    onChange={getDataToUpdate}
+                    onChange={updateClientCaseField}
                     label={
                         <Label>
                             {t(
@@ -508,7 +461,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     className={styles.inputItem}
                     fieldSize={FieldSize.Small}
                     name="lastName"
-                    onChange={getDataToUpdate}
+                    onChange={updateClientCaseField}
                     label={
                         <Label>
                             {t('clientCase.createClientCaseForm.lastNameLabel')}
@@ -561,9 +514,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             {t('clientCase.createClientCaseForm.dateLabel')}
                         </Typography>
                         <DateTextInput
-                            onChange={(v) => {
-                                calculateCurrentAge(v);
-                                updateClientCaseData({ dateOfBirth: v });
+                            onChange={(newDate) => {
+                                handleDateChange(newDate);
                             }}
                             {...(clientCaseData.insuredDetails?.dateOfBirth && {
                                 defaultDate: formatDateDescriptionList(

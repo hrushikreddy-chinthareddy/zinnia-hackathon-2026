@@ -8,19 +8,9 @@ import {
 
 export interface AgencyOption {
     value: string;
+    agentSellingCode?: string;
     textValue: string;
 }
-
-const formatAgenciesForSelect = (agenciesUpline: Upline[]): AgencyOption[] => {
-    return agenciesUpline.map((agency) => {
-        return {
-            value: agency.sellingCode,
-            textValue: agency.fullName
-                ? agency.fullName
-                : `${agency.firstName} ${agency.lastName}`,
-        };
-    });
-};
 
 function getUniqueDuplicates(uplines: Upline[]) {
     const duplicateUplinesCount = uplines.reduce<Record<string, number>>(
@@ -45,36 +35,72 @@ function getUniqueDuplicates(uplines: Upline[]) {
     });
 }
 
-export const getAgentAgenciesForSelectOptions = (
-    hieararchyResponses: GetHierarchyResponse[]
+export const getAgenciesFromHierarchy = (
+    authUserHierarchies: GetHierarchyResponse[],
+    clientCaseAgentHierarchies: GetHierarchyResponse[]
 ) => {
-    const needMatchAgencies = hieararchyResponses.length > 1;
-    const hierarchiesUpline = hieararchyResponses.map(
-        (response) => response?.upline
-    );
-    const flattedHierarchyUpline = hierarchiesUpline.flatMap(
-        (upline) => upline
-    );
+    const uplineBySellingCode = clientCaseAgentHierarchies.reduce(
+        (acc, clientCaseAgentHerarchy) => {
+            const flattedHierarchyUpline = authUserHierarchies
+                .map((hierarchy) => [
+                    ...hierarchy.upline,
+                    ...clientCaseAgentHerarchy.upline,
+                ])
+                .map(getUniqueDuplicates)
+                .flat();
 
-    let agentUplines: Upline[] = [];
-
-    if (needMatchAgencies) {
-        agentUplines = getUniqueDuplicates(flattedHierarchyUpline);
-    } else {
-        agentUplines = flattedHierarchyUpline;
-    }
-
-    const mainAgencies = agentUplines.filter(
-        (upline) => upline?.role === MAIN_AGENCY_ROLE
-    );
-    const sortedAgencies = sortBy(mainAgencies, 'level');
-    const groupAgencies = groupBy(sortedAgencies, 'level');
-    const NEAREST_HIEARCHY_LEVEl = 0;
-    const nearestHierarchyAgencyGroupKey =
-        Object.keys(groupAgencies)[NEAREST_HIEARCHY_LEVEl];
-    const formattedAgencies = formatAgenciesForSelect(
-        groupAgencies[nearestHierarchyAgencyGroupKey] ?? []
+            return {
+                ...acc,
+                ...(!!flattedHierarchyUpline.length && {
+                    [clientCaseAgentHerarchy.sellingCode]:
+                        flattedHierarchyUpline,
+                }),
+            };
+        },
+        {} as Record<string, Upline[]>
     );
 
-    return formattedAgencies;
+    const hasAgencies = Object.keys(uplineBySellingCode).length;
+
+    const agentUplinesWithSellingCode = (
+        hasAgencies
+            ? Object.entries(uplineBySellingCode)
+            : authUserHierarchies.map(
+                  (response) =>
+                      [response.sellingCode, response.upline] as [
+                          string,
+                          Upline[]
+                      ]
+              )
+    ).map(([agentSellingCode, uplines]) => ({ agentSellingCode, uplines }));
+
+    const mainAgenciesWithSellingCode = agentUplinesWithSellingCode
+        .map(({ agentSellingCode, uplines }) => ({
+            agentSellingCode,
+            agencies: uplines.filter(
+                (upline) => upline?.role === MAIN_AGENCY_ROLE
+            ),
+        }))
+        .filter(({ agencies }) => agencies.length);
+
+    mainAgenciesWithSellingCode
+        .map(({ agentSellingCode, agencies }) => {
+            const sortedAgencies = sortBy(agencies, 'level');
+            const groupedAgencies = groupBy(sortedAgencies, 'level');
+
+            const NEAREST_HIERARCHY_LEVEL = 0;
+            const nearestHierarchyAgencyGroupKey =
+                Object.keys(groupedAgencies)[NEAREST_HIERARCHY_LEVEL];
+
+            return {
+                agentSellingCode,
+                agencies: groupedAgencies[nearestHierarchyAgencyGroupKey] ?? [],
+            };
+        })
+        .filter(({ agencies }) => agencies.length);
+
+    return mainAgenciesWithSellingCode.flatMap(
+        ({ agentSellingCode, agencies }) =>
+            agencies.map((agency) => ({ agentSellingCode, agency }))
+    );
 };

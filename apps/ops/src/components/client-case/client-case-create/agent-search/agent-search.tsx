@@ -113,7 +113,10 @@ export const AgentSearch = ({
 
     const renderSearchResults = () => {
         return searchResults.map((searchResult) => (
-            <div className={agentInfoResultClassname} key={searchResult.email}>
+            <div
+                className={agentInfoResultClassname}
+                key={`${searchResult.email} - ${searchResult.firstName} ${searchResult.lastName}`}
+            >
                 <Typography
                     variant={TypographyVariant.BodySm}
                     className={styles.agentNameResult}

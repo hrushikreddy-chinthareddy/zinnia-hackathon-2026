@@ -5,10 +5,10 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
-import { findAllAliasesWithSellingCode } from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
 import ClientCaseSearchBar from '@deps/components/client-case/client-case-list/search-bar/client-case-search-bar';
 import { ClientCaseTable } from '@deps/components/client-case/client-case-list/table/client-case-table';
+import { useUserIdentity } from '@deps/components/illustrations/helpers/hooks/user-user-identity';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -64,6 +64,7 @@ export default function Illustrations({
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [bannerText, setBannerText] = useState('');
     const { partyReferenceData } = usePermissionsContext();
+    const { findAllAliasesWithSellingCode } = useUserIdentity();
     const aliases = findAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases.length > 0;
 
