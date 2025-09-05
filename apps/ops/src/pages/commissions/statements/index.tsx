@@ -71,19 +71,26 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
     const masterAgentNumber = getMasterAgentNumber(partyReferenceData);
     const externalId = getExternalAgentId(partyReferenceData);
 
-    // generate the available carrier select options from the party reference data
-    const carrierSelectOptions = useMemo(
-        () =>
-            partyReferenceData?.alias
-                ?.filter((alias) =>
-                    alias.partyRoles?.includes('PRIMARYSERVICINGAGENT')
-                )
-                ?.map((alias) => ({
-                    value: alias.carrier || '',
-                    textValue: getCarrierNameByClientId(alias?.carrier || ''),
-                })),
-        [partyReferenceData?.alias]
-    );
+    const carrierSelectOptions = useMemo(() => {
+        const uniqueCarriers = new Set();
+
+        return partyReferenceData?.alias
+            ?.filter((alias) => alias.carrier)
+            .filter((alias) => {
+                if (uniqueCarriers.has(alias.carrier)) {
+                    return false;
+                }
+                uniqueCarriers.add(alias.carrier);
+                return true;
+            })
+            .map((alias) => ({
+                value: alias?.carrier || '',
+                textValue:
+                    getCarrierNameByClientId(alias?.carrier || '') ||
+                    alias?.carrier?.toUpperCase() ||
+                    '',
+            }));
+    }, [partyReferenceData?.alias]);
 
     const searchBody = {
         parentCarrierCode: parentCarrierCode.toUpperCase(),
@@ -125,7 +132,7 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
     //Default to a carrier if there is only one available
     useEffect(() => {
         if (carrierSelectOptions?.length === 1) {
-            setParentCarrierCode(carrierSelectOptions[0].value);
+            setParentCarrierCode(carrierSelectOptions[0].value ?? '');
         }
     }, [carrierSelectOptions]);
 
@@ -142,7 +149,11 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
                 <div className={styles.filters}>
                     <Select
                         disabled={carrierSelectOptions?.length === 1}
-                        placeholder={t('commissions.statements.carrier') ?? ''}
+                        placeholder={
+                            t(
+                                'commissions.statements.carrierSelectPlaceholder'
+                            ) ?? ''
+                        }
                         options={carrierSelectOptions || []}
                         onValueChange={setParentCarrierCode}
                         value={parentCarrierCode}
@@ -199,7 +210,9 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
                                         colSpan={3}
                                         className="text-center"
                                     >
-                                        {t('commissions.statements.')}
+                                        {t(
+                                            'commissions.statements.selectACarrier'
+                                        )}
                                     </TableCell>
                                 </TableRow>
                             ) : (

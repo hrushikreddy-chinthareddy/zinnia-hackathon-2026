@@ -55,17 +55,12 @@ export const findCarrierAlias = (
 export const getMasterAgentNumber = (
     partyRefData?: PartyReferenceDataModel
 ) => {
-    const alias = partyRefData?.alias?.find((v) =>
-        v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
-    );
-
+    const alias = partyRefData?.alias?.find((v) => v?.masterAgentNumber);
     return alias?.masterAgentNumber;
 };
 
 export const getExternalAgentId = (partyRefData?: PartyReferenceDataModel) => {
-    const alias = partyRefData?.alias?.find((v) =>
-        v.partyRoles?.includes(PartyRole.PRIMARYSERVICINGAGENT)
-    );
+    const alias = partyRefData?.alias?.find((v) => v?.masterAgentNumber);
 
     return alias?.externalId;
 };

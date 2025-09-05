@@ -2917,6 +2917,18 @@
             }
         }
     },
+    "commissions": {
+        "statements": {
+            "title": "Declaraciones de la Comisión",
+            "carrierSelectPlaceholder": "-- Seleccione un transportista --",
+            "notFound": "No pudimos encontrar declaraciones de la comisión que coincidan con su búsqueda.",
+            "selectACarrier": "Seleccione un transportista para ver declaraciones de la comisión",
+            "documentId": "ID del Documento",
+            "receivedDate": "Fecha de recepción",
+            "createdDate": "Fecha de creación",
+            "actions": "Acciones"
+        }
+    },
     "sendDocument": {
         "tabs": {
             "formSelection": "Selección de Formulario",

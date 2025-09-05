@@ -2939,7 +2939,7 @@
             "title": "Commission Statements",
             "carrierSelectPlaceholder": "-- Select a carrier --",
             "notFound": "We couldn't find commission statements that match your search.",
-            "selectACarrer": "Select a carrier to view commission statements",
+            "selectACarrier": "Select a carrier to view commission statements",
             "documentId": "Document/ID",
             "receivedDate": "Received Date",
             "createdDate": "Created date",

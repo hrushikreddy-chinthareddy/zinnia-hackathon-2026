@@ -2909,7 +2909,7 @@
             "title": "Déclarations de la Commission",
             "carrierSelectPlaceholder": "-- Sélectionnez un transporteur --",
             "notFound": "Nous n'avons pas pu trouver de relevés de commission correspondant à votre recherche.",
-            "selectACarrer": "Sélectionnez un transporteur pour consulter les relevés de commission.",
+            "selectACarrier": "Sélectionnez un transporteur pour consulter les relevés de commission.",
             "documentId": "ID du Document",
             "receivedDate": "Date de reception",
             "createdDate": "Date de création",
