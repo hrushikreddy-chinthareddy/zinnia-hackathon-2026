@@ -836,8 +836,7 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
         targetPremium:
-            data?.assumed?.annualTimeSeriesData?.at(-1)?.minimumPremiumAmount ||
-            DEFAULT_ERROR_STRING,
+            data?.assumed?.initial?.targetPremiumAmount || DEFAULT_ERROR_STRING,
         mecPremium:
             data?.assumed?.annualTimeSeriesData?.[0]?.sevenPayPremiumAmount ||
             DEFAULT_ERROR_STRING,
