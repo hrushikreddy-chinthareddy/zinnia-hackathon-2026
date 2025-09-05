@@ -9,6 +9,7 @@ import {
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
+import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import { EntityTypeValue } from '@deps/constants/policy';
 import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helpers';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
@@ -357,7 +358,10 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
                 selectedPartyType == PartyType.INDIVIDUAL
                     ? item?.party?.info?.suffix || null
                     : null,
-            gender: item?.party?.info?.gender || null,
+            gender:
+                selectedPartyType == PartyType.INDIVIDUAL
+                    ? item?.party?.info?.gender
+                    : null,
             dateOfBirth: !isNullEmptyOrUndefined(item?.party?.info?.dateOfBirth)
                 ? dayjs(item?.party?.info?.dateOfBirth).format(
                       ZAHARA_API_DATE_FORMAT
@@ -408,6 +412,14 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
         isIrrevocable: item?.beneInfo?.isIrrevocable || false,
         isRestrictedBeneficiary:
             item?.beneInfo?.isRestrictedBeneficiary || false,
+        preferredCommunicationType: item?.party?.preferredCommunicationType,
+        trustDate:
+            selectedPartyType == PartyType.TRUST
+                ? dayjs(
+                      item?.party?.info?.trustDate,
+                      DATE_PICKER_FORMAT
+                  )?.format(ZAHARA_API_DATE_FORMAT)
+                : null,
     };
 
     return record;

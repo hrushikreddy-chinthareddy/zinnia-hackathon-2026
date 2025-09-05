@@ -526,12 +526,14 @@
                 "ssn": "SSN",
                 "gender": "Género",
                 "dateOfBirth": "Fecha de Nacimiento",
+                "trustDate": "Fecha del fideicomiso",
                 "male": "Masculino",
                 "female": "Femenino",
                 "formValidations": {
                     "firstName": "El nombre es obligatorio",
                     "lastName": "El apellido es obligatorio",
-                    "last": "El apellido es obligatorio"
+                    "last": "El apellido es obligatorio",
+                    "trustDateRequired": "La fecha de fideicomiso es requerida"
                 },
                 "entityType": "Tipo de entidad",
                 "entityTypeOptions": {
@@ -550,6 +552,7 @@
                 "no": "No",
                 "isRelevant": "¿Son válidos y relevantes los documentos de respaldo cargados?"
             },
+            "contactDetails": "Detalles de contacto",
             "contactInfo": {
                 "title": "Información de Contacto",
                 "labels": {
@@ -666,7 +669,8 @@
             "updated": "Actualizado",
             "identification": {
                 "title": "Identificación",
-                "gender": "Género"
+                "gender": "Género",
+                "trustDate": "Fecha del fideicomiso"
             },
             "allocation": {
                 "title": "Asignación",

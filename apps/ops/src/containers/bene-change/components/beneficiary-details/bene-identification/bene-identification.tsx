@@ -52,6 +52,7 @@ import {
     suffixOptions,
     trustOption,
     TrustType,
+    rolePartyCheck,
 } from './bene-identification.helpers';
 import PartyTypes from './party-type';
 
@@ -67,6 +68,7 @@ const DEFAULT_PARTY_INSTANCE = {
     ssn: '',
     dateOfBirth: null,
     trustType: TrustType.Individual,
+    trustDate: null,
     entityType: EntityTypeValue.Other,
 };
 
@@ -105,6 +107,7 @@ const BeneficiaryIdentification = ({
     );
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
+    const isRolePartyCheck = !rolePartyCheck(party?.partyType as PartyType);
     const { featureFlags } = useOptimizely();
 
     const trustEnumFlag = featureFlags[FEATURE_FLAGS.BENE_TRUST_TYPE_ENUM];
@@ -196,6 +199,19 @@ const BeneficiaryIdentification = ({
             : FieldVariant.Default;
     };
 
+    const onChangeTrustDate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setParty((prevState: any) => ({
+            ...prevState,
+            trustDate: event.target.value || null,
+        }));
+    };
+
+    const onGenderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setParty((prevState: any) => ({
+            ...prevState,
+            gender: event.target.value,
+        }));
+    };
     const onCompanyNameChange = (event: any) => {
         setCurrentErrors((prevState: any) => {
             const { lastName, ...errors } = prevState ?? {};
@@ -486,6 +502,26 @@ const BeneficiaryIdentification = ({
                                     onChange={handleFilesChange}
                                     error={uploadError}
                                 />
+                                <FieldDateSelect
+                                    label={t('trustDate') as string}
+                                    id="trustDate"
+                                    data-testid="trustDate"
+                                    isFutureDateDisabled={false}
+                                    onChange={(e) => onChangeTrustDate(e)}
+                                    size={FieldSize.Small}
+                                    type={FieldType.BaseActive}
+                                    value={party.trustDate || null}
+                                    maxLength={10}
+                                    disabled={isReadOnly}
+                                    message={
+                                        !party?.trustDate && !isReadOnly
+                                            ? t(
+                                                  'formValidations.trustDateRequired'
+                                              )
+                                            : ''
+                                    }
+                                    required
+                                />
                             </div>
                             <Radio
                                 items={options}
@@ -566,47 +602,48 @@ const BeneficiaryIdentification = ({
                                     }
                                 />
                             </div>
-                            <div className="mb-7">
-                                <Radio
-                                    label={t('gender') as string}
-                                    items={genderOption(t)}
-                                    onChange={(event) => {
-                                        setParty((prevState: any) => ({
-                                            ...prevState,
-                                            gender: event.target.value,
-                                        }));
-                                    }}
-                                    disabled={isReadOnly}
-                                    value={party?.gender || ''}
-                                    variant={
-                                        isReadOnly
-                                            ? RadioVariant.Inactive
-                                            : RadioVariant.Default
-                                    }
-                                    name={'gender' + Math.random()}
-                                />
-                            </div>
-                            <div className="mb-7">
-                                <FieldDateSelect
-                                    label={t('dateOfBirth') as string}
-                                    id="dateOfBirth"
-                                    data-testid="dateOfBirth"
-                                    isFutureDateDisabled={false}
-                                    onChange={(e) => {
-                                        setDateOfBirth(e.target.value);
-                                    }}
-                                    size={FieldSize.Small}
-                                    type={FieldType.BaseActive}
-                                    value={dateOfBirth}
-                                    maxLength={10}
-                                    disabled={isReadOnly}
-                                    variant={
-                                        isReadOnly
-                                            ? FieldVariant.Inactive
-                                            : FieldVariant.Default
-                                    }
-                                />
-                            </div>
+                            {isRolePartyCheck && (
+                                <>
+                                    <div className="mb-7">
+                                        <Radio
+                                            label={t('gender') as string}
+                                            items={genderOption(t)}
+                                            onChange={(event) =>
+                                                onGenderChange(event)
+                                            }
+                                            disabled={isReadOnly}
+                                            value={party?.gender || ''}
+                                            variant={
+                                                isReadOnly
+                                                    ? RadioVariant.Inactive
+                                                    : RadioVariant.Default
+                                            }
+                                            name={'gender' + Math.random()}
+                                        />
+                                    </div>
+                                    <div className="mb-7">
+                                        <FieldDateSelect
+                                            label={t('dateOfBirth') as string}
+                                            id="dateOfBirth"
+                                            data-testid="dateOfBirth"
+                                            isFutureDateDisabled={false}
+                                            onChange={(e) => {
+                                                setDateOfBirth(e.target.value);
+                                            }}
+                                            size={FieldSize.Small}
+                                            type={FieldType.BaseActive}
+                                            value={dateOfBirth}
+                                            maxLength={10}
+                                            disabled={isReadOnly}
+                                            variant={
+                                                isReadOnly
+                                                    ? FieldVariant.Inactive
+                                                    : FieldVariant.Default
+                                            }
+                                        />
+                                    </div>
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>

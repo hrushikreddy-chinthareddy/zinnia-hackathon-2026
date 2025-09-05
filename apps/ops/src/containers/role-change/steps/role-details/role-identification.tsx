@@ -164,12 +164,9 @@ const RoleIdentification = ({
     );
 
     const showElement = () =>
-        ![
-            Roles.PAYOR,
-            Roles.NEWPAYOR,
-            Roles.THIRDPARTYDESIGNEE,
-            Roles.NEWTHIRDPARTYDESIGNEE,
-        ].includes(role.toUpperCase() as Roles);
+        ![Roles.PAYOR, Roles.NEWPAYOR, Roles.THIRDPARTYDESIGNEE].includes(
+            role.toUpperCase() as Roles
+        );
 
     const onEntityTypeChange = (value: string) => {
         handleChange(RoleField.EntityType, value);
@@ -221,122 +218,131 @@ const RoleIdentification = ({
                             }
                         />
                     </div>
-                    {showElement() && (
-                        <>
-                            <div className="mb-6">
-                                <SelectSimple
-                                    label={t('relationshipParty') as string}
-                                    options={relationshipToPartyOptions}
-                                    onChange={(e) => {
-                                        handleChange(RoleField.Relationship, e);
-                                    }}
-                                    size={FieldSize.Small}
-                                    value={roleData?.relationshipToParty}
-                                    variant={getVariant(
-                                        RoleField.Relationship,
-                                        roleData,
-                                        isReadOnly
-                                    )}
-                                    disabled={isReadOnly}
-                                    message={
-                                        !roleData?.relationshipToParty &&
-                                        !isReadOnly
-                                            ? t(
-                                                  'formValidations.relationshipToParty'
-                                              )
-                                            : ''
-                                    }
-                                    required
-                                    data-testid="relationship-to-party"
-                                />
-                            </div>
-                            <div
-                                className={
-                                    identification?.usCitizen == NO
-                                        ? 'mb-6'
-                                        : ''
-                                }
-                            >
-                                <Radio
-                                    items={options}
-                                    label={t('usCitizen') as string}
-                                    onChange={(e) => {
-                                        handleIdentificationChange(
-                                            IDENTIFICATIONS,
-                                            0,
-                                            RoleField.UsCitizen,
-                                            e.target.value
-                                        );
-                                    }}
-                                    value={identification?.usCitizen ?? ''}
-                                    orientation={'horizontal'}
-                                    variant={
-                                        isReadOnly
-                                            ? RadioVariant.Inactive
-                                            : RadioVariant.Default
-                                    }
-                                    name={`partyType-${index}`}
-                                />
-                            </div>
-
-                            {identification?.usCitizen === NO && (
-                                <>
-                                    <div className="mb-6">
-                                        <Radio
-                                            items={options}
-                                            label={
-                                                t('permanentResident') as string
-                                            }
-                                            onChange={(e) => {
-                                                handleIdentificationChange(
-                                                    IDENTIFICATIONS,
-                                                    0,
-                                                    RoleField.PermanentResident,
-                                                    e.target.value
-                                                );
-                                            }}
-                                            value={
-                                                identification?.permanentResident ??
-                                                ''
-                                            }
-                                            orientation={
-                                                RadioOrientation.Horizontal
-                                            }
-                                            variant={
-                                                isReadOnly
-                                                    ? RadioVariant.Inactive
-                                                    : RadioVariant.Default
-                                            }
-                                        />
-                                    </div>
+                    {showElement() &&
+                        role.toUpperCase() !== Roles.NEWTHIRDPARTYDESIGNEE && (
+                            <>
+                                <div className="mb-6">
                                     <SelectSimple
-                                        label={
-                                            t('countryCitizenship') as string
-                                        }
-                                        options={countryOptions}
+                                        label={t('relationshipParty') as string}
+                                        options={relationshipToPartyOptions}
                                         onChange={(e) => {
-                                            handleIdentificationChange(
-                                                IDENTIFICATIONS,
-                                                0,
-                                                RoleField.IssueCountry,
+                                            handleChange(
+                                                RoleField.Relationship,
                                                 e
                                             );
                                         }}
                                         size={FieldSize.Small}
-                                        value={
-                                            identification?.issueCountry || ''
+                                        value={roleData?.relationshipToParty}
+                                        variant={getVariant(
+                                            RoleField.Relationship,
+                                            roleData,
+                                            isReadOnly
+                                        )}
+                                        disabled={isReadOnly}
+                                        message={
+                                            !roleData?.relationshipToParty &&
+                                            !isReadOnly
+                                                ? t(
+                                                      'formValidations.relationshipToParty'
+                                                  )
+                                                : ''
                                         }
+                                        required
+                                        data-testid="relationship-to-party"
+                                    />
+                                </div>
+                                <div
+                                    className={
+                                        identification?.usCitizen == NO
+                                            ? 'mb-6'
+                                            : ''
+                                    }
+                                >
+                                    <Radio
+                                        items={options}
+                                        label={t('usCitizen') as string}
+                                        onChange={(e) => {
+                                            handleIdentificationChange(
+                                                IDENTIFICATIONS,
+                                                0,
+                                                RoleField.UsCitizen,
+                                                e.target.value
+                                            );
+                                        }}
+                                        value={identification?.usCitizen ?? ''}
+                                        orientation={'horizontal'}
                                         variant={
                                             isReadOnly
-                                                ? FieldVariant.Inactive
-                                                : FieldVariant.Default
+                                                ? RadioVariant.Inactive
+                                                : RadioVariant.Default
                                         }
-                                        disabled={isReadOnly}
+                                        name={`partyType-${index}`}
                                     />
-                                </>
-                            )}
-                        </>
-                    )}
+                                </div>
+
+                                {identification?.usCitizen === NO && (
+                                    <>
+                                        <div className="mb-6">
+                                            <Radio
+                                                items={options}
+                                                label={
+                                                    t(
+                                                        'permanentResident'
+                                                    ) as string
+                                                }
+                                                onChange={(e) => {
+                                                    handleIdentificationChange(
+                                                        IDENTIFICATIONS,
+                                                        0,
+                                                        RoleField.PermanentResident,
+                                                        e.target.value
+                                                    );
+                                                }}
+                                                value={
+                                                    identification?.permanentResident ??
+                                                    ''
+                                                }
+                                                orientation={
+                                                    RadioOrientation.Horizontal
+                                                }
+                                                variant={
+                                                    isReadOnly
+                                                        ? RadioVariant.Inactive
+                                                        : RadioVariant.Default
+                                                }
+                                            />
+                                        </div>
+                                        <SelectSimple
+                                            label={
+                                                t(
+                                                    'countryCitizenship'
+                                                ) as string
+                                            }
+                                            options={countryOptions}
+                                            onChange={(e) => {
+                                                handleIdentificationChange(
+                                                    IDENTIFICATIONS,
+                                                    0,
+                                                    RoleField.IssueCountry,
+                                                    e
+                                                );
+                                            }}
+                                            size={FieldSize.Small}
+                                            value={
+                                                identification?.issueCountry ||
+                                                ''
+                                            }
+                                            variant={
+                                                isReadOnly
+                                                    ? FieldVariant.Inactive
+                                                    : FieldVariant.Default
+                                            }
+                                            disabled={isReadOnly}
+                                        />
+                                    </>
+                                )}
+                            </>
+                        )}
                 </div>
             </div>
             <div className={containerClasses}>
@@ -532,6 +538,7 @@ const RoleIdentification = ({
                                             }
                                             disabled={isReadOnly}
                                         />
+
                                         {showElement() && (
                                             <>
                                                 {isRoleCheck && (

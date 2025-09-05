@@ -591,12 +591,14 @@
                 "ssn": "SSN",
                 "gender": "Genre",
                 "dateOfBirth": "Date de naissance",
+                "trustDate": "Date du trust",
                 "male": "Homme",
                 "female": "Femme",
                 "formValidations": {
                     "firstName": "Le prénom est requis",
                     "lastName": "Le nom est requis",
-                    "last": "Le nom de famille est requis"
+                    "last": "Le nom de famille est requis",
+                    "trustDateRequired": "La date de confiance est requise"
                 },
                 "entityType": "Type d'entité",
                 "entityTypeOptions": {
@@ -615,6 +617,7 @@
                 "no": "Non",
                 "isRelevant": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?"
             },
+            "contactDetails": "Coordonnées",
             "contactInfo": {
                 "title": "Coordonnées",
                 "labels": {
@@ -740,7 +743,8 @@
                 "gender": "Genre",
                 "title": "Identification",
                 "ssn": "NSS",
-                "dateOfBirth": "Date de naissance"
+                "dateOfBirth": "Date de naissance",
+                "trustDate": "Date du trust"
             },
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche de NIGO.",
             "overview": "Aperçu",

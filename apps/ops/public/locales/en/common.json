@@ -408,6 +408,7 @@
             "header": "Beneficiary Information",
             "add": "Add",
             "edit": "edit",
+            "mail":"Mail",
             "beneficiaryListing": {
                 "primaryBeneficiaries": "Primary beneficiaries",
                 "contingentBeneficiaries": "Contingent Beneficiary",
@@ -510,12 +511,14 @@
                 "ssn": "SSN",
                 "gender": "Gender",
                 "dateOfBirth": "Date of birth",
+                "trustDate":"Trust date",
                 "male": "Male",
                 "female": "Female",
                 "formValidations": {
                     "firstName": "First name is required",
                     "lastName": "Name is required",
-                    "last": "Last name is required"
+                    "last": "Last name is required",
+                    "trustDateRequired": "Trust date is required"
                 },
                 "entityType": "Entity Type",
                 "entityTypeOptions": {
@@ -534,6 +537,7 @@
                 "no": "No",
                 "isRelevant": "Is the uploaded supporting document(s) valid and relevant?"
             },
+            "contactDetails": "Contact Details",
             "contactInfo": {
                 "title": "Contact Info",
                 "labels": {
@@ -630,7 +634,8 @@
                 "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary",
                 "allocationRequired": "Please make sure allocation is greater than 0% while adding / updating beneficiary",
                 "relationshipToParty": "Please make sure relationship to party is selected while adding / updating beneficiary"
-            }
+            },
+            "prefferedMethod": "Preferred Contact Method"
         },
         "signature": {
             "continue": "Continue",
@@ -659,7 +664,8 @@
                 "gender": "Gender",
                 "title": "Identification",
                 "ssn": "SSN",
-                "dateOfBirth": "Date of birth"
+                "dateOfBirth": "Date of birth",
+                "trustDate":"Trust date"
             },
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "overview": "Overview",
