@@ -13,7 +13,10 @@ import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getPremiumEligibility } from '@/services/bpm';
-import { getSystematicProgramsEligibility } from '@/services/bpm/systematic-programs';
+import {
+  getSystematicProgramEligibility,
+  getSystematicProgramsEligibility,
+} from '@/services/bpm/systematic-programs';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getUpcomingPremium } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -68,12 +71,12 @@ export const UpcomingPremium = async ({
     upcomingResult?.status === 'fulfilled'
       ? upcomingResult.value
       : {
-        data: null,
-        error: {
-          message: 'Error fetching upcoming premium',
-          ...loggingContext,
-        },
-      };
+          data: null,
+          error: {
+            message: 'Error fetching upcoming premium',
+            ...loggingContext,
+          },
+        };
 
   if (ottpResult?.status === 'rejected') {
     logError('Error fetching upcoming premium', ottpResult.reason);
@@ -104,6 +107,22 @@ export const UpcomingPremium = async ({
 
   const showSetUpAutopay =
     systematicPremiumFeatureFlag && systematicPremiumEligible;
+
+  // Determine Cancel Autopay enablement by checking eligibility for the specific arrangement
+  let cancelAutopayEnabled = false;
+  if (systematicPremiumFeatureFlag && !!data?.arrangementId) {
+    const { data: systematicProgramEligibility } =
+      await getSystematicProgramEligibility(
+        {
+          planCode,
+          policyNumber,
+          arrangementId: data.arrangementId,
+        },
+        loggingContext
+      );
+
+    cancelAutopayEnabled = !!systematicProgramEligibility?.isEligible;
+  }
 
   if (error) {
     return (
@@ -233,7 +252,7 @@ export const UpcomingPremium = async ({
                 </Link>
                 <CancelAutopaySidesheet
                   arrangementId={arrangementId}
-                  disabled={!arrangementId.length}
+                  disabled={!cancelAutopayEnabled}
                   frequency={frequency}
                   paymentAmount={amount}
                   planCode={planCode}

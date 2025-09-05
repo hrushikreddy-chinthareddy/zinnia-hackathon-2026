@@ -12,11 +12,14 @@ import { CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH } from 'next/dist/shared/lib/
 import { bpmApiBaseUrl } from '@/services/api-config';
 import { ServerApi } from '@/services/server-http';
 import { PolicyRequestInputs } from '@/types/policy';
+import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+
+import { transformEligibility } from '../transformers';
 
 const FILE_NAME = 'bpm/index.ts';
 
@@ -106,6 +109,57 @@ export const getSystematicProgramsEligibility = withLogging(
   {
     file: FILE_NAME,
     functionName: 'getSystematicProgramsEligibilityCheck',
+  }
+);
+
+export const getSystematicProgramEligibility = withLogging(
+  async (
+    { planCode, policyNumber, arrangementId }: SystematicProgramServiceInputs,
+    loggingCtx: CommonLogContext
+  ): Promise<TransactionEligbility> => {
+    const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/systematicprograms/${arrangementId}/eligibilitycheck`;
+    const body = {
+      effectiveDate: dayjs().add(1, 'day').format(ZAHARA_DATE_FORMAT),
+      systematicProgram: {
+        arrangementType: ArrangementType.PAYMENT,
+        arrangementId,
+      },
+      correlationId: loggingCtx.correlationId,
+    };
+
+    const rawResponse = await ServerApi.post(
+      url,
+      JSON.stringify(body),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+      loggingCtx
+    );
+
+    const response: TransactionEligbilityResponse =
+      await parseAPIResponse(rawResponse);
+
+    if (rawResponse.status === 400) {
+      logTrace(
+        `systematic program with arrangementId ${arrangementId} ineligible`,
+        {
+          arrangementId,
+          results: response.status,
+        }
+      );
+    }
+
+    if (rawResponse.status > 400) {
+      throw new Error('Error fetching systematic program eligibility', {
+        cause: { planCode, policyNumber, arrangementId },
+      });
+    }
+
+    return transformEligibility(response);
+  },
+  {
+    file: FILE_NAME,
+    functionName: 'getSystematicProgramEligibility',
   }
 );
 
