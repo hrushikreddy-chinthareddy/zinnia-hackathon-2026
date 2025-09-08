@@ -15,6 +15,9 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
   const currentCarrier = await getThemeCookies();
 
   const defaultConfig: CarrierConfig = {
+    sso: {
+      enabled: false,
+    },
     payment: {
       provider: PaymentProvider.ZINNIA,
       verifyIdentityRequired: true,
@@ -44,6 +47,9 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
     case CarrierName.FARMERS:
       return {
         ...defaultConfig,
+        sso: {
+          enabled: true,
+        },
         payment: {
           provider: PaymentProvider.PAYMENTUS,
           verifyIdentityRequired: false,

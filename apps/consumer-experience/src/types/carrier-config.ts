@@ -49,4 +49,7 @@ export interface CarrierConfig {
   payment: PaymentConfig;
   policyProfile: PolicyProfile<ManageChange>;
   documents: DocumentsConfig;
+  sso: {
+    enabled: boolean;
+  };
 }
