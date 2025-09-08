@@ -13,6 +13,7 @@ export const getHierarchyBySellingCode = async (
     sellingCode: string
 ): Promise<ApiResponse<GetHierarchyResponse>> => {
     try {
+        // hit our route handler which uses the enterprise token api
         const request = client.get<any, AxiosResponse<GetHierarchyResponse>>(
             `${baseAppUrl}/api/distributors/v1/hierarchies/selling-code/${sellingCode}`
         );
@@ -48,8 +49,43 @@ export const getDownlineBySellingCode = async (
     partialFullName: string
 ) => {
     try {
+        // hit our route handler which uses the enterprise token api
         const request = client.get<any, AxiosResponse<GetDownlineResponse[][]>>(
             `${baseAppUrl}/api/distributors/v1/hierarchies/selling-code/${sellingCode}/downline?partialFullName=${partialFullName}`
+        );
+        const response = await request;
+        if (response.status === StatusCode.Okay) {
+            return { data: response.data, error: null };
+        }
+        const error = new Error(response?.statusText);
+        return {
+            data: null,
+            error: { ...error, status: response?.status || 500 },
+        };
+    } catch (e) {
+        return {
+            data: null,
+            error: {
+                ...(e instanceof Error
+                    ? e
+                    : new Error(
+                          (e as Error)?.message ||
+                              'an error occurred while retrieving hierarchy'
+                      )),
+                status: 500,
+            },
+        };
+    }
+};
+
+export const getProducersByNameAndCarrier = async (
+    partialFullName: string,
+    carrierShortName: string
+) => {
+    try {
+        // hit our route handler which uses the enterprise token api
+        const request = client.get(
+            `${baseAppUrl}/api/distributors/v1/producers/producers?partialFullName=${partialFullName}&carrierShortName=${carrierShortName}`
         );
         const response = await request;
         if (response.status === StatusCode.Okay) {
