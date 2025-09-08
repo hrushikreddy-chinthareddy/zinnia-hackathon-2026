@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
+import { useSubmit } from '@deps/components/illustrations/providers/SubmitProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { getIllustrationCalculationStatus } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
@@ -27,7 +28,6 @@ import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
 import StatusBadge from '../../case-details/illustration-item/status-badge';
 import { EditSidesheet } from '../edit-sidesheet/edit-sidesheet';
-import { useSubmit } from '@deps/components/illustrations/providers/SubmitProvider';
 
 type IllustrationDetailsToolbarProps = {
     isLoading?: boolean;

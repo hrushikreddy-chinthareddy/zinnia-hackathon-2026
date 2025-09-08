@@ -85,6 +85,8 @@ export interface LifeCadParty {
     TaxWithHolding: LifeCadTaxWitholding[];
     addresses?: Array<Address>;
     partyId?: string;
+    partyRoleId?: string;
+    bankDetails?: LifeCadBanking[];
 }
 
 export type LifeCadBanking = {
