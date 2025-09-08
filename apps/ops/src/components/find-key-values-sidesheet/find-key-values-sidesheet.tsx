@@ -11,6 +11,7 @@ import {
     FieldData,
     FieldTypes,
     FieldSize as BloomFieldSize,
+    Link,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChangeEvent, FC, useMemo, useState } from 'react';
@@ -26,7 +27,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
-import { DataTuple, tags } from './types';
+import { DataTuple, link, linkedField, MetaData, tags } from './types';
 import { generateKeyValueGroups, prepareSearchableData } from './utils';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -46,10 +47,12 @@ const FindAllKeyValuesSection = ({
     preparedPolicy,
     fields,
     searchValue,
+    metaData,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
     fields: DataTuple[];
     searchValue: string;
+    metaData?: MetaData;
 }) => {
     return (
         <div className={styles.itemsList}>
@@ -57,6 +60,10 @@ const FindAllKeyValuesSection = ({
                 const formattedField = preparedPolicy.formatDataField(field);
                 if (!formattedField) return null;
                 const [fieldLabel, fieldData] = formattedField;
+                const fieldLink =
+                    metaData?.[link] && metaData?.[linkedField] === field[0] ? (
+                        <Link href={metaData?.[link]} text={fieldData} />
+                    ) : undefined;
                 return (
                     <DotContainer
                         key={fieldLabel}
@@ -88,7 +95,7 @@ const FindAllKeyValuesSection = ({
                             </div>
                         }
                         dotLeftSideClassName="typography-content-body-sm"
-                        dotRightSide={fieldData}
+                        dotRightSide={fieldLink ?? fieldData}
                         dotRightSideClassName="typography-content-body-sm"
                     />
                 );
@@ -178,7 +185,7 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(() => preparePolicy(policy), [policy]);
 
-    const { policyBasics, policySections, people } = useMemo(
+    const { policyBasics, policySections } = useMemo(
         () => preparedPolicy.toSections(policy),
         [preparePolicy]
     );
@@ -255,7 +262,7 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                     sectionData,
                                 ]);
 
-                            console.log('Subsections', subSections);
+                            //console.log('Subsections', subSections);
                             if (typeof sectionLabel !== 'string') {
                                 return null;
                             }
@@ -280,6 +287,10 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                 subSectionFields,
                                                 subSectionMetaData,
                                             ]) => {
+                                                console.log(
+                                                    'ssmd',
+                                                    subSectionMetaData
+                                                );
                                                 const subsectionTags =
                                                     subSectionMetaData?.[tags];
                                                 return (
@@ -308,6 +319,9 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                                 }
                                                                 searchValue={
                                                                     searchValue
+                                                                }
+                                                                metaData={
+                                                                    subSectionMetaData
                                                                 }
                                                             />
                                                         </Accordion>

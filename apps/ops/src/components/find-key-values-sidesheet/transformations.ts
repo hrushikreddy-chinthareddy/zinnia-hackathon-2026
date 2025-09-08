@@ -22,6 +22,10 @@ import {
     DataRecord,
     DataTuple,
     FieldData,
+    link,
+    Link,
+    LinkedField,
+    linkedField,
     PolicySection,
     PreparedPolicy,
     PreparedPolicySection,
@@ -344,7 +348,6 @@ export const toSections = (policy: Policy): PreparedPolicy => {
         {
             policyBasics: [],
             policySections: [],
-            people: [],
         }
     );
 
@@ -394,7 +397,10 @@ export const toSections = (policy: Policy): PreparedPolicy => {
             return acc;
         }
 
-        const partyTags = party?.partyId && partyRoleMap?.[party?.partyId];
+        const planCode = policy.product?.planCode;
+        const policyNumber = policy.policyNumber;
+        const partyLink = `/policies/${planCode}/${policyNumber}/people/${party.partyId}`;
+        const partyTags = party.partyId && partyRoleMap?.[party.partyId];
         const partyDetails = {
             partyName,
             dob: party.dateOfBirth,
@@ -402,6 +408,8 @@ export const toSections = (policy: Policy): PreparedPolicy => {
                 (id) => id.identificationType === 'SSN'
             )?.identificationValue,
             ...(partyTags && { [tags]: partyTags }),
+            ...(partyLink && { [link]: partyLink }),
+            [linkedField]: 'partyName',
         };
 
         return {
@@ -513,6 +521,12 @@ export const toFieldsAndSubsections = ([
             // also treat it as a subsection, but map the subsection title to the object key
             if (typeof fieldData === 'object' && fieldData !== null) {
                 const fieldTags = (fieldData as Tags)[tags];
+                const fieldLink = (fieldData as Link)[link];
+
+                // One field per section can be a link
+                const fieldLinkedField = (fieldData as LinkedField)[
+                    linkedField
+                ];
 
                 return {
                     fields: acc.fields, // keep fields untouched
@@ -521,8 +535,12 @@ export const toFieldsAndSubsections = ([
                         [
                             fieldName,
                             removeExcludedFields(Object.entries(fieldData)),
+
+                            // Add metadata
                             {
                                 [tags]: fieldTags,
+                                [link]: fieldLink,
+                                [linkedField]: fieldLinkedField,
                             },
                         ],
                     ],
