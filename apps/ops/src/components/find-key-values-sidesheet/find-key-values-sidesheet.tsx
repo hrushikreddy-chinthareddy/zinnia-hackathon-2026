@@ -26,7 +26,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
-import { DataTuple } from './types';
+import { DataTuple, tags } from './types';
 import { generateKeyValueGroups, prepareSearchableData } from './utils';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -178,7 +178,7 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(() => preparePolicy(policy), [policy]);
 
-    const { policyBasics, policySections } = useMemo(
+    const { policyBasics, policySections, people } = useMemo(
         () => preparedPolicy.toSections(policy),
         [preparePolicy]
     );
@@ -254,6 +254,11 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                     sectionLabel,
                                     sectionData,
                                 ]);
+
+                            console.log('Subsections', subSections);
+                            if (typeof sectionLabel !== 'string') {
+                                return null;
+                            }
                             return (
                                 <Accordion
                                     key={sectionLabel}
@@ -273,7 +278,10 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                             ([
                                                 subSectionLabel,
                                                 subSectionFields,
+                                                subSectionMetaData,
                                             ]) => {
+                                                const subsectionTags =
+                                                    subSectionMetaData?.[tags];
                                                 return (
                                                     <div
                                                         className={
@@ -283,8 +291,13 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                         <Accordion
                                                             key={sectionLabel}
                                                             sectionLabel={preparedPolicy.formatAsSectionLabel(
-                                                                subSectionLabel
+                                                                String(
+                                                                    subSectionLabel
+                                                                )
                                                             )}
+                                                            tags={
+                                                                subsectionTags
+                                                            }
                                                         >
                                                             <FindAllKeyValuesSection
                                                                 preparedPolicy={

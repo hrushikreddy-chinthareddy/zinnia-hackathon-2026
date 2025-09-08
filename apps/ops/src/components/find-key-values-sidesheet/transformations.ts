@@ -18,6 +18,7 @@ import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { sectionTypeToSubsectionTitleFields } from './translations/subsection-field-to-title';
 import {
+    DataKey,
     DataRecord,
     DataTuple,
     FieldData,
@@ -25,6 +26,8 @@ import {
     PreparedPolicy,
     PreparedPolicySection,
     SubSection,
+    Tags,
+    tags,
 } from './types';
 
 /**
@@ -231,7 +234,8 @@ export const formatDataField = (
     [fieldName, fieldData]: DataTuple,
     lineOfBusiness: LineOfBusiness
 ): [string, string] | null => {
-    if (fieldData == null) return null;
+    // Allow metadata (not rendered directly) via Symbols
+    if (typeof fieldName !== 'string' || fieldData == null) return null;
     return [
         formatAsDataLabel(fieldName, lineOfBusiness),
         formatAsDataValue(fieldData, fieldName),
@@ -254,7 +258,7 @@ export const formatDataField = (
  */
 export const toSections = (policy: Policy): PreparedPolicy => {
     const policyTuples = Object.entries(policy);
-    return policyTuples.reduce<PreparedPolicy>(
+    const basicsAndSections = policyTuples.reduce<PreparedPolicy>(
         (acc, [currentKey, currentVal]) => {
             // append to policySections list
             if (typeof currentVal === 'object' && currentVal !== null) {
@@ -340,8 +344,78 @@ export const toSections = (policy: Policy): PreparedPolicy => {
         {
             policyBasics: [],
             policySections: [],
+            people: [],
         }
     );
+
+    // Fill in aggregated sections
+    if (policy.allocation?.matchSegment) {
+        basicsAndSections.policySections.push([
+            'Match',
+            policy.allocation?.matchSegment,
+        ]);
+    }
+
+    //console.log('parties...', policy.parties);
+    //console.log('partyRoles...', policy.partyRoles);
+
+    const partyRoleMap = policy.partyRoles?.reduce<Record<string, string[]>>(
+        (acc, currentPartyRole) => {
+            const currentPartyIdRoles =
+                (currentPartyRole.partyId && acc[currentPartyRole.partyId]) ||
+                [];
+            const combinedPartyRoles = {
+                ...(currentPartyRole.partyId &&
+                    currentPartyRole.partyRole && {
+                        [currentPartyRole.partyId]: [
+                            ...currentPartyIdRoles,
+                            formatAsDataValue(currentPartyRole.partyRole),
+                        ],
+                    }),
+            };
+            return {
+                ...acc,
+                ...combinedPartyRoles,
+            };
+        },
+        {}
+    );
+
+    //console.log('partyRoleMap...', partyRoleMap);
+
+    const people = policy.parties?.reduce((acc, party, i) => {
+        const partyName = String(
+            `${party.firstName ?? ''} ${party.lastName ?? ''}`.trim() ||
+                party.fullName ||
+                `Party ${i + 1}`
+        );
+
+        if (!partyName) {
+            return acc;
+        }
+
+        const partyTags = party?.partyId && partyRoleMap?.[party?.partyId];
+        const partyDetails = {
+            partyName,
+            dob: party.dateOfBirth,
+            ssn: party.identifications?.find(
+                (id) => id.identificationType === 'SSN'
+            )?.identificationValue,
+            ...(partyTags && { [tags]: partyTags }),
+        };
+
+        return {
+            ...acc,
+            [partyName]: partyDetails,
+        };
+    }, {});
+    //console.log('people...', {[tags]: 'yay'}, tags, people);
+
+    if (people) {
+        basicsAndSections.policySections.push(['People', people]);
+    }
+
+    return basicsAndSections;
 };
 
 // TODO: this could actually be useful as a util
@@ -354,7 +428,7 @@ const convertListToMap = <T extends DataRecord>({
     subsectionTitleField: string;
     fallbackTitle: string;
 }) => {
-    const subSectionMap = subSectionList?.reduce<Record<string, T>>(
+    const subSectionMap = subSectionList?.reduce<Record<DataKey, T>>(
         (acc, currentSubSection, i) => {
             // Grab the first value to represent the title of the segment
 
@@ -409,7 +483,7 @@ export const toFieldsAndSubsections = ([
         const subSectionDataMap = convertListToMap({
             subSectionList: sectionData,
             subsectionTitleField,
-            fallbackTitle: sectionName,
+            fallbackTitle: String(sectionName),
         });
         const subSections = removeExcludedFields(
             Object.entries(subSectionDataMap), // remove excluded subsections
@@ -431,12 +505,15 @@ export const toFieldsAndSubsections = ([
             subSections,
         };
     } else {
+        //console.log('sectionData', sectionData);
         const { fields, subSections } = removeExcludedFields(
             Object.entries(sectionData)
         ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
             // If sectionData is an object, and a value within it is a nested object,
             // also treat it as a subsection, but map the subsection title to the object key
             if (typeof fieldData === 'object' && fieldData !== null) {
+                const fieldTags = (fieldData as Tags)[tags];
+
                 return {
                     fields: acc.fields, // keep fields untouched
                     subSections: [
@@ -444,6 +521,9 @@ export const toFieldsAndSubsections = ([
                         [
                             fieldName,
                             removeExcludedFields(Object.entries(fieldData)),
+                            {
+                                [tags]: fieldTags,
+                            },
                         ],
                     ],
                 };
@@ -468,7 +548,7 @@ export const toFieldsAndSubsections = ([
 
 const removeExcludedFields = (
     tuples: DataTuple[],
-    additionalFieldsToExclude?: string[]
+    additionalFieldsToExclude?: DataKey[]
 ) => {
     return tuples.filter(
         ([key]) =>
