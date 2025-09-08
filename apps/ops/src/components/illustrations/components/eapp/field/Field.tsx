@@ -219,6 +219,14 @@ export function InnerField(props: FieldProps): ReactElement | null {
         case FieldTypes.custom: {
             const customField: RenderingCustomField = field;
             switch (customField.customName) {
+                case 'Information': {
+                    // adding this so that information fields can be rendered conditionally
+                    return (
+                        <FieldContainer {...defaultContainerProps}>
+                            <FieldLabel field={field} />
+                        </FieldContainer>
+                    );
+                }
                 case 'IllustrationScheduler': {
                     return <IllustrationScheduler field={customField} />;
                 }

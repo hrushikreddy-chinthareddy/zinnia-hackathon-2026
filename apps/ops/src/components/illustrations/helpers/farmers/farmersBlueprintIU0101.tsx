@@ -4378,9 +4378,10 @@ export const farmersBlueprintIU0101 = {
                                     defaultValue: 'yes',
                                 },
                                 {
-                                    fieldType: 'information',
+                                    fieldType: 'custom',
+                                    customName: 'Information',
                                     text: {
-                                        en: 'There are tax consequences for becoming a MEC.',
+                                        en: 'Please note that the Illustrated policy may become a MEC.',
                                         fr: '',
                                     },
                                     title: {
