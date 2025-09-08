@@ -229,100 +229,34 @@ export const farmersTermBlueprintTL0101 = {
                                         en: 'Issue Age',
                                         fr: '',
                                     },
-                                    answerNodeId: 'issue-age',
+                                    answerNodeId: 'insured-issue-age',
                                     outputPath: 'insured.issueAge',
                                     valid: [
                                         {
                                             id: 'f41a1156-7d54-45db-a707-d1ce6f7f9227',
                                             conditions: {
-                                                booleanOperator: 'or',
+                                                booleanOperator: 'and',
                                                 conditions: [
                                                     {
-                                                        type: 'equalityCondition',
-                                                        value: 'Non-Nicotine',
-                                                        isEqual: true,
+                                                        type: 'numberComparisonCondition',
+                                                        value: 18,
                                                         targetNodeId:
-                                                            'is-nicotine-user',
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'greaterThanOrEqual',
                                                     },
                                                     {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'equalityCondition',
-                                                                value: 'Nicotine',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'is-nicotine-user',
-                                                            },
-                                                            {
-                                                                type: 'numberComparisonCondition',
-                                                                value: 50,
-                                                                targetNodeId:
-                                                                    'issue-age',
-                                                                operator:
-                                                                    'lessThanOrEqual',
-                                                            },
-                                                            {
-                                                                type: 'numberComparisonCondition',
-                                                                value: 18,
-                                                                targetNodeId:
-                                                                    'issue-age',
-                                                                operator:
-                                                                    'greaterThanOrEqual',
-                                                            },
-                                                        ],
+                                                        type: 'numberComparisonCondition',
+                                                        value: 75,
+                                                        targetNodeId:
+                                                            'insured-issue-age',
+                                                        operator:
+                                                            'lessThanOrEqual',
                                                     },
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=50 and must be entered.',
-                                                fr: '',
-                                            },
-                                        },
-                                        {
-                                            id: '5a394cbb-2145-4d60-a394-e7c10d16a0f5',
-                                            conditions: {
-                                                booleanOperator: 'or',
-                                                conditions: [
-                                                    {
-                                                        type: 'equalityCondition',
-                                                        value: 'Nicotine',
-                                                        isEqual: true,
-                                                        targetNodeId:
-                                                            'is-nicotine-user',
-                                                    },
-                                                    {
-                                                        booleanOperator: 'and',
-                                                        conditions: [
-                                                            {
-                                                                type: 'numberComparisonCondition',
-                                                                value: 18,
-                                                                targetNodeId:
-                                                                    'issue-age',
-                                                                operator:
-                                                                    'greaterThanOrEqual',
-                                                            },
-                                                            {
-                                                                type: 'numberComparisonCondition',
-                                                                value: 55,
-                                                                targetNodeId:
-                                                                    'issue-age',
-                                                                operator:
-                                                                    'lessThanOrEqual',
-                                                            },
-                                                            {
-                                                                type: 'equalityCondition',
-                                                                value: 'Non-Nicotine',
-                                                                isEqual: true,
-                                                                targetNodeId:
-                                                                    'is-nicotine-user',
-                                                            },
-                                                        ],
-                                                    },
-                                                ],
-                                            },
-                                            message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=55 and must be entered.',
+                                                en: 'Farmers Term Life not available under age 18 or over age 75.',
                                                 fr: '',
                                             },
                                         },

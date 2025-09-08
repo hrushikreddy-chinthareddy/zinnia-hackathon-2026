@@ -275,7 +275,7 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=50 and must be entered.',
+                                                en: 'Farmers Return of Premium Term not available under age 18 or over age 50.',
                                                 fr: '',
                                             },
                                         },
@@ -322,7 +322,7 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=55 and must be entered.',
+                                                en: 'Farmers Return of Premium Term not available under age 18 or over age 55.',
                                                 fr: '',
                                             },
                                         },
