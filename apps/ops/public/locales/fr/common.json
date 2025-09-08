@@ -7496,5 +7496,15 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "feature": {
+        "featureFlags": "Bandeaux de Fonctionnalité",
+        "flag": "Bandeau",
+        "status": "Statut",
+        "variable": "Variable",
+        "featureVariables": "Variables de Fonctionnalité",
+        "Environment": "Environment",
+        "variableSearchPlaceholder": "Rechercher des variables de fonctionnalité...",
+        "flagQueueSearchPlaceholder": "Rechercher des variables de fonctionnalité..."
     }
 }

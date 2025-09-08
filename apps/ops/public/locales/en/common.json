@@ -408,7 +408,7 @@
             "header": "Beneficiary Information",
             "add": "Add",
             "edit": "edit",
-            "mail":"Mail",
+            "mail": "Mail",
             "beneficiaryListing": {
                 "primaryBeneficiaries": "Primary beneficiaries",
                 "contingentBeneficiaries": "Contingent Beneficiary",
@@ -511,7 +511,7 @@
                 "ssn": "SSN",
                 "gender": "Gender",
                 "dateOfBirth": "Date of birth",
-                "trustDate":"Trust date",
+                "trustDate": "Trust date",
                 "male": "Male",
                 "female": "Female",
                 "formValidations": {
@@ -665,7 +665,7 @@
                 "title": "Identification",
                 "ssn": "SSN",
                 "dateOfBirth": "Date of birth",
-                "trustDate":"Trust date"
+                "trustDate": "Trust date"
             },
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "overview": "Overview",
@@ -7597,5 +7597,16 @@
     "testHarness": {
         "h1": "Test Harness",
         "description": "Click to generate a new test policy with a random policy number."
+    },
+    "feature": {
+        "featureFlags": "Feature Flags",
+        "flag": "Flag",
+        "status": "Status",
+        "value": "Value",
+        "variable": "Variable",
+        "featureVariables": "Feature Variables",
+        "environment": "Environment",
+        "variableSearchPlaceholder": "Search feature variables...",
+        "flagQueueSearchPlaceholder": "Search feature flags..."
     }
 }

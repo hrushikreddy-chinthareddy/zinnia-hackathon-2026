@@ -7413,5 +7413,16 @@
             "secondaryCta": "Volver al inicio",
             "submitTask": "Enviar"
         }
+    },
+    "feature": {
+        "featureFlags": "Banderas de Funcionalidad",
+        "flag": "Banderas",
+        "status": "Estado",
+        "variable": "Variable",
+        "value": "Valor",
+        "featureVariables": "Variables de Funcionalidad",
+        "environment": "Environment",
+        "variableSearchPlaceholder": "Buscar variables de funcionalidad...",
+        "flagQueueSearchPlaceholder": "Buscar variables de funcionalidad..."
     }
 }
