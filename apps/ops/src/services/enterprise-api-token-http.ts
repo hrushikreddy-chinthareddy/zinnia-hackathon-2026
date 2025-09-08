@@ -103,6 +103,7 @@ class EnterpriseTokenHttp extends HttpRequest {
         };
         try {
             const { access_token, expires_in } = await this.generateToken();
+
             this.token = access_token;
             this.tokenExp = expires_in;
         } catch (e) {
