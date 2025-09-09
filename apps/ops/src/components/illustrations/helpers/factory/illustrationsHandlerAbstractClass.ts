@@ -47,6 +47,8 @@ export abstract class IllustrationHandler<TOutputEntities> {
 
     abstract getCarrier(): string;
 
+    abstract getCarrierCode(): string;
+
     abstract getIllustrationApiPath(): string;
 
     public getClientCase(): IllustrationsClientCase {

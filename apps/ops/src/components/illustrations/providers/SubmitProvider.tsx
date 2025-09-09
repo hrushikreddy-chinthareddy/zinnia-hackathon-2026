@@ -101,6 +101,7 @@ export function SubmitProvider({
                 path: factoryHandler.getIllustrationApiPath(),
             });
             const clientCase = factoryHandler.getClientCase();
+            const carrierCode = factoryHandler.getCarrierCode();
 
             return await saveIllustrationToClientCase(
                 clientCase.id,
@@ -111,7 +112,8 @@ export function SubmitProvider({
                 }),
                 factoryHandler.getPlanType(), // product type
                 factoryHandler.getPlanCode(), // carrierProductId
-                JSON.stringify(inputs) // illustration inputs
+                JSON.stringify(inputs), // illustration inputs
+                carrierCode
             );
         },
         onSuccess: async ({ data }) => {

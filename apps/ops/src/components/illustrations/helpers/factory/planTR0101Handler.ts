@@ -442,6 +442,10 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
         return CarrierName.FARMERS;
     }
 
+    getCarrierCode(): string {
+        return 'fnwl';
+    }
+
     getIllustrationApiPath(): string {
         return 'api/illustration/v3/term-life/new-business';
     }

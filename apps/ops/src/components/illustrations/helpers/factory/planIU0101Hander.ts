@@ -893,6 +893,10 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return CarrierName.FARMERS;
     }
 
+    getCarrierCode(): string {
+        return 'fnwl';
+    }
+
     getIllustrationApiPath(): string {
         return 'api/illustration/v3/indexed-universal-life/new-business';
     }
