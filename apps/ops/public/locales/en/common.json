@@ -6383,6 +6383,11 @@
             "amount": "Amount",
             "check": "Check #{{number}}",
             "contract": "Contract #{{number}}"
+        },
+        "tableColumns": {
+            "transaction": "Transaction",
+            "status": "Status",
+            "amount": "Amount"
         }
     },
     "deathNotification": {

@@ -6288,6 +6288,11 @@
             "amount": "Montant",
             "check": "Vérifier #{{number}}",
             "contract": "Contracter #{{number}}"
+        },
+        "tableColumns": {
+            "transaction": "Transaction",
+            "status": "Statut",
+            "amount": "Montant"
         }
     },
     "deathNotification": {

@@ -88,8 +88,7 @@ const DeathNotificationSidesheet = ({
             beneficiaries:
                 entity.beneficiaries?.map((bene: any) => ({
                     party: {
-                        fullName:
-                            bene.party?.fullName || getName(bene.party.party),
+                        fullName: bene.party?.fullName || getName(bene.party),
                     },
                     notificationMethod:
                         bene.notificationPreferences?.notificationMethod

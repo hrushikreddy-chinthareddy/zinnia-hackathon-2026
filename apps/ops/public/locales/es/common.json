@@ -6206,6 +6206,11 @@
             "amount": "Cantidad",
             "check": "Controlar #{{number}}",
             "contract": "Contrato #{{number}}"
+        },
+        "tableColumns": {
+            "transaction": "Transacción",
+            "status": "Estado",
+            "amount": "Cantidad"
         }
     },
     "deathNotification": {

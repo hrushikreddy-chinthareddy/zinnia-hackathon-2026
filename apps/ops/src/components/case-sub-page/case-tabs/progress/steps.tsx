@@ -1,5 +1,4 @@
 import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
-import { sentenceCase } from 'change-case';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
 
@@ -17,6 +16,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -269,7 +269,7 @@ export default function Steps({
                     step={
                         {
                             ...step,
-                            name: sentenceCase(step?.name),
+                            name: toSentenceCase(step?.name),
                         } as TransformedStep
                     }
                 />
