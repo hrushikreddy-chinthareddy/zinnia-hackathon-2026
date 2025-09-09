@@ -33,6 +33,20 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
         manageChanges: ManageChange.INTERNAL,
       },
     },
+    account: {
+      surrender: {
+        enabled: false,
+      },
+      partialOneTimeWithdrawal: {
+        enabled: false,
+      },
+    },
+    freeLookCancel: {
+      enabled: false,
+    },
+    systematicPremium: {
+      enabled: false,
+    },
     // This should be temporary since eventually EDS (the documents team) will manage
     // the service the document is retrieved from depending on carrier. The logic for now
     // is that legacy carriers are on v2 and any new carriers from wellabe forward are on
@@ -68,6 +82,20 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
             manageChanges: ManageChange.EXTERNAL,
             url: CARRIER_REDIRECT_URLS[CarrierName.FARMERS].MANAGE_CHANGES,
           },
+        },
+        account: {
+          surrender: {
+            enabled: true,
+          },
+          partialOneTimeWithdrawal: {
+            enabled: true,
+          },
+        },
+        freeLookCancel: {
+          enabled: true,
+        },
+        systematicPremium: {
+          enabled: true,
         },
       };
 

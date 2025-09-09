@@ -10,6 +10,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicySurrenderDetails } from '@/services';
 import { getPolicySurrenderEligibility } from '@/services/bpm/fullsurrender';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -33,6 +34,8 @@ export default async function SurrenderPolicy({
   const flags = await getFeatureFlags();
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
+  const carrierConfig = await getCarrierConfig();
+
   const { data, error } = await getPolicySurrenderDetails(
     {
       planCode,
@@ -41,7 +44,10 @@ export default async function SurrenderPolicy({
     loggingContext
   );
 
-  const showSurrenderCta = !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER];
+  const showSurrenderCta =
+    !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER] &&
+    carrierConfig?.account?.surrender?.enabled;
+
   let isEligibleForSurrender = false;
 
   if (showSurrenderCta) {

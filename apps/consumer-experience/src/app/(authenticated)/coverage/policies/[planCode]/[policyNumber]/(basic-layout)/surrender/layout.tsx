@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 
 import { SurrenderProvider } from '@/components/providers/surrender/SurrenderProvider';
 import { getPolicySurrenderEligibility } from '@/services/bpm/fullsurrender';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -19,9 +20,13 @@ export default async function SurrenderFlow({
   const loggingContext = await buildCommonLogContext();
 
   const { planCode, policyNumber } = params;
+  const carrierConfig = await getCarrierConfig();
 
-  const showSurrenderCta = !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER];
+  const showSurrenderCta =
+    !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER] &&
+    carrierConfig?.account?.surrender?.enabled;
 
+  console.log({ showSurrenderCta });
   let isEligibleForSurrender = false;
   if (showSurrenderCta) {
     const { data: surrenderEligibility } = await getPolicySurrenderEligibility(
