@@ -2226,7 +2226,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'SEMI_ANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },
