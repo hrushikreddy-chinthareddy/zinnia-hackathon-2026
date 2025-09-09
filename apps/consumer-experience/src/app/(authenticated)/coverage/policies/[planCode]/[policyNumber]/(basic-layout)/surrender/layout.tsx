@@ -26,7 +26,6 @@ export default async function SurrenderFlow({
     !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER] &&
     carrierConfig?.account?.surrender?.enabled;
 
-  console.log({ showSurrenderCta });
   let isEligibleForSurrender = false;
   if (showSurrenderCta) {
     const { data: surrenderEligibility } = await getPolicySurrenderEligibility(
