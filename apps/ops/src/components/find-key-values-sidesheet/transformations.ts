@@ -307,7 +307,7 @@ export const toSections = (
                         lineOfBusiness,
                         productType
                     ) ||
-                    !currentVal
+                    currentVal == null
                 ) {
                     return acc;
                 }

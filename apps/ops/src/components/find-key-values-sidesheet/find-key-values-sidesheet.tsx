@@ -359,7 +359,7 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                             );
                             if (
                                 typeof sectionLabel !== 'string' ||
-                                subSections == null
+                                (fields == null && subSections == null)
                             ) {
                                 return null;
                             }
