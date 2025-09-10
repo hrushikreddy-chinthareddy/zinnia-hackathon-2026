@@ -17,7 +17,6 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
-import { useUserIdentity } from '@deps/components/illustrations/helpers/hooks/user-user-identity';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -41,6 +40,7 @@ const IllustrationCaseSumary = ({
     clientCase,
 }: IllustrationCaseSumaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { isAllowWriteClientCase } = usePermissionsContext();
 
     const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
@@ -52,10 +52,6 @@ const IllustrationCaseSumary = ({
     const [agentFullName, setAgentFullName] = useState('');
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
-    const { partyReferenceData } = usePermissionsContext();
-    const { findAllAliasesWithSellingCode } = useUserIdentity();
-    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
-    const isAgent = aliases.length > 0;
 
     useEffect(() => {
         if (
@@ -161,7 +157,7 @@ const IllustrationCaseSumary = ({
                                 'clientCase.caseSummary.untitledCase'
                             ) as string)}
                     </Heading>
-                    {isAgent && (
+                    {isAllowWriteClientCase && (
                         <Button
                             mode="link"
                             data-testid="edit-btn"

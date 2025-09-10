@@ -1,23 +1,33 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, UseQueryResult } from '@tanstack/react-query';
 import { AliasModel } from '@xd/api-types/dist/generated-types/partyreference';
+// AgencyOption should be in types directory not in a helpers module
+import { useCallback, useDebugValue, useEffect, useMemo } from 'react';
 
-// AgencyOption hosuld be in types fodler not in a helper class
+import { AgentOption } from '@deps/components/client-case/client-case-create/agent-search/types';
 import {
     AgencyOption,
-    getAgenciesFromHierarchy,
+    getCommonAgenciesFromHierarchies,
+    getNearestAgenciesFromHierarchies,
 } from '@deps/components/client-case/client-case-create/create-client-case-form/create-client-case-form.helpers';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getUserHierarchyListBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
-import { IllustrationsClientCase } from '@deps/types/illustrations';
-import { MAIN_AGENCY_ROLE, Upline } from '@deps/types/producers';
+import {
+    GetHierarchyResponse,
+    MAIN_AGENCY_ROLE,
+    UplineItem,
+} from '@deps/types/producers';
+
+import { isAgency, useHierarchyListQuery } from './pom';
 
 export const useAgencyOptions = (
-    clientCase: Partial<IllustrationsClientCase> | undefined,
-    aliasesWithSellingCodes: AliasModel[]
+    agentOption: AgentOption | undefined,
+    aliasesWithSellingCodes: AliasModel[] | undefined
 ) => {
+    const { writeClientCaseCarriers } = usePermissionsContext();
+    const isSuperIllustrator = !!writeClientCaseCarriers.length;
     // TODO: Add client case agent selling code retrival logic
 
-    const clientCaseAgentDetails = clientCase?.agentDetails;
-    const authUserAliases = aliasesWithSellingCodes.map((alias) => ({
+    const authUserAliases = aliasesWithSellingCodes?.map((alias) => ({
         sellingCode: alias.externalPartyIds?.find(
             (id) => id.key === 'SELLING_CODE'
         )?.value as string,
@@ -28,16 +38,23 @@ export const useAgencyOptions = (
     }));
 
     // TODO: this should be an array from the client case selected agent (because the agent can have more than one selling code)
-    const clientCaseAgentAliases = clientCaseAgentDetails?.sellingCode
-        ? [
-              {
-                  sellingCode: clientCaseAgentDetails?.sellingCode,
-                  fullName: `${clientCaseAgentDetails?.firstName} ${clientCaseAgentDetails?.lastName}`,
-              },
-          ]
-        : [];
+    const clientCaseAgentAliases = useMemo(() => {
+        if (!agentOption?.sellingCodes?.length) {
+            return [];
+        }
 
-    const authUserSellingCodes = authUserAliases.map(
+        const { firstName, lastName } = agentOption;
+
+        return agentOption.sellingCodes.map((sellingCode) => ({
+            sellingCode,
+            fullName:
+                firstName && lastName
+                    ? `${firstName} ${lastName}`
+                    : firstName || lastName,
+        }));
+    }, [agentOption]);
+
+    const authUserSellingCodes = authUserAliases?.map(
         ({ sellingCode }) => sellingCode
     );
 
@@ -45,58 +62,92 @@ export const useAgencyOptions = (
         .map(({ sellingCode }) => sellingCode || '')
         .filter((sellingCode) => !!sellingCode);
 
-    const { data } = useQuery({
-        queryKey: [
-            'agentHierarchy',
-            ...authUserSellingCodes,
-            ...clientCaseAgentSellingCodes,
-        ],
-        queryFn: () =>
-            Promise.all([
-                getUserHierarchyListBySellingCode(authUserSellingCodes),
-                getUserHierarchyListBySellingCode(clientCaseAgentSellingCodes),
-            ]),
-        enabled: !!authUserSellingCodes.length,
-    });
-
-    if (!data) {
-        return [];
-    }
-
-    const [authUserHerarchies, clientCaseAgentHerarchy] = data;
-
-    const rootAgencyOptions = authUserHerarchies
-        .filter(({ role }) => role === MAIN_AGENCY_ROLE)
-        .map(({ sellingCode }) => {
-            const agentData = authUserAliases
-                .concat(clientCaseAgentAliases)
-                .find((item) => item.sellingCode === sellingCode)!;
-
-            // In this case the agencyId should be the same as the agentSellingCode
-            // But we'are not sure, so just ignore it
-            return {
-                value: sellingCode,
-                textValue: agentData.fullName,
-            } as AgencyOption;
-        });
-
-    if (rootAgencyOptions.length) {
-        // TODO: what about if I have two alias that are genral_agencies in diferent herarchies. What are the criteria to choose?
-        const FIRST_GENERAL_AGENCY = 0;
-        return [rootAgencyOptions[FIRST_GENERAL_AGENCY]];
-    }
-
-    const agenciesDropDownItems = getAgenciesFromHierarchy(
-        authUserHerarchies,
-        clientCaseAgentHerarchy
+    const hierarchyCombiner = useCallback(
+        (results: UseQueryResult<GetHierarchyResponse | null>[]) =>
+            results
+                .map((result) => result.data)
+                .filter((item): item is GetHierarchyResponse => !!item),
+        []
     );
 
-    return formatAgenciesForSelect(agenciesDropDownItems);
+    const { data: authUserHierarchies } = useHierarchyListQuery(
+        authUserSellingCodes ?? [],
+        hierarchyCombiner
+    );
+
+    const { data: clientCaseAgentHierarchy } = useHierarchyListQuery(
+        clientCaseAgentSellingCodes,
+        hierarchyCombiner
+    );
+
+    const agencyOptions = useMemo(() => {
+        if (isSuperIllustrator) {
+            const groupedAgencies = getNearestAgenciesFromHierarchies(
+                clientCaseAgentHierarchy ?? []
+            );
+
+            const agencies = groupedAgencies.flatMap(
+                ({ agentSellingCode, agencies }) =>
+                    agencies.map((agency) => ({
+                        agentSellingCode,
+                        agency,
+                    }))
+            );
+
+            return formatAgenciesForSelect(agencies);
+        }
+
+        if (authUserAliases == null) {
+            // This is redundant. Normal agents should always have aliases. Just for Type narrowing
+            console.error(`Agent does not have aliases`);
+            return null;
+        }
+
+        const rootAgencyOptions = authUserHierarchies
+            ?.filter(({ role }) => role === MAIN_AGENCY_ROLE)
+            ?.map(({ sellingCode }) => {
+                const agentData = authUserAliases
+                    .concat(clientCaseAgentAliases)
+                    .find((item) => item.sellingCode === sellingCode)!;
+
+                return {
+                    value: sellingCode,
+                    textValue: agentData.fullName,
+                    agentSellingCode: sellingCode,
+                } as AgencyOption;
+            });
+
+        if (rootAgencyOptions?.length) {
+            // TODO: what about if I have two alias that are genral_agencies in diferent herarchies. What are the criteria to choose?
+            const FIRST_GENERAL_AGENCY = 0;
+            return [rootAgencyOptions[FIRST_GENERAL_AGENCY]];
+        }
+
+        const agenciesDropDownItems = getCommonAgenciesFromHierarchies(
+            authUserHierarchies ?? [],
+            clientCaseAgentHierarchy ?? []
+        );
+
+        return formatAgenciesForSelect(agenciesDropDownItems);
+    }, [
+        authUserHierarchies,
+        authUserAliases,
+        clientCaseAgentHierarchy,
+        clientCaseAgentAliases,
+    ]);
+
+    useDebugValue(agencyOptions);
+
+    return agencyOptions;
 };
 
 const formatAgenciesForSelect = (
-    agenciesWithSellingCode: { agentSellingCode?: string; agency: Upline }[]
-): AgencyOption[] => {
+    agenciesWithSellingCode: { agentSellingCode: string; agency: UplineItem }[]
+): AgencyOption[] | null => {
+    if (!agenciesWithSellingCode.length) {
+        return null;
+    }
+
     return agenciesWithSellingCode.map(({ agentSellingCode, agency }) => {
         return {
             value: agency.sellingCode,

@@ -1,19 +1,23 @@
 import { groupBy, sortBy } from 'lodash';
 
 import {
+    getNearestAgenciesFromUpline,
+    isAgency,
+} from '@deps/components/illustrations/helpers/hooks/pom';
+import {
     GetHierarchyResponse,
-    MAIN_AGENCY_ROLE,
     Upline,
+    UplineItem,
 } from '@deps/types/producers';
 
 export interface AgencyOption {
     value: string;
-    agentSellingCode?: string;
+    agentSellingCode: string;
     textValue: string;
 }
 
-function getUniqueDuplicates(uplines: Upline[]) {
-    const duplicateUplinesCount = uplines.reduce<Record<string, number>>(
+function getUniqueDuplicates(upline: Upline) {
+    const duplicateUplinesCount = upline.reduce<Record<string, number>>(
         (acc, item) => {
             acc[item.sellingCode] = (acc[item.sellingCode] || 0) + 1;
             return acc;
@@ -21,7 +25,7 @@ function getUniqueDuplicates(uplines: Upline[]) {
         {}
     );
 
-    const duplicateUplines = uplines.filter(
+    const duplicateUplines = upline.filter(
         (item) => duplicateUplinesCount[item.sellingCode] > 1
     );
 
@@ -32,75 +36,60 @@ function getUniqueDuplicates(uplines: Upline[]) {
         }
         seen.add(item.sellingCode);
         return true;
-    });
+    }) as Upline;
 }
 
-export const getAgenciesFromHierarchy = (
-    authUserHierarchies: GetHierarchyResponse[],
-    clientCaseAgentHierarchies: GetHierarchyResponse[]
-) => {
-    const uplineBySellingCode = clientCaseAgentHierarchies.reduce(
-        (acc, clientCaseAgentHerarchy) => {
-            const flattedHierarchyUpline = authUserHierarchies
-                .map((hierarchy) => [
-                    ...hierarchy.upline,
-                    ...clientCaseAgentHerarchy.upline,
-                ])
-                .map(getUniqueDuplicates)
-                .flat();
-
+export const getNearestAgenciesFromHierarchies = (
+    hierarchies: GetHierarchyResponse[]
+) =>
+    hierarchies
+        .map((hierarchy) => {
+            const { sellingCode, upline } = hierarchy;
             return {
-                ...acc,
-                ...(!!flattedHierarchyUpline.length && {
-                    [clientCaseAgentHerarchy.sellingCode]:
-                        flattedHierarchyUpline,
-                }),
-            };
-        },
-        {} as Record<string, Upline[]>
-    );
-
-    const hasAgencies = Object.keys(uplineBySellingCode).length;
-
-    const agentUplinesWithSellingCode = (
-        hasAgencies
-            ? Object.entries(uplineBySellingCode)
-            : authUserHierarchies.map(
-                  (response) =>
-                      [response.sellingCode, response.upline] as [
-                          string,
-                          Upline[]
-                      ]
-              )
-    ).map(([agentSellingCode, uplines]) => ({ agentSellingCode, uplines }));
-
-    const mainAgenciesWithSellingCode = agentUplinesWithSellingCode
-        .map(({ agentSellingCode, uplines }) => ({
-            agentSellingCode,
-            agencies: uplines.filter(
-                (upline) => upline?.role === MAIN_AGENCY_ROLE
-            ),
-        }))
-        .filter(({ agencies }) => agencies.length);
-
-    mainAgenciesWithSellingCode
-        .map(({ agentSellingCode, agencies }) => {
-            const sortedAgencies = sortBy(agencies, 'level');
-            const groupedAgencies = groupBy(sortedAgencies, 'level');
-
-            const NEAREST_HIERARCHY_LEVEL = 0;
-            const nearestHierarchyAgencyGroupKey =
-                Object.keys(groupedAgencies)[NEAREST_HIERARCHY_LEVEL];
-
-            return {
-                agentSellingCode,
-                agencies: groupedAgencies[nearestHierarchyAgencyGroupKey] ?? [],
+                agentSellingCode: sellingCode,
+                agencies: getNearestAgenciesFromUpline(upline),
             };
         })
         .filter(({ agencies }) => agencies.length);
 
-    return mainAgenciesWithSellingCode.flatMap(
-        ({ agentSellingCode, agencies }) =>
-            agencies.map((agency) => ({ agentSellingCode, agency }))
+export const getCommonAgenciesFromHierarchies = (
+    authUserHierarchies: GetHierarchyResponse[],
+    clientCaseAgentHierarchies: GetHierarchyResponse[]
+) => {
+    const commonAgencies = clientCaseAgentHierarchies.reduce(
+        (acc, { sellingCode: agentSellingCode, upline }) => {
+            const mixedUpline = authUserHierarchies
+                .map(({ upline: authUserUpline }) =>
+                    [...(authUserUpline ?? []), ...(upline ?? [])].filter(
+                        isAgency
+                    )
+                )
+                .map(getUniqueDuplicates)
+                .flat();
+
+            if (!mixedUpline.length) {
+                return acc;
+            }
+
+            return {
+                ...acc,
+                [agentSellingCode]: mixedUpline,
+            };
+        },
+        {} as Record<string, UplineItem[]>
+    );
+
+    const hasCommonAgencies = Object.keys(commonAgencies).length;
+
+    if (!hasCommonAgencies) {
+        return [];
+    }
+
+    return Object.entries(commonAgencies).flatMap(
+        ([agentSellingCode, agencies]) =>
+            getNearestAgenciesFromUpline(agencies).map((agency) => ({
+                agentSellingCode,
+                agency,
+            }))
     );
 };

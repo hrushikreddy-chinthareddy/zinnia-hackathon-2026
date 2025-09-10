@@ -1,64 +1,61 @@
-.editContainer {
+.agentFieldContainer {
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+
     gap: var(--measure-dimension-gap-lg, 16px);
+
     background-color: var(--color-grayscale-color-50-gray);
     border-radius: var(--measure-dimension-radius-md, 8px);
-    padding: var(--measure-dimension-padding-2xl, 16px);
-
-    .editForm {
-        display: flex;
-        align-items: center;
-        gap: var(--measure-dimension-gap-lg, 16px);
-    }
-
-    .loaderContainer {
-        display: flex;
-        justify-content: center;
-        --loader-size: 32px;
-    }
-
-    .errorMessage {
-        color: var(--color-red-color-700-red, #b30032);
-    }
 }
 
-.searchInput {
-    border-radius: var(--measure-dimension-radius-md, 8px);
-    min-height: 44px;
-    padding-left: 3.25rem;
-    width: 284px;
-    padding-right: 3.25rem;
-}
-
-.searchInputIcon {
-    position: absolute;
-    z-index: 1;
-    margin-left: var(--measure-dimension-gap-lg, 16px);
-}
-
-.cancelInputIcon {
-    position: absolute;
-    z-index: 1;
-    right: var(--measure-dimension-gap-lg, 16px);
-    cursor: pointer;
-}
-
-.searchInputWithIcon {
-    position: relative;
+.editForm {
     display: flex;
     align-items: center;
+
+    padding-inline: var(--measure-dimension-padding-2xl, 16px);
+    gap: var(--measure-dimension-gap-lg, 16px);
 }
 
-.agentContainer {
+.searchFieldContainer {
     display: flex;
-    height: 44px;
+    flex-direction: column;
+
+    padding-block: var(--measure-dimension-padding-2xl, 16px);
+    gap: var(--measure-dimension-gap-lg, 16px);
+}
+
+.resultContainer {
+    display: flex;
+    flex-direction: column;
+
+    padding-inline: var(--measure-dimension-padding-2xl, 16px);
+    gap: var(--measure-dimension-gap-lg, 16px);
+}
+
+.scrollableContainer {
+    max-height: 300px;
+    overflow: auto;
+}
+
+.loaderContainer {
+    justify-content: center;
+    align-items: center;
+    --loader-size: 32px;
+}
+
+.errorMessage {
+    color: var(--color-red-color-700-red, #b30032);
+}
+
+.agentReadStateContainer {
+    display: flex;
+    justify-content: space-between;
+
     padding: var(--measure-dimension-padding-lg, 8px)
         var(--measure-dimension-padding-2xl, 16px);
-    align-items: center;
-    justify-content: space-between;
-    background-color: var(--color-grayscale-color-50-gray);
-    border-radius: var(--measure-dimension-radius-md, 8px);
+    width: 100%;
 
     .agentInfo {
         display: flex;
@@ -69,6 +66,38 @@
     }
 }
 
+.searchInput {
+    border-radius: var(--measure-dimension-radius-md, 8px);
+    min-height: 44px;
+    padding-left: 3.25rem;
+    padding-right: 3.25rem;
+}
+
+.searchInputIcon {
+    position: absolute;
+    z-index: 1;
+    margin-left: var(--measure-dimension-gap-lg, 16px);
+}
+
+.searchCancelIcon {
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    margin-right: var(--measure-dimension-gap-lg, 16px);
+}
+
+.searchInputWithIcon {
+    position: relative;
+    display: flex;
+    align-items: center;
+
+    flex: 1;
+
+    & > div:nth-of-type(1) {
+        width: 100%;
+    }
+}
+
 .agentEmail {
     color: var(--color-base-text-text-secondary, #676767);
     font-weight: var(--string-font-weight-font-weight-regular, 400);
@@ -76,16 +105,29 @@
 
 .agentInfoResult {
     padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: var(--measure-dimension-gap-md, 8px);
 
     .agentEmailResult {
         width: 173px;
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
+        flex: 1;
     }
 
     .agentNameResult {
         width: 112px;
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+    }
+
+    .addAgentButton {
+        flex: 0 0 max-content;
     }
 }

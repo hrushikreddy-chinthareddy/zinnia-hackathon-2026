@@ -1,5 +1,5 @@
 import { getHierarchyBySellingCode } from '@deps/queries/api/server/v1/producers';
-import { GetHierarchyResponse, Upline } from '@deps/types/producers';
+import { GetHierarchyResponse, UplineItem } from '@deps/types/producers';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 import { getAgencyIdFromHierarchy } from './get-agency-id-from-hierarchy';
@@ -33,7 +33,7 @@ describe('getAgencyIdFromHierarchy', () => {
                     {
                         role: 'MidAgency',
                         sellingCode: 'sellingCode',
-                    } as Upline,
+                    } as UplineItem,
                 ],
             },
         ],
@@ -72,7 +72,7 @@ describe('getAgencyIdFromHierarchy', () => {
                         role: 'GeneralAgency',
                         sellingCode: 'agencySellingCode',
                     },
-                ] as Upline[],
+                ] as UplineItem[],
             },
         ],
         [
@@ -96,7 +96,7 @@ describe('getAgencyIdFromHierarchy', () => {
                         sellingCode: 'agencySellingCode',
                         level: 1,
                     },
-                ] as Upline[],
+                ] as UplineItem[],
             },
         ],
     ])(

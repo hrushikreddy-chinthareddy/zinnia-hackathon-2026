@@ -4,7 +4,7 @@ export interface GetHierarchyResponse {
     products: Product[];
     effectiveDate: string;
     expiryDate: string;
-    upline: Upline[];
+    upline: Upline | null;
     payTo: PayTo;
     paidAffiliate: PaidAffiliate;
     level: number;
@@ -23,8 +23,8 @@ type AgencyRole =
     | 'Rep';
 
 export interface GetDownlineResponse {
-    sellingCode: string;
-    npn: string;
+    sellingCode: string | null;
+    npn: string | null;
     role: AgencyRole;
     level: number;
     isActive: boolean;
@@ -48,7 +48,9 @@ export interface Product {
     name: string;
 }
 
-export interface Upline {
+export type Upline = UplineItem[];
+
+export interface UplineItem {
     firstName: string;
     lastName: string;
     middleName: string;
@@ -118,4 +120,24 @@ export interface PaidAffiliate {
 export interface TaxIdentification {
     value: string;
     type: string;
+}
+
+export interface ProducersResponse {
+    producers: ProducerSearchResult[];
+}
+
+export const PRODUCER_SEARCH_RESULT_TYPES = {
+    INDIVIDUAL: 'Individual',
+    CORPORATION: 'Corporation',
+} as const;
+
+export type ProducerSearchResultType =
+    | (typeof PRODUCER_SEARCH_RESULT_TYPES)[keyof typeof PRODUCER_SEARCH_RESULT_TYPES]
+    | (string & {});
+
+export interface ProducerSearchResult {
+    name: string;
+    type: ProducerSearchResultType;
+    email: string;
+    lookupId: string;
 }

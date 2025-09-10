@@ -7308,6 +7308,7 @@
     },
     "clientCase": {
         "newClientCase": "+ Nouveau client case",
+        "clientCasePermissions": "Vous n'avez pas l'autorisation de créer un dossier client",
         "searchBar": {
             "clientCase": "Client case",
             "agentName": "Nom de l'agent",
@@ -7462,6 +7463,7 @@
             "searchAgent": {
                 "selectAgentButton": "Sélectionner un agent",
                 "notFound": "Aucun agent nommé \"{{agentName}}\" trouvé",
+                "agentHasNoAgencies": "Cet agent n'appartient à aucune agence.",
                 "current": "Utilisateur actuel"
             }
         }

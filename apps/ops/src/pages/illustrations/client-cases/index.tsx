@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
 import ClientCaseSearchBar from '@deps/components/client-case/client-case-list/search-bar/client-case-search-bar';
 import { ClientCaseTable } from '@deps/components/client-case/client-case-list/table/client-case-table';
-import { useUserIdentity } from '@deps/components/illustrations/helpers/hooks/user-user-identity';
+import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -63,10 +64,13 @@ export default function Illustrations({
     const searchParams = useSearchParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [bannerText, setBannerText] = useState('');
-    const { partyReferenceData } = usePermissionsContext();
-    const { findAllAliasesWithSellingCode } = useUserIdentity();
-    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
-    const isAgent = aliases.length > 0;
+    const { isAllowWriteClientCase, partyReferenceData } =
+        usePermissionsContext();
+
+    const aliases = useAllAliasesWithSellingCode(partyReferenceData);
+    const isAgent = aliases?.length ?? 0 > 0;
+
+    const allowCreateCase = isAgent || isAllowWriteClientCase;
 
     const bannerBodyText = (
         <Typography
@@ -116,14 +120,14 @@ export default function Illustrations({
                     />
                 )}
 
-                {isAgent && (
-                    <div className="flex items-center justify-between">
-                        <Typography
-                            variant={TypographyVariant.H1}
-                            className="md:mb-5 mb-4"
-                        >
-                            {t('illustrations')}
-                        </Typography>
+                <div className="flex items-center justify-between">
+                    <Typography
+                        variant={TypographyVariant.H1}
+                        className="md:mb-5 mb-4"
+                    >
+                        {t('illustrations')}
+                    </Typography>
+                    {allowCreateCase ? (
                         <Link
                             href={{
                                 pathname: NEW_CLIENT_CASE_URL,
@@ -141,8 +145,25 @@ export default function Illustrations({
                                 {t('clientCase.newClientCase')}
                             </Button>
                         </Link>
-                    </div>
-                )}
+                    ) : (
+                        <TempNavInactive
+                            tooltipBody={t('clientCase.clientCasePermissions')}
+                            navElementClassName="!bg-transparent"
+                        >
+                            <Button
+                                disabled={!allowCreateCase}
+                                mode="link"
+                                data-testid="new-client-case-btn"
+                                aria-label={t('ariaLabel.search') as string}
+                                type="button"
+                                size="small"
+                            >
+                                {t('clientCase.newClientCase')}
+                            </Button>
+                        </TempNavInactive>
+                    )}
+                </div>
+
                 <div className="mb-8">
                     <ClientCaseSearchBar />
                 </div>

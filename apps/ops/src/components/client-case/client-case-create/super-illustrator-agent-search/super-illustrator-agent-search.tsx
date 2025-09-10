@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import {
     Tooltip,
     Label,
@@ -8,53 +8,52 @@ import {
     FieldSize,
     Button,
     Loader,
+    FieldStatus,
+    FieldTypes,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { uniq } from 'lodash';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { getUsersDownlineList } from '@deps/queries/tanstack/producerQueries/producerQueries';
-import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import {
+    getProducersByIdQuery,
+    getProducersByNameAndCarrierCodeQuery,
+} from '@deps/queries/tanstack/producerQueries/producerQueries';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
-import { IllustrationAgentDetails } from '@deps/types/illustrations';
+import { ProducerSearchResult } from '@deps/types/producers';
 
-import { getAgentsFromDownline } from './agent-search.helpers';
-import styles from './agent-search.module.css';
+import styles from './super-illustrator-agent-search.module.css';
 
 interface DynamicObject {
     [key: string]: any;
 }
 
-interface AgentSearchProps {
-    currentAgentData: IllustrationAgentDetails;
+interface SuperIllustratorAgentSearchProps {
     onSelectAgent: (args0: DynamicObject) => void;
-    agencyIdArray: string[];
     shouldShowEdit: boolean;
 }
 
 const ENTER_KEY_NAME = 'enter';
 
-export const AgentSearch = ({
-    currentAgentData,
+export const SuperIllustratorAgentSearch = ({
     onSelectAgent,
-    agencyIdArray,
     shouldShowEdit,
-}: AgentSearchProps) => {
+}: SuperIllustratorAgentSearchProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isEditing, setIsEditing] = useState(false);
-    const [isNotFound, setIsNotFound] = useState(false);
+    const { writeClientCaseCarriers } = usePermissionsContext();
     const [agentNameInput, setAgentNameInput] = useState('');
-    const [searchResults, setSearchResults] = useState<
-        IllustrationAgentDetails[]
-    >([]);
-    const [selectedAgent, setCurrentAgent] =
-        useState<IllustrationAgentDetails>(currentAgentData);
+    const [searchValue, setSearchValue] = useState<string | null>(null);
+    const [selectedAgent, setSelectedAgent] = useState<ProducerSearchResult>();
+    const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null);
+    const [searchFieldError, setSearchFieldError] = useState('');
+
     const agentInfoResultClassname = clsx(
         styles.agentContainer,
         styles.agentInfoResult
@@ -64,71 +63,100 @@ export const AgentSearch = ({
         styles.agentEmailResult
     );
 
-    const { mutate, isPending } = useMutation({
-        mutationFn: ({
-            agencyIdArray,
-            agentName,
-        }: {
-            agencyIdArray: string[];
-            agentName: string;
-        }) => getUsersDownlineList(uniq(agencyIdArray), agentName),
-        mutationKey: ['getUserDownline'],
-        onSuccess: (response) => {
-            if (!response?.length) {
-                setIsNotFound(true);
-                return;
-            }
-            const formattedAgents = getAgentsFromDownline(response);
-            setSearchResults(formattedAgents);
-        },
-        onMutate: () => {
-            setSearchResults([]);
-            setIsNotFound(false);
-        },
-        onError: () => {
-            setIsNotFound(true);
-        },
-    });
-
-    const onSearch = () => {
-        mutate({ agencyIdArray, agentName: agentNameInput });
+    const handleSelectAgent = (agent: ProducerSearchResult) => {
+        setSelectedAgent(agent);
+        setSelectedAgentId(agent.lookupId);
     };
 
     const clearAll = () => {
         setIsEditing(false);
-        setIsNotFound(false);
         setAgentNameInput('');
-        setSearchResults([]);
+        setSelectedAgentId(null);
+        setSearchValue(null);
+        setSearchFieldError('');
     };
 
-    const updateAgent = (sellingCode: string | undefined) => {
-        const selectedAgent = searchResults.find((result) => {
-            return result.sellingCode === sellingCode;
-        }) as IllustrationAgentDetails;
-        setCurrentAgent(selectedAgent);
-        onSelectAgent({
-            agentDetails: selectedAgent,
-        });
-        clearAll();
-    };
+    // When users hit the search button, we loop through all carriers they have permissions for
+    // and fetch the producers per carrier. Then combine into a single list.
+    const { data: producersData, isFetching } = useQueries({
+        queries: writeClientCaseCarriers.map((writeClientCaseCarrier) => {
+            return {
+                queryKey: [
+                    'getProducersByNameAndCarrierCodeQuery',
+                    searchValue,
+                    writeClientCaseCarrier.toUpperCase(),
+                ],
+                queryFn: () =>
+                    getProducersByNameAndCarrierCodeQuery(
+                        searchValue || '',
+                        writeClientCaseCarrier.toUpperCase()
+                    ),
+                enabled: !!searchValue && searchValue.length > 0,
+                staleTime: 60 * 1000 * 5,
+            };
+        }),
+
+        combine: (results) => {
+            return {
+                data: results
+                    .map((result) => {
+                        if (result.data) {
+                            return result.data?.producers;
+                        } else {
+                            return [];
+                        }
+                    })
+                    .flat(),
+                isFetching: results.some((result) => result.isFetching),
+                hasError: results.some((result) => result.isError),
+            };
+        },
+    });
+
+    const { data: agentData, isFetching: isFetchingAgent } = useQuery({
+        queryKey: ['getProducerData', selectedAgentId],
+        queryFn: () => getProducersByIdQuery(selectedAgentId ?? ''),
+        enabled: !!selectedAgentId,
+    });
+
+    // We get agent data back when the user selects an agent in the list.
+    // This side effect fires when the agent information call finishes
+    useEffect(() => {
+        if (agentData && selectedAgentId) {
+            const agentDetails = {
+                firstName: agentData?.firstName,
+                lastName: agentData?.lastName,
+                fullName: agentData?.fullName,
+                email: agentData?.email,
+
+                sellingCode:
+                    agentData?.carrierSellingCodeRoles?.['FNWL']?.[0]
+                        ?.sellingCode, //TODO: Dymically handle this
+            };
+            onSelectAgent({
+                agentDetails: agentDetails,
+            });
+            clearAll();
+        }
+    }, [agentData, onSelectAgent, selectedAgentId]);
 
     const renderSearchResults = () => {
-        return searchResults.map((searchResult) => (
+        return producersData?.map((producer, index) => (
             <div
                 className={agentInfoResultClassname}
-                key={`${searchResult.email} - ${searchResult.firstName} ${searchResult.lastName}`}
+                key={`${index}-${producer?.lookupId}-${producer?.email}`}
             >
                 <Typography
                     variant={TypographyVariant.BodySm}
                     className={styles.agentNameResult}
                 >
-                    {searchResult.firstName} {searchResult.lastName}
+                    {producer?.name}
                 </Typography>
                 <Typography
                     variant={TypographyVariant.FieldLabel}
                     className={agentEmailResultClassname}
                 >
-                    {searchResult.email}
+                    {producer?.email}
                 </Typography>
                 <Button
                     mode="link"
@@ -137,7 +165,8 @@ export const AgentSearch = ({
                     type="button"
                     size="small"
                     className={styles.addAgentButton}
-                    onClick={() => updateAgent(searchResult.sellingCode)}
+                    disabled={isFetchingAgent}
+                    onClick={() => handleSelectAgent(producer)}
                 >
                     <Icon
                         type={IconType.ADD}
@@ -154,22 +183,23 @@ export const AgentSearch = ({
     };
 
     const determineRender = () => {
-        if (isPending) {
+        if (isFetching && producersData.length === 0) {
             return (
                 <div className={styles.loaderContainer}>
                     <Loader />
                 </div>
             );
-        } else if (searchResults.length > 0) {
+        }
+        if (producersData.length > 0) {
             return (
                 <div>
                     <Typography variant={TypographyVariant.FieldLabel}>
-                        Result: {searchResults.length}
+                        Result: {producersData.length}
                     </Typography>
-                    {renderSearchResults()}
+                    {searchValue && renderSearchResults()}
                 </div>
             );
-        } else if (isNotFound) {
+        } else if (searchValue && producersData.length === 0 && !isFetching) {
             return (
                 <Typography
                     variant={TypographyVariant.BodySm}
@@ -182,14 +212,24 @@ export const AgentSearch = ({
             );
         }
 
-        return <></>;
+        return null;
+    };
+
+    const handleSearch = (agentInput: string) => {
+        if (agentInput.length < 3) {
+            setSearchFieldError('Search must include at least 3 characters');
+            return;
+        }
+
+        setSearchFieldError('');
+        setSearchValue(agentInput);
     };
 
     return (
         <div
             onKeyDown={(event) => {
                 if (event.key.toLowerCase() === ENTER_KEY_NAME) {
-                    onSearch();
+                    setSearchValue(agentNameInput);
                 }
             }}
         >
@@ -215,13 +255,8 @@ export const AgentSearch = ({
                 <div className={styles.editContainer}>
                     <div className={styles.editForm}>
                         <div className={clsx(styles.searchInputWithIcon)}>
-                            <Icon
-                                type={IconType.SEARCH}
-                                height={24}
-                                width={24}
-                                className={styles.searchInputIcon}
-                            />
                             <FieldData
+                                fieldType={FieldTypes.Search}
                                 aria-label={
                                     t(
                                         'clientCase.searchBar.agentName'
@@ -235,32 +270,22 @@ export const AgentSearch = ({
                                 }
                                 className={clsx(styles.searchInput)}
                                 onChange={(e) => {
-                                    setIsNotFound(false);
                                     setAgentNameInput(e.target.value);
                                 }}
+                                fieldStatus={
+                                    searchFieldError
+                                        ? FieldStatus.ERROR
+                                        : FieldStatus.DEFAULT
+                                }
+                                errorMessage={searchFieldError}
                             />
-                            {agentNameInput && (
-                                <div
-                                    data-testid="client-case-search-bar-cancel-btn"
-                                    aria-label={t('ariaLabel.cancel') as string}
-                                    onClick={clearAll}
-                                    className={styles.cancelInputIcon}
-                                >
-                                    <CancelIcon
-                                        className="text-primary"
-                                        height={24}
-                                        width={24}
-                                    />
-                                </div>
-                            )}
                         </div>
                         <Button
                             mode="secondary"
                             data-testid="client-case-search-bar-search-btn"
                             aria-label={t('ariaLabel.search') as string}
-                            onClick={onSearch}
+                            onClick={() => handleSearch(agentNameInput)}
                             size="small"
-                            disabled={isPending}
                         >
                             {t('dashboard.search.btnText')}
                         </Button>
@@ -271,13 +296,13 @@ export const AgentSearch = ({
                 <div className={styles.agentContainer}>
                     <div className={styles.agentInfo}>
                         <Typography variant={TypographyVariant.BodySm}>
-                            {selectedAgent.firstName} {selectedAgent.lastName}
+                            {selectedAgent?.name}
                         </Typography>
                         <Typography
                             variant={TypographyVariant.BodySm}
                             className={styles.agentEmail}
                         >
-                            {selectedAgent.email}
+                            {selectedAgent?.email}
                         </Typography>
                     </div>
                     {shouldShowEdit && (

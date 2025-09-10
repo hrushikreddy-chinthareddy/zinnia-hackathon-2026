@@ -58,7 +58,8 @@ export default function NewClientCase(
         });
     }, [router, searchParams]);
 
-    const { mutate } = useMutation({
+    const { mutateAsync } = useMutation({
+        mutationKey: ['createClientCase'],
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             postIllustrationsClientCase(data),
         onSuccess: (data) => {
@@ -73,8 +74,8 @@ export default function NewClientCase(
         onMutate: () => {
             // add loading logic
         },
-        onError: () => {
-            // add error logic
+        onError: (err) => {
+            console.error(err);
         },
     });
 
@@ -85,7 +86,7 @@ export default function NewClientCase(
                 clientCaseData.insuredDetails?.dateOfBirth ?? ''
             );
         }
-        mutate(clientCaseData as unknown as IllustrationsClientCase);
+        return mutateAsync(clientCaseData as unknown as IllustrationsClientCase);
     };
 
     useEffect(() => {
