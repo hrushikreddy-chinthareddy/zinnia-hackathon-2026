@@ -352,8 +352,15 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                     sectionData,
                                 ]);
 
-                            //console.log('Subsections', sectionLabel,subSections);
-                            if (typeof sectionLabel !== 'string') {
+                            console.log(
+                                'Subsections',
+                                sectionLabel,
+                                subSections
+                            );
+                            if (
+                                typeof sectionLabel !== 'string' ||
+                                subSections == null
+                            ) {
                                 return null;
                             }
                             return (

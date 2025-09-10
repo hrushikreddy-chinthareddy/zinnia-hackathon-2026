@@ -296,16 +296,18 @@ export const toSections = (
     const basicsAndSections = policyTuples.reduce<PreparedPolicy>(
         (acc, [currentKey, currentVal]) => {
             // append to policySections list
-            if (typeof currentVal === 'object' && currentVal !== null) {
+            if (typeof currentVal === 'object') {
                 const sectionTitle = currentKey;
 
-                // if there are rules to hide this section, do so
+                // if there are rules to hide this section,
+                // or if the section is empty, skip it
                 if (
                     !shouldShowSection(
                         sectionTitle,
                         lineOfBusiness,
                         productType
-                    )
+                    ) ||
+                    !currentVal
                 ) {
                     return acc;
                 }
@@ -325,7 +327,7 @@ export const toSections = (
                                 };
                             }
                         );
-                        const funds = combinedFunds
+                        const funds = combinedFunds?.length
                             ? convertListToMap<Fund & FundAllocation>({
                                   subSectionList: combinedFunds,
                                   subsectionTitleField,
@@ -334,16 +336,18 @@ export const toSections = (
                             : undefined;
                         return {
                             ...acc,
-                            policySections: [
-                                ...acc.policySections,
-                                [
-                                    'Funds', // TODO: maybe convert from another map
-                                    {
-                                        ...currentVal,
-                                        ...funds,
-                                    },
+                            ...(funds && {
+                                policySections: [
+                                    ...acc.policySections,
+                                    [
+                                        'Funds', // TODO: maybe convert from another map
+                                        {
+                                            ...currentVal,
+                                            ...funds,
+                                        },
+                                    ],
                                 ],
-                            ],
+                            }),
                         };
                     case 'systematicPrograms':
                         const systematicProgramsAndParties =
@@ -542,13 +546,17 @@ export const toSections = (
     );
 
     // Fill in aggregated sections
-    if (policy.allocation?.matchSegment) {
+    const nonNullMatchEntries = Object.entries(
+        policy.allocation?.matchSegment ?? {}
+    ).filter(([, data]) => data != null);
+    if (nonNullMatchEntries.length) {
         basicsAndSections.policySections.push([
             'Match',
-            policy.allocation?.matchSegment,
+            Object.fromEntries(nonNullMatchEntries),
         ]);
     }
 
+    // Make a map of party roles to reference as tags
     const partyRoleMap = policy.partyRoles?.reduce<Record<string, string[]>>(
         (acc, currentPartyRole) => {
             const currentPartyIdRoles =
@@ -571,9 +579,7 @@ export const toSections = (
         {}
     );
 
-    //console.log('partyRoleMap...', partyRoleMap);
-    //console.log('policy.parties...', policy.parties);
-
+    // Populate the People section
     const people = policy.parties?.reduce((acc, party, i) => {
         const partyName = String(
             `${party.firstName ?? ''} ${party.lastName ?? ''}`.trim() ||
@@ -605,12 +611,11 @@ export const toSections = (
             [partyName]: partyDetails,
         };
     }, {});
-    //console.log('people...', tags, people);
 
     if (people) {
         basicsAndSections.policySections.push(['People', people]);
     }
-
+    console.log('---------------->', basicsAndSections);
     return basicsAndSections;
 };
 
@@ -682,7 +687,7 @@ export const toFieldsAndSubsections = ([
             fallbackTitle: String(sectionName),
         });
         //console.log('|-------->sectionData', sectionData);
-        const subSections = removeExcludedFields(
+        const subSections = removeExcludedAndEmptyFields(
             Object.entries(subSectionDataMap), // remove excluded subsections
             [subsectionTitleField] // and also the title field
         ).map<SubSection>(([subSectionTitle, subSectionData]) => {
@@ -695,7 +700,9 @@ export const toFieldsAndSubsections = ([
                     ? []
                     : // map subsection fields to tuples and
                       // remove excluded fields within subsection
-                      removeExcludedFields(Object.entries(subSectionData)),
+                      removeExcludedAndEmptyFields(
+                          Object.entries(subSectionData)
+                      ),
             ];
         });
 
@@ -704,7 +711,7 @@ export const toFieldsAndSubsections = ([
         };
     } else {
         //console.log('sectionData', sectionData);
-        const { fields, subSections } = removeExcludedFields(
+        const { fields, subSections } = removeExcludedAndEmptyFields(
             Object.entries(sectionData)
         ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
             // If sectionData is an object, and a value within it is a nested object,
@@ -724,7 +731,9 @@ export const toFieldsAndSubsections = ([
                         ...(acc.subSections ?? []),
                         [
                             fieldName,
-                            removeExcludedFields(Object.entries(fieldData)),
+                            removeExcludedAndEmptyFields(
+                                Object.entries(fieldData)
+                            ),
 
                             // Add metadata
                             {
@@ -739,7 +748,7 @@ export const toFieldsAndSubsections = ([
 
             // Otherwise, the value is meant to be displayed, so just append the key-value pair
             return {
-                fields: removeExcludedFields([
+                fields: removeExcludedAndEmptyFields([
                     ...(acc.fields ?? []),
                     [fieldName, fieldData],
                 ]),
@@ -754,12 +763,13 @@ export const toFieldsAndSubsections = ([
     }
 };
 
-const removeExcludedFields = (
+const removeExcludedAndEmptyFields = (
     tuples: DataTuple[],
     additionalFieldsToExclude?: DataKey[]
 ) => {
     return tuples.filter(
-        ([key]) =>
+        ([key, data]) =>
+            data != null &&
             !excludeFields.has(key) &&
             !(
                 additionalFieldsToExclude &&
