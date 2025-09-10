@@ -31,7 +31,7 @@
         },
         "parties": [
             {
-                "partyType": "INDIVIDUAL",
+                "partyType": "TRUST",
                 "partyRole": "OWNER",
                 "firstName": "ROBYN",
                 "middleName": "S",
@@ -109,6 +109,7 @@
                 "isIrrevocable": "Yes",
                 "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
+                "relationshipToParty": "SPOUSE",
                 "party": {
                     "partyId": "Party_PB_Primary_Bene_1",
                     "partyType": "INDIVIDUAL",
@@ -120,7 +121,7 @@
                     "fullName": "Wilson",
                     "gender": "MALE",
                     "middleName": "",
-                    "lastName": "",
+                    "lastName": "S",
                     "prefix": "",
                     "suffix": "",
                     "trustType": "",
@@ -153,15 +154,15 @@
                     ],
                     "identifications": [
                         {
-                            "endDate": null,
-                            "identificationDescription": null,
+                            "endDate": "",
+                            "identificationDescription": "",
                             "identificationId": "1",
-                            "identificationKey": null,
+                            "identificationKey": "",
                             "identificationType": "SSN",
                             "identificationValue": "***-**-2025",
-                            "issueCountry": null,
-                            "issueState": null,
-                            "startDate": null
+                            "issueCountry": "",
+                            "issueState": "",
+                            "startDate": ""
                         }
                     ],
                     "phones": [
@@ -183,8 +184,7 @@
                 "partyRole": {
                     "partyId": "Party_PB_Primary_Bene_1",
                     "beneficiaryRole": "PRIMARY BENEFICIARY",
-                    "partyRoleId": 34,
-                    "relationshipToParty": "SPOUSE"
+                    "partyRoleId": 34
                 }
             },
             {
@@ -193,6 +193,7 @@
                 "isIrrevocable": "No",
                 "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
+                "relationshipToParty": "TRUSTEEOFINCOMPETENT",
                 "party": {
                     "partyId": "",
                     "partyType": "TRUST",
@@ -246,8 +247,7 @@
                 "partyRole": {
                     "partyId": "",
                     "beneficiaryRole": "CONTINGENT BENEFICIARY",
-                    "partyRoleId": 32,
-                    "relationshipToParty": "TRUSTEEOFINCOMPETENT"
+                    "partyRoleId": 32
                 }
             }
         ],

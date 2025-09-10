@@ -38,40 +38,88 @@ const SingleSelectOptions = ({
 }: Omit<SimpleSelectProps, 'onChange' | 'isMultiselect'>) => {
     return (
         <Select.Viewport>
-            {options.map((option: SimpleOption, index: number) => (
-                <Select.Item
-                    disabled={option.disabled}
-                    value={option.value}
-                    key={`option-${option.value}`}
-                    className={getItemClasses(
-                        option,
-                        index,
-                        options.length,
-                        option.value === value
-                    )}
-                    aria-label={`Button ${option.label}`}
-                >
-                    <Select.ItemText>
-                        <Typography
-                            variant={
-                                value === option.value
-                                    ? TypographyVariant.BodySmBold
-                                    : TypographyVariant.BodySm
-                            }
-                        >
-                            {option.label}
-                        </Typography>
-                        {option.description && (
-                            <Typography
-                                variant={TypographyVariant.BodySm}
-                                className="text-gray-500"
-                            >
-                                {option.description}
-                            </Typography>
+            {options
+                .filter((option) => option.value !== '')
+                .map((option: SimpleOption, index: number) => (
+                    <Select.Item
+                        disabled={option.disabled}
+                        value={option.value}
+                        key={`option-${option.value}`}
+                        className={getItemClasses(
+                            option,
+                            index,
+                            options.length,
+                            option.value === value
                         )}
-                    </Select.ItemText>
-                </Select.Item>
-            ))}
+                        aria-label={`Button ${option.label}`}
+                    >
+                        <Select.ItemText>
+                            <Typography
+                                variant={
+                                    value === option.value
+                                        ? TypographyVariant.BodySmBold
+                                        : TypographyVariant.BodySm
+                                }
+                            >
+                                {option.label}
+                            </Typography>
+                            {option.description && (
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className="text-gray-500"
+                                >
+                                    {option.description}
+                                </Typography>
+                            )}
+                        </Select.ItemText>
+                    </Select.Item>
+                ))}
+        </Select.Viewport>
+    );
+};
+
+const SingleSelectOptionsWithEmptyValue = ({
+    options,
+    value,
+}: Omit<SimpleSelectProps, 'onChange' | 'isMultiselect'>) => {
+    return (
+        <Select.Viewport>
+            {options
+                .filter((option) => option.value !== '')
+                .map((option: SimpleOption, index: number) => (
+                    <Select.Item
+                        disabled={option.disabled}
+                        value={option.value}
+                        key={`option-${option.value}`}
+                        className={getItemClasses(
+                            option,
+                            index,
+                            options.length,
+                            option.value === value
+                        )}
+                        aria-label={`Button ${option.label}`}
+                    >
+                        <Select.ItemText>
+                            <Typography
+                                variant={
+                                    value === option.value
+                                        ? TypographyVariant.BodySmBold
+                                        : TypographyVariant.BodySm
+                                }
+                            >
+                                {option.label}
+                            </Typography>
+                            {option.description && (
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className="text-gray-500"
+                                >
+                                    {option.description}
+                                </Typography>
+                            )}
+                        </Select.ItemText>
+                    </Select.Item>
+                ))}
         </Select.Viewport>
     );
 };
@@ -154,6 +202,7 @@ const SelectComponent = ({
     maxContentWidth,
     readOnly,
     id,
+    allowEmptyValue = false,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
@@ -310,10 +359,19 @@ const SelectComponent = ({
                                 isMultiselect
                             />
                         ) : (
-                            <SingleSelectOptions
-                                options={options}
-                                value={value}
-                            />
+                            <>
+                                {allowEmptyValue ? (
+                                    <SingleSelectOptionsWithEmptyValue
+                                        options={options}
+                                        value={value}
+                                    />
+                                ) : (
+                                    <SingleSelectOptions
+                                        options={options}
+                                        value={value}
+                                    />
+                                )}
+                            </>
                         )}
                     </MainComponent.Content>
                 </MainComponent.Portal>

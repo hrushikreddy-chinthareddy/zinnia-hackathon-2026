@@ -262,6 +262,7 @@ function SelectWidget<
                         options={selectOptions}
                         placeholder={placeholder}
                         className="max-w-sm"
+                        allowEmptyValue={uiSchema?.['ui:allowEmptyValue']}
                     />
                 )}
             </label>

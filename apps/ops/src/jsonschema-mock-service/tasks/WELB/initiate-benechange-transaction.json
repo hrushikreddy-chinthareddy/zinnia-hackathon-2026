@@ -246,6 +246,7 @@
                                                     "type": "string",
                                                     "title": "State",
                                                     "enum": [
+                                                        "",
                                                         "AA",
                                                         "AE",
                                                         "AK",
@@ -361,7 +362,13 @@
                                                 },
                                                 "trustType": {
                                                     "type": "string",
-                                                    "title": "Trust type"
+                                                    "title": "Trust type",
+                                                    "enum": [
+                                                        "",
+                                                        "INDIVIDUALTRUST",
+                                                        "CORPORATETRUST",
+                                                        "TESTAMENTARYTRUST"
+                                                    ]
                                                 }
                                             }
                                         }
@@ -438,7 +445,12 @@
                                     "enumNames": [
                                         "Individual",
                                         "Trust",
-                                        "Estate/Organization"
+                                        "Organization"
+                                    ],
+                                    "enumDisabled": [
+                                        "INDIVIDUAL",
+                                        "TRUST",
+                                        "ORGANIZATION"
                                     ]
                                 }
                             },
@@ -507,33 +519,86 @@
                                                 "Mailing Address"
                                             ]
                                         }
+                                    },
+                                    "state": {
+                                        "ui:widget": "SelectWidget",
+                                        "ui:allowEmptyValue": true,
+                                        "ui:options": {
+                                            "enumNames": [
+                                                "Select state",
+                                                "AA",
+                                                "AE",
+                                                "AK",
+                                                "AL",
+                                                "AP",
+                                                "AR",
+                                                "AZ",
+                                                "CA",
+                                                "CD",
+                                                "CO",
+                                                "CT",
+                                                "DC",
+                                                "DE",
+                                                "FL",
+                                                "FN",
+                                                "GA",
+                                                "GU",
+                                                "HI",
+                                                "IA",
+                                                "ID",
+                                                "IL",
+                                                "IN",
+                                                "KS",
+                                                "KY",
+                                                "LA",
+                                                "MA",
+                                                "MD",
+                                                "ME",
+                                                "MI",
+                                                "MN",
+                                                "MO",
+                                                "MS",
+                                                "MT",
+                                                "NC",
+                                                "ND",
+                                                "NE",
+                                                "NH",
+                                                "NJ",
+                                                "NM",
+                                                "NV",
+                                                "NY",
+                                                "OH",
+                                                "OK",
+                                                "OR",
+                                                "PA",
+                                                "PR",
+                                                "RI",
+                                                "SC",
+                                                "SD",
+                                                "TN",
+                                                "TX",
+                                                "UT",
+                                                "VA",
+                                                "VI",
+                                                "VT",
+                                                "WA",
+                                                "WI",
+                                                "WV",
+                                                "WY"
+                                            ]
+                                        }
                                     }
                                 }
                             },
                             "trustType": {
                                 "ui:widget": "SelectWidget",
+                                "ui:allowEmptyValue": true,
                                 "ui:options": {
-                                    "enumOptions": [
-                                        {
-                                            "label": "Individual Trust",
-                                            "value": "INDIVIDUALTRUST"
-                                        },
-                                        {
-                                            "label": "Corporate Trust",
-                                            "value": "CORPORATETRUST"
-                                        },
-                                        {
-                                            "label": "Testamentary Trust",
-                                            "value": "TESTAMENTARYTRUST"
-                                        },
-                                        {
-                                            "label": "Inter Vivos Trust",
-                                            "value": "INTERVIVOSTRUST"
-                                        },
-                                        {
-                                            "label": "Grantor Trust",
-                                            "value": "GRANTORTRUST"
-                                        }
+                                    "enumNames": [
+                                        "Select trust type",
+                                        "Individual Trust",
+                                        "Corporate Trust",
+                                        "Testamentary Trust"
                                     ]
                                 }
                             }
@@ -552,6 +617,50 @@
                             "items": {
                                 "type": "object",
                                 "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": ["ADD", "UPDATE", "DELETE"]
+                                    },
+                                    "relationshipToParty": {
+                                        "type": "string",
+                                        "title": "Relationship to party",
+                                        "enum": [
+                                            "TRUSTEE",
+                                            "TRUSTEEOFMINOR",
+                                            "TRUSTEEOFINCOMPETENT",
+                                            "POWEROFATTORNEY",
+                                            "CONTROLLINGPERSONOFENTITY",
+                                            "BROTHER",
+                                            "CHILD",
+                                            "DAUGHTER",
+                                            "DOMESTICPARTNER",
+                                            "EXECUTORS",
+                                            "FATHER",
+                                            "FIANCE",
+                                            "GRANDCHILD",
+                                            "LIFEPARTNER",
+                                            "MOTHER",
+                                            "SISTER",
+                                            "SON",
+                                            "SPOUSE",
+                                            "STEPFATHER",
+                                            "STEPMOTHER",
+                                            "SELF",
+                                            "LEGALGUARDIAN",
+                                            "OTHER"
+                                        ]
+                                    },
+                                    "isPerStirpes": {
+                                        "type": "string",
+                                        "title": "Per Stirpes",
+                                        "enum": ["Yes", "No"]
+                                    },
+                                    "isIrrevocable": {
+                                        "type": "string",
+                                        "title": "Irrevocable",
+                                        "enum": ["Yes", "No"]
+                                    },
                                     "party": {
                                         "type": "object",
                                         "properties": {
@@ -566,17 +675,9 @@
                                             },
                                             "beneficiaryPercentage": {
                                                 "type": "number",
-                                                "title": "Allocation"
-                                            },
-                                            "isPerStirpes": {
-                                                "type": "string",
-                                                "title": "Per Stirpes",
-                                                "enum": ["Yes", "No"]
-                                            },
-                                            "isIrrevocable": {
-                                                "type": "string",
-                                                "title": "Irrevocable",
-                                                "enum": ["Yes", "No"]
+                                                "title": "Allocation",
+                                                "minimum": 0,
+                                                "maximum": 100
                                             },
                                             "identifications": {
                                                 "type": "array",
@@ -619,7 +720,8 @@
                                                         },
                                                         "addressLine1": {
                                                             "type": "string",
-                                                            "title": "Address line 1"
+                                                            "title": "Address line 1",
+                                                            "minLength": 1
                                                         },
                                                         "addressLine2": {
                                                             "type": "string",
@@ -702,7 +804,13 @@
                                                             "type": "string",
                                                             "title": "Zip+4"
                                                         }
-                                                    }
+                                                    },
+                                                    "required": [
+                                                        "addressLine1",
+                                                        "city",
+                                                        "state",
+                                                        "zipCode"
+                                                    ]
                                                 }
                                             },
                                             "phones": {
@@ -746,6 +854,10 @@
                                                 }
                                             }
                                         },
+                                        "required": [
+                                            "partyType",
+                                            "beneficiaryPercentage"
+                                        ],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -763,6 +875,7 @@
                                                             "type": "string",
                                                             "title": "Prefix",
                                                             "enum": [
+                                                                "",
                                                                 "Dr.",
                                                                 "Mr.",
                                                                 "Mrs.",
@@ -771,7 +884,8 @@
                                                         },
                                                         "firstName": {
                                                             "type": "string",
-                                                            "title": "First name"
+                                                            "title": "First name",
+                                                            "minLength": 1
                                                         },
                                                         "middleName": {
                                                             "type": "string",
@@ -779,12 +893,14 @@
                                                         },
                                                         "lastName": {
                                                             "type": "string",
-                                                            "title": "Last name"
+                                                            "title": "Last name",
+                                                            "minLength": 1
                                                         },
                                                         "suffix": {
                                                             "type": "string",
                                                             "title": "Suffix",
                                                             "enum": [
+                                                                "",
                                                                 "JR",
                                                                 "SN",
                                                                 "I",
@@ -792,7 +908,11 @@
                                                                 "III"
                                                             ]
                                                         }
-                                                    }
+                                                    },
+                                                    "required": [
+                                                        "firstName",
+                                                        "lastName"
+                                                    ]
                                                 }
                                             },
                                             {
@@ -807,12 +927,14 @@
                                                     "properties": {
                                                         "trustName": {
                                                             "type": "string",
-                                                            "title": "Trust name"
+                                                            "title": "Trust name",
+                                                            "minLength": 1
                                                         },
                                                         "trustType": {
                                                             "type": "string",
                                                             "title": "Trust type",
                                                             "enum": [
+                                                                "",
                                                                 "INDIVIDUALTRUST",
                                                                 "CORPORATETRUST",
                                                                 "TESTAMENTARYTRUST",
@@ -820,7 +942,8 @@
                                                                 "GRANTORTRUST"
                                                             ]
                                                         }
-                                                    }
+                                                    },
+                                                    "required": ["trustName"]
                                                 }
                                             },
                                             {
@@ -837,7 +960,8 @@
                                                     "properties": {
                                                         "companyName": {
                                                             "type": "string",
-                                                            "title": "Company name"
+                                                            "title": "Company name",
+                                                            "minLength": 1
                                                         },
                                                         "entityType": {
                                                             "type": "string",
@@ -855,7 +979,8 @@
                                                                 "UNKNOWN"
                                                             ]
                                                         }
-                                                    }
+                                                    },
+                                                    "required": ["companyName"]
                                                 }
                                             }
                                         ]
@@ -870,39 +995,11 @@
                                                     "PRIMARY BENEFICIARY",
                                                     "CONTINGENT BENEFICIARY"
                                                 ]
-                                            },
-                                            "relationshipToParty": {
-                                                "type": "string",
-                                                "title": "Relationship to party",
-                                                "enum": [
-                                                    "TRUSTEE",
-                                                    "TRUSTEEOFMINOR",
-                                                    "TRUSTEEOFINCOMPETENT",
-                                                    "POWEROFATTORNEY",
-                                                    "CONTROLLINGPERSONOFENTITY",
-                                                    "BROTHER",
-                                                    "CHILD",
-                                                    "DAUGHTER",
-                                                    "DOMESTICPARTNER",
-                                                    "EXECUTORS",
-                                                    "FATHER",
-                                                    "FIANCE",
-                                                    "GRANDCHILD",
-                                                    "LIFEPARTNER",
-                                                    "MOTHER",
-                                                    "SISTER",
-                                                    "SON",
-                                                    "SPOUSE",
-                                                    "STEPFATHER",
-                                                    "STEPMOTHER",
-                                                    "SELF",
-                                                    "LEGALGUARDIAN",
-                                                    "OTHER"
-                                                ]
                                             }
                                         }
                                     }
-                                }
+                                },
+                                "required": ["relationshipToParty"]
                             }
                         }
                     }
@@ -919,20 +1016,72 @@
                     },
                     "beneData": {
                         "ui:options": {
-                            "addable": true,
-                            "orderable": false,
                             "label": false,
-                            "removable": true
+                            "addable": true,
+                            "defaultItemLabel": "New Beneficiary"
                         },
                         "items": {
-                            "ui:order": ["partyRole", "party"],
+                            "ui:order": [
+                                "partyRole",
+                                "action",
+                                "party",
+                                "relationshipToParty",
+                                "isPerStirpes",
+                                "isIrrevocable"
+                            ],
                             "ui:options": {
                                 "label": true,
                                 "title": "{{partyRole.beneficiaryRole}}",
                                 "defaultItemLabel": "New Beneficiary",
                                 "nobackground": true,
-                                "expandable": true,
-                                "removable": true
+                                "expandable": true
+                            },
+                            "action": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "enumNames": ["Add", "Update", "Delete"]
+                                }
+                            },
+                            "isPerStirpes": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "enumNames": ["Yes", "No"]
+                                }
+                            },
+                            "isIrrevocable": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "enumNames": ["Yes", "No"]
+                                }
+                            },
+                            "relationshipToParty": {
+                                "ui:options": {
+                                    "enumNames": [
+                                        "Trustee",
+                                        "Trustee of Minor",
+                                        "Trustee of Incompetent",
+                                        "Power of Attorney",
+                                        "Controlling Person of Entity",
+                                        "Brother",
+                                        "Child",
+                                        "Daughter",
+                                        "Domestic Partner",
+                                        "Executors",
+                                        "Father",
+                                        "Fiance",
+                                        "Grandchild",
+                                        "Life Partner",
+                                        "Mother",
+                                        "Sister",
+                                        "Son",
+                                        "Spouse",
+                                        "Stepfather",
+                                        "Stepmother",
+                                        "Self",
+                                        "Legal Guardian",
+                                        "Other"
+                                    ]
+                                }
                             },
                             "party": {
                                 "ui:order": [
@@ -971,7 +1120,10 @@
                                 },
                                 "trustType": {
                                     "ui:options": {
+                                        "ui:widget": "SelectWidget",
+                                        "ui:allowEmptyValue": true,
                                         "enumNames": [
+                                            "Select trust type",
                                             "Individual Trust",
                                             "Corporate Trust",
                                             "Testamentary Trust",
@@ -1146,16 +1298,31 @@
                                         }
                                     }
                                 },
-                                "isPerStirpes": {
-                                    "ui:widget": "radio",
+                                "prefix": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:allowEmptyValue": true,
                                     "ui:options": {
-                                        "enumNames": ["Yes", "No"]
+                                        "enumNames": [
+                                            "Select prefix",
+                                            "Dr.",
+                                            "Mr.",
+                                            "Mrs.",
+                                            "Ms."
+                                        ]
                                     }
                                 },
-                                "isIrrevocable": {
-                                    "ui:widget": "radio",
+                                "suffix": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:allowEmptyValue": true,
                                     "ui:options": {
-                                        "enumNames": ["Yes", "No"]
+                                        "enumNames": [
+                                            "Select suffix",
+                                            "JR",
+                                            "SN",
+                                            "I",
+                                            "II",
+                                            "III"
+                                        ]
                                     }
                                 }
                             },
@@ -1168,35 +1335,6 @@
                                         "enumNames": [
                                             "Primary Beneficiary",
                                             "Contingent Beneficiary"
-                                        ]
-                                    }
-                                },
-                                "relationshipToParty": {
-                                    "ui:options": {
-                                        "enumNames": [
-                                            "Trustee",
-                                            "Trustee of Minor",
-                                            "Trustee of Incompetent",
-                                            "Power of Attorney",
-                                            "Controlling Person of Entity",
-                                            "Brother",
-                                            "Child",
-                                            "Daughter",
-                                            "Domestic Partner",
-                                            "Executors",
-                                            "Father",
-                                            "Fiance",
-                                            "Grandchild",
-                                            "Life Partner",
-                                            "Mother",
-                                            "Sister",
-                                            "Son",
-                                            "Spouse",
-                                            "Stepfather",
-                                            "Stepmother",
-                                            "Self",
-                                            "Legal Guardian",
-                                            "Other"
                                         ]
                                     }
                                 }
@@ -1222,74 +1360,7 @@
                                 },
                                 "signatures": {
                                     "type": "array",
-                                    "items": [
-                                        {
-                                            "type": "object",
-                                            "title": "Signature 1",
-                                            "properties": {
-                                                "signType": {
-                                                    "type": "string",
-                                                    "title": "Type"
-                                                },
-                                                "isSignedPresent": {
-                                                    "type": "string",
-                                                    "title": "Signed present",
-                                                    "enum": ["Yes", "No"]
-                                                },
-                                                "signDesignation": {
-                                                    "type": "string",
-                                                    "title": "Designation",
-                                                    "enum": [
-                                                        "Trustee",
-                                                        "Executor",
-                                                        "Custodian",
-                                                        "Guardian",
-                                                        "Attorney-in-fact",
-                                                        "Assignee",
-                                                        "NA"
-                                                    ]
-                                                },
-                                                "signDate": {
-                                                    "type": "string",
-                                                    "title": "Sign date",
-                                                    "format": "date"
-                                                }
-                                            }
-                                        },
-                                        {
-                                            "type": "object",
-                                            "title": "Signature 2",
-                                            "properties": {
-                                                "signType": {
-                                                    "type": "string",
-                                                    "title": "Type"
-                                                },
-                                                "isSignedPresent": {
-                                                    "type": "string",
-                                                    "title": "Signed present",
-                                                    "enum": ["Yes", "No"]
-                                                },
-                                                "signDesignation": {
-                                                    "type": "string",
-                                                    "title": "Designation",
-                                                    "enum": [
-                                                        "Trustee",
-                                                        "Executor",
-                                                        "Custodian",
-                                                        "Guardian",
-                                                        "Attorney-in-fact",
-                                                        "Assignee",
-                                                        "NA"
-                                                    ]
-                                                },
-                                                "signDate": {
-                                                    "type": "string",
-                                                    "title": "Sign date",
-                                                    "format": "date"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                    "items": {}
                                 }
                             }
                         }
@@ -1303,7 +1374,8 @@
                                             "isIrrevocableBene": {
                                                 "const": true
                                             }
-                                        }
+                                        },
+                                        "required": ["isIrrevocableBene"]
                                     }
                                 }
                             },
@@ -1312,12 +1384,168 @@
                                     "signatureData": {
                                         "properties": {
                                             "signatures": {
+                                                "type": "array",
                                                 "items": [
-                                                    {},
-                                                    {},
+                                                    {
+                                                        "type": "object",
+                                                        "title": "Signature 1",
+                                                        "properties": {
+                                                            "signType": {
+                                                                "type": "string",
+                                                                "title": "Type"
+                                                            },
+                                                            "isSignedPresent": {
+                                                                "type": "string",
+                                                                "title": "Signed present",
+                                                                "enum": [
+                                                                    "Yes",
+                                                                    "No"
+                                                                ]
+                                                            },
+                                                            "signDesignation": {
+                                                                "type": "string",
+                                                                "title": "Designation",
+                                                                "enum": [
+                                                                    "Trustee",
+                                                                    "Executor",
+                                                                    "Custodian",
+                                                                    "Guardian",
+                                                                    "Attorney-in-fact",
+                                                                    "Assignee",
+                                                                    "NA"
+                                                                ]
+                                                            },
+                                                            "signDate": {
+                                                                "type": "string",
+                                                                "title": "Sign date",
+                                                                "format": "date"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "title": "Signature 2",
+                                                        "properties": {
+                                                            "signType": {
+                                                                "type": "string",
+                                                                "title": "Type"
+                                                            },
+                                                            "isSignedPresent": {
+                                                                "type": "string",
+                                                                "title": "Signed present",
+                                                                "enum": [
+                                                                    "Yes",
+                                                                    "No"
+                                                                ]
+                                                            },
+                                                            "signDesignation": {
+                                                                "type": "string",
+                                                                "title": "Designation",
+                                                                "enum": [
+                                                                    "Trustee",
+                                                                    "Executor",
+                                                                    "Custodian",
+                                                                    "Guardian",
+                                                                    "Attorney-in-fact",
+                                                                    "Assignee",
+                                                                    "NA"
+                                                                ]
+                                                            },
+                                                            "signDate": {
+                                                                "type": "string",
+                                                                "title": "Sign date",
+                                                                "format": "date"
+                                                            }
+                                                        }
+                                                    },
                                                     {
                                                         "type": "object",
                                                         "title": "Signature 3",
+                                                        "properties": {
+                                                            "signType": {
+                                                                "type": "string",
+                                                                "title": "Type"
+                                                            },
+                                                            "isSignedPresent": {
+                                                                "type": "string",
+                                                                "title": "Signed present",
+                                                                "enum": [
+                                                                    "Yes",
+                                                                    "No"
+                                                                ]
+                                                            },
+                                                            "signDesignation": {
+                                                                "type": "string",
+                                                                "title": "Designation",
+                                                                "enum": [
+                                                                    "Trustee",
+                                                                    "Executor",
+                                                                    "Custodian",
+                                                                    "Guardian",
+                                                                    "Attorney-in-fact",
+                                                                    "Assignee",
+                                                                    "NA"
+                                                                ]
+                                                            },
+                                                            "signDate": {
+                                                                "type": "string",
+                                                                "title": "Sign date",
+                                                                "format": "date"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "else": {
+                                "properties": {
+                                    "signatureData": {
+                                        "properties": {
+                                            "signatures": {
+                                                "type": "array",
+                                                "items": [
+                                                    {
+                                                        "type": "object",
+                                                        "title": "Signature 1",
+                                                        "properties": {
+                                                            "signType": {
+                                                                "type": "string",
+                                                                "title": "Type"
+                                                            },
+                                                            "isSignedPresent": {
+                                                                "type": "string",
+                                                                "title": "Signed present",
+                                                                "enum": [
+                                                                    "Yes",
+                                                                    "No"
+                                                                ]
+                                                            },
+                                                            "signDesignation": {
+                                                                "type": "string",
+                                                                "title": "Designation",
+                                                                "enum": [
+                                                                    "Trustee",
+                                                                    "Executor",
+                                                                    "Custodian",
+                                                                    "Guardian",
+                                                                    "Attorney-in-fact",
+                                                                    "Assignee",
+                                                                    "NA"
+                                                                ]
+                                                            },
+                                                            "signDate": {
+                                                                "type": "string",
+                                                                "title": "Sign date",
+                                                                "format": "date"
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "object",
+                                                        "title": "Signature 2",
                                                         "properties": {
                                                             "signType": {
                                                                 "type": "string",

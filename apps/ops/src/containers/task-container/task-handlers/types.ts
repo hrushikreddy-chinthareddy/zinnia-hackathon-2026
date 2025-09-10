@@ -25,3 +25,20 @@ export interface ReviewPayload {
     businessProcess: string;
     carrier?: string;
 }
+
+export interface Reason {
+    detailedReason: string;
+    exceptionSubRefs: any[];
+    nmId: string;
+    category: string;
+    reason: string;
+}
+
+export interface BeneTaskPayload {
+    category: string[];
+    businessProcess: string;
+    carrier?: string;
+    policyNumber: string;
+    planCode: string;
+    logCtx?: LoggingContext;
+}

@@ -46,6 +46,7 @@ export type MultiselectProps = {
 export type SelectProps = (SimpleSelectProps | MultiselectProps) & {
     disabled?: boolean;
     maxContentWidth?: boolean;
+    allowEmptyValue?: boolean;
 } & Omit<FieldProps, 'onChange' | 'value'>;
 
 export const getTriggerClasses = (isOpen: boolean) => {

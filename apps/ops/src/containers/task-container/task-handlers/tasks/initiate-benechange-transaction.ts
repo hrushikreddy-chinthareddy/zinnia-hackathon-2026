@@ -1,21 +1,60 @@
-import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
+import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { LoggingContext } from '@deps/utils/server-logging';
 
-import { TaskHandler, ReviewPayload } from '../types';
+import { TaskHandler, Reason, BeneTaskPayload } from '../types';
 
-const beneChangeHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
-    api: NigoSearch,
+const beneChangeHandler: TaskHandler<BeneTaskPayload, any> = {
+    api: async (payload: BeneTaskPayload, accessToken: string | undefined) => {
+        const {
+            category,
+            businessProcess,
+            carrier,
+            policyNumber,
+            planCode,
+            logCtx,
+        } = payload;
+        const [nigoSearchResult, policyResult] = await Promise.all([
+            NigoSearch(
+                {
+                    category,
+                    businessProcess,
+                    carrier,
+                },
+                accessToken,
+                (logCtx ?? {}) as LoggingContext
+            ),
+            getPolicyDetailsSsr(
+                policyNumber,
+                planCode,
+                accessToken,
+                (logCtx ?? {}) as LoggingContext
+            ),
+        ]);
+        return {
+            nigoSearchResult,
+            policyResult,
+        };
+    },
 
-    getPayload: (task: any) => ({
+    getPayload: (task: any, logCtx?: LoggingContext) => ({
         category: ['Form', 'Signature', 'Account Information', 'Data Entry'],
         businessProcess: task?.process,
         carrier: task?.carrier,
+        policyNumber: task?.data?.policyNumber,
+        planCode: task?.data?.planCode,
+        logCtx,
     }),
 
-    transformResponse: (response, metadata, task) => {
+    transformResponse: async (response, metadata, task) => {
         if (!response || response.length === 0) return;
 
-        const reasonList = Array.from(new Set(response.map((item) => item)));
+        const nigoResponse = response?.nigoSearchResult;
+        const policyResponse = response?.policyResult;
+
+        const reasonList: Reason[] = Array.from(
+            new Set(nigoResponse.map((item: any) => item))
+        );
 
         const seen = new Set<string>();
         const declineReasonEnum: string[] = [];
@@ -34,11 +73,11 @@ const beneChangeHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
 
                 const selectOptions = r.exceptionSubRefs
                     .filter(
-                        (item) =>
+                        (item: any) =>
                             item.carrier === task?.carrier &&
                             item.process === task?.process
                     )
-                    .map((item) => ({
+                    .map((item: any) => ({
                         label: item.subNmIdDetail,
                         value: item.subNmId,
                     }));
@@ -65,6 +104,36 @@ const beneChangeHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
             },
             'ui:dataPath': ['declineReason'],
         };
+
+        console.log(
+            'policyResponse',
+            policyResponse.partyRoles,
+            policyResponse.parties
+        );
+
+        const ownerPartyId = policyResponse.partyRoles.find(
+            (role: { partyRole: string }) => role.partyRole === 'OWNER'
+        )?.partyId;
+
+        const party = policyResponse.parties.find(
+            (p: { partyId: string }) => p.partyId === ownerPartyId
+        );
+
+        console.log('partyyyyyy', ownerPartyId, party);
+        if (task) {
+            Object.assign(task, {
+                data: {
+                    ...task.data,
+                    parties: [
+                        ...task.data?.parties,
+                        {
+                            partyType: party?.partyType,
+                            firstName: party?.firstName,
+                        },
+                    ],
+                },
+            });
+        }
     },
 };
 
