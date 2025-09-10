@@ -75,7 +75,7 @@ class EnterpriseTokenHttp extends HttpRequest {
                     grant_type: 'client_credentials',
                     client_id: process.env.AUTH0_CLIENT_ID,
                     client_secret: process.env.AUTH0_CLIENT_SECRET,
-                    audience: process.env.NEXT_PUBLIC_BACKEND_URL,
+                    audience: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
                 }),
             });
 
