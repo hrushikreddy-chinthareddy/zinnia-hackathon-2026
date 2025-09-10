@@ -7308,7 +7308,7 @@
     },
     "clientCase": {
         "newClientCase": "+ Nouveau client case",
-        "clientCasePermissions": "Vous n'avez pas l'autorisation de créer un dossier client",
+        "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
         "searchBar": {
             "clientCase": "Client case",
             "agentName": "Nom de l'agent",

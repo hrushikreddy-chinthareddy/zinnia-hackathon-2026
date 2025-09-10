@@ -18,6 +18,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -164,7 +165,7 @@ const IllustrationCaseSumary = ({
                                 'clientCase.caseSummary.untitledCase'
                             ) as string)}
                     </Heading>
-                    {isAllowedToEditCase && (
+                    {isAllowedToEditCase ? (
                         <Button
                             mode="link"
                             data-testid="edit-btn"
@@ -181,6 +182,26 @@ const IllustrationCaseSumary = ({
                             <Icon type={IconType.EDIT} height={24} width={24} />
                             {t('clientCase.caseSummary.edit')}
                         </Button>
+                    ): (
+                            <TempNavInactive
+                                tooltipBody={t('clientCase.clientCasePermissions')}
+                                navElementClassName="!bg-transparent"
+                            >
+                                <Button
+                                    disabled
+                                    mode="link"
+                                    data-testid="edit-btn"
+                                    aria-label={
+                                        t(
+                                            'clientCase.caseSummary.editClientCaseButton'
+                                        ) as string
+                                    }
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.caseSummary.edit')}
+                                </Button>
+                            </TempNavInactive>
                     )}
                 </div>
             </section>

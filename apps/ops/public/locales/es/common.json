@@ -7252,7 +7252,7 @@
     },
     "clientCase": {
         "newClientCase": "+  Nuevo client case",
-        "clientCasePermissions": "No tienes permiso para crear un client case",
+        "clientCasePermissions": "No tienes permiso para realizar esta acción.",
         "searchBar": {
             "clientCase": "Client case",
             "agentName": "Nombre de agente",
