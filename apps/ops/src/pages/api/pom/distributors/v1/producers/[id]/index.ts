@@ -7,10 +7,7 @@ import { withAuthAndLogging } from '@deps/utils/server-logging';
 export default withAuthAndLogging(
     async (req, res, loggingContext) => {
         try {
-            const producersUrl = new URL(
-                `/distributors/v1/producers/${req.query.id}`,
-                apiServerBaseUrl
-            );
+            const producersUrl = `${apiServerBaseUrl}/distributors/v1/producers/${req.query.id}`;
 
             const producersResponse = await EnterpriseTokenApi.get(
                 producersUrl,
