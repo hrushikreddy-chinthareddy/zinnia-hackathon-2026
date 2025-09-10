@@ -440,13 +440,21 @@ export const rolePartyCheck = (
     partyType: PartyType
 ): boolean => {
     return (
-        [PolicyRole.OWNER, PolicyRole.JOINTOWNER].includes(role) &&
+        [
+            PolicyRole.OWNER,
+            PolicyRole.JOINTOWNER,
+            PolicyRole.THIRDPARTYDESIGNEE,
+        ].includes(role) &&
         (partyType === PartyType.TRUST || partyType === PartyType.ORGANIZATION)
     );
 };
 
 export const roleCheck = (role: PolicyRole): boolean => {
-    return [PolicyRole.OWNER, PolicyRole.JOINTOWNER].includes(role);
+    return [
+        PolicyRole.OWNER,
+        PolicyRole.JOINTOWNER,
+        PolicyRole.THIRDPARTYDESIGNEE,
+    ].includes(role);
 };
 
 export const getFormattedDate = (date?: string | null): string => {

@@ -16,6 +16,7 @@ import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
 import { Link } from '@/components/link/Link';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import useMock from '@/hooks/use-mock';
+import { getCarrierConfig } from '@/queries/carrier-config-queries';
 import { getPoliciesByCarrier } from '@/queries/policy-queries';
 import { CarrierNames } from '@/types/carriers';
 import {
@@ -56,9 +57,16 @@ export const NavMenu = ({
 
   const { isMockOn } = useMock();
 
+  const { data: carrierConfig } = useQuery({
+    queryKey: ['carrierConfig'],
+    queryFn: () => getCarrierConfig(),
+  });
+
   const { data } = useQuery({
     queryKey: ['carrierPolicyDetails'],
     queryFn: () => getPoliciesByCarrier(baseExperienceCarriers),
+    // Only fetch policies if the carrier config is set and the sso is not enabled
+    enabled: !!carrierConfig && !carrierConfig?.sso.enabled,
   });
 
   return (
@@ -84,48 +92,54 @@ export const NavMenu = ({
           align="end"
         >
           <div className="typography-nav-nav-drawer">
-            <p className="typography-labels-label-sm">My Coverage</p>
-            <ul>
-              {data &&
-                data.length > 0 &&
-                data.map((detail: CarrierListDetail) => {
-                  const CarrierIcon =
-                    carrierIcons[detail.carrierName as CarrierNames];
+            {data && data.length > 0 && (
+              <>
+                <p className="typography-labels-label-sm">My Coverage</p>
+                <ul>
+                  {data.map((detail: CarrierListDetail) => {
+                    const CarrierIcon =
+                      carrierIcons[detail.carrierName as CarrierNames];
 
-                  const companyName = getCarrierSubdomainByName(
-                    detail.carrierName
-                  );
+                    const companyName = getCarrierSubdomainByName(
+                      detail.carrierName
+                    );
 
-                  return (
-                    <li
-                      key={detail.carrierName}
-                      className={clsx({
-                        [styles.active as string]:
-                          // companyName might be an empty string
-                          companyName &&
-                          currentUrl.includes(companyName) &&
-                          pathname === navUrls.allPolicies,
-                      })}
-                    >
-                      <span>
-                        {CarrierIcon ? (
-                          <CarrierIcon width={20} height={20} color="#ffffff" />
-                        ) : (
-                          <Icon type={IconType.MATCHES} />
-                        )}
-                      </span>
-                      <Link
-                        isInternal
-                        href={detail.link.href}
-                        aria-label={detail.link.label}
-                        onClick={() => {
-                          setIsOpen(false);
-                        }}
-                      >{`${detail.carrierName} ${detail.displayText}`}</Link>
-                    </li>
-                  );
-                })}
-            </ul>
+                    return (
+                      <li
+                        key={detail.carrierName}
+                        className={clsx({
+                          [styles.active as string]:
+                            // companyName might be an empty string
+                            companyName &&
+                            currentUrl.includes(companyName) &&
+                            pathname === navUrls.allPolicies,
+                        })}
+                      >
+                        <span>
+                          {CarrierIcon ? (
+                            <CarrierIcon
+                              width={20}
+                              height={20}
+                              color="#ffffff"
+                            />
+                          ) : (
+                            <Icon type={IconType.MATCHES} />
+                          )}
+                        </span>
+                        <Link
+                          isInternal
+                          href={detail.link.href}
+                          aria-label={detail.link.label}
+                          onClick={() => {
+                            setIsOpen(false);
+                          }}
+                        >{`${detail.carrierName} ${detail.displayText}`}</Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            )}
             <p className="typography-labels-label-sm">My Account</p>
             <ul>
               <li

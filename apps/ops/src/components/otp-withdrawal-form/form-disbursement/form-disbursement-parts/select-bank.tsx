@@ -1,8 +1,4 @@
-import {
-    BankAccount,
-    Party,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -45,10 +41,7 @@ const SelectBank = ({
     const bankingDetails = useMemo(() => {
         return isLC
             ? getBankingDetailsLC(parties as LifeCadParty[])
-            : getBankingDetails(
-                  parties as Party[],
-                  partyRoles as PolicyPartyRoles[]
-              );
+            : getBankingDetails(parties as LifeCadParty[]);
     }, [isLC, parties, partyRoles]);
 
     const bankOptions = isLC

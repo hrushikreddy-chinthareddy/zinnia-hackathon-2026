@@ -450,7 +450,13 @@ export function IllustrationScheduler(props: Props) {
                                         'money' && (
                                         <FieldData
                                             name={'firstColumn'}
-                                            value={row.firstColumn}
+                                            value={
+                                                row.firstColumn ||
+                                                row.firstColumn === 0
+                                                    ? row.firstColumn
+                                                    : customProperties
+                                                          .firstColumn.default // this can be undefined. The distribution scheduler works with undefined first columns to set the max value.
+                                            }
                                             fieldStatus={
                                                 error &&
                                                 error.cells.some(

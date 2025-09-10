@@ -1,6 +1,7 @@
 import { Email } from '@zinnia/api-types/types/sor';
+import { CarrierName } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useState, useContext } from 'react';
+import { useState, useCallback, useContext } from 'react';
 
 import NavElement, {
     NavElementSize,
@@ -23,6 +24,7 @@ import SideSheetPeopleHeader, {
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import useUserCarrier from '@deps/hooks/useUserCarrier';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -50,6 +52,7 @@ const EmailCard = ({
         keyPrefix: 'people.card.email',
     });
     const { policyDetails } = useContext(PolicyData);
+    const userCarrier = useUserCarrier();
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
@@ -61,35 +64,53 @@ const EmailCard = ({
 
     const showAdditionalToggle = currentEmails.length > 4;
 
-    const openSideSheet = ({
-        email,
-        header: { action, transaction, typeTranslation },
-    }: OpenSideSheet) => {
-        sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader
-                action={action}
-                transaction={transaction}
-                typeTranslation={typeTranslation}
-            />,
-            <SideSheetEmail
-                isOnlyEmail={currentEmails.length === 1}
-                onCancel={() => sideSheet.handleOpen(false)}
-                party={party}
-                planCode={planCode}
-                policyNumber={policyNumber}
-                setCurrentEmails={setCurrentEmails}
-                updateEmail={email}
-            />
-        );
-        sideSheet.handleOpen(true);
-    };
+    const openSideSheet = useCallback(
+        ({
+            email,
+            header: { action, transaction, typeTranslation },
+        }: OpenSideSheet) => {
+            sideSheet.changeSideSheetContent(
+                <SideSheetPeopleHeader
+                    action={action}
+                    transaction={transaction}
+                    typeTranslation={typeTranslation}
+                />,
+                <SideSheetEmail
+                    isOnlyEmail={currentEmails.length === 1}
+                    onCancel={() => sideSheet.handleOpen(false)}
+                    party={party}
+                    planCode={planCode}
+                    policyNumber={policyNumber}
+                    setCurrentEmails={setCurrentEmails}
+                    updateEmail={email}
+                />
+            );
+            sideSheet.handleOpen(true);
+        },
+        [sideSheet, currentEmails.length, party, planCode, policyNumber]
+    );
+
+    const onEditClick = useCallback(
+        ({ email, header }: OpenSideSheet) => {
+            const ecn = party?.identifications?.find(
+                (id) => id.identificationKey?.toLowerCase() === 'ecn'
+            );
+            if (userCarrier === CarrierName.FARMERS && ecn) {
+                const url = `${process.env.NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL}?c__ecn=${ecn.identificationValue}`;
+                window.open(url, '_blank');
+            } else {
+                openSideSheet({ email, header });
+            }
+        },
+        [userCarrier, openSideSheet, party]
+    );
 
     const EmailsBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
             <Emails
                 editable={editable}
                 emails={currentEmails}
-                onEditClick={openSideSheet}
+                onEditClick={onEditClick}
                 showAdditional={showAdditional}
             />
         </div>
@@ -109,7 +130,7 @@ const EmailCard = ({
                     {editable && isUserPermissionedToEditEmail ? (
                         <NavElement
                             onClick={() =>
-                                openSideSheet({
+                                onEditClick({
                                     header: {
                                         action: NonFinancialTransactionActions.Add,
                                         transaction:

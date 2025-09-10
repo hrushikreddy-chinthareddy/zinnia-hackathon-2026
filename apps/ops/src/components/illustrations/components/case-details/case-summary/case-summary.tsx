@@ -16,9 +16,8 @@ import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
-import CreateClientCaseForm, {
-    findAllAliasesWithSellingCode,
-} from '@deps/components/client-case/client-case-create/create-client-case-form';
+import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
+import { useUserIdentity } from '@deps/components/illustrations/helpers/hooks/user-user-identity';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -54,6 +53,7 @@ const IllustrationCaseSumary = ({
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
     const { partyReferenceData } = usePermissionsContext();
+    const { findAllAliasesWithSellingCode } = useUserIdentity();
     const aliases = findAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases.length > 0;
 

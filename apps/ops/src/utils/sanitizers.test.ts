@@ -39,11 +39,13 @@ const mockPolicyParties = [
             {
                 internationalBankAccountNumber: '987654321',
                 accountNumber: '0123456789',
+                maskedAccountNumber: '0123456789',
                 routingNumber: 'do not modify',
             },
             {
                 internationalBankAccountNumber: null,
-                accountNumber: '2468101214',
+                accountNumber: '0123456789',
+                maskedAccountNumber: '0123456789',
                 otherValue: 'do not touch this',
             },
         ],
@@ -76,12 +78,14 @@ const expectedPolicyOutput = {
             bankDetails: [
                 {
                     internationalBankAccountNumber: '*****4321',
-                    accountNumber: '******6789',
+                    accountNumber: '0123456789',
+                    maskedAccountNumber: '******6789',
                     routingNumber: 'do not modify',
                 },
                 {
                     internationalBankAccountNumber: null,
-                    accountNumber: '******1214',
+                    accountNumber: '0123456789',
+                    maskedAccountNumber: '******6789',
                     otherValue: 'do not touch this',
                 },
             ],

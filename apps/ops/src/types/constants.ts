@@ -67,6 +67,11 @@ export const CALL_LOGS_TAB_QUERY_LIMIT = 100;
 
 export const LEGACY_START_DATE = '1900-01-01';
 export const LEGACY_END_DATE = '2999-12-31';
+
+export const PartyRoleId = {
+    AnnuitantRoleId: '-1|0|1',
+    OwnerRoleId: '0|0|2',
+};
 export const DIAL_NUMBER_MAX_LEN = 7;
 export const CLIENT_COPY = 'CLIENT_COPY';
 export const NEW_BUSINESS = 'NEW_BUSINESS';

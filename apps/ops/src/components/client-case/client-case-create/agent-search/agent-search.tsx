@@ -19,6 +19,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getUsersDownlineList } from '@deps/queries/tanstack/producerQueries/producerQueries';
+import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
 import { IllustrationAgentDetails } from '@deps/types/illustrations';
@@ -113,7 +114,10 @@ export const AgentSearch = ({
 
     const renderSearchResults = () => {
         return searchResults.map((searchResult) => (
-            <div className={agentInfoResultClassname} key={searchResult.email}>
+            <div
+                className={agentInfoResultClassname}
+                key={`${searchResult.email} - ${searchResult.firstName} ${searchResult.lastName}`}
+            >
                 <Typography
                     variant={TypographyVariant.BodySm}
                     className={styles.agentNameResult}
@@ -235,6 +239,20 @@ export const AgentSearch = ({
                                     setAgentNameInput(e.target.value);
                                 }}
                             />
+                            {agentNameInput && (
+                                <div
+                                    data-testid="client-case-search-bar-cancel-btn"
+                                    aria-label={t('ariaLabel.cancel') as string}
+                                    onClick={clearAll}
+                                    className={styles.cancelInputIcon}
+                                >
+                                    <CancelIcon
+                                        className="text-primary"
+                                        height={24}
+                                        width={24}
+                                    />
+                                </div>
+                            )}
                         </div>
                         <Button
                             mode="secondary"

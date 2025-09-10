@@ -92,7 +92,8 @@ export const sanitizeBankDetails = (
         ({ internationalBankAccountNumber, accountNumber, ...rest }) => {
             return {
                 ...rest,
-                accountNumber: formatAccountNumber(accountNumber),
+                accountNumber: accountNumber,
+                maskedAccountNumber: formatAccountNumber(accountNumber),
                 internationalBankAccountNumber: formatAccountNumber(
                     internationalBankAccountNumber as string
                 ),

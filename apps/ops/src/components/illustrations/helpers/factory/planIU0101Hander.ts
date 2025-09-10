@@ -305,7 +305,7 @@ const FARMERS_HARDCODED_DATA = {
     individualPartyTypeRoleCode: IllustrationPartyTypeCode.INDIVIDUAL,
     premiumBasis: IllustrationFaceAmountAndPremiumBasis.DURATION,
     premiumFrom: 1,
-    premiumThrough: 120,
+    premiumThrough: 100,
     baseCoverageId: 'BASE_COVERAGE',
     revisedIllustration: true,
     solveForFrequency: 'ANNUAL',
@@ -836,8 +836,7 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
         initialPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
         targetPremium:
-            data?.assumed?.annualTimeSeriesData?.at(-1)?.minimumPremiumAmount ||
-            DEFAULT_ERROR_STRING,
+            data?.assumed?.initial?.targetPremiumAmount || DEFAULT_ERROR_STRING,
         mecPremium:
             data?.assumed?.annualTimeSeriesData?.[0]?.sevenPayPremiumAmount ||
             DEFAULT_ERROR_STRING,
@@ -892,6 +891,10 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
 
     getCarrier(): string {
         return CarrierName.FARMERS;
+    }
+
+    getCarrierCode(): string {
+        return 'fnwl';
     }
 
     getIllustrationApiPath(): string {

@@ -49,8 +49,8 @@ export default async function DocumentPreview({
     });
     docDownloadUrl =
       searchParams.docCategory === DocumentCategory.TAX
-        ? `/api/documents/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
-        : `/api/documents/${documentId}/download/${fileName}.pdf?${queryParamString}`;
+        ? `/api/documents/v2/tax-docs/${documentId}/download/${fileName}.pdf?${queryParamString}`
+        : `/api/documents/v2/${documentId}/download/${fileName}.pdf?${queryParamString}`;
   } else {
     const queryParamString = createQueryString({
       ...otherParams,
@@ -60,8 +60,8 @@ export default async function DocumentPreview({
     });
     docDownloadUrl =
       searchParams.docCategory === DocumentCategory.TAX
-        ? `/api/documents/v3/tax-docs/download/${documentId}.pdf?${queryParamString}`
-        : `/api/documents/v3/download/${documentId}.pdf?${queryParamString}`;
+        ? `/api/documents/v3/tax-docs/download/${documentId}?${queryParamString}`
+        : `/api/documents/v3/download/${documentId}?${queryParamString}`;
   }
 
   return (

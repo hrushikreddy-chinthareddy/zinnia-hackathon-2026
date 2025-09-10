@@ -1,6 +1,9 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { Button } from '@zinnia/bloom/components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { PageHead } from '@deps/components/page-title';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
@@ -14,6 +17,7 @@ import {
     DocumentDownloadV2WithMime,
     supportedTiffExtensions,
 } from '@deps/models/case/document';
+import Custom404Page from '@deps/pages/404s';
 import documentDownloadV2 from '@deps/queries/server/documents/v2/download';
 import documentDownload from '@deps/queries/server/documents/v3/download';
 import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
@@ -22,7 +26,11 @@ import {
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
 import { b64ToBlob } from '@deps/utils/blob';
-import { TiffConversion } from '@deps/utils/fileviewer/tiffConversion';
+import {
+    drawCanvas,
+    renderTiffPagesToContainer,
+    ViewerState,
+} from '@deps/utils/fileviewer/tiffUtils';
 import {
     isFeatureFlagVariableActive,
     optimizelyService,
@@ -41,18 +49,114 @@ const DocumentViewerPage = ({
 }: SegmentTrackedPageProps & {
     doc: DocumentDownloadV2WithMime | DocumentDownloadV3WithMime;
 }) => {
+    const { t } = useTranslation();
     useSegmentPageTracker(user, SegmentPageName.DocumentViewer);
-    const blob = b64ToBlob(
-        doc.binaryData || '',
-        doc.mimeType || 'application/pdf'
-    );
 
-    const url = blob ? URL.createObjectURL(blob) : '';
+    const containerRef = useRef<HTMLDivElement>(null);
+    const viewerStatesRef = useRef<ViewerState[]>([]);
+    const [url, setUrl] = useState<string | undefined>();
+    const [scale, setScale] = useState(1);
+    const [rotation, setRotation] = useState(0);
+
+    const isTiff =
+        doc.mimeType === 'image/tiff' ||
+        supportedTiffExtensions.includes(String(doc.fileExtension));
+
+    useEffect(() => {
+        if (!isTiff) {
+            const blob = b64ToBlob(
+                doc.binaryData ?? '',
+                doc.mimeType ?? 'application/pdf'
+            );
+            if (blob) {
+                const objectURL = URL.createObjectURL(blob);
+                setUrl(objectURL);
+            }
+        }
+    }, [doc, isTiff]);
+
+    useEffect(() => {
+        if (isTiff && containerRef?.current && doc.binaryData) {
+            renderTiffPagesToContainer(
+                doc.binaryData,
+                containerRef?.current
+            ).then((states) => {
+                if (states) viewerStatesRef.current = states;
+            });
+        }
+    }, [doc, isTiff]);
+
+    const redrawAllPages = useCallback(() => {
+        if (!containerRef.current) return;
+        const canvases = containerRef.current.querySelectorAll('canvas');
+        canvases.forEach((canvas, index) => {
+            const viewerState = viewerStatesRef.current[index];
+            if (viewerState) {
+                viewerState.scale = scale;
+                viewerState.rotation = rotation;
+                drawCanvas(canvas, viewerState);
+            }
+        });
+    }, [scale, rotation]);
+
+    useEffect(() => {
+        redrawAllPages();
+    }, [redrawAllPages]);
+
+    const zoomIn = () => setScale((prev) => prev + 0.1);
+    const zoomOut = () => setScale((prev) => Math.max(0.1, prev - 0.1));
+    const rotate = () => setRotation((prev) => (prev + 90) % 360);
+
     return (
         <>
             <PageHead titleKey="formData" />
-            <div className="h-screen w-screen">
-                <iframe src={url} width="100%" height="100%" />
+            <div className="h-screen w-screen flex flex-col">
+                {isTiff && (
+                    <div className="flex justify-center mt-4 mb-8 space-x-4">
+                        <Button
+                            aria-label={t('policy.documents.zoomIn') as string}
+                            onClick={zoomIn}
+                            mode="primary"
+                            type="button"
+                            size="large"
+                        >
+                            {t('policy.documents.zoomIn')}
+                        </Button>
+                        <Button
+                            aria-label={t('policy.documents.zoomOut') as string}
+                            onClick={zoomOut}
+                            mode="primary"
+                            size="large"
+                            type="button"
+                            selected={false}
+                        >
+                            {t('policy.documents.zoomOut')}
+                        </Button>
+                        <Button
+                            aria-label={t('policy.documents.rotate') as string}
+                            onClick={rotate}
+                            mode="primary"
+                            type="button"
+                            size="large"
+                        >
+                            {t('policy.documents.rotate')}
+                        </Button>
+                    </div>
+                )}
+                {isTiff ? (
+                    <div className="flex-1 overflow-auto relative">
+                        <div className="flex justify-center relative min-w-max">
+                            <div
+                                ref={containerRef}
+                                className="relative inline-block [transform-origin:center]"
+                            />
+                        </div>
+                    </div>
+                ) : url ? (
+                    <iframe src={url} width="100%" height="100%" />
+                ) : (
+                    <Custom404Page />
+                )}
             </div>
         </>
     );
@@ -170,21 +274,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 nextI18nextConfig,
                 ALL_LOCALES
             );
-
-            if (
-                docDownload?.mimeType === 'image/tiff' ||
-                supportedTiffExtensions.includes(docDownload?.fileExtension)
-            ) {
-                const { tiffBuffer, success } = await TiffConversion({
-                    binaryData: docDownload.binaryData,
-                });
-
-                if (success) {
-                    docDownload.mimeType = 'image/png';
-                    docDownload.fileExtension = 'png';
-                }
-                docDownload.binaryData = tiffBuffer.toString('base64');
-            }
 
             return {
                 props: { locale, ...translations, user, doc: docDownload },

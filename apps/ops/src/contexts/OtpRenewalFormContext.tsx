@@ -27,6 +27,8 @@ export interface OtpRenewalFormState {
     currentFormState: string;
     isFormStateReadOnly: boolean;
     planCode: string;
+    upfrontNIGO: any;
+    setUpfrontNIGO: React.Dispatch<React.SetStateAction<any>>;
     featureFlags: FeatureFlags;
     setCurrentFormState: React.Dispatch<React.SetStateAction<string>>;
     formValidator: (val?: renewalsFormParts) => FormValidationErrors;
@@ -67,6 +69,8 @@ export const defaultFormDataContext = {
     isFormStateReadOnly: false,
     planCode: '',
     featureFlags: {},
+    upfrontNIGO: null,
+    setUpfrontNIGO: noop,
     setCurrentFormState: noop,
     setSubsequentTargetFunds: noop,
     setOwnerInformation: noop,

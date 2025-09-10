@@ -1,3 +1,4 @@
+import { TFunction } from 'next-i18next';
 import { useCallback, useState } from 'react';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -179,4 +180,29 @@ export const getFormData = (
             break;
     }
     return data;
+};
+
+export const DE_162 = 'DE.162';
+
+export function validateDocIndexing(documentIndexingInfo: any, t: TFunction) {
+    const errors: any = {};
+    if (!documentIndexingInfo?.docTypeToReindex) {
+        errors['noDocTypeToReindex'] = t(
+            'formErrors.formValidation.noDocTypeToReindex'
+        );
+    }
+    if (
+        documentIndexingInfo?.docTypeToReindex === 'OTHER' &&
+        !documentIndexingInfo?.notes
+    ) {
+        errors['noNotes'] = t('formErrors.formValidation.noNotes');
+    }
+    return errors;
+}
+
+export const NIGO_EXCEPTIONS_LABEL = {
+    CASE_ROUTED_MANUAL: 'Case routed for manual processing',
+    VALIDATION_FAILED_REASON_NOT_LISTED:
+        'Validation failed due to reason not listed.',
+    RENEWAL_REQUEST_NOT_SUPPORTED: 'Renewal request not supported',
 };

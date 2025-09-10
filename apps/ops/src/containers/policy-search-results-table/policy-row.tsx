@@ -28,6 +28,7 @@ import { PolicyBadgeStatus } from '@deps/components/global-values/policy-info/po
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import { formatSSN } from '@deps/helpers/string.helpers';
 import { UserPermission } from '@deps/models/user-profile';
@@ -108,6 +109,8 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
             )}`;
         }
     }, [item.firstName, item.lastName, policyData]);
+
+    const policyDetails = policyData ? new PolicyDetails(policyData) : null;
 
     const imageSrc = getCarrierLogoByClientId(item.carrierId);
     const carrierName = getCarrierNameByClientId(item.carrierId);
@@ -205,12 +208,14 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
             <TableCell>
                 {dayjs(item.lastUpdated).format(DEFAULT_DATE_FORMAT)}
             </TableCell>
-            <TableCell className={styles.actionsCell}>
-                <PolicyActionCell
-                    policyNumber={item.policyNumber}
-                    planCode={item.planCode}
-                />
-            </TableCell>
+            {policyDetails?.isTPA && (
+                <TableCell className={styles.actionsCell}>
+                    <PolicyActionCell
+                        policyNumber={item.policyNumber}
+                        planCode={item.planCode}
+                    />
+                </TableCell>
+            )}
         </TableRow>
     );
 };

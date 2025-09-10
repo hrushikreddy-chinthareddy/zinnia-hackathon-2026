@@ -1,6 +1,7 @@
 import { Phone } from '@zinnia/api-types/types/sor';
+import { CarrierName } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useState, useContext } from 'react';
+import { useState, useContext, useCallback } from 'react';
 
 import NavElement, {
     NavElementSize,
@@ -29,6 +30,7 @@ import SideSheetPeopleHeader, {
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import useUserCarrier from '@deps/hooks/useUserCarrier';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -50,6 +52,7 @@ const PhoneCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.phone',
     });
+    const userCarrier = useUserCarrier();
     const { policyDetails } = useContext(PolicyData);
     const sideSheet = useSideSheetContext();
 
@@ -62,32 +65,54 @@ const PhoneCard = ({
 
     const showToggle = currentPhones.length > 4;
 
-    const openSideSheet = ({
-        phone,
-        header: { action, transaction, typeTranslation },
-    }: OpenSideSheet) => {
-        sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader
-                action={action}
-                transaction={transaction}
-                typeTranslation={typeTranslation}
-            />,
-            <SideSheetPhone
-                onCancel={() => sideSheet.handleOpen(false)}
-                party={party}
-                planCode={planCode}
-                policyNumber={policyNumber}
-                setCurrentPhones={setCurrentPhones}
-                updatePhone={phone}
-            />
-        );
-        sideSheet.handleOpen(true);
-    };
+    const openSideSheet = useCallback(
+        ({
+            phone,
+            header: { action, transaction, typeTranslation },
+        }: OpenSideSheet) => {
+            sideSheet.changeSideSheetContent(
+                <SideSheetPeopleHeader
+                    action={action}
+                    transaction={transaction}
+                    typeTranslation={typeTranslation}
+                />,
+                <SideSheetPhone
+                    onCancel={() => sideSheet.handleOpen(false)}
+                    party={party}
+                    planCode={planCode}
+                    policyNumber={policyNumber}
+                    setCurrentPhones={setCurrentPhones}
+                    updatePhone={phone}
+                />
+            );
+            sideSheet.handleOpen(true);
+        },
+        [sideSheet, party, planCode, policyNumber, setCurrentPhones]
+    );
+
+    const onEditClick = useCallback(
+        ({ phone, header }: OpenSideSheet) => {
+            const ecn = party?.identifications?.find(
+                (id) => id.identificationKey?.toLowerCase() === 'ecn'
+            );
+            // redirect to farmers apex if userCarrier is farmers and ecn is present
+            if (
+                userCarrier === CarrierName.FARMERS &&
+                ecn?.identificationValue
+            ) {
+                const url = `${process.env.NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL}?c__ecn=${ecn.identificationValue}`;
+                window.open(url, '_blank');
+            } else {
+                openSideSheet({ phone, header });
+            }
+        },
+        [userCarrier, openSideSheet, party]
+    );
 
     const PhonesBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
             <Phones
-                onEditClick={openSideSheet}
+                onEditClick={onEditClick}
                 editable={editable}
                 phones={currentPhones}
                 showAdditional={showAdditional}
@@ -110,7 +135,7 @@ const PhoneCard = ({
                     {editable && isUserPermissionedToEditPhone ? (
                         <NavElement
                             onClick={() =>
-                                openSideSheet({
+                                onEditClick({
                                     header: {
                                         action: NonFinancialTransactionActions.Add,
                                         transaction:

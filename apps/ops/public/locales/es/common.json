@@ -526,12 +526,14 @@
                 "ssn": "SSN",
                 "gender": "Género",
                 "dateOfBirth": "Fecha de Nacimiento",
+                "trustDate": "Fecha del fideicomiso",
                 "male": "Masculino",
                 "female": "Femenino",
                 "formValidations": {
                     "firstName": "El nombre es obligatorio",
                     "lastName": "El apellido es obligatorio",
-                    "last": "El apellido es obligatorio"
+                    "last": "El apellido es obligatorio",
+                    "trustDateRequired": "La fecha de fideicomiso es requerida"
                 },
                 "entityType": "Tipo de entidad",
                 "entityTypeOptions": {
@@ -550,6 +552,7 @@
                 "no": "No",
                 "isRelevant": "¿Son válidos y relevantes los documentos de respaldo cargados?"
             },
+            "contactDetails": "Detalles de contacto",
             "contactInfo": {
                 "title": "Información de Contacto",
                 "labels": {
@@ -666,7 +669,8 @@
             "updated": "Actualizado",
             "identification": {
                 "title": "Identificación",
-                "gender": "Género"
+                "gender": "Género",
+                "trustDate": "Fecha del fideicomiso"
             },
             "allocation": {
                 "title": "Asignación",
@@ -3587,7 +3591,10 @@
             "taxDocuments": "Documentos fiscales",
             "taxYear": "Año fiscal",
             "view": "Ver",
-            "xToYOfZ": "Resultados: {{x}}-{{y}} de {{z}}"
+            "xToYOfZ": "Resultados: {{x}}-{{y}} de {{z}}",
+            "zoomIn": "Dar un golpe de zoom",
+            "zoomOut": "Alejar",
+            "rotate": "Girar"
         },
         "funds": {
             "matchCard": {
@@ -6199,6 +6206,11 @@
             "amount": "Cantidad",
             "check": "Controlar #{{number}}",
             "contract": "Contrato #{{number}}"
+        },
+        "tableColumns": {
+            "transaction": "Transacción",
+            "status": "Estado",
+            "amount": "Cantidad"
         }
     },
     "deathNotification": {
@@ -7386,6 +7398,8 @@
             "ageLabel": "Edad actual",
             "riskLabel": "Clase de riesgo",
             "nicotineUserLabel": "Usuario de nicotina",
+            "nicotine": "Nicotina",
+            "nonNicotine": "No nicotina",
             "stateLabel": "Estado",
             "continueButton": "Continuar",
             "cancelButton": "Cancelar",
@@ -7404,5 +7418,16 @@
             "secondaryCta": "Volver al inicio",
             "submitTask": "Enviar"
         }
+    },
+    "feature": {
+        "featureFlags": "Banderas de Funcionalidad",
+        "flag": "Banderas",
+        "status": "Estado",
+        "variable": "Variable",
+        "value": "Valor",
+        "featureVariables": "Variables de Funcionalidad",
+        "environment": "Environment",
+        "variableSearchPlaceholder": "Buscar variables de funcionalidad...",
+        "flagQueueSearchPlaceholder": "Buscar variables de funcionalidad..."
     }
 }

@@ -82,10 +82,14 @@ const Summary = ({ policy }: SummaryProps) => {
         [validationResponse]
     );
     const ownerTaxState = getOwnersTaxJurisdictionState(policy);
-    const totalPayment = numberFormatify(
+    const totalWithdrawalAmount = numberFormatify(
         validationResponse?.quoteResponse?.payeeOrBeneficiary?.[0]
             .disbursementAmount
     );
+    const totalPayment =
+        totalWithdrawalAmount < numberFormatify(amount)
+            ? totalWithdrawalAmount
+            : numberFormatify(amount);
     const appliedAmount = validationResponse?.quoteResponse?.transactionAmounts
         ?.appliedAmount
         ? numberFormatify(

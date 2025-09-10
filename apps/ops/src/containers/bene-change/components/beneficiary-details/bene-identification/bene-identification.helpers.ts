@@ -1,8 +1,7 @@
-import { Gender, Suffix } from '@zinnia/api-types/types/sor';
+import { Gender, Suffix, PartyType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-import { NewTrustType } from '@deps/constants/policy';
-
+import { NewTrustType, PolicyRole } from '@deps/constants/policy';
 export interface Errors {
     firstName?: string;
     lastName?: string;
@@ -144,4 +143,18 @@ export const formatPrefix = (prefix: string | undefined | null): string => {
     };
 
     return prefixMap[trimmedPrefix] || prefix;
+};
+
+export const rolePartyCheck = (partyType: PartyType): boolean => {
+    return (
+        partyType === PartyType.TRUST || partyType === PartyType.ORGANIZATION
+    );
+};
+
+export const roleCheck = (role: PolicyRole): boolean => {
+    return [
+        PolicyRole.OWNER,
+        PolicyRole.JOINTOWNER,
+        PolicyRole.THIRDPARTYDESIGNEE,
+    ].includes(role);
 };

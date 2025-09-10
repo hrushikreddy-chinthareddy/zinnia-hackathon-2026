@@ -332,7 +332,9 @@ export const useCaseFilterQueryStore = () => {
         useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));
 
     const [currentSearchFieldValue, setCurrentSearchFieldValue] =
-        useState<SearchViewQuery>({});
+        useState<SearchViewQuery>(
+            convertQueryToFilters(queryStoreFilter)?.searchValue || {}
+        );
 
     const setFilters = (filters: SetStateAction<CaseSearchFilters>) => {
         let newFilters: CaseSearchFilters;

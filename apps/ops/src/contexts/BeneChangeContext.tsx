@@ -92,6 +92,7 @@ export interface BeneficiaryItem {
             gender?: string;
             trustType?: string;
             ssn?: string;
+            trustDate?: string;
         };
         allocation?: {
             beneficiaryPercentage?: number;

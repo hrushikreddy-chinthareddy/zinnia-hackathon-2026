@@ -27,13 +27,21 @@
     border-radius: var(--measure-dimension-radius-md, 8px);
     min-height: 44px;
     padding-left: 3.25rem;
-    width: 308px;
+    width: 284px;
+    padding-right: 3.25rem;
 }
 
 .searchInputIcon {
     position: absolute;
     z-index: 1;
     margin-left: var(--measure-dimension-gap-lg, 16px);
+}
+
+.cancelInputIcon {
+    position: absolute;
+    z-index: 1;
+    right: var(--measure-dimension-gap-lg, 16px);
+    cursor: pointer;
 }
 
 .searchInputWithIcon {

@@ -591,12 +591,14 @@
                 "ssn": "SSN",
                 "gender": "Genre",
                 "dateOfBirth": "Date de naissance",
+                "trustDate": "Date du trust",
                 "male": "Homme",
                 "female": "Femme",
                 "formValidations": {
                     "firstName": "Le prénom est requis",
                     "lastName": "Le nom est requis",
-                    "last": "Le nom de famille est requis"
+                    "last": "Le nom de famille est requis",
+                    "trustDateRequired": "La date de confiance est requise"
                 },
                 "entityType": "Type d'entité",
                 "entityTypeOptions": {
@@ -615,6 +617,7 @@
                 "no": "Non",
                 "isRelevant": "Les documents justificatifs téléchargés sont-ils valides et pertinents ?"
             },
+            "contactDetails": "Coordonnées",
             "contactInfo": {
                 "title": "Coordonnées",
                 "labels": {
@@ -740,7 +743,8 @@
                 "gender": "Genre",
                 "title": "Identification",
                 "ssn": "NSS",
-                "dateOfBirth": "Date de naissance"
+                "dateOfBirth": "Date de naissance",
+                "trustDate": "Date du trust"
             },
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche de NIGO.",
             "overview": "Aperçu",
@@ -3564,7 +3568,10 @@
             "taxYear": "Année fiscale",
             "view": "Voir",
             "xToYOfZ": "Résultats: {{x}}-{{y}} de {{z}}",
-            "pdfError": "Une erreur est survenue lors du chargement du PDF."
+            "pdfError": "Une erreur est survenue lors du chargement du PDF.",
+            "zoomIn": "Zoomer",
+            "zoomOut": "Zoom arrière",
+            "rotate": "Tourner"
         },
         "funds": {
             "matchCard": {
@@ -6281,6 +6288,11 @@
             "amount": "Montant",
             "check": "Vérifier #{{number}}",
             "contract": "Contracter #{{number}}"
+        },
+        "tableColumns": {
+            "transaction": "Transaction",
+            "status": "Statut",
+            "amount": "Montant"
         }
     },
     "deathNotification": {
@@ -7442,6 +7454,8 @@
             "ageLabel": "Âge actuel",
             "riskLabel": "Classe de risque",
             "nicotineUserLabel": "Utilisateur de nicotine",
+            "nicotine": "Nicotine",
+            "nonNicotine": "Non nicotine",
             "stateLabel": "État",
             "continueButton": "Continuer",
             "cancelButton": "Annuler",
@@ -7487,5 +7501,15 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "feature": {
+        "featureFlags": "Bandeaux de Fonctionnalité",
+        "flag": "Bandeau",
+        "status": "Statut",
+        "variable": "Variable",
+        "featureVariables": "Variables de Fonctionnalité",
+        "Environment": "Environment",
+        "variableSearchPlaceholder": "Rechercher des variables de fonctionnalité...",
+        "flagQueueSearchPlaceholder": "Rechercher des variables de fonctionnalité..."
     }
 }

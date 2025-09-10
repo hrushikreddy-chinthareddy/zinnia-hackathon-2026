@@ -85,7 +85,8 @@ export const hasBeneficiaryChanged = (
         existingParty?.dateOfBirth !== item?.party?.info?.dateOfBirth ||
         existingParty?.gender !== item?.party?.info?.gender ||
         (partyInfo.partyType == PartyType.TRUST &&
-            existingParty?.trustType !== partyInfo?.trustType);
+            existingParty?.trustType !== partyInfo?.trustType) ||
+        existingParty?.trustDate !== partyInfo?.trustDate;
 
     const allocationChanged =
         existingParty?.beneficiaryPercentage !==

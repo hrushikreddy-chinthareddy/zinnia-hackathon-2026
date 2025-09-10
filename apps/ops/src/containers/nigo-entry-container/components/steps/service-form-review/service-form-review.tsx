@@ -10,7 +10,7 @@ import { DocumentType } from '@deps/models/case/document';
 
 import { DocumentIndexingInfo } from './document-indexing-info';
 import { NigoOptionDetails } from './nigo-option-details';
-import { useGetPolicyTypeDocs } from './service-form-review.helpers';
+import { DE_162, useGetPolicyTypeDocs } from './service-form-review.helpers';
 import { useNigoEntry } from '../../nigo-entry-provider';
 
 export enum SelOptionType {
@@ -26,6 +26,7 @@ interface SetFormReviewProps {
     documentNumber: string;
     nigoExpection: any;
     nigoSubExceptions: any;
+    isRenewals: boolean;
 }
 
 export const ServiceFormReview = ({
@@ -35,11 +36,14 @@ export const ServiceFormReview = ({
     documentNumber,
     nigoExpection,
     nigoSubExceptions,
+    isRenewals,
 }: SetFormReviewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'nigoEntry.serviceFormReview',
     });
+
     const NIGO_EXCEPTION: SelOptionType = nigoExpection?.value;
+
     const { sectionOption, setSectionOption, setExceptions } = useNigoEntry();
     const [loading, getPolicyDocs, workingDocument] = useGetPolicyTypeDocs(
         policyNumber,
@@ -79,6 +83,18 @@ export const ServiceFormReview = ({
         });
     }
 
+    if (
+        isRenewals &&
+        nigoSubExceptions[0].subExceptions?.find(
+            (item: any) => item.value === DE_162
+        )
+    ) {
+        sectionOptions.push({
+            label: nigoExpection.label,
+            value: nigoExpection.value,
+        });
+    }
+
     useEffect(() => {
         getPolicyDocs();
     }, []);
@@ -102,6 +118,12 @@ export const ServiceFormReview = ({
             });
         }
     };
+
+    const showNigoOptions = isRenewals
+        ? nigoSubExceptions[0].subExceptions?.find(
+              (item: any) => item.value === DE_162
+          )
+        : sectionOption === NIGO_EXCEPTION;
 
     return (
         <>
@@ -152,11 +174,12 @@ export const ServiceFormReview = ({
                 {sectionOption === SelOptionType.DOC_INDEXING && (
                     <DocumentIndexingInfo />
                 )}
-                {sectionOption === NIGO_EXCEPTION && (
+                {showNigoOptions && (
                     <NigoOptionDetails
                         selNigoExpetion={nigoExpection.value}
                         nigoSubExceptions={nigoSubExceptions}
                         nigoExpetion={NIGO_EXCEPTION}
+                        isRenewals={isRenewals}
                     />
                 )}
             </div>

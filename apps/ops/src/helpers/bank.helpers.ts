@@ -7,6 +7,7 @@ import {
 
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
 import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
+import { PartyRoleId } from '@deps/types/constants';
 
 export const getBankingDetailsLC = (parties: LifeCadParty[]) => {
     const party = parties?.find(
@@ -22,12 +23,10 @@ export const isExistingBankLC = (
     return bankingDetails.map((bank) => bank.BankName).includes(bankName || '');
 };
 
-export const getBankingDetails = (
-    parties: Party[],
-    partyRoles: PolicyPartyRoles[]
-) => {
-    const owner = partyRoles?.find((pr) => pr.partyRole === PartyRole.OWNER);
-    const party = parties?.find((party) => party?.partyId === owner?.partyId);
+export const getBankingDetails = (parties: LifeCadParty[]) => {
+    const party = parties?.find(
+        (party) => party?.partyRoleId === PartyRoleId.OwnerRoleId
+    );
     return party?.bankDetails || [];
 };
 

@@ -275,7 +275,7 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=50 and must be entered.',
+                                                en: 'Farmers Return of Premium Term not available under age 18 or over age 50.',
                                                 fr: '',
                                             },
                                         },
@@ -322,7 +322,7 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=18 and is <=55 and must be entered.',
+                                                en: 'Farmers Return of Premium Term not available under age 18 or over age 55.',
                                                 fr: '',
                                             },
                                         },
@@ -1518,7 +1518,7 @@ export const farmersBlueprintTR0101 = {
                                                         conditions: [
                                                             {
                                                                 type: 'numberComparisonCondition',
-                                                                value: 15,
+                                                                value: 10,
                                                                 targetNodeId:
                                                                     'temporary-flat-extra',
                                                                 operator:
@@ -1551,7 +1551,7 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The temporary flat extra must be less than or equal to $15.00 and a multiple of $0.50.',
+                                                en: 'The temporary flat extra must be less than or equal to $10.00 and a multiple of $0.50.',
                                                 fr: '',
                                             },
                                         },
@@ -1756,7 +1756,7 @@ export const farmersBlueprintTR0101 = {
                                                         conditions: [
                                                             {
                                                                 type: 'numberComparisonCondition',
-                                                                value: 15,
+                                                                value: 10,
                                                                 targetNodeId:
                                                                     'permanent-flat-extra',
                                                                 operator:
@@ -1789,7 +1789,7 @@ export const farmersBlueprintTR0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The temporary flat extra must be less than or equal to $15.00 and a multiple of $0.50.',
+                                                en: 'The temporary flat extra must be less than or equal to $10.00 and a multiple of $0.50.',
                                                 fr: '',
                                             },
                                         },
@@ -2226,7 +2226,7 @@ export const farmersBlueprintTR0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'SEMI_ANNUAL',
+                                            value: 'SEMIANNUAL',
                                             text: {
                                                 en: 'Semi-Annual',
                                             },

@@ -333,7 +333,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'This property requires a value which is an INTEGER and is >=0 and is <=80 and must be entered.',
+                                                en: 'Farmers Index Universal Life not available over age 80.',
                                                 fr: '',
                                             },
                                         },
@@ -1832,6 +1832,12 @@ export const farmersBlueprintIU0101 = {
                                                     'table-or-flat-extra-selection',
                                                 quantifier: 'any',
                                             },
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'juvenileSubstandard',
+                                                isEqual: false,
+                                                targetNodeId: 'premium-class',
+                                            },
                                         ],
                                     },
                                 },
@@ -1892,6 +1898,28 @@ export const farmersBlueprintIU0101 = {
                                     id: '75652a6b-99af-47c7-a3af-c4d767f69453',
                                     partName:
                                         'custom-25a847f7-e8f4-4faf-be79-0fe536167ba0',
+                                    valid: [
+                                        {
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 1,
+                                                        targetNodeId:
+                                                            'schedule-duration',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Input numeric value for duration',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
+                                    defaultValue: 0,
                                     validateAs: 'integer',
                                 },
                                 {
@@ -2072,6 +2100,12 @@ export const farmersBlueprintIU0101 = {
                                         targetNodeId:
                                             'table-or-flat-extra-selection',
                                         quantifier: 'any',
+                                    },
+                                    {
+                                        type: 'equalityCondition',
+                                        value: 'juvenileSubstandard',
+                                        isEqual: false,
+                                        targetNodeId: 'premium-class',
                                     },
                                 ],
                             },
@@ -3147,6 +3181,7 @@ export const farmersBlueprintIU0101 = {
                                             tooltip: {
                                                 en: 'Modal Premium',
                                             },
+                                            default: 0,
                                         },
                                         fromYear: {
                                             min: 1,
@@ -4343,9 +4378,10 @@ export const farmersBlueprintIU0101 = {
                                     defaultValue: 'yes',
                                 },
                                 {
-                                    fieldType: 'information',
+                                    fieldType: 'custom',
+                                    customName: 'Information',
                                     text: {
-                                        en: 'There are tax consequences for becoming a MEC.',
+                                        en: 'Please note that the Illustrated policy may become a MEC.',
                                         fr: '',
                                     },
                                     title: {

@@ -1,5 +1,5 @@
 import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { Reason } from '@zinnia/api-types/types/sor';
+import { SystematicProgram, Reason } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -27,7 +27,18 @@ import {
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
 
-export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
+const getAmountAndDate = (program?: SystematicProgram): string => {
+    if (!program) {
+        return DEFAULT_ERROR_STRING;
+    }
+    const amount = program?.amount;
+    const paymentDate = program?.nextProgramDate;
+    return `${numberFormatify(amount || '')} - ${
+        dayjs(paymentDate).format(DEFAULT_EXTENDED_DATE_FORMAT) || ''
+    }`;
+};
+
+const TransactionLink: React.FC<BasePolicyComponentArgs> = ({
     policy,
 }: BasePolicyComponentArgs) => {
     const { t } = useTranslation([
@@ -39,8 +50,7 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
     const premiumProgram = policy.systematicPrograms.getProgramsByReason(
         Reason.PREMIUM
     );
-    const paymentDate = premiumProgram?.nextProgramDate;
-    const amount = premiumProgram?.amount;
+
     const { bankId, partyId } = premiumProgram?.party?.[0] || {};
     const bankDetails =
         partyId && bankId
@@ -58,11 +68,7 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
             policy.policyNumber,
             policy.planCode
         );
-    const amountAndDate = `${numberFormatify(amount || '')} - ${
-        dayjs(paymentDate).format(DEFAULT_EXTENDED_DATE_FORMAT) || ''
-    }`;
 
-    let transactionLink;
     const openBankingSidesheet = () => {
         sideSheet.changeSideSheetContent(
             <PolicyInfo
@@ -75,7 +81,7 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
     };
 
     if (!isUserPermissionedToTransact) {
-        transactionLink = (
+        return (
             <TempNavInactive
                 tooltipBody={t(
                     'colDefs:policySummary.permissionDeniedTooltip',
@@ -88,7 +94,7 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
             </TempNavInactive>
         );
     } else if (!bankDetails?.accountNumber) {
-        transactionLink = (
+        return (
             <NavElement
                 size={NavElementSize.Small}
                 type={NavElementType.Link}
@@ -97,34 +103,27 @@ export const UpcomingPremium: React.FC<BasePolicyComponentArgs> = ({
                 {t('colDefs:policySummary.makePayment')}
             </NavElement>
         );
-    } else {
-        transactionLink = (
-            <NavElement
-                onClick={openBankingSidesheet}
-                size={NavElementSize.Small}
-                type={NavElementType.Button}
-                className="text-left"
-            >
-                <PiiWrapper>
-                    {t('colDefs:policySummary.endingIn', {
-                        accountType: toTitleCase(bankDetails.accountType),
-                        accountNumber:
-                            formatAccountNumber(
-                                bankDetails.internationalBankAccountNumber ??
-                                    bankDetails.accountNumber,
-                                true
-                            ) ?? DEFAULT_ERROR_STRING,
-                    })}
-                </PiiWrapper>
-            </NavElement>
-        );
     }
 
     return (
-        <>
-            <Content details={amountAndDate} variant={ContentVariant.BodySm} />
-            {transactionLink}
-        </>
+        <NavElement
+            onClick={openBankingSidesheet}
+            size={NavElementSize.Small}
+            type={NavElementType.Button}
+            className="text-left"
+        >
+            <PiiWrapper>
+                {t('colDefs:policySummary.endingIn', {
+                    accountType: toTitleCase(bankDetails.accountType),
+                    accountNumber:
+                        formatAccountNumber(
+                            bankDetails.internationalBankAccountNumber ??
+                                bankDetails.accountNumber,
+                            true
+                        ) ?? DEFAULT_ERROR_STRING,
+                })}
+            </PiiWrapper>
+        </NavElement>
     );
 };
 
@@ -136,9 +135,11 @@ const UpcomingPremiumDisplayField = ({ policy }: BasePolicyComponentArgs) => {
     const premiumProgram = policy.systematicPrograms.getProgramsByReason(
         Reason.PREMIUM
     );
-    const translatedFrequency = t(
-        `common:systematicProgram.frequency.${premiumProgram?.frequency?.toLowerCase()}`
-    );
+    const translatedFrequency = premiumProgram?.frequency
+        ? t(
+              `common:systematicProgram.frequency.${premiumProgram?.frequency?.toLowerCase()}`
+          )
+        : '';
 
     return (
         <div>
@@ -148,7 +149,11 @@ const UpcomingPremiumDisplayField = ({ policy }: BasePolicyComponentArgs) => {
                     frequency: translatedFrequency,
                 })}
             />
-            <UpcomingPremium policy={policy} />
+            <Content
+                details={getAmountAndDate(premiumProgram)}
+                variant={ContentVariant.BodySm}
+            />
+            <TransactionLink policy={policy} />
         </div>
     );
 };

@@ -31,6 +31,13 @@ interface RenewalFormProviderProps {
     initialForm: any;
 }
 
+export interface UpfrontNIGO {
+    nigos: {
+        exceptionId: string;
+        messages: string[];
+    }[];
+}
+
 function merge(a: any[], b: any[], prop: string) {
     const reduced = a.filter(
         (aitem) => !b.find((bitem) => aitem[prop] === bitem[prop])
@@ -88,6 +95,10 @@ const RenewalFormProvider = ({
               currentFormState !== TaskStatus.InProgress)
         : false;
 
+    const [upfrontNIGO, setUpfrontNIGO] = useState<UpfrontNIGO>(
+        form?.data?.upfrontNIGO ?? null
+    );
+
     return (
         <div>
             <RenewalFormDataContext.Provider
@@ -107,6 +118,8 @@ const RenewalFormProvider = ({
                     isFormStateReadOnly,
                     planCode,
                     featureFlags: featureFlagDecisions,
+                    upfrontNIGO,
+                    setUpfrontNIGO,
                     setFormErrors,
                     setContractValue,
                     formValidator,
