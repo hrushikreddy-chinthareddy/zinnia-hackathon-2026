@@ -276,8 +276,8 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     const preparedPolicy = useMemo(() => preparePolicy(policy), [policy]);
 
     const { policyBasics, policySections } = useMemo(
-        () => preparedPolicy.toSections(policy),
-        [preparePolicy]
+        () => preparedPolicy.toSections(),
+        [preparedPolicy]
     );
 
     return (
