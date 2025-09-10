@@ -4,6 +4,7 @@ import { auth } from 'express-openid-connect';
 import { getConnectionConfig } from './utils.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import logger from './logging/logger.js';
 
 // Handles trailing slash
 const router = express.Router({ strict: false });
@@ -80,6 +81,9 @@ app.get('/', (req, res) => {
       res.redirect(302, loginRedirectUrl);
     }
   } catch (error) {
+    logger.error(
+      `RouteError: '/', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+    );
     res.sendFile('error.html', htmlFiles);
   }
 });
@@ -103,6 +107,9 @@ app.get('/login', (req, res) => {
       },
     });
   } catch (error) {
+    logger.error(
+      `Route Error: '/login', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+    );
     res.sendFile('error.html', htmlFiles);
   }
 });
