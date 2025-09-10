@@ -17,6 +17,7 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
+import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -40,7 +41,13 @@ const IllustrationCaseSumary = ({
     clientCase,
 }: IllustrationCaseSumaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const { isAllowWriteClientCase } = usePermissionsContext();
+    const { isAllowWriteClientCase, partyReferenceData } =
+        usePermissionsContext();
+
+    const aliases = useAllAliasesWithSellingCode(partyReferenceData);
+    const isAgent = aliases?.length ?? 0 > 0;
+
+    const isAllowedToEditCase = isAgent || isAllowWriteClientCase;
 
     const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
@@ -157,7 +164,7 @@ const IllustrationCaseSumary = ({
                                 'clientCase.caseSummary.untitledCase'
                             ) as string)}
                     </Heading>
-                    {isAllowWriteClientCase && (
+                    {isAllowedToEditCase && (
                         <Button
                             mode="link"
                             data-testid="edit-btn"

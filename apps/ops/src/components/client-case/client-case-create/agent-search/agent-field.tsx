@@ -94,6 +94,9 @@ const useSuperIllustratorAgentOptions = (searchQuery: string) => {
                             npn: lookupId,
                             firstName: name,
                             email,
+                            // This endpoint does not return any agent selling
+                            // code this is not a problem because we are gonna
+                            // request them later
                             sellingCodes: [] as string[],
                         })),
                     'firstName'

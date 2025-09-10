@@ -75,7 +75,7 @@ export default function NewClientCase(
             // add loading logic
         },
         onError: (err) => {
-            console.error(err);
+            // add error logic
         },
     });
 

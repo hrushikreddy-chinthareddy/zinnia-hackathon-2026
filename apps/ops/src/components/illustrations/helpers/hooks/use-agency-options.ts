@@ -37,7 +37,6 @@ export const useAgencyOptions = (
                 : undefined,
     }));
 
-    // TODO: this should be an array from the client case selected agent (because the agent can have more than one selling code)
     const clientCaseAgentAliases = useMemo(() => {
         if (!agentOption?.sellingCodes?.length) {
             return [];
