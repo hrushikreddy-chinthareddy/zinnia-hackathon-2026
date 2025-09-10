@@ -4,6 +4,7 @@ import {
     LoanSegment,
     Fund,
     FundAllocation,
+    Party,
 } from '@xd/api-types/dist/generated-types/sor';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -22,6 +23,7 @@ import {
     DataRecord,
     DataTuple,
     FieldData,
+    label,
     link,
     Link,
     LinkedField,
@@ -58,6 +60,7 @@ export const preparePolicy = (
     policy: Policy
 ): {
     lineOfBusiness: LineOfBusiness;
+    allPartiesById?: Record<string, Party>;
     toSections: (policyOverride?: Policy) => PreparedPolicy;
     toFieldsAndSubsections: (
         policySection: PolicySection
@@ -68,9 +71,19 @@ export const preparePolicy = (
     // retain persistent policy descriptors as closure
     const lineOfBusiness =
         policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
+    const allPartiesById = policy.parties
+        ? convertListToMap({
+              subSectionList: policy.parties,
+              subsectionTitleField: 'partyId',
+              fallbackTitle: 'Party',
+          })
+        : undefined;
+
     return {
         lineOfBusiness,
-        toSections: (policyOverride) => toSections(policyOverride ?? policy),
+        allPartiesById,
+        toSections: (policyOverride) =>
+            toSections(policyOverride ?? policy, allPartiesById),
         toFieldsAndSubsections: (policySection: PolicySection) =>
             toFieldsAndSubsections(policySection),
         formatDataField: (dataTuple: DataTuple) =>
@@ -260,8 +273,14 @@ export const formatDataField = (
  * @returns A {@link PreparedPolicy} object containing two lists of data tuples
  *
  */
-export const toSections = (policy: Policy): PreparedPolicy => {
+export const toSections = (
+    policy: Policy,
+    allPartiesById?: Record<string, Party>
+): PreparedPolicy => {
     const policyTuples = Object.entries(policy);
+
+    // TODO: need to build a partyId map here
+
     const basicsAndSections = policyTuples.reduce<PreparedPolicy>(
         (acc, [currentKey, currentVal]) => {
             // append to policySections list
@@ -300,6 +319,117 @@ export const toSections = (policy: Policy): PreparedPolicy => {
                                         ...currentVal,
                                         ...funds,
                                     },
+                                ],
+                            ],
+                        };
+                    case 'systematicPrograms':
+                        const systematicProgramsAndParties =
+                            policy.systematicPrograms?.map(
+                                (systematicProgram) => {
+                                    if (systematicProgram.parties?.length) {
+                                        const parties =
+                                            systematicProgram.parties?.map(
+                                                (partyData, i) => {
+                                                    const partyObj =
+                                                        partyData.partyId &&
+                                                        allPartiesById?.[
+                                                            partyData.partyId
+                                                        ];
+                                                    if (!partyObj) {
+                                                        return acc;
+                                                    }
+                                                    const partyName =
+                                                        `${partyObj.firstName} ${partyObj.lastName}`.trim() ||
+                                                        partyObj.fullName ||
+                                                        `Party ${i + 1}`;
+
+                                                    //TODO: move out of this function
+                                                    const planCode =
+                                                        policy.product
+                                                            ?.planCode;
+                                                    const policyNumber =
+                                                        policy.policyNumber;
+                                                    const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
+                                                    const firstBank =
+                                                        partyObj
+                                                            .bankDetails?.[0];
+                                                    const bankInfo = firstBank
+                                                        ? [
+                                                              firstBank.branchName,
+                                                              firstBank.accountType,
+                                                              'ending in',
+                                                              firstBank.accountNumber?.slice(
+                                                                  -4
+                                                              ),
+                                                          ].join(' ')
+                                                        : undefined;
+                                                    const firstAddress =
+                                                        partyObj.addresses?.[0];
+                                                    const addressInfo =
+                                                        firstAddress
+                                                            ? [
+                                                                  firstAddress.addressLine1,
+                                                                  firstAddress.city,
+                                                                  `${firstAddress.state} ${firstAddress.zipCode}`,
+                                                              ].join(', ')
+                                                            : undefined;
+
+                                                    const completePartyData = {
+                                                        partyId: partyName,
+                                                        percentage:
+                                                            partyData.percentage,
+                                                        ...(bankInfo && {
+                                                            bankId: bankInfo,
+                                                        }),
+                                                        ...(addressInfo && {
+                                                            addressId:
+                                                                addressInfo,
+                                                        }),
+                                                        paymentForm:
+                                                            partyData.paymentForm,
+                                                        [label]: partyName,
+                                                        [link]: partyLink,
+                                                        [linkedField]:
+                                                            'partyId',
+                                                        ...(partyData.partyRole && {
+                                                            [tags]: [
+                                                                formatAsDataValue(
+                                                                    partyData.partyRole
+                                                                ),
+                                                            ],
+                                                        }),
+                                                    };
+                                                    return completePartyData;
+                                                    /*
+                                            return {
+                                                ...acc,
+                                                [partyName]: completePartyData,
+                                            };
+                                            */
+                                                }
+                                            );
+
+                                        return {
+                                            ...systematicProgram,
+                                            systematicProgramParties: parties,
+                                        };
+                                    }
+
+                                    return {
+                                        ...systematicProgram,
+                                    };
+                                }
+                            );
+                        //console.log('systematicProgramsAndParties', systematicProgramsAndParties);
+                        //console.log('systematicProgramsCurrentVal', currentVal);
+
+                        return {
+                            ...acc,
+                            policySections: [
+                                ...acc.policySections,
+                                [
+                                    currentKey,
+                                    systematicProgramsAndParties ?? currentVal,
                                 ],
                             ],
                         };
@@ -359,9 +489,6 @@ export const toSections = (policy: Policy): PreparedPolicy => {
         ]);
     }
 
-    //console.log('parties...', policy.parties);
-    //console.log('partyRoles...', policy.partyRoles);
-
     const partyRoleMap = policy.partyRoles?.reduce<Record<string, string[]>>(
         (acc, currentPartyRole) => {
             const currentPartyIdRoles =
@@ -385,6 +512,7 @@ export const toSections = (policy: Policy): PreparedPolicy => {
     );
 
     //console.log('partyRoleMap...', partyRoleMap);
+    //console.log('policy.parties...', policy.parties);
 
     const people = policy.parties?.reduce((acc, party, i) => {
         const partyName = String(
@@ -417,7 +545,7 @@ export const toSections = (policy: Policy): PreparedPolicy => {
             [partyName]: partyDetails,
         };
     }, {});
-    //console.log('people...', {[tags]: 'yay'}, tags, people);
+    //console.log('people...', tags, people);
 
     if (people) {
         basicsAndSections.policySections.push(['People', people]);
@@ -493,10 +621,12 @@ export const toFieldsAndSubsections = ([
             subsectionTitleField,
             fallbackTitle: String(sectionName),
         });
+        //console.log('|-------->sectionData', sectionData);
         const subSections = removeExcludedFields(
             Object.entries(subSectionDataMap), // remove excluded subsections
             [subsectionTitleField] // and also the title field
         ).map<SubSection>(([subSectionTitle, subSectionData]) => {
+            //console.log('|---------->subSectionData', subSectionData);
             return [
                 subSectionTitle,
                 Array.isArray(subSectionData)

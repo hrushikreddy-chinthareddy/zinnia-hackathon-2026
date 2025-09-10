@@ -14,7 +14,7 @@ import {
     Link,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useMemo, useState, ReactElement } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { filterOnSearchHandler } from '@deps/helpers/search.helpers';
@@ -27,7 +27,15 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
-import { DataTuple, link, linkedField, MetaData, tags } from './types';
+import {
+    DataRecord,
+    DataTuple,
+    label,
+    link,
+    linkedField,
+    MetaData,
+    tags,
+} from './types';
 import { generateKeyValueGroups, prepareSearchableData } from './utils';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -43,6 +51,102 @@ interface FindKeyValuesSidebarProps {
     policyNumber?: string;
 }
 
+const DataField = ({
+    label,
+    data,
+    searchValue,
+}: {
+    label: string;
+    data: string | ReactElement;
+    searchValue: string;
+}) => {
+    if (data == null) return null;
+    return (
+        <DotContainer
+            key={label}
+            dotLeftSide={
+                <div>
+                    <Highlighter text={label} highlights={[searchValue]} />
+                    {/* FIXME: add tooltip
+                    {item.tooltip && (
+                        <Popover
+                            placement={
+                                PopoverPlacement.TopRight
+                            }
+                            title={item.tooltip}
+                            body={
+                                item.tooltipBody
+                            }
+                        >
+                            <CircleInfoIcon
+                                height={'16px'}
+                                width={'16px'}
+                                className="text-primary"
+                            />
+                        </Popover>
+                    )}
+                    */}
+                </div>
+            }
+            dotLeftSideClassName="typography-content-body-sm"
+            dotRightSide={data}
+            dotRightSideClassName="typography-content-body-sm"
+        />
+    );
+};
+
+const FindAllKeyValuesNestedSubSection = ({
+    preparedPolicy,
+    fields,
+    searchValue,
+}: {
+    preparedPolicy: ReturnType<typeof preparePolicy>;
+    fields: DataRecord[];
+    searchValue: string;
+}) => {
+    //console.log('|-------->fields', fields);
+    return fields.map((field, i) => {
+        const fieldLabel = field[label];
+        if (fieldLabel == null) return null;
+        const fieldTags = field[tags] as string[];
+        const fieldLink = field[link] as string;
+        const fieldLinkField = field[linkedField] as string;
+        //console.log('|-------->fieldLink', fieldLink, fieldLinkField);
+        return (
+            <div className={styles.subSection}>
+                <Accordion
+                    key={String(fieldLabel)}
+                    sectionLabel={preparedPolicy.formatAsSectionLabel(
+                        String(fieldLabel)
+                    )}
+                    tags={fieldTags}
+                >
+                    <div className={styles.itemsList}>
+                        {Object.entries(field).map((dataField) => {
+                            const formattedField =
+                                preparedPolicy.formatDataField(dataField);
+                            if (!formattedField) return null;
+                            const [fieldLabel, fieldData] = formattedField;
+                            const linkedField =
+                                fieldLink && fieldLinkField === dataField[0] ? (
+                                    <Link href={fieldLink} text={fieldData} />
+                                ) : undefined;
+                            return (
+                                <DataField
+                                    key={fieldLabel}
+                                    label={fieldLabel}
+                                    data={linkedField ?? fieldData}
+                                    searchValue={searchValue}
+                                />
+                            );
+                        })}
+                    </div>
+                </Accordion>
+            </div>
+        );
+    });
+};
+
 const FindAllKeyValuesSection = ({
     preparedPolicy,
     fields,
@@ -57,6 +161,20 @@ const FindAllKeyValuesSection = ({
     return (
         <div className={styles.itemsList}>
             {fields.map((field) => {
+                // If the field data is an array, render it as a
+                // subSection-in-subSection
+                const [, unformattedData] = field;
+                if (unformattedData instanceof Array) {
+                    return (
+                        <FindAllKeyValuesNestedSubSection
+                            preparedPolicy={preparedPolicy}
+                            fields={unformattedData as DataRecord[]}
+                            searchValue={searchValue}
+                        />
+                    );
+                }
+
+                // Otherwise, just render it as a DataField
                 const formattedField = preparedPolicy.formatDataField(field);
                 if (!formattedField) return null;
                 const [fieldLabel, fieldData] = formattedField;
@@ -65,38 +183,10 @@ const FindAllKeyValuesSection = ({
                         <Link href={metaData?.[link]} text={fieldData} />
                     ) : undefined;
                 return (
-                    <DotContainer
-                        key={fieldLabel}
-                        dotLeftSide={
-                            <div>
-                                <Highlighter
-                                    text={fieldLabel}
-                                    highlights={[searchValue]}
-                                />
-                                {/* FIXME: add tooltip
-                                {item.tooltip && (
-                                    <Popover
-                                        placement={
-                                            PopoverPlacement.TopRight
-                                        }
-                                        title={item.tooltip}
-                                        body={
-                                            item.tooltipBody
-                                        }
-                                    >
-                                        <CircleInfoIcon
-                                            height={'16px'}
-                                            width={'16px'}
-                                            className="text-primary"
-                                        />
-                                    </Popover>
-                                )}
-                                */}
-                            </div>
-                        }
-                        dotLeftSideClassName="typography-content-body-sm"
-                        dotRightSide={fieldLink ?? fieldData}
-                        dotRightSideClassName="typography-content-body-sm"
+                    <DataField
+                        label={fieldLabel}
+                        data={fieldLink ?? fieldData}
+                        searchValue={searchValue}
                     />
                 );
             })}
@@ -262,7 +352,7 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                     sectionData,
                                 ]);
 
-                            //console.log('Subsections', subSections);
+                            //console.log('Subsections', sectionLabel,subSections);
                             if (typeof sectionLabel !== 'string') {
                                 return null;
                             }
@@ -280,55 +370,49 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                             searchValue={searchValue}
                                         />
                                     )}
-                                    {subSections &&
-                                        subSections.map(
-                                            ([
-                                                subSectionLabel,
-                                                subSectionFields,
-                                                subSectionMetaData,
-                                            ]) => {
-                                                console.log(
-                                                    'ssmd',
-                                                    subSectionMetaData
-                                                );
-                                                const subsectionTags =
-                                                    subSectionMetaData?.[tags];
-                                                return (
-                                                    <div
-                                                        className={
-                                                            styles.subSection
-                                                        }
+                                    {subSections?.map(
+                                        ([
+                                            subSectionLabel,
+                                            subSectionFields,
+                                            subSectionMetaData,
+                                        ]) => {
+                                            //console.log('in subsection...', subSectionLabel, subSectionFields);
+                                            const subsectionTags =
+                                                subSectionMetaData?.[tags];
+                                            return (
+                                                <div
+                                                    className={
+                                                        styles.subSection
+                                                    }
+                                                >
+                                                    <Accordion
+                                                        key={sectionLabel}
+                                                        sectionLabel={preparedPolicy.formatAsSectionLabel(
+                                                            String(
+                                                                subSectionLabel
+                                                            )
+                                                        )}
+                                                        tags={subsectionTags}
                                                     >
-                                                        <Accordion
-                                                            key={sectionLabel}
-                                                            sectionLabel={preparedPolicy.formatAsSectionLabel(
-                                                                String(
-                                                                    subSectionLabel
-                                                                )
-                                                            )}
-                                                            tags={
-                                                                subsectionTags
+                                                        <FindAllKeyValuesSection
+                                                            preparedPolicy={
+                                                                preparedPolicy
                                                             }
-                                                        >
-                                                            <FindAllKeyValuesSection
-                                                                preparedPolicy={
-                                                                    preparedPolicy
-                                                                }
-                                                                fields={
-                                                                    subSectionFields
-                                                                }
-                                                                searchValue={
-                                                                    searchValue
-                                                                }
-                                                                metaData={
-                                                                    subSectionMetaData
-                                                                }
-                                                            />
-                                                        </Accordion>
-                                                    </div>
-                                                );
-                                            }
-                                        )}
+                                                            fields={
+                                                                subSectionFields
+                                                            }
+                                                            searchValue={
+                                                                searchValue
+                                                            }
+                                                            metaData={
+                                                                subSectionMetaData
+                                                            }
+                                                        />
+                                                    </Accordion>
+                                                </div>
+                                            );
+                                        }
+                                    )}
                                 </Accordion>
                             );
                         })}

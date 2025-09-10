@@ -1,7 +1,11 @@
 export type NestedFieldData = string | number | boolean | null;
-export type FieldData = string | number | boolean | object | null; //TODO: should be more specific than object
+export type FieldData = string | number | boolean | FieldData[] | object | null; //TODO: should be more specific than object
 export type DataKey = string | symbol;
-export type MetaData = Partial<Tags> & Partial<Link> & Partial<LinkedField>;
+export type MetaData = Partial<Label> &
+    Partial<Tags> &
+    Partial<Link> &
+    Partial<LinkedField>;
+export type Label = Record<typeof label, string>;
 export type Tags = Record<typeof tags, string[]>;
 export type Link = Record<typeof link, string>;
 export type LinkedField = Record<typeof linkedField, string>;
@@ -23,6 +27,7 @@ export type PreparedPolicySection = {
     subSections?: SubSection[];
 };
 
+export const label = Symbol('label');
 export const tags = Symbol('tags');
 export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
