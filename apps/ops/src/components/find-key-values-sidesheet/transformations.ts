@@ -433,6 +433,68 @@ export const toSections = (
                                 ],
                             ],
                         };
+                    case 'riders':
+                        const ridersAndParticipants = policy.riders?.map(
+                            (rider) => {
+                                if (rider.riderParticipants?.length) {
+                                    const parties =
+                                        rider.riderParticipants?.map(
+                                            (partyData, i) => {
+                                                const partyObj =
+                                                    partyData.partyId &&
+                                                    allPartiesById?.[
+                                                        partyData.partyId
+                                                    ];
+                                                if (!partyObj) {
+                                                    return acc;
+                                                }
+                                                const partyName =
+                                                    `${partyObj.firstName} ${partyObj.lastName}`.trim() ||
+                                                    partyObj.fullName ||
+                                                    `Party ${i + 1}`;
+
+                                                //TODO: move out of this function
+                                                const planCode =
+                                                    policy.product?.planCode;
+                                                const policyNumber =
+                                                    policy.policyNumber;
+                                                const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
+
+                                                const completePartyData = {
+                                                    coveredParty: partyName,
+                                                    partyAgeAtIssue:
+                                                        partyData.partyAgeAtIssue,
+                                                    [label]: partyName,
+                                                    [link]: partyLink,
+                                                    [linkedField]:
+                                                        'coveredParty',
+                                                };
+                                                return completePartyData;
+                                            }
+                                        );
+
+                                    return {
+                                        ...rider,
+                                        riderParties: parties,
+                                    };
+                                }
+
+                                return {
+                                    ...rider,
+                                };
+                            }
+                        );
+
+                        return {
+                            ...acc,
+                            policySections: [
+                                ...acc.policySections,
+                                [
+                                    currentKey,
+                                    ridersAndParticipants ?? currentVal,
+                                ],
+                            ],
+                        };
                     case 'partyRoles':
                     case 'parties':
                         return acc;
