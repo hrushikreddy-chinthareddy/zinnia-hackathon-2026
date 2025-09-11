@@ -1,7 +1,7 @@
 import pino from 'pino';
 
 const logger = pino({}).child({
-  service: 'sso-mpv',
+  service: 'sso-mypolicyview',
   env: process.env.ENVIRONMENT_NAME || '',
 });
 
