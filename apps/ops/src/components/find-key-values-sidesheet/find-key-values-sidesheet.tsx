@@ -116,9 +116,7 @@ const FindAllKeyValuesNestedSubSection = ({
             <div className={styles.subSection}>
                 <Accordion
                     key={String(fieldLabel)}
-                    sectionLabel={preparedPolicy.formatAsSectionLabel(
-                        String(fieldLabel)
-                    )}
+                    sectionLabel={String(fieldLabel)}
                     tags={fieldTags}
                 >
                     <div className={styles.itemsList}>
@@ -352,11 +350,14 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                     sectionData,
                                 ]);
 
+                            /*
                             console.log(
                                 'Subsections',
                                 sectionLabel,
                                 subSections
                             );
+                            */
+
                             if (
                                 typeof sectionLabel !== 'string' ||
                                 (fields == null && subSections == null)
@@ -394,10 +395,8 @@ export const FindAllKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                 >
                                                     <Accordion
                                                         key={sectionLabel}
-                                                        sectionLabel={preparedPolicy.formatAsSectionLabel(
-                                                            String(
-                                                                subSectionLabel
-                                                            )
+                                                        sectionLabel={String(
+                                                            subSectionLabel
                                                         )}
                                                         tags={subsectionTags}
                                                     >

@@ -238,4 +238,5 @@ export const enums: Record<string, string> = {
     AUTHORIZEDSIGNATORY: 'Authorized signatory',
     OTHERINTERESTEDPARTY: 'Other interested party',
     CONTINGENTOWNER: 'Contingent owner',
+    CHECKING: 'Checking',
 };

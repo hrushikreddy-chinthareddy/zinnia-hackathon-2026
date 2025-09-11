@@ -19,7 +19,7 @@ import { excludeFields } from './translations/exclude-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { sectionVisibility } from './translations/section-visibility';
-import { sectionTypeToSubsectionTitleFields } from './translations/subsection-field-to-title';
+import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
     DataKey,
     DataRecord,
@@ -78,7 +78,7 @@ export const preparePolicy = (
     const allPartiesById = policy.parties
         ? convertListToMap({
               subSectionList: policy.parties,
-              subsectionTitleField: 'partyId',
+              subSectionTitleField: 'partyId',
               fallbackTitle: 'Party',
           })
         : undefined;
@@ -95,7 +95,7 @@ export const preparePolicy = (
                 allPartiesById
             ),
         toFieldsAndSubsections: (policySection: PolicySection) =>
-            toFieldsAndSubsections(policySection),
+            toFieldsAndSubsections(policySection, lineOfBusiness),
         formatDataField: (dataTuple: DataTuple) =>
             formatDataField(dataTuple, lineOfBusiness),
         formatAsSectionLabel: (label: string) =>
@@ -223,7 +223,7 @@ const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
 const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
     switch (true) {
         // Empty values
-        case fieldData === null:
+        case fieldData == null:
             return '--';
 
         // Enums
@@ -289,6 +289,7 @@ export const toSections = (
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
 ): PreparedPolicy => {
+    console.log('|-------->policy', policy);
     const policyTuples = Object.entries(policy);
 
     // TODO: need to build a partyId map here
@@ -313,8 +314,8 @@ export const toSections = (
                 }
 
                 // find the field within the subsection tuples to use as the subsection title
-                const subsectionTitleField =
-                    sectionTypeToSubsectionTitleFields[sectionTitle];
+                const subSectionTitleField =
+                    sectionTypeToSubSectionTitleFields[sectionTitle];
                 switch (sectionTitle) {
                     case 'allocation':
                         // combine fundAllocationsInvestments and funds into a flat map
@@ -330,7 +331,7 @@ export const toSections = (
                         const funds = combinedFunds?.length
                             ? convertListToMap<Fund & FundAllocation>({
                                   subSectionList: combinedFunds,
-                                  subsectionTitleField,
+                                  subSectionTitleField,
                                   fallbackTitle: sectionTitle,
                               })
                             : undefined;
@@ -365,7 +366,11 @@ export const toSections = (
                                                     return acc;
                                                 }
                                                 const partyName =
-                                                    `${partyObj.firstName} ${partyObj.lastName}`.trim() ||
+                                                    `${
+                                                        partyObj.firstName ?? ''
+                                                    } ${
+                                                        partyObj.lastName ?? ''
+                                                    }`.trim() ||
                                                     partyObj.fullName ||
                                                     `Party ${i + 1}`;
 
@@ -380,7 +385,10 @@ export const toSections = (
                                                 const bankInfo = firstBank
                                                     ? [
                                                           firstBank.branchName,
-                                                          firstBank.accountType,
+                                                          formatAsDataValue(
+                                                              firstBank.accountType ??
+                                                                  null
+                                                          ),
                                                           'ending in',
                                                           firstBank.accountNumber?.slice(
                                                               -4
@@ -460,7 +468,9 @@ export const toSections = (
                                             return acc;
                                         }
                                         const partyName =
-                                            `${partyObj.firstName} ${partyObj.lastName}`.trim() ||
+                                            `${partyObj.firstName ?? ''} ${
+                                                partyObj.lastName ?? ''
+                                            }`.trim() ||
                                             partyObj.fullName ||
                                             `Party ${i + 1}`;
 
@@ -505,7 +515,7 @@ export const toSections = (
                             ? convertListToMap<LoanSegment>({
                                   subSectionList:
                                       policy.allocation?.loanSegments,
-                                  subsectionTitleField,
+                                  subSectionTitleField,
                                   fallbackTitle: sectionTitle,
                               })
                             : undefined;
@@ -533,10 +543,17 @@ export const toSections = (
                 }
             }
 
-            // append to policyBasics list
+            // Append to policyBasics list; hide empty and excluded fields
+            const shouldShowBasicField =
+                currentVal != null && !excludeFields.has(currentKey);
             return {
                 ...acc,
-                policyBasics: [...acc.policyBasics, [currentKey, currentVal]],
+                ...(shouldShowBasicField && {
+                    policyBasics: [
+                        ...acc.policyBasics,
+                        [currentKey, currentVal],
+                    ],
+                }),
             };
         },
         {
@@ -580,53 +597,51 @@ export const toSections = (
     );
 
     // Populate the People section
-    const people = policy.parties?.reduce((acc, party, i) => {
-        const partyName = String(
-            `${party.firstName ?? ''} ${party.lastName ?? ''}`.trim() ||
-                party.fullName ||
-                `Party ${i + 1}`
-        );
+    const people = policy.parties
+        ?.map((party, i) => {
+            const partyName =
+                `${party.firstName ?? ''} ${party.lastName ?? ''}`.trim() ||
+                party.fullName;
 
-        if (!partyName) {
-            return acc;
-        }
+            if (!partyName) {
+                return undefined; // ignore parties with empty or nullish names
+            }
 
-        const planCode = policy.product?.planCode;
-        const policyNumber = policy.policyNumber;
-        const partyLink = `/policies/${planCode}/${policyNumber}/people/${party.partyId}`;
-        const partyTags = party.partyId && partyRoleMap?.[party.partyId];
-        const partyDetails = {
-            partyName,
-            dob: party.dateOfBirth,
-            ssn: party.identifications?.find(
+            const planCode = policy.product?.planCode;
+            const policyNumber = policy.policyNumber;
+            const partyLink = `/policies/${planCode}/${policyNumber}/people/${party.partyId}`;
+            const partyTags = party.partyId && partyRoleMap?.[party.partyId];
+            const ssn = party.identifications?.find(
                 (id) => id.identificationType === 'SSN'
-            )?.identificationValue,
-            ...(partyTags && { [tags]: partyTags }),
-            ...(partyLink && { [link]: partyLink }),
-            [linkedField]: 'partyName',
-        };
+            )?.identificationValue;
+            const partyDetails = {
+                partyName,
+                ...(party.dateOfBirth && { dob: party.dateOfBirth }),
+                ...(ssn && { ssn }),
+                [label]: partyName,
+                ...(partyTags && { [tags]: partyTags }),
+                ...(partyLink && { [link]: partyLink }),
+                [linkedField]: 'partyName',
+            };
 
-        return {
-            ...acc,
-            [partyName]: partyDetails,
-        };
-    }, {});
+            return partyDetails;
+        })
+        .filter((p) => p != null);
 
     if (people) {
         basicsAndSections.policySections.push(['People', people]);
     }
-    console.log('---------------->', basicsAndSections);
     return basicsAndSections;
 };
 
 // TODO: this could actually be useful as a util
 const convertListToMap = <T extends DataRecord>({
     subSectionList,
-    subsectionTitleField,
+    subSectionTitleField,
     fallbackTitle,
 }: {
     subSectionList: T[];
-    subsectionTitleField: string;
+    subSectionTitleField: string;
     fallbackTitle: string;
 }) => {
     const subSectionMap = subSectionList?.reduce<Record<DataKey, T>>(
@@ -634,7 +649,7 @@ const convertListToMap = <T extends DataRecord>({
             // Grab the first value to represent the title of the segment
 
             const subSectionTitle = formatAsDataValue(
-                currentSubSection[subsectionTitleField] ??
+                currentSubSection[subSectionTitleField] ??
                     Object.values(currentSubSection)[0] ??
                     `${fallbackTitle} ${i + 1}`
             );
@@ -657,7 +672,7 @@ const convertListToMap = <T extends DataRecord>({
  * If the section data is an array, each item in the array is treated as a
  * subsection, nested under "subSections". The title of each subsection will
  * map from a defined field *within* that subsection using the
- * {@link sectionTypeToSubsectionTitleFields} mapping.
+ * {@link sectionTypeToSubSectionTitleFields} mapping.
  *
  * If the section data is an object, and a value within it is a nested object,
  * it is also treated as a subsection (also nested under "subSections"), but
@@ -672,24 +687,54 @@ const convertListToMap = <T extends DataRecord>({
  *          and/or an array of subsections
  */
 
-export const toFieldsAndSubsections = ([
-    sectionName,
-    sectionData,
-]: PolicySection): PreparedPolicySection => {
+export const toFieldsAndSubsections = (
+    [sectionName, sectionData]: PolicySection,
+    lineOfBusiness: LineOfBusiness
+): PreparedPolicySection => {
     // If sectionData is an array, treat each item as a subsection.
     // The title of each subsection will map from a defined field *within* that subsection
     if (sectionData instanceof Array) {
-        const subsectionTitleField =
-            sectionTypeToSubsectionTitleFields[sectionName];
+        sectionData;
+        const subSectionTitleField =
+            sectionTypeToSubSectionTitleFields[sectionName];
+        const subSections = sectionData.map((subSection) => {
+            const subSectionLabel =
+                subSection[label] ??
+                formatAsDataValue(subSection[subSectionTitleField]);
+            const subSectionLink = subSection[link];
+            const subSectionLinkedField = subSection[linkedField];
+            const subSectionTags = subSection[tags];
+
+            //console.log('|---------->subSectionLabel', subSectionLabel, subSectionTitleField);
+
+            const subSectionEntries = removeExcludedAndEmptyFields(
+                Object.entries(subSection),
+                [subSectionTitleField]
+            );
+
+            return [
+                subSectionLabel,
+                subSectionEntries,
+                {
+                    [tags]: subSectionTags,
+                    [link]: subSectionLink,
+                    [linkedField]: subSectionLinkedField,
+                },
+            ];
+            //console.log('|---------->subSection', subSectionEntries);
+        });
+
+        /*
         const subSectionDataMap = convertListToMap({
             subSectionList: sectionData,
-            subsectionTitleField,
+            subSectionTitleField,
             fallbackTitle: String(sectionName),
         });
         //console.log('|-------->sectionData', sectionData);
-        const subSections = removeExcludedAndEmptyFields(
+
+        const subSections2 = removeExcludedAndEmptyFields(
             Object.entries(subSectionDataMap), // remove excluded subsections
-            [subsectionTitleField] // and also the title field
+            [subSectionTitleField] // and also the title field
         ).map<SubSection>(([subSectionTitle, subSectionData]) => {
             //console.log('|---------->subSectionData', subSectionData);
             return [
@@ -705,12 +750,13 @@ export const toFieldsAndSubsections = ([
                       ),
             ];
         });
-
+        */
+        //console.log('subSections', subSections, subSections2);
         return {
-            subSections,
+            subSections: subSections as SubSection[], // FIXME
         };
     } else {
-        //console.log('sectionData', sectionData);
+        console.log('sectionData', sectionData);
         const { fields, subSections } = removeExcludedAndEmptyFields(
             Object.entries(sectionData)
         ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
@@ -725,25 +771,36 @@ export const toFieldsAndSubsections = ([
                     linkedField
                 ];
 
-                return {
-                    fields: acc.fields, // keep fields untouched
-                    subSections: [
-                        ...(acc.subSections ?? []),
-                        [
-                            fieldName,
-                            removeExcludedAndEmptyFields(
-                                Object.entries(fieldData)
-                            ),
+                console.log('mapped subsection', fieldName, fieldData);
+                const subSectionData = removeExcludedAndEmptyFields(
+                    Object.entries(fieldData)
+                );
 
-                            // Add metadata
-                            {
-                                [tags]: fieldTags,
-                                [link]: fieldLink,
-                                [linkedField]: fieldLinkedField,
-                            },
+                // Only show non-empty subsections
+                if (subSectionData.length) {
+                    return {
+                        fields: acc.fields, // keep fields untouched
+                        subSections: [
+                            ...(acc.subSections ?? []),
+                            [
+                                formatAsSectionLabel(
+                                    String(fieldName),
+                                    lineOfBusiness
+                                ),
+                                subSectionData,
+
+                                // Add metadata
+                                {
+                                    [tags]: fieldTags,
+                                    [link]: fieldLink,
+                                    [linkedField]: fieldLinkedField,
+                                },
+                            ],
                         ],
-                    ],
-                };
+                    };
+                }
+
+                return acc;
             }
 
             // Otherwise, the value is meant to be displayed, so just append the key-value pair
