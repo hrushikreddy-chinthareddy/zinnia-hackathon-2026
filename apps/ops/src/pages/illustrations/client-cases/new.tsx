@@ -86,7 +86,9 @@ export default function NewClientCase(
                 clientCaseData.insuredDetails?.dateOfBirth ?? ''
             );
         }
-        return mutateAsync(clientCaseData as unknown as IllustrationsClientCase);
+        return mutateAsync(
+            clientCaseData as unknown as IllustrationsClientCase
+        );
     };
 
     useEffect(() => {

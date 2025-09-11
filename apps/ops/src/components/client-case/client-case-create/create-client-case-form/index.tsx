@@ -41,7 +41,9 @@ import { AgentOption } from '../agent-search/types';
 
 interface CreateClientCaseFormProps {
     onCancel: () => void;
-    onSubmit?: (clientCaseData: Partial<IllustrationsClientCase>) => Promise<unknown> | void;
+    onSubmit?: (
+        clientCaseData: Partial<IllustrationsClientCase>
+    ) => Promise<unknown> | void;
     clientCase?: IllustrationsClientCase;
     isEdit: boolean;
 }
@@ -123,11 +125,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         [dateOfBirth]
     );
 
-    const isFetchingAgencies = useIsFetching({
-        queryKey: POM_QUERY_PREFIXES.GET_HIERARCHY_BY_SELLING_CODE,
-    }) + useIsFetching({
-        queryKey: POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
-    });
+    const isFetchingAgencies =
+        useIsFetching({
+            queryKey: POM_QUERY_PREFIXES.GET_HIERARCHY_BY_SELLING_CODE,
+        }) +
+        useIsFetching({
+            queryKey: POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
+        });
 
     const [somethingChanged, setSomethingChanged] = useState(false);
     const [isSubmiting, setIsSubmiting] = useState(false);

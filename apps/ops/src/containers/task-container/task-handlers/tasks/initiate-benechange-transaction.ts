@@ -4,6 +4,142 @@ import { LoggingContext } from '@deps/utils/server-logging';
 
 import { TaskHandler, Reason, BeneTaskPayload } from '../types';
 
+const formatParties = (policyResponse: any) => {
+    const partyRoleMap = policyResponse.partyRoles.reduce(
+        (acc: any, role: any) => {
+            acc[role.partyRole] = role.partyId;
+            return acc;
+        },
+        {}
+    );
+
+    const ownerParty = policyResponse.parties.find(
+        (p: any) => p.partyId === partyRoleMap['OWNER']
+    );
+
+    const jointOwnerParty = policyResponse.parties.find(
+        (p: any) => p.partyId === partyRoleMap['JOINTOWNER']
+    );
+
+    const formatAddress = (
+        address: any = {},
+        type: 'RESIDENCE' | 'MAILING'
+    ) => ({
+        addressType:
+            type === 'RESIDENCE' ? 'Residential Address' : 'Mailing Address',
+        addressLine1: address.addressLine1 ?? '',
+        city: address?.city ?? '',
+        state: address?.state ?? '',
+        zipcode: address?.zipcode ?? '',
+        zipCodeExtension: address?.zipCodeExtension ?? '',
+    });
+
+    const getAddresses = (addresses: any[] = []) => {
+        const findByType = (type: 'RESIDENCE' | 'MAILING') =>
+            addresses.find(
+                (a: any) =>
+                    a.addressType?.toUpperCase?.() === type.toUpperCase()
+            );
+        return [
+            formatAddress(findByType('RESIDENCE'), 'RESIDENCE'),
+            formatAddress(findByType('MAILING'), 'MAILING'),
+        ];
+    };
+
+    const formatParty = (
+        party: any,
+        role: string,
+        options: {
+            includeAddresses?: boolean;
+            includeEmails?: boolean;
+            includePhones?: boolean;
+        } = {}
+    ) => {
+        return {
+            partyRole: role,
+            partyType: party?.partyType,
+            firstName: party?.firstName ?? '',
+            middleName: party?.middleName ?? '',
+            lastName: party?.lastName ?? '',
+            dateOfBirth: party?.dateOfBirth ?? '',
+            ...(options.includeEmails &&
+                party?.emails && { emails: party.emails }),
+            ...(options.includePhones &&
+                party?.phones && { phones: party.phones }),
+            ...(options.includeAddresses && {
+                addresses: getAddresses(party?.addresses),
+            }),
+        };
+    };
+
+    const parties = [
+        ownerParty &&
+            formatParty(ownerParty, 'OWNER', {
+                includeAddresses: true,
+                includeEmails: true,
+                includePhones: true,
+            }),
+        jointOwnerParty && formatParty(jointOwnerParty, 'JOINT OWNER'),
+    ].filter(Boolean);
+
+    return parties;
+};
+
+const formatBeneficiaries = (policyResponse: any) => {
+    const getBeneficiariesByRole = (roleType: string) => {
+        const partyIds = policyResponse.partyRoles
+            .filter((role: any) => role.partyRole === roleType)
+            .map((role: any) => role.partyId);
+
+        return policyResponse.parties
+            .filter((party: any) => partyIds.includes(party.partyId))
+            .map((bene: any) => ({
+                ...bene,
+                relationshipToParty: bene.relationshipToParty ?? 'OTHER',
+                isPerStirpes: bene.isPerStirpes ?? 'No',
+                isIrrevocable: bene.isIrrevocable ?? 'No',
+                action: 'UPDATE',
+                partyRole: {
+                    ...bene.partyRole,
+                    beneficiaryRole:
+                        roleType === 'PRIMARYBENEFICIARY'
+                            ? 'PRIMARY BENEFICIARY'
+                            : 'CONTINGENT BENEFICIARY',
+                },
+                party: {
+                    ...bene.party,
+                    partyType: bene.partyType,
+                    prefix: bene.prefix ?? '',
+                    firstName: bene.firstName ?? '',
+                    middleName: bene.middleName ?? '',
+                    lastName: bene.lastName ?? '',
+                    suffix: bene.suffix ?? '',
+                    gender: bene.gender ?? '',
+                    dateOfBirth: bene.dateOfBirth ?? '',
+                    emails: bene.emails ?? [],
+                    phones: bene.phones ?? [],
+                    addresses: (bene.addresses ?? []).map((addr: any) => ({
+                        addressType: addr?.addressType ?? '',
+                        addressLine1: addr?.addressLine1 ?? '',
+                        addressLine2: addr?.addressLine2 ?? '',
+                        city: addr?.city ?? '',
+                        state: addr?.state ?? '',
+                        zipCode: addr?.zipCode ?? '',
+                        zipCodeExtension: addr?.zipCodeExtension ?? '',
+                    })),
+                    beneficiaryPercentage: bene.beneficiaryPercentage ?? 0,
+                },
+            }));
+    };
+
+    const primaryBeneficiaries = getBeneficiariesByRole('PRIMARYBENEFICIARY');
+    const contingentBeneficiaries = getBeneficiariesByRole(
+        'CONTINGENTBENEFICIARY'
+    );
+
+    return [...primaryBeneficiaries, ...contingentBeneficiaries];
+};
+
 const beneChangeHandler: TaskHandler<BeneTaskPayload, any> = {
     api: async (payload: BeneTaskPayload, accessToken: string | undefined) => {
         const {
@@ -105,32 +241,12 @@ const beneChangeHandler: TaskHandler<BeneTaskPayload, any> = {
             'ui:dataPath': ['declineReason'],
         };
 
-        console.log(
-            'policyResponse',
-            policyResponse.partyRoles,
-            policyResponse.parties
-        );
-
-        const ownerPartyId = policyResponse.partyRoles.find(
-            (role: { partyRole: string }) => role.partyRole === 'OWNER'
-        )?.partyId;
-
-        const party = policyResponse.parties.find(
-            (p: { partyId: string }) => p.partyId === ownerPartyId
-        );
-
-        console.log('partyyyyyy', ownerPartyId, party);
         if (task) {
             Object.assign(task, {
                 data: {
                     ...task.data,
-                    parties: [
-                        ...task.data?.parties,
-                        {
-                            partyType: party?.partyType,
-                            firstName: party?.firstName,
-                        },
-                    ],
+                    parties: formatParties(policyResponse),
+                    beneData: formatBeneficiaries(policyResponse),
                 },
             });
         }

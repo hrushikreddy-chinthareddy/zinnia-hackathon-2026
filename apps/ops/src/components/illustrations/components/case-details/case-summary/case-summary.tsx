@@ -182,26 +182,26 @@ const IllustrationCaseSumary = ({
                             <Icon type={IconType.EDIT} height={24} width={24} />
                             {t('clientCase.caseSummary.edit')}
                         </Button>
-                    ): (
-                            <TempNavInactive
-                                tooltipBody={t('clientCase.clientCasePermissions')}
-                                navElementClassName="!bg-transparent"
+                    ) : (
+                        <TempNavInactive
+                            tooltipBody={t('clientCase.clientCasePermissions')}
+                            navElementClassName="!bg-transparent"
+                        >
+                            <Button
+                                disabled
+                                mode="link"
+                                data-testid="edit-btn"
+                                aria-label={
+                                    t(
+                                        'clientCase.caseSummary.editClientCaseButton'
+                                    ) as string
+                                }
+                                type="button"
+                                size="small"
                             >
-                                <Button
-                                    disabled
-                                    mode="link"
-                                    data-testid="edit-btn"
-                                    aria-label={
-                                        t(
-                                            'clientCase.caseSummary.editClientCaseButton'
-                                        ) as string
-                                    }
-                                    type="button"
-                                    size="small"
-                                >
-                                    {t('clientCase.caseSummary.edit')}
-                                </Button>
-                            </TempNavInactive>
+                                {t('clientCase.caseSummary.edit')}
+                            </Button>
+                        </TempNavInactive>
                     )}
                 </div>
             </section>
