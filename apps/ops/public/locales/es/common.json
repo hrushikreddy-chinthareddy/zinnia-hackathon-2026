@@ -7252,6 +7252,7 @@
     },
     "clientCase": {
         "newClientCase": "+  Nuevo client case",
+        "clientCasePermissions": "No tienes permiso para realizar esta acción.",
         "searchBar": {
             "clientCase": "Client case",
             "agentName": "Nombre de agente",
@@ -7406,6 +7407,7 @@
             "searchAgent": {
                 "selectAgentButton": "Seleccionar agente",
                 "notFound": "No se encontró ningún agente \"{{agentName}}\"",
+                "agentHasNoAgencies": "Este agente no pertenece a niguna agencia.",
                 "current": "Usuario actual"
             }
         }

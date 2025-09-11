@@ -29,6 +29,7 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { getUtcDate } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
@@ -168,10 +169,7 @@ const SideSheetCancelAutopay = ({
     };
 
     const getUpdateSystematicProgramBody = () => {
-        const effectiveDateFormatted = dayjs(
-            effectiveDate,
-            NUMERIC_DATE_FORMAT
-        ).format(ZAHARA_API_DATE_FORMAT);
+        const effectiveDateFormatted = getUtcDate(effectiveDate);
 
         return {
             caseId: body.caseId || '',

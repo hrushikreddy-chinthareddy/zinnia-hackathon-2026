@@ -1,12 +1,16 @@
+import { ApiGetProducerResponse } from '@xd/pom/src/types/get.types';
 import { uniq } from 'lodash';
 
 import {
     getDownlineBySellingCode,
     getHierarchyBySellingCode,
+    getProducerById,
+    getProducersByNameAndCarrier,
 } from '@deps/queries/api/v1/producers';
 import {
     GetDownlineResponse,
     GetHierarchyResponse,
+    ProducersResponse,
 } from '@deps/types/producers';
 
 export const getUserHierarchyBySellingCode = async (
@@ -59,4 +63,28 @@ export const getUserHierarchyListBySellingCode = async (
     );
 
     return hieararchyResponses;
+};
+
+export const getProducersByNameAndCarrierCodeQuery = async (
+    partialFullName: string,
+    carrierCode: string
+): Promise<ProducersResponse> => {
+    const response = await getProducersByNameAndCarrier(
+        partialFullName,
+        carrierCode
+    );
+    if (response.error?.status) {
+        throw response.error;
+    }
+    return response.data;
+};
+
+export const getProducersByIdQuery = async (
+    id: string
+): Promise<ApiGetProducerResponse | null> => {
+    const response = await getProducerById(id);
+    if (response.error?.status) {
+        throw response.error;
+    }
+    return response.data;
 };

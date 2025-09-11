@@ -17,7 +17,8 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
-import { useUserIdentity } from '@deps/components/illustrations/helpers/hooks/user-user-identity';
+import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -41,6 +42,13 @@ const IllustrationCaseSumary = ({
     clientCase,
 }: IllustrationCaseSumaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { isAllowWriteClientCase, partyReferenceData } =
+        usePermissionsContext();
+
+    const aliases = useAllAliasesWithSellingCode(partyReferenceData);
+    const isAgent = aliases?.length ?? 0 > 0;
+
+    const isAllowedToEditCase = isAgent || isAllowWriteClientCase;
 
     const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
@@ -52,10 +60,6 @@ const IllustrationCaseSumary = ({
     const [agentFullName, setAgentFullName] = useState('');
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
-    const { partyReferenceData } = usePermissionsContext();
-    const { findAllAliasesWithSellingCode } = useUserIdentity();
-    const aliases = findAllAliasesWithSellingCode(partyReferenceData);
-    const isAgent = aliases.length > 0;
 
     useEffect(() => {
         if (
@@ -161,7 +165,7 @@ const IllustrationCaseSumary = ({
                                 'clientCase.caseSummary.untitledCase'
                             ) as string)}
                     </Heading>
-                    {isAgent && (
+                    {isAllowedToEditCase ? (
                         <Button
                             mode="link"
                             data-testid="edit-btn"
@@ -178,6 +182,26 @@ const IllustrationCaseSumary = ({
                             <Icon type={IconType.EDIT} height={24} width={24} />
                             {t('clientCase.caseSummary.edit')}
                         </Button>
+                    ): (
+                            <TempNavInactive
+                                tooltipBody={t('clientCase.clientCasePermissions')}
+                                navElementClassName="!bg-transparent"
+                            >
+                                <Button
+                                    disabled
+                                    mode="link"
+                                    data-testid="edit-btn"
+                                    aria-label={
+                                        t(
+                                            'clientCase.caseSummary.editClientCaseButton'
+                                        ) as string
+                                    }
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.caseSummary.edit')}
+                                </Button>
+                            </TempNavInactive>
                     )}
                 </div>
             </section>

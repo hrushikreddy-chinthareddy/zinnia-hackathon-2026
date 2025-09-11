@@ -58,6 +58,10 @@ export interface MockGetProducerResponse {
     licenses: License[];
     appointments: Appointment[];
   };
+  carrierSellingCodeRoles?: Record<
+    string,
+    { sellingCode: string; role: string }[]
+  >;
 }
 
 export interface ApiGetProducerResponse {
@@ -102,6 +106,10 @@ export interface ApiGetProducerResponse {
     appointments: ApiAppointment[];
   };
   carrierShortNames?: string[];
+  carrierSellingCodeRoles?: Record<
+    string,
+    { sellingCode: string; role: string }[]
+  >;
   employers?: [
     {
       name: string;

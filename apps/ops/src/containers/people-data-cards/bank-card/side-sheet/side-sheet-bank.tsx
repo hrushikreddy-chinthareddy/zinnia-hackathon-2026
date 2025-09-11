@@ -7,6 +7,7 @@ import {
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -23,7 +24,6 @@ import Field, {
 } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
-import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -32,7 +32,6 @@ import {
     ViewState,
 } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/success-state';
-import { NonFinancialTransactionIdKeys } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/types';
 import WarnState from '@deps/components/side-sheet/side-sheet-transaction/states/warn-state';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
@@ -61,6 +60,8 @@ import {
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
+dayjs.extend(utc);
 
 export type SideSheetBankProps = {
     onCancel: () => void;
@@ -95,7 +96,7 @@ const SideSheetBank = ({
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: false,
     };
 

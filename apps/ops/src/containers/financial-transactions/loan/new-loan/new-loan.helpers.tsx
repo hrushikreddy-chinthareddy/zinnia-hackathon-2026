@@ -9,12 +9,15 @@ import {
     TaxRateToUse,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { v4 as uuidV4 } from 'uuid';
 
 import { NewLoan } from '@deps/contexts/transactions/NewLoanContext';
+import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { NewLoanRequestQuery } from '@deps/queries/api/bpm';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+dayjs.extend(utc);
 
 export const buildNewLoanRequestBody = (
     newLoan: NewLoan,
@@ -24,9 +27,7 @@ export const buildNewLoanRequestBody = (
         return {
             caseId: newLoan.caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: dayjs(newLoan.effectiveDate, 'MMDDYYYY').format(
-                ZAHARA_API_DATE_FORMAT
-            ),
+            effectiveDate: getUtcDate(newLoan.effectiveDate),
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             parties: [
@@ -79,9 +80,7 @@ export const buildNewLoanRequestBody = (
     return {
         caseId: newLoan.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs(newLoan.effectiveDate, 'MMDDYYYY').format(
-            ZAHARA_API_DATE_FORMAT
-        ),
+        effectiveDate: getUtcDate(newLoan.effectiveDate),
         payeeOrBeneficiary: [
             {
                 allocationPercentage: 100,

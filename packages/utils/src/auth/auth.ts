@@ -14,6 +14,7 @@ export enum FgaRoles {
   CALL_LOGS_ZL = 'entity:zinnia_live_call_logs',
   TEST_HARNESS_ACCESS = 'entity:zinnia_live_test_harness',
   ZINNIA_INTERNAL_VIEWER = 'role:zinnia_internal_viewer',
+  ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE = 'entity:zinnia_live_illustrations_client_case_sidesheet',
 }
 
 export enum FgaRelation {

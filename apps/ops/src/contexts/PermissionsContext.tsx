@@ -21,6 +21,7 @@ import { getPartyMetadataById } from '@deps/queries/api/parties';
 import {
     bulkCheckPermissionsQuery,
     doesUserHavePagePermissionQuery,
+    getCarriersListQuery,
 } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
@@ -32,6 +33,7 @@ import { useOptimizely } from './OptimizelyContext';
 export interface PermissionsContextProps {
     sessionId: string;
     partyId: string;
+    writeClientCaseCarriers: string[];
     bulkCheckComplete: boolean;
     fgaRolesData: BulkCheckTuple[];
     isAdvisorsExcel: boolean;
@@ -56,6 +58,7 @@ export interface PermissionsContextProps {
     hasNotesAccess: boolean;
     hasTestHarnessAccess: boolean;
     isZinniaInternalViewer: boolean;
+    isAllowWriteClientCase: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -189,6 +192,16 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         },
     });
 
+    const { data: writeClientCaseCarriers } = useQuery({
+        queryKey: ['writeClientCaseCarriers', partyId],
+        queryFn: () =>
+            getCarriersListQuery(UserPermission.AllowWriteClientCase, partyId),
+        enabled: !!partyId,
+        initialData: [],
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+        initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
+    });
+
     const {
         data: fgaRoleData,
         isLoading: bulkCheckLoading,
@@ -213,6 +226,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
                     object: FgaRoles.WELB_SALES_MATERIALS,
+                },
+                {
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: FgaRoles.ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE,
                 },
             ];
             const data = await bulkCheckPermissionsQuery({ tuples });
@@ -261,6 +279,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.UiAccess
             );
 
+            const hasCreateClientAccess = !!checkRelation(
+                data,
+                FgaRoles.ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE,
+                FgaRelation.UiAccess
+            );
+
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -276,6 +300,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
                 hasWelbSalesMaterials,
+                hasCreateClientAccess,
             };
         },
         enabled: !!partyId,
@@ -291,12 +316,14 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         !partyRefLoading &&
         !homeCheckLoading &&
         !opsManagerLoading;
+
     return (
         <PermissionContext.Provider
             value={{
                 bulkCheckComplete: !bulkCheckLoading,
                 sessionId,
                 partyId,
+                writeClientCaseCarriers,
                 isAdvisorsExcel: !!fgaRoleData?.isAdvisorsExcel,
                 isSuperAdmin: !!fgaRoleData?.isSuperAdmin,
                 fgaRolesData: fgaRoleData?.fgaRoles || [],
@@ -326,6 +353,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
                 hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
+                isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
             }}
         >
             {children}

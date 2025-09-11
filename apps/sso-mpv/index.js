@@ -37,11 +37,12 @@ const config = {
 app.use(auth(config), router);
 
 app.get('/', (req, res) => {
+  const redirectTo = req.query.redirectTo;
+
   // TODO: need to figure out how to handle this because `isAuthenticated` depends
   // on connection....
   if (req.oidc.isAuthenticated()) {
     const connectionConfig = getConnectionConfig(req.query.connection);
-    const redirectTo = req.query.redirectTo;
 
     if (redirectTo) {
       res.redirect(
@@ -52,9 +53,19 @@ app.get('/', (req, res) => {
 
     res.redirect(302, `${req.protocol}://${connectionConfig.loginSuccessUrl}`);
   } else {
-    const loginRedirectUrl = req.query.connection
-      ? `/login?connection=${req.query.connection}`
-      : '/login';
+    const prefix = '/login';
+    const queryParams = new URLSearchParams();
+
+    if (req.query.connection) {
+      queryParams.set('connection', req.query.connection);
+    }
+
+    if (redirectTo) {
+      queryParams.set('redirectTo', redirectTo);
+    }
+
+    const loginRedirectUrl = `${prefix}?${queryParams.toString()}`;
+
     res.redirect(302, loginRedirectUrl);
   }
 });
