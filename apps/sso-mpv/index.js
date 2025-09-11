@@ -60,6 +60,13 @@ app.get('/', (req, res) => {
         throw new Error('Unknown connection config');
       }
 
+      if (redirectTo) {
+        res.redirect(
+          302,
+          `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`
+        );
+      }
+
       res.redirect(
         302,
         `${req.protocol}://${connectionConfig.loginSuccessUrl}`
