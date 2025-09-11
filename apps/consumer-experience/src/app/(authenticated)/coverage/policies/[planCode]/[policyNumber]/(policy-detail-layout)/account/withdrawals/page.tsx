@@ -16,8 +16,7 @@ import {
   getPolicyWithdrawalDetails,
 } from '@/services';
 import { getWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
-import { getCarrierConfig } from '@/services/carrier-config';
-import { getFeatureFlags } from '@/services/feature-flags';
+import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
@@ -55,8 +54,8 @@ export default async function Withdrawals({
   const { planCode, policyNumber } = params;
 
   const loggingContext = await buildCommonLogContext();
-  const flags = await getFeatureFlags();
-  const carrierConfig = await getCarrierConfig();
+  const { featureFlags: flags, carrierConfig } =
+    await getFeatureFlagsWithCarrierConfig();
   const showPartialWithdrawalOneTime =
     flags?.[FEATURE_FLAGS.TRANSACTION_PARTIAL_WITHDRAWAL_ONETIME] &&
     carrierConfig?.account?.partialOneTimeWithdrawal?.enabled;

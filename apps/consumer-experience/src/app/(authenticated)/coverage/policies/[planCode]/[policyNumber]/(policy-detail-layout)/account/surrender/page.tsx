@@ -10,8 +10,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicySurrenderDetails } from '@/services';
 import { getPolicySurrenderEligibility } from '@/services/bpm/fullsurrender';
-import { getCarrierConfig } from '@/services/carrier-config';
-import { getFeatureFlags } from '@/services/feature-flags';
+import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -31,10 +30,10 @@ export default async function SurrenderPolicy({
 }: {
   params: PolicyRequestInputs;
 }) {
-  const flags = await getFeatureFlags();
+  const { featureFlags: flags, carrierConfig } =
+    await getFeatureFlagsWithCarrierConfig();
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
-  const carrierConfig = await getCarrierConfig();
 
   const { data, error } = await getPolicySurrenderDetails(
     {

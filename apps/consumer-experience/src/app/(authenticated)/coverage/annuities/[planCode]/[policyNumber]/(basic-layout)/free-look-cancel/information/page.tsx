@@ -1,12 +1,11 @@
 import { notFound } from 'next/navigation';
 
-import { getCarrierConfig } from '@/services/carrier-config';
-import { getFeatureFlags } from '@/services/feature-flags';
+import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 export default async function FreeLookCancelInformation() {
-  const flags = await getFeatureFlags();
-  const carrierConfig = await getCarrierConfig();
+  const { featureFlags: flags, carrierConfig } =
+    await getFeatureFlagsWithCarrierConfig();
 
   if (
     !flags?.[FEATURE_FLAGS.TRANSACTION_FREE_LOOK_CANCEL] ||
