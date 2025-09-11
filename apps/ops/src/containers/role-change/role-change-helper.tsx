@@ -10,6 +10,7 @@ import {
     PreferredCommunicationType,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
 import { SetStateAction } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -40,6 +41,8 @@ import {
 } from '@deps/types/constants';
 
 import { newTrustOptions } from '../bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
+
+dayjs.extend(utc);
 
 export const BooleanOptions = (t: TFunction) => {
     return [
@@ -575,7 +578,7 @@ export const buildRoleChangeRequestBody = (
     );
 
     return {
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         caseId,
         correlationId: uuidV4(),
         changeReason: changeReason || null,

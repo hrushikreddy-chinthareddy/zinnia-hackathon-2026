@@ -2,12 +2,11 @@ import {
     FreeLookCancellationRequest,
     PaymentForm,
 } from '@zinnia/api-types/types/bpm';
-import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types';
+import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 export const buildFreeLookCancelRequestBody = (
     withdrawal: Withdrawal,
@@ -17,9 +16,7 @@ export const buildFreeLookCancelRequestBody = (
         return {
             caseId: withdrawal.caseId || '',
             correlationId: uuidV4(),
-            effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(
-                ZAHARA_API_DATE_FORMAT
-            ),
+            effectiveDate: getUtcDate(withdrawal.effectiveDate),
             parties: [
                 {
                     allocationPercentage: 100,
@@ -44,9 +41,7 @@ export const buildFreeLookCancelRequestBody = (
     return {
         caseId: withdrawal.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs(withdrawal.effectiveDate, 'MMDDYYYY').format(
-            ZAHARA_API_DATE_FORMAT
-        ),
+        effectiveDate: getUtcDate(withdrawal.effectiveDate),
         parties: [
             {
                 allocationPercentage: 100,

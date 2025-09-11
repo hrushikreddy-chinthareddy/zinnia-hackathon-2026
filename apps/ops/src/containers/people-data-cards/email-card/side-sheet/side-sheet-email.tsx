@@ -6,6 +6,7 @@ import {
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -54,6 +55,8 @@ import {
 } from '@deps/queries/api/bpm-non-financial';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
+dayjs.extend(utc);
+
 export type SideSheetEmailProps = {
     isOnlyEmail: boolean;
     onCancel: () => void;
@@ -80,12 +83,12 @@ const SideSheetEmail = ({
 
     const INITIAL_EMAIL: Email = {
         emailType: EmailType.PERSONAL,
-        startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        startDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
     };
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: false,
     };
 

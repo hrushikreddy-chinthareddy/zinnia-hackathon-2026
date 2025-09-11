@@ -8,6 +8,7 @@ import {
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -77,6 +78,8 @@ export interface SideSheetAddressProps {
     updateAddress?: Address;
 }
 
+dayjs.extend(utc);
+
 const SideSheetAddress = ({
     isCurrentMailingAddress,
     isOnlyAddress,
@@ -99,7 +102,7 @@ const SideSheetAddress = ({
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         preferredAddressIndicator: isCurrentMailingAddress
             ? PreferredAddressIndicator.Yes
             : PreferredAddressIndicator.No,

@@ -7,6 +7,7 @@ import {
 } from '@xd/api-types/dist/generated-types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -81,6 +82,8 @@ interface IDocuments {
     documentType: string;
 }
 
+dayjs.extend(utc);
+
 export const SidesheetNameCard = ({
     policyDetails,
     planCode,
@@ -93,7 +96,7 @@ export const SidesheetNameCard = ({
     const { t: defaultT } = useTranslation();
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: false,
     };
     const [body, setBody] = useState(INITIAL_BODY);

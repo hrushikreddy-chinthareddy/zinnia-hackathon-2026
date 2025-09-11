@@ -7,6 +7,7 @@ import {
     SystematicProgram,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ACH, Autopay } from '@deps/contexts/transactions/AutopayContext';
@@ -15,6 +16,8 @@ import {
     NUMERIC_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
+
+dayjs.extend(utc);
 
 export const buildSystematicProgramUpdateRequestBody = (
     autopay: Autopay,
@@ -28,7 +31,7 @@ export const buildSystematicProgramUpdateRequestBody = (
     return {
         caseId: autopay.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: autopay.reverseInitiator,
         externalTransactionId: '',
         systematicProgram: {
@@ -81,7 +84,7 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
     return {
         caseId: autopay.caseId || '',
         correlationId: uuidV4(),
-        effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: autopay.reverseInitiator,
         externalTransactionId: '',
         systematicProgram: {

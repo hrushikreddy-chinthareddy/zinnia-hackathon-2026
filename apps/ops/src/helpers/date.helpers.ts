@@ -1,4 +1,10 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+import {
+    NUMERIC_DATE_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 
 export const ZAHARA_DATE_FORMAT = 'YYYY-MM-DD';
 interface DateRange {
@@ -36,4 +42,20 @@ export const getArrayIndexFromDate = (
     const dateToStart = dayjs(startDate, 'YYYY-M-D').startOf(unitOfTime);
 
     return dayjs(date, 'YYYY-M-D').diff(dateToStart, unitOfTime);
+};
+
+export const getUtcDate = (
+    effectiveDate: string,
+    dateFormat: string = NUMERIC_DATE_FORMAT
+): string | undefined => {
+    dayjs.extend(utc);
+
+    const now = dayjs();
+
+    const dateWithTime = dayjs(effectiveDate, dateFormat)
+        .set('hour', now.get('hour'))
+        .set('minute', now.get('minute'))
+        .set('second', now.get('second'));
+
+    return dayjs(dateWithTime).utc().format(ZAHARA_API_DATE_FORMAT);
 };
