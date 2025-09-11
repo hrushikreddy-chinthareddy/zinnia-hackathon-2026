@@ -2,8 +2,19 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { auth } from 'express-openid-connect';
 import { getConnectionConfig } from './utils.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import logger from './logging/logger.js';
+
 // Handles trailing slash
 const router = express.Router({ strict: false });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const htmlFiles = {
+  root: path.join(__dirname, 'html'),
+};
 
 dotenv.config();
 
@@ -41,47 +52,73 @@ app.get('/', (req, res) => {
 
   // TODO: need to figure out how to handle this because `isAuthenticated` depends
   // on connection....
-  if (req.oidc.isAuthenticated()) {
-    const connectionConfig = getConnectionConfig(req.query.connection);
+  try {
+    if (req.oidc.isAuthenticated()) {
+      const connectionConfig = getConnectionConfig(req.query.connection);
 
-    if (redirectTo) {
+      if (!connectionConfig) {
+        throw new Error(
+          `RouteError: '/', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+        );
+      }
+
+      if (redirectTo) {
+        res.redirect(
+          302,
+          `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`
+        );
+      }
+
       res.redirect(
         302,
-        `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`
+        `${req.protocol}://${connectionConfig.loginSuccessUrl}`
       );
+    } else {
+      const prefix = '/login';
+      const queryParams = new URLSearchParams();
+
+      if (req.query.connection) {
+        queryParams.set('connection', req.query.connection);
+      }
+
+      if (redirectTo) {
+        queryParams.set('redirectTo', redirectTo);
+      }
+
+      const loginRedirectUrl = `${prefix}?${queryParams.toString()}`;
+
+      res.redirect(302, loginRedirectUrl);
     }
-
-    res.redirect(302, `${req.protocol}://${connectionConfig.loginSuccessUrl}`);
-  } else {
-    const prefix = '/login';
-    const queryParams = new URLSearchParams();
-
-    if (req.query.connection) {
-      queryParams.set('connection', req.query.connection);
-    }
-
-    if (redirectTo) {
-      queryParams.set('redirectTo', redirectTo);
-    }
-
-    const loginRedirectUrl = `${prefix}?${queryParams.toString()}`;
-
-    res.redirect(302, loginRedirectUrl);
+  } catch (error) {
+    logger.error(error.message);
+    res.sendFile('error.html', htmlFiles);
   }
 });
 
 app.get('/login', (req, res) => {
-  const connectionConfig = getConnectionConfig(req.query.connection);
-  const redirectTo = req.query.redirectTo;
-  res.oidc.login({
-    returnTo: redirectTo
-      ? `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`
-      : `${req.protocol}://${connectionConfig.loginSuccessUrl}`,
-    authorizationParams: {
-      connection: req.query.connection,
-      scope: connectionConfig.scope,
-    },
-  });
+  try {
+    const connectionConfig = getConnectionConfig(req.query.connection);
+    const redirectTo = req.query.redirectTo;
+
+    if (!connectionConfig) {
+      throw new Error(
+        `Route Error: '/login', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+      );
+    }
+
+    res.oidc.login({
+      returnTo: redirectTo
+        ? `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`
+        : `${req.protocol}://${connectionConfig.loginSuccessUrl}`,
+      authorizationParams: {
+        connection: req.query.connection,
+        scope: connectionConfig.scope,
+      },
+    });
+  } catch (error) {
+    logger.error(error.message);
+    res.sendFile('error.html', htmlFiles);
+  }
 });
 
 app.get('/health', (_, res) => {
