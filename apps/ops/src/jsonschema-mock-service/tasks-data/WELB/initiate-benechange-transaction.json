@@ -10,7 +10,7 @@
     "status": "NEW",
     "data": {
         "process": "Policy Update",
-        "policyNumber": "ADA2501506",
+        "policyNumber": "ADA2504638",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
         "taskName": "Beneficiary Change Data Entry",
         "processSubType": "Beneficiary Change",
@@ -32,15 +32,13 @@
         "parties": [
             {
                 "partyType": "TRUST",
-                "partyRole": "OWNER",
+                "partyRole": "Owner",
                 "firstName": "ROBYN",
                 "middleName": "S",
                 "lastName": "WILSON",
                 "fullName": "Robyn S Wilson",
                 "dateOfBirth": "1978-11-05",
                 "trustType": "",
-                "trustName": "",
-                "companyName": "",
                 "prefix": "",
                 "phones": [
                     {
@@ -94,7 +92,7 @@
             },
             {
                 "partyType": "INDIVIDUAL",
-                "partyRole": "JOINT OWNER",
+                "partyRole": "Joint Owner",
                 "firstName": "ROBY",
                 "middleName": "",
                 "lastName": "WILL",
@@ -113,6 +111,7 @@
                 "party": {
                     "partyId": "Party_PB_Primary_Bene_1",
                     "partyType": "INDIVIDUAL",
+                    "preferredCommunicationType": "EMAIL",
                     "beneficiaryPercentage": 100,
                     "dateOfBirth": "1978-11-05",
                     "endDate": "",
@@ -197,6 +196,7 @@
                 "party": {
                     "partyId": "",
                     "partyType": "TRUST",
+                    "preferredCommunicationType": "EMAIL",
                     "beneficiaryPercentage": 100,
                     "dateOfBirth": "2025-09-04",
                     "endDate": "",
@@ -205,7 +205,7 @@
                     "fullName": "Wilson",
                     "gender": "MALE",
                     "middleName": "",
-                    "lastName": "",
+                    "lastName": "S",
                     "prefix": "",
                     "suffix": "",
                     "trustType": "CORPORATETRUST",

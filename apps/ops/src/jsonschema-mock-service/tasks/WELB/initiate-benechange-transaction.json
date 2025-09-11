@@ -181,7 +181,7 @@
                                     "partyRole": {
                                         "type": "string",
                                         "title": "Party Role",
-                                        "enum": ["OWNER", "JOINT OWNER"]
+                                        "enum": ["Owner", "Joint Owner"]
                                     },
                                     "partyType": {
                                         "type": "string",
@@ -356,7 +356,7 @@
                                         },
                                         "then": {
                                             "properties": {
-                                                "trustName": {
+                                                "lastName": {
                                                     "type": "string",
                                                     "title": "Trust name"
                                                 },
@@ -383,7 +383,7 @@
                                         },
                                         "then": {
                                             "properties": {
-                                                "companyName": {
+                                                "lastName": {
                                                     "type": "string",
                                                     "title": "Company name"
                                                 }
@@ -415,12 +415,10 @@
                             "ui:order": [
                                 "partyType",
                                 "partyRole",
+                                "trustType",
                                 "firstName",
                                 "middleName",
                                 "lastName",
-                                "trustName",
-                                "trustType",
-                                "companyName",
                                 "dateOfBirth",
                                 "emails",
                                 "phones",
@@ -692,16 +690,6 @@
                                                     }
                                                 }
                                             },
-                                            "gender": {
-                                                "type": "string",
-                                                "title": "Gender",
-                                                "enum": ["MALE", "FEMALE"]
-                                            },
-                                            "dateOfBirth": {
-                                                "type": "string",
-                                                "title": "Date of birth",
-                                                "format": "date"
-                                            },
                                             "addresses": {
                                                 "type": "array",
                                                 "title": "",
@@ -852,6 +840,15 @@
                                                         }
                                                     }
                                                 }
+                                            },
+                                            "preferredCommunicationType": {
+                                                "type": "string",
+                                                "title": "Preferred Contact Method",
+                                                "enum": [
+                                                    "EMAIL",
+                                                    "PHONE",
+                                                    "MAIL"
+                                                ]
                                             }
                                         },
                                         "required": [
@@ -907,6 +904,19 @@
                                                                 "II",
                                                                 "III"
                                                             ]
+                                                        },
+                                                        "gender": {
+                                                            "type": "string",
+                                                            "title": "Gender",
+                                                            "enum": [
+                                                                "MALE",
+                                                                "FEMALE"
+                                                            ]
+                                                        },
+                                                        "dateOfBirth": {
+                                                            "type": "string",
+                                                            "title": "Date of birth",
+                                                            "format": "date"
                                                         }
                                                     },
                                                     "required": [
@@ -925,7 +935,7 @@
                                                 },
                                                 "then": {
                                                     "properties": {
-                                                        "trustName": {
+                                                        "lastName": {
                                                             "type": "string",
                                                             "title": "Trust name",
                                                             "minLength": 1
@@ -943,7 +953,7 @@
                                                             ]
                                                         }
                                                     },
-                                                    "required": ["trustName"]
+                                                    "required": ["lastName"]
                                                 }
                                             },
                                             {
@@ -958,7 +968,7 @@
                                                 },
                                                 "then": {
                                                     "properties": {
-                                                        "companyName": {
+                                                        "lastName": {
                                                             "type": "string",
                                                             "title": "Company name",
                                                             "minLength": 1
@@ -980,7 +990,7 @@
                                                             ]
                                                         }
                                                     },
-                                                    "required": ["companyName"]
+                                                    "required": ["lastName"]
                                                 }
                                             }
                                         ]
@@ -1086,18 +1096,17 @@
                             "party": {
                                 "ui:order": [
                                     "partyType",
+                                    "trustType",
                                     "prefix",
                                     "firstName",
                                     "middleName",
                                     "lastName",
                                     "suffix",
-                                    "trustName",
-                                    "trustType",
-                                    "companyName",
                                     "entityType",
                                     "identifications",
                                     "gender",
                                     "dateOfBirth",
+                                    "preferredCommunicationType",
                                     "addresses",
                                     "phones",
                                     "emails",
@@ -1323,6 +1332,12 @@
                                             "II",
                                             "III"
                                         ]
+                                    }
+                                },
+                                "preferredCommunicationType": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "enumNames": ["Email", "Phone", "Mail"]
                                     }
                                 }
                             },

@@ -1,3 +1,8 @@
+import {
+    ExtendedAddress,
+    ExtendedEmail,
+    ExtendedPhone,
+} from '@deps/contexts/RoleChangeContext';
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { LoggingContext } from '@deps/utils/server-logging';
@@ -34,11 +39,59 @@ export interface Reason {
     reason: string;
 }
 
-export interface BeneTaskPayload {
+export interface BeneficiaryTaskPayload {
     category: string[];
     businessProcess: string;
     carrier?: string;
     policyNumber: string;
     planCode: string;
     logCtx?: LoggingContext;
+}
+
+export interface PartyRole {
+    partyRole: string;
+    partyId: string;
+    relationshipToParty?: string;
+}
+
+export interface Party {
+    partyId?: string;
+    partyType?: string;
+    firstName?: string;
+    middleName?: string;
+    lastName?: string;
+    dateOfBirth?: string;
+    trustType?: string;
+    addresses: ExtendedAddress[];
+    phones: ExtendedPhone[];
+    emails: ExtendedEmail[];
+}
+
+export interface PolicyResponse {
+    partyRoles: PartyRole[];
+    parties: Party[];
+}
+
+export enum PartyRoleType {
+    OWNER = 'OWNER',
+    JOINTOWNER = 'JOINTOWNER',
+    PRIMARYBENEFICIARY = 'PRIMARYBENEFICIARY',
+    CONTINGENTBENEFICIARY = 'CONTINGENTBENEFICIARY',
+}
+
+export enum PartyRoleLabel {
+    OWNER = 'Owner',
+    JOINTOWNER = 'Joint Owner',
+    PRIMARYBENEFICIARY = 'PRIMARY BENEFICIARY',
+    CONTINGENTBENEFICIARY = 'CONTINGENT BENEFICIARY',
+}
+
+export enum AddressType {
+    RESIDENCE = 'RESIDENCE',
+    MAILING = 'MAILING',
+}
+
+export enum AddressTypeLabel {
+    RESIDENCE = 'Residential Address',
+    MAILING = 'Mailing Address',
 }
