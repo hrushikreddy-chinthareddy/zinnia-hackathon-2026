@@ -5,6 +5,9 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { TranslationFiles } from '@deps/config/translations';
@@ -57,6 +60,7 @@ const DocumentViewerPage = ({
     const [url, setUrl] = useState<string | undefined>();
     const [scale, setScale] = useState(1);
     const [rotation, setRotation] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
 
     const isTiff =
         doc.mimeType === 'image/tiff' ||
@@ -73,6 +77,7 @@ const DocumentViewerPage = ({
                 setUrl(objectURL);
             }
         }
+        setIsLoading(false);
     }, [doc, isTiff]);
 
     useEffect(() => {
@@ -152,8 +157,17 @@ const DocumentViewerPage = ({
                             />
                         </div>
                     </div>
+                ) : isLoading ? (
+                    <div className="mb-4 mt-8">
+                        <PageLoader variant={PageLoaderVariant.Center} />
+                    </div>
                 ) : url ? (
-                    <iframe src={url} width="100%" height="100%" />
+                    <iframe
+                        src={url}
+                        width="100%"
+                        height="100%"
+                        title="Document Viewer"
+                    />
                 ) : (
                     <Custom404Page />
                 )}
