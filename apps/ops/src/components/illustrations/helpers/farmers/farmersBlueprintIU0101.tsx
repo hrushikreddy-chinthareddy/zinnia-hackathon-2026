@@ -4488,7 +4488,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Funds must total 100%',
+                                                en: 'Total of funds allocated must be 100%',
                                                 fr: '',
                                             },
                                         },
@@ -4605,7 +4605,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Funds must total 100%',
+                                                en: 'Total of funds allocated must be 100%',
                                                 fr: '',
                                             },
                                         },
@@ -4723,7 +4723,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Funds must total 100%',
+                                                en: 'Total of funds allocated must be 100%',
                                                 fr: '',
                                             },
                                         },
