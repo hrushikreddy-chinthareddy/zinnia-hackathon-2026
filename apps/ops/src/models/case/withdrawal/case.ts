@@ -1272,48 +1272,8 @@ export const ParticipantCompanies = [
         companyName: 'USAA Life Insurance Company of New York(4062)',
     },
     {
-        code: '3055',
-        companyName: 'DELAWARE LIFE INSURANCE COMPANY/DLIC (3055)',
-    },
-    {
-        code: '3389',
-        companyName: 'MASSACHUSETTS MUTUAL LIFE INSURANCE COMPANY (3389)',
-    },
-    {
-        code: '4527',
-        companyName: 'SECURITY BENEFIT LIFE INSURANCE CO. (4527)',
-    },
-    {
-        code: '4602',
-        companyName: 'BRIGHTHOUSE LIFE INSURANCE COMPANY (4602)',
-    },
-    {
         code: '4621',
         companyName: 'FIRST SYMETRA NATIONAL LIFE INSURANCE CO. O (4621)',
-    },
-    {
-        code: '4687',
-        companyName: 'EVERLAKE LIFE INSURANCE COMPANY/ADMINISTERE (4687)',
-    },
-    {
-        code: '4749',
-        companyName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY/ A (4749)',
-    },
-    {
-        code: '7012',
-        companyName: 'FORETHOUGHT LIFE INSURANCE COMPANY/FORETHOU (7012)',
-    },
-    {
-        code: '4542',
-        companyName: 'WESTERN-SOUTHERN LIFE ASSURANCE COMPAN (4542)',
-    },
-    {
-        code: '4549',
-        companyName: 'INTEGRITY LIFE INSURANCE CO. (4549)',
-    },
-    {
-        code: '4550',
-        companyName: 'NATIONAL INTEGRITY LIFE INSURANCE CO. (4550)',
     },
     {
         code: '4503',
@@ -1345,8 +1305,12 @@ export const ParticipantCompanies = [
         companyName: 'MASSMUTUAL ASCEND LIFE INSURANCE COMPANY (5949)',
     },
     {
-        code: '4701',
-        companyName: 'STANDARD INSURANCE COMPANY (4701)',
+        code: '4533',
+        companyName: 'GUARDIAN INSURANCE AND ANNUITY COMPANY (4533)',
+    },
+    {
+        code: '0226',
+        companyName: 'National Financial Services (0226)',
     },
 ];
 
