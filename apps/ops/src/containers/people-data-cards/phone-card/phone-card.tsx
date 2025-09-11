@@ -1,5 +1,4 @@
 import { Phone } from '@zinnia/api-types/types/sor';
-import { CarrierName } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState, useContext, useCallback } from 'react';
 
@@ -30,7 +29,7 @@ import SideSheetPeopleHeader, {
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import useUserCarrier from '@deps/hooks/useUserCarrier';
+import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -52,7 +51,7 @@ const PhoneCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.phone',
     });
-    const userCarrier = useUserCarrier();
+
     const { policyDetails } = useContext(PolicyData);
     const sideSheet = useSideSheetContext();
 
@@ -90,24 +89,10 @@ const PhoneCard = ({
         [sideSheet, party, planCode, policyNumber, setCurrentPhones]
     );
 
-    const onEditClick = useCallback(
-        ({ phone, header }: OpenSideSheet) => {
-            const ecn = party?.identifications?.find(
-                (id) => id.identificationKey?.toLowerCase() === 'ecn'
-            );
-            // redirect to farmers apex if userCarrier is farmers and ecn is present
-            if (
-                userCarrier === CarrierName.FARMERS &&
-                ecn?.identificationValue
-            ) {
-                const url = `${process.env.NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL}?c__ecn=${ecn.identificationValue}`;
-                window.open(url, '_blank');
-            } else {
-                openSideSheet({ phone, header });
-            }
-        },
-        [userCarrier, openSideSheet, party]
-    );
+    const onEditClick = useAddOrEditPhoneOrEmailClick<OpenSideSheet>({
+        defaultCallback: openSideSheet,
+        party,
+    });
 
     const PhonesBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">
