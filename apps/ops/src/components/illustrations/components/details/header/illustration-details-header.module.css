@@ -27,6 +27,12 @@
     margin-right: auto;
 }
 
+.eAppIdLabel {
+    color: var(--color-states-inactive-text-inactive-text-link, #b3b3b3);
+    font-size: 12px;
+    font-weight: 600;
+}
+
 .goToSureify {
     font: var(--typography-buttons-button-sm);
     color: var(--color-states-inactive-text-inactive-text);
