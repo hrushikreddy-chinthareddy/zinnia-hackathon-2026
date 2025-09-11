@@ -1,9 +1,8 @@
-import { createLogger, transports, config } from 'winston';
+import pino from 'pino';
 
-// TODO: We need to actually integrate this with data dog. Currently this just logs to the server console.
-const logger = createLogger({
-  levels: config.syslog.levels,
-  transports: [new transports.Console()],
+const logger = pino({}).child({
+  service: 'sso-mpv',
+  env: process.env.ENVIRONMENT_NAME || '',
 });
 
 export default logger;

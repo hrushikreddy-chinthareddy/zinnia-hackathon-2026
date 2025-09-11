@@ -57,7 +57,9 @@ app.get('/', (req, res) => {
       const connectionConfig = getConnectionConfig(req.query.connection);
 
       if (!connectionConfig) {
-        throw new Error('Unknown connection config');
+        throw new Error(
+          `RouteError: '/', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+        );
       }
 
       if (redirectTo) {
@@ -88,9 +90,7 @@ app.get('/', (req, res) => {
       res.redirect(302, loginRedirectUrl);
     }
   } catch (error) {
-    logger.error(
-      `RouteError: '/', Unknown connection config when attempting to login through sso: ${req.query.connection}`
-    );
+    logger.error(error.message);
     res.sendFile('error.html', htmlFiles);
   }
 });
@@ -101,7 +101,9 @@ app.get('/login', (req, res) => {
     const redirectTo = req.query.redirectTo;
 
     if (!connectionConfig) {
-      throw new Error('Unknown connection config');
+      throw new Error(
+        `Route Error: '/login', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+      );
     }
 
     res.oidc.login({
@@ -114,9 +116,7 @@ app.get('/login', (req, res) => {
       },
     });
   } catch (error) {
-    logger.error(
-      `Route Error: '/login', Unknown connection config when attempting to login through sso: ${req.query.connection}`
-    );
+    logger.error(error.message);
     res.sendFile('error.html', htmlFiles);
   }
 });
