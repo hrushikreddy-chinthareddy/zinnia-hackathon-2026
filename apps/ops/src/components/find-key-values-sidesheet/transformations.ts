@@ -8,23 +8,18 @@ import {
     ProductType,
 } from '@xd/api-types/dist/generated-types/sor';
 
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-
-import { currencyFields } from './translations/currency-fields';
-import { dateFields } from './translations/date-fields';
-import { enums } from './translations/enums';
-import { exactTranslations } from './translations/exact';
+import {
+    formatDataField,
+    formatAsSectionLabel,
+    formatAsDataValue,
+} from './formatters';
 import { excludeFields } from './translations/exclude-fields';
-import { grammarCorrections } from './translations/grammar-corrections';
-import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { sectionVisibility } from './translations/section-visibility';
 import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
     DataKey,
     DataRecord,
     DataTuple,
-    FieldData,
     label,
     link,
     Link,
@@ -55,8 +50,9 @@ import {
  *
  * @param policy The policy to transform
  * @returns A factory that can be used to split into sections,
- *          and transform field labels and values into human-readable strings
- *
+ *          and transform field labels and values into human-readable strings.
+ *          The factory retains the policy's line of business, product type,
+ *          and mapping of all parties as a closure.
  */
 export const preparePolicy = (
     policy: Policy
@@ -104,184 +100,14 @@ export const preparePolicy = (
 };
 
 /**
- * Given a camel-cased string, returns the same string with each camel-case transition
- * separated by a space. For example, "camelCase" becomes "camel Case".
- *
- * @param label The string to split
- * @returns The same string, with each camel-case transition separated by a space.
- */
-const splitIntoWords = (label: string) => {
-    return label.replace(/([a-z])([A-Z])/g, '$1 $2');
-};
-
-/**
- * Given a string and a line of business, returns the same string with any
- * instances of "policy" replaced with "contract" for non-life policies.
- *
- * @param words The string to modify
- * @param lineOfBusiness The line of business
- * @returns "policy" if life policy, otherwise "contract"
- */
-const replaceLineOfBusinessWords = (
-    words: string,
-    lineOfBusiness: LineOfBusiness
-) => {
-    if (lineOfBusiness !== LineOfBusiness.LIFE) {
-        return words.replace(/(\bpolicy\b)/gi, 'contract');
-    }
-    return words;
-};
-
-/**
- * Given a string, returns the same string with all words capitalized unless
- * they are abbreviations. The first letter of the sentence is also capitalized.
- *
- * @param words The string of space-separated words to modify
- * @returns The same string, formatted as sentence case
- */
-const formatAsSentenceCase = (words: string) => {
-    return words
-        .replace(
-            /\w+/g,
-            (word) => {
-                return word === word.toUpperCase() ? word : word.toLowerCase();
-            } // Convert words to lowercase, unless they are abbreviations
-        )
-        .replace(
-            /^./g,
-            (sentence) => sentence.toUpperCase() // Capitalize the first letter of the sentence
-        );
-};
-
-/**
- * Formats a section label as a human-readable string
- *
- * @param label The section label to format
- * @param lineOfBusiness The line of business
- * @returns The formatted section label
- */
-export const formatAsSectionLabel = (
-    label: string,
-    lineOfBusiness: LineOfBusiness
-) => {
-    const words = splitIntoWords(label);
-
-    // Replace "policy" with "contract" if not a life policy
-    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
-        words,
-        lineOfBusiness
-    );
-
-    return formatAsSentenceCase(lineOfBusinessSpecificWords);
-};
-
-/**
- * Formats a data label as a human-readable string
- *
- * @param label The data label to format
- * @param lineOfBusiness The line of business
- * @returns The formatted data label
- */
-const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
-    if (exactTranslations[label]) {
-        return exactTranslations[label];
-    }
-    const words = splitIntoWords(label);
-
-    // Replace "policy" with "contract" if not a life policy
-    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
-        words,
-        lineOfBusiness
-    );
-
-    // Apply industry term abbreviations and grammar corrections
-    const formatted = Object.entries({
-        ...industryTermToAbbrev,
-        ...grammarCorrections,
-    }).reduce(
-        (acc, [key, val]) =>
-            acc.replace(
-                new RegExp(`\\b${key}\\b`, 'i'), // whole word match, case insensitive
-                val
-            ),
-        lineOfBusinessSpecificWords
-    );
-    return formatAsSentenceCase(formatted);
-};
-
-/**
- * Formats a field value as a human-readable string.
- * Depending on the field type, the value will be formatted as a string,
- * match from a map of known values, currency, date, or "--" for empty values.
- *
- * @param fieldData The field data to format
- * @param lineOfBusiness The line of business
- * @param fieldName The name of the field being formatted
- * @returns The formatted field value
- *
- */
-const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
-    switch (true) {
-        // Empty values
-        case fieldData == null:
-            return '--';
-
-        // Enums
-        case typeof fieldData === 'string' && !!enums[fieldData]:
-            return enums[fieldData];
-
-        // Currency
-        case fieldName && currencyFields.has(fieldName):
-            return numberFormatify(String(fieldData));
-
-        // Dates
-        case fieldName && dateFields.has(fieldName):
-            return convertKebabedDateString(String(fieldData) || undefined);
-
-        case typeof fieldData === 'object' && fieldData !== null:
-            return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
-        default:
-            return String(fieldData);
-    }
-};
-
-/**
- * Given a tuple of a field name and its value, and a line of business, returns a tuple of a
- * human-readable field name and field value.
- *
- * The human-readable field name is formatted using {@link formatAsDataLabel}, and the
- * human-readable field value is formatted using {@link formatAsDataValue}.
- *
- * @param fieldData The tuple of a field name and its value
- * @param lineOfBusiness The line of business
- * @returns A tuple of a human-readable field name and field value
- *
- */
-export const formatDataField = (
-    [fieldName, fieldData]: DataTuple,
-    lineOfBusiness: LineOfBusiness
-): [string, string] | null => {
-    // Allow metadata (not rendered directly) via Symbols
-    if (typeof fieldName !== 'string' || fieldData == null) return null;
-    return [
-        formatAsDataLabel(fieldName, lineOfBusiness),
-        formatAsDataValue(fieldData, fieldName),
-    ];
-};
-
-/**
- * Given a policy, returns a {@link PreparedPolicy} object containing two lists of data
+ * Given a policy, returns an object containing two lists of data
  * tuples: `policyBasics` and `policySections`.
  *
- * `policyBasics` contains all top-level key-value pairs from the policy, filtered to only
- * include those that are not objects.
- *
- * `policySections` contains key-value pairs of section titles and their corresponding
- * section data.
- *
  * @param policy The policy to transform
- * @returns A {@link PreparedPolicy} object containing two lists of data tuples
- *
+ * @param lineOfBusiness The line of business to apply filtering rules to
+ * @param productType The product type to apply filtering rules to
+ * @param allPartiesById The mapping of party IDs to party objects
+ * @returns A {@link PreparedPolicy} object
  */
 export const toSections = (
     policy: Policy,
@@ -289,18 +115,14 @@ export const toSections = (
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
 ): PreparedPolicy => {
-    console.log('|-------->policy', policy);
     const policyTuples = Object.entries(policy);
-
-    // TODO: need to build a partyId map here
-
     const basicsAndSections = policyTuples.reduce<PreparedPolicy>(
         (acc, [currentKey, currentVal]) => {
-            // append to policySections list
+            // If the value is an object, treat it as a section
             if (typeof currentVal === 'object') {
                 const sectionTitle = currentKey;
 
-                // if there are rules to hide this section,
+                // If there are rules to hide this section,
                 // or if the section is empty, skip it
                 if (
                     !shouldShowSection(
@@ -313,12 +135,13 @@ export const toSections = (
                     return acc;
                 }
 
-                // find the field within the subsection tuples to use as the subsection title
+                // Find the field within the subsection tuples to use as the subsection title
                 const subSectionTitleField =
                     sectionTypeToSubSectionTitleFields[sectionTitle];
                 switch (sectionTitle) {
                     case 'allocation':
-                        // combine fundAllocationsInvestments and funds into a flat map
+                        // Funds are mapped from the Allocation section, minus the loanSegments subsections
+                        // Combine fundAllocationsInvestments and funds into a flat map
                         const combinedFunds = policy.allocation?.funds?.map(
                             (fund, i) => {
                                 return {
@@ -354,6 +177,8 @@ export const toSections = (
                         const systematicProgramsAndParties =
                             policy.systematicPrograms?.map(
                                 (systematicProgram) => {
+                                    // Party name, bank info, and address are mapped from
+                                    // the partyId-to-party map on the PreparedPolicy
                                     const parties =
                                         systematicProgram.parties?.map(
                                             (partyData, i) => {
@@ -429,12 +254,6 @@ export const toSections = (
                                                     }),
                                                 };
                                                 return completePartyData;
-                                                /*
-                                        return {
-                                            ...acc,
-                                            [partyName]: completePartyData,
-                                        };
-                                        */
                                             }
                                         );
 
@@ -459,6 +278,8 @@ export const toSections = (
                     case 'riders':
                         const ridersAndParticipants = policy.riders?.map(
                             (rider) => {
+                                // Party name is mapped from the partyId-to-party map
+                                // on the PreparedPolicy
                                 const parties = rider.riderParticipants?.map(
                                     (partyData, i) => {
                                         const partyObj =
@@ -511,6 +332,7 @@ export const toSections = (
                             ],
                         };
                     case 'loanValues':
+                        // Loan segments are split from the Allocation section
                         const loanSegments = policy.allocation?.loanSegments
                             ? convertListToMap<LoanSegment>({
                                   subSectionList:
@@ -543,7 +365,7 @@ export const toSections = (
                 }
             }
 
-            // Append to policyBasics list; hide empty and excluded fields
+            // Oetherwise, the value is a primitive, so add it to the policy basics
             const shouldShowBasicField =
                 currentVal != null && !excludeFields.has(currentKey);
             return {
@@ -573,7 +395,7 @@ export const toSections = (
         ]);
     }
 
-    // Make a map of party roles to reference as tags
+    // Make a map of party roles to reference as tags for the People section
     const partyRoleMap = policy.partyRoles?.reduce<Record<string, string[]>>(
         (acc, currentPartyRole) => {
             const currentPartyIdRoles =
@@ -634,7 +456,144 @@ export const toSections = (
     return basicsAndSections;
 };
 
-// TODO: this could actually be useful as a util
+/**
+ * Given a policy section, returns a {@link PreparedPolicySection} object
+ * containing an array of field/data tuples and/or an array of subsections.
+ *
+ * If the section data is an array, each item in the array is treated as a
+ * subsection, nested under "subSections". The title of each subsection will
+ * map from a defined field *within* that subsection using the
+ * {@link sectionTypeToSubSectionTitleFields} mapping.
+ *
+ * If the section data is an object, and a value within it is a nested object,
+ * it is also treated as a subsection (also nested under "subSections"), but
+ * the subsection title is mapped to the object key.
+ *
+ * Otherwise, the value is meant to be displayed, so just it is just returned
+ * as key-value pairs of field names and field values, nested under "fields".
+ *
+ * @param policySection The policy section to transform
+ * @param lineOfBusiness The line of business for the policy
+ * @returns A {@link PreparedPolicySection} object containing an array of field/data tuples
+ *          and/or an array of subsections
+ */
+export const toFieldsAndSubsections = (
+    [sectionName, sectionData]: PolicySection,
+    lineOfBusiness: LineOfBusiness
+): PreparedPolicySection => {
+    // If sectionData is an array, treat each item as a subsection.
+    // The title of each subsection will map from a defined field *within* that subsection
+    if (sectionData instanceof Array) {
+        sectionData;
+        const subSectionTitleField =
+            sectionTypeToSubSectionTitleFields[sectionName];
+        const subSections = sectionData.map((subSection) => {
+            const subSectionLabel =
+                subSection[label] ??
+                formatAsDataValue(subSection[subSectionTitleField]);
+            const subSectionLink = subSection[link];
+            const subSectionLinkedField = subSection[linkedField];
+            const subSectionTags = subSection[tags];
+            const subSectionEntries = removeExcludedAndEmptyFields(
+                Object.entries(subSection),
+                [subSectionTitleField]
+            );
+
+            return [
+                subSectionLabel,
+                subSectionEntries,
+                {
+                    [tags]: subSectionTags,
+                    [link]: subSectionLink,
+                    [linkedField]: subSectionLinkedField,
+                },
+            ];
+        });
+        return {
+            subSections: subSections as SubSection[], // FIXME
+        };
+    } else {
+        const { fields, subSections } = removeExcludedAndEmptyFields(
+            Object.entries(sectionData)
+        ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
+            // If sectionData is an object, and a value within it is a nested object,
+            // also treat it as a subsection, but map the subsection title to the object key
+            if (typeof fieldData === 'object' && fieldData !== null) {
+                const fieldTags = (fieldData as Tags)[tags];
+                const fieldLink = (fieldData as Link)[link];
+
+                // One field per section can be a link
+                const fieldLinkedField = (fieldData as LinkedField)[
+                    linkedField
+                ];
+
+                const subSectionData = removeExcludedAndEmptyFields(
+                    Object.entries(fieldData)
+                );
+
+                // Only show non-empty subsections
+                if (subSectionData.length) {
+                    return {
+                        fields: acc.fields, // keep fields untouched
+                        subSections: [
+                            ...(acc.subSections ?? []),
+                            [
+                                formatAsSectionLabel(
+                                    String(fieldName),
+                                    lineOfBusiness
+                                ),
+                                subSectionData,
+
+                                // Add metadata for tags and linked field (1 per section)
+                                {
+                                    [tags]: fieldTags,
+                                    [link]: fieldLink,
+                                    [linkedField]: fieldLinkedField,
+                                },
+                            ],
+                        ],
+                    };
+                }
+                return acc;
+            }
+
+            // Otherwise, the value is meant to be displayed, so just append the key-value pair
+            return {
+                fields: removeExcludedAndEmptyFields([
+                    ...(acc.fields ?? []),
+                    [fieldName, fieldData],
+                ]),
+                subSections: acc.subSections, // keep subsections untouched
+            };
+        }, {});
+
+        return {
+            fields,
+            subSections,
+        };
+    }
+};
+
+/**
+ * Given a list of subsections, creates a map where the keys are human-readable
+ * titles derived from each subsection, and the values are the subsections
+ * themselves.
+ *
+ * If the subsection does not contain a value for the given
+ * `subSectionTitleField`, it will use the first value in the subsection as the
+ * title instead. If the subsection is empty, it will use the given
+ * `fallbackTitle` and the index of the subsection in the list (starting from 1).
+ *
+ * @param {T[]} subSectionList The list of subsections to convert
+ * @param {string} subSectionTitleField The field name to use as the title for
+ * each subsection
+ * @param {string} fallbackTitle The title to use if the subsection does not
+ * contain a value for `subSectionTitleField`
+ * @returns {Record<DataKey, T>} A map where the keys are titles and the values
+ * are the subsections
+ *
+ * TODO: this could actually be useful as a util
+ */
 const convertListToMap = <T extends DataRecord>({
     subSectionList,
     subSectionTitleField,
@@ -666,160 +625,14 @@ const convertListToMap = <T extends DataRecord>({
 };
 
 /**
- * Given a policy section, returns a {@link PreparedPolicySection} object
- * containing an array of field/data tuples and/or an array of subsections.
+ * Given an array of key-value pairs, filters out any empty values and keys that
+ * are excluded from display.
  *
- * If the section data is an array, each item in the array is treated as a
- * subsection, nested under "subSections". The title of each subsection will
- * map from a defined field *within* that subsection using the
- * {@link sectionTypeToSubSectionTitleFields} mapping.
- *
- * If the section data is an object, and a value within it is a nested object,
- * it is also treated as a subsection (also nested under "subSections"), but
- * the subsection title is mapped to the object key.
- *
- * Otherwise, the value is meant to be displayed, so just it is just returned
- * as key-value pairs of field names and field values, nested under "fields".
- *
- * @param policySection The policy section to transform
- * @param lineOfBusiness The line of business for the policy
- * @returns A {@link PreparedPolicySection} object containing an array of field/data tuples
- *          and/or an array of subsections
+ * @param tuples The array of key-value pairs to filter
+ * @param additionalFieldsToExclude An optional array of additional fields to
+ *      exclude from display
+ * @returns The filtered array of key-value pairs
  */
-
-export const toFieldsAndSubsections = (
-    [sectionName, sectionData]: PolicySection,
-    lineOfBusiness: LineOfBusiness
-): PreparedPolicySection => {
-    // If sectionData is an array, treat each item as a subsection.
-    // The title of each subsection will map from a defined field *within* that subsection
-    if (sectionData instanceof Array) {
-        sectionData;
-        const subSectionTitleField =
-            sectionTypeToSubSectionTitleFields[sectionName];
-        const subSections = sectionData.map((subSection) => {
-            const subSectionLabel =
-                subSection[label] ??
-                formatAsDataValue(subSection[subSectionTitleField]);
-            const subSectionLink = subSection[link];
-            const subSectionLinkedField = subSection[linkedField];
-            const subSectionTags = subSection[tags];
-
-            //console.log('|---------->subSectionLabel', subSectionLabel, subSectionTitleField);
-
-            const subSectionEntries = removeExcludedAndEmptyFields(
-                Object.entries(subSection),
-                [subSectionTitleField]
-            );
-
-            return [
-                subSectionLabel,
-                subSectionEntries,
-                {
-                    [tags]: subSectionTags,
-                    [link]: subSectionLink,
-                    [linkedField]: subSectionLinkedField,
-                },
-            ];
-            //console.log('|---------->subSection', subSectionEntries);
-        });
-
-        /*
-        const subSectionDataMap = convertListToMap({
-            subSectionList: sectionData,
-            subSectionTitleField,
-            fallbackTitle: String(sectionName),
-        });
-        //console.log('|-------->sectionData', sectionData);
-
-        const subSections2 = removeExcludedAndEmptyFields(
-            Object.entries(subSectionDataMap), // remove excluded subsections
-            [subSectionTitleField] // and also the title field
-        ).map<SubSection>(([subSectionTitle, subSectionData]) => {
-            //console.log('|---------->subSectionData', subSectionData);
-            return [
-                subSectionTitle,
-                Array.isArray(subSectionData)
-                    ? subSectionData
-                    : subSectionData === null
-                    ? []
-                    : // map subsection fields to tuples and
-                      // remove excluded fields within subsection
-                      removeExcludedAndEmptyFields(
-                          Object.entries(subSectionData)
-                      ),
-            ];
-        });
-        */
-        //console.log('subSections', subSections, subSections2);
-        return {
-            subSections: subSections as SubSection[], // FIXME
-        };
-    } else {
-        console.log('sectionData', sectionData);
-        const { fields, subSections } = removeExcludedAndEmptyFields(
-            Object.entries(sectionData)
-        ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
-            // If sectionData is an object, and a value within it is a nested object,
-            // also treat it as a subsection, but map the subsection title to the object key
-            if (typeof fieldData === 'object' && fieldData !== null) {
-                const fieldTags = (fieldData as Tags)[tags];
-                const fieldLink = (fieldData as Link)[link];
-
-                // One field per section can be a link
-                const fieldLinkedField = (fieldData as LinkedField)[
-                    linkedField
-                ];
-
-                console.log('mapped subsection', fieldName, fieldData);
-                const subSectionData = removeExcludedAndEmptyFields(
-                    Object.entries(fieldData)
-                );
-
-                // Only show non-empty subsections
-                if (subSectionData.length) {
-                    return {
-                        fields: acc.fields, // keep fields untouched
-                        subSections: [
-                            ...(acc.subSections ?? []),
-                            [
-                                formatAsSectionLabel(
-                                    String(fieldName),
-                                    lineOfBusiness
-                                ),
-                                subSectionData,
-
-                                // Add metadata
-                                {
-                                    [tags]: fieldTags,
-                                    [link]: fieldLink,
-                                    [linkedField]: fieldLinkedField,
-                                },
-                            ],
-                        ],
-                    };
-                }
-
-                return acc;
-            }
-
-            // Otherwise, the value is meant to be displayed, so just append the key-value pair
-            return {
-                fields: removeExcludedAndEmptyFields([
-                    ...(acc.fields ?? []),
-                    [fieldName, fieldData],
-                ]),
-                subSections: acc.subSections, // keep subsections untouched
-            };
-        }, {});
-
-        return {
-            fields,
-            subSections,
-        };
-    }
-};
-
 const removeExcludedAndEmptyFields = (
     tuples: DataTuple[],
     additionalFieldsToExclude?: DataKey[]
@@ -835,6 +648,15 @@ const removeExcludedAndEmptyFields = (
     );
 };
 
+/**
+ * Given a section label, a line of business, and optionally a product type,
+ * determines whether the section should be shown.
+ *
+ * @param sectionLabel The section label to check
+ * @param lineOfBusiness The line of business for the policy
+ * @param productType The product type for the policy, if applicable
+ * @returns {boolean} Whether the section should be shown
+ */
 const shouldShowSection = (
     sectionLabel: string,
     lineOfBusiness: LineOfBusiness,

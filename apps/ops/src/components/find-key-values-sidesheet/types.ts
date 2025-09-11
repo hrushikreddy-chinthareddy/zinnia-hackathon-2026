@@ -24,7 +24,7 @@ export type PreparedPolicy = {
 
 export type PreparedPolicySection = {
     fields?: DataTuple[];
-    subSections?: SubSection[];
+    subSections?: SubSection[]; // TODO: refactor to use a list of tuples
 };
 
 export const label = Symbol('label');

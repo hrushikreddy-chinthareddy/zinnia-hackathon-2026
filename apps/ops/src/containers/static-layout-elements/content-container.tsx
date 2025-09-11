@@ -3,10 +3,8 @@ import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
-import {
-    FindKeyValuesSidesheet,
-    FindAllKeyValuesSidesheet,
-} from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
+import { FindAllKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-sidesheet';
+import { FindKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import PageLoader, {
     PageLoaderVariant,
