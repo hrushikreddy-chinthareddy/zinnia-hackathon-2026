@@ -17,6 +17,7 @@ import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface ContentContainerProps extends PropsWithChildren {
     policy: Policy;
@@ -39,7 +40,7 @@ const ContentContainer = ({
     const { t } = useTranslation();
     const { globalValuesData } = useContentContext();
     const { featureFlags } = useOptimizely();
-    const showAllKeyValues = true; //FIXME: featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
+    const showAllKeyValues = featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
 
     const {
         highlight,
