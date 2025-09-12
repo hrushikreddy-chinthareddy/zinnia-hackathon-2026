@@ -3,7 +3,7 @@ import { ReactNode } from 'react';
 
 import { SurrenderProvider } from '@/components/providers/surrender/SurrenderProvider';
 import { getPolicySurrenderEligibility } from '@/services/bpm/fullsurrender';
-import { getFeatureFlags } from '@/services/feature-flags';
+import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -15,12 +15,15 @@ export default async function SurrenderFlow({
   params: PolicyRequestInputs;
   children: ReactNode;
 }) {
-  const flags = await getFeatureFlags();
   const loggingContext = await buildCommonLogContext();
 
   const { planCode, policyNumber } = params;
+  const { featureFlags: flags, carrierConfig } =
+    await getFeatureFlagsWithCarrierConfig();
 
-  const showSurrenderCta = !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER];
+  const showSurrenderCta =
+    !!flags?.[FEATURE_FLAGS.TRANSACTION_FULL_SURRENDER] &&
+    carrierConfig?.account?.surrender?.enabled;
 
   let isEligibleForSurrender = false;
   if (showSurrenderCta) {

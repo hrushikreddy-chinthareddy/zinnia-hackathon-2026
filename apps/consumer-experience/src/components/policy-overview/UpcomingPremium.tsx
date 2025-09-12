@@ -12,7 +12,7 @@ import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getPremiumEligibility } from '@/services/bpm';
-import { getFeatureFlags } from '@/services/feature-flags';
+import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { getUpcomingPremium } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined } from '@/utils/data';
@@ -24,8 +24,8 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import { CancelAutopaySidesheet } from './CancelAutopaySidesheet';
 import styles from './PolicyOverview.module.css';
-import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 import { AutopayStatus, determineAutopayDisplayAndEligibility } from './utils';
+import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
 const UPCOMING_PREMIUM = 'Premiums';
 
@@ -41,9 +41,11 @@ export const UpcomingPremium = async ({
   title?: string;
 }) => {
   const loggingContext = await buildCommonLogContext();
-  const featureFlags = await getFeatureFlags();
+  const { featureFlags, carrierConfig } =
+    await getFeatureFlagsWithCarrierConfig();
   const systematicPremiumFeatureFlag =
-    featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM];
+    featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM] &&
+    carrierConfig?.systematicPremium.enabled;
 
   const [upcomingResult, ottpResult] = await Promise.allSettled([
     getUpcomingPremium(

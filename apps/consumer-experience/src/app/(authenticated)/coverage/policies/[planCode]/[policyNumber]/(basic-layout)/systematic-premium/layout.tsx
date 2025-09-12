@@ -7,13 +7,14 @@ import {
   determineAutopayDisplayAndEligibility,
 } from '@/components/policy-overview/utils';
 import { SystematicPremiumsProvider } from '@/components/providers/systematic-premiums/SystematicPremiumsProvider';
-import { getFeatureFlags } from '@/services/feature-flags';
+// import { getSystematicPremiumEligibility } from '@/services/bpm/systematic-premium';
+import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
+import { getPolicyFeatures } from '@/services/policy/features';
 import { getAllSystematicPrograms } from '@/services/policy/systematic-programs';
 import { PolicyRequestInputs } from '@/types/policy';
 // import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { getPolicyFeatures } from '@/services/policy/features';
 
 export default async function SystematicPremiumLayout({
   children,
@@ -24,9 +25,11 @@ export default async function SystematicPremiumLayout({
   };
   children: ReactNode;
 }) {
-  const flags = await getFeatureFlags();
+  const { featureFlags: flags, carrierConfig } =
+    await getFeatureFlagsWithCarrierConfig();
   const showPartialSystematicPremiumOneTime =
-    flags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM];
+    flags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM] &&
+    carrierConfig?.systematicPremium?.enabled;
 
   const loggingCtx = await buildCommonLogContext();
 
