@@ -186,3 +186,9 @@ export enum Action {
     NONE = 'NONE',
     DELETE = 'DELETE',
 }
+
+export enum CarrierCode {
+    Farmers = 'FNWL',
+}
+
+export const FarmersPlanCodes = ['TR0101', 'TL0101'];
