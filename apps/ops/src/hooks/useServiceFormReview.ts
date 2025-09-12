@@ -76,7 +76,6 @@ export function useServiceFormReview({
         setSubmitFailed,
         setMessages,
         messages,
-        formComment,
         setFormComment,
     } = nigoEntry;
 
@@ -86,6 +85,7 @@ export function useServiceFormReview({
         setFormData,
         formSubtype,
         setFormNigos,
+        formComment,
         setFormReindexingData,
     } = formState;
 
@@ -287,7 +287,7 @@ export function useServiceFormReview({
                 errors['noNotes'] = t('formErrors.formValidation.noNotes');
             }
         }
-        if (sectionOption === NIGO_EXCEPTION) {
+        if (sectionOption === NIGO_EXCEPTION && !isRenewals) {
             if (
                 messages[NIGO_EXCEPTION] === undefined ||
                 isEmptyObject(messages[NIGO_EXCEPTION])
