@@ -2,17 +2,6 @@
  * Set of known currency fields
  */
 export const currencyFields = new Set([
-    'projectedLapseIndicator',
-    'suppressionIndicator',
-    'marketValueAdjustmentIndicator',
-    'modifiedEndowmentContractStatus',
-    'proofOfDeathReceived',
-    'unbornChildIndicator',
-    'qualifiedAdditionalBenefit',
-    'claimStatus',
-    'featureIndicator',
-    'status',
-    'underwritingDecision',
     'costBasis',
     'preTaxEquityAndFiscalResponsibilityActBasis',
     'preTechnicalAndMiscellaneousRevenueActAmount',
