@@ -128,7 +128,7 @@ const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
  * @returns The formatted field value
  *
  */
-const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
+export const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
     switch (true) {
         // Empty values
         case fieldData == null:

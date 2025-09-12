@@ -182,69 +182,33 @@ export const toSections = (
                                     const parties =
                                         systematicProgram.parties?.map(
                                             (partyData, i) => {
-                                                const partyObj =
-                                                    partyData.partyId &&
-                                                    allPartiesById?.[
-                                                        partyData.partyId
-                                                    ];
-                                                if (!partyObj) {
-                                                    return acc;
-                                                }
-                                                const partyName =
-                                                    `${
-                                                        partyObj.firstName ?? ''
-                                                    } ${
-                                                        partyObj.lastName ?? ''
-                                                    }`.trim() ||
-                                                    partyObj.fullName ||
-                                                    `Party ${i + 1}`;
+                                                const requiredPartyData =
+                                                    fillInRequiredPartyDetails({
+                                                        partyId:
+                                                            partyData.partyId,
+                                                        policy,
+                                                        idFieldName: 'partyId',
+                                                        allPartiesById,
+                                                    });
 
-                                                //TODO: move out of this function
-                                                const planCode =
-                                                    policy.product?.planCode;
-                                                const policyNumber =
-                                                    policy.policyNumber;
-                                                const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
-                                                const firstBank =
-                                                    partyObj.bankDetails?.[0];
-                                                const bankInfo = firstBank
-                                                    ? [
-                                                          firstBank.branchName,
-                                                          formatAsDataValue(
-                                                              firstBank.accountType ??
-                                                                  null
-                                                          ),
-                                                          'ending in',
-                                                          firstBank.accountNumber?.slice(
-                                                              -4
-                                                          ),
-                                                      ].join(' ')
-                                                    : undefined;
-                                                const firstAddress =
-                                                    partyObj.addresses?.[0];
-                                                const addressInfo = firstAddress
-                                                    ? [
-                                                          firstAddress.addressLine1,
-                                                          firstAddress.city,
-                                                          `${firstAddress.state} ${firstAddress.zipCode}`,
-                                                      ].join(', ')
-                                                    : undefined;
+                                                if (!requiredPartyData) {
+                                                    return undefined;
+                                                }
+
+                                                const partyBankAndAddress =
+                                                    fillInBankAndAddressInfo({
+                                                        partyId:
+                                                            partyData.partyId,
+                                                        allPartiesById,
+                                                    });
 
                                                 const completePartyData = {
-                                                    partyId: partyName,
+                                                    ...requiredPartyData,
+                                                    ...partyBankAndAddress,
                                                     percentage:
                                                         partyData.percentage,
-                                                    ...(bankInfo && {
-                                                        bankId: bankInfo,
-                                                    }),
-                                                    ...(addressInfo && {
-                                                        addressId: addressInfo,
-                                                    }),
                                                     paymentForm:
                                                         partyData.paymentForm,
-                                                    [label]: partyName,
-                                                    [link]: partyLink,
-                                                    [linkedField]: 'partyId',
                                                     ...(partyData.partyRole && {
                                                         [tags]: [
                                                             formatAsDataValue(
@@ -253,6 +217,7 @@ export const toSections = (
                                                         ],
                                                     }),
                                                 };
+
                                                 return completePartyData;
                                             }
                                         );
@@ -282,34 +247,24 @@ export const toSections = (
                                 // on the PreparedPolicy
                                 const parties = rider.riderParticipants?.map(
                                     (partyData, i) => {
-                                        const partyObj =
-                                            partyData.partyId &&
-                                            allPartiesById?.[partyData.partyId];
-                                        if (!partyObj) {
-                                            return acc;
-                                        }
-                                        const partyName =
-                                            `${partyObj.firstName ?? ''} ${
-                                                partyObj.lastName ?? ''
-                                            }`.trim() ||
-                                            partyObj.fullName ||
-                                            `Party ${i + 1}`;
+                                        const requiredPartyData =
+                                            fillInRequiredPartyDetails({
+                                                partyId: partyData.partyId,
+                                                policy,
+                                                idFieldName: 'coveredParty',
+                                                allPartiesById,
+                                            });
 
-                                        //TODO: move out of this function
-                                        const planCode =
-                                            policy.product?.planCode;
-                                        const policyNumber =
-                                            policy.policyNumber;
-                                        const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
+                                        if (!requiredPartyData) {
+                                            return undefined;
+                                        }
 
                                         const completePartyData = {
-                                            coveredParty: partyName,
+                                            ...requiredPartyData,
                                             partyAgeAtIssue:
                                                 partyData.partyAgeAtIssue,
-                                            [label]: partyName,
-                                            [link]: partyLink,
-                                            [linkedField]: 'coveredParty',
                                         };
+
                                         return completePartyData;
                                     }
                                 );
@@ -421,29 +376,26 @@ export const toSections = (
     // Populate the People section
     const people = policy.parties
         ?.map((party, i) => {
-            const partyName =
-                `${party.firstName ?? ''} ${party.lastName ?? ''}`.trim() ||
-                party.fullName;
+            const requiredPartyData = fillInRequiredPartyDetails({
+                partyId: party.partyId,
+                policy,
+                idFieldName: 'partyName',
+                allPartiesById,
+            });
 
-            if (!partyName) {
-                return undefined; // ignore parties with empty or nullish names
+            if (!requiredPartyData) {
+                return undefined;
             }
 
-            const planCode = policy.product?.planCode;
-            const policyNumber = policy.policyNumber;
-            const partyLink = `/policies/${planCode}/${policyNumber}/people/${party.partyId}`;
             const partyTags = party.partyId && partyRoleMap?.[party.partyId];
             const ssn = party.identifications?.find(
                 (id) => id.identificationType === 'SSN'
             )?.identificationValue;
             const partyDetails = {
-                partyName,
+                ...requiredPartyData,
                 ...(party.dateOfBirth && { dob: party.dateOfBirth }),
                 ...(ssn && { ssn }),
-                [label]: partyName,
                 ...(partyTags && { [tags]: partyTags }),
-                ...(partyLink && { [link]: partyLink }),
-                [linkedField]: 'partyName',
             };
 
             return partyDetails;
@@ -456,6 +408,86 @@ export const toSections = (
     return basicsAndSections;
 };
 
+const fillInRequiredPartyDetails = ({
+    partyId,
+    allPartiesById,
+    policy,
+    idFieldName,
+}: {
+    partyId?: string;
+    allPartiesById?: Record<string, Party>;
+    policy: Policy;
+    idFieldName: string;
+}) => {
+    if (partyId == null || allPartiesById == null) {
+        return undefined;
+    }
+    const partyObj = allPartiesById[partyId];
+
+    if (!partyObj) {
+        return undefined;
+    }
+    const partyName =
+        `${partyObj.firstName ?? ''} ${partyObj.lastName ?? ''}`.trim() ||
+        partyObj.fullName;
+
+    if (!partyName) {
+        return undefined;
+    }
+
+    //TODO: move out of this function
+    const planCode = policy.product?.planCode;
+    const policyNumber = policy.policyNumber;
+    const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
+
+    const additionalPartyData = {
+        [idFieldName]: partyName,
+        [label]: partyName,
+        [link]: partyLink,
+        [linkedField]: idFieldName,
+    };
+    return additionalPartyData;
+};
+
+const fillInBankAndAddressInfo = ({
+    partyId,
+    allPartiesById,
+}: {
+    partyId?: string;
+    allPartiesById?: Record<string, Party>;
+}) => {
+    if (partyId == null || allPartiesById == null) {
+        return undefined;
+    }
+    const partyObj = allPartiesById[partyId];
+
+    if (!partyObj) {
+        return undefined;
+    }
+
+    const firstBank = partyObj.bankDetails?.[0];
+    const bankInfo = firstBank
+        ? [
+              firstBank.branchName,
+              formatAsDataValue(firstBank.accountType ?? null),
+              'ending in',
+              firstBank.accountNumber?.slice(-4),
+          ].join(' ')
+        : undefined;
+    const firstAddress = partyObj.addresses?.[0];
+    const addressInfo = firstAddress
+        ? [
+              firstAddress.addressLine1,
+              firstAddress.city,
+              `${firstAddress.state} ${firstAddress.zipCode}`,
+          ].join(', ')
+        : undefined;
+
+    return {
+        bankInfo,
+        addressInfo,
+    };
+};
 /**
  * Given a policy section, returns a {@link PreparedPolicySection} object
  * containing an array of field/data tuples and/or an array of subsections.
