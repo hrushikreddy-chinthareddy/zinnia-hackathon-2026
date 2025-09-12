@@ -10,7 +10,6 @@ import { ApiEndpoints } from '@/components/dev-menu/types';
 import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { getSession } from '@/utils/auth';
 import { POLICY_ACKNOWLEDGEMENT_DOC_TYPE } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
@@ -131,39 +130,25 @@ export const getOneTimePremiumEligibility = async (
   return response;
 };
 
+// Define a custom type that extends OneTimePremiumRequest with flexible paymentForm
+type ExtendedOneTimePremiumRequest = Omit<OneTimePremiumRequest, 'payor'> & {
+  payor: Omit<OneTimePremiumRequest['payor'], 'paymentForm'> & {
+    paymentForm?: PaymentForm | string;
+  };
+};
+
 export const getOneTimePremiumValidation = withLogging(
   async (
     options: PolicyRequestInputs,
-    ottpRequestDetails: OneTimePremiumRequest,
+    ottpRequestDetails: ExtendedOneTimePremiumRequest,
     loggingContext: CommonLogContext
   ) => {
-    const session = await getSession();
-    const partyId = session?.user?.partyId;
     const { planCode, policyNumber } = options;
     const url = `${await transactionsAPIUrl()}/${planCode}/${policyNumber}/onetimepremium/validation`;
 
-    const payorPartyId = ottpRequestDetails.payor?.partyId || partyId;
-    const requestDetails = {
-      ...ottpRequestDetails,
-
-      // TODO: eventually the aggregation API will return appliesToPartyId which will make
-      // this unnecessary. Unfortunately the partyId returned in auth (so from session above)
-      // is only included in policy details for certain carriers (e.g. farmers)
-      // for other carriers (e.g. everly, wellabe) partyId on the poliyc
-      // is the enterprise partyId not the auth partyId
-      payor: {
-        ...ottpRequestDetails.payor,
-        partyId: payorPartyId,
-        // Hardcode ACH here because the one time premium submission takes in the accountType from the bank
-        // detail as the paymentForm to account for third party payment methods, but this endpoint
-        // has not been updated to handle that as of 07/31/25
-        paymentForm: PaymentForm.ACH,
-      },
-    };
-
     const rawResponse = await ServerApi.post(
       url,
-      JSON.stringify(requestDetails),
+      JSON.stringify(ottpRequestDetails),
       {
         headers: { 'Content-Type': 'application/json' },
       },
@@ -172,14 +157,13 @@ export const getOneTimePremiumValidation = withLogging(
 
     const response = await parseAPIResponse(rawResponse);
 
-    // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
     if (rawResponse.status > 400) {
-      logError(
-        'Error fetching one time premium validation',
-        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-      );
-
-      throw new Error('Error fetching PolicyLoanEligibility');
+      throw new Error('Error fetching OneTimePremiumValidation', {
+        cause: await logApiNotOkDetails({
+          rawResponse,
+          parsedResponse: response,
+        }),
+      });
     }
 
     if (rawResponse.status === 400) {
@@ -196,32 +180,19 @@ export const getOneTimePremiumValidation = withLogging(
 export const submitOneTimePremiumPayment = withLogging(
   async (
     options: PolicyRequestInputs,
-    paymentDetails: OneTimePremiumRequest,
+    paymentDetails: ExtendedOneTimePremiumRequest,
     loggingCtx: CommonLogContext
   ) => {
     if (isMockErrorEnabled(ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT)) {
       throw new Error('Error making one time premium payment.');
     }
-    const session = await getSession();
-    const partyId = session?.user?.partyId;
 
     const { planCode, policyNumber } = options;
     const url = `${await transactionsAPIUrl()}/${planCode}/${policyNumber}/onetimepremium`;
 
-    const payorPartyId = paymentDetails?.payor?.partyId || partyId;
-    const submitDetails = {
-      ...paymentDetails,
-      // TODO: eventually the aggregation API will return appliesToPartyId which will make
-      // this unnecessary. Unfortunately the partyId returned in auth (so from session above)
-      // is only included in policy details for certain carriers (e.g. farmers)
-      // for other carriers (e.g. everly, wellabe) partyId on the poliyc
-      // is the enterprise partyId not the auth partyId
-      payor: { ...paymentDetails.payor, partyId: payorPartyId },
-    };
-
     const rawResponse = await ServerApi.post(
       url,
-      JSON.stringify(submitDetails),
+      JSON.stringify(paymentDetails),
       {
         headers: { 'Content-Type': 'application/json' },
       },
@@ -242,7 +213,7 @@ export const submitOneTimePremiumPayment = withLogging(
         cause: {
           name: 'submitOneTimePremiumPayment Error',
           ...moreDetails,
-          submissionDetails: submitDetails,
+          submissionDetails: paymentDetails,
         },
       });
     }
