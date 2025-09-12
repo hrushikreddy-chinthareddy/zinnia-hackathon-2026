@@ -10,6 +10,14 @@
 
   &[data-state='open'] {
     .chevron {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.trigger.nested {
+  &[data-state='open'] {
+    .chevron {
       transform: rotate(90deg);
     }
   }

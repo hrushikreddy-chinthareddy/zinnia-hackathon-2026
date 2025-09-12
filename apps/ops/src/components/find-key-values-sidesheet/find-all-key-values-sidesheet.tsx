@@ -41,6 +41,7 @@ import FieldDateSelect, {
 } from '../fields/field-date-select/field-date-select';
 import Highlighter from '../highlighter/highlighter';
 import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
+import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
 
 interface FindAllKeyValuesSidebarProps {
     planCode?: string;
@@ -68,6 +69,7 @@ const KeyValueBasics = ({
     <Accordion
         key="policyBasics"
         sectionLabel={preparedPolicy.formatAsSectionLabel('Policy basics')}
+        type={AccordionType.NESTED}
     >
         <KeyValueFieldList
             preparedPolicy={preparedPolicy}
@@ -109,6 +111,7 @@ const KeyValueSections = ({
             <Accordion
                 key={sectionLabel}
                 sectionLabel={preparedPolicy.formatAsSectionLabel(sectionLabel)}
+                type={AccordionType.NESTED}
             >
                 {fields && (
                     <KeyValueFieldList
@@ -159,6 +162,7 @@ const KeyValueSubSections = ({
                         key={sectionLabel}
                         sectionLabel={String(subSectionLabel)}
                         tags={subsectionTags}
+                        type={AccordionType.NESTED}
                     >
                         <KeyValueFieldList
                             preparedPolicy={preparedPolicy}
@@ -236,6 +240,7 @@ const KeyValueNestedSubSection = ({
                     key={String(subSectonLabel)}
                     sectionLabel={String(subSectonLabel)}
                     tags={subSectionTags}
+                    type={AccordionType.NESTED}
                 >
                     <div className={styles.itemsList}>
                         {Object.entries(subSection).map((dataField) => {
