@@ -231,7 +231,6 @@ const KeyValueFieldList = ({
     );
 };
 
-/*************  ✨ Windsurf Command ⭐  *************/
 /**
  * Given a list of nested subsections, renders each subsection as a nested Accordion
  * with a single field list.
@@ -244,7 +243,6 @@ const KeyValueFieldList = ({
  * @param {string} searchValue
  * @returns {JSX.Element[]}
  */
-/*******  f4a45773-916c-4a0f-87c7-39c5ff8b9aad  *******/
 const KeyValueNestedSubSection = ({
     preparedPolicy,
     subSections,
