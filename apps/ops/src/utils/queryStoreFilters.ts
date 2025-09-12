@@ -35,7 +35,7 @@ export const useQueryFilters = (queryKeys: string[]) => {
             }
             return acc;
         }, {} as ParsedUrlQueryInput);
-    }, [queryParams]);
+    }, [queryParams, queryKeys]);
 
     const setFilters: Dispatch<SetStateAction<ParsedUrlQueryInput>> =
         useCallback(
@@ -63,7 +63,7 @@ export const useQueryFilters = (queryKeys: string[]) => {
                     return { ...paramsWithoutFilters, ...filtersToInsert };
                 });
             },
-            [setQueryParams, filters]
+            [setQueryParams, filters, queryKeys]
         );
 
     return [filters, setFilters] as [typeof filters, typeof setFilters];

@@ -8,6 +8,7 @@ import {
     CaseSearchFilters,
 } from '@deps/contexts/CaseManagementFilters';
 import { Statuses } from '@deps/models/case/case';
+import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { SearchViewQuery } from '@deps/types/search';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import useQueryFilters from '@deps/utils/queryStoreFilters';
@@ -17,6 +18,7 @@ export enum QueryKeys {
     brokerDealerName = 'brokerDealerName',
     carrier = 'carrier',
     caseStatus = 'caseStatus',
+    category = 'category',
     createdDateEnd = 'createdDateEnd',
     createdDateStart = 'createdDateStart',
     limit = 'limit',
@@ -30,6 +32,9 @@ export enum QueryKeys {
     sortDirection = 'sortDirection',
     updatedDateEnd = 'updatedDateEnd',
     updatedDateStart = 'updatedDateStart',
+    reason = 'reason',
+    detailedReason = 'detailedReason',
+    issueStatus = 'issueStatus',
 }
 
 // Convert query strings to filters used by case management search
@@ -42,6 +47,10 @@ const convertQueryToFilters = (
         requestSubType: new Set([]),
         products: new Set([]),
         brokerDealerName: '',
+        category: '',
+        reason: '',
+        detailedReason: '',
+        issueStatus: [],
     };
     const caseFilters: CaseSearchFilters = {
         additionalFilters,
@@ -220,6 +229,36 @@ const convertQueryToFilters = (
         }
     }
 
+    if (query[QueryKeys.category]) {
+        if (typeof query[QueryKeys.category] === 'string') {
+            additionalFilters.category = query[QueryKeys.category];
+        }
+    }
+
+    if (query[QueryKeys.reason]) {
+        if (typeof query[QueryKeys.reason] === 'string') {
+            additionalFilters.reason = query[QueryKeys.reason];
+        }
+    }
+
+    if (query[QueryKeys.detailedReason]) {
+        if (typeof query[QueryKeys.detailedReason] === 'string') {
+            additionalFilters.detailedReason = query[QueryKeys.detailedReason];
+        }
+    }
+
+    if (query[QueryKeys.issueStatus]) {
+        if (Array.isArray(query[QueryKeys.issueStatus])) {
+            additionalFilters.issueStatus = query[
+                QueryKeys.issueStatus
+            ] as ExceptionStatus[];
+        } else if (typeof query[QueryKeys.issueStatus] === 'string') {
+            additionalFilters.issueStatus = [
+                query[QueryKeys.issueStatus] as ExceptionStatus,
+            ];
+        }
+    }
+
     return { ...caseFilters, additionalFilters };
 };
 
@@ -243,6 +282,10 @@ const convertFilterToQuery = (
         updatedDateEnd,
         updatedDateStart,
         brokerDealerName,
+        category,
+        reason,
+        detailedReason,
+        issueStatus,
     } = additionalFilters;
     const { policyNumber } = searchValue;
 
@@ -318,6 +361,22 @@ const convertFilterToQuery = (
         query[QueryKeys.policyNumber] = policyNumber;
     }
 
+    if (category) {
+        query[QueryKeys.category] = category;
+    }
+
+    if (reason) {
+        query[QueryKeys.reason] = reason;
+    }
+
+    if (detailedReason) {
+        query[QueryKeys.detailedReason] = detailedReason;
+    }
+
+    if (issueStatus) {
+        query[QueryKeys.issueStatus] = issueStatus;
+    }
+
     return query;
 };
 
@@ -328,6 +387,7 @@ export const useCaseFilterQueryStore = () => {
     const [queryStoreFilter, setQueryStoreFilter] = useQueryFilters(
         Object.values(QueryKeys)
     );
+
     const [caseManagementFilters, setCaseManagementFilters] =
         useState<CaseSearchFilters>(convertQueryToFilters(queryStoreFilter));
 

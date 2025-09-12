@@ -2,6 +2,7 @@ import { createContext } from 'react';
 
 import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { Statuses, Case } from '@deps/models/case/case';
+import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
 export type CaseStatusFilter = 'All' | Statuses.InProgress | Statuses.Exception;
@@ -29,6 +30,10 @@ export interface CaseSearchAdditionalFilters {
     requestSubType: Set<string>;
     carriers?: { [key: string]: string };
     products: Set<string>;
+    category?: string;
+    reason?: string;
+    detailedReason?: string;
+    issueStatus?: ExceptionStatus[];
 }
 
 export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
@@ -42,7 +47,10 @@ export const initialAdditionalFilters: CaseSearchAdditionalFilters = {
     carriers: {},
     caseStatus: [],
     products: new Set([]),
-    brokerDealerName: '',
+    category: '',
+    reason: '',
+    detailedReason: '',
+    issueStatus: [],
 };
 
 export const initialFilters: CaseSearchFilters = {

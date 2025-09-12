@@ -5,6 +5,7 @@ import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilter
 import { Case, Metadata, StatCount, Statuses } from '@deps/models/case/case';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { PartyInstance } from '@deps/models/case/party-instance';
+import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
@@ -77,6 +78,10 @@ type AdditionalFiltersResult = {
     requestSubType?: string[];
     caseStatus?: Statuses[];
     notInCaseStatus?: Statuses[];
+    category?: string;
+    reason?: string;
+    detailedReason?: string;
+    issueStatus?: ExceptionStatus[];
 };
 
 // Get additional filters based on the filters selected
@@ -230,6 +235,22 @@ export const getAdditionalFilters = (
         result['notInCaseStatus'] = Array.from(
             additionalFilters.notInCaseStatus
         );
+    }
+
+    if (additionalFilters.category) {
+        result['category'] = additionalFilters.category;
+    }
+
+    if (additionalFilters.reason) {
+        result['reason'] = additionalFilters.reason;
+    }
+
+    if (additionalFilters.detailedReason) {
+        result['detailedReason'] = additionalFilters.detailedReason;
+    }
+
+    if (additionalFilters.issueStatus) {
+        result['issueStatus'] = Array.from(additionalFilters.issueStatus);
     }
 
     return result;
