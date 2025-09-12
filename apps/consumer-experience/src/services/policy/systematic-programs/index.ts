@@ -24,7 +24,7 @@ export const getAllSystematicPrograms = withLogging(
       await parseAPIResponse(rawResponse);
 
     if (!rawResponse?.ok || !response.data) {
-      throw new Error('Error fetching policy', {
+      throw new Error('Error fetching systematic programs for policy', {
         cause: { policyNumber, planCode },
       });
     }

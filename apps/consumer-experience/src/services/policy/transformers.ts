@@ -51,6 +51,7 @@ import {
   banksByPartyId,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { LimitedPolicyParty } from './types';
 
 export const allBeneficiaries = (policy: Policy) => {
   const benesWithRoles = [] as Beneficiary[];
@@ -705,4 +706,29 @@ export const getPartyRolesFromPolicyPartyId = (
   return matchingPartyRoles
     .filter(p => p.partyRole !== undefined)
     .map(p => p.partyRole!);
+};
+
+export const transformPolicyParties = (
+  policy: Policy
+): LimitedPolicyParty[] | undefined => {
+  return policy.parties
+    ?.map(party => {
+      if (!party) {
+        return null;
+      }
+
+      return {
+        partyId: party.partyId,
+        firstName: party.firstName,
+        lastName: party.lastName,
+        fullName: party.fullName,
+        addresses: party.addresses,
+        emails: party.emails,
+        phones: party.phones,
+        partyRoles: getPartyRolesFromPolicyPartyId(party.partyId, policy),
+        partyType: party.partyType,
+        allocationPercentage: party.beneficiaryPercentage,
+      };
+    })
+    .filter(p => p !== null);
 };

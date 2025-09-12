@@ -11,6 +11,26 @@ import {
   UpcomingPremium,
 } from '@/types/policy';
 import { CarrierListDetail } from '@/utils/carriers';
+import { LimitedPolicyParty } from '@/services/policy/types';
+
+export const getPolicyParties = async ({
+  planCode,
+  policyNumber,
+}: {
+  planCode: string;
+  policyNumber: string;
+}) => {
+  // TODO: fix types
+  const response: ApiResponse<LimitedPolicyParty[]> = await (
+    await ClientApi.get(`/api/policies/${planCode}/${policyNumber}/parties`)
+  ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  return response.data;
+};
 
 /**
  *

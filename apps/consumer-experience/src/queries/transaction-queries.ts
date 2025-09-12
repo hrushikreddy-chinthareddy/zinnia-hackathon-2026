@@ -10,7 +10,6 @@ import {
 import {
   SystematicProgramBPMResponse,
   SystematicProgramTransactionResponse,
-  TransactionEligbilityResponse,
 } from '@/services/bpm/systematic-programs';
 import { ClientApi } from '@/services/client-http';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -58,13 +57,21 @@ export const getSystematicPremiumValidation = async ({
   planCode: string;
   policyNumber: string;
   body: SystematicPremiumsState;
-}): Promise<ApiResponse<SystematicProgramBPMResponse>> => {
-  return await (
+}): Promise<SystematicProgramBPMResponse> => {
+  // TODO: update thiis to follow the pattern of the other queries where
+  // we throw if there is an error returned so that we can use the tanstack utilities
+  const response = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/systematic-programs/validate`,
       JSON.stringify(body)
     )
   ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  return response.data;
 };
 
 export const submitSystematicPremium = async ({
@@ -76,12 +83,18 @@ export const submitSystematicPremium = async ({
   policyNumber: string;
   body: SystematicPremiumsState;
 }): Promise<ApiResponse<SystematicProgramTransactionResponse>> => {
-  return await (
+  const response = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/systematic-programs`,
       JSON.stringify(body)
     )
   ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  return response.data;
 };
 
 export const cancelSystematicPremium = async ({
@@ -99,23 +112,6 @@ export const cancelSystematicPremium = async ({
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/systematic-programs/${arrangementId}/cancel`,
       JSON.stringify(body)
-    )
-  ).json();
-
-  if (response.error || !response) {
-    throw response.error;
-  }
-
-  return response.data;
-};
-
-export const getSystematicProgramsEligibility = async ({
-  planCode,
-  policyNumber,
-}: PolicyRequestInputs) => {
-  const response: ApiResponse<TransactionEligbilityResponse> = await (
-    await ClientApi.get(
-      `/api/bpm/${planCode}/${policyNumber}/systematic-programs/eligibility`
     )
   ).json();
 

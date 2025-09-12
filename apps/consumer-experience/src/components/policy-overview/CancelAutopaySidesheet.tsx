@@ -25,7 +25,6 @@ import { FormSteps } from '@/types/transactions';
 import { formatUSDollars } from '@/utils/currency';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
-import { FullName } from '../pii/FullName';
 import { Confirm } from '../transaction-steps/confirm/Confirm';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
@@ -177,22 +176,19 @@ export const CancelAutopaySidesheet = ({
 
   const partyName = payorFullName?.fullName?.length
     ? {
-      fullName: payorFullName.fullName,
-    }
+        fullName: payorFullName.fullName,
+      }
     : {
-      firstName: payorFullName?.firstName,
-      lastName: payorFullName?.lastName,
-    };
+        firstName: payorFullName?.firstName,
+        lastName: payorFullName?.lastName,
+      };
 
   const Views: Record<Partial<ViewState>, React.ReactNode> = {
     [FormSteps.CONFIRM]: (
       <Confirm
         confirmMessage={
           <>
-            <b>
-              <FullName {...partyName} />
-            </b>
-            , your{' '}
+            Your{' '}
             <b>
               {formatUSDollars(paymentAmount)} {frequency.toLocaleLowerCase()}
             </b>{' '}
@@ -228,11 +224,8 @@ export const CancelAutopaySidesheet = ({
     [FormSteps.LOADING]: <Loading />,
   };
 
-  const description = 'next payment: ' + dayjs(nextActivityDate).format(DEFAULT_DATE_FORMAT);
-
   return (
     <SideSheet
-      description={description}
       overrideOpen={open}
       preventCloseOnOutsideClick={false}
       header="Cancel Autopay"

@@ -64,7 +64,6 @@ export const submitOneTimeWithdrawal = withLogging<
     );
 
     const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/partialwithdrawalonetime`;
-    // console.log('submission body', JSON.stringify(body));
 
     try {
       const rawResponse = await ServerApi.post(
@@ -77,8 +76,6 @@ export const submitOneTimeWithdrawal = withLogging<
       );
       const response: TransactionAcceptedResponse =
         await parseAPIResponse(rawResponse);
-
-      // console.log('submission response', JSON.stringify(response));
 
       if (response.caseId?.length) {
         return {

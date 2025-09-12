@@ -38,7 +38,11 @@ export async function POST(
 
   try {
     const response = await getSystematicProgramValidation(
-      { planCode, policyNumber },
+      {
+        planCode,
+        policyNumber,
+        arrangementId: state?.currentSystematicPremium?.arrangementId,
+      },
       body,
       loggingContext
     );
@@ -49,6 +53,8 @@ export async function POST(
       policyNumber,
     });
 
+    // TODO: I feel like we should just return the same values regardless
+    // of what gets sent to us through bpm
     if (response.data?.status === TransactionResponse.status.SUCCESS) {
       return NextResponse.json({
         data: {
@@ -69,7 +75,7 @@ export async function POST(
       });
     }
 
-    throw new Error('Error fetching one time withdrawal validation');
+    return NextResponse.json(response);
   } catch (error) {
     logError('bpm::systematic-program::validation::POST::error', {
       ...loggingContext,

@@ -1,7 +1,7 @@
 'use client';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import styles from './PolicyOverview.module.css';
+import styles from '@/components/policy-overview/PolicyOverview.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';
 const UPCOMING_PREMIUM = 'Premium';
 

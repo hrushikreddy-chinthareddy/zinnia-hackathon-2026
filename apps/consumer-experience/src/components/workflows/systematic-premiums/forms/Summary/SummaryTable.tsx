@@ -1,132 +1,170 @@
 'use client';
 
+import { useQuery } from '@tanstack/react-query';
+import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import { ComparisonTable } from '@xd-components/components/ComparisonTable/ComparisonTable';
-import {
-  BannerAlert,
-  BannerVariant,
-  IconType,
-} from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 
-import { Payee } from '@/components/pii/Payee';
+import { Name } from '@/components/pii/Name';
 import { SystematicPremiumSteps } from '@/components/providers/systematic-premiums/types';
+import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import commonStyles from '@/components/stepped-workflow/common/Styles.module.css';
-import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
-import { getPartyName } from '@/utils/policy';
+import { useUser } from '@/hooks/use-user';
+import { getPaymentMethods } from '@/queries/payment-queries';
+import { getPolicyParties } from '@/queries/policy-queries';
+import { QueryKeys } from '@/queries/query-keys';
+import { formatUSDollars } from '@/utils/currency';
 
 import { BankDisplay } from './BankDisplay';
 import { SummaryDisplay } from './SummaryDisplay';
-import { getFrequencyText } from './SummaryForm.helpers';
-import { TableValues } from './SummaryForm.types';
 import { stepsInfo } from '../../steps';
+import { paymentFrequencyDisplay } from '../../utils';
 
 export const SummaryTable = ({
-  tableValues,
+  policyNumber,
+  planCode,
 }: {
-  tableValues?: TableValues;
+  policyNumber: string;
+  planCode: string;
 }) => {
   const router = useRouter();
+  const { state } = useSystematicPremiums();
+  const { user } = useUser();
+  const currentUserPartyId = user?.partyId;
+
+  // TODO: hold up page render for this loading?
+  const { data: paymentMethods = [], isLoading } = useQuery({
+    queryKey: [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
+    queryFn: () => getPaymentMethods(policyNumber, planCode),
+  });
+
+  const { data: policyParties = [] } = useQuery({
+    queryKey: [QueryKeys.POLICY_PARTIES, policyNumber, planCode],
+    queryFn: () => getPolicyParties({ policyNumber, planCode }),
+  });
+
   const handleEdit = (step: SystematicPremiumSteps) => {
     const url = stepsInfo[step].url;
     router.push(url);
   };
 
-  if (!tableValues) {
-    return <PaymentLoading />;
-  }
+  const hasCurrentSystematicPremium = !!state.currentSystematicPremium;
+  const currentSystematicPremium = state.currentSystematicPremium;
+  // TODO: currently the bankId on payor is null for farmers and possibly for
+  // other carriers, check to make sure paymentMethods data is populating
+  // systematic programs in policy
+  const currentPremiumPaymentMethod =
+    paymentMethods.find(
+      paymentMethod =>
+        paymentMethod.bankId === currentSystematicPremium?.party?.[0]?.bankId
+    ) || {};
+
+  const currentPayor = policyParties.find(party => {
+    // For now this object only has one payor in it since we only allow a single payor
+    // for transaction, but this may need to change in the future
+    return party.partyId === currentSystematicPremium?.parties?.[0]?.partyId;
+  });
+
+  const newPayor = policyParties.find(party => {
+    return party.partyId === currentUserPartyId;
+  });
 
   const comparisonTableData = {
     amount: {
       label: 'Amount',
       onEdit: () => handleEdit(SystematicPremiumSteps.AMOUNT),
       newValue: (
-        <span className="typography-content-body-sm">
-          {tableValues.newValues.amount}
+        <span>
+          {formatUSDollars(state.systematicPremiumAmountStep.paymentAmount)}
         </span>
       ),
-      currentValue: tableValues?.currentValues?.amount && (
-        <span className="typography-content-body-sm">
-          {tableValues.currentValues.amount}
-        </span>
+      currentValue: hasCurrentSystematicPremium && (
+        <span>{formatUSDollars(currentSystematicPremium?.amount)}</span>
       ),
       isNew:
-        tableValues.currentValues &&
-        tableValues.newValues.amount !== tableValues?.currentValues?.amount,
+        hasCurrentSystematicPremium &&
+        state.systematicPremiumAmountStep.paymentAmount !==
+          currentSystematicPremium?.amount,
     },
     frequency: {
       label: 'Frequency',
       onEdit: () => handleEdit(SystematicPremiumSteps.AMOUNT),
       newValue: (
-        <span className="typography-content-body-sm">
-          {getFrequencyText(tableValues.newValues.frequency)}
+        <span>
+          {paymentFrequencyDisplay(
+            state.systematicPremiumAmountStep.paymentFrequency
+          )}
         </span>
       ),
-      currentValue: tableValues?.currentValues?.frequency && (
-        <span className="typography-content-body-sm">
-          {getFrequencyText(tableValues.currentValues.frequency)}
+      currentValue: hasCurrentSystematicPremium && (
+        <span>
+          {paymentFrequencyDisplay(currentSystematicPremium?.frequency)}
         </span>
       ),
       isNew:
-        tableValues.currentValues &&
-        tableValues.newValues.frequency !==
-        tableValues?.currentValues?.frequency,
+        hasCurrentSystematicPremium &&
+        state.systematicPremiumAmountStep.paymentFrequency !==
+          currentSystematicPremium?.frequency,
     },
     nextPaymentDate: {
       label: 'Next payment date',
       onEdit: () => handleEdit(SystematicPremiumSteps.AMOUNT),
       newValue: (
-        <span className="typography-content-body-sm">
-          {tableValues.newValues.nextPaymentDate}
+        <span>
+          {dayjs(state.systematicPremiumAmountStep.nextPaymentDate).format(
+            DEFAULT_DATE_FORMAT
+          )}
         </span>
       ),
-      currentValue: tableValues?.currentValues?.nextPaymentDate && (
-        <span className="typography-content-body-sm">
-          {tableValues.currentValues.nextPaymentDate}
+      currentValue: hasCurrentSystematicPremium && (
+        <span>
+          {dayjs(currentSystematicPremium?.nextProgramDate).format(
+            DEFAULT_DATE_FORMAT
+          )}
         </span>
       ),
       isNew:
-        tableValues.currentValues &&
-        tableValues.newValues.nextPaymentDate !==
-        tableValues?.currentValues?.nextPaymentDate,
+        hasCurrentSystematicPremium &&
+        state.systematicPremiumAmountStep.nextPaymentDate !==
+          currentSystematicPremium?.nextPaymentDate,
     },
+    // We use parties from the policy and current logged in user partyId
+    // to display these values rather than the nameOnAccount value that is on
+    // the payment method because there isn't a gaurantee that the payment method
+    // belongs to the current logged in user. The payor of a transaction is the person logged
+    // in and making the payment. The payment method could be owned by anyone
     payor: {
       label: 'Payor',
       onEdit: () => handleEdit(SystematicPremiumSteps.BANK),
       newValue: (
-        <Payee
-          className="typography-content-body-sm"
-          payee={getPartyName(tableValues.newValues.payor)}
-        />
+        <span>
+          <Name displayName={newPayor?.firstName} />{' '}
+          <Name displayName={newPayor?.lastName} />
+        </span>
       ),
-      currentValue: tableValues?.currentValues?.payor && (
-        <Payee
-          className="typography-content-body-sm"
-          payee={getPartyName(tableValues.currentValues.payor)}
-        />
+      currentValue: hasCurrentSystematicPremium && (
+        <span>
+          <Name displayName={currentPayor?.firstName} />{' '}
+          <Name displayName={currentPayor?.lastName} />
+        </span>
       ),
       isNew:
-        tableValues.currentValues &&
-        tableValues.newValues.payor?.partyId !==
-        tableValues?.currentValues?.payor?.partyId,
+        hasCurrentSystematicPremium &&
+        state.selectBankStep.appliesToPartyId !==
+          currentPremiumPaymentMethod?.appliesToPartyId,
     },
     bankingDetails: {
       label: 'Banking details',
       onEdit: () => handleEdit(SystematicPremiumSteps.BANK),
-      newValue: (
-        <BankDisplay
-          paymentMethod={tableValues.newValues.bank}
-        />
-      ),
-      currentValue: tableValues?.currentValues?.bank && (
-        <BankDisplay
-          paymentMethod={tableValues.currentValues.bank}
-        />
+      newValue: <BankDisplay paymentMethod={state.selectBankStep} />,
+      currentValue: hasCurrentSystematicPremium && (
+        <BankDisplay paymentMethod={currentPremiumPaymentMethod} />
       ),
       isNew:
-        tableValues.currentValues &&
-        tableValues.currentValues?.bank?.bankId !==
-        tableValues.newValues.bank?.bankId,
+        hasCurrentSystematicPremium &&
+        currentPremiumPaymentMethod?.bankId !== state.selectBankStep.bankId,
     },
   };
 
@@ -135,19 +173,22 @@ export const SummaryTable = ({
       <div className={clsx(commonStyles.paymentSummaryDetails)}>
         <ComparisonTable
           newValueHeader="New autopay details"
-          currentValueHeader={tableValues.currentValues && 'Current'}
+          currentValueHeader={state.currentSystematicPremium && 'Current'}
           data={comparisonTableData}
         />
-        {tableValues?.currentValues?.frequency &&
+        {/* TODO: hiding this for now because there is no call to populate the one time payment data
+        there is also a component called FrequencyAlert...once we have information about this value,
+        we should use that */}
+        {/* {tableValues?.currentValues?.frequency &&
           tableValues.currentValues.frequency !==
-          tableValues.newValues.frequency && (
+            tableValues.newValues.frequency && (
             <BannerAlert
               icon={IconType.ALERT}
               variant={BannerVariant.Information}
               bodyText={`Changing your payment frequency updates your premium amount and next payment date.
               A one-time payment of $X,XXX.XX will be processed to cover the until the new schedule takes effect.`}
             />
-          )}
+          )} */}
       </div>
       <div
         className={clsx(
@@ -160,4 +201,3 @@ export const SummaryTable = ({
     </>
   );
 };
-

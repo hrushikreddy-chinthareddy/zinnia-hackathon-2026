@@ -1,7 +1,5 @@
 import { StoryObj, Meta } from '@storybook/nextjs';
 
-import { Footer } from '@/components/footer/Footer';
-import { SystematicPremiumsProvider } from '@/components/providers/systematic-premiums/SystematicPremiumsProvider';
 import { UserProvider } from '@/components/providers/UserProvider';
 
 import { SystematicPremiums } from './SystematicPremiums';
@@ -19,12 +17,13 @@ const meta: Meta<typeof SystematicPremiums> = {
   decorators: Story => {
     return (
       <UserProvider user={undefined}>
-        <SystematicPremiumsProvider>
+        {/* TODO: fix this!!! */}
+        {/* <SystematicPremiumsProvider>
           <div data-theme="everglades">
             <Story />
             <Footer />
           </div>
-        </SystematicPremiumsProvider>
+        </SystematicPremiumsProvider> */}
       </UserProvider>
     );
   },
@@ -45,7 +44,6 @@ export const PaymentMethod: Story = {
     currentStepOverride: 1,
   },
 };
-
 
 export const Summary: Story = {
   args: {

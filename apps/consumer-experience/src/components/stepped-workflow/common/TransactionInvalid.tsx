@@ -2,9 +2,15 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 
 import { Link } from '@/components/link/Link';
 import styles from '@/components/one-time-premium-payment/OneTimePremiumPayment.module.css';
-import { EVERLY_CONTACT_PHONE_NUMBER } from '@/utils/data';
+import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 
-export const PaymentInvalid = ({ goToUrl }: { goToUrl: string }) => {
+export const TransactionInvalid = ({
+  goToUrl,
+  message = 'The transaction you are trying to make is invalid.',
+}: {
+  goToUrl: string;
+  message?: string;
+}) => {
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto' }}>
       <div className={styles.errorMessageContainer}>
@@ -18,15 +24,16 @@ export const PaymentInvalid = ({ goToUrl }: { goToUrl: string }) => {
           Sorry, that didn't work
         </h3>
 
-        <p className="typography-content-body">
-          The payment you are trying to make is invalid. Please contact support
-          at{' '}
-          <Link isNativeAnchorTag href={`tel:${EVERLY_CONTACT_PHONE_NUMBER}`}>
-            {EVERLY_CONTACT_PHONE_NUMBER}
-          </Link>{' '}
-          for more information.
+        <p>{message}</p>
+        <p>
+          Please contact support at <CarrierPhoneNumber /> for more information.
         </p>
-        <Link className="mt-2xl" variant="button" text="Close" href={goToUrl} />
+        <Link
+          className="mt-2xl"
+          variant="button"
+          text="Back to overview"
+          href={goToUrl}
+        />
       </div>
     </div>
   );

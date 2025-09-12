@@ -74,6 +74,7 @@ export const SelectBank = ({
   );
   const defaultAddress = selectedParty?.addresses?.[0];
 
+  // TODO: remove this, it's causing client side error
   useEffect(() => {
     if (!selectedParty) return;
     const payload = {

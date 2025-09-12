@@ -57,7 +57,7 @@ export type SystematicProgramTransactionResponse =
   | SystematicProgramTransactionSuccessResponse
   | SystematicProgramTransactionFailureResponse;
 
-export const getSystematicProgramsEligibility = withLogging(
+export const getAddSystematicProgramEligibility = withLogging(
   async (
     { planCode, policyNumber }: SystematicProgramServiceInputs,
     loggingCtx: CommonLogContext
@@ -108,11 +108,11 @@ export const getSystematicProgramsEligibility = withLogging(
   },
   {
     file: FILE_NAME,
-    functionName: 'getSystematicProgramsEligibilityCheck',
+    functionName: 'getAddSystematicProgramEligibility',
   }
 );
 
-export const getSystematicProgramEligibility = withLogging(
+export const getUpdateSystematicProgramEligibility = withLogging(
   async (
     { planCode, policyNumber, arrangementId }: SystematicProgramServiceInputs,
     loggingCtx: CommonLogContext
@@ -159,7 +159,7 @@ export const getSystematicProgramEligibility = withLogging(
   },
   {
     file: FILE_NAME,
-    functionName: 'getSystematicProgramEligibility',
+    functionName: 'getUpdateSystematicProgramEligibility',
   }
 );
 
@@ -169,13 +169,8 @@ export const getSystematicProgramValidation = withLogging(
     body: SystematicProgramUpdateRequest,
     loggingCtx: CommonLogContext
   ): Promise<SystematicProgramBPMResponse> => {
-    let url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/systematicprograms`;
-
-    if (arrangementId) {
-      url += `/${arrangementId}`;
-    }
-
-    url += '/validation';
+    const arrangementIdPath = arrangementId ? `/${arrangementId}` : '';
+    const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/systematicprograms${arrangementIdPath}/validation`;
 
     const rawResponse = await ServerApi.post(
       url,
@@ -245,14 +240,31 @@ export const submitSystematicProgram = withLogging(
       },
       loggingCtx
     );
+
     const response: SystematicProgramTransactionResponse =
       await parseAPIResponse(rawResponse);
 
-    if ('caseId' in response) {
+    // This means the call successfully created a case OR that
+    // there was some error submitting the transaction, but that
+    // the call itself did successfully submit
+    if ('caseId' in response || rawResponse.status === 400) {
+      if (rawResponse.status === 400) {
+        logTrace('systematic premium submission status failure', {
+          status: rawResponse.status,
+          bpmResponse: response,
+        });
+      }
+
       return response;
     }
 
-    throw new Error('Error submitting systematic program');
+    throw new Error('Error submitting systematic program', {
+      // TODO: verify no PII, but i think this is okay
+      cause: {
+        requestBody,
+        ...logApiNotOkDetails({ rawResponse, parsedResponse: response }),
+      },
+    });
   },
   {
     file: FILE_NAME,
@@ -280,11 +292,25 @@ export const editSystematicProgram = withLogging(
     const response: SystematicProgramTransactionResponse =
       await parseAPIResponse(rawResponse);
 
-    if ('caseId' in response) {
+    // This means the call successfully created a case OR that
+    // there was some error submitting the transaction, but that
+    // the call itself did successfully submit
+    if ('caseId' in response || rawResponse.status === 400) {
+      if (rawResponse.status === 400) {
+        logTrace('systematic premium submission status failure', {
+          status: rawResponse.status,
+          bpmResponse: response,
+        });
+      }
+
       return response;
     }
-
-    throw new Error('Error editing Systematic Program');
+    throw new Error('Error editing Systematic Program', {
+      cause: {
+        requestBody: body,
+        ...logApiNotOkDetails({ rawResponse, parsedResponse: response }),
+      },
+    });
   },
   {
     file: FILE_NAME,

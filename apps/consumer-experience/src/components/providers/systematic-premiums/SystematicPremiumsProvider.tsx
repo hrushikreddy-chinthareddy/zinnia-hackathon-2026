@@ -1,18 +1,22 @@
 'use client';
-import { useSearchParams } from 'next/navigation';
-import { PropsWithChildren, useReducer } from 'react';
-
-import { getSystematicProgramAmounts } from '@/components/workflows/systematic-premiums/utils';
-import { useSystematicProgramsFor } from '@/hooks/use-systematic-programs';
-
 import {
-  Action,
-  SystematicPremiumsState,
-  SystematicPremiumSteps,
-} from './types';
+  PolicyFeature,
+  SystematicProgram,
+} from '@xd/api-types/dist/generated-types/sor';
+import dayjs from 'dayjs';
+import { PropsWithChildren, useReducer } from 'react';
+import z from 'zod';
+
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+
+import { Action, selectBankStepSchema, SystematicPremiumsState } from './types';
 import { SystematicPremiumsContext } from './useSystematicPremiums';
 
-interface SystematicPremiumsProviderProps extends PropsWithChildren { }
+// TODO: fix this type
+interface SystematicPremiumsProviderProps extends PropsWithChildren {
+  currentSystematicPremium?: SystematicProgram;
+  currentBillingFeature?: PolicyFeature;
+}
 
 function SystematicPremiumsReducer(
   state: SystematicPremiumsState,
@@ -25,59 +29,26 @@ function SystematicPremiumsReducer(
 }
 
 const SystematicPremiumsProvider = ({
+  currentSystematicPremium,
+  currentBillingFeature,
   children,
 }: SystematicPremiumsProviderProps) => {
-  const search = useSearchParams();
-  const arrangementId = search.get('arrangementId');
-
-  const { data: systematicPremium } = useSystematicProgramsFor(arrangementId)
-
-  const {
-    paymentFrequency,
-    monthlyAmount,
-    totalAmount,
-    effectiveDate,
-    bankId,
-    partyId,
-  } = getSystematicProgramAmounts({
-    monthlyAmount: systematicPremium?.amount,
-    bpmFrequency: systematicPremium?.frequency,
-    effectiveDate: systematicPremium?.nextProgramDate,
-    parties: systematicPremium?.party ?? systematicPremium?.parties,
-  });
-
-  const previousProgramDate = arrangementId
-    ? systematicPremium?.previousProgramDate
-    : undefined;
-  const nextProgramDate = arrangementId
-    ? systematicPremium?.nextProgramDate
-    : undefined;
-
   const [state, dispatch] = useReducer<
     React.Reducer<SystematicPremiumsState, Action>
   >(SystematicPremiumsReducer, {
-    activeArrangementId: systematicPremium?.arrangementId,
-    currentPage: SystematicPremiumSteps.AMOUNT,
-    yearlyPremiumAmount: totalAmount,
-    previousProgramDate,
-    nextProgramDate,
+    activeArrangementId: currentSystematicPremium?.arrangementId,
+    currentSystematicPremium: currentSystematicPremium,
     systematicPremiumAmountStep: {
-      effectiveDate: effectiveDate,
-      // TODO: GET PAYMENT AMOUNT
-      paymentAmount: monthlyAmount,
-      // AND PAYMENT FREQUENCY
-      paymentFrequency,
-      // FROM API
+      nextPaymentDate:
+        currentSystematicPremium?.nextProgramDate ||
+        dayjs().format(ZAHARA_DATE_FORMAT),
+      // TODO: what should the default for this be???
+      paymentAmount: currentBillingFeature?.paymentAmount,
+      // TODO: eventually remove the bpm enum to zod enum mapping?
+      paymentFrequency: currentBillingFeature?.frequency,
     },
-    selectBankStep: {
-      payor: {
-        payorPartyId: partyId ?? '',
-        payorName: '',
-      },
-      bank: {
-        bankId,
-      },
-    },
+    // TODO: I don't like this, what should the default here be?
+    selectBankStep: {} as z.infer<typeof selectBankStepSchema>,
   });
 
   const value = { state, dispatch };

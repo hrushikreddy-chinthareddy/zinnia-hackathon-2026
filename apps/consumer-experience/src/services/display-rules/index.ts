@@ -49,6 +49,8 @@ export const evaluateComponentVisibilityRules = (
     [ComponentName.OTTP_PAYMENT_SUMMARY_ACCOUNT_VALUE]: () =>
       policy.product?.productType !== ProductType.TERM || !!skip,
     [ComponentName.NOTIFICATIONS]: () => isNotPayor || !!skip,
+    [ComponentName.SYSTEMATIC_PREMIUM_AUTOPAY_WITH_QUOTE_VALUES]: () =>
+      policy.product?.productType === ProductType.TERM || !!skip,
   };
 };
 

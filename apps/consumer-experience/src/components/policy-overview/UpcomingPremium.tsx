@@ -1,4 +1,3 @@
-import { TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
 import { PolicyStatus, Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
 import clsx from 'clsx';
@@ -13,10 +12,6 @@ import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { getPremiumEligibility } from '@/services/bpm';
-import {
-  getSystematicProgramEligibility,
-  getSystematicProgramsEligibility,
-} from '@/services/bpm/systematic-programs';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getUpcomingPremium } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -30,6 +25,7 @@ import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 import { CancelAutopaySidesheet } from './CancelAutopaySidesheet';
 import styles from './PolicyOverview.module.css';
 import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
+import { AutopayStatus, determineAutopayDisplayAndEligibility } from './utils';
 
 const UPCOMING_PREMIUM = 'Premiums';
 
@@ -87,41 +83,25 @@ export const UpcomingPremium = async ({
     !!ottpResult?.value?.data?.reason ||
     !!ottpResult?.value?.error;
 
-  let systematicPremiumEligible = false;
-  if (systematicPremiumFeatureFlag) {
-    // TODO: Move call back to allSettled promises array
-    // after feature flag is turned off
-    const systematicPremiumEligibilityResult =
-      await getSystematicProgramsEligibility(
-        {
-          planCode,
-          policyNumber,
-        },
-        loggingContext
-      );
-
-    systematicPremiumEligible =
-      systematicPremiumEligibilityResult.data?.status ===
-      TransactionResponse.status.SUCCESS;
-  }
-
-  const showSetUpAutopay =
-    systematicPremiumFeatureFlag && systematicPremiumEligible;
-
-  // Determine Cancel Autopay enablement by checking eligibility for the specific arrangement
   let cancelAutopayEnabled = false;
-  if (systematicPremiumFeatureFlag && !!data?.arrangementId) {
-    const { data: systematicProgramEligibility } =
-      await getSystematicProgramEligibility(
-        {
-          planCode,
-          policyNumber,
-          arrangementId: data.arrangementId,
-        },
-        loggingContext
-      );
+  let manageAutopayLinkDisplay = 'Set up autopay';
+  let manageAutopayEnabled = false;
+  // Determine Cancel Autopay enablement by checking eligibility for the specific arrangement
+  if (systematicPremiumFeatureFlag) {
+    const { cancelAutopayEligible, addManageEligible, autopayCurrentState } =
+      await determineAutopayDisplayAndEligibility({
+        arrangementId: data?.arrangementId,
+        loggingContext,
+        planCode,
+        policyNumber,
+      });
 
-    cancelAutopayEnabled = !!systematicProgramEligibility?.isEligible;
+    cancelAutopayEnabled = cancelAutopayEligible;
+    manageAutopayLinkDisplay =
+      autopayCurrentState === AutopayStatus.MANAGE
+        ? 'Manage autopay'
+        : manageAutopayLinkDisplay;
+    manageAutopayEnabled = addManageEligible;
   }
 
   if (error) {
@@ -228,16 +208,13 @@ export const UpcomingPremium = async ({
                 Make a one-time payment
               </Button>
             </Link>
-            {showSetUpAutopay && (
+            {systematicPremiumFeatureFlag && (
               <>
                 <Link
                   passHref={true}
                   isInternal
                   href={{
                     pathname: `/coverage/policies/${planCode}/${policyNumber}/systematic-premium/amount`,
-                    query: {
-                      arrangementId,
-                    },
                   }}
                   role={ottpPaymentDisabled ? 'link' : ''}
                   aria-disabled={ottpPaymentDisabled}
@@ -245,9 +222,9 @@ export const UpcomingPremium = async ({
                   <Button
                     mode="link"
                     size="small"
-                    disabled={!systematicPremiumEligible}
+                    disabled={!manageAutopayEnabled}
                   >
-                    {arrangementId?.length ? 'Manage' : 'Set-up'} autopay
+                    {manageAutopayLinkDisplay}
                   </Button>
                 </Link>
                 <CancelAutopaySidesheet

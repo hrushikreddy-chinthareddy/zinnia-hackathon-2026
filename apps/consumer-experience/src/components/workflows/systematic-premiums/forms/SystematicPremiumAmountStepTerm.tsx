@@ -1,7 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@xd/utils/dist';
+import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -20,30 +19,29 @@ import {
 } from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { formatUSDollars } from '@/utils/currency';
 
 import { default as styles } from '../SystematicPremiums.module.css';
 import { paymentFrequencyDisplay } from '../utils';
 
-const getRadioOptions = () => {
-  return Object.keys(Frequency)
-    .map(k => {
-      const label = paymentFrequencyDisplay(k as Frequency);
+const getRadioOptions = ({
+  paymentFrequency,
+  paymentAmount,
+}: SPAmountStepSchema) => {
+  if (!paymentFrequency || !paymentAmount) return [];
+  const label = paymentFrequencyDisplay(paymentFrequency);
 
-      if (label === DEFAULT_ERROR_STRING) {
-        return null;
-      }
-
-      return {
-        key: k,
-        value: k,
-        label: label,
-        ariaLabel: `systematic-premium-amount-${k}`,
-      };
-    })
-    .filter(freq => !!freq);
+  return [
+    {
+      paymentFrequency,
+      value: paymentFrequency,
+      label: `${label} (${formatUSDollars(paymentAmount)})`,
+      ariaLabel: `systematic-premium-amount-${paymentFrequency}`,
+    },
+  ];
 };
 
-export const SystematicPremiumAmountStep = () => {
+export const SystematicPremiumAmountStepTerm = () => {
   const { state, dispatch } = useSystematicPremiums();
   const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
@@ -64,7 +62,7 @@ export const SystematicPremiumAmountStep = () => {
     router.push(stepInfo.nextStepUrl);
   };
 
-  const radioOptions = getRadioOptions();
+  const radioOptions = getRadioOptions(state.systematicPremiumAmountStep);
 
   return (
     <form
@@ -90,7 +88,9 @@ export const SystematicPremiumAmountStep = () => {
         render={({ field }) => (
           <div>
             <Radio
-              onValueChange={field.onChange}
+              onValueChange={value => {
+                field.onChange(value);
+              }}
               id="systematic-premium-amount"
               defaultValue={form.formState.defaultValues?.paymentFrequency}
               options={radioOptions}
