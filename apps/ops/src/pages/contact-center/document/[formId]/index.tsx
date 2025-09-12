@@ -3,7 +3,9 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
 
-import PageLoader from '@deps/components/page-loader/page-loader';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -14,62 +16,88 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { b64ToBlob } from '@deps/utils/blob';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import {
     logWarn,
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
+
 interface FormViewerProps extends SegmentTrackedPageProps {
     formId: number;
 }
 
 const FormViewer = ({ formId, user }: FormViewerProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
-    const [pdf, setPdf] = useState<string | null>(null);
-    const [pdfError, setPdfError] = useState<boolean>(false);
+
+    const [url, setUrl] = useState<string | undefined>();
+
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     useSegmentPageTracker(user, SegmentPageName.FormViewer, { formId });
 
     useEffect(() => {
         const getForms = async () => {
             try {
+                browserLogInfo('GetCallCenterForms:: fetching document...', {
+                    formId,
+                });
+                setIsLoading(true);
                 const response = await downloadFormById(formId);
 
-                setPdf(response);
+                const blob = b64ToBlob(response ?? '', 'application/pdf');
+                if (blob) {
+                    const objectURL = URL.createObjectURL(blob);
+                    setUrl(objectURL);
+                }
             } catch (e: any) {
-                setPdfError(true);
-                console.error('GetCallCenterForms::Error call center forms', e);
+                setError(true);
+                browserLogError('GetCallCenterForms::Error fetching document', {
+                    error: e,
+                    formId,
+                });
+            } finally {
+                setIsLoading(false);
             }
         };
 
         getForms();
     }, [formId]);
 
-    if (!pdf) return <PageLoader />;
-    if (pdfError) return <p>{t('pdfError' as string)}</p>;
+    if (error) {
+        return <p>{t('pdfError' as string)}</p>;
+    }
 
     return (
-        <iframe
-            src={`data:application/pdf;base64,${pdf}`}
-            width="100%"
-            height="100%"
-            style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                border: 'none',
-            }}
-        />
+        <div className="h-full w-full flex flex-col">
+            <>
+                {isLoading ? (
+                    <div className="mb-4 mt-8">
+                        <PageLoader variant={PageLoaderVariant.Center} />
+                    </div>
+                ) : (
+                    <iframe
+                        src={url}
+                        width="100%"
+                        height="100%"
+                        title="Document Viewer"
+                        className="border-0"
+                    />
+                )}
+            </>
+        </div>
     );
 };
 
 const FormViewerPage = (props: FormViewerProps) => (
     <>
-        <PageHead titleKey="viewDocument" />
-        <FormViewer {...props} />
+        <PageHead titleKey="formData" />
+        <div className="h-screen w-screen overflow-hidden fixed top-0 left-0 z-50 bg-white">
+            <FormViewer {...props} />
+        </div>
     </>
 );
 
@@ -91,6 +119,9 @@ export const getServerSideProps = withPageAuthAndLogging(
             const formId = (params?.formId as string) || '';
 
             if (!formId) {
+                logWarn('documents:: No form id provided', {
+                    ...loggingContext,
+                });
                 return {
                     redirect: {
                         destination: '/406',
