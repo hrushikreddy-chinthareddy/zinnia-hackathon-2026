@@ -177,6 +177,18 @@ const KeyValueSubSections = ({
     );
 };
 
+/**
+ * Given a list of field tuples and a search value, renders a list of field
+ * values. If the field value is an array, renders it as a subSection-in-subSection.
+ * Otherwise, renders it as a DataField.
+ *
+ * @param preparedPolicy The prepared policy to use for formatting
+ * @param fields The list of field tuples to render
+ * @param searchValue The search value to highlight in the rendered fields
+ * @param metaData Optional metadata for the field list. If provided, will be
+ * passed to the DataField component.
+ * @returns A JSX element representing the rendered field list
+ */
 const KeyValueFieldList = ({
     preparedPolicy,
     fields,
@@ -219,6 +231,20 @@ const KeyValueFieldList = ({
     );
 };
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Given a list of nested subsections, renders each subsection as a nested Accordion
+ * with a single field list.
+ *
+ * Each subsection is rendered as an Accordion with the subsection label as the
+ * section label, and the subsection tags as the tags.
+ *
+ * @param {ReturnType<typeof preparePolicy>} preparedPolicy
+ * @param {DataRecord[]} subSections
+ * @param {string} searchValue
+ * @returns {JSX.Element[]}
+ */
+/*******  f4a45773-916c-4a0f-87c7-39c5ff8b9aad  *******/
 const KeyValueNestedSubSection = ({
     preparedPolicy,
     subSections,
@@ -261,6 +287,20 @@ const KeyValueNestedSubSection = ({
     });
 };
 
+/**
+ * Given a policy field tuple, renders a single field as a DotContainer with:
+ *
+ * - The field label on the left side, highlighted if it matches the search value.
+ * - The field data on the right side, or a link to the field data if the field
+ *   is a link field and the link is provided.
+ *
+ * @param {ReturnType<typeof preparePolicy>} preparedPolicy
+ * @param {DataTuple} dataField
+ * @param {string} link
+ * @param {string} linkField
+ * @param {string} searchValue
+ * @returns {JSX.Element}
+ */
 const DataField = ({
     preparedPolicy,
     dataField,
@@ -316,6 +356,22 @@ const DataField = ({
     );
 };
 
+/**
+ * FindAllKeyValuesSidesheet is a Sidesheet component that allows users to search through the key values of a given policy.
+ *
+ * The component takes in the `planCode` and `policyNumber` as props, and fetches the policy data from the API.
+ * It also takes care of debouncing the search value and filtering the key values accordingly.
+ *
+ * The component renders a date picker that allows the user to select a date, and a search bar that allows the user to search for key values.
+ * The results are then displayed in a table below, with the key values grouped by section.
+ *
+ * The component also handles loading and error states, and will display a loading overlay if the data is still being fetched,
+ * or an error message if the data is not available.
+ *
+ * @param planCode - The code of the plan to fetch the policy for
+ * @param policyNumber - The number of the policy to fetch
+ * @returns - The rendered Sidesheet component
+ */
 export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     planCode,
     policyNumber,
