@@ -129,28 +129,25 @@ const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
  *
  */
 export const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
-    switch (true) {
-        // Empty values
-        case fieldData == null:
-            return '--';
+    // Empty values
+    if (fieldData == null) return '--';
 
-        // Enums
-        case typeof fieldData === 'string' && !!enums[fieldData]:
-            return enums[fieldData];
+    // Enums
+    if (typeof fieldData === 'string' && !!enums[fieldData])
+        return enums[fieldData];
 
-        // Currency
-        case fieldName && currencyFields.has(fieldName):
-            return numberFormatify(String(fieldData));
+    // Currency
+    if (fieldName && currencyFields.has(fieldName))
+        return numberFormatify(String(fieldData));
 
-        // Dates
-        case fieldName && dateFields.has(fieldName):
-            return convertKebabedDateString(String(fieldData) || undefined);
+    // Dates
+    if (fieldName && dateFields.has(fieldName))
+        return convertKebabedDateString(String(fieldData) || undefined);
 
-        case typeof fieldData === 'object' && fieldData !== null:
-            return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
-        default:
-            return String(fieldData);
-    }
+    if (typeof fieldData === 'object' && fieldData !== null)
+        return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
+
+    return String(fieldData);
 };
 
 /**
