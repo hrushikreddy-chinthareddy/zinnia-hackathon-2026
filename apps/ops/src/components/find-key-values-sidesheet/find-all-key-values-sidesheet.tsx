@@ -152,7 +152,6 @@ const KeyValueSubSections = ({
 }) => {
     return subSections?.map(
         ([subSectionLabel, subSectionFields, subSectionMetaData]) => {
-            //console.log('in subsection...', subSectionLabel, subSectionFields);
             const subsectionTags = subSectionMetaData?.[tags];
             return (
                 <div className={styles.subSection}>
@@ -225,14 +224,12 @@ const KeyValueNestedSubSection = ({
     subSections: DataRecord[];
     searchValue: string;
 }) => {
-    //console.log('|-------->fields', fields);
     return subSections.map((subSection) => {
         const subSectonLabel = subSection[label];
         if (subSectonLabel == null) return null;
         const subSectionTags = subSection[tags] as string[];
         const subSectionLink = subSection[link] as string;
         const subSectionLinkField = subSection[linkedField] as string;
-        //console.log('|-------->fieldLink', fieldLink, fieldLinkField);
         return (
             <div className={styles.subSection}>
                 <Accordion
