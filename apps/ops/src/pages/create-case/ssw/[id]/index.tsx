@@ -59,8 +59,8 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import {
-    isFastFeatureEnabled,
     isFormFeatureEnabled,
+    isSourceSystemLifeCad,
 } from '@deps/utils/optimizely/utils';
 import {
     logError,
@@ -107,6 +107,7 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     planCode?: string;
     systematicPrograms: SystematicSpecialPrograms[] | [];
+    isLC?: boolean;
     nigoExceptions: NigoExceptionResponse[];
 }
 
@@ -143,6 +144,7 @@ export default function SSWCase({
     user,
     planCode,
     systematicPrograms,
+    isLC = false,
     nigoExceptions,
 }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
@@ -167,13 +169,11 @@ export default function SSWCase({
     });
 
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
-    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
-
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
         clientId as string,
-        isLC
+        isLC ?? false
     );
     const { issueState, qualType, issueDate } = contractAccountInfo;
 
@@ -294,6 +294,7 @@ export default function SSWCase({
                                             featureFlagDecisions
                                         }
                                         systematicPrograms={systematicPrograms}
+                                        isLC={isLC}
                                     >
                                         {
                                             <>
@@ -505,6 +506,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const isLC = response
+                ? isSourceSystemLifeCad(response[0]?.source)
+                : null;
+
             const nigoFilters = {
                 carrier: clientId?.toUpperCase(),
                 process: Processes.SSW,
@@ -516,10 +521,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            const isLC = !isFastFeatureEnabled(
-                form?.taskType,
-                featureFlagDecisions
-            );
             if (isLC) {
                 const parties = document?.contract
                     ? await getPolicyPartiesSSR(
@@ -541,36 +542,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         featureFlagDecisions,
                         user,
                         planCode,
+                        isLC,
                         nigoExceptions,
                     },
                 };
             } else {
-                const policies = await searchPolicySSR(
-                    document?.contract,
-                    [clientId?.toUpperCase() as Carrier],
-                    accessToken,
-                    1,
-                    0,
-                    loggingContext
-                );
-                const planCode = policies?.[0]?.planCode || null;
-                if (!planCode) {
-                    logInfo(
-                        'create-case/ssw/:id::Plan code not found',
-                        loggingContext
-                    );
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                            permanent: false,
-                        },
-                    };
-                }
-                logInfo('create-case/ssw/:id::Plan code found', {
-                    ...loggingContext,
-                    planCode: planCode,
-                });
-
                 const policy = await getPolicyDetailsSsr(
                     document?.contract,
                     planCode,
@@ -613,6 +589,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         user,
                         planCode,
                         systematicPrograms,
+                        isLC,
                         nigoExceptions,
                     },
                 };

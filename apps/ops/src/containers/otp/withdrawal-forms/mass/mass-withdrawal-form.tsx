@@ -24,7 +24,6 @@ import {
     FASTQualTypes,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedStateWithdrawals } from '@deps/utils/renderStateW4';
 
 import useMassWithdrawalConfig from './mass-withdrawal-form-helpers';
@@ -67,7 +66,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -92,10 +91,6 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
         setFormValidator(() => formValidation);
     }, [setFormValidator]);
 
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
     const verificationReason = formSignature?.signVerificationReason ?? [];
     // Fast mapping for  QualTypes.KEOGHHR10 is FASTQualTypes.QUALIFIED
     const isKeogh = isLC

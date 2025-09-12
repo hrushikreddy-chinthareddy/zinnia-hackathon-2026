@@ -19,7 +19,6 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import useNasuConfig from './nasu-withdrawal-form-helpers';
@@ -59,8 +58,8 @@ export default function NasuWithdrawalForm() {
         contractIssueState,
         isFormStateReadOnly,
         parties,
-        featureFlagDecisions,
         partyRoles,
+        isLC,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -88,10 +87,6 @@ export default function NasuWithdrawalForm() {
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
     const shouldShowDOBInOl4573 = isLC
         ? handleShouldShowDOBInOl4573LC(parties as LifeCadParty[])
         : handleShouldShowDOBInOl4573(

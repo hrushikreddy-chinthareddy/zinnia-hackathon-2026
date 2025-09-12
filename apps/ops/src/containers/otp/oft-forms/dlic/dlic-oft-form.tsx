@@ -18,7 +18,6 @@ import {
     FASTQualTypes,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import getOftDlicConfig from './dlic-oft-form.helpers';
 
@@ -61,7 +60,7 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
         formErrors,
         formESignatureData,
         setFormESignatureData,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
 
     const isNonQualifiedOr403b = [
@@ -70,10 +69,6 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
         FASTQualTypes.NONQUALIFIED,
         FASTQualTypes.Q403B,
     ].includes(qualType as QualTypes);
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -113,7 +108,7 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
             />
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
-                options={surrenderingInstructionsOptions(isLC)}
+                options={surrenderingInstructionsOptions(isLC ?? false)}
                 title={
                     t('amountDetails.surrenderingInstructions.title') as string
                 }

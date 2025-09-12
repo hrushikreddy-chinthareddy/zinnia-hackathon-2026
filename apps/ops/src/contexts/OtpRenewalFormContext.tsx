@@ -28,6 +28,7 @@ export interface OtpRenewalFormState {
     isFormStateReadOnly: boolean;
     planCode: string;
     upfrontNIGO: any;
+    isLC?: boolean;
     setUpfrontNIGO: React.Dispatch<React.SetStateAction<any>>;
     featureFlags: FeatureFlags;
     setCurrentFormState: React.Dispatch<React.SetStateAction<string>>;

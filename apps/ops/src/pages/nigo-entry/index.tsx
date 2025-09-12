@@ -54,7 +54,7 @@ import {
     FeatureFlags,
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { isSourceSystemLifeCad } from '@deps/utils/optimizely/utils';
 import {
     logWarn,
     logError,
@@ -85,6 +85,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     partyRoles?: PolicyPartyRoles[];
     relatedDoc: PolicyDocument[];
     systematicPrograms: SystematicSpecialPrograms[] | [];
+    isLC?: boolean;
 }
 
 const isNigoEntryEnabled = (
@@ -121,6 +122,7 @@ const NigoEntry = ({
     partyRoles,
     relatedDoc,
     systematicPrograms,
+    isLC = false,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
         policyNumber,
@@ -132,7 +134,6 @@ const NigoEntry = ({
         nigoSubExceptions,
     });
 
-    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
@@ -157,6 +158,7 @@ const NigoEntry = ({
                     action={'' as string}
                     planCode={planCode}
                     featureFlagDecisions={featureFlagDecisions as FeatureFlags}
+                    isLC={isLC}
                 >
                     <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
                         <NigoEntryContainer
@@ -183,6 +185,7 @@ const NigoEntry = ({
                     parties={parties}
                     partyRoles={partyRoles}
                     systematicPrograms={systematicPrograms}
+                    isLC={isLC}
                 >
                     <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
                         <NigoEntryContainer
@@ -470,6 +473,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 ]);
 
                 const planCode = policies?.[0]?.planCode || null;
+
                 if (!planCode) {
                     logInfo('nigo-entry::Policy plan code not found', {
                         taskId,
@@ -523,11 +527,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         (item: PolicyDocument) =>
                             item?.documentNumber !== documentNumber
                     );
+                const sourceSystem = policies?.[0]?.source || null;
 
-                const isLC = !isFastFeatureEnabled(
-                    form?.taskType,
-                    featureFlagDecisions
-                );
+                const isLC = sourceSystem
+                    ? isSourceSystemLifeCad(sourceSystem)
+                    : null;
 
                 if (!isLC) {
                     // should get parties from policy api
@@ -579,6 +583,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                             isNigoCase: false,
                             relatedDoc,
                             systematicPrograms,
+                            isLC,
                         },
                     };
                 } else {
@@ -605,6 +610,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                                 : null,
                             isNigoCase: false,
                             relatedDoc,
+                            isLC,
                         },
                     };
                 }

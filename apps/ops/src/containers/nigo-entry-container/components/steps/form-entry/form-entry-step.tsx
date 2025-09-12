@@ -44,7 +44,6 @@ import {
 } from '@deps/types/constants';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { getCaseType, getFormParts } from './form-entry-step.helpers';
 import { useNigoEntry } from '../../nigo-entry-provider';
@@ -98,15 +97,11 @@ function FormEntryStep({
 
     const { setSubmitFailed, initRelatedDocCount, areAttachmentsViewed } =
         useNigoEntry();
-    const isLC = !isFastFeatureEnabled(
-        formState?.initialForm?.taskType,
-        formState.featureFlagDecisions
-    );
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
         clientCode as string,
-        isLC
+        formState.isLC ?? false
     );
     const { qualType } = contractAccountInfo;
 
@@ -115,7 +110,7 @@ function FormEntryStep({
         clientCode,
         qualType,
         planCode,
-        isLC
+        formState.isLC ?? false
     );
     const [taskApiError, setTaskApiError] = useState('');
     const [isLoading, setIsLoading] = useState(false);

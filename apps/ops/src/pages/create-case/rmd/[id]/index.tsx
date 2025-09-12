@@ -79,7 +79,7 @@ import {
     FeatureFlags,
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { isSourceSystemLifeCad } from '@deps/utils/optimizely/utils';
 import {
     logError,
     logInfo,
@@ -99,6 +99,7 @@ interface RmdCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[];
     systematicPrograms: SystematicSpecialPrograms[] | [];
     planCode: string;
+    isLC?: boolean;
     nigoExceptions: NigoExceptionResponse[];
 }
 
@@ -154,6 +155,7 @@ export default function RmdCase({
     user,
     systematicPrograms,
     planCode = '',
+    isLC = false,
     nigoExceptions,
 }: RmdCaseProps) {
     const { t } = useTranslation(undefined, {
@@ -170,7 +172,6 @@ export default function RmdCase({
         : clientId;
     // get the contract issue type from custom hook
 
-    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
@@ -309,6 +310,7 @@ export default function RmdCase({
                                         }
                                         parties={parties}
                                         systematicPrograms={systematicPrograms}
+                                        isLC={isLC}
                                     >
                                         {
                                             <>
@@ -445,6 +447,31 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
             }
 
+            const policyNumber = document?.contract ?? '';
+            const response = await searchPolicySSR(
+                policyNumber,
+                [clientId.toUpperCase() as Carrier],
+                accessToken,
+                1,
+                0,
+                loggingContext
+            );
+            const planCode = response ? response[0]?.planCode : null;
+            if (!planCode) {
+                logInfo(
+                    'create-case/rmd/:id::Plan code not found',
+                    loggingContext
+                );
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                        permanent: false,
+                    },
+                };
+            } else {
+                logInfo('create-case/rmd/:id::Plan code found', loggingContext);
+            }
+
             const form = await initializeOTPTaskSSR({
                 accessToken,
                 caseId: id,
@@ -475,6 +502,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const isLC = response
+                ? isSourceSystemLifeCad(response[0]?.source)
+                : null;
             const nigoFilters = {
                 carrier: clientId?.toUpperCase(),
                 process: Processes.RequiredMinimumDistribution,
@@ -484,11 +514,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 nigoFilters,
                 accessToken,
                 loggingContext
-            );
-
-            const isLC = !isFastFeatureEnabled(
-                form?.taskType,
-                featureFlagDecisions
             );
 
             if (isLC) {
@@ -511,36 +536,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles: [],
                         user,
+                        isLC,
                         nigoExceptions,
                     },
                 };
             } else {
-                const policies = await searchPolicySSR(
-                    document?.contract,
-                    [clientId?.toUpperCase() as Carrier],
-                    accessToken,
-                    1,
-                    0,
-                    loggingContext
-                );
-                const planCode = policies?.[0]?.planCode || null;
-                if (!planCode) {
-                    logInfo(
-                        'create-case/rmd/:id::Plan code not found',
-                        loggingContext
-                    );
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                            permanent: false,
-                        },
-                    };
-                }
-                logInfo('create-case/rmd/:id::Plan code found', {
-                    ...loggingContext,
-                    planCode: planCode,
-                });
-
                 const policy = await getPolicyDetailsSsr(
                     document?.contract,
                     planCode,
@@ -584,6 +584,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         planCode,
                         policy,
                         systematicPrograms,
+                        isLC,
                         nigoExceptions,
                     },
                 };

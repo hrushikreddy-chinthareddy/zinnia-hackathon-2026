@@ -18,7 +18,6 @@ import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { FASTQualTypes, QualTypes } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import useMassMutualRmdConfig from './mm-rmd-form.helpers';
@@ -61,7 +60,7 @@ export default function MassMutualRmdWithdrawalForm({
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -88,10 +87,6 @@ export default function MassMutualRmdWithdrawalForm({
     }, [formParty]);
 
     const verificationReason = formSignature?.signVerificationReason ?? [];
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
     const isKeogh = isLC
         ? qualType === QualTypes.KEOGHHR10
         : qualType === FASTQualTypes.QUALIFIED;

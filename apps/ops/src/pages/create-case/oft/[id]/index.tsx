@@ -87,8 +87,8 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import {
-    isFastFeatureEnabled,
     isFormFeatureEnabled,
+    isSourceSystemLifeCad,
 } from '@deps/utils/optimizely/utils';
 import {
     logError,
@@ -108,6 +108,7 @@ interface OftCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     parties: LifeCadParty[] | Party[];
     planCode: string;
+    isLC?: boolean;
     nigoExceptions: NigoExceptionResponse[];
 }
 
@@ -144,6 +145,7 @@ export default function OftCase({
     user,
     parties,
     planCode = '',
+    isLC = false,
     nigoExceptions,
 }: OftCaseProps) {
     const { t } = useTranslation(undefined, {
@@ -158,8 +160,6 @@ export default function OftCase({
     const clientForFormDetermination = isNonProductionEnvironment()
         ? clientIdOverride || clientId
         : clientId;
-
-    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
@@ -306,6 +306,7 @@ export default function OftCase({
                                             featureFlagDecisions
                                         }
                                         parties={parties}
+                                        isLC={isLC}
                                     >
                                         {
                                             <>
@@ -466,6 +467,31 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
             }
 
+            const policyNumber = document?.contract ?? '';
+            const response = await searchPolicySSR(
+                policyNumber,
+                [clientId.toUpperCase() as Carrier],
+                accessToken,
+                1,
+                0,
+                loggingContext
+            );
+            const planCode = response ? response[0]?.planCode : null;
+            if (!planCode) {
+                logInfo(
+                    'create-case/oft/:id::Plan code not found',
+                    loggingContext
+                );
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                        permanent: false,
+                    },
+                };
+            } else {
+                logInfo('create-case/oft/:id::Plan code found', loggingContext);
+            }
+
             const form = await initializeOTPTaskSSR({
                 accessToken,
                 caseId: id,
@@ -496,10 +522,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const isLC = !isFastFeatureEnabled(
-                form?.taskType,
-                featureFlagDecisions
-            );
+            const isLC = response
+                ? isSourceSystemLifeCad(response[0]?.source)
+                : null;
 
             const nigoFilters = {
                 carrier: clientId?.toUpperCase(),
@@ -530,36 +555,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         featureFlagDecisions,
                         user,
                         parties,
+                        isLC,
                         nigoExceptions,
                     },
                 };
             } else {
-                const policies = await searchPolicySSR(
-                    document?.contract,
-                    [clientId?.toUpperCase() as Carrier],
-                    accessToken,
-                    1,
-                    0,
-                    loggingContext
-                );
-                const planCode = policies?.[0]?.planCode || null;
-                if (!planCode) {
-                    logInfo(
-                        'create-case/oft/:id::Plan code not found',
-                        loggingContext
-                    );
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                            permanent: false,
-                        },
-                    };
-                }
-                logInfo('create-case/oft/:id::Plan code found', {
-                    ...loggingContext,
-                    planCode: planCode,
-                });
-
                 const policy = await getPolicyDetailsSsr(
                     document?.contract,
                     planCode,
@@ -597,6 +597,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         partyRoles,
                         user,
                         planCode,
+                        isLC,
                         nigoExceptions,
                     },
                 };

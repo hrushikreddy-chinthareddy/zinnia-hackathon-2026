@@ -94,8 +94,8 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import {
-    isFastFeatureEnabled,
     isFormFeatureEnabled,
+    isSourceSystemLifeCad,
 } from '@deps/utils/optimizely/utils';
 import {
     logError,
@@ -117,6 +117,7 @@ interface WithdrawalCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[] | Party[];
     partyRoles: PolicyPartyRoles[];
     planCode: string;
+    isLC?: boolean;
     nigoExceptions: NigoExceptionResponse[];
 }
 
@@ -152,6 +153,7 @@ export default function WithdrawalCase({
     user,
     partyRoles,
     planCode,
+    isLC = false,
     nigoExceptions,
 }: WithdrawalCaseProps) {
     const { t } = useTranslation(undefined, {
@@ -165,12 +167,11 @@ export default function WithdrawalCase({
         ? clientIdOverride || clientId
         : clientId;
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
-    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
         clientId as string,
-        isLC
+        isLC ?? false
     );
     const { issueState, qualType, issueDate } = contractAccountInfo;
 
@@ -212,7 +213,7 @@ export default function WithdrawalCase({
 
     const formParts = determineFormToRender(
         clientForFormDetermination as string,
-        getFormComponentMap(qualType, isLC, planCode)
+        getFormComponentMap(qualType, isLC ?? false, planCode)
     );
     if (!formParts) {
         console.error('WithdrawalCase::No form parts', {
@@ -330,6 +331,7 @@ export default function WithdrawalCase({
                                         }
                                         parties={parties}
                                         partyRoles={partyRoles}
+                                        isLC={isLC}
                                     >
                                         {
                                             <>
@@ -511,6 +513,34 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const policyNumber = document?.contract ?? '';
+            const response = await searchPolicySSR(
+                policyNumber,
+                [clientId.toUpperCase() as Carrier],
+                accessToken,
+                1,
+                0,
+                loggingContext
+            );
+            const planCode = response ? response[0]?.planCode : null;
+            if (!planCode) {
+                logInfo(
+                    'create-case/withdrawal/:id::Plan code not found',
+                    loggingContext
+                );
+                return {
+                    redirect: {
+                        destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
+                        permanent: false,
+                    },
+                };
+            } else {
+                logInfo(
+                    'create-case/withdrawal/:id::Plan code found',
+                    loggingContext
+                );
+            }
+
             const form = await initializeOTPTaskSSR({
                 accessToken,
                 caseId: id,
@@ -541,6 +571,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const isLC = response
+                ? isSourceSystemLifeCad(response[0]?.source)
+                : null;
             const nigoFilters = {
                 carrier: clientId?.toUpperCase(),
                 process: Processes.Withdrawal,
@@ -550,11 +583,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 nigoFilters,
                 accessToken,
                 loggingContext
-            );
-
-            const isLC = !isFastFeatureEnabled(
-                form?.taskType,
-                featureFlagDecisions
             );
 
             if (isLC) {
@@ -578,36 +606,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles: [],
                         user,
+                        isLC,
                         nigoExceptions,
                     },
                 };
             } else {
-                const policies = await searchPolicySSR(
-                    document?.contract,
-                    [clientId?.toUpperCase() as Carrier],
-                    accessToken,
-                    1,
-                    0,
-                    loggingContext
-                );
-                const planCode = policies?.[0]?.planCode || null;
-                if (!planCode) {
-                    logInfo(
-                        'create-case/withdrawal/:id::Plan code not found',
-                        loggingContext
-                    );
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                            permanent: false,
-                        },
-                    };
-                }
-                logInfo('create-case/withdrawal/:id::Plan code found', {
-                    ...loggingContext,
-                    planCode: planCode,
-                });
-
                 const policy = await getPolicyDetailsSsr(
                     document?.contract,
                     planCode,

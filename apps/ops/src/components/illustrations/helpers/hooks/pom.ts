@@ -314,10 +314,10 @@ export const useAuthenticatedAgentAgencies = () => {
 
                 if (rootAgencyHierarchies?.length) {
                     // Return all rootAgencies if any is present
-                    return rootAgencyHierarchies.map(rootAgencyHierarchy => ({
+                    return rootAgencyHierarchies.map((rootAgencyHierarchy) => ({
                         agencies: [rootAgencyHierarchy],
                         agentSellingCode: rootAgencyHierarchy?.sellingCode,
-                    }))
+                    }));
                 }
 
                 return hierarchies

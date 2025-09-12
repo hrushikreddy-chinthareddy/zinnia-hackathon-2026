@@ -24,7 +24,6 @@ import {
     PartyRoles,
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
@@ -55,13 +54,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
-
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
 
     const {
         formValidation,
@@ -77,7 +71,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         cslnCheckStates,
         eSignatureFieldConfig,
         sswUpdateFastOptions,
-    } = getDlicConfig(t, isLC);
+    } = getDlicConfig(t, isLC ?? false);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -138,7 +132,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 options={
                     systematicWithdrawalOptions(
                         planCode,
-                        isLC
+                        isLC ?? false
                     ) as SSWProgramOptions[]
                 }
                 onSswProgramFrequencyChange={handleSswProgramFrequency}
@@ -150,7 +144,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isFormStateReadOnly={isFormStateReadOnly}
                 fundWithdrawnMethodOptions={fundWithdrawnMethodOptions(
                     formProgram?.programSubType?.text || '',
-                    isLC
+                    isLC ?? false
                 )}
                 title={
                     t(

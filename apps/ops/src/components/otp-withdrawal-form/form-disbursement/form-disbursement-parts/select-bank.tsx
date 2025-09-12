@@ -16,7 +16,6 @@ import {
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AccountType } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import { SelectedBankContext } from './pre-populate-banking-details';
 
@@ -29,14 +28,10 @@ const SelectBank = ({
     onDataChange,
 }: DisbursementInformation) => {
     const { t } = useTranslation();
-    const { parties, partyRoles, initialForm, featureFlagDecisions } =
+    const { parties, partyRoles, initialForm, isLC } =
         useContext(FormDataContext);
     const { setBankSelected } = useContext(SelectedBankContext);
     const OTHER_BANK_OPTION = 'other';
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
 
     const bankingDetails = useMemo(() => {
         return isLC

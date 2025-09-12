@@ -17,7 +17,6 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getDlicWithdrawalConfig from './dlic-rmd-form.helpers';
@@ -55,16 +54,11 @@ const DlicRmdWithdrawalForm = () => {
         formErrors,
         formESignatureData,
         setFormESignatureData,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
 
     const [rmdFormType, setRmdFormType] = useState(
         (formProgram.programType?.text as RmdFormType) ?? RmdFormType.RMD
-    );
-
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
     );
 
     useEffect(() => {

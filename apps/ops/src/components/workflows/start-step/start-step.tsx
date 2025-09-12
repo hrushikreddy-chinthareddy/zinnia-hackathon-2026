@@ -130,9 +130,7 @@ const StartStep = ({
                         return {
                             documentNumber: documentNumber || '',
                             caseId: caseDetails.id,
-                            tag: `${caseDetails?.process || ''} - ${
-                                caseDetails?.processSubType || ''
-                            }`,
+                            tag: `${caseDetails?.process || ''}`,
                             value: caseDetails.id,
                         };
                     });
