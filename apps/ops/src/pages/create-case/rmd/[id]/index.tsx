@@ -1,10 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import clsx from 'clsx';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useState, useMemo } from 'react';
 
+import FormNigoMessages from '@deps/components/form-nigos/form-nigo-messages';
 import OtpLayout from '@deps/components/otp-layout';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import WithdrawalDrawer, {
@@ -18,6 +20,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
 import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-form';
@@ -44,6 +47,7 @@ import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { Processes } from '@deps/models/case/case';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskType } from '@deps/models/case/task';
@@ -57,6 +61,7 @@ import {
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
+import { searchNigoExceptions } from '@deps/queries/api/exception-refs';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import {
     getPolicyDetailsSsr,
@@ -94,6 +99,7 @@ interface RmdCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[];
     systematicPrograms: SystematicSpecialPrograms[] | [];
     planCode: string;
+    nigoExceptions: NigoExceptionResponse[];
 }
 
 const DefaultSidebarContent = {
@@ -148,10 +154,13 @@ export default function RmdCase({
     user,
     systematicPrograms,
     planCode = '',
+    nigoExceptions,
 }: RmdCaseProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+    const searchParams = useSearchParams();
+    const isFormReadOnly = searchParams.get('action') === 'readonly';
     const router = useRouter();
     const initialForm = form;
 
@@ -251,6 +260,15 @@ export default function RmdCase({
     };
 
     const formTitle = t(`formTitles.rmd`);
+
+    const upFrontNigos = form.data?.formRequest?.formNigos || null;
+
+    const renderUpFrontNigos = isFormReadOnly && (
+        <FormNigoMessages
+            nigoExceptions={nigoExceptions}
+            formNigos={upFrontNigos}
+        />
+    );
     // TODO: Create store and access store data from store. Wrapping OtpLayout with DiaryNotesProvider is not correct approach
     return (
         <>
@@ -295,6 +313,7 @@ export default function RmdCase({
                                         {
                                             <>
                                                 {formParts}
+                                                {renderUpFrontNigos}
                                                 <NoteSection />
                                                 <FormErrors
                                                     t={t}
@@ -456,6 +475,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const nigoFilters = {
+                carrier: clientId?.toUpperCase(),
+                process: Processes.RequiredMinimumDistribution,
+            };
+
+            const nigoExceptions = await searchNigoExceptions(
+                nigoFilters,
+                accessToken,
+                loggingContext
+            );
+
             const isLC = !isFastFeatureEnabled(
                 form?.taskType,
                 featureFlagDecisions
@@ -481,6 +511,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles: [],
                         user,
+                        nigoExceptions,
                     },
                 };
             } else {
@@ -553,6 +584,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         planCode,
                         policy,
                         systematicPrograms,
+                        nigoExceptions,
                     },
                 };
             }

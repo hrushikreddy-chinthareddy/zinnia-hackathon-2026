@@ -2,6 +2,7 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -10,6 +11,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import AssistiveText, {
     AssistiveTextVariant,
 } from '@deps/components/assistive-text/assistive-text';
+import FormNigoMessages from '@deps/components/form-nigos/form-nigo-messages';
 import OtpLayout from '@deps/components/otp-layout';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import WithdrawalDrawer, {
@@ -23,6 +25,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
 import { FormControls } from '@deps/containers/otp/withdrawal-forms/components/form-controls';
 import { FormErrors } from '@deps/containers/otp/withdrawal-forms/components/form-errors';
 import { FormProvider } from '@deps/containers/otp/withdrawal-forms/components/form-provider';
@@ -53,6 +56,7 @@ import {
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { Processes } from '@deps/models/case/case';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -68,6 +72,7 @@ import {
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
+import { searchNigoExceptions } from '@deps/queries/api/exception-refs';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import {
     getPolicyDetailsSsr,
@@ -112,6 +117,7 @@ interface WithdrawalCaseProps extends SegmentTrackedPageProps {
     parties: LifeCadParty[] | Party[];
     partyRoles: PolicyPartyRoles[];
     planCode: string;
+    nigoExceptions: NigoExceptionResponse[];
 }
 
 const DefaultSidebarContent = {
@@ -146,10 +152,13 @@ export default function WithdrawalCase({
     user,
     partyRoles,
     planCode,
+    nigoExceptions,
 }: WithdrawalCaseProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+    const searchParams = useSearchParams();
+    const isFormReadOnly = searchParams.get('action') === 'readonly';
     const router = useRouter();
     const { clientId, clientIdOverride, getLastSaved } = router.query;
     const clientForFormDetermination = isNonProductionEnvironment()
@@ -269,6 +278,15 @@ export default function WithdrawalCase({
         ? t(`formTitles.${(clientId as string).toLowerCase()}`)
         : t(`formTitles.defaultTitle`);
 
+    const upFrontNigos = form.data?.formRequest?.formNigos || null;
+
+    const renderUpFrontNigos = isFormReadOnly && (
+        <FormNigoMessages
+            nigoExceptions={nigoExceptions}
+            formNigos={upFrontNigos}
+        />
+    );
+
     return (
         <>
             <PageHead titleKey="createCaseWithdrawal" />
@@ -330,6 +348,7 @@ export default function WithdrawalCase({
                                                         </div>
                                                     )}
                                                 {formParts}
+                                                {renderUpFrontNigos}
                                                 <NoteSection />
                                                 <FormErrors
                                                     t={t}
@@ -522,6 +541,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const nigoFilters = {
+                carrier: clientId?.toUpperCase(),
+                process: Processes.Withdrawal,
+            };
+
+            const nigoExceptions = await searchNigoExceptions(
+                nigoFilters,
+                accessToken,
+                loggingContext
+            );
+
             const isLC = !isFastFeatureEnabled(
                 form?.taskType,
                 featureFlagDecisions
@@ -548,6 +578,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles: [],
                         user,
+                        nigoExceptions,
                     },
                 };
             } else {
@@ -615,6 +646,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         partyRoles,
                         user,
                         planCode,
+                        nigoExceptions,
                     },
                 };
             }

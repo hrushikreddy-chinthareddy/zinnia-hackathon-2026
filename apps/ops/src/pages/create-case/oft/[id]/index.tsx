@@ -1,11 +1,13 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { Party } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import React, { useEffect, useState, useMemo } from 'react';
 
+import FormNigoMessages from '@deps/components/form-nigos/form-nigo-messages';
 import OtpLayout from '@deps/components/otp-layout';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import WithdrawalDrawer, {
@@ -19,6 +21,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
 import OftDlicForm from '@deps/containers/otp/oft-forms/dlic/dlic-oft-form';
 import FlicOftWithdrawalForm from '@deps/containers/otp/oft-forms/flic/flic-oft-form';
 import GdmnOftWithdrawalForm from '@deps/containers/otp/oft-forms/gdmn/gdmn-oft-form';
@@ -49,6 +52,7 @@ import {
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { Processes } from '@deps/models/case/case';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -63,6 +67,7 @@ import {
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
 import { getDocumentV2SSR } from '@deps/queries/api/documents';
+import { searchNigoExceptions } from '@deps/queries/api/exception-refs';
 import { checkNigoExistsSSR } from '@deps/queries/api/integration';
 import {
     getPolicyDetailsSsr,
@@ -103,6 +108,7 @@ interface OftCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     parties: LifeCadParty[] | Party[];
     planCode: string;
+    nigoExceptions: NigoExceptionResponse[];
 }
 
 const DefaultSidebarContent = {
@@ -138,11 +144,15 @@ export default function OftCase({
     user,
     parties,
     planCode = '',
+    nigoExceptions,
 }: OftCaseProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const isFormReadOnly = searchParams.get('action') === 'readonly';
 
     const { clientId, clientIdOverride } = router.query;
     const clientForFormDetermination = isNonProductionEnvironment()
@@ -247,6 +257,16 @@ export default function OftCase({
         clientId: clientId as string,
         policyNum: document.contract || '',
     };
+
+    const upFrontNigos = form.data?.formRequest?.formNigos || null;
+
+    const renderUpFrontNigos = isFormReadOnly && (
+        <FormNigoMessages
+            nigoExceptions={nigoExceptions}
+            formNigos={upFrontNigos}
+        />
+    );
+
     // TODO: Create store and access store data from store. Wrapping OtpLayout with DiaryNotesProvider is not correct approach
     return (
         <>
@@ -290,7 +310,9 @@ export default function OftCase({
                                         {
                                             <>
                                                 {formParts}
+                                                {renderUpFrontNigos}
                                                 <NoteSection />
+
                                                 <FormErrors
                                                     t={t}
                                                     taskApiError={taskApiError}
@@ -479,6 +501,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 featureFlagDecisions
             );
 
+            const nigoFilters = {
+                carrier: clientId?.toUpperCase(),
+                process: Processes.OutgoingFundTransfer,
+            };
+
+            const nigoExceptions = await searchNigoExceptions(
+                nigoFilters,
+                accessToken,
+                loggingContext
+            );
+
             if (isLC) {
                 const parties = document?.contract
                     ? await getPolicyPartiesSSR(
@@ -497,6 +530,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         featureFlagDecisions,
                         user,
                         parties,
+                        nigoExceptions,
                     },
                 };
             } else {
@@ -563,6 +597,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         partyRoles,
                         user,
                         planCode,
+                        nigoExceptions,
                     },
                 };
             }

@@ -91,6 +91,11 @@ import { DlicSSWForm } from '@deps/containers/otp/ssw-forms/dlic/dlic-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { PageHead } from '@deps/components/page-title';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
+import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
+import { useSearchParams } from 'next/navigation';
+import FormNigoMessages from '@deps/components/form-nigos/form-nigo-messages';
+import { Processes } from '@deps/models/case/case';
+import { searchNigoExceptions } from '@deps/queries/api/exception-refs';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -102,6 +107,7 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     planCode?: string;
     systematicPrograms: SystematicSpecialPrograms[] | [];
+    nigoExceptions: NigoExceptionResponse[];
 }
 
 const DefaultSidebarContent = {
@@ -137,8 +143,11 @@ export default function SSWCase({
     user,
     planCode,
     systematicPrograms,
+    nigoExceptions,
 }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
+    const searchParams = useSearchParams();
+    const isFormReadOnly = searchParams.get('action') === 'readonly';
     // TODO: Need to map this from common portion whenever we will restructure i18 files
     const { t: withdrawalTx } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
@@ -237,6 +246,15 @@ export default function SSWCase({
         ? t('formTitles.standard', { carrier: carrierTitle })
         : t(`formTitles.defaultTitle`);
 
+    const upFrontNigos = form.data?.formRequest?.formNigos || null;
+
+    const renderUpFrontNigos = isFormReadOnly && (
+        <FormNigoMessages
+            nigoExceptions={nigoExceptions}
+            formNigos={upFrontNigos}
+        />
+    );
+
     return (
         <>
             <PageHead titleKey="createCaseSsw" />
@@ -280,6 +298,7 @@ export default function SSWCase({
                                         {
                                             <>
                                                 {formParts}
+                                                {renderUpFrontNigos}
                                                 <NoteSection />
                                                 <FormErrors
                                                     t={withdrawalTx}
@@ -486,6 +505,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const nigoFilters = {
+                carrier: clientId?.toUpperCase(),
+                process: Processes.SSW,
+            };
+
+            const nigoExceptions = await searchNigoExceptions(
+                nigoFilters,
+                accessToken,
+                loggingContext
+            );
+
             const isLC = !isFastFeatureEnabled(
                 form?.taskType,
                 featureFlagDecisions
@@ -511,6 +541,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         featureFlagDecisions,
                         user,
                         planCode,
+                        nigoExceptions,
                     },
                 };
             } else {
@@ -576,13 +607,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                         document,
                         form,
                         locale,
-                        // isNigoCase,
                         featureFlagDecisions,
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles,
                         user,
                         planCode,
                         systematicPrograms,
+                        nigoExceptions,
                     },
                 };
             }
