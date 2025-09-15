@@ -60,6 +60,7 @@ export const preparePolicy = (
     t: TFunction
 ): {
     lineOfBusiness: LineOfBusiness;
+    planCode?: string;
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
     t: TFunction;
@@ -73,6 +74,7 @@ export const preparePolicy = (
     // retain persistent policy descriptors as closure
     const lineOfBusiness =
         policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
+    const planCode = policy.product?.planCode;
     const productType = policy.product?.productType;
     const allPartiesById = policy.parties
         ? convertListToMap(
@@ -87,6 +89,7 @@ export const preparePolicy = (
 
     return {
         lineOfBusiness,
+        planCode,
         productType,
         allPartiesById,
         t,
@@ -95,6 +98,7 @@ export const preparePolicy = (
                 policyOverride ?? policy,
                 lineOfBusiness,
                 t,
+                planCode,
                 productType,
                 allPartiesById
             ),
@@ -121,6 +125,7 @@ export const toSections = (
     policy: Policy,
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
+    planCode?: string,
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
 ): PreparedPolicy => {
@@ -137,6 +142,7 @@ export const toSections = (
                     !shouldShowSection(
                         sectionTitle,
                         lineOfBusiness,
+                        planCode,
                         productType
                     ) ||
                     currentVal == null
@@ -736,12 +742,14 @@ const removeExcludedAndEmptyFields = (
 const shouldShowSection = (
     sectionLabel: string,
     lineOfBusiness: LineOfBusiness,
+    planCode?: string,
     productType?: ProductType
 ) => {
     const sectionRule = sectionVisibility[sectionLabel];
 
     return (
         !sectionRule ||
+        (planCode && sectionRule.has(planCode)) ||
         sectionRule.has(lineOfBusiness) ||
         (productType && sectionRule.has(productType))
     );

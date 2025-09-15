@@ -5,13 +5,16 @@ import {
 
 import { DataKey } from '../types';
 
-const LIFEONLY = new Set([LineOfBusiness.LIFE]);
-const ANNUITYONLY = new Set([LineOfBusiness.ANNUITY]);
-const ULIUL = new Set([
+type ExceptionalPlanCode = string;
+
+const LIFE_ONLY = new Set([LineOfBusiness.LIFE]);
+const ANNUITY_ONLY = new Set([LineOfBusiness.ANNUITY]);
+const UL_IUL_TR0101 = new Set([
     ProductType.UNIVERSALLIFE,
     ProductType.INDEXEDUNIVERSALLIFE,
+    'TR0101',
 ]);
-const ANNUITYULIUL = new Set([
+const ANNUITY_UL_IUL = new Set([
     LineOfBusiness.ANNUITY,
     ProductType.UNIVERSALLIFE,
     ProductType.INDEXEDUNIVERSALLIFE,
@@ -22,14 +25,14 @@ const NEVER = new Set([]);
  */
 export const sectionVisibility: Record<
     DataKey,
-    Set<LineOfBusiness | ProductType>
+    Set<LineOfBusiness | ProductType | ExceptionalPlanCode>
 > = {
-    loanValues: ULIUL,
-    marketValueAdjustment: ANNUITYONLY,
-    withdrawalValues: ANNUITYULIUL,
-    testValues: LIFEONLY,
-    requiredMinimumDistribution: ANNUITYONLY,
-    allocation: ANNUITYULIUL,
+    loanValues: UL_IUL_TR0101,
+    marketValueAdjustment: ANNUITY_ONLY,
+    withdrawalValues: ANNUITY_UL_IUL,
+    testValues: LIFE_ONLY,
+    requiredMinimumDistribution: ANNUITY_ONLY,
+    allocation: ANNUITY_UL_IUL,
     partyRoles: NEVER,
     parties: NEVER,
 };
