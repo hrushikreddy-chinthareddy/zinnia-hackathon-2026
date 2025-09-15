@@ -173,224 +173,233 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "parties": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "partyRole": {
-                                        "type": "string",
-                                        "title": "Party Role",
-                                        "enum": ["Owner", "Joint Owner"]
-                                    },
-                                    "partyType": {
-                                        "type": "string",
-                                        "title": "Party type",
-                                        "enum": [
-                                            "INDIVIDUAL",
-                                            "TRUST",
-                                            "ORGANIZATION"
+                        "contractInfo": {
+                            "type": "object",
+                            "properties": {
+                                "parties": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partyRole": {
+                                                "type": "string",
+                                                "title": "Party Role",
+                                                "enum": ["Owner", "Joint Owner"]
+                                            },
+                                            "partyType": {
+                                                "type": "string",
+                                                "title": "Party type",
+                                                "enum": [
+                                                    "INDIVIDUAL",
+                                                    "TRUST",
+                                                    "ORGANIZATION"
+                                                ]
+                                            },
+                                            "dateOfBirth": {
+                                                "type": "string",
+                                                "format": "date",
+                                                "title": "Date of birth"
+                                            },
+                                            "emails": {
+                                                "type": "array",
+                                                "title": "Email",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "emailAddress": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "phones": {
+                                                "title": "Telephone number",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "dialNumber": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "addresses": {
+                                                "title": "Address",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "addressLine1": {
+                                                            "type": "string",
+                                                            "title": "Address"
+                                                        },
+                                                        "addressType": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "Residential Address",
+                                                                "Mailing Address"
+                                                            ]
+                                                        },
+                                                        "city": {
+                                                            "type": "string",
+                                                            "title": "City"
+                                                        },
+                                                        "state": {
+                                                            "type": "string",
+                                                            "title": "State",
+                                                            "enum": [
+                                                                "",
+                                                                "AA",
+                                                                "AE",
+                                                                "AK",
+                                                                "AL",
+                                                                "AP",
+                                                                "AR",
+                                                                "AZ",
+                                                                "CA",
+                                                                "CD",
+                                                                "CO",
+                                                                "CT",
+                                                                "DC",
+                                                                "DE",
+                                                                "FL",
+                                                                "FN",
+                                                                "GA",
+                                                                "GU",
+                                                                "HI",
+                                                                "IA",
+                                                                "ID",
+                                                                "IL",
+                                                                "IN",
+                                                                "KS",
+                                                                "KY",
+                                                                "LA",
+                                                                "MA",
+                                                                "MD",
+                                                                "ME",
+                                                                "MI",
+                                                                "MN",
+                                                                "MO",
+                                                                "MS",
+                                                                "MT",
+                                                                "NC",
+                                                                "ND",
+                                                                "NE",
+                                                                "NH",
+                                                                "NJ",
+                                                                "NM",
+                                                                "NV",
+                                                                "NY",
+                                                                "OH",
+                                                                "OK",
+                                                                "OR",
+                                                                "PA",
+                                                                "PR",
+                                                                "RI",
+                                                                "SC",
+                                                                "SD",
+                                                                "TN",
+                                                                "TX",
+                                                                "UT",
+                                                                "VA",
+                                                                "VI",
+                                                                "VT",
+                                                                "WA",
+                                                                "WI",
+                                                                "WV",
+                                                                "WY"
+                                                            ]
+                                                        },
+                                                        "zipCode": {
+                                                            "type": "string",
+                                                            "title": "Zip"
+                                                        },
+                                                        "zipCodeExtension": {
+                                                            "type": "string",
+                                                            "title": "Zip+4"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "allOf": [
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": [
+                                                                "INDIVIDUAL"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "firstName": {
+                                                            "type": "string",
+                                                            "title": "First name"
+                                                        },
+                                                        "middleName": {
+                                                            "type": "string",
+                                                            "title": "Middle name"
+                                                        },
+                                                        "lastName": {
+                                                            "type": "string",
+                                                            "title": "Last name"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": ["TRUST"]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "lastName": {
+                                                            "type": "string",
+                                                            "title": "Trust name"
+                                                        },
+                                                        "trustType": {
+                                                            "type": "string",
+                                                            "title": "Trust type",
+                                                            "enum": [
+                                                                "",
+                                                                "INDIVIDUALTRUST",
+                                                                "CORPORATETRUST",
+                                                                "TESTAMENTARYTRUST"
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": [
+                                                                "ORGANIZATION"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "lastName": {
+                                                            "type": "string",
+                                                            "title": "Company name"
+                                                        }
+                                                    }
+                                                }
+                                            }
                                         ]
-                                    },
-                                    "dateOfBirth": {
-                                        "type": "string",
-                                        "format": "date",
-                                        "title": "Date of birth"
-                                    },
-                                    "emails": {
-                                        "type": "array",
-                                        "title": "Email",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "emailAddress": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "phones": {
-                                        "title": "Telephone number",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "dialNumber": {
-                                                    "type": "string"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    "addresses": {
-                                        "title": "Address",
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object",
-                                            "properties": {
-                                                "addressLine1": {
-                                                    "type": "string",
-                                                    "title": "Address"
-                                                },
-                                                "addressType": {
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "Residential Address",
-                                                        "Mailing Address"
-                                                    ]
-                                                },
-                                                "city": {
-                                                    "type": "string",
-                                                    "title": "City"
-                                                },
-                                                "state": {
-                                                    "type": "string",
-                                                    "title": "State",
-                                                    "enum": [
-                                                        "",
-                                                        "AA",
-                                                        "AE",
-                                                        "AK",
-                                                        "AL",
-                                                        "AP",
-                                                        "AR",
-                                                        "AZ",
-                                                        "CA",
-                                                        "CD",
-                                                        "CO",
-                                                        "CT",
-                                                        "DC",
-                                                        "DE",
-                                                        "FL",
-                                                        "FN",
-                                                        "GA",
-                                                        "GU",
-                                                        "HI",
-                                                        "IA",
-                                                        "ID",
-                                                        "IL",
-                                                        "IN",
-                                                        "KS",
-                                                        "KY",
-                                                        "LA",
-                                                        "MA",
-                                                        "MD",
-                                                        "ME",
-                                                        "MI",
-                                                        "MN",
-                                                        "MO",
-                                                        "MS",
-                                                        "MT",
-                                                        "NC",
-                                                        "ND",
-                                                        "NE",
-                                                        "NH",
-                                                        "NJ",
-                                                        "NM",
-                                                        "NV",
-                                                        "NY",
-                                                        "OH",
-                                                        "OK",
-                                                        "OR",
-                                                        "PA",
-                                                        "PR",
-                                                        "RI",
-                                                        "SC",
-                                                        "SD",
-                                                        "TN",
-                                                        "TX",
-                                                        "UT",
-                                                        "VA",
-                                                        "VI",
-                                                        "VT",
-                                                        "WA",
-                                                        "WI",
-                                                        "WV",
-                                                        "WY"
-                                                    ]
-                                                },
-                                                "zipCode": {
-                                                    "type": "string",
-                                                    "title": "Zip"
-                                                },
-                                                "zipCodeExtension": {
-                                                    "type": "string",
-                                                    "title": "Zip+4"
-                                                }
-                                            }
-                                        }
                                     }
-                                },
-                                "allOf": [
-                                    {
-                                        "if": {
-                                            "properties": {
-                                                "partyType": {
-                                                    "enum": ["INDIVIDUAL"]
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "firstName": {
-                                                    "type": "string",
-                                                    "title": "First name"
-                                                },
-                                                "middleName": {
-                                                    "type": "string",
-                                                    "title": "Middle name"
-                                                },
-                                                "lastName": {
-                                                    "type": "string",
-                                                    "title": "Last name"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "if": {
-                                            "properties": {
-                                                "partyType": {
-                                                    "enum": ["TRUST"]
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "lastName": {
-                                                    "type": "string",
-                                                    "title": "Trust name"
-                                                },
-                                                "trustType": {
-                                                    "type": "string",
-                                                    "title": "Trust type",
-                                                    "enum": [
-                                                        "",
-                                                        "INDIVIDUALTRUST",
-                                                        "CORPORATETRUST",
-                                                        "TESTAMENTARYTRUST"
-                                                    ]
-                                                }
-                                            }
-                                        }
-                                    },
-                                    {
-                                        "if": {
-                                            "properties": {
-                                                "partyType": {
-                                                    "enum": ["ORGANIZATION"]
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "lastName": {
-                                                    "type": "string",
-                                                    "title": "Company name"
-                                                }
-                                            }
-                                        }
-                                    }
-                                ]
+                                }
                             }
                         }
                     }
@@ -405,199 +414,208 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "parties": {
+                    "contractInfo": {
+                        "ui:widget": "TransactionAccordion",
                         "ui:options": {
-                            "addable": false,
-                            "orderable": false,
                             "label": false
                         },
-                        "items": {
-                            "ui:order": [
-                                "partyType",
-                                "partyRole",
-                                "trustType",
-                                "firstName",
-                                "middleName",
-                                "lastName",
-                                "dateOfBirth",
-                                "emails",
-                                "phones",
-                                "addresses"
-                            ],
+                        "parties": {
+                            "ui:widget": "TransactionAccordion",
                             "ui:options": {
-                                "label": true,
-                                "title": "{{partyRole}}",
-                                "nobackground": true,
-                                "expandable": true,
-                                "removable": false
+                                "addable": false,
+                                "orderable": false,
+                                "label": false,
+                                "tabTitle": "Owner Details"
                             },
-                            "partyRole": {
-                                "ui:widget": "hidden",
+                            "items": {
+                                "ui:order": [
+                                    "partyType",
+                                    "partyRole",
+                                    "trustType",
+                                    "firstName",
+                                    "middleName",
+                                    "lastName",
+                                    "dateOfBirth",
+                                    "emails",
+                                    "phones",
+                                    "addresses"
+                                ],
                                 "ui:options": {
-                                    "enumNames": ["Owner", "Joint Owner"]
-                                }
-                            },
-                            "partyType": {
-                                "ui:widget": "radio",
-                                "ui:options": {
-                                    "enumNames": [
-                                        "Individual",
-                                        "Trust",
-                                        "Organization"
-                                    ],
-                                    "enumDisabled": [
-                                        "INDIVIDUAL",
-                                        "TRUST",
-                                        "ORGANIZATION"
-                                    ]
-                                }
-                            },
-                            "emails": {
-                                "ui:options": {
-                                    "addable": false,
-                                    "orderable": false,
-                                    "removable": false,
-                                    "label": false
+                                    "label": false,
+                                    "title": "{{partyRole}}",
+                                    "nobackground": true,
+                                    "expandable": false,
+                                    "removable": false
                                 },
-                                "items": {
+                                "partyRole": {
+                                    "ui:widget": "hidden",
                                     "ui:options": {
-                                        "label": true,
-                                        "title": "Email"
+                                        "enumNames": ["Owner", "Joint Owner"]
+                                    }
+                                },
+                                "partyType": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:options": {
+                                        "inline": true,
+                                        "enumNames": [
+                                            "Individual",
+                                            "Trust",
+                                            "Organization"
+                                        ],
+                                        "enumDisabled": [
+                                            "INDIVIDUAL",
+                                            "TRUST",
+                                            "ORGANIZATION"
+                                        ]
+                                    }
+                                },
+                                "emails": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": false
                                     },
-                                    "emailAddress": {
+                                    "items": {
                                         "ui:options": {
-                                            "label": false
+                                            "label": true,
+                                            "title": "Email"
+                                        },
+                                        "emailAddress": {
+                                            "ui:options": {
+                                                "label": false
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            "phones": {
-                                "ui:options": {
-                                    "addable": false,
-                                    "orderable": false,
-                                    "removable": false,
-                                    "label": false
                                 },
-                                "items": {
+                                "phones": {
                                     "ui:options": {
-                                        "label": true,
-                                        "title": "Telephone number"
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": false
                                     },
-                                    "dialNumber": {
+                                    "items": {
                                         "ui:options": {
-                                            "label": false
+                                            "label": true,
+                                            "title": "Telephone number"
+                                        },
+                                        "dialNumber": {
+                                            "ui:options": {
+                                                "label": false
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            "addresses": {
-                                "ui:options": {
-                                    "addable": false,
-                                    "orderable": false,
-                                    "removable": false,
-                                    "label": false
                                 },
-                                "items": {
+                                "addresses": {
                                     "ui:options": {
-                                        "label": true,
-                                        "title": "{{addressType}}",
-                                        "expandable": true,
-                                        "nobackground": true
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": false
                                     },
-                                    "dialNumber": {
+                                    "items": {
                                         "ui:options": {
-                                            "label": false
-                                        }
-                                    },
-                                    "addressType": {
-                                        "ui:widget": "hidden",
-                                        "ui:options": {
-                                            "enumNames": [
-                                                "Residential Address",
-                                                "Mailing Address"
-                                            ]
-                                        }
-                                    },
-                                    "state": {
-                                        "ui:widget": "SelectWidget",
-                                        "ui:allowEmptyValue": true,
-                                        "ui:options": {
-                                            "enumNames": [
-                                                "Select state",
-                                                "AA",
-                                                "AE",
-                                                "AK",
-                                                "AL",
-                                                "AP",
-                                                "AR",
-                                                "AZ",
-                                                "CA",
-                                                "CD",
-                                                "CO",
-                                                "CT",
-                                                "DC",
-                                                "DE",
-                                                "FL",
-                                                "FN",
-                                                "GA",
-                                                "GU",
-                                                "HI",
-                                                "IA",
-                                                "ID",
-                                                "IL",
-                                                "IN",
-                                                "KS",
-                                                "KY",
-                                                "LA",
-                                                "MA",
-                                                "MD",
-                                                "ME",
-                                                "MI",
-                                                "MN",
-                                                "MO",
-                                                "MS",
-                                                "MT",
-                                                "NC",
-                                                "ND",
-                                                "NE",
-                                                "NH",
-                                                "NJ",
-                                                "NM",
-                                                "NV",
-                                                "NY",
-                                                "OH",
-                                                "OK",
-                                                "OR",
-                                                "PA",
-                                                "PR",
-                                                "RI",
-                                                "SC",
-                                                "SD",
-                                                "TN",
-                                                "TX",
-                                                "UT",
-                                                "VA",
-                                                "VI",
-                                                "VT",
-                                                "WA",
-                                                "WI",
-                                                "WV",
-                                                "WY"
-                                            ]
+                                            "label": true,
+                                            "title": "{{addressType}}",
+                                            "expandable": true,
+                                            "nobackground": true
+                                        },
+                                        "dialNumber": {
+                                            "ui:options": {
+                                                "label": false
+                                            }
+                                        },
+                                        "addressType": {
+                                            "ui:widget": "hidden",
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "Residential Address",
+                                                    "Mailing Address"
+                                                ]
+                                            }
+                                        },
+                                        "state": {
+                                            "ui:widget": "SelectWidget",
+                                            "ui:allowEmptyValue": true,
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "Select state",
+                                                    "AA",
+                                                    "AE",
+                                                    "AK",
+                                                    "AL",
+                                                    "AP",
+                                                    "AR",
+                                                    "AZ",
+                                                    "CA",
+                                                    "CD",
+                                                    "CO",
+                                                    "CT",
+                                                    "DC",
+                                                    "DE",
+                                                    "FL",
+                                                    "FN",
+                                                    "GA",
+                                                    "GU",
+                                                    "HI",
+                                                    "IA",
+                                                    "ID",
+                                                    "IL",
+                                                    "IN",
+                                                    "KS",
+                                                    "KY",
+                                                    "LA",
+                                                    "MA",
+                                                    "MD",
+                                                    "ME",
+                                                    "MI",
+                                                    "MN",
+                                                    "MO",
+                                                    "MS",
+                                                    "MT",
+                                                    "NC",
+                                                    "ND",
+                                                    "NE",
+                                                    "NH",
+                                                    "NJ",
+                                                    "NM",
+                                                    "NV",
+                                                    "NY",
+                                                    "OH",
+                                                    "OK",
+                                                    "OR",
+                                                    "PA",
+                                                    "PR",
+                                                    "RI",
+                                                    "SC",
+                                                    "SD",
+                                                    "TN",
+                                                    "TX",
+                                                    "UT",
+                                                    "VA",
+                                                    "VI",
+                                                    "VT",
+                                                    "WA",
+                                                    "WI",
+                                                    "WV",
+                                                    "WY"
+                                                ]
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            "trustType": {
-                                "ui:widget": "SelectWidget",
-                                "ui:allowEmptyValue": true,
-                                "ui:options": {
-                                    "enumNames": [
-                                        "Select trust type",
-                                        "Individual Trust",
-                                        "Corporate Trust",
-                                        "Testamentary Trust"
-                                    ]
+                                },
+                                "trustType": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:allowEmptyValue": true,
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select trust type",
+                                            "Individual Trust",
+                                            "Corporate Trust",
+                                            "Testamentary Trust"
+                                        ]
+                                    }
                                 }
                             }
                         }
@@ -609,7 +627,7 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "beneData": {
+                        "actionData": {
                             "type": "array",
                             "title": "Beneficiaries",
                             "items": {
@@ -1024,11 +1042,15 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "beneData": {
+                    "actionData": {
+                        "ui:widget": "TransactionAccordion",
                         "ui:options": {
                             "label": false,
                             "addable": true,
-                            "defaultItemLabel": "New Beneficiary"
+                            "defaultItemLabel": "New Beneficiary",
+                            "showDeleteBtn": true,
+                            "showAddBtn": true,
+                            "tabTitle": "Beneficiary Details"
                         },
                         "items": {
                             "ui:order": [
@@ -1040,15 +1062,16 @@
                                 "isIrrevocable"
                             ],
                             "ui:options": {
-                                "label": true,
+                                "label": false,
                                 "title": "{{partyRole.beneficiaryRole}}",
                                 "defaultItemLabel": "New Beneficiary",
                                 "nobackground": true,
-                                "expandable": true
+                                "expandable": false
                             },
                             "action": {
-                                "ui:widget": "radio",
+                                "ui:widget": "hidden",
                                 "ui:options": {
+                                    "inline": true,
                                     "enumNames": ["Add", "Update", "Delete"]
                                 }
                             },
@@ -1335,8 +1358,9 @@
                                     }
                                 },
                                 "preferredCommunicationType": {
-                                    "ui:widget": "radio",
+                                    "ui:widget": "RadioWidget",
                                     "ui:options": {
+                                        "inline": true,
                                         "enumNames": ["Email", "Phone", "Mail"]
                                     }
                                 }
@@ -1615,7 +1639,13 @@
                     },
                     "signatureData": {
                         "ui:options": { "label": false },
-                        "isIrrevocableBene": { "ui:widget": "radio" },
+                        "isIrrevocableBene": {
+                            "ui:widget": "RadioWidget",
+                            "ui:options": {
+                                "inline": true,
+                                "enumNames": ["Yes", "No"]
+                            }
+                        },
                         "signatures": {
                             "ui:options": {
                                 "addable": false,

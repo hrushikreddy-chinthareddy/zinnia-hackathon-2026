@@ -15,6 +15,7 @@
         "taskName": "Beneficiary Change Data Entry",
         "processSubType": "Beneficiary Change",
         "planCode": "WBFDAV03",
+        "policyStatus": "ACTIVE",
         "details": {
             "documents": [
                 {
@@ -29,78 +30,81 @@
                 }
             ]
         },
-        "parties": [
-            {
-                "partyType": "TRUST",
-                "partyRole": "Owner",
-                "firstName": "ROBYN",
-                "middleName": "S",
-                "lastName": "WILSON",
-                "fullName": "Robyn S Wilson",
-                "dateOfBirth": "1978-11-05",
-                "trustType": "",
-                "prefix": "",
-                "phones": [
-                    {
-                        "areaCode": "515",
-                        "bestTime": "",
-                        "countryCode": "USA",
-                        "dialNumber": "2585158",
-                        "endDate": "",
-                        "extension": "",
-                        "isPreferred": false,
-                        "phoneId": "Party_Annuitant_1_Phone0",
-                        "phoneType": "HOME",
-                        "startDate": "2025-05-22",
-                        "timezone": ""
-                    }
-                ],
-                "emails": [
-                    {
-                        "emailAddress": "abhigyan@example.com",
-                        "emailType": "PERSONAL"
-                    }
-                ],
-                "addresses": [
-                    {
-                        "addressLine1": "701 N COLLEGE AVE",
-                        "addressLine2": "",
-                        "addressLine3": "",
-                        "addressType": "Residential Address",
-                        "city": "FAYETTEVILLE",
-                        "country": "US",
-                        "endDate": "",
-                        "startDate": "2025-05-23",
-                        "state": "AR",
-                        "zipCode": "72701",
-                        "zipCodeExtension": "88"
-                    },
-                    {
-                        "addressLine1": "701 N COLLEGE AVE",
-                        "addressLine2": "",
-                        "addressLine3": "",
-                        "addressType": "Mailing Address",
-                        "city": "FAYETTEVILLE",
-                        "country": "US",
-                        "endDate": "",
-                        "startDate": "2025-05-23",
-                        "state": "AR",
-                        "zipCode": "72701",
-                        "zipCodeExtension": "22"
-                    }
-                ]
-            },
-            {
-                "partyType": "INDIVIDUAL",
-                "partyRole": "Joint Owner",
-                "firstName": "ROBY",
-                "middleName": "",
-                "lastName": "WILL",
-                "fullName": "Roby Will",
-                "dateOfBirth": "1978-11-05"
-            }
-        ],
-        "beneData": [
+        "contractInfo": {
+            "product": null,
+            "parties": [
+                {
+                    "partyType": "TRUST",
+                    "partyRole": "Owner",
+                    "firstName": "ROBYN",
+                    "middleName": "S",
+                    "lastName": "WILSON",
+                    "fullName": "Robyn S Wilson",
+                    "dateOfBirth": "1978-11-05",
+                    "trustType": "",
+                    "prefix": "",
+                    "phones": [
+                        {
+                            "areaCode": "515",
+                            "bestTime": "",
+                            "countryCode": "USA",
+                            "dialNumber": "2585158",
+                            "endDate": "",
+                            "extension": "",
+                            "isPreferred": false,
+                            "phoneId": "Party_Annuitant_1_Phone0",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22",
+                            "timezone": ""
+                        }
+                    ],
+                    "emails": [
+                        {
+                            "emailAddress": "abhigyan@example.com",
+                            "emailType": "PERSONAL"
+                        }
+                    ],
+                    "addresses": [
+                        {
+                            "addressLine1": "701 N COLLEGE AVE",
+                            "addressLine2": "",
+                            "addressLine3": "",
+                            "addressType": "Residential Address",
+                            "city": "FAYETTEVILLE",
+                            "country": "US",
+                            "endDate": "",
+                            "startDate": "2025-05-23",
+                            "state": "AR",
+                            "zipCode": "72701",
+                            "zipCodeExtension": "88"
+                        },
+                        {
+                            "addressLine1": "701 N COLLEGE AVE",
+                            "addressLine2": "",
+                            "addressLine3": "",
+                            "addressType": "Mailing Address",
+                            "city": "FAYETTEVILLE",
+                            "country": "US",
+                            "endDate": "",
+                            "startDate": "2025-05-23",
+                            "state": "AR",
+                            "zipCode": "72701",
+                            "zipCodeExtension": "22"
+                        }
+                    ]
+                },
+                {
+                    "partyType": "INDIVIDUAL",
+                    "partyRole": "Joint Owner",
+                    "firstName": "ROBY",
+                    "middleName": "",
+                    "lastName": "WILL",
+                    "fullName": "Roby Will",
+                    "dateOfBirth": "1978-11-05"
+                }
+            ]
+        },
+        "actionData": [
             {
                 "action": "UPDATE",
                 "actionType": "BENE_CHANGE",
