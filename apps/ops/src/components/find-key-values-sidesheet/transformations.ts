@@ -7,6 +7,7 @@ import {
     Party,
     ProductType,
 } from '@xd/api-types/dist/generated-types/sor';
+import { TFunction } from 'next-i18next';
 
 import {
     formatDataField,
@@ -55,11 +56,13 @@ import {
  *          and mapping of all parties as a closure.
  */
 export const preparePolicy = (
-    policy: Policy
+    policy: Policy,
+    t: TFunction
 ): {
     lineOfBusiness: LineOfBusiness;
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
+    t: TFunction;
     toSections: (policyOverride?: Policy) => PreparedPolicy;
     toFieldsAndSubsections: (
         policySection: PolicySection
@@ -72,30 +75,35 @@ export const preparePolicy = (
         policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
     const productType = policy.product?.productType;
     const allPartiesById = policy.parties
-        ? convertListToMap({
-              subSectionList: policy.parties,
-              subSectionTitleField: 'partyId',
-              fallbackTitle: 'Party',
-          })
+        ? convertListToMap(
+              {
+                  subSectionList: policy.parties,
+                  subSectionTitleField: 'partyId',
+                  fallbackTitle: 'Party',
+              },
+              t
+          )
         : undefined;
 
     return {
         lineOfBusiness,
         productType,
         allPartiesById,
+        t,
         toSections: (policyOverride) =>
             toSections(
                 policyOverride ?? policy,
                 lineOfBusiness,
+                t,
                 productType,
                 allPartiesById
             ),
         toFieldsAndSubsections: (policySection: PolicySection) =>
-            toFieldsAndSubsections(policySection, lineOfBusiness),
+            toFieldsAndSubsections(policySection, lineOfBusiness, t),
         formatDataField: (dataTuple: DataTuple) =>
-            formatDataField(dataTuple, lineOfBusiness),
+            formatDataField(dataTuple, lineOfBusiness, t),
         formatAsSectionLabel: (label: string) =>
-            formatAsSectionLabel(label, lineOfBusiness),
+            formatAsSectionLabel(label, lineOfBusiness, t),
     };
 };
 
@@ -112,6 +120,7 @@ export const preparePolicy = (
 export const toSections = (
     policy: Policy,
     lineOfBusiness: LineOfBusiness,
+    t: TFunction,
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
 ): PreparedPolicy => {
@@ -152,11 +161,14 @@ export const toSections = (
                             }
                         );
                         const funds = combinedFunds?.length
-                            ? convertListToMap<Fund & FundAllocation>({
-                                  subSectionList: combinedFunds,
-                                  subSectionTitleField,
-                                  fallbackTitle: sectionTitle,
-                              })
+                            ? convertListToMap<Fund & FundAllocation>(
+                                  {
+                                      subSectionList: combinedFunds,
+                                      subSectionTitleField,
+                                      fallbackTitle: sectionTitle,
+                                  },
+                                  t
+                              )
                             : undefined;
                         return {
                             ...acc,
@@ -164,7 +176,7 @@ export const toSections = (
                                 policySections: [
                                     ...acc.policySections,
                                     [
-                                        'Funds', // TODO: maybe convert from another map
+                                        String(t('policy.allFields.Funds')), // TODO: maybe convert from another map
                                         {
                                             ...currentVal,
                                             ...funds,
@@ -183,24 +195,31 @@ export const toSections = (
                                         systematicProgram.parties?.map(
                                             (partyData, i) => {
                                                 const requiredPartyData =
-                                                    fillInRequiredPartyDetails({
-                                                        partyId:
-                                                            partyData.partyId,
-                                                        policy,
-                                                        idFieldName: 'partyId',
-                                                        allPartiesById,
-                                                    });
+                                                    fillInRequiredPartyDetails(
+                                                        {
+                                                            partyId:
+                                                                partyData.partyId,
+                                                            policy,
+                                                            idFieldName:
+                                                                'partyId',
+                                                            allPartiesById,
+                                                        },
+                                                        t
+                                                    );
 
                                                 if (!requiredPartyData) {
                                                     return undefined;
                                                 }
 
                                                 const partyBankAndAddress =
-                                                    fillInBankAndAddressInfo({
-                                                        partyId:
-                                                            partyData.partyId,
-                                                        allPartiesById,
-                                                    });
+                                                    fillInBankAndAddressInfo(
+                                                        {
+                                                            partyId:
+                                                                partyData.partyId,
+                                                            allPartiesById,
+                                                        },
+                                                        t
+                                                    );
 
                                                 const completePartyData = {
                                                     ...requiredPartyData,
@@ -212,7 +231,8 @@ export const toSections = (
                                                     ...(partyData.partyRole && {
                                                         [tags]: [
                                                             formatAsDataValue(
-                                                                partyData.partyRole
+                                                                partyData.partyRole,
+                                                                t
                                                             ),
                                                         ],
                                                     }),
@@ -248,12 +268,15 @@ export const toSections = (
                                 const parties = rider.riderParticipants?.map(
                                     (partyData, i) => {
                                         const requiredPartyData =
-                                            fillInRequiredPartyDetails({
-                                                partyId: partyData.partyId,
-                                                policy,
-                                                idFieldName: 'coveredParty',
-                                                allPartiesById,
-                                            });
+                                            fillInRequiredPartyDetails(
+                                                {
+                                                    partyId: partyData.partyId,
+                                                    policy,
+                                                    idFieldName: 'coveredParty',
+                                                    allPartiesById,
+                                                },
+                                                t
+                                            );
 
                                         if (!requiredPartyData) {
                                             return undefined;
@@ -289,19 +312,22 @@ export const toSections = (
                     case 'loanValues':
                         // Loan segments are split from the Allocation section
                         const loanSegments = policy.allocation?.loanSegments
-                            ? convertListToMap<LoanSegment>({
-                                  subSectionList:
-                                      policy.allocation?.loanSegments,
-                                  subSectionTitleField,
-                                  fallbackTitle: sectionTitle,
-                              })
+                            ? convertListToMap<LoanSegment>(
+                                  {
+                                      subSectionList:
+                                          policy.allocation?.loanSegments,
+                                      subSectionTitleField,
+                                      fallbackTitle: sectionTitle,
+                                  },
+                                  t
+                              )
                             : undefined;
                         return {
                             ...acc,
                             policySections: [
                                 ...acc.policySections,
                                 [
-                                    'Loans',
+                                    String(t('policy.allFields.Loans')),
                                     {
                                         ...currentVal,
                                         ...loanSegments,
@@ -345,7 +371,7 @@ export const toSections = (
     ).filter(([, data]) => data != null);
     if (nonNullMatchEntries.length) {
         basicsAndSections.policySections.push([
-            'Match',
+            String(t('policy.allFields.match')),
             Object.fromEntries(nonNullMatchEntries),
         ]);
     }
@@ -361,7 +387,7 @@ export const toSections = (
                     currentPartyRole.partyRole && {
                         [currentPartyRole.partyId]: [
                             ...currentPartyIdRoles,
-                            formatAsDataValue(currentPartyRole.partyRole),
+                            formatAsDataValue(currentPartyRole.partyRole, t),
                         ],
                     }),
             };
@@ -376,12 +402,15 @@ export const toSections = (
     // Populate the People section
     const people = policy.parties
         ?.map((party, i) => {
-            const requiredPartyData = fillInRequiredPartyDetails({
-                partyId: party.partyId,
-                policy,
-                idFieldName: 'partyName',
-                allPartiesById,
-            });
+            const requiredPartyData = fillInRequiredPartyDetails(
+                {
+                    partyId: party.partyId,
+                    policy,
+                    idFieldName: 'partyName',
+                    allPartiesById,
+                },
+                t
+            );
 
             if (!requiredPartyData) {
                 return undefined;
@@ -403,22 +432,28 @@ export const toSections = (
         .filter((p) => p != null);
 
     if (people) {
-        basicsAndSections.policySections.push(['People', people]);
+        basicsAndSections.policySections.push([
+            String(t('policy.allFields.people')),
+            people,
+        ]);
     }
     return basicsAndSections;
 };
 
-const fillInRequiredPartyDetails = ({
-    partyId,
-    allPartiesById,
-    policy,
-    idFieldName,
-}: {
-    partyId?: string;
-    allPartiesById?: Record<string, Party>;
-    policy: Policy;
-    idFieldName: string;
-}) => {
+const fillInRequiredPartyDetails = (
+    {
+        partyId,
+        allPartiesById,
+        policy,
+        idFieldName,
+    }: {
+        partyId?: string;
+        allPartiesById?: Record<string, Party>;
+        policy: Policy;
+        idFieldName: string;
+    },
+    t: TFunction
+) => {
     if (partyId == null || allPartiesById == null) {
         return undefined;
     }
@@ -449,13 +484,16 @@ const fillInRequiredPartyDetails = ({
     return additionalPartyData;
 };
 
-const fillInBankAndAddressInfo = ({
-    partyId,
-    allPartiesById,
-}: {
-    partyId?: string;
-    allPartiesById?: Record<string, Party>;
-}) => {
+const fillInBankAndAddressInfo = (
+    {
+        partyId,
+        allPartiesById,
+    }: {
+        partyId?: string;
+        allPartiesById?: Record<string, Party>;
+    },
+    t: TFunction
+) => {
     if (partyId == null || allPartiesById == null) {
         return undefined;
     }
@@ -469,7 +507,7 @@ const fillInBankAndAddressInfo = ({
     const bankInfo = firstBank
         ? [
               firstBank.branchName,
-              formatAsDataValue(firstBank.accountType ?? null),
+              formatAsDataValue(firstBank.accountType ?? null, t),
               'ending in',
               firstBank.accountNumber?.slice(-4),
           ].join(' ')
@@ -511,7 +549,8 @@ const fillInBankAndAddressInfo = ({
  */
 export const toFieldsAndSubsections = (
     [sectionName, sectionData]: PolicySection,
-    lineOfBusiness: LineOfBusiness
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction
 ): PreparedPolicySection => {
     // If sectionData is an array, treat each item as a subsection.
     // The title of each subsection will map from a defined field *within* that subsection
@@ -522,7 +561,7 @@ export const toFieldsAndSubsections = (
         const subSections = sectionData.map((subSection) => {
             const subSectionLabel =
                 subSection[label] ??
-                formatAsDataValue(subSection[subSectionTitleField]);
+                formatAsDataValue(subSection[subSectionTitleField], t);
             const subSectionLink = subSection[link];
             const subSectionLinkedField = subSection[linkedField];
             const subSectionTags = subSection[tags];
@@ -572,7 +611,8 @@ export const toFieldsAndSubsections = (
                             [
                                 formatAsSectionLabel(
                                     String(fieldName),
-                                    lineOfBusiness
+                                    lineOfBusiness,
+                                    t
                                 ),
                                 subSectionData,
 
@@ -626,15 +666,18 @@ export const toFieldsAndSubsections = (
  *
  * TODO: this could actually be useful as a util
  */
-const convertListToMap = <T extends DataRecord>({
-    subSectionList,
-    subSectionTitleField,
-    fallbackTitle,
-}: {
-    subSectionList: T[];
-    subSectionTitleField: string;
-    fallbackTitle: string;
-}) => {
+const convertListToMap = <T extends DataRecord>(
+    {
+        subSectionList,
+        subSectionTitleField,
+        fallbackTitle,
+    }: {
+        subSectionList: T[];
+        subSectionTitleField: string;
+        fallbackTitle: string;
+    },
+    t: TFunction
+) => {
     const subSectionMap = subSectionList?.reduce<Record<DataKey, T>>(
         (acc, currentSubSection, i) => {
             // Grab the first value to represent the title of the segment
@@ -642,7 +685,8 @@ const convertListToMap = <T extends DataRecord>({
             const subSectionTitle = formatAsDataValue(
                 currentSubSection[subSectionTitleField] ??
                     Object.values(currentSubSection)[0] ??
-                    `${fallbackTitle} ${i + 1}`
+                    `${fallbackTitle} ${i + 1}`,
+                t
             );
 
             return {

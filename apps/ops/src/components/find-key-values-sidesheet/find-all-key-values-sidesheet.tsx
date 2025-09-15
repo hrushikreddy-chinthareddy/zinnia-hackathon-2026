@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import { Accordion } from '@xd/components/Accordion/Accordion';
+import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
 import {
     SideSheet,
     Icon,
@@ -41,7 +42,6 @@ import FieldDateSelect, {
 } from '../fields/field-date-select/field-date-select';
 import Highlighter from '../highlighter/highlighter';
 import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
-import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
 
 interface FindAllKeyValuesSidebarProps {
     planCode?: string;
@@ -68,7 +68,7 @@ const KeyValueBasics = ({
     /* FIXME: i18n */
     <Accordion
         key="policyBasics"
-        sectionLabel={preparedPolicy.formatAsSectionLabel('Policy basics')}
+        sectionLabel={preparedPolicy.formatAsSectionLabel('policyBasics')}
         type={AccordionType.NESTED}
     >
         <KeyValueFieldList
@@ -312,6 +312,9 @@ const DataField = ({
     linkField?: string;
     searchValue: string;
 }) => {
+    /**
+     * If the field cannot be formatted, return null
+     */
     const formattedField = preparedPolicy.formatDataField(dataField);
     if (!formattedField) return null;
     const [fieldLabel, fieldData] = formattedField;
@@ -319,7 +322,6 @@ const DataField = ({
         link && linkField === dataField[0] ? (
             <Link href={link} text={fieldData} />
         ) : undefined;
-
     return (
         <DotContainer
             key={fieldLabel}
@@ -449,7 +451,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     if (!policy) return null; //FIXME: add loading state
 
     // This retains all the persistent extracted data on the policy
-    const preparedPolicy = useMemo(() => preparePolicy(policy), [policy]);
+    const preparedPolicy = useMemo(() => preparePolicy(policy, t), [policy]);
 
     const { policyBasics, policySections } = useMemo(
         () => preparedPolicy.toSections(),

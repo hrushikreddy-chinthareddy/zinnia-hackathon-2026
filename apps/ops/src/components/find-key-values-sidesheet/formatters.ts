@@ -1,12 +1,12 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { TFunction, useTranslation } from 'next-i18next';
 
+import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
-import { enums } from './translations/enums';
-import { exactTranslations } from './translations/exact';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { DataTuple, FieldData } from './types';
@@ -70,8 +70,23 @@ const formatAsSentenceCase = (words: string) => {
  */
 export const formatAsSectionLabel = (
     label: string,
-    lineOfBusiness: LineOfBusiness
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction
 ) => {
+    const { t: tr } = useTranslation(TranslationFiles.COMMON);
+
+    const exactTranslation = tr(`policy.allFields.${label}`, {
+        defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
+        policyNomenclature:
+            lineOfBusiness === LineOfBusiness.LIFE
+                ? t('policy.nomenclature.policy')
+                : t('policy.nomenclature.contract'),
+    });
+
+    if (exactTranslation !== null) {
+        return exactTranslation;
+    }
+
     const words = splitIntoWords(label);
 
     // Replace "policy" with "contract" if not a life policy
@@ -90,10 +105,25 @@ export const formatAsSectionLabel = (
  * @param lineOfBusiness The line of business
  * @returns The formatted data label
  */
-const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
-    if (exactTranslations[label]) {
-        return exactTranslations[label];
+const formatAsDataLabel = (
+    label: string,
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction
+) => {
+    const { t: tr } = useTranslation(TranslationFiles.COMMON);
+
+    const exactTranslation = tr(`policy.allFields.${label}`, {
+        defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
+        policyNomenclature:
+            lineOfBusiness === LineOfBusiness.LIFE
+                ? t('policy.nomenclature.policy')
+                : t('policy.nomenclature.contract'),
+    });
+
+    if (exactTranslation) {
+        return exactTranslation;
     }
+
     const words = splitIntoWords(label);
 
     // Replace "policy" with "contract" if not a life policy
@@ -128,13 +158,20 @@ const formatAsDataLabel = (label: string, lineOfBusiness: LineOfBusiness) => {
  * @returns The formatted field value
  *
  */
-export const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
+export const formatAsDataValue = (
+    fieldData: FieldData,
+    t: TFunction,
+    fieldName?: string
+) => {
     // Empty values
     if (fieldData == null) return '--';
 
     // Enums
-    if (typeof fieldData === 'string' && !!enums[fieldData])
-        return enums[fieldData];
+    // Attempt to translate first, then process as numeric data if no translation found
+    const exactTranslation = t(`policy.enums.${fieldData}`, {
+        defaultValue: null,
+    });
+    if (exactTranslation !== null) return exactTranslation;
 
     // Currency
     if (fieldName && currencyFields.has(fieldName))
@@ -164,12 +201,13 @@ export const formatAsDataValue = (fieldData: FieldData, fieldName?: string) => {
  */
 export const formatDataField = (
     [fieldName, fieldData]: DataTuple,
-    lineOfBusiness: LineOfBusiness
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction
 ): [string, string] | null => {
     // Allow metadata (not rendered directly) via Symbols
     if (typeof fieldName !== 'string' || fieldData == null) return null;
     return [
-        formatAsDataLabel(fieldName, lineOfBusiness),
-        formatAsDataValue(fieldData, fieldName),
+        formatAsDataLabel(fieldName, lineOfBusiness, t),
+        formatAsDataValue(fieldData, t, fieldName),
     ];
 };
