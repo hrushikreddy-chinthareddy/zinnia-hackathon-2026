@@ -1,7 +1,6 @@
 {
     "formId": "dc7dbfdd-7ff7-4c04-89ed-6e59b9959a8d",
     "process": "Operations Review",
-    "carrier": "WELB",
     "taskType": "DEFAULT_CASE_DATA_ENTRY",
     "formSchema": {
         "type": "object"
@@ -33,7 +32,8 @@
                                 },
                                 "caseSubType": {
                                     "type": "string",
-                                    "title": "Case Sub Type"
+                                    "title": "Case Sub Type",
+                                    "minLength": 1
                                 },
                                 "contractNumber": {
                                     "type": "string",
@@ -128,7 +128,8 @@
                     "caseDetails": {
                         "ui:options": {
                             "ObjectFieldTemplate": "AddressFieldTemplate",
-                            "backgroundColor": "white"
+                            "backgroundColor": "white",
+                            "classes": "p-0"
                         },
                         "caseType": {
                             "ui:disabled": true,
@@ -174,7 +175,8 @@
                             "ui:options": {
                                 "label": true,
                                 "ObjectFieldTemplate": "AddressFieldTemplate",
-                                "backgroundColor": "white"
+                                "backgroundColor": "white",
+                                "classes": "p-0"
                             },
                             "firstName": {
                                 "ui:options": {
@@ -198,7 +200,8 @@
                             "ui:options": {
                                 "label": true,
                                 "ObjectFieldTemplate": "AddressFieldTemplate",
-                                "backgroundColor": "white"
+                                "backgroundColor": "white",
+                                "classes": "p-0"
                             },
                             "callerRole": {
                                 "ui:options": {
@@ -430,6 +433,52 @@
                                                 "type": "object",
                                                 "title": "Additional Information",
                                                 "properties": {
+                                                    "address": {
+                                                        "type": "object",
+                                                        "title": "New Address",
+                                                        "properties": {
+                                                            "country": {
+                                                                "type": "string",
+                                                                "title": "Country Code",
+                                                                "$ref": "#/definitions/countryCodeEnum"
+                                                            },
+                                                            "addressLine1": {
+                                                                "type": "string",
+                                                                "title": "Address"
+                                                            },
+                                                            "addressLine2": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ],
+                                                                "title": "Address 2"
+                                                            },
+                                                            "addressLine3": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ],
+                                                                "title": "Address 3"
+                                                            },
+                                                            "city": {
+                                                                "type": "string",
+                                                                "title": "City"
+                                                            },
+                                                            "state": {
+                                                                "type": "string",
+                                                                "title": "State",
+                                                                "$ref": "#/definitions/stateEnum"
+                                                            },
+                                                            "zip": {
+                                                                "type": "string",
+                                                                "title": "Zip"
+                                                            },
+                                                            "zipPlusFour": {
+                                                                "type": "string",
+                                                                "title": "Zip+4"
+                                                            }
+                                                        }
+                                                    },
                                                     "newAddressEffectiveDate": {
                                                         "type": "string",
                                                         "format": "date",
@@ -509,7 +558,8 @@
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "AddressFieldTemplate",
-                            "backgroundColor": "white"
+                            "backgroundColor": "white",
+                            "classes": "p-0"
                         },
                         "caseType": {
                             "ui:options": {
@@ -526,7 +576,7 @@
                         "additionalDetails": {
                             "address": {
                                 "ui:options": {
-                                    "label": false,
+                                    "label": true,
                                     "ObjectFieldTemplate": "AddressFieldTemplate"
                                 },
                                 "addressLine1": {

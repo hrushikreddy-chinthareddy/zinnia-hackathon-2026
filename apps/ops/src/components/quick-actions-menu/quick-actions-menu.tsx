@@ -103,11 +103,7 @@ export const MenuContextualContent = ({
 }: TranslateProps & QuickActionsMenuProps) => {
     const limit = 1;
     const offset = 0;
-    const {
-        sessionId,
-        partyId: userPartyId,
-        hasEditServiceRequestAccess,
-    } = usePermissionsContext();
+    const { sessionId, partyId: userPartyId } = usePermissionsContext();
 
     const { featureFlags, featureFlagVariables } = useOptimizely();
 
@@ -153,8 +149,7 @@ export const MenuContextualContent = ({
 
     const serviceRequestFormEnabled =
         shouldShowServiceRequestForm &&
-        policyReference?.[0]?.source === Source.ZAHARA &&
-        hasEditServiceRequestAccess;
+        policyReference?.[0]?.source === Source.ZAHARA;
 
     const sendCorrespondenceEnabled =
         featureFlags[FEATURE_FLAGS.SEND_CORRESPONDENCE];
