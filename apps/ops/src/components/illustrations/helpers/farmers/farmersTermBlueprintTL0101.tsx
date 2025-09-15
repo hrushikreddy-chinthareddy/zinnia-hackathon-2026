@@ -1782,7 +1782,7 @@ export const farmersTermBlueprintTL0101 = {
                                 'custom-e27fe421-38cc-4979-a1d6-0f22f6200e31',
                             text: {},
                             title: {
-                                en: 'Adjustments',
+                                en: 'Policy Discounts and Credits',
                             },
                             isCustom: true,
                             fields: [
