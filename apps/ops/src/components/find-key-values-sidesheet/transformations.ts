@@ -176,7 +176,7 @@ export const toSections = (
                                 policySections: [
                                     ...acc.policySections,
                                     [
-                                        String(t('policy.allFields.Funds')), // TODO: maybe convert from another map
+                                        String(t('policy.allFields.funds')), // TODO: maybe convert from another map
                                         {
                                             ...currentVal,
                                             ...funds,
@@ -327,7 +327,7 @@ export const toSections = (
                             policySections: [
                                 ...acc.policySections,
                                 [
-                                    String(t('policy.allFields.Loans')),
+                                    String(t('policy.allFields.loans')),
                                     {
                                         ...currentVal,
                                         ...loanSegments,

@@ -10,6 +10,7 @@ import { dateFields } from './translations/date-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { DataTuple, FieldData } from './types';
+import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition
@@ -164,7 +165,7 @@ export const formatAsDataValue = (
     fieldName?: string
 ) => {
     // Empty values
-    if (fieldData == null) return '--';
+    if (fieldData == null) return DEFAULT_ERROR_STRING;
 
     // Enums
     // Attempt to translate first, then process as numeric data if no translation found
