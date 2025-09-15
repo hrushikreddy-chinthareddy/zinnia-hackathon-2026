@@ -2,6 +2,7 @@ import {
     DistributionType,
     FeatureType,
     PolicyFeatureBase,
+    Policy,
 } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
@@ -291,4 +292,16 @@ export const getApplicationDetailsData = (
             policy?.policy?.policySourceDescription ?? DEFAULT_ERROR_STRING,
         multiPolicyDiscount,
     };
+};
+
+export const checkCustomPolicy = (
+    policy: Policy,
+    supportedCarrier: string,
+    supportedPlancodes: Array<string>
+) => {
+    const planCode = policy.product?.planCode ?? '';
+    const carrierId = policy.carrierId;
+    return (
+        carrierId === supportedCarrier && supportedPlancodes.includes(planCode)
+    );
 };

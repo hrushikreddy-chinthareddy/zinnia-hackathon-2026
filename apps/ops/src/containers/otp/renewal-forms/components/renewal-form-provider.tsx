@@ -29,6 +29,7 @@ interface RenewalFormProviderProps {
     planCode: string;
     form: any;
     initialForm: any;
+    isLC?: boolean;
 }
 
 export interface UpfrontNIGO {
@@ -53,6 +54,7 @@ const RenewalFormProvider = ({
     featureFlagDecisions,
     planCode,
     form,
+    isLC,
 }: RenewalFormProviderProps) => {
     const [channel, setChannel] = useState<Channel>(
         form?.data?.channel ?? Channel.Form
@@ -129,6 +131,7 @@ const RenewalFormProvider = ({
                     setChannel,
                     setRenewalRequestSignDate,
                     setFormValidator,
+                    isLC,
                 }}
             >
                 {children}

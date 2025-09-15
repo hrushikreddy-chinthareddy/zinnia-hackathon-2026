@@ -12,9 +12,11 @@ import PayorStep, {
 import StartStep, {
     StartStepSetState,
 } from '@deps/components/workflows/start-step/start-step';
+import { CarrierCode, FarmersPlanCodes } from '@deps/constants/policy';
 import Amount from '@deps/containers/financial-transactions/premium/new-premium/amount/amount';
 import Confirm from '@deps/containers/financial-transactions/premium/new-premium/confirm/confirm';
 import Summary from '@deps/containers/financial-transactions/premium/new-premium/summary/summary';
+import { checkCustomPolicy } from '@deps/containers/policy-details/policy-details.helpers';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
@@ -51,6 +53,12 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
         );
     };
 
+    const customFarmerCheck = checkCustomPolicy(
+        policy,
+        CarrierCode.Farmers,
+        FarmersPlanCodes
+    );
+
     const steps: Step[] = [
         {
             component: (
@@ -73,7 +81,9 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
             text: startLabel,
         },
         {
-            component: <Amount policy={policy} />,
+            component: (
+                <Amount policy={policy} customFarmerCheck={customFarmerCheck} />
+            ),
             screenReaderLabel: amountLabel,
             index: 1,
             text: amountLabel,

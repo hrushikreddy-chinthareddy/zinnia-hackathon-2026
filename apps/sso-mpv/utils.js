@@ -11,11 +11,5 @@ export const getConnectionConfig = (connection) => {
         loginSuccessUrl: process.env.MYPOLICYVIEW_BASE_URL,
         scope: 'openid profile email',
       };
-    // This will use universal login
-    default:
-      return {
-        loginSuccessUrl: process.env.MYPOLICYVIEW_BASE_URL,
-        scope: 'openid profile email',
-      };
   }
 };

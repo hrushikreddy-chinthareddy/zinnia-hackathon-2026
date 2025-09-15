@@ -18,17 +18,25 @@ import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { Columns, DownloadCSV } from '@deps/components/dashboard/download-csv';
-import { defaultDateFormat } from '@deps/components/dashboard/utils';
+import {
+    defaultDateFormat,
+    generateCaseLink,
+} from '@deps/components/dashboard/utils';
+import NavElement, {
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { IssueCountsByStatusHeader } from './issue-counts-by-status-header';
 import { IssueCountsByStatusContext } from '../../context/issue-counts-by-status-context';
@@ -48,49 +56,57 @@ export const IssueCountsByStatusTable = () => {
         issueCountsByStatusDataFetching,
         exceptionStatus,
         timerange,
+        filter,
+        selectedProcess,
     } = useContext(IssueCountsByStatusContext);
+
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
 
-    const flattenDashboardStats = (
-        data: ExceptionCountOutputLevel1[],
-        detailedReason?: string,
-        reason?: string
-    ): FlattenedDashboardStatsElement[] => {
-        return data.flatMap((item) => {
-            if (item.values && item.values.length > 0) {
-                if (!detailedReason) {
-                    return flattenDashboardStats(
-                        item.values,
-                        item.name,
-                        reason
-                    );
-                } else if (!reason) {
-                    return flattenDashboardStats(
-                        item.values,
-                        detailedReason,
-                        item.name
-                    );
+    const { featureFlags } = useOptimizely();
+
+    const flattenDashboardStats = useCallback(
+        (
+            data: ExceptionCountOutputLevel1[],
+            detailedReason?: string,
+            reason?: string
+        ): FlattenedDashboardStatsElement[] => {
+            return data.flatMap((item) => {
+                if (item.values && item.values.length > 0) {
+                    if (!detailedReason) {
+                        return flattenDashboardStats(
+                            item.values,
+                            item.name,
+                            reason
+                        );
+                    } else if (!reason) {
+                        return flattenDashboardStats(
+                            item.values,
+                            detailedReason,
+                            item.name
+                        );
+                    } else {
+                        return flattenDashboardStats(
+                            item.values,
+                            detailedReason,
+                            reason
+                        );
+                    }
                 } else {
-                    return flattenDashboardStats(
-                        item.values,
-                        detailedReason,
-                        reason
-                    );
+                    return [
+                        {
+                            category: item.name,
+                            reason: reason ?? '',
+                            details: detailedReason ?? '',
+                            count: item.count,
+                        },
+                    ];
                 }
-            } else {
-                return [
-                    {
-                        category: item.name,
-                        reason: reason ?? '',
-                        details: detailedReason ?? '',
-                        count: item.count,
-                    },
-                ];
-            }
-        });
-    };
+            });
+        },
+        []
+    );
 
     enum SortByOptions {
         CATEGORY = 'category',
@@ -103,7 +119,7 @@ export const IssueCountsByStatusTable = () => {
     const flattenedData = useMemo(() => {
         if (!issueCountsByStatusData?.data) return [];
         return flattenDashboardStats(issueCountsByStatusData?.data);
-    }, [issueCountsByStatusData?.data]);
+    }, [issueCountsByStatusData?.data, flattenDashboardStats]);
 
     // Filter by search
     const searchedData = useMemo(() => {
@@ -273,10 +289,28 @@ export const IssueCountsByStatusTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
+                                    {featureFlags[
+                                        FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
+                                    ] && (
+                                        <TableHeaderCell>
+                                            Actions
+                                        </TableHeaderCell>
+                                    )}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map((item) => {
+                                    const link = generateCaseLink({
+                                        process: selectedProcess,
+                                        startDate: timerange.from,
+                                        endDate: timerange.to,
+                                        issueStatus: exceptionStatus,
+                                        carrier: filter.carrier,
+                                        brokerDealer: filter.brokerDealerName,
+                                        category: item.category,
+                                        reason: item.reason,
+                                        detailedReason: item.details,
+                                    });
                                     return (
                                         <TableRow
                                             key={`${item.category}-${item.reason}-${item.details}`}
@@ -363,6 +397,24 @@ export const IssueCountsByStatusTable = () => {
                                                     {item.count?.toLocaleString()}
                                                 </Tooltip>
                                             </TableCell>
+                                            {featureFlags[
+                                                FEATURE_FLAGS
+                                                    .ENTERPRISE_SEARCH_CASE
+                                            ] && (
+                                                <TableCell>
+                                                    <NavElement
+                                                        type={
+                                                            NavElementType.Link
+                                                        }
+                                                        className="underline"
+                                                        target="_blank"
+                                                        href={link}
+                                                        rel="noreferrer"
+                                                    >
+                                                        View cases
+                                                    </NavElement>
+                                                </TableCell>
+                                            )}
                                         </TableRow>
                                     );
                                 })}

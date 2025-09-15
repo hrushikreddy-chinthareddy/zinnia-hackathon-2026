@@ -28,6 +28,7 @@ const SurrenderProvider = ({ children }: SurrenderProviderProps) => {
   const [state, dispatch] = useReducer<React.Reducer<SurrenderState, Action>>(
     SurrenderReducer,
     {
+      // TODO: remove this and action to set it, it never gets used
       currentPage: SurrenderSteps.INFO,
       dateStep: {
         surrenderDate: dayjs().format(ZAHARA_DATE_FORMAT),

@@ -101,7 +101,8 @@
             "ownerChange": "Cambio de Propietario",
             "jointOwnerChange": "Cambio de Copropietario",
             "payorChange": "Cambio de pagador",
-            "thirdPartyDesigneeChange": "Cambio de designado por terceros"
+            "thirdPartyDesigneeChange": "Cambio de designado por terceros",
+            "nigoSelected": "NIGO seleccionado"
         },
         "navLinks": {
             "accessManagement": {

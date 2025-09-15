@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
 
 import {
-  getSystematicProgramsEligibility,
+  getAddSystematicProgramEligibility,
   TransactionEligbilityResponse,
 } from '@/services/bpm/systematic-programs';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -29,7 +29,7 @@ export async function GET(
 
   try {
     const { data: systematicProgramData, error } =
-      await getSystematicProgramsEligibility(
+      await getAddSystematicProgramEligibility(
         { planCode, policyNumber },
         loggingContext
       );

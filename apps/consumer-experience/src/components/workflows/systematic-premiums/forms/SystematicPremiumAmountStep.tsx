@@ -1,7 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
+import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
+import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@xd/utils/dist';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -13,47 +13,37 @@ import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { FieldDate } from '@/components/field/date/FieldDate';
-import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import {
-  paymentFrequencyEnum,
   SPAmountStepSchema,
-  SPPaymentFrequency,
   systematicPremiumAmountStepSchema,
   SystematicPremiumsAction,
 } from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
-import { formatUSDollars } from '@/utils/currency';
 
 import { default as styles } from '../SystematicPremiums.module.css';
-import { PaymentFrequencyMap } from '../utils';
+import { paymentFrequencyDisplay } from '../utils';
 
-const getRadioValue = (freq: SPPaymentFrequency, premiumAmount: number) => {
-  const dollarAmt = premiumAmount / PaymentFrequencyMap[freq].divisor;
-  return formatUSDollars(dollarAmt);
+const getRadioOptions = () => {
+  return Object.keys(Frequency)
+    .map(k => {
+      const label = paymentFrequencyDisplay(k as Frequency);
+
+      if (label === DEFAULT_ERROR_STRING) {
+        return null;
+      }
+
+      return {
+        key: k,
+        value: k,
+        label: label,
+        ariaLabel: `systematic-premium-amount-${k}`,
+      };
+    })
+    .filter(freq => !!freq);
 };
 
-const getRadioOptions = (premiumAmout: number) => {
-  return Object.entries(PaymentFrequencyMap).map(([k, value]) => {
-    const key = k as keyof typeof PaymentFrequencyMap;
-    const displayLabel = getRadioValue(
-      paymentFrequencyEnum.enum[key],
-      premiumAmout
-    );
-    return {
-      key,
-      value: key,
-      label: `${value.label} (${displayLabel})`,
-      ariaLabel: `systematic-premium-amount-${key}`,
-    };
-  });
-};
-
-export const SystematicPremiumAmountStep = ({
-  systematicPrograms: _systematicPrograms,
-}: {
-  systematicPrograms: SystematicProgram[];
-}) => {
+export const SystematicPremiumAmountStep = () => {
   const { state, dispatch } = useSystematicPremiums();
   const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
@@ -62,7 +52,6 @@ export const SystematicPremiumAmountStep = ({
     resolver: zodResolver(systematicPremiumAmountStepSchema),
     defaultValues: state.systematicPremiumAmountStep,
   });
-  const premiumAmount = state.yearlyPremiumAmount;
 
   const onSubmit: SubmitHandler<SPAmountStepSchema> = data => {
     dispatch({
@@ -74,6 +63,8 @@ export const SystematicPremiumAmountStep = ({
 
     router.push(stepInfo.nextStepUrl);
   };
+
+  const radioOptions = getRadioOptions();
 
   return (
     <form
@@ -91,7 +82,6 @@ export const SystematicPremiumAmountStep = ({
         }}
       >
         <p className="typography-labels-field-label">Payment frequency</p>
-        <LabelPopover title="">{''}</LabelPopover>
       </div>
 
       <Controller
@@ -100,16 +90,10 @@ export const SystematicPremiumAmountStep = ({
         render={({ field }) => (
           <div>
             <Radio
-              onValueChange={v => {
-                const freq = v as keyof typeof PaymentFrequencyMap;
-                const dollarAmt =
-                  premiumAmount / PaymentFrequencyMap[freq].divisor;
-                form.setValue('paymentAmount', dollarAmt);
-                field.onChange(v);
-              }}
+              onValueChange={field.onChange}
               id="systematic-premium-amount"
               defaultValue={form.formState.defaultValues?.paymentFrequency}
-              options={getRadioOptions(premiumAmount)}
+              options={radioOptions}
             />
             {form.formState.errors.paymentFrequency?.message && (
               <AssistiveText
@@ -121,17 +105,19 @@ export const SystematicPremiumAmountStep = ({
         )}
       />
       <div className={styles.field}>
-        <Label labelFor="effective-date">Effective Date</Label>
+        <Label labelFor="next-payment-date">Next payment date</Label>
         <div>
           <Controller
             control={form.control}
-            name="effectiveDate"
+            name="nextPaymentDate"
             render={({ field }) => (
               <FieldDate
-                {...field}
-                disableBeforeDate={dayjs().subtract(1, 'day').toDate()}
-                id="effective-date"
-                defaultDate={form.formState.defaultValues?.effectiveDate}
+                name="systematic-next-payment-date"
+                disableBeforeDate={dayjs().toDate()}
+                id="next-payment-date"
+                defaultDate={dayjs(
+                  form.formState.defaultValues?.nextPaymentDate
+                ).format(DEFAULT_DATE_FORMAT)}
                 onDateSelect={date => {
                   const formattedDate = dayjs(date).format(DEFAULT_DATE_FORMAT);
                   field.onChange(formattedDate);
@@ -139,9 +125,9 @@ export const SystematicPremiumAmountStep = ({
               />
             )}
           />
-          {form.formState.errors.effectiveDate?.message && (
+          {form.formState.errors.nextPaymentDate?.message && (
             <AssistiveText
-              text={form.formState.errors.effectiveDate.message}
+              text={form.formState.errors.nextPaymentDate.message}
               variant={AssistiveTextVariant.Error}
             />
           )}

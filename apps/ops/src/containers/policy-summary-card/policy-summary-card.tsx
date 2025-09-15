@@ -92,6 +92,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
+import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { CardDetailsTest } from '@deps/jest/constants/test-id-constants';
 import { Statuses } from '@deps/models/case/case';
@@ -796,6 +797,11 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
         sideSheet.handleOpen(true);
     };
 
+    const onEditClick = useAddOrEditPhoneOrEmailClick<SideSheetViews>({
+        defaultCallback: openSideSheet,
+        party: owner?.party,
+    });
+
     return (
         <QuickViewRoot
             title={t('dashboard.search.results.policySummaryCard.header1')}
@@ -825,7 +831,7 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     {canEditPolicy && bestAvailEmail && (
                         <IconButton
                             aria-describedby="policy-owner-email"
-                            onClick={() => openSideSheet(SideSheetViews.EMAIL)}
+                            onClick={() => onEditClick(SideSheetViews.EMAIL)}
                         >
                             <Icon
                                 type={IconType.EDIT_ALT}
@@ -865,7 +871,7 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     {canEditPolicy && bestAvailPhone && (
                         <IconButton
                             aria-describedby="policy-owner-phone"
-                            onClick={() => openSideSheet(SideSheetViews.PHONE)}
+                            onClick={() => onEditClick(SideSheetViews.PHONE)}
                         >
                             <Icon
                                 type={IconType.EDIT_ALT}

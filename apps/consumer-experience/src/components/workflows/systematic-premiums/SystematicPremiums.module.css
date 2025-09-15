@@ -21,9 +21,10 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: var(--measure-dimension-gap-3xl);
+  gap: var(--measure-dimension-gap-xl);
 }
 
+/* // TODO: I don't think this is being used anywhere? */
 .radio {
   display: grid;
   grid-template-columns: 1fr 1fr;

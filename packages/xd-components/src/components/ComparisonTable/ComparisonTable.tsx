@@ -42,7 +42,10 @@ export const ComparisonTable = ({
 
   return (
     <div className={styles.tableContainer}>
-      <Table className={clsx(styles.tableWrapper, styles.desktopView)}>
+      <Table
+        className={clsx(styles.tableWrapper, styles.desktopView)}
+        preventBackgroundHoverInteraction
+      >
         <TableHeader>
           <TableRow>
             <TableHeaderCell />

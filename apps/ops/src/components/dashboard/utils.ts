@@ -169,7 +169,11 @@ interface generateLinkArgs {
     carrier?: string[] | string | null;
     product?: string;
     brokerDealer?: string[] | null;
-    status?: string[] | undefined | null;
+    status?: string[] | null;
+    category?: string | null;
+    reason?: string | null;
+    detailedReason?: string | null;
+    issueStatus?: string[] | null;
 }
 
 export const generateCaseLink = ({
@@ -183,11 +187,18 @@ export const generateCaseLink = ({
     product,
     brokerDealer,
     status,
+    category,
+    reason,
+    detailedReason,
+    issueStatus,
 }: generateLinkArgs) => {
     const statuses = status?.join('&caseStatus=') || '';
     const carriers = Array.isArray(carrier)
         ? carrier?.join('&carrier=')
         : carrier;
+    const issues = Array.isArray(issueStatus)
+        ? issueStatus?.join('&issueStatus=')
+        : issueStatus;
     const brokerDealers = brokerDealer?.join('&brokerDealerName=') || '';
     const method = submissionMethod
         ? submissionMethod === 'Electronic (E-App)'
@@ -211,7 +222,9 @@ export const generateCaseLink = ({
 
     // Only add this if users aren't grouping by broker dealer
     if (brokerDealers && groupBy !== CaseCountGroupByEnum.BROKER_DEALER_NAME) {
-        queryParams.push(`brokerDealerName=${brokerDealers}`);
+        queryParams.push(
+            `brokerDealerName=${encodeURIComponent(brokerDealers)}`
+        );
     }
     if (startDate) {
         queryParams.push(`createdDateStart=${startDate}`);
@@ -232,6 +245,24 @@ export const generateCaseLink = ({
     }
     if (method) {
         queryParams.push(`applicationType=${method}`);
+    }
+
+    if (category) {
+        queryParams.push(`category=${category.toLowerCase()}`);
+    }
+
+    if (reason) {
+        queryParams.push(`reason=${reason.toLowerCase()}`);
+    }
+
+    if (detailedReason) {
+        queryParams.push(
+            `detailedReason=${encodeURIComponent(detailedReason.toLowerCase())}`
+        );
+    }
+
+    if (issues) {
+        queryParams.push(`issueStatus=${issues}`);
     }
 
     return `/cases?${queryParams.join('&')}`;

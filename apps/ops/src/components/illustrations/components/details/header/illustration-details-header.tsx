@@ -13,6 +13,9 @@ import { useTranslation } from 'next-i18next';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
@@ -44,7 +47,7 @@ export default function IllustrationDetailsHeader({
         ProductTypeLabel.get(product?.productType ?? ProductTypes.TERM) ??
         DEFAULT_ERROR_STRING;
 
-    const eappHtmlLink = (
+    const eappHtmlLink = eAppLink ? (
         <a
             aria-disabled={hasIllustrationSelected}
             key={'eapp-link'}
@@ -63,9 +66,14 @@ export default function IllustrationDetailsHeader({
         >
             <span>
                 {`App #${eAppId}`}
-                <Icon type={IconType.EXTERNAL_LINK}></Icon>
+                <Icon type={IconType.EXTERNAL_LINK} />
             </span>
         </a>
+    ) : (
+        <Typography
+            variant={TypographyVariant.LabelAlt}
+            className={style.eAppIdLabel}
+        >{`App #${eAppId}`}</Typography>
     );
 
     return (
@@ -82,7 +90,6 @@ export default function IllustrationDetailsHeader({
                     </div>
                     <div className={style.centerLine}>
                         {!!eAppId &&
-                            !!eAppLink &&
                             (hasIllustrationSelected ? (
                                 eappHtmlLink
                             ) : (

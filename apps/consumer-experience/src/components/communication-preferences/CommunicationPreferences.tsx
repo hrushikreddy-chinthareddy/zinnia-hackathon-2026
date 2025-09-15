@@ -1,11 +1,9 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import { IconType } from '@zinnia/bloom/components';
 
-import { getCarrierConfig } from '@/queries/carrier-config-queries';
-import { QueryKeys } from '@/queries/query-keys';
+import { useCarrierConfig } from '@/hooks/use-carrier-config';
 import { ManageChange } from '@/types/carrier-config';
 import { PolicyProfile } from '@/types/policy';
 
@@ -22,10 +20,7 @@ export const CommunicationPreferences = ({
   preferenceData: EDeliveryPreferenceModel[];
   profileData: PolicyProfile;
 }) => {
-  const { data, isLoading } = useQuery({
-    queryKey: [QueryKeys.CARRIER_CONFIG],
-    queryFn: () => getCarrierConfig(),
-  });
+  const { data, isLoading } = useCarrierConfig();
   // Communication preferences come back from the preference management service as an array
   // of every doc type. we assume that they are all set to the same deliveryType per BPM instruction
   const communicationPreference = preferenceData?.[0];

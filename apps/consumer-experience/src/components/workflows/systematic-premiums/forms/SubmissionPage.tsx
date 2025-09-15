@@ -1,38 +1,28 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
+import dayjs from 'dayjs';
 
-import {
-  paymentFrequencyEnum,
-  SPPaymentFrequency,
-} from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
 import { formatUSDollars } from '@/utils/currency';
 
-const frequencyLabels: Record<SPPaymentFrequency, string> = {
-  [paymentFrequencyEnum.Values.MONTHLY]: 'month',
-  [paymentFrequencyEnum.Values.QUARTERLY]: '3 months',
-  [paymentFrequencyEnum.Values.SEMIANNUAL]: '6 months',
-  [paymentFrequencyEnum.Values.ANNUAL]: 'year',
-};
+import { paymentFrequencyDisplay } from '../utils';
 
 export const SubmissionPage = () => {
   const { state } = useSystematicPremiums();
-  const router = useRouter();
-  const { paymentFrequency, paymentAmount, effectiveDate } =
+  const { paymentFrequency, paymentAmount, nextPaymentDate } =
     state.systematicPremiumAmountStep;
-
-  if (!state.caseId) {
-    router.push('error');
-  }
 
   return (
     <div>
-      <p className="typography-content-body">
+      <p
+        className="typography-content-body"
+        style={{ marginBottom: 'var(--measure-dimension-gap-lg)' }}
+      >
         We received a request to process a payment for&nbsp;
-        <b>{formatUSDollars(paymentAmount)}</b> every{' '}
-        <b>{frequencyLabels[paymentFrequency]}</b> starting{' '}
-        <b>{effectiveDate}</b>
+        <b>{formatUSDollars(paymentAmount)}</b>{' '}
+        <b>{paymentFrequencyDisplay(paymentFrequency)?.toLowerCase()}</b>{' '}
+        starting <b>{dayjs(nextPaymentDate).format(DEFAULT_DATE_FORMAT)}</b>.
       </p>
       <p className="typography-content-body-sm">
         There will be a confirmation sent to your email shortly.

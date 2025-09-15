@@ -1,13 +1,14 @@
 import { selectBankSchema } from '@/components/providers/one-time-premium-payment/types';
-import { systematicPremiumAmountStepSchema, SystematicPremiumSteps } from '@/components/providers/systematic-premiums/types';
+import {
+  systematicPremiumAmountStepSchema,
+  SystematicPremiumSteps,
+} from '@/components/providers/systematic-premiums/types';
 import { StepInfo } from '@/components/stepped-workflow/types';
-
 
 export const systematicPremiumUrls: Record<SystematicPremiumSteps, string> = {
   [SystematicPremiumSteps.AMOUNT]: 'amount',
   [SystematicPremiumSteps.BANK]: 'bank',
   [SystematicPremiumSteps.SUMMARY]: 'summary',
-  [SystematicPremiumSteps.MFA]: 'verify-identity',
   [SystematicPremiumSteps.SUBMITTED]: 'submitted',
 };
 
@@ -30,17 +31,8 @@ export const stepsInfo: Record<SystematicPremiumSteps, StepInfo> = {
     url: systematicPremiumUrls[SystematicPremiumSteps.SUMMARY],
     actions: {
       primary: {
-        text: 'Submit Autopay'
-      }
-    }
-  },
-  [SystematicPremiumSteps.MFA]: {
-    title: 'verify your identity',
-    order: null,
-    url: systematicPremiumUrls[SystematicPremiumSteps.MFA],
-    actions: {
-      primary: null,
-      secondary: null,
+        text: 'Submit Autopay',
+      },
     },
   },
   [SystematicPremiumSteps.SUBMITTED]: {
@@ -49,8 +41,8 @@ export const stepsInfo: Record<SystematicPremiumSteps, StepInfo> = {
     url: systematicPremiumUrls[SystematicPremiumSteps.SUBMITTED],
     actions: {
       primary: {
-        text: 'Go Back to Coverage Page'
-      }
-    }
+        text: 'Go Back to Coverage Page',
+      },
+    },
   },
 };

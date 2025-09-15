@@ -1,7 +1,11 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    FeatureType,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { ChangeEvent, useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import Field, {
     FieldSize,
@@ -31,6 +35,7 @@ import {
 
 interface AmountProps {
     policy: Policy;
+    customFarmerCheck?: boolean;
 }
 
 type Errors = {
@@ -38,7 +43,7 @@ type Errors = {
     paymentAmount?: string;
 };
 
-const Amount = ({ policy }: AmountProps) => {
+const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'newPremium.amount',
     });
@@ -46,8 +51,18 @@ const Amount = ({ policy }: AmountProps) => {
     const { goToNext } = useWorkflow();
     const [errors, setErrors] = useState<Errors>({});
 
-    const { policyNumber, product, policyFeatures } = policy;
-    const { effectiveDate, paymentAmount } = premium;
+    const { policyNumber, product, policyFeatures = [] } = policy;
+
+    const billingFeature = policyFeatures.find(
+        (item) => item.featureType === FeatureType.BILLING
+    );
+
+    const { paymentAmount: billingPaymentAmount = '' } = billingFeature || {};
+
+    const { effectiveDate } = premium;
+    const paymentAmount = customFarmerCheck
+        ? String(billingPaymentAmount)
+        : premium.paymentAmount;
 
     const { startDate, endDate, requiredPayment, hasLapse, hasReinstatement } =
         getImportantDates(policyFeatures);
@@ -168,6 +183,15 @@ const Amount = ({ policy }: AmountProps) => {
         goToNext();
     };
 
+    useEffect(() => {
+        if (customFarmerCheck) {
+            setPremium((oldPremium) => ({
+                ...oldPremium,
+                paymentAmount: String(billingPaymentAmount),
+            }));
+        }
+    }, [customFarmerCheck]);
+
     return (
         <WorkflowCard
             title={t('label')}
@@ -220,11 +244,14 @@ const Amount = ({ policy }: AmountProps) => {
                         decimalPlaces: 2,
                     }}
                     variant={
-                        errors.paymentAmount
+                        customFarmerCheck
+                            ? FieldVariant.Inactive
+                            : errors.paymentAmount
                             ? FieldVariant.Error
                             : FieldVariant.Default
                     }
                     message={errors.paymentAmount || ''}
+                    disabled={customFarmerCheck}
                 />
             </div>
         </WorkflowCard>

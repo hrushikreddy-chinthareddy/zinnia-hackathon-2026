@@ -39,7 +39,7 @@ export const SystematicPremiums = ({
   const cancelUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/premium`;
   const baseTransactionUrl = `/coverage/${lineOfBusinessUrl}/${planCode}/${policyNumber}/systematic-premium`;
 
-  if (!state.activeArrangementId?.length) {
+  if (state.currentSystematicPremium) {
     SystematicPremiumStages[SystematicPremiumSteps.AMOUNT].title =
       'Manage Premium Autopay';
   }

@@ -30,6 +30,7 @@ export const evaluateComponentVisibilityRules = (
   // this should be temporary, but this whole setup should be temporary
   // and ideally should be handled by CIAM
   const isNotPayor = !isPayorOnly(partyRoles);
+  const isTerm = policy.product?.productType === ProductType.TERM;
 
   return {
     [ComponentName.OVERVIEW_PROFILE]: () => true,
@@ -38,17 +39,18 @@ export const evaluateComponentVisibilityRules = (
     [ComponentName.OVERVIEW_PREMIUM_DETAILED_VIEW]: () =>
       isPayorNotOwner || !!skip,
     [ComponentName.OVERVIEW_ACCOUNT_VALUE]: () =>
-      (isNotPayor && policy.product?.productType !== ProductType.TERM) ||
-      !!skip,
+      (isNotPayor && !isTerm) || !!skip,
     [ComponentName.OVERVIEW_COVERAGE]: () => isNotPayor || !!skip,
     [ComponentName.OVERVIEW_BENEFICIARIES]: () => isNotPayor || !!skip,
     [ComponentName.OVERVIEW_RIDERS]: () => isNotPayor || !!skip,
     [ComponentName.OVERVIEW_DOCUMENTS]: () => isNotPayor || !!skip,
     [ComponentName.PROFILE_PAYOR_PARTY_ROLES]: () => isPayorNotOwner,
     [ComponentName.PREMIUM_PAYOR_BACK_URL]: () => isPayorNotOwner,
-    [ComponentName.OTTP_PAYMENT_SUMMARY_ACCOUNT_VALUE]: () =>
-      policy.product?.productType !== ProductType.TERM || !!skip,
+    [ComponentName.OTTP_PAYMENT_SUMMARY_ACCOUNT_VALUE]: () => !isTerm || !!skip,
     [ComponentName.NOTIFICATIONS]: () => isNotPayor || !!skip,
+    [ComponentName.SYSTEMATIC_PREMIUM_AUTOPAY_WITH_QUOTE_VALUES]: () =>
+      isTerm || !!skip,
+    [ComponentName.OTPP_EDITABLE_PAYMENT_AMOUNT]: () => !isTerm || !!skip,
   };
 };
 

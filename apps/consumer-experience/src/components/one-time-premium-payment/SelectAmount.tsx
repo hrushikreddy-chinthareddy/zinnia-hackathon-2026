@@ -22,6 +22,7 @@ import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import premiumStyles from './OneTimePremiumPayment.module.css';
+import { LabelPopover } from '../label-popover/LabelPopover';
 import { useSteppedWorkflowContext } from '../stepped-workflow/SteppedWorkflowContext';
 
 export const dateInvalidMessage = 'Please enter a valid date';
@@ -42,9 +43,13 @@ const dateWithinSixtyDayRange = (date: string) => {
 
 export const SelectAmount = ({
   paymentFee,
+  paymentAmount,
   minimumPaymentDue,
+  isAmountEditable = true,
 }: {
   paymentFee: number;
+  paymentAmount?: number;
+  isAmountEditable?: boolean;
   minimumPaymentDue: number;
 }) => {
   const router = useRouter();
@@ -71,7 +76,7 @@ export const SelectAmount = ({
       type: OttpAction.SET_PAYMENT_FEE,
       payload: paymentFee,
     });
-  }, [dispatch, paymentFee]);
+  }, [dispatch, paymentFee, paymentAmount]);
 
   const saveAndMove = () => {
     dispatch({
@@ -80,7 +85,9 @@ export const SelectAmount = ({
     });
     dispatch({
       type: OttpAction.SET_PAYMENT_AMOUNT,
-      payload: Number(getValues('paymentAmount')),
+      payload: isAmountEditable
+        ? Number(getValues('paymentAmount'))
+        : paymentAmount,
     });
     router.push(stepInfo.nextStepUrl);
   };
@@ -124,47 +131,48 @@ export const SelectAmount = ({
         />
       </div>
       <div className="mb-xl field-container">
-        <Controller
-          control={control}
-          name="paymentAmount"
-          rules={{
-            required: 'Please enter a valid payment amount',
-            min: {
-              value: 1,
-              message: 'Please enter an amount greater than zero',
-            },
-          }}
-          render={({ field }) => (
-            <FieldValue
-              {...field}
-              fieldStatus={
-                formState.errors.paymentAmount
-                  ? FieldStatus.ERROR
-                  : FieldStatus.DEFAULT
-              }
-              errorMessage={formState.errors.paymentAmount?.message}
-              label={
-                <Label
-                  interactiveElements={[
-                    <Popover
-                      key={PREMIUM_PAYMENT_AMOUNT}
-                      title={PREMIUM_PAYMENT_AMOUNT}
-                      trigger={
-                        <Icon
-                          type={IconType.CIRCLE_INFO}
-                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
-                          small
-                        />
-                      }
-                    >
-                      <p>
-                        Enter the amount you would like to pay into your policy.
-                        Keep in mind there are limits (set by federal laws) to
-                        the amount you can pay without impacting your coverage
-                        or losing tax advantages.
-                      </p>
-                      {/* // TODO: where does this value come from? */}
-                      {/* <p>
+        {isAmountEditable && (
+          <Controller
+            control={control}
+            name="paymentAmount"
+            rules={{
+              required: 'Please enter a valid payment amount',
+              min: {
+                value: 1,
+                message: 'Please enter an amount greater than zero',
+              },
+            }}
+            render={({ field }) => (
+              <FieldValue
+                {...field}
+                fieldStatus={
+                  formState.errors.paymentAmount
+                    ? FieldStatus.ERROR
+                    : FieldStatus.DEFAULT
+                }
+                errorMessage={formState.errors.paymentAmount?.message}
+                label={
+                  <Label
+                    interactiveElements={[
+                      <Popover
+                        key={PREMIUM_PAYMENT_AMOUNT}
+                        title={PREMIUM_PAYMENT_AMOUNT}
+                        trigger={
+                          <Icon
+                            type={IconType.CIRCLE_INFO}
+                            color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                            small
+                          />
+                        }
+                      >
+                        <p>
+                          Enter the amount you would like to pay into your
+                          policy. Keep in mind there are limits (set by federal
+                          laws) to the amount you can pay without impacting your
+                          coverage or losing tax advantages.
+                        </p>
+                        {/* // TODO: where does this value come from? */}
+                        {/* <p>
                           Currently, you may pay up to [MEC limit value, CVAT
                           value, Guideline premium value, whichever is the
                           lesser of] without changing the nature of your policy
@@ -173,19 +181,45 @@ export const SelectAmount = ({
                           professional (like a tax advisor) who can help walk
                           you through the consequences first.
                         </p> */}
-                    </Popover>,
-                  ]}
+                      </Popover>,
+                    ]}
+                  >
+                    {PREMIUM_PAYMENT_AMOUNT}
+                  </Label>
+                }
+                placeholder=""
+                // TODO: what should this be?
+                name="one-time-premium-payment"
+                inputMode="numeric"
+              />
+            )}
+          />
+        )}
+        {!isAmountEditable && (
+          <div>
+            <Label
+              labelFor="premium-payment-amount"
+              interactiveElements={[
+                <LabelPopover
+                  key="premium-payment-amount"
+                  title="Premium payment amount"
                 >
-                  {PREMIUM_PAYMENT_AMOUNT}
-                </Label>
-              }
-              placeholder=""
-              // TODO: what should this be?
-              name="one-time-premium-payment"
-              inputMode="numeric"
-            />
-          )}
-        />
+                  <p>
+                    This is the amount you will pay into your policy. Keep in
+                    mind there are limits (set by federal laws) to the amount
+                    you can pay without impacting your coverage or losing tax
+                    advantages.
+                  </p>
+                </LabelPopover>,
+              ]}
+            >
+              {PREMIUM_PAYMENT_AMOUNT}
+            </Label>
+            <p className="typography-content-value">
+              {formatUSDollars(paymentAmount)}
+            </p>
+          </div>
+        )}
         {minimumPaymentDue > 0 && (
           <AssistiveText
             text={`A minimum payment of ${formatUSDollars(minimumPaymentDue)} is required`}

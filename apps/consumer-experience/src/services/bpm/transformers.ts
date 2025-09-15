@@ -109,37 +109,38 @@ export const systematicPremiumsStateToPolicyRequestInput = (
   state: SystematicPremiumsState,
   correlationId: string
 ): SystematicProgramUpdateRequest => {
-  const effectiveDate = dayjs(
-    state.systematicPremiumAmountStep.effectiveDate
+  const nextProgramDateFormatted = dayjs(
+    state.systematicPremiumAmountStep?.nextPaymentDate
   ).format(ZAHARA_DATE_FORMAT);
-
   const result: SystematicProgramUpdateRequest = {
     correlationId: correlationId,
-    effectiveDate: effectiveDate,
+    effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT),
     reverseInitiator: false,
     systematicProgram: {
-      previousProgramDate: state.previousProgramDate,
-      nextProgramDate: effectiveDate,
-      arrangementType: ArrangementType.PAYMENT,
-      amount: state.systematicPremiumAmountStep.paymentAmount,
+      amount: state?.systematicPremiumAmountStep?.paymentAmount || undefined,
       amountType: AmountType.AMOUNT,
-      paymentForm: PaymentForm.ACH,
-      // https://se2llc-global.slack.com/archives/C069ZQ0REET/p1753984107283049?thread_ts=1753978579.055209&cid=C069ZQ0REET
-      // – one time premium requires paymentForm to successfully submit. Use accountType from the bank detail return
-      // paymentForm: state.selectBankStep.bank?.accountType as PaymentForm,
-      // This didn't turn out to be true, we were getting [errors](https://github.com/zinnia/digital-experience-monorepo/pull/2435#issuecomment-3161423796) for subnmitting anything other than ACH
-      // so we will leave hardcoded ACH for now!
-      frequency: state.systematicPremiumAmountStep.paymentFrequency,
-      party: {
-        bankId: state.selectBankStep.bank?.bankId,
-        partyId: state.selectBankStep.payor?.payorPartyId,
-      },
+      arrangementType: ArrangementType.PAYMENT,
+      frequency: state?.systematicPremiumAmountStep?.paymentFrequency,
+      paymentForm: state?.selectBankStep?.accountType as PaymentForm,
+      startDate:
+        state?.currentSystematicPremium?.startDate || nextProgramDateFormatted,
+      endDate: state?.currentSystematicPremium?.endDate,
+      previousProgramDate: state?.currentSystematicPremium?.previousProgramDate,
+      nextProgramDate: nextProgramDateFormatted,
+      // party: {
+      //   bankId: state.selectBankStep.bankId,
+      //   partyId: state.selectBankStep.appliesToPartyId,
+      // },
+      // TODO: is this something we should be editing what is the difference between this and
+      // party above?
       parties: [
         {
           allocationPercentage: 100,
-          bankId: state.selectBankStep.bank?.bankId,
-          partyId: state.selectBankStep.payor?.payorPartyId,
-          paymentForm: PaymentForm.ACH,
+          bankId: state.selectBankStep.bankId,
+          partyId: state.selectBankStep.appliesToPartyId,
+          //TODO: this will not work for everly until the paymentMethods
+          // API is updated to return the correct paymentForm
+          paymentForm: state.selectBankStep.accountType as PaymentForm,
         },
       ],
     },

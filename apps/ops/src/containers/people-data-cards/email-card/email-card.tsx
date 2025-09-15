@@ -1,5 +1,4 @@
 import { Email } from '@zinnia/api-types/types/sor';
-import { CarrierName } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState, useCallback, useContext } from 'react';
 
@@ -24,7 +23,7 @@ import SideSheetPeopleHeader, {
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import useUserCarrier from '@deps/hooks/useUserCarrier';
+import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -52,7 +51,7 @@ const EmailCard = ({
         keyPrefix: 'people.card.email',
     });
     const { policyDetails } = useContext(PolicyData);
-    const userCarrier = useUserCarrier();
+
     const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
@@ -90,20 +89,10 @@ const EmailCard = ({
         [sideSheet, currentEmails.length, party, planCode, policyNumber]
     );
 
-    const onEditClick = useCallback(
-        ({ email, header }: OpenSideSheet) => {
-            const ecn = party?.identifications?.find(
-                (id) => id.identificationKey?.toLowerCase() === 'ecn'
-            );
-            if (userCarrier === CarrierName.FARMERS && ecn) {
-                const url = `${process.env.NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL}?c__ecn=${ecn.identificationValue}`;
-                window.open(url, '_blank');
-            } else {
-                openSideSheet({ email, header });
-            }
-        },
-        [userCarrier, openSideSheet, party]
-    );
+    const onEditClick = useAddOrEditPhoneOrEmailClick<OpenSideSheet>({
+        defaultCallback: openSideSheet,
+        party,
+    });
 
     const EmailsBody = (
         <div className="grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4">

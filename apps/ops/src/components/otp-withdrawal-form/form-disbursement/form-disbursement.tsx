@@ -27,7 +27,6 @@ import {
     PaymentMethodAdditionalOptions,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 
 import AutofillAccountToggle from './form-disbursement-parts/autofill-account-toggle';
 import { ConsentAvailable } from './form-disbursement-parts/consent-available';
@@ -113,7 +112,7 @@ export default function FormDisbursement({
         partyRoles,
         setFormErrors,
         setFormDisbursement,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
@@ -133,11 +132,6 @@ export default function FormDisbursement({
     const selectedBankInfoOption = disbursementInformation?.isDirectDeposit
         ? BankInfoType.Full
         : BankInfoType.Masked;
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
-
     const bankingDetails = useMemo(() => {
         return isLC
             ? getBankingDetailsLC(parties as LifeCadParty[])

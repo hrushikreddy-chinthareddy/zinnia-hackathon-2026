@@ -20,7 +20,6 @@ import { USStates } from '@deps/constants/geography/us-states';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { isFastFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import getUlpcConfig, { FormSubtype } from './ulpc-withdrawal-form.helpers';
@@ -44,13 +43,8 @@ export default function UlpcWithdrawalForm() {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        featureFlagDecisions,
+        isLC,
     } = useContext(FormDataContext);
-
-    const isLC = !isFastFeatureEnabled(
-        initialForm?.taskType,
-        featureFlagDecisions
-    );
 
     const {
         cslnCheckStates,
@@ -70,7 +64,7 @@ export default function UlpcWithdrawalForm() {
         w4pSignaturesConfig,
         eSignatureFieldConfig,
         reasonOptions,
-    } = getUlpcConfig(t, isLC);
+    } = getUlpcConfig(t, isLC ?? false);
 
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)

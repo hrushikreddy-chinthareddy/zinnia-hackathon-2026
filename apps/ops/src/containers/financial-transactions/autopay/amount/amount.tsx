@@ -4,6 +4,7 @@ import {
     Status,
     AmountType as AutopayAmountType,
     TransactionType,
+    FeatureType,
 } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
@@ -18,7 +19,7 @@ import Field, {
 import FieldDateSelect, {
     DATE_PICKER_FORMAT,
 } from '@deps/components/fields/field-date-select/field-date-select';
-import Radio, { RadioItem } from '@deps/components/radio/radio';
+import Radio, { RadioItem, RadioVariant } from '@deps/components/radio/radio';
 import TransactionNavigationButtons, {
     ParentPage,
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -36,6 +37,7 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 
 interface AmountProps {
     policy: Policy;
+    customFarmerCheck?: boolean;
 }
 
 export type AmountType = {
@@ -56,7 +58,7 @@ type Errors = {
     paymentAmount?: string;
 };
 
-const Amount = ({ policy }: AmountProps) => {
+const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     const { autopay, setAutopay } = useAutopay();
     const {
         isSetUp,
@@ -69,7 +71,19 @@ const Amount = ({ policy }: AmountProps) => {
         keyPrefix: `${translationKeyPrefix}.amount`,
     });
     const [errors, setErrors] = useState<Errors>({});
-    const { systematicPrograms, policyDates, policyNumber, product } = policy;
+    const {
+        systematicPrograms,
+        policyDates,
+        policyNumber,
+        product,
+        policyFeatures = [],
+    } = policy;
+
+    const billingFeature = policyFeatures.find(
+        (item) => item.featureType === FeatureType.BILLING
+    );
+
+    const { frequency = '' } = billingFeature || {};
 
     const systematicProgramData = useMemo(
         () =>
@@ -105,7 +119,9 @@ const Amount = ({ policy }: AmountProps) => {
             effectiveDate: String(
                 dayjs(effectiveDate).format(NUMERIC_DATE_FORMAT)
             ),
-            frequency: systematicProgramData?.frequency as Frequency,
+            frequency: customFarmerCheck
+                ? (frequency as Frequency)
+                : (systematicProgramData?.frequency as Frequency),
             initValues: true,
             paymentAmount: systematicProgramData?.amount
                 ? String(systematicProgramData.amount)
@@ -265,7 +281,14 @@ const Amount = ({ policy }: AmountProps) => {
                     items={items}
                     value={String(autopay.frequency)}
                     onChange={handleFrequencyChange}
+                    disabled={customFarmerCheck}
+                    variant={
+                        customFarmerCheck
+                            ? RadioVariant.Inactive
+                            : RadioVariant.Default
+                    }
                 />
+
                 {errors.frequency && (
                     <AssistiveText
                         text={errors.frequency}

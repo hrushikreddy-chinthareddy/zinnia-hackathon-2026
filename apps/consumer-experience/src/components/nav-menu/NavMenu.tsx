@@ -15,8 +15,8 @@ import EverlyIcon from '@/app/styles/everly/assets/everly-logo-icon-new.svg';
 import WellabeIcon from '@/app/styles/wellabe/assets/wellabe-logo-icon.svg';
 import { Link } from '@/components/link/Link';
 import { UserBadge } from '@/components/user-badge/UserBadge';
+import { useCarrierConfig } from '@/hooks/use-carrier-config';
 import useMock from '@/hooks/use-mock';
-import { getCarrierConfig } from '@/queries/carrier-config-queries';
 import { getPoliciesByCarrier } from '@/queries/policy-queries';
 import { CarrierNames } from '@/types/carriers';
 import {
@@ -57,10 +57,7 @@ export const NavMenu = ({
 
   const { isMockOn } = useMock();
 
-  const { data: carrierConfig } = useQuery({
-    queryKey: ['carrierConfig'],
-    queryFn: () => getCarrierConfig(),
-  });
+  const { data: carrierConfig } = useCarrierConfig();
 
   const { data } = useQuery({
     queryKey: ['carrierPolicyDetails'],

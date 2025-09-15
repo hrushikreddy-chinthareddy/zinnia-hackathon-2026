@@ -24,11 +24,15 @@ export default function AddressFieldTemplate({
     uiSchema = {},
     title,
 }: ObjectFieldTemplateProps): JSX.Element {
-    const { backgroundColor, helpText } = getUiOptions(uiSchema);
+    const { backgroundColor, helpText, classes } = getUiOptions(uiSchema);
     const DEFAULT_BACKGROUND_COLOR = 'bg-gray-100';
+    const DEFAULT_PADDING = 'p-6';
     const bgColor = backgroundColor ?? DEFAULT_BACKGROUND_COLOR;
+    const customClasses = classes ?? DEFAULT_PADDING;
     return (
-        <div className={`w-full max-w-[800px] rounded-md ${bgColor}`}>
+        <div
+            className={`w-full max-w-[800px] rounded-md ${bgColor} ${customClasses}`}
+        >
             {title && (
                 <div className={styles.container + 'flex my-1'}>
                     <div className={styles.text}>{title} </div>

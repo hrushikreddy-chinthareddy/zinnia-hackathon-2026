@@ -5,12 +5,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { SystematicPremiumsState } from '@/components/providers/systematic-premiums/types';
 import { ApiResponse } from '@/services';
 import {
+  editSystematicProgram,
   submitSystematicProgram,
   SystematicProgramTransactionResponse,
 } from '@/services/bpm/systematic-programs';
 import { systematicPremiumsStateToPolicyRequestInput } from '@/services/bpm/transformers';
 import { PolicyRequestInputsParams } from '@/types/policy';
-import { logError, logTrace } from '@/utils/logging/log-fns';
+import { logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 dayjs.extend(utc);
@@ -20,7 +21,7 @@ export async function POST(
   { params }: PolicyRequestInputsParams
 ): Promise<NextResponse<ApiResponse<SystematicProgramTransactionResponse>>> {
   const loggingContext = await buildNextReqLoggingContext(_request);
-  logTrace('bpm::systematic-program::POST::start', {
+  logTrace('route-handler::systematic-program::POST::start', {
     ...loggingContext,
     planCode: params.planCode,
     policyNumber: params.policyNumber,
@@ -36,34 +37,34 @@ export async function POST(
   );
 
   try {
-    const response = await submitSystematicProgram(
-      { planCode, policyNumber },
-      paymentDetails,
-      loggingContext
-    );
+    const response = requestBody.currentSystematicPremium?.arrangementId
+      ? await editSystematicProgram(
+          {
+            planCode,
+            policyNumber,
+            arrangementId: requestBody?.currentSystematicPremium?.arrangementId,
+          },
+          paymentDetails,
+          loggingContext
+        )
+      : await submitSystematicProgram(
+          {
+            planCode,
+            policyNumber,
+          },
+          paymentDetails,
+          loggingContext
+        );
 
-    logTrace('bpm::systematic-program::POST::complete', {
+    logTrace('route-handler::systematic-program::POST::complete', {
       ...loggingContext,
       planCode,
       policyNumber,
     });
 
-    const data = response?.data;
-
-    if (!!data && 'caseId' in data) {
-      return NextResponse.json({
-        data: {
-          caseId: data.caseId,
-          caseStatus: data.caseStatus,
-          correlationId: data.correlationId,
-        },
-        error: null,
-      });
-    }
-
-    throw new Error('Error submitting systematic premium');
+    return NextResponse.json(response);
   } catch (error) {
-    logError('bpm::systematic-program::validation::POST::error', {
+    logTrace('route-handler::systematic-program::submit::POST::error', {
       ...loggingContext,
       planCode,
       policyNumber,

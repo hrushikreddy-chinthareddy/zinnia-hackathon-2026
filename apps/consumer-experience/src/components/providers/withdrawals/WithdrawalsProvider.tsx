@@ -37,6 +37,7 @@ const WithdrawalsProvider = ({ children }: WithdrawalsProviderProps) => {
   const [state, dispatch] = useReducer<React.Reducer<WithdrawalsState, Action>>(
     WithdrawalsReducer,
     {
+      // TODO: remove this and action to set it, it never gets used
       currentPage: WithdrawalSteps.INTRO,
       withdrawalAmountStep: {
         effectiveDate: dayjs().format(DEFAULT_DATE_FORMAT),
@@ -48,6 +49,7 @@ const WithdrawalsProvider = ({ children }: WithdrawalsProviderProps) => {
         withdrawalMethod: AllocationOption.PRORATA,
       },
       distributionMethodStep: {
+        // TODO: Update this to be CHECK
         distributionType: DisbursementPaymentForm.ACH,
       },
       taxWithholdingsStep: {

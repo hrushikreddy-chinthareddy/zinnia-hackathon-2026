@@ -3,9 +3,7 @@ import { SystematicPremiums } from '@/components/workflows/systematic-premiums/S
 
 const SubmissionStep = () => {
   return (
-    <SystematicPremiums
-      currentStepOverride={4}
-    >
+    <SystematicPremiums currentStepOverride={3}>
       <SubmissionPage />
     </SystematicPremiums>
   );

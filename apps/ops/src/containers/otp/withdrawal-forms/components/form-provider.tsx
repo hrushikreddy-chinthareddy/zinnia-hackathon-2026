@@ -44,6 +44,7 @@ type FormProviderProps = {
     parties?: LifeCadParty[] | Party[];
     partyRoles?: PolicyPartyRoles[];
     systematicPrograms?: SystematicSpecialPrograms[] | [];
+    isLC?: boolean;
 };
 
 const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
@@ -99,6 +100,7 @@ export const FormProvider = ({
     featureFlagDecisions,
     partyRoles,
     systematicPrograms,
+    isLC = false,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
@@ -275,6 +277,7 @@ export const FormProvider = ({
                 formBeneInfo,
                 formPeriodicPension,
                 policySystematicPrograms,
+                isLC,
                 setFormPeriodicPension,
                 setFormSubtype,
                 setCurrentFormState,

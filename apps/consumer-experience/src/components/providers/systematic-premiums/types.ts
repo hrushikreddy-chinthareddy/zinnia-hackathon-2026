@@ -5,14 +5,11 @@ export enum SystematicPremiumSteps {
   AMOUNT = 'amount',
   BANK = 'bank',
   SUMMARY = 'summary',
-  MFA = 'verify-identity',
   SUBMITTED = 'submitted',
 }
 
 export enum SystematicPremiumsAction {
   SET_ACTIVE_SYSTEMATIC_PROGRAM = 'setActiveSystematicProgram',
-  SET_CURRENT_PAGE = 'setCurrentPage',
-  SET_SYSTEMATIC_PREMIUM_CASE_ID = 'setSystematicPremiumCaseId',
   SET_SYSTEMATIC_PREMIUM_AMOUNT_STEP = 'setSystematicPremiumAmountStep',
   SET_SYSTEMATIC_PREMIUM_METHOD_STEP = 'setSystematicPremiumMethodStep',
   SET_SYSTEMATIC_PREMIUM_TAX_WITHHOLDING_STEP = 'setSystematicPremiumTaxWithholdingStep',
@@ -20,46 +17,36 @@ export enum SystematicPremiumsAction {
   SET_SYSTEMATIC_PREMIUM_DISTRIBUTION_METHOD_STEP = 'setSystematicPremiumDistributionMethodStep',
 }
 
-export const paymentFrequencyEnum = z.enum([
-  Frequency.MONTHLY,
-  Frequency.QUARTERLY,
-  Frequency.SEMIANNUAL,
-  Frequency.ANNUAL,
-]);
-
-export type SPPaymentFrequency = z.infer<typeof paymentFrequencyEnum>;
+export type SPPaymentFrequency = Frequency;
 
 export const systematicPremiumAmountStepSchema = z.object({
-  effectiveDate: z.string().min(1, 'Effective date is required'),
-  paymentFrequency: paymentFrequencyEnum,
-  paymentAmount: z.number().min(1),
+  nextPaymentDate: z.string().min(1, 'Next payment date is required'),
+  paymentFrequency: z.nativeEnum(Frequency).optional(),
+  // TODO: this validation only really works if we have data returning from the API OR user can
+  // input their own value
+  paymentAmount: z.number().nullish(),
 });
 
 export type SPAmountStepSchema = z.infer<
   typeof systematicPremiumAmountStepSchema
 >;
 
-export const payorSchema = z
-  .object({
-    payorName: z.string(),
-    payorPartyId: z.string(),
-  })
-  .optional();
-
-export const bankAccountSchema = z
-  .object({
-    accountNumber: z.string().optional(),
-    bankId: z.string().optional(),
-    branchName: z.string().nullish(),
-    bankName: z.string().optional(),
-    accountType: z.string().optional(),
-    autopayEnabled: z.boolean().optional(),
-  })
-  .optional();
-
+// TODO: I don't really like recreating BPM types in ZOD
+// feels treachorous
 export const selectBankStepSchema = z.object({
-  bank: bankAccountSchema,
-  payor: payorSchema,
+  bankId: z.string(),
+  appliesToPartyId: z.string(),
+  startDate: z.string(),
+  endDate: z.string(),
+  nameOnAccount: z.string(),
+  accountStatus: z.string(),
+  accountType: z.string(),
+  accountNumber: z.string(),
+  routingNumber: z.string(),
+  // internationalBankAccountNumberobject
+  branchName: z.string(),
+  // branchAddressobject
+  branchPhoneNumber: z.string(),
 });
 
 export type SPSelectBankStepSchema = z.infer<typeof selectBankStepSchema>;
@@ -69,14 +56,8 @@ export const systematicPremiumStepsSchema = z.nativeEnum(
 );
 
 export const systematicPremiumsStateSchema = z.object({
-  currentPage: systematicPremiumStepsSchema,
   activeArrangementId: z.string().optional(),
-  // this only gets set after successful submission
-  // and comes from bpm response
-  caseId: z.string().optional(),
-  previousProgramDate: z.string().optional(),
-  nextProgramDate: z.string().optional(),
-  yearlyPremiumAmount: z.number().min(0, 'Amount must be a positive number'),
+  currentSystematicPremium: z.any().optional() || {},
   selectBankStep: selectBankStepSchema,
   systematicPremiumAmountStep: systematicPremiumAmountStepSchema,
 });
@@ -93,12 +74,6 @@ export const actionSchema = z.discriminatedUnion('type', [
     }),
   }),
   z.object({
-    type: z.literal(SystematicPremiumsAction.SET_CURRENT_PAGE),
-    payload: systematicPremiumsStateSchema.pick({
-      currentPage: true,
-    }),
-  }),
-  z.object({
     type: z.literal(
       SystematicPremiumsAction.SET_SYSTEMATIC_PREMIUM_AMOUNT_STEP
     ),
@@ -112,12 +87,6 @@ export const actionSchema = z.discriminatedUnion('type', [
     ),
     payload: systematicPremiumsStateSchema.pick({
       selectBankStep: true,
-    }),
-  }),
-  z.object({
-    type: z.literal(SystematicPremiumsAction.SET_SYSTEMATIC_PREMIUM_CASE_ID),
-    payload: systematicPremiumsStateSchema.pick({
-      caseId: true,
     }),
   }),
 ]);

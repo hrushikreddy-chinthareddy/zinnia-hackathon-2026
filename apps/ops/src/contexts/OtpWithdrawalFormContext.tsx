@@ -76,6 +76,7 @@ export interface OtpWithdrawalFormState {
     formPeriodicPension: PeriodicPensionFormType | null;
     formESignatureData?: FormEsignatureData | any;
     policySystematicPrograms: SystematicSpecialPrograms[] | [];
+    isLC?: boolean;
     setFormESignatureData: React.Dispatch<React.SetStateAction<any>>;
     setFormPeriodicPension: React.Dispatch<
         React.SetStateAction<PeriodicPensionFormType | null>

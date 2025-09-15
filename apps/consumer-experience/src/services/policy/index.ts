@@ -46,6 +46,7 @@ import {
   transformPolicyForProfile,
   transformPolicyForSurrender,
   getPartyRolesFromPolicyPartyId,
+  transformPolicyParties,
 } from '@/services/policy/transformers';
 import { ServerApi } from '@/services/server-http';
 import { ApiResponse } from '@/services/types';
@@ -219,11 +220,16 @@ export const getPolicyByPlanCodeAndId = withLogging(
     }
 
     const rawResponse = await ServerApi.get(url, undefined, loggingCtx);
+
     const response = await parseAPIResponse(rawResponse);
 
     if (!rawResponse?.ok) {
+      const failureDetails = await logApiNotOkDetails({
+        rawResponse,
+        parsedResponse: response,
+      });
       throw new Error('Error fetching policy.', {
-        cause: { policyNumber, planCode },
+        cause: { policyNumber, planCode, failureDetails },
       });
     }
 
@@ -1236,6 +1242,29 @@ export const getPolicyDetails = withLogging(
     return transformPolicyDetails(policyResponse.data);
   },
   { file: FILE_NAME, functionName: 'getPolicyDetails' }
+);
+
+export const getPolicyParties = withLogging(
+  async (policyInputs: PolicyRequestInputs, loggingCtx: CommonLogContext) => {
+    const policyResponse = await getPolicyByPlanCodeAndId(
+      {
+        planCode: policyInputs.planCode,
+        policyNumber: policyInputs.policyNumber,
+      },
+      loggingCtx
+    );
+
+    if (policyResponse.error || !policyResponse.data) {
+      // TODO: i don't think this should throw an error or a warn, but i do want it
+      // to exit out of this and return the correct data, error object
+      throw new Error('Failed to fetch policy data for parties.', {
+        cause: { ...policyInputs, error: policyResponse.error },
+      });
+    }
+
+    return transformPolicyParties(policyResponse.data);
+  },
+  { file: FILE_NAME, functionName: 'getPolicyParties' }
 );
 
 /**

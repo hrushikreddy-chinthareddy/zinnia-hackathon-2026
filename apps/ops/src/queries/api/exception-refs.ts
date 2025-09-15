@@ -24,7 +24,7 @@ type searchNigoExceptionsQuery = {
 };
 
 export type searchNigoExceptionsFilters = {
-    categoryIds: string[];
+    categoryIds?: string[];
     carrier: string;
     process: string;
 };
@@ -76,7 +76,6 @@ export const searchNigoExceptions = async (
                 'Access-Control-Allow-Origin': '*',
             },
         };
-
         const { data } = await serverApi.post<any>(
             url,
             formData,

@@ -61,10 +61,7 @@ class ServerHttpRequest extends HttpRequest {
 
     requestInit.headers = {
       // all backend services should be using this as the way to pass
-      // correlationId through the system. Enterprise api at least is
-      // definitely using this
-      // TODO: verify that bpm is using this header
-      // TODO: if not in log, check req body? but then what about GET requests?
+      // correlationId through the system.
       'x-correlation-id': correlationId || uuid4(),
       ...requestInit.headers,
       Authorization: `Bearer ${accessToken}`,

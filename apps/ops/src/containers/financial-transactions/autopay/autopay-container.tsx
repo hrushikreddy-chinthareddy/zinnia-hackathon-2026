@@ -23,6 +23,8 @@ import StartStep, {
     StartStepSetState,
 } from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
+import { CarrierCode, FarmersPlanCodes } from '@deps/constants/policy';
+import { checkCustomPolicy } from '@deps/containers/policy-details/policy-details.helpers';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -149,6 +151,10 @@ const AutopayContainer = ({
         PaymentStepComponent = PaymentStepMoneyOut;
     }
 
+    const customFarmerCheck =
+        systematicProgramReason == Reason.PREMIUM &&
+        checkCustomPolicy(policy, CarrierCode.Farmers, FarmersPlanCodes);
+
     const steps: Step[] = [
         {
             component: (
@@ -192,7 +198,10 @@ const AutopayContainer = ({
                 parentPage === ParentPage.Withdrawals ? (
                     <WithdrawalAmount policy={policy} />
                 ) : (
-                    <Amount policy={policy} />
+                    <Amount
+                        policy={policy}
+                        customFarmerCheck={customFarmerCheck}
+                    />
                 ),
             screenReaderLabel: amountLabel,
             index: 1,

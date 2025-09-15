@@ -59,8 +59,8 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import {
-    isFastFeatureEnabled,
     isFormFeatureEnabled,
+    isSourceSystemLifeCad,
 } from '@deps/utils/optimizely/utils';
 import {
     logError,
@@ -91,6 +91,11 @@ import { DlicSSWForm } from '@deps/containers/otp/ssw-forms/dlic/dlic-ssw-form';
 import { SbgcSSWForm } from '@deps/containers/otp/ssw-forms/sbgc/sbgc-ssw-form';
 import { PageHead } from '@deps/components/page-title';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
+import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
+import { useSearchParams } from 'next/navigation';
+import FormNigoMessages from '@deps/components/form-nigos/form-nigo-messages';
+import { Processes } from '@deps/models/case/case';
+import { searchNigoExceptions } from '@deps/queries/api/exception-refs';
 
 interface SSWCaseProps extends SegmentTrackedPageProps {
     document: DocumentData;
@@ -102,6 +107,8 @@ interface SSWCaseProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     planCode?: string;
     systematicPrograms: SystematicSpecialPrograms[] | [];
+    isLC?: boolean;
+    nigoExceptions: NigoExceptionResponse[];
 }
 
 const DefaultSidebarContent = {
@@ -137,8 +144,12 @@ export default function SSWCase({
     user,
     planCode,
     systematicPrograms,
+    isLC = false,
+    nigoExceptions,
 }: SSWCaseProps) {
     const { t } = useTranslation(undefined, { keyPrefix: 'caseSSW.request' });
+    const searchParams = useSearchParams();
+    const isFormReadOnly = searchParams.get('action') === 'readonly';
     // TODO: Need to map this from common portion whenever we will restructure i18 files
     const { t: withdrawalTx } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
@@ -158,13 +169,11 @@ export default function SSWCase({
     });
 
     const isLargeScreen = useScreenSize(SCREEN_BREAKPOINTS.lg);
-    const isLC = !isFastFeatureEnabled(form?.taskType, featureFlagDecisions);
-
     const contractAccountInfo = useContractAccountInfo(
         document.contract,
         planCode as string,
         clientId as string,
-        isLC
+        isLC ?? false
     );
     const { issueState, qualType, issueDate } = contractAccountInfo;
 
@@ -237,6 +246,15 @@ export default function SSWCase({
         ? t('formTitles.standard', { carrier: carrierTitle })
         : t(`formTitles.defaultTitle`);
 
+    const upFrontNigos = form.data?.formRequest?.formNigos || null;
+
+    const renderUpFrontNigos = isFormReadOnly && (
+        <FormNigoMessages
+            nigoExceptions={nigoExceptions}
+            formNigos={upFrontNigos}
+        />
+    );
+
     return (
         <>
             <PageHead titleKey="createCaseSsw" />
@@ -276,10 +294,12 @@ export default function SSWCase({
                                             featureFlagDecisions
                                         }
                                         systematicPrograms={systematicPrograms}
+                                        isLC={isLC}
                                     >
                                         {
                                             <>
                                                 {formParts}
+                                                {renderUpFrontNigos}
                                                 <NoteSection />
                                                 <FormErrors
                                                     t={withdrawalTx}
@@ -486,10 +506,21 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
-            const isLC = !isFastFeatureEnabled(
-                form?.taskType,
-                featureFlagDecisions
+            const isLC = response
+                ? isSourceSystemLifeCad(response[0]?.source)
+                : null;
+
+            const nigoFilters = {
+                carrier: clientId?.toUpperCase(),
+                process: Processes.SSW,
+            };
+
+            const nigoExceptions = await searchNigoExceptions(
+                nigoFilters,
+                accessToken,
+                loggingContext
             );
+
             if (isLC) {
                 const parties = document?.contract
                     ? await getPolicyPartiesSSR(
@@ -511,35 +542,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                         featureFlagDecisions,
                         user,
                         planCode,
+                        isLC,
+                        nigoExceptions,
                     },
                 };
             } else {
-                const policies = await searchPolicySSR(
-                    document?.contract,
-                    [clientId?.toUpperCase() as Carrier],
-                    accessToken,
-                    1,
-                    0,
-                    loggingContext
-                );
-                const planCode = policies?.[0]?.planCode || null;
-                if (!planCode) {
-                    logInfo(
-                        'create-case/ssw/:id::Plan code not found',
-                        loggingContext
-                    );
-                    return {
-                        redirect: {
-                            destination: `/create-case/error?errorCode=${ERROR_CODES.RENEWAL_FORM_PLAN_CODE}`,
-                            permanent: false,
-                        },
-                    };
-                }
-                logInfo('create-case/ssw/:id::Plan code found', {
-                    ...loggingContext,
-                    planCode: planCode,
-                });
-
                 const policy = await getPolicyDetailsSsr(
                     document?.contract,
                     planCode,
@@ -576,13 +583,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                         document,
                         form,
                         locale,
-                        // isNigoCase,
                         featureFlagDecisions,
                         parties: Array.isArray(parties) ? parties : [],
                         partyRoles,
                         user,
                         planCode,
                         systematicPrograms,
+                        isLC,
+                        nigoExceptions,
                     },
                 };
             }

@@ -1262,6 +1262,63 @@ export const farmersBlueprintTR0101 = {
                                             },
                                         ],
                                     },
+                                    valid: [
+                                        {
+                                            id: '1c3746d9-cd75-465f-9a4b-16bcd88c9e7c',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        isEqual: false,
+                                                        value: 'NONETABLE',
+                                                        targetNodeId:
+                                                            'table-rating',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                            },
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                isEqual: false,
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'temporary-flat-extra',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                            },
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                isEqual: false,
+                                                                value: 0,
+                                                                targetNodeId:
+                                                                    'permanent-flat-extra',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'For the sub-standard rating, please select one of the Table or Flat Extra Ratings and provide input.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                             ],
                             displayAsCard: false,
@@ -1275,37 +1332,6 @@ export const farmersBlueprintTR0101 = {
                             title: {},
                             isCustom: true,
                             fields: [
-                                {
-                                    fieldType: 'information',
-                                    text: {
-                                        en: 'For Table or Flat Extra Ratings, please select one of the Substandard classes',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'table-flat-ratings-info',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 12,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '1533d9cf-87e8-4ebe-b1cf-9c607b2dc6ce',
-                                    partName:
-                                        'custom-8beadcd6-616c-4a31-9ed5-625db38a1927',
-                                    variant: 'info',
-                                    validateAs: 'string',
-                                },
                                 {
                                     fieldType: 'dropdown',
                                     text: {

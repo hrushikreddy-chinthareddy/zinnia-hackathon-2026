@@ -52,4 +52,18 @@ export interface CarrierConfig {
   sso: {
     enabled: boolean;
   };
+  account: {
+    surrender: {
+      enabled: boolean;
+    };
+    partialOneTimeWithdrawal: {
+      enabled: boolean;
+    };
+  };
+  systematicPremium: {
+    enabled: boolean;
+  };
+  freeLookCancel: {
+    enabled: boolean;
+  };
 }

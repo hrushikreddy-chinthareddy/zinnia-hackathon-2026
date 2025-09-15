@@ -30,3 +30,9 @@ export interface StepInfo {
   };
   requiredData?: ZodObject<ZodRawShape>;
 }
+
+export const TRANSACTION_ERROR_QUERY_PARAM = 'errorType';
+
+export enum TransactionErrorType {
+  SUBMISSION_FAILED = 'SubmissionFailed',
+}

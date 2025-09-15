@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
-import { v4 as uuidv4 } from 'uuid';
 
 import {
   getOneTimePremiumValidation,
@@ -10,6 +9,7 @@ import {
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
+import { convertAggregationAccountTypeToPaymentForm } from './utils';
 
 dayjs.extend(utc);
 
@@ -33,8 +33,7 @@ export async function POST(
   const ottpRequest = {
     // TODO: do we need to check for current caseId?
     caseId: '',
-    // TODO: add this to logging
-    correlationId: uuidv4(),
+    correlationId: loggingContext.correlationId,
     effectiveDate: dayjs(paymentDetails.effectiveDate).utc().format(),
     transactionAmounts: {
       requestedAmount: paymentDetails.paymentAmount,
@@ -42,7 +41,9 @@ export async function POST(
     payor: {
       partyId: paymentDetails.partyId,
       bankId: paymentDetails.bankId,
-      paymentForm: paymentDetails.paymentForm,
+      paymentForm: convertAggregationAccountTypeToPaymentForm(
+        paymentDetails.paymentForm
+      ),
     },
     // TODO: do we need to pass this?
     // reverseInitiator: false
@@ -53,11 +54,6 @@ export async function POST(
     ottpRequest,
     loggingContext
   );
-
-  // Its a little confusing that one of these calls returns data, error object and the other
-  // calls the function and does the transforming here, it's because the eligiblity function does
-  // additional transforming, but the submit premium payment call is just success/fail. The pattern
-  // is a little messy right now in the client <-> server api call transformation (8/15/24)
 
   // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
   if (ottpValidation.error) {

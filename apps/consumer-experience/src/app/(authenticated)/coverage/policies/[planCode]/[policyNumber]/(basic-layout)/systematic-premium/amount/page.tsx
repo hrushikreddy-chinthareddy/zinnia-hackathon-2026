@@ -1,34 +1,27 @@
-import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
-
 import { SystematicPremiumAmountStep } from '@/components/workflows/systematic-premiums/forms/SystematicPremiumAmountStep';
+import { SystematicPremiumAmountStepTerm } from '@/components/workflows/systematic-premiums/forms/SystematicPremiumAmountStepTerm';
 import { SystematicPremiums } from '@/components/workflows/systematic-premiums/SystematicPremiums';
-import { getAllSystematicPrograms } from '@/services/policy/systematic-programs';
-import { PolicyRequestInputsParams } from '@/types/policy';
-import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { getComponentVisibility } from '@/services/display-rules';
+import { ComponentName } from '@/services/display-rules/types';
+import { PolicyRequestInputs } from '@/types/policy';
 
-const AmountPage = async ({ params }: PolicyRequestInputsParams) => {
-  const loggingCtx = await buildCommonLogContext();
-  let systematicPrograms = [] as SystematicProgram[];
-
-  const { data: systematicProgramResponse } = await getAllSystematicPrograms(
-    {
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-    },
-    loggingCtx
-  );
-
-  if (systematicProgramResponse?.data) {
-    systematicPrograms = systematicProgramResponse.data;
-  }
+export default async function AmountPage({
+  params,
+}: {
+  params: PolicyRequestInputs;
+}) {
+  const { planCode, policyNumber } = params;
+  const visibility = await getComponentVisibility(policyNumber, planCode);
 
   return (
-    <SystematicPremiums
-      currentStepOverride={0}
-    >
-      <SystematicPremiumAmountStep systematicPrograms={systematicPrograms} />
+    <SystematicPremiums currentStepOverride={0}>
+      {visibility?.[
+        ComponentName.SYSTEMATIC_PREMIUM_AUTOPAY_WITH_QUOTE_VALUES
+      ]() ? (
+        <SystematicPremiumAmountStepTerm />
+      ) : (
+        <SystematicPremiumAmountStep />
+      )}
     </SystematicPremiums>
   );
-};
-
-export default AmountPage;
+}

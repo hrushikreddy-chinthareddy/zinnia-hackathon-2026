@@ -1,5 +1,6 @@
 import { ProcessType } from '@deps/models/case/enums';
 import { TaskToProcessType, TaskType } from '@deps/models/case/task';
+import { SorSystem } from '@deps/models/policy/enums';
 
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from './flags';
 import { FeatureFlags } from './optimizely';
@@ -33,4 +34,8 @@ export const isFastFeatureEnabled = (
     return featureKey && featureFlagMap[featureKey]
         ? featureFlagMap[featureKey]
         : false;
+};
+
+export const isSourceSystemLifeCad = (sourceSystem: string): boolean => {
+    return sourceSystem === SorSystem.LifeCad.toLowerCase() ? true : false;
 };

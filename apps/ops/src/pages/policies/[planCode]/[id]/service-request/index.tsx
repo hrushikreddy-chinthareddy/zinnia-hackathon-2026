@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRelation } from '@xd/utils/dist';
 import { Policy } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { v4 as uuidV4 } from 'uuid';
@@ -24,8 +23,6 @@ import {
     getPolicyDetailsSsr,
     searchPolicySSR,
 } from '@deps/queries/api/policies';
-import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import { FgaUiEntity } from '@deps/types/fga';
 import { Source } from '@deps/types/search';
 import {
     SegmentPageName,
@@ -102,13 +99,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const hasServiceRequestAccess = await checkTuplePage(
-                context,
-                FgaRelation.UiAccess,
-                FgaUiEntity.ZinniaLiveServiceRequest,
-                loggingContext
-            );
-
             try {
                 const policy = await getPolicyDetailsSsr(
                     policyNumber,
@@ -129,12 +119,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext
                 );
 
-                if (!shouldShowDefaultCase || !hasServiceRequestAccess) {
+                if (!shouldShowDefaultCase) {
                     logError('policies/service-request::403 redirect', {
                         partyId: user?.partyId,
                         requestStatus: 403,
                         featureFlagEnabled: shouldShowDefaultCase,
-                        hasPagePermissions: hasServiceRequestAccess,
                         requestPath: context.resolvedUrl,
                         ...loggingContext,
                     });

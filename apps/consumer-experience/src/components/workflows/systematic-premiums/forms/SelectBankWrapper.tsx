@@ -24,13 +24,14 @@ export const SelectBankWrapper = ({
   initialPaymentMethods,
   paymentProvider,
 }: SelectBankWrapperProps) => {
-  const { data: paymentMethods = [], isLoading } = useQuery({
-    queryKey: [
-      QueryKeys.PAYMENT_METHODS,
-      policyNumber,
-      planCode,
-      paymentProvider,
-    ],
+  // TODO: wrap this in a hook so we don't have to replicate this everywhere
+  const {
+    data: paymentMethods = [],
+    isLoading,
+    isError,
+    isSuccess,
+  } = useQuery({
+    queryKey: [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
     queryFn: () => getPaymentMethods(policyNumber, planCode),
     initialData: initialPaymentMethods,
   });
@@ -38,7 +39,7 @@ export const SelectBankWrapper = ({
   const queryClient = useQueryClient();
 
   // @TODO CUI-869: Add edit bank functionality
-  const showEditBank = false;
+  // const showEditBank = false;
   const showAddBank = paymentProvider === PaymentProvider.PAYMENTUS;
 
   const handleAddPaymentMethod = () => {
@@ -55,10 +56,15 @@ export const SelectBankWrapper = ({
   return (
     <>
       {isLoading && <Loader />}
-      {paymentMethods && paymentMethods.length > 0 && (
+      {isError && (
+        <div>
+          We’re having trouble getting your payment methods. Please try again
+          later.
+        </div>
+      )}
+      {isSuccess && (
         <SelectBank
           activeBanks={paymentMethods ?? []}
-          editBankEnabled={showEditBank}
           addBankEnabled={showAddBank}
           onAddPaymentMethod={handleAddPaymentMethod}
         />
