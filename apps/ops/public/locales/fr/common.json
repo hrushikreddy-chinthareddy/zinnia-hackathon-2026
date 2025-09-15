@@ -6071,16 +6071,17 @@
         }
     },
     "comparisonTable": {
+        "amount": "Montant",
+        "bankDetails": "Informations Bancaires",
+        "checkingEndingIn": "Vérification se terminant par ",
+        "creditCardEndingIn": "Carte de crédit se terminant par ",
+        "frequency": "Fréquence",
         "heading1": "Nouveaux détails de paiement automatique",
         "heading2": "Actuel",
-        "amount": "Montant",
-        "frequency": "Fréquence",
+        "new": "Nouveau",
         "nextPaymentDate": "Prochaine date de paiement",
-        "payor": "Payeur",
-        "bankDetails": "Informations Bancaires",
         "paymentMethod": "Méthode de paiement",
-        "checkingEndingIn": "Vérification se terminant par ",
-        "new": "Nouveau"
+        "payor": "Payeur"
     },
     "tasks": {
         "open": "Ouvert",

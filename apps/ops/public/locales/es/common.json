@@ -5990,15 +5990,16 @@
         }
     },
     "comparisonTable": {
-        "heading1": "Nuevos detalles de pago automático",
-        "heading2": "Actual",
         "amount": "Monto",
-        "frequency": "Frecuencia",
-        "nextPaymentDate": "Fecha del próximo pago",
-        "payor": "Pagador",
         "bankDetails": "Detalles bancarios",
         "checkingEndingIn": "Cheques terminando en ",
-        "new": "Nuevo"
+        "creditCardEndingIn": "Tarjeta de crédito terminando en ",
+        "frequency": "Frecuencia",
+        "heading1": "Nuevos detalles de pago automático",
+        "heading2": "Actual",
+        "new": "Nuevo",
+        "nextPaymentDate": "Fecha del próximo pago",
+        "payor": "Pagador"
     },
     "tasks": {
         "open": "Abierto",

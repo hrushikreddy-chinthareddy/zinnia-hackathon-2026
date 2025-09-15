@@ -8,7 +8,6 @@ import { first, groupBy, sortBy, uniq } from 'lodash';
 import { useCallback, useMemo } from 'react';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { getProducersByNameAndCarrier } from '@deps/queries/api/v1/producers';
 import {
     getProducersByIdQuery,
     getProducersByNameAndCarrierCodeQuery,

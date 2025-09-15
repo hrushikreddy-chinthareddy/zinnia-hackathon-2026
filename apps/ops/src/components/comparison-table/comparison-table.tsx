@@ -1,4 +1,4 @@
-import { Address } from '@zinnia/api-types/types/sor';
+import { Address, PaymentForm } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -6,6 +6,7 @@ import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { formatAddress } from '@deps/helpers/address.helpers';
+import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { PiiWrapper } from '../pii/PiiWrapper';
@@ -207,7 +208,10 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
                                 variant={TagVariant.White}
                             />
                         </span>
-                        {newBankDetails?.paymentType !== 'CHECK' ? (
+                        {![
+                            PaymentForm.CHECK as string,
+                            PaymentForm.CREDITCARD as string,
+                        ].includes(newBankDetails?.paymentType ?? '') && (
                             <>
                                 <Content
                                     pii={true}
@@ -220,12 +224,30 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
                                     details={`${t(
                                         'comparisonTable.checkingEndingIn'
                                     )} ${
-                                        newBankDetails?.accountNumber ??
-                                        DEFAULT_ERROR_STRING
+                                        formatAccountNumber(
+                                            newBankDetails?.accountNumber,
+                                            true
+                                        ) ?? DEFAULT_ERROR_STRING
                                     }`}
                                 />
                             </>
-                        ) : (
+                        )}
+                        {newBankDetails?.paymentType ===
+                            PaymentForm.CREDITCARD && (
+                            <Content
+                                pii={true}
+                                variant={ContentVariant.BodySm}
+                                details={`${t(
+                                    'comparisonTable.creditCardEndingIn'
+                                )} ${
+                                    formatAccountNumber(
+                                        newBankDetails?.accountNumber,
+                                        true
+                                    ) ?? DEFAULT_ERROR_STRING
+                                }`}
+                            />
+                        )}
+                        {newBankDetails?.paymentType === PaymentForm.CHECK && (
                             <>
                                 {newBankDetails.paymentAddress ? (
                                     <div className="flex flex-col">
@@ -261,7 +283,10 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
                             variant={TagVariant.White}
                         />
                     </span>
-                    {currentBankDetails?.paymentType !== 'CHECK' ? (
+                    {![
+                        PaymentForm.CHECK as string,
+                        PaymentForm.CREDITCARD as string,
+                    ].includes(currentBankDetails?.paymentType ?? '') && (
                         <>
                             <Content
                                 pii={true}
@@ -274,12 +299,30 @@ const BankDetailsTableRow: React.FC<TableRowsProps> = ({ rowData }) => {
                                 details={`${t(
                                     'comparisonTable.checkingEndingIn'
                                 )} ${
-                                    currentBankDetails?.accountNumber ??
-                                    DEFAULT_ERROR_STRING
+                                    formatAccountNumber(
+                                        currentBankDetails?.accountNumber,
+                                        true
+                                    ) ?? DEFAULT_ERROR_STRING
                                 }`}
                             />
                         </>
-                    ) : (
+                    )}
+                    {currentBankDetails?.paymentType ===
+                        PaymentForm.CREDITCARD && (
+                        <Content
+                            pii={true}
+                            variant={ContentVariant.BodySm}
+                            details={`${t(
+                                'comparisonTable.creditCardEndingIn'
+                            )} ${
+                                formatAccountNumber(
+                                    currentBankDetails?.accountNumber,
+                                    true
+                                ) ?? DEFAULT_ERROR_STRING
+                            }`}
+                        />
+                    )}
+                    {currentBankDetails?.paymentType === PaymentForm.CHECK && (
                         <>
                             {currentBankDetails.paymentAddress ? (
                                 <div className="flex flex-col">

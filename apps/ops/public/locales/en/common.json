@@ -6162,16 +6162,17 @@
         }
     },
     "comparisonTable": {
+        "amount": "Amount",
+        "bankDetails": "Banking details",
+        "checkingEndingIn": "Checking ending in ",
+        "creditCardEndingIn": "Credit card ending in ",
+        "frequency": "Frequency",
         "heading1": "New autopay details",
         "heading2": "Current",
-        "amount": "Amount",
-        "frequency": "Frequency",
+        "new": "New",
         "nextPaymentDate": "Next payment date",
-        "payor": "Payor",
-        "bankDetails": "Banking details",
         "paymentMethod": "Payment method",
-        "checkingEndingIn": "Checking ending in ",
-        "new": "New"
+        "payor": "Payor"
     },
     "tasks": {
         "open": "Open",
