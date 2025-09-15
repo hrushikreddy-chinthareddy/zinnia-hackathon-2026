@@ -1,5 +1,6 @@
 .header {
     padding: var(--measure-dimension-gap-2xl);
+    min-height: 248px;
 }
 
 .breadcrumb {

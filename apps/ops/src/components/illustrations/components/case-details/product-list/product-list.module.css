@@ -1,4 +1,5 @@
 .productSelection {
+    overflow-y: auto;
     padding: var(--measure-dimension-gap-lg);
 
     .selectionTitle {

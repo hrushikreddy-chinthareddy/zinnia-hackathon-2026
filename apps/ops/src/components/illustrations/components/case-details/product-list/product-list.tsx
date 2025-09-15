@@ -119,6 +119,7 @@ const IllustrationProductList = ({
                     : illustrationId[0]
             );
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         illustrationId,
         illustrations,
@@ -190,6 +191,7 @@ const IllustrationProductList = ({
         if (firstIllustration) {
             navigateToIllustration(firstIllustration.id);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productsWithIllustrations, illustrationId, navigateToIllustration]);
 
     const preselectedProduct = products.find(
@@ -268,7 +270,6 @@ const IllustrationProductList = ({
                             )}
                 </ul>
             )}
-
             {!isError &&
                 productsWithIllustrationsCount > 0 &&
                 productsWithoutIllustrationsCount > 0 && (
@@ -298,7 +299,6 @@ const IllustrationProductList = ({
                         ></Icon>
                     </Button>
                 )}
-
             {showEmptyProducts && (
                 <ul className={styles.productList}>
                     {productsWithIllustrationsData
@@ -317,7 +317,6 @@ const IllustrationProductList = ({
                         )}
                 </ul>
             )}
-
             {(isError || !products) && (
                 <div className={styles.noProducts}>
                     <Icon

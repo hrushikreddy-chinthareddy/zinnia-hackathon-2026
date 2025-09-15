@@ -110,36 +110,33 @@ export default function ClientCaseIllustrations() {
                                 />
                             </Skeleton>
                             <hr className={clsx(styles.separator)} />
-                            <div>
-                                <>
-                                    {(isLoadingProducts ||
-                                        isFetchingProducts) && (
-                                        <div
-                                            style={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                marginTop: '2rem',
-                                            }}
-                                        >
-                                            <Loader />
-                                        </div>
-                                    )}
-                                </>
-                                {!isLoadingProducts &&
-                                    !isFetchingProducts &&
-                                    !isLoadingClientCase &&
-                                    !isFetchingClientCase && (
-                                        <IllustrationProductList
-                                            carrierProductId={carrierProductId}
-                                            clientCase={clientCase}
-                                            illustrations={
-                                                clientCase?.illustrations
-                                            }
-                                            products={products}
-                                            isError={isErrorProducts}
-                                        />
-                                    )}
-                            </div>
+                            <>
+                                {(isLoadingProducts || isFetchingProducts) && (
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            marginTop: '2rem',
+                                        }}
+                                    >
+                                        <Loader />
+                                    </div>
+                                )}
+                            </>
+                            {!isLoadingProducts &&
+                                !isFetchingProducts &&
+                                !isLoadingClientCase &&
+                                !isFetchingClientCase && (
+                                    <IllustrationProductList
+                                        carrierProductId={carrierProductId}
+                                        clientCase={clientCase}
+                                        illustrations={
+                                            clientCase?.illustrations
+                                        }
+                                        products={products}
+                                        isError={isErrorProducts}
+                                    />
+                                )}
                         </section>
                         <section className={clsx(styles.illustrationContainer)}>
                             <IllustrationDetails

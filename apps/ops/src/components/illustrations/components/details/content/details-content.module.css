@@ -1,7 +1,10 @@
 .detailsContent {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr) max-content;
+    grid-auto-rows: min-content;
 
     row-gap: var(--measure-dimension-z-space-6);
     padding: var(--measure-dimension-z-space-6);
+
+    overflow-y: auto;
 }
