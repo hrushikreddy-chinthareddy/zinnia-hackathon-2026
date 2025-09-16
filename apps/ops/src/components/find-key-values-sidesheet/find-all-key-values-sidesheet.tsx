@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import { Accordion } from '@xd/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
+import useDebounce from '@xd/xd-components/src/hooks/useDebounce';
 import {
     SideSheet,
     Icon,
@@ -251,16 +252,19 @@ const KeyValueNestedSubSection = ({
     subSections: DataRecord[];
     searchValue: string;
 }) => {
-    return subSections.map((subSection, i) => {
-        const subSectonLabel = subSection[label];
-        if (subSectonLabel == null) return null;
+    const subSectionElements = subSections.map((subSection) => {
+        const subSectionLabel = subSection[label];
+        if (subSectionLabel == null) return null;
         const subSectionTags = subSection[tags] as string[];
         const subSectionLink = subSection[link] as string;
         const subSectionLinkField = subSection[linkedField] as string;
+        const subSectionEntries = Object.entries(subSection);
+
         return (
             <div key={`nested_subsection_${i}`} className={styles.subSection}>
                 <Accordion
-                    sectionLabel={String(subSectonLabel)}
+                    key={String(subSectionLabel)}
+                    sectionLabel={String(subSectionLabel)}
                     tags={subSectionTags}
                     type={AccordionType.NESTED}
                 >
@@ -311,11 +315,10 @@ const DataField = ({
     linkField?: string;
     searchValue: string;
 }) => {
-    /**
-     * If the field cannot be formatted, return null
-     */
+    // If the field cannot be formatted, return null
     const formattedField = preparedPolicy.formatDataField(dataField);
     if (!formattedField) return null;
+
     const [fieldLabel, fieldData] = formattedField;
     const linkedField =
         link && linkField === dataField[0] ? (
@@ -434,9 +437,9 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
         }
     };
 
-    /*
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
+    /*
     // When user searches, filter down the key values
     const filteredKeys = useMemo(() => {
         return filterOnSearchHandler(keyValues, {
@@ -449,11 +452,14 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     if (!policy) return null; //FIXME: add loading state
 
     // This retains all the persistent extracted data on the policy
-    const preparedPolicy = useMemo(() => preparePolicy(policy, t), [policy]);
+    const preparedPolicy = useMemo(
+        () => preparePolicy(policy, t, debouncedSearchValue),
+        [policy]
+    );
 
     const { policyBasics, policySections } = useMemo(
         () => preparedPolicy.toSections(),
-        [preparedPolicy]
+        [preparedPolicy, debouncedSearchValue]
     );
 
     return (

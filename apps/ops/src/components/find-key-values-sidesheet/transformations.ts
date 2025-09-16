@@ -57,13 +57,13 @@ import {
  */
 export const preparePolicy = (
     policy: Policy,
-    t: TFunction
+    t: TFunction,
+    searchValue?: string
 ): {
     lineOfBusiness: LineOfBusiness;
     planCode?: string;
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
-    t: TFunction;
     toSections: (policyOverride?: Policy) => PreparedPolicy;
     toFieldsAndSubsections: (
         policySection: PolicySection
@@ -92,18 +92,23 @@ export const preparePolicy = (
         planCode,
         productType,
         allPartiesById,
-        t,
         toSections: (policyOverride) =>
             toSections(
                 policyOverride ?? policy,
                 lineOfBusiness,
                 t,
+                searchValue,
                 planCode,
                 productType,
                 allPartiesById
             ),
         toFieldsAndSubsections: (policySection: PolicySection) =>
-            toFieldsAndSubsections(policySection, lineOfBusiness, t),
+            toFieldsAndSubsections(
+                policySection,
+                lineOfBusiness,
+                t,
+                searchValue
+            ),
         formatDataField: (dataTuple: DataTuple) =>
             formatDataField(dataTuple, lineOfBusiness, t),
         formatAsSectionLabel: (label: string) =>
@@ -125,6 +130,7 @@ export const toSections = (
     policy: Policy,
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
+    searchValue?: string,
     planCode?: string,
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
@@ -514,7 +520,7 @@ const fillInBankAndAddressInfo = (
         ? [
               firstBank.branchName,
               formatAsDataValue(firstBank.accountType ?? null, t),
-              'ending in',
+              t('policy.commonPhrases.endingIn'),
               firstBank.accountNumber?.slice(-4),
           ].join(' ')
         : undefined;
@@ -556,7 +562,8 @@ const fillInBankAndAddressInfo = (
 export const toFieldsAndSubsections = (
     [sectionName, sectionData]: PolicySection,
     lineOfBusiness: LineOfBusiness,
-    t: TFunction
+    t: TFunction,
+    searchValue?: string
 ): PreparedPolicySection => {
     // If sectionData is an array, treat each item as a subsection.
     // The title of each subsection will map from a defined field *within* that subsection
@@ -573,6 +580,7 @@ export const toFieldsAndSubsections = (
             const subSectionTags = subSection[tags];
             const subSectionEntries = removeExcludedAndEmptyFields(
                 Object.entries(subSection),
+                searchValue,
                 [subSectionTitleField]
             );
 
@@ -591,7 +599,8 @@ export const toFieldsAndSubsections = (
         };
     } else {
         const { fields, subSections } = removeExcludedAndEmptyFields(
-            Object.entries(sectionData)
+            Object.entries(sectionData),
+            searchValue
         ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
             // If sectionData is an object, and a value within it is a nested object,
             // also treat it as a subsection, but map the subsection title to the object key
@@ -605,7 +614,8 @@ export const toFieldsAndSubsections = (
                 ];
 
                 const subSectionData = removeExcludedAndEmptyFields(
-                    Object.entries(fieldData)
+                    Object.entries(fieldData),
+                    searchValue
                 );
 
                 // Only show non-empty subsections
@@ -637,10 +647,10 @@ export const toFieldsAndSubsections = (
 
             // Otherwise, the value is meant to be displayed, so just append the key-value pair
             return {
-                fields: removeExcludedAndEmptyFields([
-                    ...(acc.fields ?? []),
-                    [fieldName, fieldData],
-                ]),
+                fields: removeExcludedAndEmptyFields(
+                    [...(acc.fields ?? []), [fieldName, fieldData]],
+                    searchValue
+                ),
                 subSections: acc.subSections, // keep subsections untouched
             };
         }, {});
@@ -717,6 +727,7 @@ const convertListToMap = <T extends DataRecord>(
  */
 const removeExcludedAndEmptyFields = (
     tuples: DataTuple[],
+    searchValue?: string,
     additionalFieldsToExclude?: DataKey[]
 ) => {
     return tuples.filter(
@@ -726,7 +737,9 @@ const removeExcludedAndEmptyFields = (
             !(
                 additionalFieldsToExclude &&
                 new Set(additionalFieldsToExclude).has(key)
-            )
+            ) &&
+            (!searchValue ||
+                String(key).toLowerCase().includes(searchValue.toLowerCase()))
     );
 };
 
