@@ -1,7 +1,6 @@
 {
     "formId": "3e15f22d-940f-4a00-afc4-5fa37c8c2249",
     "process": "Policy Update",
-    "carrier": "WELB",
     "taskType": "SEND_NIGO_COMMUNICATION",
     "formSchema": {
         "type": "object"

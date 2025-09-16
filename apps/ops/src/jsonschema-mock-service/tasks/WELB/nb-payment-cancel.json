@@ -1,7 +1,6 @@
 {
     "formId": "0fc6f0a2-45f9-477b-b67f-d1135c5ac764",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "NB_PAYMENT_CANCEL",
     "formSchema": {
         "type": "object"

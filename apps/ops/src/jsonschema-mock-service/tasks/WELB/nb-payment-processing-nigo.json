@@ -1,7 +1,6 @@
 {
     "formId": "aed4a1af-428d-4467-9fdd-07ecc3f3e239",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "NB_PAYMENT_PROCESSING_NIGO",
     "formSchema": {
         "type": "object"

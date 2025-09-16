@@ -1,7 +1,6 @@
 {
     "formId": "c6443de1-8a08-4ebd-a785-9b3870489625",
     "process": "Operations Review",
-    "carrier": "WELB",
     "taskType": "OPS_NIGO",
     "formSchema": {
         "type": "object"
