@@ -7890,7 +7890,7 @@
             "pdfError": "Ocurrio un error al cargar el PDF.",
             "premiumMode": "Modo de prima",
             "paymentMode": "Modo de pago",
-            "cashValue": "Valor en efectivo",
+            "cashValue": "Valor en efectivo (a fin de año)",
             "duplicate": "Duplicar",
             "calculating": "Calculando",
             "ariaValuePerYear": "{{value}} por año",

@@ -8066,7 +8066,7 @@
             "pdfError": "An error occured while generating the PDF.",
             "premiumMode": "Premium mode",
             "paymentMode": "Payment mode",
-            "cashValue": "Cash value",
+            "cashValue": "Cash values (end of year)",
             "duplicate": "Duplicate",
             "calculating": "Calculating",
             "ariaValuePerYear": "{{value}} per year",

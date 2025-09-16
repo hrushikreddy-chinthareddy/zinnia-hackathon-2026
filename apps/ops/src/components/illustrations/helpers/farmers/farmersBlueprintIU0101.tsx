@@ -2657,25 +2657,9 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'GUIDELINE_MAXIMUM_PREMIUM',
-                                            text: {
-                                                en: 'Guideline Maximum Premium',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                        {
                                             value: 'GUIDELINE_LEVEL_PREMIUM',
                                             text: {
                                                 en: 'Guideline Level Premium',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                        {
-                                            value: 'LEVEL_NON_MEC',
-                                            text: {
-                                                en: 'Level Non-MEC',
                                             },
                                             isCustom: true,
                                             orderingIndex: 2,

@@ -7910,7 +7910,7 @@
             "pdfError": "Une erreur est survenue lors du chargement du PDF.",
             "premiumMode": "Mode de prime",
             "paymentMode": "Mode de paiement",
-            "cashValue": "Valeur de rachat",
+            "cashValue": "Valeur de rachat (fin d'année)",
             "duplicate": "Double",
             "calculating": "Calculé",
             "ariaValuePerYear": "{{value}} par an",
