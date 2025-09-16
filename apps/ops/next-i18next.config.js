@@ -13,6 +13,7 @@ module.exports = {
     },
     serializeConfig: false,
     interpolation: {
+        escapeValue: false,
         format: (value, format, lng) => {
             switch(format) {
                 case 'capitalize':
