@@ -5593,7 +5593,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The Owner must be aged 18-55 to select Owner Waiver of Deduction Rider.',
+                                                en: 'Age of owner on Owner Waiver of Deduction Rider must be between 18 and 55.',
                                                 fr: '',
                                             },
                                         },
