@@ -252,13 +252,12 @@ const KeyValueNestedSubSection = ({
     subSections: DataRecord[];
     searchValue: string;
 }) => {
-    const subSectionElements = subSections.map((subSection) => {
+    return subSections.map((subSection, i) => {
         const subSectionLabel = subSection[label];
         if (subSectionLabel == null) return null;
         const subSectionTags = subSection[tags] as string[];
         const subSectionLink = subSection[link] as string;
         const subSectionLinkField = subSection[linkedField] as string;
-        const subSectionEntries = Object.entries(subSection);
 
         return (
             <div key={`nested_subsection_${i}`} className={styles.subSection}>
@@ -457,10 +456,8 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
         [policy]
     );
 
-    const { policyBasics, policySections } = useMemo(
-        () => preparedPolicy.toSections(),
-        [preparedPolicy, debouncedSearchValue]
-    );
+    // TODO: memoize?
+    const { policyBasics, policySections } = preparedPolicy.toSections();
 
     return (
         <SideSheet
