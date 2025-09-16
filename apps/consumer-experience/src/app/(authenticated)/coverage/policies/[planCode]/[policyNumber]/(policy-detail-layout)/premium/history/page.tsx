@@ -15,7 +15,6 @@ import {
   getPaymentHistory,
 } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
-import { formatBankAccountTypeText } from '@/utils/data';
 import { sortByDate } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
@@ -93,11 +92,7 @@ export default async function PaymentHistory({ params }: Props) {
                 </span>
               )}
               <span>
-                <AccountType
-                  accountType={formatBankAccountTypeText(
-                    item?.bankDetails?.accountType
-                  )}
-                />
+                <AccountType accountType={item.bankDetails?.accountType} />
                 {/*********
                  *  Only the logged in user that matches the same policy party ID as the
                 transaction should see bank details
@@ -151,11 +146,7 @@ export default async function PaymentHistory({ params }: Props) {
               )}
 
               <span>
-                <AccountType
-                  accountType={formatBankAccountTypeText(
-                    item?.bankDetails?.accountType
-                  )}
-                />
+                <AccountType accountType={item?.bankDetails?.accountType} />
                 {/*********
                  *  Only the logged in user that matches the same policy party ID as the
                 transaction should see bank details

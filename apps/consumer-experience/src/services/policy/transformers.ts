@@ -18,6 +18,7 @@ import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';
+import { PaymentMethod } from '@/types/payment';
 import {
   Beneficiary,
   BeneficiaryData,
@@ -399,41 +400,38 @@ export const transformPolicyForSurrender = (
   };
 };
 
-const getTransactionBankDetails = (
-  policy: Policy,
+const getTransactionPaymentMethod = (
+  paymentMethods: PaymentMethod[],
   transactionPayor?: Transaction_Payor
 ) => {
   if (!transactionPayor) {
     return null;
   }
-  // TODO: is it possible to have multiple payors? what is the ui for that if so?
-  const transactionPayorPartyId = transactionPayor.partyId;
+
   const transactionBankId = transactionPayor.bankId;
-  const transactionPolicyParty = policy.parties?.find(
-    ({ partyId }) => partyId === transactionPayorPartyId
+  const paymentMethod = paymentMethods.find(
+    pm => pm.bankId === transactionBankId
   );
 
-  return transactionPolicyParty?.bankDetails?.find(
-    ({ bankId }) => bankId === transactionBankId
-  );
+  return paymentMethod;
 };
 
 export const transformPaymentHistory = (
-  policy: Policy,
+  paymentMethods: PaymentMethod[],
   transaction: Transaction | undefined
 ): PaymentHistory => {
-  const paymentMethod = getTransactionBankDetails(
-    policy,
+  const paymentMethod = getTransactionPaymentMethod(
+    paymentMethods,
     transaction?.payors?.[0]
   );
+
   const { effectiveDate, status, transactionAmounts, transactionType } =
     transaction ?? {};
   const { appliedAmount, requestedAmount, paymentAmount } =
     transactionAmounts ?? {};
   const accountType = paymentMethod?.accountType;
   const accountNumber = bankAccountNumberSanitizer(
-    paymentMethod?.internationalBankAccountNumber ??
-      paymentMethod?.accountNumber
+    paymentMethod?.accountNumber
   );
 
   const date =

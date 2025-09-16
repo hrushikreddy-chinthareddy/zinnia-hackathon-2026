@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { PaymentHistoryTransaction } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { formatBankAccountTypeText } from '@/utils/data';
 
 import { CardInsertHistory } from '../card-list-history/CardInsertHistory';
 import { CardListHistory } from '../card-list-history/CardListHistory';
@@ -36,11 +35,7 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
                 title={item.title}
                 subtitle={
                   <span>
-                    <AccountType
-                      accountType={formatBankAccountTypeText(
-                        item?.bankDetails?.accountType
-                      )}
-                    />
+                    <AccountType accountType={item?.bankDetails?.accountType} />
                     {' ending in '}
                     <AccountNumber
                       accountNumber={item?.bankDetails?.accountNumber}
@@ -69,11 +64,7 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
                 isPending
                 subtitle={
                   <span>
-                    <AccountType
-                      accountType={formatBankAccountTypeText(
-                        item?.bankDetails?.accountType
-                      )}
-                    />
+                    <AccountType accountType={item?.bankDetails?.accountType} />
                     {' ending in '}
                     <AccountNumber
                       accountNumber={item?.bankDetails?.accountNumber}
