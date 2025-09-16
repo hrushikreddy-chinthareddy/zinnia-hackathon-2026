@@ -26,8 +26,10 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
             <h3 className="typography-labels-label-lg">{sectionLabel}</h3>
           </AccordionTrigger>
           <div className={styles.tags}>
-            {tags?.map(tag => (
-              <Tag text={tag}>
+            {tags?.map((tag, i) => (
+              <Tag
+                key={`tag_${i}`}
+                text={tag}>
                 {tag}
               </Tag>
             ))}
