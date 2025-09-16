@@ -16,6 +16,9 @@ module.exports = {
         escapeValue: false,
         format: (value, format, lng) => {
             switch(format) {
+                case 'capitalize':
+                    const str = String(value);
+                    return str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
                 default:
                     return value;
             }
