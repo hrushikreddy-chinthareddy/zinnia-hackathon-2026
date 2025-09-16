@@ -65,9 +65,7 @@ const KeyValueBasics = ({
     policyBasics: DataTuple[];
     searchValue: string;
 }) => (
-    /* FIXME: i18n */
     <Accordion
-        key="policyBasics"
         sectionLabel={preparedPolicy.formatAsSectionLabel('policyBasics')}
         type={AccordionType.NESTED}
     >
@@ -96,7 +94,7 @@ const KeyValueSections = ({
     policySections: PolicySection[];
     searchValue: string;
 }) => {
-    return policySections.map(([sectionLabel, sectionData]) => {
+    return policySections.map(([sectionLabel, sectionData], i) => {
         const { fields, subSections } = preparedPolicy.toFieldsAndSubsections([
             sectionLabel,
             sectionData,
@@ -109,7 +107,7 @@ const KeyValueSections = ({
         }
         return (
             <Accordion
-                key={sectionLabel}
+                key={`section_${i}`}
                 sectionLabel={preparedPolicy.formatAsSectionLabel(sectionLabel)}
                 type={AccordionType.NESTED}
             >
@@ -154,12 +152,11 @@ const KeyValueSubSections = ({
     sectionLabel: string;
 }) => {
     return subSections?.map(
-        ([subSectionLabel, subSectionFields, subSectionMetaData]) => {
+        ([subSectionLabel, subSectionFields, subSectionMetaData], i) => {
             const subsectionTags = subSectionMetaData?.[tags];
             return (
-                <div className={styles.subSection}>
+                <div key={`subsection_${i}`} className={styles.subSection}>
                     <Accordion
-                        key={sectionLabel}
                         sectionLabel={String(subSectionLabel)}
                         tags={subsectionTags}
                         type={AccordionType.NESTED}
@@ -202,13 +199,14 @@ const KeyValueFieldList = ({
 }) => {
     return (
         <div className={styles.itemsList}>
-            {fields.map((field) => {
+            {fields.map((field, i) => {
                 // If the field data is an array, render it as a
                 // subSection-in-subSection
                 const [, unformattedData] = field;
                 if (unformattedData instanceof Array) {
                     return (
                         <KeyValueNestedSubSection
+                            key={`subsection_${i}`}
                             preparedPolicy={preparedPolicy}
                             subSections={unformattedData as DataRecord[]}
                             searchValue={searchValue}
@@ -219,6 +217,7 @@ const KeyValueFieldList = ({
                 // Otherwise, just render it as a DataField
                 return (
                     <DataField
+                        key={`field_${i}`}
                         preparedPolicy={preparedPolicy}
                         dataField={field}
                         searchValue={searchValue}
@@ -252,24 +251,24 @@ const KeyValueNestedSubSection = ({
     subSections: DataRecord[];
     searchValue: string;
 }) => {
-    return subSections.map((subSection) => {
+    return subSections.map((subSection, i) => {
         const subSectonLabel = subSection[label];
         if (subSectonLabel == null) return null;
         const subSectionTags = subSection[tags] as string[];
         const subSectionLink = subSection[link] as string;
         const subSectionLinkField = subSection[linkedField] as string;
         return (
-            <div className={styles.subSection}>
+            <div key={`nested_subsection_${i}`} className={styles.subSection}>
                 <Accordion
-                    key={String(subSectonLabel)}
                     sectionLabel={String(subSectonLabel)}
                     tags={subSectionTags}
                     type={AccordionType.NESTED}
                 >
                     <div className={styles.itemsList}>
-                        {Object.entries(subSection).map((dataField) => {
+                        {Object.entries(subSection).map((dataField, j) => {
                             return (
                                 <DataField
+                                    key={`field_${j}`}
                                     preparedPolicy={preparedPolicy}
                                     dataField={dataField}
                                     searchValue={searchValue}
@@ -324,7 +323,6 @@ const DataField = ({
         ) : undefined;
     return (
         <DotContainer
-            key={fieldLabel}
             dotLeftSide={
                 <div>
                     <Highlighter text={fieldLabel} highlights={[searchValue]} />
