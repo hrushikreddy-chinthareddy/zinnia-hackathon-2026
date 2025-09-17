@@ -267,6 +267,33 @@ export const checkEligibilityPhoneChange = async (
     }
 };
 
+export const checkEligibilityCommunicationPreferenceChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/communicationpreference/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityCommunicationPreferenceChange::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber },
+                function:
+                    'webnonfinancial.checkEligibilityCommunicationPreferenceChange',
+            }
+        );
+
+        return error?.data;
+    }
+};
+
 export const checkEligibilityBeneficiary = async (
     planCode: string | undefined,
     policyNumber: string | undefined
