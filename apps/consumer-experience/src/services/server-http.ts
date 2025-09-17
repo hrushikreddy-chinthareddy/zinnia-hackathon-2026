@@ -41,6 +41,7 @@ enum Service {
   AUTH0 = 'auth0',
   ENTERPRISE_SEARCH = 'enterprise-search',
   TRANSACTIONS = 'transactions',
+  PREFERENCES = '/preferences/',
   UNKNOWN = 'unknown',
 }
 
@@ -66,10 +67,18 @@ function handleLogging(
   loggingContext: ServerLoggingContext
 ) {
   if (service === Service.BPM && status === 400) {
-    //do we want a log trace
     // When BPM returns a 400, it often doesnt mean theres an actual issue with the request, it just means something is ineligible,
     logTrace(
       `${LoggingModule.SERVER_HTTP_REQUEST}::BPM::400::request::${LoggingStage.COMPLETE}`,
+      loggingContext
+    );
+    return;
+  }
+
+  if (service === Service.PREFERENCES && status === 404) {
+    // When preferences returns a 404, all it means is that a prefernce hasnt been set
+    logTrace(
+      `${LoggingModule.SERVER_HTTP_REQUEST}::PREFERENCES::404::request::${LoggingStage.COMPLETE}`,
       loggingContext
     );
     return;
@@ -341,6 +350,8 @@ class ServerHttpRequest extends HttpRequest {
     if (url.includes(Service.BPM)) return Service.BPM;
     if (url.includes(Service.POLICY)) return Service.POLICY;
     if (url.includes(Service.AUTH0)) return Service.AUTH0;
+    if (url.includes(Service.PREFERENCES)) return Service.PREFERENCES;
+    if (url.includes(Service.TRANSACTIONS)) return Service.TRANSACTIONS;
     if (url.includes(Service.ENTERPRISE_SEARCH))
       return Service.ENTERPRISE_SEARCH;
     return Service.UNKNOWN;
