@@ -306,6 +306,9 @@
                 "policyDate": "Policy Date",
                 "issueState": "Issue State"
             },
+            "aiChatbot": {
+                "text": "Zinnia AI Assistant"
+            },
             "owner": {
                 "text": "Manage owners",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
@@ -8177,6 +8180,89 @@
                 "agentHasNoAgencies": "This agent doesn't belong to any agencies.",
                 "current": "Current user"
             }
+        }
+    },
+    "zinniaAiAssistant": {
+        "header":"Zinnia AI Assistant",
+        "chat": {
+            "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
+            "inputPlaceholder": "Ask me anything",
+            "footerText": "Disclaimer: Zinnia chat can make mistakes.",
+            "errorMsg": "Sorry, I couldn’t get a response. Please try again later.",
+            "send": "Send",
+            "stop": "Stop",
+            "retry": "Retry",
+            "feedback": {
+                "thanksMsg": "Thanks for submitting your feedback",
+                "feedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
+                "submitFeedback": "Submit feedback",
+                "yourFeedback": "Your feedback",
+                "description": "Description",
+                "submit": "Submit",
+                "cancel": "Cancel",
+                "placeholder": "Your feedback message here...",
+                "positiveFeedbackComment": "Could you clarify what aspects of the feedback you found satisfactory? Your feedback is valuable for improving our service.",
+                "negativeFeedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
+                "validationError": "Please enter your feedback comment"
+            },
+            "followUpPlaceholder": "Ask your follow up questions here...",
+            "followUpButton": "Ask your follow up questions here"
+        },
+        "documents": {
+            "recentlyAdded": "Recently added files",
+            "recentlyModified": "Recently modified files",
+            "allDocs": "All documents",
+            "fileName": "File Name",
+            "createdAt": "Created at",
+            "updatedAt": "Updated at",
+            "noDoc": "No documents found",
+            "search": "Search Documents",
+            "docPreview": "Document Preview",
+            "noPreview": "Document preview is not available",
+            "resultsPerPage": "Results per page"
+        },
+        "admin": {
+            "tenants": {
+                "header": "Tenants",
+                "tenantId": "Zowie Tenant ID",
+                "createdDate": "Date Created",
+                "updatedDate": "Date Updated",
+                "noTenantsFound": "No Tenant Found",
+                "search": "Search tenants",
+                "sidesheet": {
+                    "overview": "Overview",
+                    "featureFlags": "Feature Flags",
+                    "integrations": "Integrations",
+                    "knowledgeBases": "Knowledge Bases",
+                    "retrievalAugmentedGeneration": "Retrieval Augmented Generation",
+                    "tableConfigurations": "Table Configurations",
+                    "users": "Users",
+                    "warehouse": "Warehouse"
+                }
+            },
+            "users": {
+                "header": "System Users",
+                "name": "Name",
+                "email": "Email",
+                "role": "Role",
+                "createdDate": "Date Created",
+                "updatedDate": "Date Updated",
+                "search": "Search users",
+                "noUsersFound": "No User Found"
+            }
+        },
+        "sidenav": {
+            "newChat": "New chat",
+            "sharepointDocuments": "Sharepoint Documents",
+            "recentlyAdded": "Recently added",
+            "recentlyModified": "Recently modified",
+            "allDocs": "All documents",
+            "recentChat": "Recent chat",
+            "search": "Search",
+            "noResultsFound": "No results found",
+            "noRecentChats": "No recent chats",
+            "loadingChats": "Loading chats...",
+            "settings": "Settings"
         }
     },
     "updateSuitabilityDataEntry": {

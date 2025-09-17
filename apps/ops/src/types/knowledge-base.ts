@@ -1,0 +1,77 @@
+import { ClientDetailsDto, SourceDocument, UserResponse } from "@xd/api-types/dist/generated-types/knowledgebase";
+
+export enum KnowledgeBasePages {
+  CHAT = 'chat',
+  DOCUMENTS = 'documents',
+  ADMIN = 'admin',
+}
+
+export enum MessageRole {
+  User = 'user',
+  Bot = 'bot',
+};
+
+export type UserMessage = {
+  id: string;
+  role: MessageRole.User;
+  content: string;
+};
+
+export type ChatbotMessage = {
+  id: string;
+  questionId: string
+  role: MessageRole.Bot;
+  content: string;
+  sourceDocuments: SourceDocument[];
+  feedbackType: FeedbackType | null;
+  feedbackComment: string | null;
+};
+
+export const BOT_ERROR_MESSAGE_ID = 'bot_error';
+
+export enum KeyboardEvents {
+  Enter = 'Enter',
+  Space = ' ',
+}
+
+export enum FeedbackType {
+  Like = 'LIKE',
+  Dislike = 'DISLIKE',
+}
+
+export enum DocumentsDisplayType {
+  Updated = 'updated',
+  Recent = 'recent',
+  All = 'all',
+}
+
+export enum SortBy {
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+}
+
+export enum SortDirection {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export enum SortFields {
+  Name = 'name',
+  Created = 'created',
+  Updated = 'updated',
+}
+
+export type ClientDetailsResponse = ClientDetailsDto[];
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}
+
+export type GetAllUserDetailsResponse = PaginatedResponse<UserResponse>;

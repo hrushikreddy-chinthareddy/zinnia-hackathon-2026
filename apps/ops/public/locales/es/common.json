@@ -292,6 +292,9 @@
                 "policyDate": "Fecha de la Póliza",
                 "issueState": "Estado de Emisión"
             },
+            "aiChatbot": {
+                "text": "Asistente de AI de Zinnia"
+            },
             "owner": {
                 "text": "Administrar propietarios",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
@@ -8021,6 +8024,89 @@
                 "agentHasNoAgencies": "Este agente no pertenece a niguna agencia.",
                 "current": "Usuario actual"
             }
+        }
+    },
+    "zinniaAiAssistant": {
+        "header":"Zinnia AI Assistant",
+        "chat": {
+            "startingMessage": "Hola, soy agente virtual. Tenga en cuenta que esta función está actualmente en fase beta.\n¿Cómo puedo ayudarle?",
+            "inputPlaceholder": "Pregúntame cualquier cosa",
+            "footerText": "Descargo de responsabilidad: El chat de zinnia puede cometer errores.",
+            "errorMsg": "Lo siento, no obtuve respuesta. Inténtalo de nuevo más tarde.",
+            "send": "Enviar",
+            "stop": "Detener",
+            "retry": "Rever",
+            "feedback": {
+                "thanksMsg": "Gracias por enviarnos tus comentarios",
+                "feedbackComment": "¿Podrías aclarar qué aspectos de los comentarios te parecieron insatisfactorios? Tus comentarios son valiosos para mejorar nuestro servicio.",
+                "submitFeedback": "Enviar comentarios",
+                "yourFeedback": "Tus comentarios",
+                "description": "Descripción",
+                "submit": "Enviar",
+                "cancel": "Cancelar",
+                "placeholder": "Escribe tu mensaje de comentarios aquí...",
+                "positiveFeedbackComment": "¿Podría aclarar qué aspectos de sus comentarios fueron satisfactorios? Su opinión es valiosa para mejorar nuestro servicio.",
+                "negativeFeedbackComment": "¿Podría aclarar qué aspectos de sus comentarios no fueron satisfactorios? Su opinión es valiosa para mejorar nuestro servicio.",
+                "validationError": "Por favor, ingrese su comentario"
+            },
+            "followUpPlaceholder": "Haga sus preguntas de seguimiento aquí...",
+            "followUpButton": "Haga sus preguntas de seguimiento aquí"
+        },
+        "documents": {
+            "recentlyAdded": "Archivos añadidos recientemente",
+            "recentlyModified": "Archivos modificados recientemente",
+            "allDocs": "Todos los documentos",
+            "fileName": "Nombre del archivo",
+            "createdAt": "Fecha de creación",
+            "updatedAt": "Fecha de actualización",
+            "noDoc": "No se encontraron documentos",
+            "search": "Buscar documentos",
+            "docPreview": "Document Preview",
+            "noPreview": "Vista previa del documento no disponible",
+            "resultsPerPage": "Resultados por página"
+        },
+        "admin": {
+            "tenants": {
+                "header": "Inquilinos",
+                "tenantId": "ID de inquilino Zowie",
+                "createdDate": "Fecha de creación",
+                "updatedDate": "Fecha de actualización",
+                "noTenantsFound": "No se encontró ningún inquilino",
+                "search": "Buscar inquilinos",
+                "sidesheet": {
+                    "overview": "Resumen",
+                    "featureFlags": "Funciones",
+                    "integrations": "Integraciones",
+                    "knowledgeBases": "Bases de conocimiento",
+                    "retrievalAugmentedGeneration": "Generación aumentada por recuperación",
+                    "tableConfigurations": "Configuraciones de tablas",
+                    "users": "Usuarios",
+                    "warehouse": "Almacén"
+                }
+            },
+            "users": {
+                "header": "Usuarios del sistema",
+                "name": "Nombre",
+                "email": "Correo electrónico",
+                "role": "Rol",
+                "createdDate": "Fecha de creación",
+                "updatedDate": "Fecha de actualización",
+                "search": "Buscar usuarios",
+                "noUsersFound": "No se encontró ningún usuario"
+            }
+        },
+        "sidenav": {
+            "newChat": "Nuevo chat",
+            "sharepointDocuments": "Documentos de SharePoint",
+            "recentlyAdded": "Recientemente añadidos",
+            "recentlyModified": "Recientemente modificados",
+            "allDocs": "Todos los documentos",
+            "recentChat": "Chat reciente",
+            "search": "Buscar",
+            "noResultsFound": "No se encontraron resultados",
+            "noRecentChats": "No hay chats recientes",
+            "loadingChats": "Cargando más chats...",
+            "settings": "Configuraciones"
         }
     },
     "updateSuitabilityDataEntry": {

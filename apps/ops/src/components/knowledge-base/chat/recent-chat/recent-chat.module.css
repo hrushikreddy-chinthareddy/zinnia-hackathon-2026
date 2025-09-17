@@ -1,0 +1,8 @@
+.itemhover:hover{
+  color: var(--color-base-text-text-link);
+  background-color: var(--color-base-surface-surface-secondary);
+  border-radius: var(--measure-dimension-z-space-1);
+}
+.activeItem{
+  color: var(--color-nav-drawer-2-nav-drawer-item-2-active-border) !important;
+}

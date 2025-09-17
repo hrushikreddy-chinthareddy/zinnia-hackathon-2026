@@ -164,3 +164,25 @@ export const formatRelativeTime = (
   }
   return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
 };
+
+export function formatDateTime(isoString: string): string {
+  const date = new Date(isoString);
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: 'UTC',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  let formatted = date.toLocaleString('en-US', options);
+
+  formatted = formatted
+    .replace('at ', '')
+    .replace(' PM', ' pm')
+    .replace(' AM', ' am');
+
+  return formatted;
+}
