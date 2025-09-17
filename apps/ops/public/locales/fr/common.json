@@ -2277,7 +2277,8 @@
                     "specificAmountGross": "Specific Amount net$",
                     "percetageOfAccountValue": "% de la valeur du compte",
                     "maximum": "Montant maximum",
-                    "percentageOfAccumulatedValue": "% de valeur accumulée"
+                    "percentageOfAccumulatedValue": "% de valeur accumulée",
+                    "tenPercentageOfAccumulatedValue": "10 % de valeur accumulée"
                 },
                 "processTimeframe": {
                     "selectOne": "Sélectionnez-en un",

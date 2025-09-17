@@ -2303,7 +2303,8 @@
                     "percetageOfAccountValue": "% of Account value",
                     "maximum": "Maximum amount",
                     "maturingGuranteePeriod": "Maturing guarantee period",
-                    "percentageOfAccumulatedValue": "% of accumulated value"
+                    "percentageOfAccumulatedValue": "% of accumulated value",
+                    "tenPercentageOfAccumulatedValue": "10% of Accumulated value"
                 },
                 "processTimeframe": {
                     "selectOne": "Select one",

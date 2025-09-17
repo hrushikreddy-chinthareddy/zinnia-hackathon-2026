@@ -2286,7 +2286,8 @@
                     "percetageOfAccountValue": "% del valor de la cuenta",
                     "maximum": "Monto máximo",
                     "maturingGuranteePeriod": "Periodo de garantía de maduración",
-                    "percentageOfAccumulatedValue": "% del valor acumulado"
+                    "percentageOfAccumulatedValue": "% del valor acumulado",
+                    "tenPercentageOfAccumulatedValue": "10% del valor acumulado"
                 },
                 "processTimeframe": {
                     "selectOne": "Seleccione uno",

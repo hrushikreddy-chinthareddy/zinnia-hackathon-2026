@@ -113,6 +113,13 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         ) {
             return { selectedOption: ProgramType.TotalFreeAmt, amount: '' };
         }
+
+        if (
+            withdrawType == WithdrawalType.Gross &&
+            programSubType === ProgramSubType.PercentageofAV
+        ) {
+            return { selectedOption: ProgramType.PartialPercent, amount: '10' };
+        }
         return { selectedOption: null, amount: '' };
     };
 
@@ -161,6 +168,24 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
                     programType: { text: ProgramType.TotalFreeAmt },
                     programSubType: {
                         text: ProgramSubType.TotalFreeWithdrawal,
+                    },
+                };
+            },
+        },
+        {
+            label: `${t(
+                'amountDetails.partialWithdrawal.tenPercentageOfAccumulatedValue'
+            )}`,
+            value: ProgramType.PartialPercent,
+            generatePayloadFromSelection: () => {
+                return {
+                    ...getDefaultFormProgramValues(),
+                    withdrawType: { text: WithdrawalType.Gross },
+                    programType: { text: ProgramType.WITHDRAWAL },
+                    programSubType: { text: ProgramSubType.PercentageofAV },
+                    partialPercent: {
+                        text: '10',
+                        amountType: AmountType.Percent,
                     },
                 };
             },
