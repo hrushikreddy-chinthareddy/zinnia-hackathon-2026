@@ -23,7 +23,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { ACH, useAutopay } from '@deps/contexts/transactions/AutopayContext';
+import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
@@ -184,9 +184,9 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         {
             // TODO MG: fix the comparison table so this can be translated
             // comparison table uses 'Banking details' to style
-            header: isWithdrawalAutopay ? 'Payment method' : 'Banking details',
+            header: 'Payment method',
             new: {
-                paymentType: isWithdrawalAutopay ? paymentForm : ACH,
+                paymentType: paymentForm,
                 branchName: paymentBranchName,
                 accountNumber: paymentAccountNumber,
                 paymentAddress: paymentAddress ?? {},

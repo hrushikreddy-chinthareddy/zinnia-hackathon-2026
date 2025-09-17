@@ -36,7 +36,6 @@ import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesh
 dayjs.extend(utc);
 
 function TaskQueueDrawer({
-    onClose,
     taskId,
     taskStatus,
     getTasks,
@@ -205,7 +204,7 @@ function TaskQueueDrawer({
         if (regex.test(currentLocation)) {
             openGlobalSideSheet();
         } else {
-            onClose();
+            sideSheet.onClose();
         }
     };
 

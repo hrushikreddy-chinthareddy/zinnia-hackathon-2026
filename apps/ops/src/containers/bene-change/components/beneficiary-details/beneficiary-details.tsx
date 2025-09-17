@@ -1,4 +1,9 @@
-import { Email, PartyRole, Policy } from '@zinnia/api-types/types/sor';
+import {
+    Email,
+    PartyRole,
+    Policy,
+    PreferredCommunicationType,
+} from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -128,15 +133,11 @@ export default function BeneficiaryDetails({
     const preferedOptions = [
         {
             label: t('email.title'),
-            value: 'EMAIL',
-        },
-        {
-            label: t('phone.title'),
-            value: 'PHONE',
+            value: PreferredCommunicationType.EMAIL,
         },
         {
             label: t('mail'),
-            value: 'REGULARMAIL',
+            value: PreferredCommunicationType.REGULARMAIL,
         },
     ];
 

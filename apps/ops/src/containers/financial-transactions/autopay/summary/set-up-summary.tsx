@@ -1,7 +1,6 @@
 import {
     Address,
     ArrangementType,
-    DisbursementPaymentForm,
     Policy,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
@@ -195,7 +194,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                         classNames="max-w-[524px]"
                         payeeName={payeeFullName}
                         showFinancialData={false}
-                        paymentType={paymentForm as any}
+                        paymentType={paymentForm}
                         fboFfc={fboFfc}
                     />
                 ) : (
@@ -204,7 +203,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                         branchName={paymentBranchName}
                         classNames="max-w-[524px]"
                         payeeName={payorFullName}
-                        paymentType={DisbursementPaymentForm.ACH}
+                        paymentType={paymentForm}
                         showFinancialData={false}
                     />
                 )}

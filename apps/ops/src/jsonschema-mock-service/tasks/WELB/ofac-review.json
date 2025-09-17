@@ -1,7 +1,6 @@
 {
     "formId": "1ad71c64-0273-4108-b625-83f049c63514",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "OFAC_REVIEW",
     "formSchema": {
         "type": "object"

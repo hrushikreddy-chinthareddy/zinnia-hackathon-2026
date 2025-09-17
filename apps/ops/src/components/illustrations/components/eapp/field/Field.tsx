@@ -492,11 +492,6 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         fieldSize={FieldSize.Small}
                         readOnly={field.disabled}
                     />
-                    {field.validationError?.message && (
-                        <p className={style.errorMessage}>
-                            {field.validationError?.message}
-                        </p>
-                    )}
                 </FieldContainer>
             );
 

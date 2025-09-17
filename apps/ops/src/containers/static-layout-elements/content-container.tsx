@@ -3,18 +3,21 @@ import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
+import { FindAllKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-sidesheet';
 import { FindKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface ContentContainerProps extends PropsWithChildren {
     policy: Policy;
@@ -36,6 +39,8 @@ const ContentContainer = ({
 }: ContentContainerProps) => {
     const { t } = useTranslation();
     const { globalValuesData } = useContentContext();
+    const { featureFlags } = useOptimizely();
+    const showAllKeyValues = featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
 
     const {
         highlight,
@@ -94,7 +99,13 @@ const ContentContainer = ({
                         showLink={showLink}
                         className="justify-between items-center"
                     >
-                        {hideSearch || !policyDetails.isTPA ? null : (
+                        {hideSearch ||
+                        !policyDetails.isTPA ? null : showAllKeyValues ? (
+                            <FindAllKeyValuesSidesheet
+                                planCode={planCode}
+                                policyNumber={policyNumber}
+                            />
+                        ) : (
                             <FindKeyValuesSidesheet
                                 planCode={planCode}
                                 policyNumber={policyNumber}

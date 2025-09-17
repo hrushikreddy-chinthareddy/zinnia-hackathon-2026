@@ -34,7 +34,7 @@ import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 interface InteriorPeoplePageHeaderContainerProps {
     selectedPolicyParty?: Party;
     selectedPolicyPartyRoles?: PolicyPartyRoles[];
-    editable: boolean;
+    editable?: boolean;
     partyStatus?: PartyStatus;
     isUserPermissionedToEditCards?: boolean;
 }
@@ -42,14 +42,14 @@ interface InteriorPeoplePageHeaderContainerProps {
 const InteriorPeoplePageHeaderContainer = ({
     selectedPolicyParty,
     selectedPolicyPartyRoles,
-    editable,
+    editable = false,
     isUserPermissionedToEditCards,
     partyStatus,
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const shouldShowEditCommunicationsPreferences =
-        featureFlags[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
+        featureFlags[FEATURE_FLAGS.COMMUNICATION_PREFERENCES] && editable;
     const selectedPartyRoles = selectedPolicyPartyRoles?.map((roleObject) => {
         return roleObject.partyRole?.toLowerCase();
     });

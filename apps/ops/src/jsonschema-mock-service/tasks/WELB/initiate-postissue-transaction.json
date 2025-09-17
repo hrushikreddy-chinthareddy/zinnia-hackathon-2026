@@ -1,7 +1,6 @@
 {
     "formId": "12a36451-02b1-4c7b-a399-8cd40e564203",
     "process": "Policy Update",
-    "carrier": "WELB",
     "taskType": "INITIATE_POSTISSUE_TRANSACTION",
     "formSchema": {
         "type": "object"

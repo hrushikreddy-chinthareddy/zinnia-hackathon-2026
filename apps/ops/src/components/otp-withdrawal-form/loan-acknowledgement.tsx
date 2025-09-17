@@ -40,20 +40,18 @@ export default function LoanAcknowledgement({
                     ? t('loanRepayment.title')
                     : t('loanAcknowledgement.title')}
             </Typography>
-            <div className="flex flex-wrap gap-8 max-md:flex-col">
-                <div className="flex-1">
-                    <CheckboxText
-                        data-testid="acknowledgement"
-                        label={
-                            isLoanRepayment
-                                ? t('loanRepayment.acknowledgement')
-                                : t('loanAcknowledgement.acknowledgement')
-                        }
-                        checked={acknowledgement}
-                        onChange={() => setAcknowledgement(!acknowledgement)}
-                        isDisabled={isFormStateReadOnly}
-                    />
-                </div>
+            <div className=" flex flex-wrap gap-8 max-md:flex-col">
+                <CheckboxText
+                    data-testid="acknowledgement"
+                    label={
+                        isLoanRepayment
+                            ? t('loanRepayment.acknowledgement')
+                            : t('loanAcknowledgement.acknowledgement')
+                    }
+                    checked={acknowledgement}
+                    onChange={() => setAcknowledgement(!acknowledgement)}
+                    isDisabled={isFormStateReadOnly}
+                />
             </div>
         </CardContainer>
     );

@@ -99,7 +99,7 @@ const W4pTaxForm = ({
             containerClassNames="border-b-2 border-gray-100"
             classNames="w-full"
         >
-            <div className="flex-1 mt-5">
+            <div className="flex-1 mt-5 flex flex-wrap gap-8 max-md:flex-col">
                 <CheckboxText
                     label={t('title')}
                     checked={isW4pChecked}

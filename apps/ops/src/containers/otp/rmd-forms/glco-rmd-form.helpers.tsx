@@ -35,8 +35,7 @@ import getGlcoConfig from '../withdrawal-forms/flic-withdrawal-form.helpers';
 
 export default function getGlcoRmdConfig(t: TFunction) {
     // importing base configuration from GLCO form helper.
-    const { cslnCheckStates, irsSignatureConfig, formValidation } =
-        getGlcoConfig(t);
+    const { irsSignatureConfig, formValidation } = getGlcoConfig(t);
 
     // CMW-13796 remove further credit info
     const disbursementOptions: PaymentMethodOption[] = [
@@ -366,7 +365,6 @@ export default function getGlcoRmdConfig(t: TFunction) {
         signaturesConfig,
         formPartyConfigs,
         formValidation: rmdformValidation,
-        cslnCheckStates,
         irsSignatureConfig,
         w4pSignaturesConfig,
         disbursementOptions,

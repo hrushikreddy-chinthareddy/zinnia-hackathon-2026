@@ -13,6 +13,7 @@ import {
 import {
     checkEligibilityAddressChange,
     checkEligibilityBeneficiary,
+    checkEligibilityCommunicationPreferenceChange,
     checkEligibilityEmailChange,
     checkEligibilityPhoneChange,
 } from '@deps/queries/api/bpm-non-financial';
@@ -79,6 +80,16 @@ export const checkPhoneChangeEligibilityQuery = async (
     policyNumber: string
 ) => {
     return await checkEligibilityPhoneChange(planCode, policyNumber);
+};
+
+export const checkCommunicationPreferenceChangeEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string
+) => {
+    return await checkEligibilityCommunicationPreferenceChange(
+        planCode,
+        policyNumber
+    );
 };
 
 export const checkAddressChangeEligibilityQuery = async (

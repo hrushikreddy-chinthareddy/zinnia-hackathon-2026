@@ -43,8 +43,7 @@ import getFlicConfig, {
 
 export default function getFlicRmdConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
-    const { cslnCheckStates, irsSignatureConfig, formValidation } =
-        getFlicConfig(t);
+    const { irsSignatureConfig, formValidation } = getFlicConfig(t);
 
     // CMW-13796 remove further credit info
     const disbursementOptions: PaymentMethodOption[] = [
@@ -619,7 +618,6 @@ export default function getFlicRmdConfig(t: TFunction) {
         signaturesConfig,
         formPartyConfigs,
         formValidation: rmdformValidation,
-        cslnCheckStates,
         irsSignatureConfig,
         fundWithdrawnMethodOptions,
         w4pSignaturesConfig,

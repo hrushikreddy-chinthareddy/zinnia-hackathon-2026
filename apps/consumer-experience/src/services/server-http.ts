@@ -48,6 +48,7 @@ class ServerHttpRequest extends HttpRequest {
       method: init?.method,
       file: 'server-http.ts',
       function: 'request',
+      correlationId,
     };
     logTrace(
       `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.START}`,

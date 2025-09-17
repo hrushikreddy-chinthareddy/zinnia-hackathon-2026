@@ -1,7 +1,6 @@
 {
     "formId": "4b0b4c59-28a3-4de3-9d63-25a8d24522d1",
     "process": "Agent Onboarding",
-    "carrier": "WELB",
     "taskType": "BACKGROUND_NIGO",
     "formSchema": {
         "type": "object"

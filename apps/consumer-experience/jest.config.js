@@ -19,6 +19,7 @@ module.exports = createJestConfig({
     '@zinnia/bloom/internal/components':
       '<rootDir>/node_modules/@zinnia/bloom/src/components',
     '@panva/hkdf': '<rootDir>/node_modules/@panva/hkdf',
-    'jose': '<rootDir>/node_modules/jose',
+    jose: '<rootDir>/node_modules/jose',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
 });

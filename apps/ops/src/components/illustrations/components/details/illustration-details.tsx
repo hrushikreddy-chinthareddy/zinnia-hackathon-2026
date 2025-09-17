@@ -54,6 +54,7 @@ export default function IllustrationDetails({
             setNewBusinessCaseId(newBusinesResponse.caseId);
             setEAppLink(getEAppLink());
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newBusinesResponse]);
 
     const getEAppLink = () => {
@@ -83,28 +84,26 @@ export default function IllustrationDetails({
             versionedAnswers={versionedAnswers}
         >
             <IllustrationDetailProvider value={fullIllustration ?? null}>
-                <div>
-                    <Skeleton loading={isLoading}>
-                        <IllustrationDetailsHeader
-                            title={illustration.title}
-                            carrier={getProductCarrierName(product)}
-                            eAppId={eAppId}
-                            eAppLink={getEAppLink()}
-                            hasIllustrationSelected={hasIllustrationSelected()}
-                        />
-                    </Skeleton>
-                    <Skeleton loading={isLoading}>
-                        <IllustrationDetailsToolbar
-                            status={illustration.status}
-                            isLoading={isLoading}
-                            clientCase={clientCase}
-                            illustrationId={illustration.id}
-                            eAppId={eAppId}
-                            planCode={product.planCode}
-                        />
-                    </Skeleton>
-                    <IllustrationDetailsContent isLoading={true} />
-                </div>
+                <Skeleton loading={isLoading}>
+                    <IllustrationDetailsHeader
+                        title={illustration.title}
+                        carrier={getProductCarrierName(product)}
+                        eAppId={eAppId}
+                        eAppLink={getEAppLink()}
+                        hasIllustrationSelected={hasIllustrationSelected()}
+                    />
+                </Skeleton>
+                <Skeleton loading={isLoading}>
+                    <IllustrationDetailsToolbar
+                        status={illustration.status}
+                        isLoading={isLoading}
+                        clientCase={clientCase}
+                        illustrationId={illustration.id}
+                        eAppId={eAppId}
+                        planCode={product.planCode}
+                    />
+                </Skeleton>
+                <IllustrationDetailsContent isLoading={true} />
             </IllustrationDetailProvider>
         </EAppProviders>
     );

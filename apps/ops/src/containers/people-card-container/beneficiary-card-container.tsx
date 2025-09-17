@@ -78,7 +78,6 @@ const BeneficiaryCardContainer = ({
     const colors: AllocationColor[] = showAllocationBar
         ? peopleDataToColors(filteredData, type)
         : [];
-    const { isAgentSelected } = peopleCardData;
 
     const classes = clsx(
         'mb-[9px]',
@@ -124,7 +123,7 @@ const BeneficiaryCardContainer = ({
                 classNames="mt-6"
                 filteredData={filteredData}
                 peopleCardData={peopleCardData}
-                isRereg={!isAgentSelected}
+                isRereg={isRereg}
                 type={type}
             />
         </div>

@@ -11,6 +11,7 @@ import utc from 'dayjs/plugin/utc';
 import { v4 as uuidV4 } from 'uuid';
 
 import { ACH, Autopay } from '@deps/contexts/transactions/AutopayContext';
+import { convertAggregationAccountTypeToPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { SystematicProgramUpdateRequestQuery } from '@deps/queries/api/bpm';
 import {
     NUMERIC_DATE_FORMAT,
@@ -27,6 +28,9 @@ export const buildSystematicProgramUpdateRequestBody = (
         autopay.effectiveDate,
         NUMERIC_DATE_FORMAT
     ).format(ZAHARA_API_DATE_FORMAT);
+    const paymentForm = convertAggregationAccountTypeToPaymentForm(
+        autopay.paymentForm
+    );
 
     return {
         caseId: autopay.caseId || '',
@@ -37,7 +41,7 @@ export const buildSystematicProgramUpdateRequestBody = (
         systematicProgram: {
             amount: Number(autopay.paymentAmount),
             arrangementType: autopay.arrangementType,
-            paymentForm: ACH,
+            paymentForm,
             amountType: AmountType.AMOUNT,
             frequency: autopay.frequency,
             startDate: autopay.isSetUp
@@ -52,7 +56,7 @@ export const buildSystematicProgramUpdateRequestBody = (
                     allocationPercentage: 100,
                     bankId: autopay.paymentBankId,
                     partyId: autopay.payorPartyId,
-                    paymentForm: ACH,
+                    paymentForm,
                 },
             ],
         },

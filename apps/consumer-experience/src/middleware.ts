@@ -7,12 +7,10 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { CarrierName } from '@zinnia/bloom/components';
 import { NextResponse, type NextRequest } from 'next/server';
-import { v4 as uuid4 } from 'uuid';
 
-import { getRouteKeyFromUrl, RouteKey } from '@/route-map';
+import { RouteKey } from '@/route-map';
 import { isMockAllowed } from '@/utils';
 import {
-  ACKNOWLEDGEMENT_COOKIE_KEY,
   HAD_PREVIOUS_SESSION_COOKIE_KEY,
   MFA_OOB_CODE_COOKIE_KEY,
   MFA_TOKEN_COOKIE_KEY,
@@ -21,16 +19,10 @@ import {
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
 
-import {
-  consumerExperienceAPIBaseUrl,
-  getPolicyDetails,
-  ServerApi,
-} from './services';
-import { checkResetDeliveryDateEligibility } from './services/bpm';
+import { consumerExperienceAPIBaseUrl, ServerApi } from './services';
 import { ROOT_URL_PATH } from './types';
 import { COOKIE_DOMAIN } from '../constants';
 import { CARRIER_REDIRECT_URLS } from './carrier-config/urls';
-import { getRoutePermissions } from './services/display-rules';
 import { TermsAndConditionApiResponse } from './types/auth';
 import { Subdomains } from './types/carriers';
 import {
@@ -44,11 +36,13 @@ import {
   setTermsAndConditionsCookie,
   touchSession,
 } from './utils/auth';
-import {
-  getCarrierSubdomainById,
-  isValidCarrierSubdomain,
-} from './utils/carriers';
 import { lineOfBusinessUrlPath } from './utils/data';
+import {
+  getValidSubdomainForPolicy,
+  hasAcknowledgedPolicy,
+  hasPermissionsForPolicyRoute,
+  pathAccessibleWithoutPolicyAcknowledgement,
+} from './utils/middleware-checks';
 import {
   getFriendlyRedirectUrl,
   isRedirectAFriendlyUrl,
@@ -169,40 +163,27 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL(friendlyRedirectUrl, req.url));
     }
 
-    // Ensure user is on a valid subdomain for the policy theyre viewing.
-    // If not, redirect them to the correct subdomain for a policy
     if (pathnameIsInternalPage) {
       const { planCode, policyNumber, lineOfBusiness } =
         getPolicyDataFromPath(pathname);
+      const currentSubdomain = getSubdomain(req.headers);
 
-      if (!planCode || !policyNumber || !lineOfBusiness) {
+      // If these don't exist exit early because nothing following
+      // is relevant without them
+      if (!planCode || !policyNumber || !lineOfBusiness || !currentSubdomain) {
         return resNext;
       }
 
-      const { data: policyData } = await getPolicyDetails(
-        {
-          planCode,
-          policyNumber,
-        },
-        {
-          user: session?.user,
-          correlationId: uuid4(),
-        }
-      );
+      const validPolicySubdomain = await getValidSubdomainForPolicy({
+        currentSubdomain,
+        planCode: getPolicyDataFromPath(pathname).planCode,
+        policyNumber: getPolicyDataFromPath(pathname).policyNumber,
+      });
+      const userHasRoutePermissions =
+        await hasPermissionsForPolicyRoute(pathname);
 
-      // if the user is not on a valid subdomain, redirect them to the correct subdomain based on the
-      // policy they have selected. Prevents someone from being going to like `wellabe.com/123everlyCode/456everlyPolicyNumber`
-      const carrierSubdomain = getCarrierSubdomainById(policyData?.carrierId);
-      const currentSubDomain = getSubdomain(req.headers);
-      const validSubdomain = isValidCarrierSubdomain(currentSubDomain);
-
-      const onWrongUrl =
-        carrierSubdomain &&
-        carrierSubdomain !== currentSubDomain &&
-        validSubdomain;
-
-      if (onWrongUrl) {
-        const subdomainPath = prependSubdomain(carrierSubdomain);
+      if (validPolicySubdomain && validPolicySubdomain !== currentSubDomain) {
+        const subdomainPath = prependSubdomain(validPolicySubdomain);
         return NextResponse.redirect(
           new URL(
             `/coverage/${lineOfBusinessUrlPath(lineOfBusiness as LineOfBusiness)}/${planCode}/${policyNumber}`,
@@ -210,95 +191,24 @@ export async function middleware(req: NextRequest) {
           )
         );
       }
-    }
 
-    // Check that the logged in user has the correct role on a policy to view a page
-    if (pathnameIsInternalPage) {
-      const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
-
-      //We dont have a plancode or policy number for some reason, move on
-      if (!planCode || !policyNumber) {
-        return resNext;
-      }
-
-      const routePermissions = await getRoutePermissions(
-        policyNumber,
-        planCode
-      );
-
-      // if something goes wrong, just let the user go to the page anyway
-      // the backend should still prevent them from doing anything bad based on their user permissions.
-      if (!routePermissions) {
-        return resNext;
-      }
-
-      const routeKeyFromPathname = getRouteKeyFromUrl(pathname);
-
-      const hasPermission =
-        routePermissions[routeKeyFromPathname as RouteKey]();
-
-      // You shouldn't be here, GET ON OUTTA HERE! YOU GET OUT!
-      if (!hasPermission) {
+      if (!userHasRoutePermissions) {
         return NextResponse.redirect(new URL('/404', req.url));
       }
 
-      // Everything is good, carry on!
+      if (!pathAccessibleWithoutPolicyAcknowledgement(pathname)) {
+        const userHasAcknowledgedPolicy = await hasAcknowledgedPolicy(
+          { planCode, policyNumber },
+          req,
+          resNext
+        );
+
+        if (!userHasAcknowledgedPolicy) {
+          return NextResponse.redirect(new URL('/coverage', req.url));
+        }
+      }
+
       return resNext;
-    }
-
-    //********************************** */
-    // Policy delivery eligibility check
-    //********************************** */
-    // Check if the user still needs to acknowledge their policy.
-    // First check if we've already checked this policy in this session, if yes, ignore,
-    // otherwise check if the policy requires acknowledgement and redirect them back to the coverage page instead of letting them
-    // go to the policy details page
-    if (pathnameIsInternalPage) {
-      const { planCode, policyNumber } = getPolicyDataFromPath(pathname);
-      const hasAckowledgedPolicy = req.cookies.get(
-        ACKNOWLEDGEMENT_COOKIE_KEY
-      )?.value;
-
-      const parsedCookie: string[] = JSON.parse(hasAckowledgedPolicy || '[]');
-      // we check to see if the policy number is in the cookie,
-      // this means they have already acknowledged the policy
-      if (
-        !planCode ||
-        !policyNumber ||
-        parsedCookie.includes(policyNumber) ||
-        // These two routes need to be accessible so that users can view their
-        // policy acknowledgement document
-        pathname.includes('/policy-acknowledgement') ||
-        pathname.includes('/documents/error')
-      ) {
-        return resNext;
-      }
-
-      // You'll only get to this logic if you NEED to acknowledge the policy
-      // AND you've NEVER been to the policy page before AND you're trying
-      // to get to an interior page (not the index page). Includes the case
-      // where you have a single policy and this is the first time you've
-      // visited the site
-      const { data: eligiblityData } = await checkResetDeliveryDateEligibility({
-        planCode,
-        policyNumber,
-      });
-
-      // If you REQUIRE policy acknowledgement, you will be redirected to the index page
-      // We can assume that once theyve ackowledged the policy, the cookie will be set
-      // in policy acknowledgement action and they won't make it here, but if the policy
-      // is not in the cookie, then the eligibility check will have returned false
-      // and user will get to the else here
-      if (eligiblityData.isEligible) {
-        return NextResponse.redirect(new URL('/coverage', req.url));
-      } else {
-        parsedCookie.push(policyNumber);
-        setResCookie(resNext, {
-          name: ACKNOWLEDGEMENT_COOKIE_KEY,
-          value: JSON.stringify(parsedCookie),
-        });
-        return resNext;
-      }
     }
 
     return resNext;

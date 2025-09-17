@@ -1,7 +1,6 @@
 {
     "formId": "d30857ef-cf3f-46dc-b461-694c5b0e0c19",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "NB_PRENOTE_NIGO",
     "formSchema": {
         "type": "object"

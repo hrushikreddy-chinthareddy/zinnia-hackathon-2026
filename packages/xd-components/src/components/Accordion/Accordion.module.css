@@ -15,8 +15,23 @@
   }
 }
 
+.trigger.nested {
+  &[data-state='open'] {
+    .chevron {
+      transform: rotate(90deg);
+    }
+  }
+}
+
 .content {
   overflow: hidden;
+}
+
+.tags {
+    display: flex;
+    gap: var(--measure-dimension-gap-sm);
+    flex-wrap: wrap;
+    margin-top: var(--measure-dimension-margin-xs);
 }
 
 .item {

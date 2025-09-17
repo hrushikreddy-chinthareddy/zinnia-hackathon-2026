@@ -2142,7 +2142,7 @@ export const farmersBlueprintIU0101 = {
                                 'custom-e27fe421-38cc-4979-a1d6-0f22f6200e31',
                             text: {},
                             title: {
-                                en: 'Adjustments',
+                                en: 'Policy Discounts and Credits',
                             },
                             isCustom: true,
                             fields: [
@@ -2657,25 +2657,9 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'GUIDELINE_MAXIMUM_PREMIUM',
-                                            text: {
-                                                en: 'Guideline Maximum Premium',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                        {
                                             value: 'GUIDELINE_LEVEL_PREMIUM',
                                             text: {
                                                 en: 'Guideline Level Premium',
-                                            },
-                                            isCustom: true,
-                                            orderingIndex: 2,
-                                        },
-                                        {
-                                            value: 'LEVEL_NON_MEC',
-                                            text: {
-                                                en: 'Level Non-MEC',
                                             },
                                             isCustom: true,
                                             orderingIndex: 2,
@@ -5593,7 +5577,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The Owner must be aged 18-55 to select Owner Waiver of Deduction Rider.',
+                                                en: 'Age of owner on Owner Waiver of Deduction Rider must be between 18 and 55.',
                                                 fr: '',
                                             },
                                         },

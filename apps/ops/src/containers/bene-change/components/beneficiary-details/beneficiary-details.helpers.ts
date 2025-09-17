@@ -63,6 +63,7 @@ export const getInitialBene = (
         trustName: selectedParty?.lastName,
         companyName: selectedParty?.lastName,
         dateOfBirth: selectedParty?.dateOfBirth,
+        trustDate: selectedParty?.trustDate,
         partyType: selectedParty?.partyType,
         trustType: selectedParty?.trustType,
         entityType: selectedParty?.entityType,

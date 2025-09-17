@@ -2,7 +2,7 @@
 
 import { skipToken, useQuery } from '@tanstack/react-query';
 import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { AcknowledgePolicyCard } from '@/components/acknowledge-policy-card/AcknowledgePolicyCard';
 import { CoverageOverviewCard } from '@/components/coverage-overview-card/CoverageOverviewCard';
@@ -48,6 +48,17 @@ export const CoverageCard = ({
       : skipToken,
   });
 
+  const policyRequiresAcknowledgement = useMemo(() => {
+    return (
+      // Include this check because if the user checks the box to acknowledge the policy, the
+      // requiresAcknowledgement query was already run and the data cached, so this check
+      // will still return true without the additional cookie check
+      !policyIsInAcknowledgedCookie &&
+      requiresAckowledgement &&
+      requiresAckowledgement.isEligible
+    );
+  }, [policyIsInAcknowledgedCookie, requiresAckowledgement]);
+
   if (isLoading || !clientReady) {
     return (
       <ClickableCardContainer>
@@ -64,14 +75,7 @@ export const CoverageCard = ({
     );
   }
 
-  if (
-    // Include this check because if the user checks the box to acknowledge the policy, the
-    // requiresAcknowledgement query was already run and the data cached, so this check
-    // will still return true without the additional cookie check
-    !policyIsInAcknowledgedCookie &&
-    requiresAckowledgement &&
-    requiresAckowledgement.isEligible
-  ) {
+  if (policyRequiresAcknowledgement) {
     return <AcknowledgePolicyCard policy={policy} />;
   }
 

@@ -302,10 +302,14 @@ const PayeeSummaryCard = ({
     address,
     beneficiaryColor,
     branchName,
+    charges,
     classNames,
+    disbursementType,
+    fboFfc,
     federalTaxDollarAmount,
     federalTaxPercentage,
     index,
+    ownerTaxState,
     payeeName,
     paymentType,
     requestedAmountDollarAmount,
@@ -314,10 +318,6 @@ const PayeeSummaryCard = ({
     stateTaxDollarAmount,
     stateTaxPercentage,
     totalAllocationAmount,
-    disbursementType,
-    ownerTaxState,
-    fboFfc,
-    charges,
 }: PayeeSummaryCardProps) => {
     const { t } = useTranslation();
 

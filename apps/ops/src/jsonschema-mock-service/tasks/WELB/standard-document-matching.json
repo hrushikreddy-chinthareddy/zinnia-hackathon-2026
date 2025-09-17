@@ -1,7 +1,6 @@
 {
     "formId": "f62f34ec-dcf2-4539-937e-5246b4f2a068",
     "process": "Qualification",
-    "carrier": "WELB",
     "taskType": "STANDARD_DOCUMENT_MATCHING",
     "formSchema": {
         "type": "object"

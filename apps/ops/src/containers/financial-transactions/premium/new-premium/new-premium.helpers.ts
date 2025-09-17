@@ -5,7 +5,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { OneTimePremiumRequestQuery } from '@deps/queries/api/bpm';
 import {
-    EDS_DATE_DISPLAY_FORMAT,
+    ZAHARA_API_DATE_FORMAT,
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 
@@ -28,7 +28,7 @@ export const buildNewPremiumRequestBody = (
         correlationId: uuidV4(),
         effectiveDate: dayjs(effectiveDate)
             .utc()
-            .format(EDS_DATE_DISPLAY_FORMAT),
+            .format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: premium.reverseInitiator,
         transactionAmounts: {
             requestedAmount: Number(premium.paymentAmount),

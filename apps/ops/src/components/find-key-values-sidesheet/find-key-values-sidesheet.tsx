@@ -34,11 +34,13 @@ import FieldDateSelect, {
 import Highlighter from '../highlighter/highlighter';
 import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
 import Popover from '../popover/popover';
+
 interface FindKeyValuesSidebarProps {
     planCode?: string;
     policyNumber?: string;
 }
 
+//TODO: remove once FindAllKeyValuesSidesheet is enabled for all users
 export const FindKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
     planCode,
     policyNumber,
@@ -107,6 +109,7 @@ export const FindKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
         () => prepareSearchableData(policy ?? {}, t),
         [policy, t]
     );
+
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
     // When user searches, filter down the key values
