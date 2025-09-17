@@ -731,6 +731,7 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         onCancel={() => sideSheet.handleOpen(false)}
                         party={owner?.party}
                         planCode={policy.planCode}
+                        policy={policy.policy}
                         policyNumber={policy.policyNumber}
                         setCurrentEmails={setCurrentEmails}
                         updateEmail={bestAvailEmail}
@@ -754,6 +755,7 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         onCancel={() => sideSheet.handleOpen(false)}
                         party={owner?.party}
                         planCode={policy.planCode}
+                        policy={policy.policy}
                         policyNumber={policy.policyNumber}
                         setCurrentPhones={setCurrentPhones}
                         updatePhone={bestAvailPhone}
@@ -783,6 +785,7 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         party={owner?.party}
                         planCode={policy.planCode}
                         policyNumber={policy.policyNumber}
+                        policy={policy.policy}
                         setCurrentAddresses={setCurrentAddresses}
                         updateAddress={bestAvailAddress ?? undefined}
                     />

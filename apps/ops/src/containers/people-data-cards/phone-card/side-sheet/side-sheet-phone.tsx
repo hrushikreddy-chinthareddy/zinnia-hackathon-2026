@@ -4,6 +4,7 @@ import {
     PhoneType,
     Party,
     TransactionType,
+    Policy,
 } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
@@ -51,6 +52,9 @@ import {
     getPhoneTypeOptions,
     getTimeZoneOptions,
 } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
@@ -64,6 +68,11 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 
 dayjs.extend(utc);
 
@@ -72,6 +81,7 @@ type SideSheetPhoneProps = {
     party?: Party;
     planCode?: string;
     policyNumber?: string;
+    policy?: Policy;
     setCurrentPhones: Dispatch<SetStateAction<Phone[]>>;
     updatePhone?: Phone;
 };
@@ -81,6 +91,7 @@ export const SideSheetPhone = ({
     party,
     planCode,
     policyNumber,
+    policy,
     setCurrentPhones,
     updatePhone,
 }: SideSheetPhoneProps) => {
@@ -88,6 +99,7 @@ export const SideSheetPhone = ({
         keyPrefix: 'people.sideSheet.phone',
     });
     const { t: defaultT } = useTranslation();
+    const { sessionId, partyId: userId } = usePermissionsContext();
 
     const INITIAL_PHONE: Phone = {
         bestTime: 'Anytime',
@@ -157,11 +169,31 @@ export const SideSheetPhone = ({
             transaction: NonFinancialTransactions.Phone,
         });
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.REMOVE_PHONE,
+                    query: {
+                        ...body,
+                        deleteRequest: true,
+                        phone,
+                    },
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId,
+            onSuccessfulSubmit,
         });
     };
 
@@ -202,11 +234,31 @@ export const SideSheetPhone = ({
             });
         }
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType: isAdd
+                        ? TransactionSubmittedEventType.ADD_PHONE
+                        : TransactionSubmittedEventType.UPDATE_PHONE,
+                    query: {
+                        ...body,
+                        phone,
+                    },
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId,
+            onSuccessfulSubmit,
         });
     };
 

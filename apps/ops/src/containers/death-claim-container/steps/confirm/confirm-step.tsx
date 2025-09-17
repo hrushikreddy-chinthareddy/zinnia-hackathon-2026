@@ -16,8 +16,15 @@ import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-ca
 import { TranslationFiles } from '@deps/config/translations';
 import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import {
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
 interface ConfirmStepProps {
@@ -29,6 +36,7 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
         keyPrefix: 'deathClaims.confirmStep',
     });
     const router = useRouter();
+    const { partyId, sessionId } = usePermissionsContext();
     const {
         submitFailed,
         setSubmitFailed,
@@ -62,6 +70,18 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
         if (successfulSubmit && successfulSubmit?.zlCaseId) {
             setCaseId(successfulSubmit?.id);
             setSubmitFailed(false);
+            segmentAnalyticsTrackEvent(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.DEATH_CLAIM,
+                    query: payload,
+                    policy,
+                    caseId: successfulSubmit?.zlCaseId,
+                    sessionId,
+                    userId: partyId,
+                })
+            );
         } else {
             setCaseId('');
             setSubmitFailed(true);

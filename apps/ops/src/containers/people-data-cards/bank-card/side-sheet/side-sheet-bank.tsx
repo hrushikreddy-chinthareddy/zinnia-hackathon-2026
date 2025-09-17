@@ -4,6 +4,7 @@ import {
     BankAccount,
     BankAccountPurpose,
     Party,
+    Policy,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
@@ -44,6 +45,9 @@ import {
     getPurposeOptions,
 } from '@deps/containers/people-data-cards/bank-card/side-sheet/side-sheet-bank.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
@@ -59,6 +63,11 @@ import {
 } from '@deps/queries/api/bpm-non-financial';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+    TransactionSuccessfulEvent,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 dayjs.extend(utc);
@@ -68,6 +77,7 @@ export type SideSheetBankProps = {
     party?: Party;
     planCode?: string;
     policyNumber?: string;
+    policy?: Policy;
     updatedBank: BankAccount;
     setCurrentBankAccounts: Dispatch<SetStateAction<BankAccount[]>>;
 };
@@ -75,6 +85,7 @@ export type SideSheetBankProps = {
 const SideSheetBank = ({
     party,
     planCode,
+    policy,
     policyNumber,
     onCancel,
     setCurrentBankAccounts,
@@ -85,6 +96,7 @@ const SideSheetBank = ({
     });
     const { t: defaultT } = useTranslation();
     const { featureFlags } = useOptimizely();
+    const { partyId: userId, sessionId } = usePermissionsContext();
     const shouldShowBankDelete =
         featureFlags[FEATURE_FLAGS.BANK_CHANGE_DELETE_TRANSACTION];
 
@@ -155,11 +167,30 @@ const SideSheetBank = ({
             transaction: NonFinancialTransactions.BankAccount,
         });
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.REMOVE_BANK_INFO,
+                    query: {
+                        ...body,
+                        deleteRequest: true,
+                        bankAccount,
+                    },
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId,
+            onSuccessfulSubmit,
         });
     };
 
@@ -263,6 +294,19 @@ const SideSheetBank = ({
                 if (response?.data?.caseId) {
                     setNewCaseId(response?.data?.caseId);
                 }
+                segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                    SegmentTrackedEventName.TransactionSubmitted,
+                    buildNonFinancialTransactionsSubmittedEvent({
+                        transactionSubmittedEventType: isAdd
+                            ? TransactionSubmittedEventType.ADD_BANK_INFO
+                            : TransactionSubmittedEventType.UPDATE_BANK_INFO,
+                        query: body,
+                        caseId: response?.data?.caseId,
+                        policy,
+                        sessionId,
+                        userId,
+                    })
+                );
                 break;
             case StatusCode.BadRequest:
                 setValidationResults(response?.data?.validationResult);

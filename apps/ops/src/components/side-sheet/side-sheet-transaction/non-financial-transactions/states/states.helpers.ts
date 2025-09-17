@@ -8,7 +8,7 @@ interface HandleResponse {
     response: any;
     setViewState: Dispatch<SetStateAction<ViewState>>;
     setValidationResults: Dispatch<SetStateAction<ValidationResult[]>>;
-    setNewCaseId?: Dispatch<SetStateAction<string | undefined>>;
+    onSuccessfulSubmit: (caseId: string) => void;
 }
 
 export enum ViewState {
@@ -25,11 +25,14 @@ export const handleResponse = ({
     response,
     setViewState,
     setValidationResults,
-    setNewCaseId,
+    onSuccessfulSubmit,
 }: HandleResponse) => {
     switch (response?.status) {
         case StatusCode.Accepted:
             setViewState(ViewState.Success);
+            if (response?.data?.caseId) {
+                onSuccessfulSubmit(response?.data?.caseId);
+            }
             break;
         case StatusCode.BadRequest:
             setValidationResults(response?.data?.validationResult);
@@ -39,8 +42,5 @@ export const handleResponse = ({
         default:
             setViewState(ViewState.ApiError);
             break;
-    }
-    if (response?.data?.caseId && setNewCaseId) {
-        setNewCaseId(response?.data?.caseId);
     }
 };

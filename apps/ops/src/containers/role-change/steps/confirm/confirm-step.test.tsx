@@ -60,6 +60,13 @@ const mockPolicy = {
 };
 
 describe('ConfirmStep', () => {
+    beforeAll(() => {
+        const mockAnalytics = {
+            page: jest.fn(),
+            track: jest.fn(),
+        };
+        (window as any).analytics = mockAnalytics;
+    });
     beforeEach(() => {
         jest.clearAllMocks();
     });

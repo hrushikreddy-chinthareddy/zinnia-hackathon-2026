@@ -36,6 +36,9 @@ import {
 } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Processes } from '@deps/models/case/case';
@@ -56,6 +59,11 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
@@ -94,6 +102,7 @@ export const SidesheetNameCard = ({
         keyPrefix: 'people.sideSheet.name',
     });
     const { t: defaultT } = useTranslation();
+    const { sessionId, partyId: userId } = usePermissionsContext();
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
@@ -386,15 +395,27 @@ export const SidesheetNameCard = ({
             newPartyData: nameChangePayload,
         });
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.UPDATE_NAME,
+                    query: nameChangePayload,
+                    caseId,
+                    policy: policyDetails.policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId: () => {
-                if (response?.data?.caseId) {
-                    setNewCaseId(response?.data?.caseId);
-                }
-            },
+            onSuccessfulSubmit,
         });
     };
 

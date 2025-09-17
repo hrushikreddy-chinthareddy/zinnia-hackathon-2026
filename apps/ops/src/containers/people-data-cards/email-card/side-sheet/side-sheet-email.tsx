@@ -2,6 +2,7 @@ import {
     Email,
     EmailType,
     Party,
+    Policy,
     PreferredCommunicationType,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
@@ -42,6 +43,9 @@ import {
     getEmailTypes,
     getFormErrors,
 } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Processes } from '@deps/models/case/case';
@@ -54,6 +58,11 @@ import {
     editNonFinancialTransaction,
 } from '@deps/queries/api/bpm-non-financial';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 
 dayjs.extend(utc);
 
@@ -61,6 +70,7 @@ export type SideSheetEmailProps = {
     isOnlyEmail: boolean;
     onCancel: () => void;
     party?: Party;
+    policy?: Policy;
     planCode?: string;
     policyNumber?: string;
     setCurrentEmails: Dispatch<SetStateAction<Email[]>>;
@@ -73,6 +83,7 @@ const SideSheetEmail = ({
     party,
     planCode,
     policyNumber,
+    policy,
     setCurrentEmails,
     updateEmail,
 }: SideSheetEmailProps) => {
@@ -80,6 +91,7 @@ const SideSheetEmail = ({
         keyPrefix: 'people.sideSheet.email',
     });
     const { t: defaultT } = useTranslation();
+    const { sessionId, partyId: userId } = usePermissionsContext();
 
     const INITIAL_EMAIL: Email = {
         emailType: EmailType.PERSONAL,
@@ -143,11 +155,31 @@ const SideSheetEmail = ({
             transaction: NonFinancialTransactions.EmailAddress,
         });
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.REMOVE_EMAIL,
+                    query: {
+                        ...body,
+                        email,
+                        deleteRequest: true,
+                    },
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId,
+            onSuccessfulSubmit,
         });
     };
 
@@ -198,11 +230,31 @@ const SideSheetEmail = ({
             });
         }
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType: isAdd
+                        ? TransactionSubmittedEventType.ADD_EMAIL
+                        : TransactionSubmittedEventType.UPDATE_EMAIL,
+                    query: {
+                        ...body,
+                        email,
+                    },
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId,
+            onSuccessfulSubmit,
         });
     };
 

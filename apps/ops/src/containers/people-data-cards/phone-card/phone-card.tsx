@@ -80,6 +80,7 @@ const PhoneCard = ({
                     party={party}
                     planCode={planCode}
                     policyNumber={policyNumber}
+                    policy={policyDetails.policy}
                     setCurrentPhones={setCurrentPhones}
                     updatePhone={phone}
                 />

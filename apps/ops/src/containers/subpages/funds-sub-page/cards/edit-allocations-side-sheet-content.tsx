@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -34,6 +34,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
@@ -50,6 +51,8 @@ import {
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSuccessfulEvent,
+    TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 
 import { FundViewModel } from '../types';
@@ -67,6 +70,7 @@ interface IEditAllocationsContent {
     sideSheet: SideSheetContextProps;
     investmentType?: string;
     policyOwner: string;
+    policy: Policy;
 }
 
 export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
@@ -77,6 +81,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     sideSheet,
     investmentType,
     policyOwner,
+    policy,
 }) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -303,6 +308,18 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
             }
             setSuccessCaseId(fundAllocationResponse.caseId);
             setSuccess(true);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.EDIT_ALLOCATIONS,
+                    query: payload,
+                    policy,
+                    caseId: fundAllocationResponse.caseId,
+                    sessionId,
+                    userId: partyId,
+                })
+            );
         }
     };
 
