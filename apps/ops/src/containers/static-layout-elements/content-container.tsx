@@ -14,10 +14,10 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface ContentContainerProps extends PropsWithChildren {
     policy: Policy;

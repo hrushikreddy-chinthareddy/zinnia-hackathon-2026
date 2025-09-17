@@ -137,11 +137,6 @@ export default function NasuRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
-
-            <FormDisbursement
-                isFormStateReadOnly={isFormStateReadOnly}
-                options={disbursementOptions}
-            />
         </>
     );
     const qcdComponents = !isRmdForm && (
