@@ -415,7 +415,6 @@
                         "norender": true
                     },
                     "contractInfo": {
-                        "ui:widget": "TransactionAccordion",
                         "ui:options": {
                             "label": false
                         },
@@ -479,7 +478,9 @@
                                     "items": {
                                         "ui:options": {
                                             "label": true,
-                                            "title": "Email"
+                                            "title": "Email",
+                                            "noMargin": true,
+                                            "nobackground": true
                                         },
                                         "emailAddress": {
                                             "ui:options": {
@@ -498,7 +499,9 @@
                                     "items": {
                                         "ui:options": {
                                             "label": true,
-                                            "title": "Telephone number"
+                                            "title": "Telephone number",
+                                            "noMargin": true,
+                                            "nobackground": true
                                         },
                                         "dialNumber": {
                                             "ui:options": {
@@ -516,15 +519,13 @@
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "label": true,
-                                            "title": "{{addressType}}",
-                                            "expandable": true,
-                                            "nobackground": true
-                                        },
-                                        "dialNumber": {
-                                            "ui:options": {
-                                                "label": false
-                                            }
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true,
+                                            "ObjectFieldTemplate": "AddressFieldTemplate",
+                                            "backgroundColor": "white",
+                                            "classes": "p-0",
+                                            "showDynamicTitle": true
                                         },
                                         "addressType": {
                                             "ui:widget": "hidden",
@@ -969,9 +970,60 @@
                                                                 "INTERVIVOSTRUST",
                                                                 "GRANTORTRUST"
                                                             ]
+                                                        },
+                                                        "uploadDocuments": {
+                                                            "type": "object",
+                                                            "title": "Link or upload the supporting document(s)",
+                                                            "properties": {
+                                                                "upload": {
+                                                                    "type": "string"
+                                                                },
+                                                                "or": {
+                                                                    "type": "string",
+                                                                    "title": "or"
+                                                                },
+                                                                "attachment": {
+                                                                    "type": "array",
+                                                                    "title": "Upload",
+                                                                    "items": {
+                                                                        "title": "Upload",
+                                                                        "type": "string",
+                                                                        "format": "data-url"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "attachments": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "documentName": {
+                                                                    "title": "Name",
+                                                                    "type": "string"
+                                                                },
+                                                                "documentId": {
+                                                                    "title": "Document Id",
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "trustDate": {
+                                                            "type": "string",
+                                                            "format": "date",
+                                                            "title": "Trust date"
+                                                        },
+                                                        "supportingDocumentAttached": {
+                                                            "type": "string",
+                                                            "title": "Is the uploaded supporting document(s) valid and relevant?",
+                                                            "enum": [
+                                                                "Yes",
+                                                                "No"
+                                                            ]
                                                         }
                                                     },
-                                                    "required": ["lastName"]
+                                                    "required": [
+                                                        "lastName",
+                                                        "trustDate"
+                                                    ]
                                                 }
                                             },
                                             {
@@ -1119,12 +1171,16 @@
                             "party": {
                                 "ui:order": [
                                     "partyType",
-                                    "trustType",
                                     "prefix",
                                     "firstName",
                                     "middleName",
                                     "lastName",
                                     "suffix",
+                                    "trustType",
+                                    "uploadDocuments",
+                                    "attachments",
+                                    "trustDate",
+                                    "supportingDocumentAttached",
                                     "entityType",
                                     "identifications",
                                     "gender",
@@ -1164,6 +1220,52 @@
                                         ]
                                     }
                                 },
+                                "uploadDocuments": {
+                                    "inline": true,
+                                    "ui:options": {
+                                        "label": true,
+                                        "omitValue": true
+                                    },
+                                    "upload": {
+                                        "ui:widget": "AutoCompleteWidget",
+                                        "ui:placeholder": "Find existing documents...",
+                                        "ui:options": {
+                                            "label": false,
+                                            "icon": "Search"
+                                        }
+                                    },
+                                    "or": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "inline": true
+                                        }
+                                    },
+                                    "attachment": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "showFiles": false
+                                        },
+                                        "ui:props": {
+                                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                            "apiMethod": "get"
+                                        }
+                                    }
+                                },
+                                "attachments": {
+                                    "ui:options": {
+                                        "label": false,
+                                        "addable": false,
+                                        "removable": true,
+                                        "ArrayFieldTemplate": "FileInfoTemplate"
+                                    }
+                                },
+                                "supportingDocumentAttached": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"],
+                                        "inline": true
+                                    }
+                                },
                                 "entityType": {
                                     "ui:options": {
                                         "enumNames": [
@@ -1189,7 +1291,9 @@
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "label": false
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
                                         }
                                     }
                                 },
@@ -1209,7 +1313,9 @@
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "label": false
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
                                         },
                                         "addressType": {
                                             "ui:options": {
@@ -1298,7 +1404,9 @@
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "label": false
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
                                         },
                                         "phoneType": {
                                             "ui:options": {
@@ -1321,12 +1429,14 @@
                                         "addable": false,
                                         "orderable": false,
                                         "removable": false,
-                                        "label": true,
+                                        "label": false,
                                         "title": "Email"
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "label": false
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
                                         }
                                     }
                                 },
@@ -1394,238 +1504,47 @@
                                     "type": "boolean",
                                     "enum": [true, false],
                                     "enumNames": ["Yes", "No"],
-                                    "title": "Is there an irrevocable beneficiary?",
-                                    "default": true
+                                    "title": "Is there an irrevocable beneficiary?"
                                 },
                                 "signatures": {
                                     "type": "array",
-                                    "items": {}
-                                }
-                            }
-                        }
-                    },
-                    "allOf": [
-                        {
-                            "if": {
-                                "properties": {
-                                    "signatureData": {
+                                    "items": {
+                                        "type": "object",
                                         "properties": {
-                                            "isIrrevocableBene": {
-                                                "const": true
-                                            }
-                                        },
-                                        "required": ["isIrrevocableBene"]
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "signatureData": {
-                                        "properties": {
-                                            "signatures": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "object",
-                                                        "title": "Signature 1",
-                                                        "properties": {
-                                                            "signType": {
-                                                                "type": "string",
-                                                                "title": "Type"
-                                                            },
-                                                            "isSignedPresent": {
-                                                                "type": "string",
-                                                                "title": "Signed present",
-                                                                "enum": [
-                                                                    "Yes",
-                                                                    "No"
-                                                                ]
-                                                            },
-                                                            "signDesignation": {
-                                                                "type": "string",
-                                                                "title": "Designation",
-                                                                "enum": [
-                                                                    "Trustee",
-                                                                    "Executor",
-                                                                    "Custodian",
-                                                                    "Guardian",
-                                                                    "Attorney-in-fact",
-                                                                    "Assignee",
-                                                                    "NA"
-                                                                ]
-                                                            },
-                                                            "signDate": {
-                                                                "type": "string",
-                                                                "title": "Sign date",
-                                                                "format": "date"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "type": "object",
-                                                        "title": "Signature 2",
-                                                        "properties": {
-                                                            "signType": {
-                                                                "type": "string",
-                                                                "title": "Type"
-                                                            },
-                                                            "isSignedPresent": {
-                                                                "type": "string",
-                                                                "title": "Signed present",
-                                                                "enum": [
-                                                                    "Yes",
-                                                                    "No"
-                                                                ]
-                                                            },
-                                                            "signDesignation": {
-                                                                "type": "string",
-                                                                "title": "Designation",
-                                                                "enum": [
-                                                                    "Trustee",
-                                                                    "Executor",
-                                                                    "Custodian",
-                                                                    "Guardian",
-                                                                    "Attorney-in-fact",
-                                                                    "Assignee",
-                                                                    "NA"
-                                                                ]
-                                                            },
-                                                            "signDate": {
-                                                                "type": "string",
-                                                                "title": "Sign date",
-                                                                "format": "date"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "type": "object",
-                                                        "title": "Signature 3",
-                                                        "properties": {
-                                                            "signType": {
-                                                                "type": "string",
-                                                                "title": "Type"
-                                                            },
-                                                            "isSignedPresent": {
-                                                                "type": "string",
-                                                                "title": "Signed present",
-                                                                "enum": [
-                                                                    "Yes",
-                                                                    "No"
-                                                                ]
-                                                            },
-                                                            "signDesignation": {
-                                                                "type": "string",
-                                                                "title": "Designation",
-                                                                "enum": [
-                                                                    "Trustee",
-                                                                    "Executor",
-                                                                    "Custodian",
-                                                                    "Guardian",
-                                                                    "Attorney-in-fact",
-                                                                    "Assignee",
-                                                                    "NA"
-                                                                ]
-                                                            },
-                                                            "signDate": {
-                                                                "type": "string",
-                                                                "title": "Sign date",
-                                                                "format": "date"
-                                                            }
-                                                        }
-                                                    }
+                                            "signType": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
+                                            "isSignedPresent": {
+                                                "type": "string",
+                                                "title": "Signed present",
+                                                "enum": ["Yes", "No"]
+                                            },
+                                            "signDesignation": {
+                                                "type": "string",
+                                                "title": "Designation",
+                                                "enum": [
+                                                    "",
+                                                    "Trustee",
+                                                    "Executor",
+                                                    "Custodian",
+                                                    "Guardian",
+                                                    "Attorney-in-fact",
+                                                    "Assignee",
+                                                    "NA"
                                                 ]
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "else": {
-                                "properties": {
-                                    "signatureData": {
-                                        "properties": {
-                                            "signatures": {
-                                                "type": "array",
-                                                "items": [
-                                                    {
-                                                        "type": "object",
-                                                        "title": "Signature 1",
-                                                        "properties": {
-                                                            "signType": {
-                                                                "type": "string",
-                                                                "title": "Type"
-                                                            },
-                                                            "isSignedPresent": {
-                                                                "type": "string",
-                                                                "title": "Signed present",
-                                                                "enum": [
-                                                                    "Yes",
-                                                                    "No"
-                                                                ]
-                                                            },
-                                                            "signDesignation": {
-                                                                "type": "string",
-                                                                "title": "Designation",
-                                                                "enum": [
-                                                                    "Trustee",
-                                                                    "Executor",
-                                                                    "Custodian",
-                                                                    "Guardian",
-                                                                    "Attorney-in-fact",
-                                                                    "Assignee",
-                                                                    "NA"
-                                                                ]
-                                                            },
-                                                            "signDate": {
-                                                                "type": "string",
-                                                                "title": "Sign date",
-                                                                "format": "date"
-                                                            }
-                                                        }
-                                                    },
-                                                    {
-                                                        "type": "object",
-                                                        "title": "Signature 2",
-                                                        "properties": {
-                                                            "signType": {
-                                                                "type": "string",
-                                                                "title": "Type"
-                                                            },
-                                                            "isSignedPresent": {
-                                                                "type": "string",
-                                                                "title": "Signed present",
-                                                                "enum": [
-                                                                    "Yes",
-                                                                    "No"
-                                                                ]
-                                                            },
-                                                            "signDesignation": {
-                                                                "type": "string",
-                                                                "title": "Designation",
-                                                                "enum": [
-                                                                    "Trustee",
-                                                                    "Executor",
-                                                                    "Custodian",
-                                                                    "Guardian",
-                                                                    "Attorney-in-fact",
-                                                                    "Assignee",
-                                                                    "NA"
-                                                                ]
-                                                            },
-                                                            "signDate": {
-                                                                "type": "string",
-                                                                "title": "Sign date",
-                                                                "format": "date"
-                                                            }
-                                                        }
-                                                    }
-                                                ]
+                                            },
+                                            "signDate": {
+                                                "type": "string",
+                                                "title": "Sign date",
+                                                "format": "date"
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                    ]
+                    }
                 },
                 "uiSchema": {
                     "ui:globalOptions": {
@@ -1647,68 +1566,49 @@
                             }
                         },
                         "signatures": {
+                            "ui:widget": "TransactionAccordion",
                             "ui:options": {
                                 "addable": false,
                                 "orderable": false,
                                 "removable": false,
-                                "label": false
+                                "label": false,
+                                "tabTitle": "Signature",
+                                "hideAccordion": true
                             },
-                            "items": [
-                                {
-                                    "ui:options": {
-                                        "title": "Owner Signature",
-                                        "label": true,
-                                        "expandable": true,
-                                        "nobackground": true
-                                    },
-                                    "signType": {},
-                                    "isSignedPresent": {
-                                        "ui:options": {
-                                            "enumNames": ["Yes", "No"]
-                                        }
-                                    },
-                                    "signDesignation": {
-                                        "ui:widget": "select"
-                                    },
-                                    "signDate": { "ui:widget": "date" }
+                            "items": {
+                                "ui:options": {
+                                    "title": "Signature",
+                                    "label": false,
+                                    "expandable": false,
+                                    "nobackground": true
                                 },
-                                {
+                                "signType": {
                                     "ui:options": {
-                                        "title": "Joint Owner Signature",
-                                        "label": true,
-                                        "expandable": true,
-                                        "nobackground": true
-                                    },
-                                    "signType": {},
-                                    "isSignedPresent": {
-                                        "ui:options": {
-                                            "enumNames": ["Yes", "No"]
-                                        }
-                                    },
-                                    "signDesignation": {
-                                        "ui:widget": "select"
-                                    },
-                                    "signDate": { "ui:widget": "date" }
+                                        "disabled": true
+                                    }
                                 },
-                                {
+                                "isSignedPresent": {
                                     "ui:options": {
-                                        "title": "Irrevocable Beneficiary Signature",
-                                        "label": true,
-                                        "expandable": true,
-                                        "nobackground": true
-                                    },
-                                    "signType": {},
-                                    "isSignedPresent": {
-                                        "ui:options": {
-                                            "enumNames": ["Yes", "No"]
-                                        }
-                                    },
-                                    "signDesignation": {
-                                        "ui:widget": "select"
-                                    },
-                                    "signDate": { "ui:widget": "date" }
-                                }
-                            ]
+                                        "enumNames": ["Yes", "No"]
+                                    }
+                                },
+                                "signDesignation": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select designation",
+                                            "Trustee",
+                                            "Executor",
+                                            "Custodian",
+                                            "Guardian",
+                                            "Attorney-in-fact",
+                                            "Assignee",
+                                            "NA"
+                                        ]
+                                    }
+                                },
+                                "signDate": {}
+                            }
                         }
                     }
                 }
