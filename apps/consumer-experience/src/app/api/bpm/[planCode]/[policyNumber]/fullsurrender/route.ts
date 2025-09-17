@@ -64,7 +64,8 @@ export async function POST(
       error: {
         status: 500,
         name: 'Error submitting full surrender',
-        message: 'error submitting full surrender',
+        message: `error submitting full surrender`,
+        correlationId: loggingContext.correlationId,
       },
     });
   }

@@ -64,8 +64,9 @@ export async function GET(
       data: null,
       error: {
         status: 500,
-        name: 'Failed to fetch systematic programs',
+        name: 'policies::systematic-programs::search::GET::error',
         message: 'Failed to fetch systematic programs',
+        correlationId: loggingContext.correlationId,
       },
     });
   }
