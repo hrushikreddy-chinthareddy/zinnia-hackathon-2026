@@ -253,9 +253,10 @@ export const CaseTimingTable = () => {
                                                             selectedProcess,
                                                         carrierOrProductName:
                                                             item.name,
-                                                        startDate:
+                                                        updatedDateStart:
                                                             timerange.from,
-                                                        endDate: timerange.to,
+                                                        updatedDateEnd:
+                                                            timerange.to,
                                                         groupBy:
                                                             CaseCountGroupByEnum.PROCESS_SUB_TYPE,
                                                         status: [

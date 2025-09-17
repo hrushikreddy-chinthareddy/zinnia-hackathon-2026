@@ -13,116 +13,126 @@ import { getOpsUserDetailsSSR } from '@deps/queries/api/knowledge-base';
 import { DocumentsDisplayType } from '@deps/types/knowledge-base';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
-  FeatureFlags,
-  optimizelyService
+    FeatureFlags,
+    optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import { logWarn, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 type additionalDataProps = {
-  user: UserProfile;
+    user: UserProfile;
 };
 
 type DocumentsProps = {
-  featureFlagDecisions: FeatureFlags;
-  additionalData: additionalDataProps;
-  opsUserData: MeResponse;
-  docs: DocumentsDisplayType;
+    featureFlagDecisions: FeatureFlags;
+    additionalData: additionalDataProps;
+    opsUserData: MeResponse;
+    docs: DocumentsDisplayType;
 };
 
 export default function Documents({ opsUserData, docs }: DocumentsProps) {
-
-  return (
-    <KnowledgeBaseContainer opsUserData={opsUserData}>
-      <DocumentsPage docs={docs} />
-    </KnowledgeBaseContainer>
-  );
+    return (
+        <KnowledgeBaseContainer opsUserData={opsUserData}>
+            <DocumentsPage docs={docs} />
+        </KnowledgeBaseContainer>
+    );
 }
 
 export const getServerSideProps = withPageAuthAndLogging(
-  {
-    getServerSideProps: async (context, loggingContext) => {
-      const user = await getUserData(context);
-      const featureFlagDecisions: FeatureFlags =
-        await optimizelyService.getFeatureFlagDecisions(
-          user.sub,
-          loggingContext
-        );
+    {
+        getServerSideProps: async (context, loggingContext) => {
+            const user = await getUserData(context);
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
 
-      if (!featureFlagDecisions?.[FEATURE_FLAGS.AI_ASSISTANT]) {
-        logWarn('zinnia-ai-assistant::Feature flag disabled', loggingContext)
-        return {
-          redirect: {
-            destination: '/cases',
-            permanent: false,
-          },
-        };
-      }
-      const { locale = DEFAULT_LOCALE, req, res, query } = context;
-      const logCtx = {
-        ...loggingContext,
-        file: 'pages/zinnia-ai-assistant',
-        function: 'getServerSideProps',
-      };
-      let accessToken;
-      try {
-        accessToken = (await getAccessToken(req, res)).accessToken;
-      } catch (e) {
-        logWarn('zinnia-ai-assistant::Access token expired', { ...logCtx });
-        return serverSidePropsLogout();
-      }
-      const additionalData: additionalDataProps = { user: user };
-      const translations = await serverSideTranslations(
-        locale,
-        [TranslationFiles.COMMON],
-        nextI18nextConfig,
-        ALL_LOCALES
-      );
+            if (!featureFlagDecisions?.[FEATURE_FLAGS.AI_ASSISTANT]) {
+                logWarn(
+                    'zinnia-ai-assistant::Feature flag disabled',
+                    loggingContext
+                );
+                return {
+                    redirect: {
+                        destination: '/cases',
+                        permanent: false,
+                    },
+                };
+            }
+            const { locale = DEFAULT_LOCALE, req, res, query } = context;
+            const logCtx = {
+                ...loggingContext,
+                file: 'pages/zinnia-ai-assistant',
+                function: 'getServerSideProps',
+            };
+            let accessToken;
+            try {
+                accessToken = (await getAccessToken(req, res)).accessToken;
+            } catch (e) {
+                logWarn('zinnia-ai-assistant::Access token expired', {
+                    ...logCtx,
+                });
+                return serverSidePropsLogout();
+            }
+            const additionalData: additionalDataProps = { user: user };
+            const translations = await serverSideTranslations(
+                locale,
+                [TranslationFiles.COMMON],
+                nextI18nextConfig,
+                ALL_LOCALES
+            );
 
-      try {
-        if (!user?.email) {
-          logWarn('zinnia-ai-assistant::User email is missing', logCtx);
-          return serverSidePropsLogout();
-        }
-        const opsUserData = await getOpsUserDetailsSSR(
-          user.email.toLowerCase(),
-          accessToken,
-          logCtx
-        );
-        if (!opsUserData?.client?.length) {
-          logWarn('zinnia-ai-assistant::no client assigned to the user', logCtx)
-          return {
-            redirect: {
-              destination: '/403',
-              permanent: false,
-            },
-          };
-        }
-        return {
-          props: {
-            locale,
-            ...translations,
-            featureFlagDecisions,
-            additionalData,
-            opsUserData: opsUserData as MeResponse,
-            docs: query.docs ?? DocumentsDisplayType.All,
-          },
-        };
-      } catch (error) {
-        return {
-          props: {
-            locale,
-            ...translations,
-            featureFlagDecisions,
-            additionalData,
-          },
-        };
-      }
+            try {
+                if (!user?.email) {
+                    logWarn(
+                        'zinnia-ai-assistant::User email is missing',
+                        logCtx
+                    );
+                    return serverSidePropsLogout();
+                }
+                const opsUserData = await getOpsUserDetailsSSR(
+                    user.email.toLowerCase(),
+                    accessToken,
+                    logCtx
+                );
+                if (!opsUserData?.client?.length) {
+                    logWarn(
+                        'zinnia-ai-assistant::no client assigned to the user',
+                        logCtx
+                    );
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+                return {
+                    props: {
+                        locale,
+                        ...translations,
+                        featureFlagDecisions,
+                        additionalData,
+                        opsUserData: opsUserData as MeResponse,
+                        docs: query.docs ?? DocumentsDisplayType.All,
+                    },
+                };
+            } catch (error) {
+                return {
+                    props: {
+                        locale,
+                        ...translations,
+                        featureFlagDecisions,
+                        additionalData,
+                    },
+                };
+            }
+        },
     },
-  },
-  {
-    file: 'zinnia-ai-assistant/documents',
-    function: 'getServerSideProps',
-    page: 'ai-assistant/documents',
-  }
+    {
+        file: 'zinnia-ai-assistant/documents',
+        function: 'getServerSideProps',
+        page: 'ai-assistant/documents',
+    }
 );

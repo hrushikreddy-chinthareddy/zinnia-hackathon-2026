@@ -210,8 +210,8 @@ export const TransactionTrendsTable = () => {
                                     const link = generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: item.name,
-                                        startDate: timerange.from,
-                                        endDate: timerange.to,
+                                        updatedDateStart: timerange.from,
+                                        updatedDateEnd: timerange.to,
                                         status: [Statuses.Completed],
                                         groupBy,
                                         carrier: filter.carrier,

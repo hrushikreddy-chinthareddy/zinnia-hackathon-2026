@@ -1,4 +1,4 @@
-import { isValidDate } from './dates';
+import { isValidDate, startOfTomorrowLocalIso } from './dates';
 import { standardDateMonthDayYear } from './dates';
 import { DEFAULT_ERROR_STRING } from './strings';
 import dayjs from 'dayjs';
@@ -92,5 +92,40 @@ describe('toEnterpriseDate', () => {
     const date = undefined;
     const result = toEnterpriseDate(date);
     expect(result).toBe(DEFAULT_ERROR_STRING);
+  });
+});
+describe('startOfTomorrowLocalIso', () => {
+  it('returns UTC ISO for local midnight of the next day', () => {
+    const input = '2025-09-08';
+    const expected = dayjs(input, ENTERPRISE_DATE_FORMAT, true)
+      .add(1, 'day')
+      .startOf('day')
+      .toDate()
+      .toISOString();
+
+    expect(startOfTomorrowLocalIso(input)).toBe(expected);
+  });
+
+  it('handles month/year rollovers', () => {
+    const input1 = '2025-12-31';
+    const expected1 = dayjs(input1, ENTERPRISE_DATE_FORMAT, true)
+      .add(1, 'day')
+      .startOf('day')
+      .toDate()
+      .toISOString();
+    expect(startOfTomorrowLocalIso(input1)).toBe(expected1);
+
+    const input2 = '2025-01-31';
+    const expected2 = dayjs(input2, ENTERPRISE_DATE_FORMAT, true)
+      .add(1, 'day')
+      .startOf('day')
+      .toDate()
+      .toISOString();
+    expect(startOfTomorrowLocalIso(input2)).toBe(expected2);
+  });
+
+  it('returns DEFAULT_ERROR_STRING for invalid input', () => {
+    expect(startOfTomorrowLocalIso('09/08/2025')).toBe(DEFAULT_ERROR_STRING);
+    expect(startOfTomorrowLocalIso('')).toBe(DEFAULT_ERROR_STRING);
   });
 });
