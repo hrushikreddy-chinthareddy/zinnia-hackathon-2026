@@ -1,5 +1,6 @@
 import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 
+import ClaimsFundRelease from './claims-fund-release/claims-fund-release';
 import DeathNotificationSidesheet from './death-notification';
 import {
     StepProgramTypes,
@@ -50,6 +51,12 @@ export const TransactionsStepAdditionalData = ({
                     <ViewTransactions
                         stepAdditionalData={stepAdditionalData}
                         prop={StepProgramTypes.UNCASHED}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.claimsFundRelease:
+                return (
+                    <ClaimsFundRelease
+                        stepAdditionalData={stepAdditionalData}
                     />
                 );
             default:

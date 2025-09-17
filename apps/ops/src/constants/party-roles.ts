@@ -29,6 +29,7 @@ export enum PartyRoleChipToText {
     Agent = 'agent',
     AgentOfRecord = 'agent,agent of record',
     Annuitant = 'annuitant',
+    JointAnnuitant = 'jointannuitant',
     Assignee = 'assignee',
     Beneficiary = 'beneficiary',
     CommissionAgent = 'commissionagent',

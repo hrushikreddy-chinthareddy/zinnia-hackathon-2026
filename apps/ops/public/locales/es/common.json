@@ -5056,7 +5056,8 @@
             "riderInsured": "Asegurado adicional",
             "primaryWritingAgent": "Agente de Registro",
             "additionalWritingAgent": "Agente redactor adicional",
-            "exchangeCompany": "Empresa de intercambio"
+            "exchangeCompany": "Empresa de intercambio",
+            "jointAnnuitant": "Rentista conjunto"
         }
     },
     "pageHeader": {
@@ -6846,6 +6847,16 @@
             "faxnumber": "Fax:",
             "noData": "No hay detalles del beneficiario disponibles."
         }
+    },
+    "claimsFundRelease": {
+        "noData": "No hay detalles disponibles sobre la liberación del fondo de reclamaciones.",
+        "loadingTransactions": "Recuperando detalles de liberación de fondos de reclamaciones...",
+        "errorGettingTransactions": "No se pudieron recuperar los datos de liberación del fondo de reclamaciones.",
+        "claimClosureReasons": {
+            "spousalContinuation": "Acuerdo finalizado. El contrato continúa bajo la Continuación Conyugal (fuente: {{closureSource}})",
+            "deathClaimPaid": "Liquidación completada. Se han pagado las prestaciones por fallecimiento al beneficiario (fuente: {{closureSource}})"
+        },
+        "settlementInProgress": "El acuerdo está en curso."
     },
     "nigoEntry": {
         "tabs": {

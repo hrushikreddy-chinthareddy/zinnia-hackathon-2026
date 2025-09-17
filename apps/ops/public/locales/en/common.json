@@ -5099,7 +5099,8 @@
             "riderInsured": "Rider Insured",
             "primaryWritingAgent": "Agent of Record",
             "additionalWritingAgent": "Additional Writing Agent",
-            "exchangeCompany": "Exchange Company"
+            "exchangeCompany": "Exchange Company",
+            "jointAnnuitant": "Joint Annuitant"
         }
     },
     "pageHeader": {
@@ -6999,6 +7000,16 @@
             "faxnumber": "Fax:",
             "noData": "No beneficiary details available."
         }
+    },
+    "claimsFundRelease": {
+        "noData": "No claims fund release details available.",
+        "loadingTransactions": "Retrieving claims fund release details...",
+        "errorGettingTransactions": "Claims fund release data couldn't be retrieved.",
+        "claimClosureReasons": {
+            "spousalContinuation": "Settlement completed. The contract continues under Spousal Continuation (source: {{closureSource}})",
+            "deathClaimPaid": "Settlement completed. Death claim benefits have been paid to the beneficiary (source: {{closureSource}})"
+        },
+        "settlementInProgress": "Settlement is in progress."
     },
     "nigoEntry": {
         "tabs": {

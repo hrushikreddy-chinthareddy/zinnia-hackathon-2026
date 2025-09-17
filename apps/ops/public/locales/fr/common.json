@@ -5023,7 +5023,8 @@
             "riderInsured": "Assurée d'un Avenant",
             "primaryWritingAgent": "Agent désigné",
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
-            "exchangeCompany": "Société d'échange"
+            "exchangeCompany": "Société d'échange",
+            "jointAnnuitant": "Corentier"
         }
     },
     "pageHeader": {
@@ -6892,6 +6893,16 @@
             "faxnumber": "Fax :",
             "noData": "Aucun détail du bénéficiaire disponible."
         }
+    },
+    "claimsFundRelease": {
+        "noData": "Aucun détail de déblocage des fonds de réclamation n'est disponible.",
+        "loadingTransactions": "Récupération des détails de déblocage du fonds de réclamation...",
+        "errorGettingTransactions": "Les données de déblocage des fonds de réclamation n'ont pas pu être récupérées.",
+        "claimClosureReasons": {
+            "spousalContinuation": "Règlement conclu. Le contrat est maintenu en vertu de la clause de continuation entre conjoints (source : {{closureSource}}).",
+            "deathClaimPaid": "Règlement finalisé. Les prestations de décès ont été versées au bénéficiaire (source : {{closureSource}})."
+        },
+        "settlementInProgress": "Le règlement est en cours."
     },
     "nigoEntry": {
         "tabs": {
