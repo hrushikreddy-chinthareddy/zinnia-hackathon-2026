@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import {
@@ -98,16 +98,15 @@ const TaxOL4753Attachment = ({
             containerClassNames="border-b-2 border-gray-100"
             classNames="w-full"
         >
-            <div className="flex flex-wrap gap-8 max-md:flex-col">
-                <div className="flex-1">
-                    <CheckboxText
-                        label={t('isOL4753Attached')}
-                        checked={isOL4753Attached}
-                        onChange={() => setOL4753Attached(!isOL4753Attached)}
-                        isDisabled={isFormStateReadOnly}
-                    />
-                </div>
+            <div className=" flex flex-wrap gap-8 max-md:flex-col">
+                <CheckboxText
+                    label={t('isOL4753Attached')}
+                    checked={isOL4753Attached}
+                    onChange={() => setOL4753Attached(!isOL4753Attached)}
+                    isDisabled={isFormStateReadOnly}
+                />
             </div>
+
             {isOL4753Attached && (
                 <div className="my-4">
                     <AddressEntry

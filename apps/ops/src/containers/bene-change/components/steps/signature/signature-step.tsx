@@ -224,7 +224,7 @@ const SignatureStep = ({
                     ownerState?.toUpperCase()
                 ) &&
                 policy.carrierId === 'FLIC' && (
-                    <div className="mt-5 flex">
+                    <div className="mt-5 flex flex-wrap gap-8 max-md:flex-col">
                         <CheckboxText
                             label={t('spouseConsentText')}
                             checked={spousalConsent as boolean}

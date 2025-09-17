@@ -175,7 +175,10 @@ export default function StateW4Form({
             containerClassNames="border-b-2 border-gray-100"
             classNames="w-full"
         >
-            <div className="flex-1 mt-5" data-testid="w4p-checkbox">
+            <div
+                className="mt-5 flex flex-wrap gap-8 max-md:flex-col"
+                data-testid="w4p-checkbox"
+            >
                 <CheckboxText
                     label={t('isW4P')}
                     checked={isW4pChecked}
