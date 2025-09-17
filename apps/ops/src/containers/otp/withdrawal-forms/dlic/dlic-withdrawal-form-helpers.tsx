@@ -784,7 +784,6 @@ export default function useDlicConfig(t: TFunction) {
         [TaxWithholdingPlace.Federal]: { amountType: AmountType.Percent },
     };
 
-    const cslnCheckStates = ['CA', 'CO', 'TX'];
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -832,7 +831,6 @@ export default function useDlicConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         partialWithdrawalOptions,
         selectOneOptions,
-        cslnCheckStates,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
         reasonOptions,

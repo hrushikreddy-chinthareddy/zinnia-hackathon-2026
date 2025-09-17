@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
 import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -49,7 +48,6 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         irsSignatureConfig,
         disbursementOptions,
         signaturesConfig,
-        cslnCheckStates,
         eSignatureFieldConfig,
     } = getFlicConfig(t);
     const {
@@ -160,10 +158,7 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
                 }
                 key={sswProgramFrequency}
             />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

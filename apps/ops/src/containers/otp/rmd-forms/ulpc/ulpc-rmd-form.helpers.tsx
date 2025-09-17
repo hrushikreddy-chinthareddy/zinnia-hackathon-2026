@@ -36,8 +36,7 @@ import getFlicConfig from '../../withdrawal-forms/flic-withdrawal-form.helpers';
 
 export default function getUlpcRmdConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
-    const { cslnCheckStates, irsSignatureConfig, formValidation } =
-        getFlicConfig(t);
+    const { irsSignatureConfig, formValidation } = getFlicConfig(t);
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -354,7 +353,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
         signaturesConfig,
         fundWithdrawnMethodOptions,
         formValidation: rmdformValidation,
-        cslnCheckStates,
         irsSignatureConfig,
         w4pSignaturesConfig,
         disbursementOptions,

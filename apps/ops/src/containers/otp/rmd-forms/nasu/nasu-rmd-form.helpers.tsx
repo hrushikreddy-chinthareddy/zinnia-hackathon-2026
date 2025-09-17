@@ -43,8 +43,6 @@ import { createValidator } from '../../utils/helper-utils';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helpers';
 
 export default function getNasuRmdConfig(t: TFunction) {
-    const cslnCheckStates = ['CA'];
-
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -520,7 +518,6 @@ export default function getNasuRmdConfig(t: TFunction) {
         signaturesConfig,
         signaturesNotaryConfig,
         formValidation: rmdFormValidation,
-        cslnCheckStates,
         handleShouldShowDOBInOl4573,
         w4pSignaturesConfig,
         disbursementOptions,

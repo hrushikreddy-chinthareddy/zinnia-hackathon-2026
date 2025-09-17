@@ -548,8 +548,6 @@ export default function getUsaaConfig(t: TFunction) {
         auditTrial: true,
     };
 
-    const cslnCheckStates = ['CA', 'MO', 'TX', 'RI'];
-
     return {
         formValidation,
         formPartyConfigs,
@@ -560,6 +558,5 @@ export default function getUsaaConfig(t: TFunction) {
         disbursementOptions,
         signaturesConfig,
         eSignatureFieldConfig,
-        cslnCheckStates,
     };
 }

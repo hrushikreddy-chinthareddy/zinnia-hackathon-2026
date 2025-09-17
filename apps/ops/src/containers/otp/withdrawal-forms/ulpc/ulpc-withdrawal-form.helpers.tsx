@@ -354,8 +354,6 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         },
     ];
 
-    const cslnCheckStates = ['MA'];
-
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -876,7 +874,6 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
     ];
 
     return {
-        cslnCheckStates,
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,

@@ -471,8 +471,6 @@ export default function useNassauConfig(t: TFunction) {
         },
     ];
 
-    const cslnCheckStates = ['CA'];
-
     const handleShouldShowDOBInOl4573 = (
         parties: LifeCadParty[] | undefined
     ): boolean => {
@@ -584,7 +582,6 @@ export default function useNassauConfig(t: TFunction) {
         formValidation,
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
-        cslnCheckStates,
         signaturesConfig,
         signaturesNotaryConfig,
         defaultValues,
