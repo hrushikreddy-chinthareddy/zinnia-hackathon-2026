@@ -8,6 +8,7 @@ import {
 } from '@/types/auth';
 import { Subdomains } from '@/types/carriers';
 import { UserInfo } from '@/types/logging';
+import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getAccessToken, getSession } from '@/utils/auth';
 import { logError, logFatal, logTrace, logWarn } from '@/utils/logging/log-fns';
 import {
@@ -61,16 +62,26 @@ interface ServerLoggingContext {
   correlationId: string;
 }
 
-function handleLogging(
+async function handleLogging(
   service: Service,
   status: number,
-  loggingContext: ServerLoggingContext
+  loggingContext: ServerLoggingContext,
+  result: Response
 ) {
+  const parsedResponse = await parseAPIResponse(result);
+  const responseErrorDetails = await logApiNotOkDetails({
+    rawResponse: result,
+    parsedResponse: parsedResponse,
+  });
+
   if (service === Service.BPM && status === 400) {
     // When BPM returns a 400, it often doesnt mean theres an actual issue with the request, it just means something is ineligible,
     logTrace(
       `${LoggingModule.SERVER_HTTP_REQUEST}::BPM::400::request::${LoggingStage.COMPLETE}`,
-      loggingContext
+      {
+        ...loggingContext,
+        responseErrorDetails,
+      }
     );
     return;
   }
@@ -79,7 +90,10 @@ function handleLogging(
     // When preferences returns a 404, all it means is that a prefernce hasnt been set
     logTrace(
       `${LoggingModule.SERVER_HTTP_REQUEST}::PREFERENCES::404::request::${LoggingStage.COMPLETE}`,
-      loggingContext
+      {
+        ...loggingContext,
+        responseErrorDetails,
+      }
     );
     return;
   }
@@ -88,18 +102,27 @@ function handleLogging(
     if (criticalServices.includes(service)) {
       logFatal(
         `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.ERROR}`,
-        loggingContext
+        {
+          ...loggingContext,
+          responseErrorDetails,
+        }
       );
     } else {
       logError(
         `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.ERROR}`,
-        loggingContext
+        {
+          ...loggingContext,
+          responseErrorDetails,
+        }
       );
     }
   } else if (status >= 400) {
     logWarn(
       `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.ERROR}`,
-      loggingContext
+      {
+        ...loggingContext,
+        responseErrorDetails,
+      }
     );
   }
 }
@@ -153,7 +176,7 @@ class ServerHttpRequest extends HttpRequest {
 
     if (!result.ok) {
       const service = this.identifyService(input.toString());
-      handleLogging(service, result.status, loggingContext);
+      handleLogging(service, result.status, loggingContext, result);
     }
 
     logTrace('server-http::request::complete', {
