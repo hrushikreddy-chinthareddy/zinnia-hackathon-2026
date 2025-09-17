@@ -291,6 +291,26 @@
                 "contractValue": "Valor del Contrato",
                 "policyDate": "Fecha de la Póliza",
                 "issueState": "Estado de Emisión"
+            },
+            "owner": {
+                "text": "Administrar propietarios",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
+            },
+            "jointOwner": {
+                "text": "Administrar propietarios conjuntos",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-jointowner"
+            },
+            "payor": {
+                "text": "Administrar pagadores",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-payor"
+            },
+            "thirdPartyDesignee": {
+                "text": "Administrar terceros",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
+            },
+            "beneficiary": {
+                "text": "Administrar beneficiarios",
+                "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             }
         },
         "loader": "Cargando..."
@@ -5371,6 +5391,7 @@
                 "address": "Dirección",
                 "allocations": "Asignaciones",
                 "bankaccount": "Cuenta bancaria",
+                "bank account": "Cuenta bancaria",
                 "communicationpreference": "Comunicación preferida",
                 "email": "Correo electrónico",
                 "emailaddress": "Correo electrónico",

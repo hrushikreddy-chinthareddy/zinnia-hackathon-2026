@@ -284,7 +284,7 @@ const SideSheetBank = ({
                     onCancel={onCancel}
                     onContinue={handleSubmit}
                     setViewState={setViewState}
-                    transaction={NonFinancialTransactions.BankAccount}
+                    transaction={NonFinancialTransactions.BankAccountLabel}
                     validationResults={validationResults}
                 >
                     <BankDetails bankAccount={bankAccount} />
@@ -297,7 +297,7 @@ const SideSheetBank = ({
                     name={getFirstLastName(party)}
                     onCancel={onCancel}
                     onContinue={handleSubmit}
-                    transaction={NonFinancialTransactions.BankAccount}
+                    transaction={NonFinancialTransactions.BankAccountLabel}
                 />
             );
         case ViewState.Warn:
@@ -306,7 +306,7 @@ const SideSheetBank = ({
                     name={getFirstLastName(party)}
                     onCancel={onCancel}
                     onContinue={handleDelete}
-                    transaction={NonFinancialTransactions.BankAccount}
+                    transaction={NonFinancialTransactions.BankAccountLabel}
                 />
             );
         case ViewState.Success:
@@ -315,7 +315,7 @@ const SideSheetBank = ({
                     action={getAction()}
                     name={bankAccount.branchName ?? ''}
                     onCancel={onCancel}
-                    transaction={NonFinancialTransactions.BankAccount}
+                    transaction={NonFinancialTransactions.BankAccountLabel}
                     caseId={newCaseId}
                 />
             );

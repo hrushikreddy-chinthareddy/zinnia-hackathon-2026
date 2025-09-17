@@ -49,6 +49,7 @@ export enum NonFinancialTransactions {
     Number = 'number',
     Phone = 'phone',
     Name = 'name',
+    BankAccountLabel = 'bank account',
 }
 
 export interface NonFinancialTransactionBody {

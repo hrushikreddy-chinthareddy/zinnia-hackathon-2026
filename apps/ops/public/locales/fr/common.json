@@ -302,6 +302,26 @@
                 "policyDate": "date du contrat",
                 "qualificationType": "Type de qualification",
                 "text": "voir les détails"
+            },
+            "propriétaire": {
+                "text": "Gérer les propriétaires",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
+            },
+            "co-propriétaire": {
+                "text": "Gérer les co-propriétaires",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-jointowner"
+            },
+            "payeur": {
+                "text": "Gérer les payeurs",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-payor"
+            },
+            "concepteur tiers": {
+                "text": "Gérer les concepteurs tiers",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
+            },
+            "bénéficiaire": {
+                "text": "Gérer les bénéficiaires",
+                "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             }
         },
         "loader": "Chargement..."
@@ -5338,6 +5358,7 @@
                 "address": "Adresse",
                 "allocations": "Répartitions",
                 "bankaccount": "Compte bancaire",
+                "bank account": "Compte bancaire",
                 "communicationpreference": "Préférences de communication",
                 "email": "E-mail",
                 "number": "Numéro",

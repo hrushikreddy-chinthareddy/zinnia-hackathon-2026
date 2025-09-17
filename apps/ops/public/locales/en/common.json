@@ -319,7 +319,7 @@
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-payor"
             },
             "thirdPartyDesignee": {
-                "text": "Manage Third Party",
+                "text": "Manage third party",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
             },
             "beneficiary": {
@@ -5439,6 +5439,7 @@
                 "address": "Address",
                 "allocations": "Allocations",
                 "bankaccount": "Bank Account",
+                "bank account": "Bank Account",
                 "communicationpreference": "Preferred Communication",
                 "email": "Email",
                 "emailaddress": "Email",
