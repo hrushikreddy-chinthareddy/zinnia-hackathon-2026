@@ -143,7 +143,12 @@ const SideSheetEmail = ({
             transaction: NonFinancialTransactions.EmailAddress,
         });
 
-        handleResponse({ response, setViewState, setValidationResults });
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            setNewCaseId,
+        });
     };
 
     const handleSubmit = async () => {

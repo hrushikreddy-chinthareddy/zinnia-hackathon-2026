@@ -157,7 +157,12 @@ export const SideSheetPhone = ({
             transaction: NonFinancialTransactions.Phone,
         });
 
-        handleResponse({ response, setViewState, setValidationResults });
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            setNewCaseId,
+        });
     };
 
     const handleSubmit = async () => {
