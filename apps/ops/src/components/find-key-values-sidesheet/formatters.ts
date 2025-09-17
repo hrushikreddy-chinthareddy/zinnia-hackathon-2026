@@ -1,7 +1,6 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
-import { TFunction, useTranslation } from 'next-i18next';
+import { TFunction } from 'next-i18next';
 
-import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
@@ -9,8 +8,9 @@ import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
-import { DataTuple, FieldData } from './types';
+import { DataKey, DataTuple, FieldData } from './types';
 import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
+import { excludeFields } from './translations/exclude-fields';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition
@@ -74,9 +74,7 @@ export const formatAsSectionLabel = (
     lineOfBusiness: LineOfBusiness,
     t: TFunction
 ) => {
-    const { t: tr } = useTranslation(TranslationFiles.COMMON);
-
-    const exactTranslation = tr(`policy.allFields.${label}`, {
+    const exactTranslation = t(`policy.allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -111,9 +109,7 @@ const formatAsDataLabel = (
     lineOfBusiness: LineOfBusiness,
     t: TFunction
 ) => {
-    const { t: tr } = useTranslation(TranslationFiles.COMMON);
-
-    const exactTranslation = tr(`policy.allFields.${label}`, {
+    const exactTranslation = t(`policy.allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -201,14 +197,55 @@ export const formatAsDataValue = (
  *
  */
 export const formatDataField = (
-    [fieldName, fieldData]: DataTuple,
+    tuple: DataTuple,
     lineOfBusiness: LineOfBusiness,
-    t: TFunction
+    t: TFunction,
+    searchValue?: string
 ): [string, string] | null => {
-    // Allow metadata (not rendered directly) via Symbols
-    if (typeof fieldName !== 'string' || fieldData == null) return null;
-    return [
-        formatAsDataLabel(fieldName, lineOfBusiness, t),
-        formatAsDataValue(fieldData, t, fieldName),
-    ];
+    const [label, data] = tuple;
+    const include =
+        label != null &&
+        typeof label === 'string' &&
+        data != null &&
+        !excludeFields.has(label);
+    const formattedLabel =
+        include && formatAsDataLabel(label, lineOfBusiness, t);
+    const displayIfSearched =
+        include &&
+        formattedLabel &&
+        (!searchValue ||
+            formattedLabel.toLowerCase().includes(searchValue.toLowerCase()));
+
+    return displayIfSearched
+        ? [formattedLabel, formatAsDataValue(data, t, label)]
+        : null;
+};
+
+/**
+ * Given an array of key-value pairs, filters out any empty values and keys that
+ * are excluded from display.
+ *
+ * @param tuples The array of key-value pairs to filter
+ * @param additionalFieldsToExclude An optional array of additional fields to
+ *      exclude from display
+ * @returns The filtered array of key-value pairs
+ */
+export const removeExcludedAndEmptyFields = (
+    tuples: DataTuple[],
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction,
+    searchValue?: string,
+    additionalFieldsToExclude?: DataKey[]
+) => {
+    return tuples
+        .map((tuple) => {
+            const [key] = tuple;
+            return !(
+                additionalFieldsToExclude &&
+                new Set(additionalFieldsToExclude).has(key)
+            )
+                ? formatDataField(tuple, lineOfBusiness, t, searchValue)
+                : null;
+        })
+        .filter((tuple) => tuple != null);
 };

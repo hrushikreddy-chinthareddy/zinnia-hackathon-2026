@@ -203,7 +203,7 @@ const KeyValueFieldList = ({
             {fields.map((field, i) => {
                 // If the field data is an array, render it as a
                 // subSection-in-subSection
-                const [, unformattedData] = field;
+                const [key, unformattedData] = field;
                 if (unformattedData instanceof Array) {
                     return (
                         <KeyValueNestedSubSection
@@ -216,16 +216,18 @@ const KeyValueFieldList = ({
                 }
 
                 // Otherwise, just render it as a DataField
-                return (
-                    <DataField
-                        key={`field_${i}`}
-                        preparedPolicy={preparedPolicy}
-                        dataField={field}
-                        searchValue={searchValue}
-                        link={metaData?.[link]}
-                        linkField={metaData?.[linkedField]}
-                    />
-                );
+                if (typeof key === 'string') {
+                    return (
+                        <DataField
+                            key={`field_${i}`}
+                            preparedPolicy={preparedPolicy}
+                            dataField={[key, String(unformattedData)]} // FIXME
+                            searchValue={searchValue}
+                            link={metaData?.[link]}
+                            linkField={metaData?.[linkedField]}
+                        />
+                    );
+                }
             })}
         </div>
     );
@@ -268,12 +270,12 @@ const KeyValueNestedSubSection = ({
                     type={AccordionType.NESTED}
                 >
                     <div className={styles.itemsList}>
-                        {Object.entries(subSection).map((dataField, j) => {
+                        {Object.entries(subSection).map(([label, data], j) => {
                             return (
                                 <DataField
                                     key={`field_${j}`}
                                     preparedPolicy={preparedPolicy}
-                                    dataField={dataField}
+                                    dataField={[label, String(data)]}
                                     searchValue={searchValue}
                                     link={subSectionLink}
                                     linkField={subSectionLinkField}
@@ -309,16 +311,12 @@ const DataField = ({
     searchValue,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    dataField: DataTuple;
+    dataField: [string, string];
     link?: string;
     linkField?: string;
     searchValue: string;
 }) => {
-    // If the field cannot be formatted, return null
-    const formattedField = preparedPolicy.formatDataField(dataField);
-    if (!formattedField) return null;
-
-    const [fieldLabel, fieldData] = formattedField;
+    const [fieldLabel, fieldData] = dataField;
     const linkedField =
         link && linkField === dataField[0] ? (
             <Link href={link} text={fieldData} />
@@ -453,7 +451,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(
         () => preparePolicy(policy, t, debouncedSearchValue),
-        [policy]
+        [policy, debouncedSearchValue, t]
     );
 
     // TODO: memoize?
@@ -510,11 +508,13 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                     loading={fieldError || isFetching || isError}
                 >
                     <div className={styles.container}>
-                        <KeyValueBasics
-                            preparedPolicy={preparedPolicy}
-                            policyBasics={policyBasics}
-                            searchValue={searchValue}
-                        />
+                        {policyBasics && (
+                            <KeyValueBasics
+                                preparedPolicy={preparedPolicy}
+                                policyBasics={policyBasics}
+                                searchValue={searchValue}
+                            />
+                        )}
 
                         <KeyValueSections
                             preparedPolicy={preparedPolicy}
