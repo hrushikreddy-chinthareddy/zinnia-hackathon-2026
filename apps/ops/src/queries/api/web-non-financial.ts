@@ -44,16 +44,48 @@ export const addTransaction = async (body: any): Promise<any> => {
     }
 };
 
+export const addBeneChangeTransaction = async (body: any): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    try {
+        browserLogInfo('webNonFinancial::Adding a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            function: 'webnonfinancial.addTransaction',
+        });
+        const { data } = await client.put<any, AxiosResponse>(
+            `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            body
+        );
+        browserLogInfo('webNonFinancial::Added a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            function: 'webnonfinancial.addTransaction',
+        });
+        return data;
+    } catch (error: any) {
+        browserLogError('webNonFinancial::Failed to add transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            function: 'webnonfinancial.addTransaction',
+        });
+        return error;
+    }
+};
+
 export const validateTransaction = async (body: any): Promise<any> => {
-    const { businessKey, correlationid, carrierId, policyNumber } = body || {};
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
     try {
         browserLogInfo('BeneficiaryChange::Validating a transaction', {
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseUrl}/transactions/bene/validation`,
+            url: `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
             function: 'webnonfinancial.validateTransaction',
         });
         const { data } = await client.post<any, AxiosResponse>(
-            `${baseUrl}/transactions/bene/validation`,
+            `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
             body
         );
         return data;
@@ -61,7 +93,7 @@ export const validateTransaction = async (body: any): Promise<any> => {
         browserLogError('BeneficiaryChange::Failed to validate transaction', {
             ...parseErrorInformation(error),
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseUrl}/transactions/bene/validation`,
+            url: `https://dev-bpm.se2.com/process/transactions/bene/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
             function: 'webnonfinancial.validateTransaction',
         });
         return error;

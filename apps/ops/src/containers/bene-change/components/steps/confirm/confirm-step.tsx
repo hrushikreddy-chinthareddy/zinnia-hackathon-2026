@@ -18,7 +18,10 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { addTransaction } from '@deps/queries/api/web-non-financial';
+import {
+    addTransaction,
+    addBeneChangeTransaction,
+} from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 import { buildReRegRequestBody } from './confirm-step.helpers';
@@ -31,6 +34,7 @@ interface ConfirmStepProps {
     clientId: string;
     parentPage: ParentPage;
     leaveTransactionLink: string;
+    isBeneChange?: boolean;
 }
 
 const ConfirmStep = ({
@@ -40,6 +44,7 @@ const ConfirmStep = ({
     clientId,
     leaveTransactionLink,
     parentPage,
+    isBeneChange = false,
 }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.confirm',
@@ -112,7 +117,9 @@ const ConfirmStep = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = await addTransaction(requestBody);
+        const response = isBeneChange
+            ? await addBeneChangeTransaction({ ...requestBody, planCode })
+            : await addTransaction(requestBody);
         if (response.status !== 'ACCEPTED') {
             setSubmitFailed(true);
         } else {
