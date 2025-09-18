@@ -8,6 +8,10 @@ type ServerFunction<T extends unknown[], R> = (
   ...args: [...T, CommonLogContext]
 ) => Promise<ApiResponse<R>>;
 
+/**
+ *
+ * This will always return a {data, error} object
+ */
 export function withLogging<T extends unknown[], R>(
   fn: (...args: [...T, CommonLogContext]) => Promise<R>,
   additionalLoggingContext: {

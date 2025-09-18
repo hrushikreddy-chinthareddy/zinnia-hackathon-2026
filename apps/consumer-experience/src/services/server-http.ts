@@ -47,7 +47,6 @@ enum Service {
 }
 
 const criticalServices: Service[] = [
-  Service.BPM,
   Service.POLICY,
   Service.AUTH0,
   Service.ENTERPRISE_SEARCH,
