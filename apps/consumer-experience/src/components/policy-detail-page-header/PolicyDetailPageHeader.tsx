@@ -1,10 +1,8 @@
 'use client';
 import { useParams, usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
-import { HeaderPolicyDetails } from '@/components/policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
-import { lineOfBusinessFromPathname } from '@/utils/data';
 
 import { Breadcrumbs } from './Breadcrumbs';
 import {
@@ -14,7 +12,9 @@ import {
 } from './utils';
 import { AnalyticsPageHeader } from '../analytics/AnalyticsPageHeader';
 
-export const PolicyDetailPageHeader = () => {
+export const PolicyDetailPageHeader: React.FC<PropsWithChildren> = ({
+  children,
+}) => {
   const params = useParams<{
     planCode: string;
     policyNumber: string;
@@ -40,12 +40,7 @@ export const PolicyDetailPageHeader = () => {
             policyNumber: params.policyNumber,
           }}
         />
-        <HeaderPolicyDetails
-          className={styles.policyDetails}
-          planCode={params.planCode}
-          policyNumber={params.policyNumber}
-          lineOfBusiness={lineOfBusinessFromPathname(pathname)}
-        />
+        {children}
       </div>
     </div>
   );

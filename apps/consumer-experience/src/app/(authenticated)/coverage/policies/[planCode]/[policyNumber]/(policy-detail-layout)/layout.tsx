@@ -2,6 +2,7 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
+import { HeaderPolicyDetails } from '@/components/policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
 import { PolicyDetailPageHeader } from '@/components/policy-detail-page-header/PolicyDetailPageHeader';
 import { PolicyStatusAlertBanner } from '@/components/policy-status-alert-banner/PolicyStatusAlertBanner';
 import { getPolicyStatusDetails } from '@/services';
@@ -65,7 +66,13 @@ export default async function AuthenticatedLayout({
         policyNumber={params.policyNumber}
         lineOfBusiness={LineOfBusiness.LIFE}
       />
-      <PolicyDetailPageHeader />
+      <PolicyDetailPageHeader>
+        <HeaderPolicyDetails
+          planCode={params.planCode}
+          policyNumber={params.policyNumber}
+          lineOfBusiness={LineOfBusiness.ANNUITY}
+        />
+      </PolicyDetailPageHeader>
       <div className="container">{children}</div>
       <Footer />
     </>
