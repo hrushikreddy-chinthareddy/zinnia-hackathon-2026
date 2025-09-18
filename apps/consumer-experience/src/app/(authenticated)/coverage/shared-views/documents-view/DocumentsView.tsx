@@ -53,11 +53,11 @@ export const DocumentsView = async ({
     },
     loggingContext
   );
-  const { documents: documentsConfig } = await getCarrierConfig();
+  const { data: carrierConfigData } = await getCarrierConfig(loggingContext);
   const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV2 =
     !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
-    documentsConfig.version === DocumentsVersion.V2;
+    carrierConfigData?.documents.version === DocumentsVersion.V2;
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
     shouldUseV2
       ? getDocumentsV2({

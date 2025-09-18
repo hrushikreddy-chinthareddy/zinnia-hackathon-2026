@@ -14,7 +14,7 @@ interface SelectBankWrapperProps {
   planCode: string;
   policyNumber: string;
   lineOfBusiness: LineOfBusiness;
-  paymentProvider: PaymentProvider;
+  paymentProvider?: PaymentProvider;
 }
 
 export const SelectBankWrapper = ({
