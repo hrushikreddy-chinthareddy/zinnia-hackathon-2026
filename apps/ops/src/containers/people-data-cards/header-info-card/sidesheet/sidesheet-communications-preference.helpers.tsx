@@ -1,4 +1,4 @@
-import { Address, Email } from '@zinnia/api-types/types/sor';
+import { Address, Email, Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { Dispatch, SetStateAction } from 'react';
 
@@ -13,6 +13,7 @@ export type SideSheetCommnunicationPreferenceProps = {
     setPreferredCommunication: Dispatch<
         SetStateAction<Email | Address | undefined>
     >;
+    policy: Policy;
 };
 
 interface GetFormErrors {

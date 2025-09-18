@@ -11,6 +11,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildOneTimeFinancialTransactionSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import {
     TransactionResponseStatus,
@@ -20,6 +21,8 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSuccessfulEvent,
+    TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 
 import { buildLoanPaymentRequestBody } from '../loan-payment.helpers';
@@ -73,16 +76,22 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildOneTimeFinancialTransactionSubmittedEvent({
+                    query: paymentBody,
+                    policy,
+                    caseId: response?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.ONE_TIME_LOAN,
+                })
+            );
         }
 
         setIsLoading(false);
-    }, [
-        loanPayment,
-        policy.product?.planCode,
-        policy.policyNumber,
-        sessionId,
-        partyId,
-    ]);
+    }, [loanPayment, policy, sessionId, partyId]);
 
     useEffect(() => {
         submit();

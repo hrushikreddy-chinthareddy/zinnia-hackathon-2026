@@ -1,4 +1,5 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
@@ -10,7 +11,6 @@ import { dateFields } from './translations/date-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { DataTuple, FieldData } from './types';
-import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition

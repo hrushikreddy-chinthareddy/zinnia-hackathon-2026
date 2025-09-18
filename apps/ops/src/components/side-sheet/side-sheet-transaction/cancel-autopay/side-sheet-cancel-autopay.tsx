@@ -29,6 +29,7 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -48,6 +49,7 @@ import {
     SegmentTrackedEventName,
     TransactionContinueClickedEvent,
     TransactionStep,
+    TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
@@ -250,6 +252,24 @@ const SideSheetCancelAutopay = ({
 
         if (submitResponse?.data?.caseId) {
             setNewCaseId(submitResponse?.data?.caseId);
+        }
+
+        if (
+            [StatusCode.Accepted, StatusCode.Okay].includes(
+                submitResponse?.status
+            )
+        ) {
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildSystematicProgramSubmittedEvent({
+                    action: 'cancel',
+                    query: updateBody,
+                    policy,
+                    caseId: submitResponse?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                })
+            );
         }
 
         handleResponse({

@@ -111,8 +111,8 @@ export const ActiveAgingTable = () => {
                                     href={generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: name,
-                                        startDate: key,
-                                        endDate: key,
+                                        createdDateStart: key,
+                                        createdDateEnd: key,
                                         groupBy,
                                         status: filter.caseStatus,
                                         brokerDealer: filter.brokerDealerName,
@@ -219,13 +219,15 @@ export const ActiveAgingTable = () => {
                             </TableHeader>
                             <TableBody>
                                 {paginatedData.map((item) => {
-                                    const startDate = startDates[timeframe];
-                                    const endDate = calculateEndDate(timeframe);
+                                    const createdDateStart =
+                                        startDates[timeframe];
+                                    const createdDateEnd =
+                                        calculateEndDate(timeframe);
                                     const link = generateCaseLink({
                                         process: selectedProcess,
                                         carrierOrProductName: item.name,
-                                        startDate,
-                                        endDate,
+                                        createdDateStart,
+                                        createdDateEnd,
                                         groupBy,
                                         carrier: filter.carrier,
                                         brokerDealer: filter.brokerDealerName,

@@ -1,5 +1,6 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQueries } from '@tanstack/react-query';
+import { toTitleCase } from '@xd/utils/dist';
 import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -218,6 +219,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         isBeneficiarySelected: isBeneficiarySelected,
         isAgentSelected: isAgentSelected,
     };
+
     const commissionAllocationData = agentDataByType(
         filteredNameTags,
         AgentType.PRIMARY
@@ -260,7 +262,8 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                     key={`people-chip-${role.value}`}
                                     value={role.value}
                                 >
-                                    {role.text} ({role.quantity})
+                                    {toTitleCase(role.text ?? '')} (
+                                    {role.quantity})
                                 </RadioGroup.Item>
                             ))}
                         </RadioGroup.Root>

@@ -8,6 +8,7 @@ interface Props {
     className?: string;
     modalTitle?: string;
     onCancel: () => void;
+    bigSize?: boolean;
 }
 
 export const Modal: React.FC<Props> = (props) => {
@@ -18,6 +19,7 @@ export const Modal: React.FC<Props> = (props) => {
         className = '',
         modalTitle = '',
         onCancel,
+        bigSize = false,
     } = props;
 
     if (!open) return null;
@@ -25,7 +27,9 @@ export const Modal: React.FC<Props> = (props) => {
     return (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-60">
             <div
-                className={`relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white ${className}`}
+                className={`relative m-4 p-4 ${
+                    bigSize ? 'w-4/5 max-w-[70%] h-[95vh]' : 'w-2/5 max-w-[40%]'
+                } min-w-[40%] rounded-lg bg-white ${className} `}
             >
                 <div className="absolute top-4 right-4">
                     <Button mode="link" onClick={onCancel}>
@@ -37,7 +41,11 @@ export const Modal: React.FC<Props> = (props) => {
                         {modalTitle}
                     </div>
                 )}
-                <div className="py-4 text-slate-600 font-light leading-normal">
+                <div
+                    className={`py-4 text-slate-600 font-light leading-normal ${
+                        bigSize && 'h-full'
+                    }`}
+                >
                     {content}
                 </div>
             </div>

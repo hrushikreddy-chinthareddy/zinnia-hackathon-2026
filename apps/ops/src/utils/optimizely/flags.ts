@@ -155,6 +155,7 @@ export enum FEATURE_FLAGS {
     SEND_CORRESPONDENCE = 'send_correspondence',
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
     USAGE_STATS_DASHBOARD = 'usage_stats_dashboard',
+    AI_ASSISTANT = 'ai_assistant',
     IDN_DEATH_CLAIM_FLIC = 'claims-feature-flic-idn-death-claim',
     OWNER_CHANGE_TRANSACTION = 'owner_change_transaction',
     JOINT_OWNER_CHANGE_TRANSACTION = 'joint_owner_change_transaction',

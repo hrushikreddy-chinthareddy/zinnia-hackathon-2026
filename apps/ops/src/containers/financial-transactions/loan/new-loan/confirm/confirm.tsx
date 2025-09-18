@@ -12,6 +12,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useNewLoan } from '@deps/contexts/transactions/NewLoanContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildOneTimeFinancialTransactionSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import {
     submitNewLoan,
@@ -21,6 +22,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -83,17 +85,22 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+            segmentAnalyticsTrackEvent(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildOneTimeFinancialTransactionSubmittedEvent({
+                    query: requestBody,
+                    policy,
+                    caseId: response?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.NEW_LOAN,
+                })
+            );
         }
 
         setIsLoading(false);
-    }, [
-        newLoan,
-        wireCheckPaymentsEnabled,
-        policy.product?.planCode,
-        policy.policyNumber,
-        sessionId,
-        partyId,
-    ]);
+    }, [newLoan, wireCheckPaymentsEnabled, policy, sessionId, partyId]);
 
     useEffect(() => {
         submit();

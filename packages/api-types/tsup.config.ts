@@ -16,6 +16,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/partyreference',
     'src/generated-types/analytics',
     'src/generated-types/contact-management',
+    'src/generated-types/knowledgebase',
     'src/generated-types/correspondence',
     'src/generated-types/aggregation',
   ],

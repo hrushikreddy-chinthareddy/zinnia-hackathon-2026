@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import {
     CaseCountGroupByEnum,
     CaseCountInputFilter,
@@ -95,7 +96,7 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
 
     const filter = {
         updatedDateStart: timerange.from,
-        updatedDateEnd: timerange.to,
+        updatedDateEnd: startOfTomorrowLocalIso(timerange.to),
         process: formatProcessFilter(selectedProcess),
         caseStatus: [Statuses.Completed],
         carrier: Object.keys(selectedCarriers),

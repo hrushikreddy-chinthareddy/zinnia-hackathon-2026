@@ -302,6 +302,29 @@
                 "policyDate": "date du contrat",
                 "qualificationType": "Type de qualification",
                 "text": "voir les détails"
+            },
+            "aiChatbot": {
+                "text": "Assistant AI de Zinnia"
+             },
+            "propriétaire": {
+                "text": "Gérer les propriétaires",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
+            },
+            "co-propriétaire": {
+                "text": "Gérer les co-propriétaires",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-jointowner"
+            },
+            "payeur": {
+                "text": "Gérer les payeurs",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-payor"
+            },
+            "concepteur tiers": {
+                "text": "Gérer les concepteurs tiers",
+                "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
+            },
+            "bénéficiaire": {
+                "text": "Gérer les bénéficiaires",
+                "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             }
         },
         "loader": "Chargement..."
@@ -5003,7 +5026,8 @@
             "riderInsured": "Assurée d'un Avenant",
             "primaryWritingAgent": "Agent désigné",
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
-            "exchangeCompany": "Société d'échange"
+            "exchangeCompany": "Société d'échange",
+            "jointAnnuitant": "Corentier"
         }
     },
     "pageHeader": {
@@ -5338,6 +5362,7 @@
                 "address": "Adresse",
                 "allocations": "Répartitions",
                 "bankaccount": "Compte bancaire",
+                "bank account": "Compte bancaire",
                 "communicationpreference": "Préférences de communication",
                 "email": "E-mail",
                 "number": "Numéro",
@@ -6872,6 +6897,16 @@
             "noData": "Aucun détail du bénéficiaire disponible."
         }
     },
+    "claimsFundRelease": {
+        "noData": "Aucun détail de déblocage des fonds de réclamation n'est disponible.",
+        "loadingTransactions": "Récupération des détails de déblocage du fonds de réclamation...",
+        "errorGettingTransactions": "Les données de déblocage des fonds de réclamation n'ont pas pu être récupérées.",
+        "claimClosureReasons": {
+            "spousalContinuation": "Règlement conclu. Le contrat est maintenu en vertu de la clause de continuation entre conjoints (source : {{closureSource}}).",
+            "deathClaimPaid": "Règlement finalisé. Les prestations de décès ont été versées au bénéficiaire (source : {{closureSource}})."
+        },
+        "settlementInProgress": "Le règlement est en cours."
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Révision du formulaire de service",
@@ -8036,6 +8071,89 @@
             "zinniaLiveCaseViews": {
                 "title": "Vues de cas Zinnia Live par transaction"
             }
+        }
+    },
+    "zinniaAiAssistant": {
+        "header":"Zinnia AI Assistant",
+        "chat": {
+            "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
+            "inputPlaceholder": "Demande-moi n'importe quoi",
+            "footerText": "Avertissement:Le chat Zinnia peut faire des erreurs.",
+            "errorMsg": "Désolé, je n'ai pas obtenu de réponse. Veuillez réessayer plus tard.",
+            "send": "Envoyer",
+            "stop": "Arrêt",
+            "retry": "Réessayer",
+            "feedback": {
+                "thanksMsg": "Merci de nous avoir envoyé vos commentaires",
+                "feedbackComment": "Pouvez-vous préciser quels aspects des commentaires vous ont semblé insatisfaisants ? Vos commentaires sont précieux pour améliorer notre service.",
+                "submitFeedback": "Soumettre des commentaires",
+                "yourFeedback": "Vos commentaires",
+                "description": "Description",
+                "submit": "Soumettre",
+                "cancel": "Annuler",
+                "placeholder": "Votre message de commentaires ici...",
+                "positiveFeedbackComment": "Pourriez-vous préciser quels aspects de votre retour vous ont semblé satisfaisants ? Votre avis est précieux pour améliorer notre service.",
+                "negativeFeedbackComment": "Pourriez-vous préciser quels aspects de votre retour vous ont semblé insatisfaisants ? Votre avis est précieux pour améliorer notre service.",
+                "validationError": "Veuillez saisir votre commentaire"
+            },
+            "followUpPlaceholder": "Posez vos questions complémentaires ici...",
+            "followUpButton": "Posez vos questions complémentaires ici"
+        },
+        "documents": {
+            "recentlyAdded": "Fichiers récemment ajoutés",
+            "recentlyModified": "Fichiers récemment modifiés",
+            "allDocs": "Tous les documents",
+            "fileName": "Nom du fichier",
+            "createdAt": "Créé le",
+            "updatedAt": "Mis à jour le",
+            "noDoc": "Aucun document trouvé",
+            "search": "Rechercher des documents",
+            "docPreview": "Document Preview",
+            "noPreview": "Aperçu du document non disponible",
+            "resultsPerPage": "Résultats par page"
+        },
+        "admin": {
+            "tenants": {
+                "header": "Locataires",
+                "tenantId": "ID de locataire Zowie",
+                "createdDate": "Date de création",
+                "updatedDate": "Date de mise à jour",
+                "noTenantsFound": "Aucun locataire trouvé",
+                "search": "Rechercher des locataires",
+                "sidesheet": {
+                    "overview": "Aperçu",
+                    "featureFlags": "Fonctionnalités",
+                    "integrations": "Intégrations",
+                    "knowledgeBases": "Bases de connaissances",
+                    "retrievalAugmentedGeneration": "Génération augmentée par récupération",
+                    "tableConfigurations": "Configurations des tableaux",
+                    "users": "Utilisateurs",
+                    "warehouse": "Entrepôt"
+                }
+            },
+            "users": {
+                "header": "Utilisateurs du système",
+                "name": "Nom",
+                "email": "Email",
+                "role": "Rôle",
+                "createdDate": "Date de création",
+                "updatedDate": "Date de mise à jour",
+                "search": "Rechercher des utilisateurs",
+                "noUsersFound": "Aucun utilisateur trouvé"
+            }
+        },
+        "sidenav": {
+            "newChat": "Nouveau chat",
+            "sharepointDocuments": "Documents SharePoint",
+            "recentlyAdded": "Récemment ajoutés",
+            "recentlyModified": "Récemment modifiés",
+            "allDocs": "Tous les documents",
+            "recentChat": "Chat récent",
+            "search": "Rechercher",
+            "noResultsFound": "Aucun résultat trouvé",
+            "noRecentChats": "Aucune discussion récente",
+            "loadingChats": "Chargement des discussions...",
+            "settings": "Paramètres"
         }
     },
     "updateSuitabilityDataEntry": {

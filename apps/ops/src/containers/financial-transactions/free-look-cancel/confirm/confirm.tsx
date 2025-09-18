@@ -12,12 +12,15 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import { submitFreeLookCancel } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSuccessfulEvent,
+    TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -77,10 +80,22 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.FREE_LOOK_CANCELLATION,
+                    query: requestBody,
+                    policy,
+                    caseId: response?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                })
+            );
         }
 
         setIsLoading(false);
-    }, [policy.policyNumber, policy.product?.planCode, withdrawal]);
+    }, [policy, withdrawal, sessionId, partyId, wireCheckPaymentsEnabled]);
 
     useEffect(() => {
         submit();

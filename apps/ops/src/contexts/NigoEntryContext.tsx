@@ -26,7 +26,7 @@ export type NigoEntryFormState = {
     transactionSubType: CallCenterElement<string, SimpleOption>;
     document: CallCenterElement<FormDetails, FormDetails>;
     formErrors: FormValidationErrors;
-    submitFailed: boolean;
+    submitFailed: boolean | undefined;
     formComment?: FormComment;
     initRelatedDocCount: number;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
@@ -48,7 +48,7 @@ export type NigoEntryFormState = {
         React.SetStateAction<CallCenterElement<FormDetails, FormDetails>>
     >;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
-    setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
+    setSubmitFailed: React.Dispatch<React.SetStateAction<boolean | undefined>>;
     setFormComment: React.Dispatch<React.SetStateAction<FormComment>>;
 };
 

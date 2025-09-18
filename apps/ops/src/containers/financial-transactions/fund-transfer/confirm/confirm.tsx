@@ -11,6 +11,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { submitFundTransfer } from '@deps/queries/api/fund-transfer';
@@ -18,6 +19,8 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+    TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 
 import { buildfundTransferRequestBody } from '../fund-transfer.helpers';
@@ -72,16 +75,22 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.FUND_TRANSFER,
+                    query: body,
+                    policy,
+                    caseId: response?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                })
+            );
         }
 
         setIsLoading(false);
-    }, [
-        fundTransfer,
-        policy.product?.planCode,
-        policy.policyNumber,
-        sessionId,
-        partyId,
-    ]);
+    }, [fundTransfer, policy, sessionId, partyId]);
 
     useEffect(() => {
         submit();

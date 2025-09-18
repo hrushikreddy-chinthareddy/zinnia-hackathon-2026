@@ -4,6 +4,7 @@ import {
     AddressType,
     Country,
     Party,
+    Policy,
     State,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
@@ -50,6 +51,9 @@ import {
     getAddressTypeOptions,
     getFormErrors,
 } from '@deps/containers/people-data-cards/address-card/side-sheet/side-sheet-address.helpers';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -66,11 +70,17 @@ import {
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+    TransactionSuccessfulEvent,
+} from '@deps/types/segment-analytics';
 
 export interface SideSheetAddressProps {
     isCurrentMailingAddress: boolean;
     isOnlyAddress: boolean;
     onCancel: () => void;
+    policy: Policy;
     party?: Party;
     planCode?: string;
     policyNumber?: string;
@@ -86,6 +96,7 @@ const SideSheetAddress = ({
     onCancel,
     party,
     planCode,
+    policy,
     policyNumber,
     setCurrentAddresses,
     updateAddress,
@@ -94,7 +105,7 @@ const SideSheetAddress = ({
         keyPrefix: 'people.sideSheet.address',
     });
     const { t: defaultT } = useTranslation();
-
+    const { partyId: userId, sessionId } = usePermissionsContext();
     const INITIAL_ADDRESS: Address = {
         addressType: AddressType.RESIDENCE,
         country: Country.US,
@@ -180,20 +191,40 @@ const SideSheetAddress = ({
     };
 
     const handleDelete = async () => {
+        const reqBody = {
+            ...body,
+            address,
+            deleteRequest: true,
+        };
         const response = await editNonFinancialTransaction({
-            body: {
-                ...body,
-                address,
-                deleteRequest: true,
-            },
+            body: reqBody,
             itemId: updateAddress?.addressId,
             partyId,
             planCode,
             policyNumber,
             transaction: NonFinancialTransactions.Address,
         });
+        const onSuccessfulSubmit = (caseId: string) => {
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.REMOVE_ADDRESS,
+                    query: reqBody,
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
 
-        handleResponse({ response, setViewState, setValidationResults });
+        handleResponse({
+            response,
+            setViewState,
+            setValidationResults,
+            onSuccessfulSubmit,
+        });
     };
 
     const handleSubmit = async () => {
@@ -233,11 +264,28 @@ const SideSheetAddress = ({
             });
         }
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType: isAdd
+                        ? TransactionSubmittedEventType.ADD_ADDRESS
+                        : TransactionSubmittedEventType.UPDATE_ADDRESS,
+                    query: body,
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId,
+            onSuccessfulSubmit,
         });
     };
 

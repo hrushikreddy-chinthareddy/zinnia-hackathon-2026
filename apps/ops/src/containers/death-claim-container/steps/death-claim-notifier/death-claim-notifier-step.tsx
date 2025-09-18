@@ -88,7 +88,10 @@ export const DeathClaimNotificationStep = ({
     }, [policy]);
 
     const policyAnnuitants = useMemo(() => {
-        return getPolicyOwnersByRole(policy, [PartyRole.ANNUITANT]);
+        return getPolicyOwnersByRole(policy, [
+            PartyRole.ANNUITANT,
+            PartyRole.JOINTANNUITANT,
+        ]);
     }, [policy]);
 
     const ownerPartyType = useMemo(() => {

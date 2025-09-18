@@ -120,11 +120,16 @@ const mapDataToPeopleCard = ({
         }
     }
 
+    const convertedTags = tags.map((tag) => ({
+        ...tag,
+        text: toTitleCase(tag.text),
+    }));
+
     return (
         <CardPeople
             key={index}
             index={index}
-            tags={tags}
+            tags={convertedTags}
             name={name}
             selectedTags={selectedTagList}
             beneficiaryType={tagsToBeneficiaryType(tags)}

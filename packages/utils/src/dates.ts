@@ -1,13 +1,13 @@
-import dayjs from 'dayjs';
-import isBetween from 'dayjs/plugin/isBetween';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
-import { DEFAULT_ERROR_STRING } from './strings';
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import { DEFAULT_ERROR_STRING } from "./strings";
 
-export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
-export const ENTERPRISE_DATE_FORMAT = 'YYYY-MM-DD';
-export const ASIA_IN_TZ = 'Asia/Calcutta';
-export const ASIA_IN_LOCAL = 'en-IN';
+export const DEFAULT_DATE_FORMAT = "M/D/YYYY";
+export const ENTERPRISE_DATE_FORMAT = "YYYY-MM-DD";
+export const ASIA_IN_TZ = "Asia/Calcutta";
+export const ASIA_IN_LOCAL = "en-IN";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -96,9 +96,9 @@ const getUserLocale = (): string => {
 
 export const formatTimestamp = (
   timestamp: string,
-  style: 'standard' | 'tooltip' | 'monthDay' | 'dateTimeWithTZ' = 'standard'
+  style: "standard" | "tooltip" | "monthDay" | "dateTimeWithTZ" = "standard"
 ): string => {
-  const parsedTime = dayjs(timestamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+  const parsedTime = dayjs(timestamp, "YYYY-MM-DDTHH:mm:ss.SSSZ");
 
   if (!parsedTime.isValid()) {
     return DEFAULT_ERROR_STRING;
@@ -109,29 +109,29 @@ export const formatTimestamp = (
   const locale = getUserLocale();
   const formatter = new Intl.DateTimeFormat(locale, {
     timeZone,
-    timeZoneName: 'short',
+    timeZoneName: "short",
   });
 
   const parts = formatter.formatToParts(new Date(localizedTime.format()));
   const timeZoneAbbr =
-    parts.find((part) => part.type === 'timeZoneName')?.value || '';
+    parts.find((part) => part.type === "timeZoneName")?.value || "";
 
   switch (style) {
-    case 'standard':
+    case "standard":
       return localizedTime.format(`M/D/YYYY [at] h:mma [${timeZoneAbbr}]`);
 
-    case 'tooltip':
+    case "tooltip":
       return localizedTime.format(`MMM D, YYYY [at] h:mma [${timeZoneAbbr}]`);
 
-    case 'monthDay': {
+    case "monthDay": {
       const currentYear = dayjs().year();
-      const base = localizedTime.format('MMM D');
+      const base = localizedTime.format("MMM D");
       return currentYear === localizedTime.year()
         ? base
         : `${base}, ${localizedTime.year()}`;
     }
 
-    case 'dateTimeWithTZ':
+    case "dateTimeWithTZ":
       return localizedTime.format(`M/D/YYYY [at] h:mm a [${timeZoneAbbr}]`);
 
     default:
@@ -149,18 +149,47 @@ export const formatRelativeTime = (
   const now = dayjs();
   const target = dayjs(inputDate);
 
-  const diffInMinutes = now.diff(target, 'minute');
-  const diffInHours = now.diff(target, 'hour');
-  const diffInDays = now.diff(target, 'day');
+  const diffInMinutes = now.diff(target, "minute");
+  const diffInHours = now.diff(target, "hour");
+  const diffInDays = now.diff(target, "day");
 
   if (diffInMinutes < 1) {
-    return 'just now';
+    return "just now";
   }
   if (diffInMinutes < 60) {
-    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? "s" : ""} ago`;
   }
   if (diffInHours < 24) {
-    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+    return `${diffInHours} hour${diffInHours !== 1 ? "s" : ""} ago`;
   }
-  return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+  return `${diffInDays} day${diffInDays !== 1 ? "s" : ""} ago`;
 };
+
+export const startOfTomorrowLocalIso = (ymd: string) => {
+  const base = dayjs(ymd, ENTERPRISE_DATE_FORMAT, true);
+  if (!base.isValid()) return DEFAULT_ERROR_STRING;
+
+  // add one day, clamp to start of day (local), then express that instant in UTC ISO
+  return base.add(1, "day").startOf("day").toDate().toISOString();
+};
+export function formatDateTime(isoString: string): string {
+  const date = new Date(isoString);
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: "UTC",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+
+  let formatted = date.toLocaleString("en-US", options);
+
+  formatted = formatted
+    .replace("at ", "")
+    .replace(" PM", " pm")
+    .replace(" AM", " am");
+
+  return formatted;
+}

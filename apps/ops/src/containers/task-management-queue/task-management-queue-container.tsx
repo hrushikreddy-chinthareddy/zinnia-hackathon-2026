@@ -30,6 +30,7 @@ const SideSheetTasksResults = dynamic(
 
 import { PolicySearchKeys } from '@deps/types/search';
 import { LabelValue } from '@deps/types/data';
+import { TaskStatus } from '@deps/models/case/task-instance';
 
 const fieldKeyMapping: Record<string, string> = {
     taskName: 'taskName',
@@ -107,6 +108,10 @@ const TaskManagementQueue = ({
         if (!Array.isArray(carriers)) return [];
         return carriers.map((carrier) => carrier.toUpperCase());
     };
+
+    const enableClaimTask = taskDetails.every(
+        (task) => task.status === TaskStatus.Pending
+    );
 
     const getSafeSearchParams = (searchParams: SearchParamsPayload) => {
         const { carriers, queues } = searchParams;
@@ -339,11 +344,7 @@ const TaskManagementQueue = ({
                                 data-testid="claim-task"
                                 aria-label={t('claimTask') as string}
                                 size={ButtonSize.Small}
-                                disabled={
-                                    (Array.isArray(taskDetails) &&
-                                        taskDetails.length > 0) ||
-                                    isLoading
-                                }
+                                disabled={!enableClaimTask || isLoading}
                                 variant={ButtonVariant.Default}
                             >
                                 {t('claimTask')}
