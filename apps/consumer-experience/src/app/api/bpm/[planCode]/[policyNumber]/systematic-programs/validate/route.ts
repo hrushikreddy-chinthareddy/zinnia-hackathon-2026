@@ -87,9 +87,10 @@ export async function POST(
     return NextResponse.json({
       data: null,
       error: {
-        name: 'error unknown',
+        name: 'bpm::systematic-program::validation::POST::error',
         message: 'error unknown',
         status: 500,
+        correlationId: loggingContext.correlationId,
       },
     });
   }

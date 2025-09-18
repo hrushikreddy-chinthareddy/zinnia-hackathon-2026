@@ -78,8 +78,9 @@ export async function POST(
       data: null,
       error: {
         status: 500,
-        name: 'Error fetching systematic program cancellation',
+        name: 'bpm::systematic-program::cancellation::POST::error',
         message: 'error fetching systematic program cancellation',
+        correlationId: loggingContext.correlationId,
       },
     });
   }

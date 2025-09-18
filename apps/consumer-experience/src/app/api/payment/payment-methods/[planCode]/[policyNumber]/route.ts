@@ -42,8 +42,9 @@ export async function GET(
       data: null,
       error: {
         status: 500,
-        name: 'Failed to fetch payment methods',
-        message: `Failed to fetch payment methods::correlationId: ${loggingContext.correlationId}`,
+        name: 'payment::payment-methods::GET::error',
+        message: 'Failed to fetch payment methods',
+        correlationId: loggingContext.correlationId,
       },
     });
   }

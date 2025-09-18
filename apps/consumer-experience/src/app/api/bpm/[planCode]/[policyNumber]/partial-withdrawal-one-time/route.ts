@@ -64,6 +64,7 @@ export async function POST(
         status: 500,
         name: 'Error fetching one time withdrawal validation',
         message: 'error fetching one time withdrawal validation',
+        correlationId: loggingContext.correlationId,
       },
     });
   }

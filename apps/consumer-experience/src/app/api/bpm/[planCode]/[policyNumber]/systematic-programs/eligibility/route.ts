@@ -52,8 +52,11 @@ export async function GET(
       data: null,
       error: {
         status: 500,
-        name: 'Failed to fetch systematic programs',
-        message: 'Failed to fetch systematic programs',
+        name: 'policies::systematic-programs::eligibility::POST::error',
+        message:
+          (error as Error).message ||
+          'Something went wrong getting the eligibility',
+        correlationId: loggingContext.correlationId,
       },
     });
   }
