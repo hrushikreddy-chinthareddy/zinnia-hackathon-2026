@@ -23,6 +23,7 @@ import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
 import { isProd } from '@deps/utils/environment.helpers';
+import nextI18nextConfig from 'next-i18next.config';
 
 const lato = Lato({
     subsets: ['latin'],
@@ -144,4 +145,4 @@ const App = (props: AppProps) => {
     );
 };
 
-export default appWithTranslation(App as any);
+export default appWithTranslation(App as any, nextI18nextConfig);

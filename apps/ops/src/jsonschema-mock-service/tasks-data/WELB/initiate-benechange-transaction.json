@@ -10,7 +10,7 @@
     "status": "NEW",
     "data": {
         "process": "Policy Update",
-        "policyNumber": "ADA2504638",
+        "policyNumber": "ADA2501506",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
         "taskName": "Beneficiary Change Data Entry",
         "processSubType": "Beneficiary Change",
@@ -128,6 +128,8 @@
                     "prefix": "",
                     "suffix": "",
                     "trustType": "",
+                    "trustDate": "",
+                    "supportingDocumentAttached": "No",
                     "addresses": [
                         {
                             "addressId": "Party_PB_Primary_Bene_1_Address_0",
@@ -212,6 +214,8 @@
                     "lastName": "S",
                     "prefix": "",
                     "suffix": "",
+                    "trustDate": "2025-09-04",
+                    "supportingDocumentAttached": "Yes",
                     "trustType": "CORPORATETRUST",
                     "addresses": [
                         {
@@ -256,28 +260,20 @@
             }
         ],
         "signatureData": {
-            "isIrrevocableBene": true,
+            "isIrrevocableBene": false,
             "signatures": [
                 {
-                    "isSignedPresent": "Yes",
-                    "signDate": "2025-07-30",
-                    "signDesignation": "Executor",
+                    "isSignedPresent": "No",
+                    "signDate": "1978-11-05",
+                    "signDesignation": "",
                     "signGurantee": "",
                     "signPrintName": "",
                     "signType": "OWNER"
                 },
                 {
-                    "isSignedPresent": "Yes",
-                    "signDate": "2025-07-30",
-                    "signDesignation": "Custodian",
-                    "signGurantee": "",
-                    "signPrintName": "",
-                    "signType": "JOINT OWNER"
-                },
-                {
-                    "isSignedPresent": "Yes",
-                    "signDate": "2025-07-30",
-                    "signDesignation": "Guardian",
+                    "isSignedPresent": "No",
+                    "signDate": "1978-11-05",
+                    "signDesignation": "",
                     "signGurantee": "",
                     "signPrintName": "",
                     "signType": "IRREVOCABLE"

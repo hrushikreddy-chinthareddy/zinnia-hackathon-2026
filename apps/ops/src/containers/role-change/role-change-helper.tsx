@@ -64,10 +64,6 @@ export const ContactOptions = (t: TFunction, role: string) => {
             value: PreferredCommunicationType.EMAIL,
         },
         {
-            label: t('phone'),
-            value: PreferredCommunicationType.PHONE,
-        },
-        {
             label: t('mail'),
             value: PreferredCommunicationType.REGULARMAIL,
         },

@@ -628,7 +628,6 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
             key: 'irs-signature-sign-date',
         },
     ];
-    const cslnCheckStates = ['CA', 'CO', 'TX'];
 
     const eSignatureFieldConfig = {
         type: true,
@@ -659,7 +658,6 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
         signaturesNotaryConfig,
         additionalWithholdingAmountConfig,
         irsSignatureConfig,
-        cslnCheckStates,
         eSignatureFieldConfig,
         sswUpdateFastOptions,
     };

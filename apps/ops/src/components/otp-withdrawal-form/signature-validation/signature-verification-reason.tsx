@@ -55,7 +55,10 @@ export default function SignatureVerificationReasons({
     return (
         <div className="flex flex-col space-y-2">
             {config.map((option: SignVerificationReasonItem) => (
-                <div key={`verification-reason-${option.value}`}>
+                <div
+                    key={`verification-reason-${option.value}`}
+                    className="flex flex-wrap gap-8 max-md:flex-col"
+                >
                     <CheckboxText
                         label={option.label}
                         data-testid={`verification-reason-test-id-${option.value}`}

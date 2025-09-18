@@ -1,7 +1,6 @@
 {
     "formId": "739f1330-9de0-484b-8938-4292ccd9b244",
     "process": "Qualification",
-    "carrier": "WELB",
     "taskType": "NB_DUPLICATE_REVIEW",
     "formSchema": {
         "type": "object"

@@ -212,7 +212,7 @@ const CedingCompanyDistribution = ({
                 }
             />
 
-            <div className="my-4 ">
+            <div className="my-4 flex flex-wrap gap-8 max-md:flex-col">
                 <CheckboxText
                     label={t('cedingCompanySignature.isQualTypeNotValid')}
                     checked={isMultipleQualType}
@@ -306,16 +306,23 @@ const CedingCompanyDistribution = ({
                 <div className="flex flex-col gap-4">
                     {invalidOwnerRegReasons.map(({ label, value }) => {
                         return (
-                            <CheckboxText
-                                checked={isChecked(value, selectedRegReasons)}
+                            <div
+                                className="flex flex-wrap gap-8 max-md:flex-col"
                                 key={`hardshipSelect-${value}`}
-                                label={label}
-                                onChange={toggleOption(
-                                    value,
-                                    setSelectedRegReasons
-                                )}
-                                isDisabled={isFormStateReadOnly}
-                            />
+                            >
+                                <CheckboxText
+                                    checked={isChecked(
+                                        value,
+                                        selectedRegReasons
+                                    )}
+                                    label={label}
+                                    onChange={toggleOption(
+                                        value,
+                                        setSelectedRegReasons
+                                    )}
+                                    isDisabled={isFormStateReadOnly}
+                                />
+                            </div>
                         );
                     })}
                 </div>

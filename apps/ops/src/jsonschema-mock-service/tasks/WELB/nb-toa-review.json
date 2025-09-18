@@ -1,7 +1,6 @@
 {
     "formId": "500468fd-c5e1-4b20-9832-267a355d3d5d",
     "process": "New Business",
-    "carrier": "WELB",
     "taskType": "NB_TOA_REVIEW",
     "formSchema": {
         "type": "object"

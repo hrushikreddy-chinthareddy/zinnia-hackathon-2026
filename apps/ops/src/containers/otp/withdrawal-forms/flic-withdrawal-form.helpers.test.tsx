@@ -68,7 +68,6 @@ describe.skip('FLIC withdrawal form config', () => {
     const flicConfig = getFlicConfig(t);
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
-            expect(flicConfig.cslnCheckStates).toBeDefined();
             expect(flicConfig.formSubtypeOptions).toBeDefined();
             expect(flicConfig.formValidation).toBeDefined();
             expect(flicConfig.fundWithdrawnMethodOptions).toBeDefined();

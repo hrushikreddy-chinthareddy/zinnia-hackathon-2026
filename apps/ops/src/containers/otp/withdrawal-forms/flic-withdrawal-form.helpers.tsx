@@ -337,20 +337,6 @@ export default function getFlicConfig(
         },
     ];
 
-    const cslnCheckStates = [
-        'AZ',
-        'CA',
-        'CO',
-        'LA',
-        'MT',
-        'NV',
-        'NM',
-        'OH',
-        'TX',
-        'WA',
-        'ND',
-        'RI',
-    ];
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -839,7 +825,6 @@ export default function getFlicConfig(
     ];
 
     return {
-        cslnCheckStates,
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,

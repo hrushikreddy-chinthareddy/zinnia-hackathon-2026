@@ -702,21 +702,6 @@ export default function useFlicSSWConfig(t: TFunction) {
         },
     ];
 
-    const cslnCheckStates = [
-        'AZ',
-        'CA',
-        'CO',
-        'LA',
-        'MT',
-        'NV',
-        'ND',
-        'NM',
-        'OH',
-        'RI',
-        'TX',
-        'WA',
-    ];
-
     const eSignatureFieldConfig = {
         type: true,
         signPresent: true,
@@ -733,7 +718,6 @@ export default function useFlicSSWConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         signaturesConfig,
-        cslnCheckStates,
         eSignatureFieldConfig,
     };
 }

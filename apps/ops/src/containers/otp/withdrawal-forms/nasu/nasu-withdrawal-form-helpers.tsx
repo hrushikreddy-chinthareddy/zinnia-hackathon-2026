@@ -721,8 +721,6 @@ export default function useNasuConfig(t: TFunction) {
         },
     ];
 
-    const cslnCheckStates = ['CA'];
-
     const defaultValues = {
         disbursementOption: FormDisbursementSelections.Check,
     };
@@ -806,7 +804,6 @@ export default function useNasuConfig(t: TFunction) {
         identifySelectedFormProgramOption,
         partialWithdrawalOptions,
         selectOneOptions,
-        cslnCheckStates,
         fullWithdrawalOptions,
         reasonOptions,
         defaultValues,

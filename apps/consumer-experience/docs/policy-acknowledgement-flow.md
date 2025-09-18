@@ -40,5 +40,5 @@ graph TD
 
 ## To test flow
 
-1. [Make a new policy](./make-a-new-policy.md)
+1. [Make a new policy](./MakeANewPolicy.mdx)
 1. [Set delivery preference](./update-policy-delivery-preference.md)

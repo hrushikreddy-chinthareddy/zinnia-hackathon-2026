@@ -133,7 +133,7 @@ export const ContactDetailsStep = ({ policy }: ContactDetailsProps) => {
                     <Typography variant={TypographyVariant.LabelLg}>
                         {t('title')}
                     </Typography>
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-wrap gap-4 max-md:flex-col">
                         {contactTypes.map(({ label, value, isChecked }) => {
                             return (
                                 <CheckboxText

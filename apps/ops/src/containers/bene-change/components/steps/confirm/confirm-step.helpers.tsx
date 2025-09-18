@@ -407,19 +407,19 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
             entityType: item?.party?.info?.entityType ?? EntityTypeValue.Other,
             documents,
             supportingDocumentAttached,
+            trustDate:
+                selectedPartyType == PartyType.TRUST
+                    ? dayjs(
+                          item?.party?.info?.trustDate,
+                          DATE_PICKER_FORMAT
+                      )?.format(ZAHARA_API_DATE_FORMAT)
+                    : null,
         },
         isPerStirpes: item?.beneInfo?.isPerStirpes || false,
         isIrrevocable: item?.beneInfo?.isIrrevocable || false,
         isRestrictedBeneficiary:
             item?.beneInfo?.isRestrictedBeneficiary || false,
         preferredCommunicationType: item?.party?.preferredCommunicationType,
-        trustDate:
-            selectedPartyType == PartyType.TRUST
-                ? dayjs(
-                      item?.party?.info?.trustDate,
-                      DATE_PICKER_FORMAT
-                  )?.format(ZAHARA_API_DATE_FORMAT)
-                : null,
     };
 
     return record;

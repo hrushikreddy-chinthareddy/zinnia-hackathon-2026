@@ -69,20 +69,20 @@ import {
   PolicyWithdrawals,
   PolicyLoans,
   CarrierPolicyDetails,
-  CompletedAnnuityTransactionType,
-  PendingAnnuityTransactionType,
   PolicyProfile,
   PolicyStatusDetail,
   PolicySurrender,
   CompletedPremiumTransactionType,
   PendingPremiumTransactionType,
   Metric,
+  PendingAnnuityTransactionType,
+  CompletedAnnuityTransactionType,
 } from '@/types/policy';
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getSession } from '@/utils/auth';
 import { LogWarn } from '@/utils/logging/errors';
-import { logError } from '@/utils/logging/log-fns';
+import { logError, logInfo } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -100,6 +100,7 @@ import {
   getPartyRolesByPolicyNumber,
   getPolicyPartyIdByPolicyNumber,
 } from '../party-reference/transformers';
+import { getPaymentMethods } from '../payment-methods';
 
 const FILE_NAME = '/src/services/policy/index.ts';
 
@@ -780,6 +781,7 @@ export const getPaymentDetails = withLogging(
   { file: FILE_NAME, functionName: 'getPaymentDetails' }
 );
 
+// @TODO: This is has duplicate logic with getAnnuityRecentTransactions and should be refactored
 export const getPaymentHistory = withLogging(
   async (
     { planCode, policyNumber }: PolicyRequestInputs,
@@ -793,62 +795,59 @@ export const getPaymentHistory = withLogging(
     ).map(String);
 
     if (isMockPaymentHistoryRequestEnabled()) {
-      const product = isTestAnnuitiesEnabled()
-        ? mockAnnuityResponse
-        : mockPolicyResponse;
       return {
         completedTransactions: mockCompletedTransactions.map(t =>
-          transformPaymentHistory(product, t)
+          transformPaymentHistory([], t)
         ),
         pendingTransactions: mockPendingTransactions.map(t =>
-          transformPaymentHistory(product, t)
+          transformPaymentHistory([], t)
         ),
       };
     }
 
-    const [policySettledResult, completedPromise, pendingPromise] =
-      await Promise.allSettled([
-        getPolicyByPlanCodeAndId({ planCode, policyNumber }, loggingCtx),
-        getPolicyTransactions(
-          {
-            transactionTypes: completedTransactionTypes,
-            planCode,
-            policyNumber,
-            limit: 30,
-            status: 'Completed',
-          },
-          loggingCtx
-        ),
-        getPolicyTransactions(
-          {
-            transactionTypes: pendingTransactionTypes,
-            planCode,
-            policyNumber,
-            status: 'Pending',
-          },
-          loggingCtx
-        ),
-      ]);
-
-    // Check for rejected promises
-    if (policySettledResult.status === 'rejected') {
-      throw new Error('Policy Call failed', {
-        cause: {
-          error: policySettledResult.reason,
+    const [
+      completedTransactionsRes,
+      pendingTransactionsRes,
+      paymentMethodsRes,
+    ] = await Promise.allSettled([
+      getPolicyTransactions(
+        {
+          transactionTypes: completedTransactionTypes,
           planCode,
           policyNumber,
+          limit: 30,
+          status: 'Completed',
         },
-      });
+        loggingCtx
+      ),
+      getPolicyTransactions(
+        {
+          transactionTypes: pendingTransactionTypes,
+          planCode,
+          policyNumber,
+          status: 'Pending',
+        },
+        loggingCtx
+      ),
+      getPaymentMethods({ planCode, policyNumber }, loggingCtx),
+    ]);
+
+    // Check for rejected promises
+    if (paymentMethodsRes.status === 'rejected') {
+      logInfo(
+        'Failed to fetch payment methods for premium payment history',
+        loggingCtx
+      );
     }
 
     if (
-      completedPromise.status === 'rejected' &&
-      pendingPromise.status === 'rejected'
+      completedTransactionsRes.status === 'rejected' &&
+      pendingTransactionsRes.status === 'rejected'
     ) {
       throw new Error('All requests for transactions were rejected', {
         cause: {
-          completedReason: completedPromise.reason,
-          pendingReason: pendingPromise.reason,
+          completedReason: completedTransactionsRes.reason,
+          pendingReason: pendingTransactionsRes.reason,
           ...loggingCtx,
         },
       });
@@ -856,10 +855,24 @@ export const getPaymentHistory = withLogging(
 
     // Check if errors are returned
     if (
-      (completedPromise.status === 'fulfilled' &&
-        (!!completedPromise.value.error || !completedPromise.value.data)) ||
-      (pendingPromise.status === 'fulfilled' &&
-        (!!pendingPromise.value.error || !pendingPromise.value.data))
+      paymentMethodsRes.status === 'fulfilled' &&
+      (paymentMethodsRes.value.error ||
+        !paymentMethodsRes.value.data ||
+        paymentMethodsRes.value.data.length === 0)
+    ) {
+      logInfo(
+        'Payment methods call fulfilled but returned error or no data',
+        loggingCtx
+      );
+    }
+
+    if (
+      (completedTransactionsRes.status === 'fulfilled' &&
+        (!!completedTransactionsRes.value.error ||
+          !completedTransactionsRes.value.data)) ||
+      (pendingTransactionsRes.status === 'fulfilled' &&
+        (!!pendingTransactionsRes.value.error ||
+          !pendingTransactionsRes.value.data))
     ) {
       throw new Error('Transactions returned an error', {
         cause: {
@@ -870,38 +883,32 @@ export const getPaymentHistory = withLogging(
       });
     }
 
-    if (policySettledResult.value.error || !policySettledResult.value.data) {
-      throw new Error('Policy Call fulfilled but returned error or no data', {
-        cause: {
-          error: policySettledResult.value.error,
-          planCode,
-          policyNumber,
-        },
-      });
-    }
-
-    const policyData = policySettledResult.value.data;
     const completedTransactions =
-      completedPromise.status === 'fulfilled'
-        ? completedPromise.value.data || []
+      completedTransactionsRes.status === 'fulfilled'
+        ? completedTransactionsRes.value.data || []
         : [];
     const pendingTransactions =
-      pendingPromise.status === 'fulfilled'
-        ? pendingPromise.value.data || []
+      pendingTransactionsRes.status === 'fulfilled'
+        ? pendingTransactionsRes.value.data || []
+        : [];
+    const paymentMethods =
+      paymentMethodsRes.status === 'fulfilled' && paymentMethodsRes.value?.data
+        ? paymentMethodsRes.value.data
         : [];
 
     return {
       completedTransactions: completedTransactions.map(t =>
-        transformPaymentHistory(policyData, t)
+        transformPaymentHistory(paymentMethods, t)
       ),
       pendingTransactions: pendingTransactions.map(t =>
-        transformPaymentHistory(policyData, t)
+        transformPaymentHistory(paymentMethods, t)
       ),
     };
   },
   { file: FILE_NAME, functionName: 'getPaymentHistory' }
 );
 
+// @TODO: This is has duplicate logic with getPaymentHistory and should be refactored
 export const getAnnuityRecentTransactions = withLogging(
   async (
     { planCode, policyNumber }: PolicyRequestInputs,
@@ -916,96 +923,96 @@ export const getAnnuityRecentTransactions = withLogging(
     ).map(String);
 
     if (isMockPaymentHistoryRequestEnabled()) {
-      const product = isTestAnnuitiesEnabled()
-        ? mockAnnuityResponse
-        : mockPolicyResponse;
       return {
         completedTransactions: mockCompletedTransactions.map(t =>
-          transformPaymentHistory(product, t)
+          transformPaymentHistory([], t)
         ),
         pendingTransactions: mockPendingTransactions.map(t =>
-          transformPaymentHistory(product, t)
+          transformPaymentHistory([], t)
         ),
       };
     }
 
-    const [policyPromise, completedPromise, pendingPromise] =
-      await Promise.allSettled([
-        getPolicyByPlanCodeAndId({ planCode, policyNumber }, loggingCtx),
-        getPolicyTransactions(
-          {
-            transactionTypes: completedTransactionTypes,
-            planCode,
-            policyNumber,
-            limit: 30,
-            status: 'Completed',
-            year: currentYear,
-          },
-          loggingCtx
-        ),
-        getPolicyTransactions(
-          {
-            transactionTypes: pendingTransactionTypes,
-            planCode,
-            policyNumber,
-            status: 'Pending',
-            year: currentYear,
-          },
-          loggingCtx
-        ),
-      ]);
-
-    if (policyPromise.status === 'rejected') {
-      throw new Error('Policy Call failed', {
-        cause: {
+    const [
+      completedTransactionsRes,
+      pendingTransactionsRes,
+      paymentMethodsRes,
+    ] = await Promise.allSettled([
+      getPolicyTransactions(
+        {
+          transactionTypes: completedTransactionTypes,
           planCode,
           policyNumber,
-          error: policyPromise.reason,
-          ...loggingCtx,
+          limit: 30,
+          status: 'Completed',
+          year: currentYear,
         },
-      });
+        loggingCtx
+      ),
+      getPolicyTransactions(
+        {
+          transactionTypes: pendingTransactionTypes,
+          planCode,
+          policyNumber,
+          status: 'Pending',
+          year: currentYear,
+        },
+        loggingCtx
+      ),
+      getPaymentMethods({ planCode, policyNumber }, loggingCtx),
+    ]);
+
+    if (paymentMethodsRes.status === 'rejected') {
+      logInfo(
+        'Failed to fetch payment methods for premium payment history',
+        loggingCtx
+      );
     }
-    if (completedPromise.status === 'rejected') {
+
+    if (completedTransactionsRes.status === 'rejected') {
       throw new Error('Completed transactions call failed', {
         cause: {
           planCode,
           policyNumber,
-          error: completedPromise.reason,
+          error: completedTransactionsRes.reason,
           ...loggingCtx,
         },
       });
     }
-    if (pendingPromise.status === 'rejected') {
+    if (pendingTransactionsRes.status === 'rejected') {
       throw new Error('Pending transactions call failed', {
         cause: {
           planCode,
           policyNumber,
-          error: pendingPromise.reason,
+          error: pendingTransactionsRes.reason,
           ...loggingCtx,
         },
       });
     }
 
-    // 1- Check fetched policies
-    const { data: policyData, error: policyError } = policyPromise.value;
-    if (policyError || !policyData) {
-      logError(
-        'getAnnuityRecentTransactions: policyResponse error or no data',
-        {
-          planCode,
-          policyNumber,
-          error: policyError,
-          ...loggingCtx,
-        }
+    // 1- Check fetched payment methods
+    if (
+      paymentMethodsRes.status === 'fulfilled' &&
+      (paymentMethodsRes.value.error ||
+        !paymentMethodsRes.value.data ||
+        paymentMethodsRes.value.data.length === 0)
+    ) {
+      logInfo(
+        'Payment methods call fulfilled but returned error or no data',
+        loggingCtx
       );
-      throw new Error('Policy call failed to return data');
     }
+
+    const paymentMethods =
+      paymentMethodsRes.status === 'fulfilled' && paymentMethodsRes.value?.data
+        ? paymentMethodsRes.value.data
+        : [];
 
     // 2- Check fetched completed transactions
     const {
       data: completedTransactionsData,
       error: completedTransactionsError,
-    } = completedPromise.value;
+    } = completedTransactionsRes.value;
 
     if (completedTransactionsError || !completedTransactionsData) {
       throw new Error('Completed transactions call failed', {
@@ -1020,7 +1027,7 @@ export const getAnnuityRecentTransactions = withLogging(
 
     // 3- Check fetched pending transactions
     const { data: pendingTransactionsData, error: pendingTransactionsError } =
-      pendingPromise.value;
+      pendingTransactionsRes.value;
 
     if (pendingTransactionsError || !pendingTransactionsData) {
       throw new Error('Pending transactions call failed', {
@@ -1039,10 +1046,10 @@ export const getAnnuityRecentTransactions = withLogging(
 
     return {
       completedTransactions: completedTransactions.map(t =>
-        transformPaymentHistory(policyData, t)
+        transformPaymentHistory(paymentMethods, t)
       ),
       pendingTransactions: pendingTransactions.map(t =>
-        transformPaymentHistory(policyData, t)
+        transformPaymentHistory(paymentMethods, t)
       ),
     };
   },

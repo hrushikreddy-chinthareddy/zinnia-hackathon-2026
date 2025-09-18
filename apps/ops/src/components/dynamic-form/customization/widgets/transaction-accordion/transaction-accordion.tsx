@@ -1,16 +1,22 @@
 import { WidgetProps } from '@rjsf/utils';
-import React, { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
-interface PanelHeights {
+type PanelHeights = {
     [key: number]: number;
-}
+};
 
-const TransactionAccordion: React.FC<WidgetProps> = (props) => {
-    const { schema, uiSchema = {}, value = [], onChange, registry, id } = props;
-    const ObjectField = registry.fields.ObjectField;
-    const showAddBtn = uiSchema?.['ui:options']?.showAddBtn || false;
-    const showDeleteBtn = uiSchema?.['ui:options']?.showDeleteBtn || false;
-    const tabTitle = uiSchema?.['ui:options']?.tabTitle || '';
+const TransactionAccordion = ({
+    schema,
+    uiSchema = {},
+    value = [],
+    onChange,
+    registry,
+    options,
+    formContext,
+}: WidgetProps) => {
+    const { ObjectField } = registry.fields;
+    const { tabTitle, showAddBtn, showDeleteBtn, hideAccordion } = options;
+    const { isIrrevocableBene } = formContext.customData.signatureData;
 
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const [heights, setHeights] = useState<PanelHeights>({});
@@ -21,18 +27,18 @@ const TransactionAccordion: React.FC<WidgetProps> = (props) => {
     };
 
     const handleItemChange = (index: number, updatedItem: any) => {
-        const updated = [...value];
-        updated[index] = updatedItem;
-        onChange(updated);
+        const updatedList = [...value];
+        updatedList[index] = updatedItem;
+        onChange(updatedList);
     };
 
     const handleRemoveToggle = (index: number, checked: boolean) => {
-        const updated = [...value];
-        updated[index] = {
-            ...updated[index],
+        const updatedList = [...value];
+        updatedList[index] = {
+            ...updatedList[index],
             action: checked ? 'DELETE' : 'UPDATE',
         };
-        onChange(updated);
+        onChange(updatedList);
     };
 
     const handleAddItem = () => {
@@ -79,146 +85,172 @@ const TransactionAccordion: React.FC<WidgetProps> = (props) => {
             },
         };
 
-        const updated = [...value, newItem];
-        onChange(updated);
-        setActiveIndex(updated.length - 1);
+        const updatedList = [...value, newItem];
+        onChange(updatedList);
+        setActiveIndex(updatedList.length - 1);
     };
 
-    const setTitle = (item: any) => {
-        let title = '';
+    const setTitle = (item: any, index: number) => {
+        let title = `Item ${index + 1}`;
         if (tabTitle == 'Owner Details') {
             title = item.partyRole;
         } else if (tabTitle == 'Beneficiary Details') {
             title = item.partyRole.beneficiaryRole;
+        } else if (tabTitle == 'Signature') {
+            title = item.signType;
         }
         return title;
     };
 
+    const handleRemoveItem = (index: number) => {
+        const updatedList = [...value];
+        updatedList.splice(index, 1);
+        onChange(updatedList);
+        setActiveIndex(null);
+    };
+
     useEffect(() => {
-        if (activeIndex !== null && contentRefs.current[activeIndex]) {
-            const el = contentRefs.current[activeIndex]!;
-            const measured = el.scrollHeight;
-            setHeights((prev) => ({
-                ...prev,
-                [activeIndex]: measured,
-            }));
+        if (activeIndex !== null) {
+            const element = contentRefs.current[activeIndex];
+            if (element) {
+                const elementHeight = element.scrollHeight;
+                setHeights((prev) => ({
+                    ...prev,
+                    [activeIndex]: elementHeight,
+                }));
+            }
         }
     }, [activeIndex, value]);
 
     return (
-        <div id={`${id}-accordion`}>
+        <div>
             {value.map((item: any, index: number) => {
-                const title = setTitle(item);
+                const title = setTitle(item, index);
                 const isActive = activeIndex === index;
                 const panelHeight = heights[index] || 0;
                 const isMarkedForRemoval = item?.action === 'DELETE';
+                const isBeneAddition = item?.action === 'ADD';
+                const hideIrrevocableSignType =
+                    item.signType === 'IRREVOCABLE' && !isIrrevocableBene;
 
                 return (
-                    <div
-                        key={index}
-                        className={`border-2 border-gray-100 rounded-lg mb-4 ${
-                            isMarkedForRemoval ? 'bg-gray-50' : ''
-                        }`}
-                    >
-                        <div className="flex justify-between items-center px-4 py-3 bg-white rounded-t-lg">
-                            <button
-                                type="button"
-                                onClick={() => toggleIndex(index)}
-                                className="flex items-center gap-x-2 text-left flex-grow"
+                    <>
+                        {hideAccordion && hideIrrevocableSignType ? null : (
+                            <div
+                                key={`accordion-item-${index}`}
+                                className={`border-2 border-gray-100 rounded-lg mt-3 ${
+                                    isMarkedForRemoval ? 'bg-gray-50' : ''
+                                }`}
                             >
-                                {isActive ? (
-                                    <svg
-                                        className="w-4 h-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
+                                <div className="flex justify-between items-center px-4 py-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => toggleIndex(index)}
+                                        className="flex items-center gap-x-2 flex-grow"
                                     >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M19 9l-7 7-7-7"
-                                        />
-                                    </svg>
-                                ) : (
-                                    <svg
-                                        className="w-4 h-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M9 5l7 7-7 7"
-                                        />
-                                    </svg>
-                                )}
-                                <span className="font-lato font-bold text-sm">
-                                    {title}
-                                </span>
-                            </button>
-                            {showDeleteBtn && (
-                                <label className="flex items-center gap-2 text-sm font-bold">
-                                    <input
-                                        type="checkbox"
-                                        checked={isMarkedForRemoval}
-                                        onChange={(e) =>
-                                            handleRemoveToggle(
-                                                index,
-                                                e.target.checked
-                                            )
-                                        }
-                                        className="form-checkbox"
-                                    />
-                                    Remove
-                                </label>
-                            )}
-                        </div>
-
-                        <div
-                            ref={(el: any) => (contentRefs.current[index] = el)}
-                            className={`overflow-hidden ${
-                                isMarkedForRemoval
-                                    ? 'opacity-60 pointer-events-none'
-                                    : ''
-                            }`}
-                            style={{
-                                maxHeight: isActive ? panelHeight : 0,
-                                padding: isActive ? '1rem' : '0',
-                                backgroundColor: isActive
-                                    ? 'rgb(248 248 248)'
-                                    : 'transparent',
-                            }}
-                        >
-                            {isActive && (
-                                <ObjectField
-                                    schema={schema.items as any}
-                                    uiSchema={uiSchema.items || {}}
-                                    formData={item}
-                                    onChange={(data) =>
-                                        handleItemChange(index, data)
+                                        <svg
+                                            className="w-5 h-5"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth={2}
+                                                d={
+                                                    isActive
+                                                        ? 'M19 9l-7 7-7-7'
+                                                        : 'M9 5l7 7-7 7'
+                                                }
+                                            />
+                                        </svg>
+                                        <span className="font-bold">
+                                            {title}
+                                        </span>
+                                    </button>
+                                    {isBeneAddition && (
+                                        <button
+                                            onClick={() =>
+                                                handleRemoveItem(index)
+                                            }
+                                        >
+                                            <svg
+                                                className="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M6 18L18 6M6 6l12 12"
+                                                />
+                                            </svg>
+                                        </button>
+                                    )}
+                                    {showDeleteBtn && !isBeneAddition && (
+                                        <label className="flex items-center gap-2 text-sm">
+                                            <input
+                                                type="checkbox"
+                                                id={`remove-${index}`}
+                                                checked={isMarkedForRemoval}
+                                                onChange={(e) =>
+                                                    handleRemoveToggle(
+                                                        index,
+                                                        e.target.checked
+                                                    )
+                                                }
+                                                className="text-orange-500"
+                                            />
+                                            Remove
+                                        </label>
+                                    )}
+                                </div>
+                                <div
+                                    ref={(element: any) =>
+                                        (contentRefs.current[index] = element)
                                     }
-                                    registry={registry}
-                                    id={`${id}-${index}`}
-                                    name={`${index}`}
-                                    disabled={isMarkedForRemoval}
-                                    onBlur={() => {}}
-                                    onFocus={() => {}}
-                                    idSchema={{ $id: `${id}-${index}` }}
-                                />
-                            )}
-                        </div>
-                    </div>
+                                    className={`overflow-hidden bg-gray-50 ${
+                                        isMarkedForRemoval
+                                            ? 'opacity-60 pointer-events-none'
+                                            : ''
+                                    }`}
+                                    style={{
+                                        maxHeight: isActive ? panelHeight : 0,
+                                        padding: isActive ? '1rem' : '0',
+                                    }}
+                                >
+                                    {isActive && (
+                                        <ObjectField
+                                            schema={schema.items as any}
+                                            uiSchema={uiSchema.items}
+                                            formData={item}
+                                            onChange={(data) =>
+                                                handleItemChange(index, data)
+                                            }
+                                            registry={registry}
+                                            id={`${index}`}
+                                            name={`${index}`}
+                                            disabled={isMarkedForRemoval}
+                                            onBlur={() => {}}
+                                            onFocus={() => {}}
+                                            idSchema={{ $id: `${index}` }}
+                                        />
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </>
                 );
             })}
             {showAddBtn && (
-                <div className="flex justify-start mt-4">
+                <div className="flex justify-start mt-3">
                     <button
                         type="button"
                         onClick={handleAddItem}
-                        className="text-cyan-800 rounded font-lato font-bold text-sm hover:text-cyan-900 transition"
+                        className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
                     >
                         + Add New Beneficiary
                     </button>

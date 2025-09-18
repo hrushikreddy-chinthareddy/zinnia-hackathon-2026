@@ -123,34 +123,49 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                 );
 
                 return {
-                    ...bene,
                     relationshipToParty: role?.relationshipToParty ?? 'OTHER',
                     isPerStirpes: bene.isPerStirpes ?? 'No',
                     isIrrevocable: bene.isIrrevocable ?? 'No',
                     action: 'UPDATE',
                     partyRole: {
-                        ...bene.partyRole,
                         beneficiaryRole:
                             roleType === PartyRoleType.PRIMARYBENEFICIARY
                                 ? PartyRoleLabel.PRIMARYBENEFICIARY
                                 : PartyRoleLabel.CONTINGENTBENEFICIARY,
                     },
                     party: {
-                        ...bene.party,
                         partyType: bene.partyType,
                         preferredCommunicationType:
-                            bene.preferredCommunicationType ?? '',
+                            bene.preferredCommunicationType ?? 'EMAIL',
                         prefix: bene.prefix ?? '',
                         firstName: bene.firstName ?? '',
                         middleName: bene.middleName ?? '',
-                        lastName: bene.lastName ?? bene.fullName ?? '',
+                        lastName: bene.lastName ?? '',
                         suffix: bene.suffix ?? '',
                         trustType: bene.trustType ?? '',
+                        trustDate: bene.trustDate ?? '',
+                        supportingDocumentAttached:
+                            bene.supportingDocumentAttached ?? 'No',
                         entityType: bene.entityType ?? 'UNKNOWN',
                         gender: bene.gender ?? '',
                         dateOfBirth: bene.dateOfBirth ?? '',
-                        emails: bene.emails ?? [],
-                        phones: bene.phones ?? [],
+                        emails:
+                            bene.emails.length > 0
+                                ? bene.emails
+                                : [
+                                      {
+                                          emailAddress: '',
+                                      },
+                                  ],
+                        phones:
+                            bene.phones.length > 0
+                                ? bene.phones
+                                : [
+                                      {
+                                          dialNumber: '',
+                                          phoneType: 'HOME',
+                                      },
+                                  ],
                         identifications: bene.identifications ?? [],
                         addresses: (bene.addresses ?? []).map(
                             (address: ExtendedAddress) => ({
@@ -290,8 +305,11 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
             Object.assign(task, {
                 data: {
                     ...task.data,
-                    parties: formatParties(policyResponse),
-                    beneData: formatBeneficiaries(policyResponse),
+                    contractInfo: {
+                        parties: formatParties(policyResponse),
+                        product: null,
+                    },
+                    actionData: formatBeneficiaries(policyResponse),
                 },
             });
         }

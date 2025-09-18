@@ -74,7 +74,7 @@ export default function NewClientCase(
         onMutate: () => {
             // add loading logic
         },
-        onError: (err) => {
+        onError: () => {
             // add error logic
         },
     });
