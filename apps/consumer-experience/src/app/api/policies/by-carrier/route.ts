@@ -10,12 +10,11 @@ import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 /**
  *
- * Takes in a queryParam of carriers as a comma separated list.
- * If no carriers are provided, defaults to baseExperienceCarriers
+ * Returns list of policies by carrier from the baseExperienceCarriers array
+ * note: Previously this took in a query param of carrierIds. This is a no-no. We cant
+ * show other carrierCodes to people client side
  */
 export async function GET(request: NextRequest) {
-  const carrierParams = request.nextUrl.searchParams.get('carriers');
-  const carrierArray = carrierParams?.split(',') || baseExperienceCarriers;
   const loggingContext = await buildNextReqLoggingContext(request);
   logTrace('policies::by-carrier::GET::start', {
     ...loggingContext,
@@ -23,7 +22,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const { data: policyData, error } = await getMyPoliciesByCarrier(
-      carrierArray,
+      baseExperienceCarriers,
       loggingContext
     );
 
