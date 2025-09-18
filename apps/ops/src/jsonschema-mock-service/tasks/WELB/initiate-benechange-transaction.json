@@ -459,7 +459,7 @@
                                         "enumNames": [
                                             "Individual",
                                             "Trust",
-                                            "Organization"
+                                            "Estate/Organization"
                                         ],
                                         "enumDisabled": [
                                             "INDIVIDUAL",
@@ -863,11 +863,7 @@
                                             "preferredCommunicationType": {
                                                 "type": "string",
                                                 "title": "Preferred Contact Method",
-                                                "enum": [
-                                                    "EMAIL",
-                                                    "PHONE",
-                                                    "MAIL"
-                                                ]
+                                                "enum": ["EMAIL", "MAIL"]
                                             }
                                         },
                                         "required": [
@@ -1072,8 +1068,8 @@
                                                 "type": "string",
                                                 "title": "Party role",
                                                 "enum": [
-                                                    "PRIMARY BENEFICIARY",
-                                                    "CONTINGENT BENEFICIARY"
+                                                    "Primary Beneficiary",
+                                                    "Contingent Beneficiary"
                                                 ]
                                             }
                                         }
@@ -1471,7 +1467,7 @@
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
                                         "inline": true,
-                                        "enumNames": ["Email", "Phone", "Mail"]
+                                        "enumNames": ["Email", "Mail"]
                                     }
                                 }
                             },
@@ -1535,9 +1531,10 @@
                                                 ]
                                             },
                                             "signDate": {
-                                                "type": "string",
+                                                "type": ["string", "null"],
                                                 "title": "Sign date",
-                                                "format": "date"
+                                                "format": "date",
+                                                "default": null
                                             }
                                         }
                                     }

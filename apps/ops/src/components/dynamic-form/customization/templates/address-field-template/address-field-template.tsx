@@ -45,7 +45,7 @@ export default function AddressFieldTemplate({
                 </div>
             )}
             {showDynamicTitle && addressType && (
-                <div className="text-sm">{addressType} </div>
+                <div className={styles.labelRequired}>{addressType} </div>
             )}
             <div className="flex flex-wrap gap-2">
                 {properties

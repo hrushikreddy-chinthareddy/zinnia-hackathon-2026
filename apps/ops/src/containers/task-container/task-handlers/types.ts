@@ -82,8 +82,8 @@ export enum PartyRoleType {
 export enum PartyRoleLabel {
     OWNER = 'Owner',
     JOINTOWNER = 'Joint Owner',
-    PRIMARYBENEFICIARY = 'PRIMARY BENEFICIARY',
-    CONTINGENTBENEFICIARY = 'CONTINGENT BENEFICIARY',
+    PRIMARYBENEFICIARY = 'Primary Beneficiary',
+    CONTINGENTBENEFICIARY = 'Contingent Beneficiary',
 }
 
 export enum AddressType {

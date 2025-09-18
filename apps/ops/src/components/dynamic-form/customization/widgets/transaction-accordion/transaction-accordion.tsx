@@ -1,6 +1,10 @@
 import { WidgetProps } from '@rjsf/utils';
 import { useRef, useState, useEffect } from 'react';
 
+import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+
+import styles from './transaction-accordion.module.css';
+
 type PanelHeights = {
     [key: number]: number;
 };
@@ -81,7 +85,7 @@ const TransactionAccordion = ({
                 ],
             },
             partyRole: {
-                beneficiaryRole: 'PRIMARY BENEFICIARY',
+                beneficiaryRole: 'Primary Beneficiary',
             },
         };
 
@@ -131,13 +135,13 @@ const TransactionAccordion = ({
                 const isMarkedForRemoval = item?.action === 'DELETE';
                 const isBeneAddition = item?.action === 'ADD';
                 const hideIrrevocableSignType =
-                    item.signType === 'IRREVOCABLE' && !isIrrevocableBene;
+                    item.signType === 'Irrevocable Beneficiary' &&
+                    !isIrrevocableBene;
 
                 return (
-                    <>
+                    <div key={`accordion-item-${index}`}>
                         {hideAccordion && hideIrrevocableSignType ? null : (
                             <div
-                                key={`accordion-item-${index}`}
                                 className={`border-2 border-gray-100 rounded-lg mt-3 ${
                                     isMarkedForRemoval ? 'bg-gray-50' : ''
                                 }`}
@@ -165,7 +169,7 @@ const TransactionAccordion = ({
                                                 }
                                             />
                                         </svg>
-                                        <span className="font-bold">
+                                        <span className={styles.title}>
                                             {title}
                                         </span>
                                     </button>
@@ -184,28 +188,24 @@ const TransactionAccordion = ({
                                                 <path
                                                     strokeLinecap="round"
                                                     strokeLinejoin="round"
-                                                    strokeWidth={2}
+                                                    strokeWidth={4}
                                                     d="M6 18L18 6M6 6l12 12"
                                                 />
                                             </svg>
                                         </button>
                                     )}
                                     {showDeleteBtn && !isBeneAddition && (
-                                        <label className="flex items-center gap-2 text-sm">
-                                            <input
-                                                type="checkbox"
-                                                id={`remove-${index}`}
-                                                checked={isMarkedForRemoval}
-                                                onChange={(e) =>
-                                                    handleRemoveToggle(
-                                                        index,
-                                                        e.target.checked
-                                                    )
-                                                }
-                                                className="text-orange-500"
-                                            />
-                                            Remove
-                                        </label>
+                                        <CheckboxText
+                                            id={`remove-${index}`}
+                                            label="Remove"
+                                            checked={isMarkedForRemoval}
+                                            onChange={(checked) =>
+                                                handleRemoveToggle(
+                                                    index,
+                                                    checked
+                                                )
+                                            }
+                                        />
                                     )}
                                 </div>
                                 <div
@@ -242,7 +242,7 @@ const TransactionAccordion = ({
                                 </div>
                             </div>
                         )}
-                    </>
+                    </div>
                 );
             })}
             {showAddBtn && (
