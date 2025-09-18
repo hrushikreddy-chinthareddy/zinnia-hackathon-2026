@@ -63,6 +63,7 @@ const SignatureStep = ({
 
     const { goToNext } = useWorkflow();
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     const {
         formValidation,
@@ -109,8 +110,9 @@ const SignatureStep = ({
                     goToNext();
                     return;
                 }
-
+                setLoading(true);
                 const response = await validateTransaction();
+                setLoading(false);
 
                 setValidationResponse(response);
                 goToNext();
@@ -189,7 +191,8 @@ const SignatureStep = ({
                     className="mt-60"
                     mainCta={mainCta}
                     secondaryCta={secondaryCta}
-                    stopLoading={Object.keys(formErrors).length > 0}
+                    stopLoading={!loading}
+                    newSpinner={true}
                 />
             }
         >

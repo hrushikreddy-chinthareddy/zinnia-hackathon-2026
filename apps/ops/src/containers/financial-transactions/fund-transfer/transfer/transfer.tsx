@@ -75,6 +75,7 @@ const Transfer = ({
 
     const { fundTransfer, setFundTransfer } = useFundTransfer();
     const [fetchingFunds, setFetchingFunds] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const { policyNumber, product } = policy;
     const { funds, effectiveDate } = fundTransfer;
@@ -362,12 +363,17 @@ const Transfer = ({
             goToNext();
             return;
         }
+
+        setLoading(true);
+
         const response = await validateTransaction();
 
         setFundTransfer((prev) => ({
             ...prev,
             validationResponse: response,
         }));
+        setLoading(false);
+
         goToNext();
     };
 
@@ -463,11 +469,12 @@ const Transfer = ({
                     <TransactionCta
                         mainCta={mainCta}
                         secondaryCta={secondaryCta}
-                        stopLoading={Object.keys(errors).length != 0}
+                        stopLoading={!loading}
                         trackEventProps={{
                             type: TransactionType.FUND_TRANSFER,
                             step: TransactionStep.Transfer,
                         }}
+                        newSpinner={true}
                     />
                 }
             >
