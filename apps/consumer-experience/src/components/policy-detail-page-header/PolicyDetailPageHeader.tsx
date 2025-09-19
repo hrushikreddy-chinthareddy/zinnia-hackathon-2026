@@ -1,6 +1,6 @@
 'use client';
 import { useParams, usePathname } from 'next/navigation';
-import { PropsWithChildren, useMemo } from 'react';
+import { FC, PropsWithChildren, useMemo } from 'react';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Layout.module.css';
 
@@ -12,9 +12,7 @@ import {
 } from './utils';
 import { AnalyticsPageHeader } from '../analytics/AnalyticsPageHeader';
 
-export const PolicyDetailPageHeader: React.FC<PropsWithChildren> = ({
-  children,
-}) => {
+export const PolicyDetailPageHeader: FC<PropsWithChildren> = ({ children }) => {
   const params = useParams<{
     planCode: string;
     policyNumber: string;

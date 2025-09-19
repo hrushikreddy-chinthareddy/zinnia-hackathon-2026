@@ -26,12 +26,12 @@ export const HeaderPolicyDetails = async ({
 }: Props) => {
   const loggingContext = await buildCommonLogContext();
 
-  const { data: policyData } = await getPolicyDetails(
+  const { data: policyData, error: policyError } = await getPolicyDetails(
     { planCode, policyNumber },
     loggingContext
   );
 
-  const { data: agentData, error } = await getAgentInformation(
+  const { data: agentData } = await getAgentInformation(
     {
       clientCode: policyData?.carrierId || '',
       agentId: policyData?.primaryAgentExternalId || '',
@@ -55,7 +55,7 @@ export const HeaderPolicyDetails = async ({
     }
   };
 
-  if (!policyData || error) {
+  if (!policyData || policyError) {
     return null;
   }
 
