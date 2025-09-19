@@ -5061,7 +5061,8 @@
             "primaryWritingAgent": "Agente de Registro",
             "additionalWritingAgent": "Agente redactor adicional",
             "exchangeCompany": "Empresa de intercambio",
-            "jointAnnuitant": "Rentista conjunto"
+            "jointAnnuitant": "Rentista conjunto",
+            "otherInterestedParty": "Otra parte interesada"
         }
     },
     "pageHeader": {

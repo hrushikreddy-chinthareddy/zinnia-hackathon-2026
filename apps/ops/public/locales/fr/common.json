@@ -5028,7 +5028,8 @@
             "primaryWritingAgent": "Agent désigné",
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
             "exchangeCompany": "Société d'échange",
-            "jointAnnuitant": "Corentier"
+            "jointAnnuitant": "Corentier",
+            "otherInterestedParty": "autre partie intéressée"
         }
     },
     "pageHeader": {
