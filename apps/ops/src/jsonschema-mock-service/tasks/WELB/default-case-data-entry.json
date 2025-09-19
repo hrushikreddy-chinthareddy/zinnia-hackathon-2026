@@ -97,26 +97,11 @@
                                 }
                             }
                         },
-                        "attachment": {
-                            "type": "array",
-                            "title": "Attach Document",
-                            "items": {
-                                "title": "Upload",
-                                "type": "string",
-                                "format": "data-url"
-                            }
-                        },
                         "attachments": {
+                            "title": "Attach Document",
                             "type": "array",
                             "items": {
-                                "documentName": {
-                                    "title": "Name",
-                                    "type": "string"
-                                },
-                                "documentId": {
-                                    "title": "Document Id",
-                                    "type": "string"
-                                }
+                                "format": "data-url"
                             }
                         }
                     }
@@ -227,27 +212,12 @@
                             }
                         }
                     },
-                    "attachment": {
+                    "attachments": {
+                        "ui:widget": "FileWidget",
                         "ui:options": {
                             "label": false,
-                            "showFiles": false,
-                            "omitValue": true
-                        },
-                        "ui:props": {
-                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                            "apiMethod": "get"
-                        }
-                    },
-                    "attachments": {
-                        "ui:options": {
-                            "label": true,
                             "addable": false,
-                            "removable": true,
-                            "ArrayFieldTemplate": "FileInfoTemplate",
-                            "formContext": {
-                                "keyName": "customData",
-                                "listName": "attachments"
-                            }
+                            "removable": true
                         }
                     }
                 }

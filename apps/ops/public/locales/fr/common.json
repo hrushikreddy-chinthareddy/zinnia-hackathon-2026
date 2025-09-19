@@ -1226,6 +1226,7 @@
         "submit": "Soumettre",
         "uploadDocument": "Uploader un document",
         "fileUpload": {
+            "or": "ou",
             "documentCategory": "Catégorie de document",
             "documentType": "Type de document",
             "formNumber": "Numéro du formulaire",
@@ -5778,6 +5779,9 @@
         },
         "type": "Type",
         "submissionType": "Type de soumission",
+        "caseId": "ID du dossier parent",
+        "caseTransactionType": "Type de transaction de cas",
+        "caseCompletionDate": "Date d'achèvement du dossier",
         "electronic": "Électronique",
         "paper": "Papier",
         "email": "E-mail",
@@ -8163,6 +8167,33 @@
             "title": "Compris !",
             "subTitle": "Les données d'adéquation ont été soumises.",
             "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "qualityAuditReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Le document Review Quality Audit a été soumis.",
+            "cta": "Aller à l’Audit de Qualité",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "qualityAuditRework": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Le document Rework on Quality Audit a été soumis.",
+            "cta": "Aller à l’Audit de Qualité",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "qualityReworkAuditReview": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Le document Review Quality Audit Rework a été soumis.",
+            "cta": "Aller à l’Audit de Qualité",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

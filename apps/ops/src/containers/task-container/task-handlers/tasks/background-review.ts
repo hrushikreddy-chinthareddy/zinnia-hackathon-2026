@@ -1,18 +1,12 @@
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 
+import { NigoExceptionResponse } from '../../components/steps/nigo-details/nigo-details.types';
 import { TaskHandler } from '../types';
 
 // Define expected payload and response types
 interface BackgroundReviewPayload {
     category: string[];
     businessProcess: string;
-}
-
-interface NigoExceptionResponse {
-    reason: string;
-    category: string;
-    detailedReason: string;
-    nmId: string;
 }
 
 const backgroundReviewHandler: TaskHandler<
@@ -37,15 +31,13 @@ const backgroundReviewHandler: TaskHandler<
 
         if (metadata[0]?.formSchema?.definitions) {
             metadata[0].formSchema.definitions.declineReason = {
-                enum: reasonList.map((reason) => JSON.stringify(reason)),
+                enum: reasonList,
             };
         }
 
-        metadata[0].uiSchema.declineReason['ui:options'].enumOptions =
-            reasonList.map((reason) => ({
-                label: reason.detailedReason,
-                value: JSON.stringify(reason),
-            }));
+        metadata[0].uiSchema.declineReason['ui:options'] = {
+            enumNames: reasonList.map((reason) => reason.detailedReason),
+        };
     },
 };
 

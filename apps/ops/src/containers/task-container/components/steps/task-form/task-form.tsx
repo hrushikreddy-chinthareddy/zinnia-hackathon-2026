@@ -24,7 +24,7 @@ import {
     MatchingCase,
     TransactionData,
 } from '@deps/models/case/task/doc-matching-payment';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogWarn } from '@deps/utils/browser-logging';
@@ -74,8 +74,15 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         keyPrefix: `taskManagement.formErrors`,
     });
     const formState = useContext(TaskDataContext);
-    const { task, setTask, setSubmitFailed, correlationId, initialTask } =
-        formState;
+    const {
+        task,
+        setTask,
+        setSubmitFailed,
+        correlationId,
+        initialTask,
+        mappedDocuments,
+        setMappedDocuments,
+    } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
 
     const formContext = {
@@ -192,7 +199,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     cleanForm(task, taskMetadata),
                     initialTask
                 );
-                const success = await updateTask(taskPayload, correlationId);
+                const success = await updateTask(
+                    { ...taskPayload, mappedDocuments },
+                    correlationId
+                );
                 removeFromCache('getTaskInstance', { taskId: task.id });
                 setSubmitFailed(!success);
             }
@@ -231,7 +241,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 return updatedTask;
             });
         },
-        [setTask, task, formSchema]
+        [setTask, formSchema]
     );
     const setFormContext = (dynamicData: any) => {
         setTask((ogTask: any) => ({
@@ -327,6 +337,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const memoizedSchema = useMemo(() => formSchema, [formSchema]);
 
+    const handleSetMappedDocuments = (documents: TaskDocument[]) => {
+        setMappedDocuments(documents);
+    };
+
     return (
         <DynamicForm
             ref={forwardedRef}
@@ -344,6 +358,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 setCustomData: setFormContext,
                 updateSchema: updateSchemaHandler,
                 isReadOnlyOverride: readonly,
+                mappedDocuments,
+                setMappedDocuments: handleSetMappedDocuments,
                 setSubmitEnabled: setSubmitEnabled,
             }}
         ></DynamicForm>

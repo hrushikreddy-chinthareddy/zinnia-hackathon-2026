@@ -1,0 +1,601 @@
+{
+    "formId": "a00cbc0d-37df-4d83-8e11-df6c77689599",
+    "process": "Quality Audit",
+    "carrier": "WELB",
+    "taskType": "QUALITY_REWORK_AUDIT_REVIEW",
+    "taskName": "Quality Rework Audit Review",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Quality Audit Rework",
+                "formSchema": {
+                    "definitions": {
+                        "attachmentsConditional": {
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "attachments": {
+                                                "minItems": 1
+                                            }
+                                        },
+                                        "required": ["attachments"]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "attachments": {
+                                                "type": "array",
+                                                "title": "Documents",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "documentId": {
+                                                            "type": "string"
+                                                        },
+                                                        "urlLabel": {
+                                                            "type": "string",
+                                                            "default": "{{documentName}}"
+                                                        },
+                                                        "urlValue": {
+                                                            "type": "string",
+                                                            "default": "/documents/{{documentId}}?carrierCode={{customData.carrier}}"
+                                                        },
+                                                        "documentName": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "reworkDateTimeConditional": {
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "reworkDateTime": {
+                                                "minLength": 1
+                                            }
+                                        },
+                                        "required": ["reworkDateTime"]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "reworkDateTime": {
+                                                "type": "string",
+                                                "title": "Date & Time"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review the case and supporting information and determine what requires rework. Select the category and provide comments if the case requires rework."
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "auditDetails": {
+                            "title": "Processor validations",
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "processName": {
+                                        "type": "string",
+                                        "title": "Process name"
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "title": "Category"
+                                    },
+                                    "subCategory": {
+                                        "type": "string",
+                                        "title": "Sub-category"
+                                    },
+                                    "processorDetails": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string",
+                                                "title": "Processor name"
+                                            }
+                                        }
+                                    },
+                                    "historicalAuditDetails": {
+                                        "type": "array",
+                                        "title": "Audit Data",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "userDetails": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "title": "Auditor Name",
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "note": {
+                                                    "type": "string",
+                                                    "title": "Notes"
+                                                }
+                                            },
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/reworkDateTimeConditional"
+                                                },
+                                                {
+                                                    "$ref": "#/definitions/attachmentsConditional"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "reworkDetails": {
+                                        "type": "array",
+                                        "title": "Rework Details",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "userDetails": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "title": "Processor Name",
+                                                            "type": "string"
+                                                        }
+                                                    }
+                                                },
+                                                "note": {
+                                                    "type": "string",
+                                                    "title": "Notes"
+                                                }
+                                            },
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/definitions/reworkDateTimeConditional"
+                                                },
+                                                {
+                                                    "$ref": "#/definitions/attachmentsConditional"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "auditData": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {},
+                                            "allOf": [
+                                                {
+                                                    "if": {
+                                                        "properties": {
+                                                            "histricalData": {
+                                                                "const": false
+                                                            }
+                                                        },
+                                                        "required": [
+                                                            "histricalData"
+                                                        ]
+                                                    },
+                                                    "then": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string"
+                                                            },
+                                                            "note": {
+                                                                "title": "Notes",
+                                                                "type": "string",
+                                                                "minLength": 1
+                                                            },
+                                                            "attachments": {
+                                                                "type": "array",
+                                                                "title": "Link or upload document",
+                                                                "items": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "documentId": {
+                                                                            "title": "Document Id",
+                                                                            "type": "string"
+                                                                        },
+                                                                        "documentName": {
+                                                                            "title": "Document Name",
+                                                                            "type": "string"
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "required": ["note"]
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+
+                                    "auditCompleted": {
+                                        "type": "boolean",
+                                        "title": "This can be marked as completed.",
+                                        "default": false
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "allOf": [
+                        {
+                            "if": {
+                                "properties": {
+                                    "auditDetails": {
+                                        "items": {
+                                            "properties": {
+                                                "auditCompleted": {
+                                                    "const": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "then": {
+                                "properties": {
+                                    "isOwnerContractConfirmed": {
+                                        "type": "boolean",
+                                        "default": false,
+                                        "title": "Confirm if the updated contract has been sent to the owner"
+                                    }
+                                },
+                                "if": {
+                                    "properties": {
+                                        "required": ["isOwnerContractConfirmed"]
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "isOwnerContractConfirmed": {
+                                            "const": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "sectionHeader",
+                        "details",
+                        "auditDetails",
+                        "additionalNotes",
+                        "additionalAttachments",
+                        "isOwnerContractConfirmed"
+                    ],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "auditDetails": {
+                        "ui:options": {
+                            "addable": false,
+                            "removable": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "nobackground": true,
+                                "title": "{{processName}}",
+                                "minItems": 1,
+                                "label": true,
+                                "expandable": true
+                            },
+                            "processName": {
+                                "ui:options": {
+                                    "inline": true,
+                                    "label": false
+                                }
+                            },
+                            "category": {
+                                "ui:options": {
+                                    "inline": true,
+                                    "label": false
+                                }
+                            },
+                            "subCategory": {
+                                "ui:options": {
+                                    "inline": true,
+                                    "label": false
+                                }
+                            },
+                            "processorDetails": {
+                                "ui:options": {
+                                    "nobackground": true,
+                                    "noMargin": true,
+                                    "minItems": 1,
+                                    "label": false
+                                },
+                                "name": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false
+                                    }
+                                }
+                            },
+                            "historicalAuditDetails": {
+                                "ui:options": {
+                                    "orderable": false,
+                                    "label": false,
+                                    "addable": false,
+                                    "removable": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "title": "another auditData",
+                                        "label": false,
+                                        "minItems": 1,
+                                        "hideError": true,
+                                        "nobackground": true,
+                                        "noMargin": true,
+                                        "conditionalHideField": "histricalData"
+                                    },
+                                    "userDetails": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "nobackground": true,
+                                            "noMargin": true
+                                        },
+                                        "name": {
+                                            "ui-widget": "ValueWidget",
+                                            "ui:options": {
+                                                "inline": true,
+                                                "label": false
+                                            }
+                                        }
+                                    },
+                                    "histricalData": {
+                                        "ui:widget": "hidden"
+                                    },
+                                    "note": {
+                                        "ui-widget": "ValueWidget",
+                                        "ui:options": {
+                                            "inline": true,
+                                            "label": false
+                                        },
+                                        "hideError": true
+                                    },
+                                    "reworkDateTime": {
+                                        "ui:options": {
+                                            "inline": true,
+                                            "label": false
+                                        }
+                                    },
+                                    "attachments": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "inline": true,
+                                            "type": "link"
+                                        },
+                                        "ui:widget": "HyperLinkWidget",
+                                        "items": {
+                                            "urlLabel": {
+                                                "ui:options": {
+                                                    "omitValue": true
+                                                }
+                                            },
+                                            "urlValue": {
+                                                "ui:options": {
+                                                    "omitValue": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "auditData": {
+                                "ui:options": {
+                                    "orderable": false,
+                                    "label": false,
+                                    "addable": false,
+                                    "removable": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "title": "another auditData",
+                                        "label": false,
+                                        "minItems": 1,
+                                        "hideError": true,
+                                        "nobackground": true,
+                                        "noMargin": true
+                                    },
+                                    "histricalData": {
+                                        "ui:widget": "hidden"
+                                    },
+                                    "note": {
+                                        "hideError": true
+                                    },
+                                    "id": {
+                                        "ui:field": "UUIDField",
+                                        "ui:hidden": true
+                                    },
+                                    "workId": {
+                                        "ui:field": "DynamicField"
+                                    },
+                                    "attachments": {
+                                        "ui:widget": "AttachmentWidget",
+                                        "ui:options": {
+                                            "label": true
+                                        }
+                                    }
+                                }
+                            },
+                            "reworkDetails": {
+                                "ui:options": {
+                                    "orderable": false,
+                                    "label": false,
+                                    "addable": false,
+                                    "removable": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "title": "another auditData",
+                                        "label": false,
+                                        "minItems": 1,
+                                        "hideError": true,
+                                        "nobackground": true,
+                                        "noMargin": true,
+                                        "conditionalHideField": "histricalData"
+                                    },
+                                    "userDetails": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "nobackground": true,
+                                            "noMargin": true
+                                        },
+                                        "name": {
+                                            "ui-widget": "ValueWidget",
+                                            "ui:options": {
+                                                "inline": true,
+                                                "label": false
+                                            }
+                                        }
+                                    },
+                                    "histricalData": {
+                                        "ui:widget": "hidden"
+                                    },
+                                    "note": {
+                                        "ui-widget": "ValueWidget",
+                                        "ui:options": {
+                                            "inline": true,
+                                            "label": false
+                                        },
+                                        "hideError": true
+                                    },
+                                    "reworkDateTime": {
+                                        "ui:options": {
+                                            "inline": true,
+                                            "label": false
+                                        }
+                                    },
+                                    "workId": {
+                                        "ui:field": "DynamicField"
+                                    },
+                                    "attachments": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "inline": true,
+                                            "type": "link"
+                                        },
+                                        "ui:widget": "HyperLinkWidget",
+                                        "items": {
+                                            "urlLabel": {
+                                                "ui:options": {
+                                                    "omitValue": true
+                                                }
+                                            },
+                                            "urlValue": {
+                                                "ui:options": {
+                                                    "omitValue": true
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            "auditCompleted": {
+                                "ui:options": {
+                                    "inline": true
+                                }
+                            }
+                        }
+                    },
+                    "isOwnerContractConfirmed": {
+                        "ui:options": {
+                            "omitValue": true
+                        },
+                        "ui:hideError": true
+                    }
+                }
+            }
+        ]
+    }
+}

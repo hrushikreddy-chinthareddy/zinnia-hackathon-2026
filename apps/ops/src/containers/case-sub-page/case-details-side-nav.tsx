@@ -1,6 +1,7 @@
 import { toSentenceCase } from '@zinnia/utils';
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
+import React from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, {
@@ -13,7 +14,10 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { getValidFullName } from '@deps/helpers/case-management';
-import { formatSSN } from '@deps/helpers/string.helpers';
+import {
+    convertKebabedDateString,
+    formatSSN,
+} from '@deps/helpers/string.helpers';
 import {
     AdditionalDataInstance,
     CaseAdditionalDataKeys,
@@ -28,6 +32,13 @@ type CaseDetailsSideNavProps = {
     process?: Processes;
     applicationType?: string;
 };
+
+const parentCaseDetailsKeys: string[] = [
+    'caseId',
+    'caseTransactionType',
+    'caseCompletionDate',
+];
+
 const CaseDetailsSideNav = ({
     CaseAdditionalDetails,
     carrier,
@@ -43,6 +54,17 @@ const CaseDetailsSideNav = ({
         agentNPN ||
         agentSSN
     );
+
+    const parentCaseDetails = parentCaseDetailsKeys.filter(
+        (key: string) => CaseAdditionalDetails?.[key]
+    );
+    const parentCaseKeysFormatter: Record<string, () => string> = {
+        caseId: () => CaseAdditionalDetails.caseId.toUpperCase(),
+        caseCompletionDate: () =>
+            convertKebabedDateString(CaseAdditionalDetails.caseCompletionDate),
+        caseTransactionType: () =>
+            toSentenceCase(CaseAdditionalDetails.caseTransactionType),
+    };
 
     const setCookies = () => {
         setCookie('documentType', DocumentTypeView.Correspondence);
@@ -187,6 +209,43 @@ const CaseDetailsSideNav = ({
                                     ] ?? ''}
                                 </NavElement>
                             </div>
+                        )}
+
+                    {parentCaseDetails.length > 0 &&
+                        parentCaseDetails.map(
+                            (parentCaseKey: string, idx: number) => (
+                                <React.Fragment key={idx}>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="text-[--color-base-text-text-secondary]"
+                                    >
+                                        {t(`sidenav.${parentCaseKey}`)}
+                                    </Typography>
+                                    {parentCaseKey === 'caseId' ? (
+                                        <NavElement
+                                            href={`/cases/${CaseAdditionalDetails[parentCaseKey]}`}
+                                            isNewPage={true}
+                                            size={NavElementSize.Small}
+                                            target="_blank"
+                                            type={NavElementType.Link}
+                                            onClick={setCookies}
+                                        >
+                                            {
+                                                CaseAdditionalDetails[
+                                                    parentCaseKey
+                                                ]
+                                            }
+                                        </NavElement>
+                                    ) : (
+                                        <Content
+                                            details={parentCaseKeysFormatter[
+                                                parentCaseKey
+                                            ]()}
+                                            variant={ContentVariant.BodySm}
+                                        />
+                                    )}
+                                </React.Fragment>
+                            )
                         )}
                 </div>
             </div>
