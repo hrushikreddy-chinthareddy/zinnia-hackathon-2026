@@ -52,4 +52,5 @@ export enum PartyRoleChipToText {
     SellingAgent = 'sellingagent',
     ServicingAgent = 'servicingagent',
     ThirdPartyDesignee = 'thirdpartydesignee',
+    OtherIntresedParty = 'otherinterestedparty',
 }
