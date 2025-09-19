@@ -197,12 +197,11 @@ const SideSheetCancelAutopay = ({
     };
 
     const validateAndSubmitUpdate = async () => {
-        setLoading(true);
-
         if (!validateFields(effectiveDate, confirmCancel, body.caseId)) {
-            setLoading(false);
             return;
         }
+
+        setLoading(true);
 
         const arrangementId = systematicProgram?.arrangementId || '';
         const updateBody = getUpdateSystematicProgramBody();
@@ -228,6 +227,8 @@ const SideSheetCancelAutopay = ({
         }
 
         await submitUpdate();
+
+        setLoading(false);
     };
 
     const submitUpdate = async () => {
@@ -425,6 +426,7 @@ const SideSheetCancelAutopay = ({
                     text: t('cancel'),
                 }}
                 stopLoading={!loading}
+                newSpinner={true}
                 // TODO MG: better handling for this - will need to support withdrawal soon
                 trackEventProps={{
                     type:

@@ -84,8 +84,9 @@ export async function POST(
     return NextResponse.json({
       data: null,
       error: {
-        name: 'error unknown',
-        message: 'error unknown',
+        name: 'bpm::fullsurrender::validation::POST::error',
+        message: `error unknown`,
+        correlationId: loggingContext.correlationId,
         status: 500,
         cause: error,
       },

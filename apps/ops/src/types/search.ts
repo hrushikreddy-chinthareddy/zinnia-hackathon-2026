@@ -20,7 +20,8 @@ export type PolicySearchKeys =
     | 'agentFirstName'
     | 'agentLastName'
     | 'documentNumber'
-    | 'taskName';
+    | 'taskName'
+    | 'agentSsn';
 
 export interface PolicySearchResult {
     carrierId: string;
@@ -38,6 +39,7 @@ export interface PolicySearchResult {
     productType: string;
     source: string;
     ssn: string;
+    agentSsn: string;
 }
 
 export enum Source {
@@ -54,6 +56,7 @@ export interface SearchViewQuery {
     caseIds?: string[];
     agentFirstName?: string;
     agentLastName?: string;
+    agentSsn?: string;
     brokerDealerName?: string;
     [key: string]: any; // used to loop over the object
     documentNumber?: string;

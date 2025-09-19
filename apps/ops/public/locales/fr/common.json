@@ -3935,6 +3935,7 @@
                 "custodialindividualretirementaccount": "IRA traditionnel avec garde",
                 "custodialrothindividualretirementaccount": "Roth IRA avec garde",
                 "custodialrolloverindividualretirementaccount": "IRA avec transfert de garde",
+                "inheritedindividualretirementaccount": "Compte de retraite individuel hérité",
                 "ira-sep": "SEP IRA",
                 "inheritedira": "IRA hérité",
                 "custodialira-sep": "SEP IRA avec garde",
@@ -5027,7 +5028,8 @@
             "primaryWritingAgent": "Agent désigné",
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
             "exchangeCompany": "Société d'échange",
-            "jointAnnuitant": "Corentier"
+            "jointAnnuitant": "Corentier",
+            "otherInterestedParty": "autre partie intéressée"
         }
     },
     "pageHeader": {

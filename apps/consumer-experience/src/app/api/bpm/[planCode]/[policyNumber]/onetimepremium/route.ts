@@ -9,6 +9,7 @@ import {
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
+
 import { convertAggregationAccountTypeToPaymentForm } from './utils';
 
 dayjs.extend(utc);
@@ -57,11 +58,22 @@ export async function POST(
 
   // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
   if (ottpValidation.error) {
-    return NextResponse.json({ data: null, error: { status: 500 } });
+    return NextResponse.json({
+      data: null,
+      error: {
+        status: 500,
+        message: `Ottp validation failed or is not eligible`,
+        correlationId: loggingContext.correlationId,
+      },
+    });
   } else if (!ottpValidation.data?.isEligible) {
     return NextResponse.json({
       data: null,
-      error: { status: 400, message: ottpValidation.data?.reason },
+      error: {
+        status: 400,
+        message: ottpValidation.data?.reason,
+        correlationId: loggingContext.correlationId,
+      },
     });
   }
 
@@ -86,6 +98,10 @@ export async function POST(
       policyNumber: params.policyNumber,
       error,
     });
-    return NextResponse.json({ data: null, error: (error as Error).cause });
+    return NextResponse.json({
+      data: null,
+      error: (error as Error).cause,
+      correlationId: loggingContext.correlationId,
+    });
   }
 }

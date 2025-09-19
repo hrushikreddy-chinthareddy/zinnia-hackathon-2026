@@ -87,6 +87,8 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
             return t('chipFilter.partyRole.additionalWritingAgent');
         case PartyRoleChipToText.ExchangeCompany:
             return t('chipFilter.partyRole.exchangeCompany');
+        case PartyRoleChipToText.OtherIntresedParty:
+            return t('chipFilter.partyRole.otherInterestedParty');
         default:
             return text;
     }

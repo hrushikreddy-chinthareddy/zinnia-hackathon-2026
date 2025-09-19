@@ -85,6 +85,8 @@ export const SidesheetCommunicationsPreference = ({
         correlationId: uuidV4(),
     };
 
+    const [loading, setLoading] = useState<boolean>(false);
+
     const [body, setBody] =
         useState<CommunicationPreferenceChangeRequest>(INITIAL_BODY);
     const [newCaseId, setNewCaseId] = useState<string | undefined>(undefined);
@@ -106,11 +108,6 @@ export const SidesheetCommunicationsPreference = ({
     const partyId = party?.partyId ?? '';
 
     const partyFullName = party?.fullName ?? '';
-
-    const stopLoading =
-        currentErrors === undefined
-            ? true
-            : !!Object.entries(currentErrors).length;
 
     const mainCtaText = t('mainCta.update');
 
@@ -231,6 +228,8 @@ export const SidesheetCommunicationsPreference = ({
             )?.emailAddress;
         }
 
+        setLoading(true);
+
         const response = await updateEDeliveryPreferenceByPlanCode({
             planCode: planCode,
             policyNumber: policyNumber,
@@ -272,6 +271,8 @@ export const SidesheetCommunicationsPreference = ({
             setValidationResults,
             onSuccessfulSubmit,
         });
+
+        setLoading(false);
     };
 
     const sortedEmails = sortEmailsByType({ emails: emails });
@@ -481,11 +482,12 @@ export const SidesheetCommunicationsPreference = ({
                             onClick: onCancel,
                             text: t('general.cancel'),
                         }}
-                        stopLoading={stopLoading}
+                        stopLoading={!loading}
                         trackEventProps={{
                             type: TransactionType.COMMUNICATION_PREFERENCE_CHANGE,
                             correlationId: body.correlationId,
                         }}
+                        newSpinner={true}
                     />
                 </div>
             );

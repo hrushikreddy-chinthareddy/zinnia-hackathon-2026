@@ -1,6 +1,6 @@
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import PageLoader, {
     PageLoaderVariant,
@@ -97,7 +97,11 @@ const Confirm = ({ policy }: ConfirmProps) => {
         setIsLoading(false);
     }, [policy, withdrawal, sessionId, partyId, wireCheckPaymentsEnabled]);
 
+    const hasAutoSubmittedRef = useRef<unknown>(null);
+
     useEffect(() => {
+        if (hasAutoSubmittedRef.current === submit) return;
+        hasAutoSubmittedRef.current = submit;
         submit();
     }, [submit]);
 

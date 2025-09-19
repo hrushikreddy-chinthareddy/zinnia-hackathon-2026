@@ -3990,6 +3990,7 @@
                 "ira-simple": "SIMPLE IRA (Plan de incentivos de ahorro para empleados)",
                 "q401a": "Plan 401(a) calificado",
                 "inheritedrothindividualretirementaccount": "Cuenta de jubilación individual Roth heredada",
+                "inheritedindividualretirementaccount": "Cuenta de Jubilación Individual Heredada",
                 "convertedrothira": "IRA Roth convertida",
                 "corporatedeferredcomp(404)": "Compensación diferida corporativa (404)",
                 "corporatepension": "Plan de Pensiones Corporativo",
@@ -5060,7 +5061,8 @@
             "primaryWritingAgent": "Agente de Registro",
             "additionalWritingAgent": "Agente redactor adicional",
             "exchangeCompany": "Empresa de intercambio",
-            "jointAnnuitant": "Rentista conjunto"
+            "jointAnnuitant": "Rentista conjunto",
+            "otherInterestedParty": "Otra parte interesada"
         }
     },
     "pageHeader": {
