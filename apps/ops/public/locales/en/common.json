@@ -3872,7 +3872,7 @@
             "TRUSTEE": "Trustee",
             "POWEROFATTORNEY": "Power of attorney",
             "AUTHORIZEDSIGNATORY": "Authorized signatory",
-            "OTHERINTERESTEDPARTY": "Other interested party",
+            "OTHERINTERESTEDPARTY": "Other Interested Party",
             "CONTINGENTOWNER": "Contingent owner",
             "CHECKING": "Checking"
         },
@@ -5105,7 +5105,7 @@
             "additionalWritingAgent": "Additional Writing Agent",
             "exchangeCompany": "Exchange Company",
             "jointAnnuitant": "Joint Annuitant",
-            "otherInterestedParty": "Other interested party"
+            "otherInterestedParty": "Other Interested Party"
 
         }
     },
