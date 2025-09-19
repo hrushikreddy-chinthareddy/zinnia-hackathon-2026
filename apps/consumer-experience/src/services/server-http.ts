@@ -68,35 +68,15 @@ async function handleLogging(
   loggingContext: ServerLoggingContext,
   result: Response
 ) {
-  const parsedResponse = await parseAPIResponse(result);
+  // We clone the response because the result will be parsed in functions
+  // that call ServerAPI and you cannot consumer the response more than once
+  // https://tigerabrodi.blog/a-console-log-broke-my-app#heading-what-if-i-want-to-read-the-response-multiple-times
+  const clonedRes = result.clone();
+  const parsedResponse = await parseAPIResponse(clonedRes);
   const responseErrorDetails = await logApiNotOkDetails({
-    rawResponse: result,
+    rawResponse: clonedRes,
     parsedResponse: parsedResponse,
   });
-
-  if (service === Service.BPM && status === 400) {
-    // When BPM returns a 400, it often doesnt mean theres an actual issue with the request, it just means something is ineligible,
-    logTrace(
-      `${LoggingModule.SERVER_HTTP_REQUEST}::BPM::400::request::${LoggingStage.COMPLETE}`,
-      {
-        ...loggingContext,
-        responseErrorDetails,
-      }
-    );
-    return;
-  }
-
-  if (service === Service.PREFERENCES && status === 404) {
-    // When preferences returns a 404, all it means is that a prefernce hasnt been set
-    logTrace(
-      `${LoggingModule.SERVER_HTTP_REQUEST}::PREFERENCES::404::request::${LoggingStage.COMPLETE}`,
-      {
-        ...loggingContext,
-        responseErrorDetails,
-      }
-    );
-    return;
-  }
 
   if (status >= 500) {
     if (criticalServices.includes(service)) {
@@ -117,13 +97,33 @@ async function handleLogging(
       );
     }
   } else if (status >= 400) {
-    logWarn(
-      `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.ERROR}`,
-      {
-        ...loggingContext,
-        responseErrorDetails,
-      }
-    );
+    if (service === Service.BPM && status === 400) {
+      // When BPM returns a 400, it often doesnt mean theres an actual issue with the request, it just means something is ineligible,
+      logTrace(
+        `${LoggingModule.SERVER_HTTP_REQUEST}::BPM::400::request::${LoggingStage.COMPLETE}`,
+        {
+          ...loggingContext,
+          responseErrorDetails,
+        }
+      );
+    } else if (service === Service.PREFERENCES && status === 404) {
+      // When preferences returns a 404, all it means is that a prefernce hasnt been set
+      logTrace(
+        `${LoggingModule.SERVER_HTTP_REQUEST}::PREFERENCES::404::request::${LoggingStage.COMPLETE}`,
+        {
+          ...loggingContext,
+          responseErrorDetails,
+        }
+      );
+    } else {
+      logWarn(
+        `${LoggingModule.SERVER_HTTP_REQUEST}::request::${LoggingStage.ERROR}`,
+        {
+          ...loggingContext,
+          responseErrorDetails,
+        }
+      );
+    }
   }
 }
 
