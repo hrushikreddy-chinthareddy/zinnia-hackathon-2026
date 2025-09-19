@@ -69,7 +69,7 @@ async function handleLogging(
   result: Response
 ) {
   // We clone the response because the result will be parsed in functions
-  // that call ServerAPI and you cannot consumer the response more than once
+  // that call ServerAPI and you cannot consume the response more than once
   // https://tigerabrodi.blog/a-console-log-broke-my-app#heading-what-if-i-want-to-read-the-response-multiple-times
   const clonedRes = result.clone();
   const parsedResponse = await parseAPIResponse(clonedRes);
