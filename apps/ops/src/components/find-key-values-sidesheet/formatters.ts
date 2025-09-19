@@ -8,7 +8,14 @@ import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
-import { DataKey, DataTuple, FieldData } from './types';
+import {
+    label,
+    tags,
+    link,
+    linkedField,
+    NestedDataTuple,
+    DataField,
+} from './types';
 import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
 import { excludeFields } from './translations/exclude-fields';
 
@@ -156,7 +163,8 @@ const formatAsDataLabel = (
  *
  */
 export const formatAsDataValue = (
-    fieldData: FieldData,
+    fieldData: NestedDataTuple | DataField,
+    lineOfBusiness: LineOfBusiness,
     t: TFunction,
     fieldName?: string
 ) => {
@@ -178,8 +186,9 @@ export const formatAsDataValue = (
     if (fieldName && dateFields.has(fieldName))
         return convertKebabedDateString(String(fieldData) || undefined);
 
-    if (typeof fieldData === 'object' && fieldData !== null)
-        return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
+    if (typeof fieldData === 'object') {
+        return fieldData;
+    }
 
     return String(fieldData);
 };
@@ -197,28 +206,77 @@ export const formatAsDataValue = (
  *
  */
 export const formatDataField = (
-    tuple: DataTuple,
+    tuple: NestedDataTuple,
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
-    searchValue?: string
-): [string, string] | null => {
-    const [label, data] = tuple;
+    searchValue?: string,
+    fieldLink?: string,
+    fieldLinkedField?: string
+): NestedDataTuple => {
+    //TODO make into predicate
+    if (
+        tuple == null ||
+        !Array.isArray(tuple) ||
+        tuple.length < 2 ||
+        typeof tuple[0] !== 'string'
+    ) {
+        return null;
+    }
+
+    const [key, data] = tuple;
     const include =
-        label != null &&
-        typeof label === 'string' &&
+        key != null &&
+        typeof key === 'string' &&
         data != null &&
-        !excludeFields.has(label);
-    const formattedLabel =
-        include && formatAsDataLabel(label, lineOfBusiness, t);
+        !excludeFields.has(key);
+    const formattedLabel = include && formatAsDataLabel(key, lineOfBusiness, t);
     const displayIfSearched =
         include &&
         formattedLabel &&
         (!searchValue ||
             formattedLabel.toLowerCase().includes(searchValue.toLowerCase()));
 
-    return displayIfSearched
-        ? [formattedLabel, formatAsDataValue(data, t, label)]
-        : null;
+    if (!displayIfSearched) {
+        return null;
+    }
+
+    const formattedData = formatAsDataValue(data, lineOfBusiness, t, key);
+
+    if (typeof formattedData === 'object' && formattedData != null) {
+        //console.log('.....formattedData', key, formattedData);
+        const fieldTags = formattedData[tags];
+        const fieldLabel = formattedData[label];
+        const fieldLink = formattedData[link];
+        const fieldLinkedField = formattedData[linkedField];
+        const formattedEntries = removeExcludedAndEmptyFields(
+            Object.entries(formattedData),
+            lineOfBusiness,
+            t,
+            fieldLink,
+            fieldLinkedField,
+            searchValue
+        );
+
+        if (formattedEntries == null) {
+            return null;
+        }
+        //console.log('...formattedEntries', formattedEntries);
+
+        //console.log('...formattedEntries', formattedEntries);
+        formattedEntries[tags] = fieldTags;
+        formattedEntries[label] = fieldLabel;
+        formattedEntries[link] = fieldLink;
+        formattedEntries[linkedField] = fieldLinkedField;
+
+        return formattedEntries;
+    }
+
+    const dataTuple: NestedDataTuple = [formattedLabel, formattedData];
+
+    if (fieldLinkedField === key) {
+        dataTuple[link] = fieldLink;
+    }
+    return dataTuple;
 };
 
 /**
@@ -231,21 +289,39 @@ export const formatDataField = (
  * @returns The filtered array of key-value pairs
  */
 export const removeExcludedAndEmptyFields = (
-    tuples: DataTuple[],
+    tuples: NestedDataTuple,
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
+    fieldLink?: string,
+    linkedField?: string,
     searchValue?: string,
-    additionalFieldsToExclude?: DataKey[]
-) => {
-    return tuples
-        .map((tuple) => {
-            const [key] = tuple;
+    additionalFieldsToExclude?: string[]
+): NestedDataTuple => {
+    const filteredTuples = tuples
+        ?.map((tuple) => {
+            // Ensure tuple is valid
+            if (
+                tuple == null ||
+                !Array.isArray(tuple) ||
+                tuple.length < 2 ||
+                typeof tuple[0] !== 'string'
+            ) {
+                return null;
+            }
             return !(
                 additionalFieldsToExclude &&
-                new Set(additionalFieldsToExclude).has(key)
+                new Set(additionalFieldsToExclude).has(tuple[0])
             )
-                ? formatDataField(tuple, lineOfBusiness, t, searchValue)
+                ? formatDataField(
+                      tuple,
+                      lineOfBusiness,
+                      t,
+                      searchValue,
+                      fieldLink,
+                      linkedField
+                  )
                 : null;
         })
         .filter((tuple) => tuple != null);
+    return filteredTuples ?? null;
 };

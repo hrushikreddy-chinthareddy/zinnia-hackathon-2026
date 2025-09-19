@@ -26,15 +26,13 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import styles from './find-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
 import {
-    DataRecord,
-    DataTuple,
+    NestedDataTuple,
     label,
-    link,
-    linkedField,
-    MetaData,
-    PolicySection,
-    SubSection,
     tags,
+    link,
+    MetaData,
+    DataTuple,
+    PolicySection,
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -63,7 +61,7 @@ const KeyValueBasics = ({
     searchValue,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    policyBasics: DataTuple[];
+    policyBasics: NestedDataTuple;
     searchValue: string;
 }) => (
     <Accordion
@@ -95,11 +93,10 @@ const KeyValueSections = ({
     policySections: PolicySection[];
     searchValue: string;
 }) => {
-    return policySections.map(([sectionLabel, sectionData], i) => {
-        const { fields, subSections } = preparedPolicy.toFieldsAndSubsections([
-            sectionLabel,
-            sectionData,
-        ]);
+    return policySections?.map((policySection, i) => {
+        const [sectionLabel, sectionData] = policySection;
+        const { fields, subSections } = sectionData;
+
         if (
             typeof sectionLabel !== 'string' ||
             (fields == null && subSections == null)
@@ -148,31 +145,30 @@ const KeyValueSubSections = ({
     sectionLabel,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    subSections: SubSection[];
+    subSections: NestedDataTuple;
     searchValue: string;
     sectionLabel: string;
 }) => {
-    return subSections?.map(
-        ([subSectionLabel, subSectionFields, subSectionMetaData], i) => {
-            const subsectionTags = subSectionMetaData?.[tags];
-            return (
-                <div key={`subsection_${i}`} className={styles.subSection}>
-                    <Accordion
-                        sectionLabel={String(subSectionLabel)}
-                        tags={subsectionTags}
-                        type={AccordionType.NESTED}
-                    >
-                        <KeyValueFieldList
-                            preparedPolicy={preparedPolicy}
-                            fields={subSectionFields}
-                            searchValue={searchValue}
-                            metaData={subSectionMetaData}
-                        />
-                    </Accordion>
-                </div>
-            );
-        }
-    );
+    return subSections?.map((subSection, i) => {
+        const [subSectionLabel, subSectionFields, subSectionMetaData] =
+            subSection as [string, NestedDataTuple, MetaData];
+        const subsectionTags = subSectionMetaData?.[tags];
+        return (
+            <div key={`subsection_${i}`} className={styles.subSection}>
+                <Accordion
+                    sectionLabel={String(subSectionLabel)}
+                    tags={subsectionTags}
+                    type={AccordionType.NESTED}
+                >
+                    <KeyValueFieldList
+                        preparedPolicy={preparedPolicy}
+                        fields={subSectionFields}
+                        searchValue={searchValue}
+                    />
+                </Accordion>
+            </div>
+        );
+    });
 };
 
 /**
@@ -191,25 +187,26 @@ const KeyValueFieldList = ({
     preparedPolicy,
     fields,
     searchValue,
-    metaData,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    fields: DataTuple[];
+    fields: NestedDataTuple;
     searchValue: string;
-    metaData?: MetaData;
 }) => {
     return (
         <div className={styles.itemsList}>
-            {fields.map((field, i) => {
+            {fields?.map((field, i) => {
                 // If the field data is an array, render it as a
                 // subSection-in-subSection
-                const [key, unformattedData] = field;
-                if (unformattedData instanceof Array) {
+                const [key, data] = field as unknown[];
+
+                // The data returned is either a Tuple or an Array of Tuples;
+                // If the first element (key) is an array, it's a nested subSection
+                if (key instanceof Array) {
                     return (
-                        <KeyValueNestedSubSection
+                        <KeyValueNestedSubSections
                             key={`subsection_${i}`}
                             preparedPolicy={preparedPolicy}
-                            subSections={unformattedData as DataRecord[]}
+                            subSections={field as NestedDataTuple[]} // FIXME
                             searchValue={searchValue}
                         />
                     );
@@ -221,10 +218,9 @@ const KeyValueFieldList = ({
                         <DataField
                             key={`field_${i}`}
                             preparedPolicy={preparedPolicy}
-                            dataField={[key, String(unformattedData)]} // FIXME
+                            dataField={[key, String(data)]} // FIXME
                             searchValue={searchValue}
-                            link={metaData?.[link]}
-                            linkField={metaData?.[linkedField]}
+                            link={(field as MetaData)?.[link]}
                         />
                     );
                 }
@@ -245,21 +241,20 @@ const KeyValueFieldList = ({
  * @param {string} searchValue
  * @returns {JSX.Element[]}
  */
-const KeyValueNestedSubSection = ({
+const KeyValueNestedSubSections = ({
     preparedPolicy,
     subSections,
     searchValue,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    subSections: DataRecord[];
+    subSections: NestedDataTuple[];
     searchValue: string;
 }) => {
     return subSections.map((subSection, i) => {
-        const subSectionLabel = subSection[label];
+        const subSectionLabel = (subSection as MetaData)[label];
         if (subSectionLabel == null) return null;
-        const subSectionTags = subSection[tags] as string[];
-        const subSectionLink = subSection[link] as string;
-        const subSectionLinkField = subSection[linkedField] as string;
+
+        const subSectionTags = (subSection as MetaData)[tags] as string[];
 
         return (
             <div key={`nested_subsection_${i}`} className={styles.subSection}>
@@ -270,18 +265,22 @@ const KeyValueNestedSubSection = ({
                     type={AccordionType.NESTED}
                 >
                     <div className={styles.itemsList}>
-                        {Object.entries(subSection).map(([label, data], j) => {
-                            return (
-                                <DataField
-                                    key={`field_${j}`}
-                                    preparedPolicy={preparedPolicy}
-                                    dataField={[label, String(data)]}
-                                    searchValue={searchValue}
-                                    link={subSectionLink}
-                                    linkField={subSectionLinkField}
-                                />
-                            );
-                        })}
+                        {(subSection as NestedDataTuple[])
+                            .map((field, j) => {
+                                const [label, data] = field as DataTuple;
+                                const fieldLink = (field as MetaData)[link];
+                                // FIXME: disallow Symbol in field label
+                                return typeof label === 'string' ? (
+                                    <DataField
+                                        key={`field_${j}`}
+                                        preparedPolicy={preparedPolicy}
+                                        dataField={[label, String(data)]}
+                                        searchValue={searchValue}
+                                        link={fieldLink}
+                                    />
+                                ) : null;
+                            })
+                            .filter((field) => field !== null)}
                     </div>
                 </Accordion>
             </div>
@@ -307,20 +306,17 @@ const DataField = ({
     preparedPolicy,
     dataField,
     link,
-    linkField,
     searchValue,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
     dataField: [string, string];
     link?: string;
-    linkField?: string;
     searchValue: string;
 }) => {
     const [fieldLabel, fieldData] = dataField;
-    const linkedField =
-        link && linkField === dataField[0] ? (
-            <Link href={link} text={fieldData} />
-        ) : undefined;
+    const linkedField = link ? (
+        <Link href={link} text={fieldData} />
+    ) : undefined;
     return (
         <DotContainer
             dotLeftSide={
@@ -447,15 +443,16 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     */
 
     if (!policy) return null; //FIXME: add loading state
-
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(
         () => preparePolicy(policy, t, debouncedSearchValue),
         [policy, debouncedSearchValue, t]
     );
 
-    // TODO: memoize?
-    const { policyBasics, policySections } = preparedPolicy.toSections();
+    const { policyBasics, policySections } = useMemo(
+        () => preparedPolicy.toSections(),
+        [preparedPolicy]
+    );
 
     return (
         <SideSheet
@@ -511,16 +508,18 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                         {policyBasics && (
                             <KeyValueBasics
                                 preparedPolicy={preparedPolicy}
-                                policyBasics={policyBasics}
+                                policyBasics={policyBasics as NestedDataTuple[]}
                                 searchValue={searchValue}
                             />
                         )}
 
-                        <KeyValueSections
-                            preparedPolicy={preparedPolicy}
-                            policySections={policySections}
-                            searchValue={searchValue}
-                        />
+                        {policySections && (
+                            <KeyValueSections
+                                preparedPolicy={preparedPolicy}
+                                policySections={policySections}
+                                searchValue={searchValue}
+                            />
+                        )}
                     </div>
                 </BlurOverlayLoader>
             </div>

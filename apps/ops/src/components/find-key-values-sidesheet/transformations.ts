@@ -12,26 +12,20 @@ import { TFunction } from 'next-i18next';
 import {
     formatDataField,
     formatAsSectionLabel,
-    formatAsDataValue,
     removeExcludedAndEmptyFields,
+    formatAsDataValue,
 } from './formatters';
 import { sectionVisibility } from './translations/section-visibility';
 import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
-    DataKey,
-    DataRecord,
-    DataTuple,
+    NestedDataTuple,
     label,
-    link,
-    Link,
-    LinkedField,
-    linkedField,
-    PolicySection,
-    PreparedPolicy,
-    PreparedPolicySection,
-    SubSection,
-    Tags,
     tags,
+    link,
+    linkedField,
+    DataField,
+    MetaData,
+    PolicySection,
 } from './types';
 
 /**
@@ -64,11 +58,10 @@ export const preparePolicy = (
     planCode?: string;
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
-    toSections: (policyOverride?: Policy) => PreparedPolicy;
-    toFieldsAndSubsections: (
-        policySection: PolicySection
-    ) => PreparedPolicySection;
-    formatDataField: (dataTuple: DataTuple) => [string, string] | null;
+    toSections: (policyOverride?: Policy) => {
+        policyBasics: NestedDataTuple[] | null;
+        policySections: PolicySection[];
+    };
     formatAsSectionLabel: (label: string) => string;
 } => {
     // retain persistent policy descriptors as closure
@@ -92,8 +85,8 @@ export const preparePolicy = (
         planCode,
         productType,
         allPartiesById,
-        toSections: (policyOverride) =>
-            toSections(
+        toSections: (policyOverride) => {
+            return toSections(
                 policyOverride ?? policy,
                 lineOfBusiness,
                 t,
@@ -101,16 +94,8 @@ export const preparePolicy = (
                 planCode,
                 productType,
                 allPartiesById
-            ),
-        toFieldsAndSubsections: (policySection: PolicySection) =>
-            toFieldsAndSubsections(
-                policySection,
-                lineOfBusiness,
-                t,
-                searchValue
-            ),
-        formatDataField: (dataTuple: DataTuple) =>
-            formatDataField(dataTuple, lineOfBusiness, t),
+            );
+        },
         formatAsSectionLabel: (label: string) =>
             formatAsSectionLabel(label, lineOfBusiness, t),
     };
@@ -134,10 +119,19 @@ export const toSections = (
     planCode?: string,
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
-): PreparedPolicy => {
+): {
+    policyBasics: NestedDataTuple[] | null;
+    policySections: PolicySection[];
+} => {
     const policyTuples = Object.entries(policy);
-    const basicsAndSections = policyTuples.reduce<PreparedPolicy>(
-        (acc, [currentKey, currentVal]) => {
+    const basicsAndSections = policyTuples.reduce(
+        (
+            acc,
+            [currentKey, currentVal]
+        ): {
+            policyBasics: NestedDataTuple[] | null;
+            policySections: PolicySection[];
+        } => {
             // If the value is an object, treat it as a section
             if (typeof currentVal === 'object') {
                 const sectionTitle = currentKey;
@@ -188,12 +182,12 @@ export const toSections = (
                                 policySections: [
                                     ...acc.policySections,
                                     [
-                                        String(t('policy.allFields.funds')), // TODO: maybe convert from another map
+                                        'funds',
                                         {
                                             ...currentVal,
                                             ...funds,
                                         },
-                                    ],
+                                    ] as PolicySection,
                                 ],
                             }),
                         };
@@ -244,6 +238,7 @@ export const toSections = (
                                                         [tags]: [
                                                             formatAsDataValue(
                                                                 partyData.partyRole,
+                                                                lineOfBusiness,
                                                                 t
                                                             ),
                                                         ],
@@ -269,7 +264,7 @@ export const toSections = (
                                 [
                                     currentKey,
                                     systematicProgramsAndParties ?? currentVal,
-                                ],
+                                ] as PolicySection,
                             ],
                         };
                     case 'riders':
@@ -318,7 +313,7 @@ export const toSections = (
                                 [
                                     currentKey,
                                     ridersAndParticipants ?? currentVal,
-                                ],
+                                ] as PolicySection,
                             ],
                         };
                     case 'loanValues':
@@ -339,12 +334,12 @@ export const toSections = (
                             policySections: [
                                 ...acc.policySections,
                                 [
-                                    String(t('policy.allFields.loans')),
+                                    'loans',
                                     {
                                         ...currentVal,
                                         ...loanSegments,
                                     },
-                                ],
+                                ] as PolicySection,
                             ],
                         };
                     default:
@@ -352,13 +347,13 @@ export const toSections = (
                             ...acc,
                             policySections: [
                                 ...acc.policySections,
-                                [currentKey, currentVal],
+                                [currentKey, currentVal] as PolicySection,
                             ],
                         };
                 }
             }
 
-            // Oetherwise, the value is a primitive, so add it to the policy basics
+            // Otherwise, the value is a primitive, so add it to the policy basics
             // formatDataField will determine if the field should be shown
             const formattedField = formatDataField(
                 [currentKey, currentVal],
@@ -374,8 +369,9 @@ export const toSections = (
                 }),
             };
         },
+
         {
-            policyBasics: undefined,
+            policyBasics: null,
             policySections: [],
         }
     );
@@ -402,7 +398,7 @@ export const toSections = (
                     currentPartyRole.partyRole && {
                         [currentPartyRole.partyId]: [
                             ...currentPartyIdRoles,
-                            formatAsDataValue(currentPartyRole.partyRole, t),
+                            currentPartyRole.partyRole,
                         ],
                     }),
             };
@@ -439,7 +435,11 @@ export const toSections = (
                 ...requiredPartyData,
                 ...(party.dateOfBirth && { dob: party.dateOfBirth }),
                 ...(ssn && { ssn }),
-                ...(partyTags && { [tags]: partyTags }),
+                ...(partyTags && {
+                    [tags]: partyTags.map((tag) =>
+                        formatAsDataValue(tag, lineOfBusiness, t)
+                    ),
+                }),
             };
 
             return partyDetails;
@@ -450,9 +450,25 @@ export const toSections = (
         basicsAndSections.policySections.push([
             String(t('policy.allFields.people')),
             people,
-        ]);
+        ] as PolicySection);
     }
-    return basicsAndSections;
+    return {
+        policyBasics: basicsAndSections.policyBasics,
+        policySections: (basicsAndSections.policySections?.map(
+            (policySection) => [
+                (policySection as unknown[])[0],
+                toFieldsAndSubsections(
+                    policySection as [
+                        string,
+                        unknown[] | Record<string, unknown>
+                    ],
+                    lineOfBusiness,
+                    t,
+                    searchValue
+                ),
+            ]
+        ) ?? []) as PolicySection[],
+    };
 };
 
 const fillInRequiredPartyDetails = (
@@ -522,7 +538,7 @@ const fillInBankAndAddressInfo = (
     const bankInfo = firstBank
         ? [
               firstBank.branchName,
-              formatAsDataValue(firstBank.accountType ?? null, t),
+              firstBank.accountType ?? null,
               t('policy.commonPhrases.endingIn'),
               firstBank.accountNumber?.slice(-4),
           ].join(' ')
@@ -563,41 +579,52 @@ const fillInBankAndAddressInfo = (
  *          and/or an array of subsections
  */
 export const toFieldsAndSubsections = (
-    [sectionName, sectionData]: PolicySection,
+    [sectionName, sectionData]: [string, unknown[] | Record<string, unknown>],
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
     searchValue?: string
-): PreparedPolicySection => {
+): {
+    fields?: NestedDataTuple;
+    subSections?: NestedDataTuple;
+} => {
+    const subSectionTitleField =
+        sectionTypeToSubSectionTitleFields[sectionName];
+
     // If sectionData is an array, treat each item as a subsection.
     // The title of each subsection will map from a defined field *within* that subsection
     if (sectionData instanceof Array) {
-        sectionData;
-        const subSectionTitleField =
-            sectionTypeToSubSectionTitleFields[sectionName];
         const subSections = sectionData
             .map((subSection) => {
-                const subSectionLabel =
-                    subSection[label] ??
-                    formatAsDataValue(subSection[subSectionTitleField], t);
-                const subSectionLink = subSection[link];
-                const subSectionLinkedField = subSection[linkedField];
-                const subSectionTags = subSection[tags];
+                if (subSection == null) {
+                    return null;
+                }
+                const subSectionLabel = String(
+                    (subSection as MetaData)[label] ??
+                        (subSection as Record<string, unknown>)[
+                            subSectionTitleField
+                        ]
+                );
+                const subSectionLink = (subSection as MetaData)[link];
+                const subSectionLinkedField = (subSection as MetaData)[
+                    linkedField
+                ];
+                const subSectionTags = (subSection as MetaData)[tags];
                 const subSectionEntries = removeExcludedAndEmptyFields(
                     Object.entries(subSection),
                     lineOfBusiness,
                     t,
+                    subSectionLink,
+                    subSectionLinkedField,
                     searchValue,
                     [subSectionTitleField]
                 );
 
-                return subSectionEntries.length
+                return subSectionEntries?.length
                     ? [
-                          subSectionLabel,
+                          formatAsDataValue(subSectionLabel, lineOfBusiness, t),
                           subSectionEntries,
                           {
-                              [tags]: subSectionTags,
-                              [link]: subSectionLink,
-                              [linkedField]: subSectionLinkedField,
+                              [tags]: subSectionTags, //FIXME
                           },
                       ]
                     : null;
@@ -605,76 +632,55 @@ export const toFieldsAndSubsections = (
             .filter((subSection) => subSection !== null);
         return subSections.length
             ? {
-                  subSections: subSections as SubSection[], // FIXME
+                  subSections: subSections as NestedDataTuple,
               }
             : {};
     } else {
-        const { fields, subSections } = removeExcludedAndEmptyFields(
-            Object.entries(sectionData),
-            lineOfBusiness,
-            t,
-            searchValue
-        ).reduce<PreparedPolicySection>((acc, [fieldName, fieldData]) => {
-            // If sectionData is an object, and a value within it is a nested object,
-            // also treat it as a subsection, but map the subsection title to the object key
-            if (typeof fieldData === 'object' && fieldData !== null) {
-                const fieldTags = (fieldData as Tags)[tags];
-                const fieldLink = (fieldData as Link)[link];
+        const fields = Object.entries(sectionData)
+            .map(([subSectionName, fieldData]) => {
+                // If sectionData is an object, and a value within it is a nested object,
+                // also treat it as a subsection, but map the subsection title to the object key
+                if (fieldData instanceof Array) {
+                    const fieldEntries = fieldData.map((fieldObj) => {
+                        if (typeof fieldObj !== 'object' || fieldObj == null)
+                            return null;
+                        if (!(subSectionTitleField in fieldObj)) return null;
+                        fieldObj;
+                        const fieldLabel = fieldObj[subSectionTitleField];
+                        const fieldEntry = Object.entries(fieldObj);
+                        const subSectionData = removeExcludedAndEmptyFields(
+                            fieldEntry as NestedDataTuple,
+                            lineOfBusiness,
+                            t,
+                            undefined,
+                            undefined,
+                            searchValue
+                        );
 
-                // One field per section can be a link
-                const fieldLinkedField = (fieldData as LinkedField)[
-                    linkedField
-                ];
+                        (subSectionData as MetaData)[label] = fieldLabel;
+                        return subSectionData;
+                    });
 
-                const subSectionData = removeExcludedAndEmptyFields(
-                    Object.entries(fieldData),
+                    // Only show non-empty subsections
+                    if (fieldEntries?.length) {
+                        return fieldEntries;
+                    }
+
+                    return null;
+                }
+
+                // Otherwise, the value is meant to be displayed, so just append the key-value pair
+                return formatDataField(
+                    [subSectionName, fieldData as DataField],
                     lineOfBusiness,
                     t,
                     searchValue
                 );
-
-                // Only show non-empty subsections
-                if (subSectionData.length) {
-                    return {
-                        fields: acc.fields, // keep fields untouched
-                        subSections: [
-                            ...(acc.subSections ?? []),
-                            [
-                                formatAsSectionLabel(
-                                    String(fieldName),
-                                    lineOfBusiness,
-                                    t
-                                ),
-                                subSectionData,
-
-                                // Add metadata for tags and linked field (1 per section)
-                                {
-                                    [tags]: fieldTags,
-                                    [link]: fieldLink,
-                                    [linkedField]: fieldLinkedField,
-                                },
-                            ],
-                        ],
-                    };
-                }
-                return acc;
-            }
-
-            // Otherwise, the value is meant to be displayed, so just append the key-value pair
-            return {
-                fields: removeExcludedAndEmptyFields(
-                    [...(acc.fields ?? []), [fieldName, fieldData]],
-                    lineOfBusiness,
-                    t,
-                    searchValue
-                ),
-                subSections: acc.subSections, // keep subsections untouched
-            };
-        }, {});
+            })
+            .filter((field) => field !== null);
 
         return {
             fields,
-            subSections,
         };
     }
 };
@@ -699,7 +705,7 @@ export const toFieldsAndSubsections = (
  *
  * TODO: this could actually be useful as a util
  */
-const convertListToMap = <T extends DataRecord>(
+const convertListToMap = <T>(
     {
         subSectionList,
         subSectionTitleField,
@@ -711,20 +717,20 @@ const convertListToMap = <T extends DataRecord>(
     },
     t: TFunction
 ) => {
-    const subSectionMap = subSectionList?.reduce<Record<DataKey, T>>(
+    const subSectionMap = subSectionList?.reduce<Record<string, T>>(
         (acc, currentSubSection, i) => {
             // Grab the first value to represent the title of the segment
 
-            const subSectionTitle = formatAsDataValue(
-                currentSubSection[subSectionTitleField] ??
-                    Object.values(currentSubSection)[0] ??
-                    `${fallbackTitle} ${i + 1}`,
-                t
-            );
+            const subSectionTitle =
+                (currentSubSection as Record<string, T>)[
+                    subSectionTitleField
+                ] ??
+                Object.values(currentSubSection as T[])[0] ??
+                `${fallbackTitle} ${i + 1}`;
 
             return {
                 ...acc,
-                [subSectionTitle]: currentSubSection,
+                [String(subSectionTitle)]: currentSubSection, // FIXME
             };
         },
         {}

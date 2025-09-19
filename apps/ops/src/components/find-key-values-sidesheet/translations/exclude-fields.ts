@@ -1,9 +1,7 @@
-import { DataKey } from '../types';
-
 /**
  * Fields that should not be displayed
  */
-export const excludeFields = new Set<DataKey>([
+export const excludeFields = new Set<string>([
     'id',
     'version',
     'event',
@@ -14,7 +12,6 @@ export const excludeFields = new Set<DataKey>([
     'base',
     'party',
     'parties',
-    'funds',
     'fundAllocationsInvestments',
     'fundSegments',
     'matchSegment',
