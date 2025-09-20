@@ -4,7 +4,7 @@ export enum AccordionType {
   NESTED = 'nested',
 }
 export interface AccordionProps {
-  sectionLabel: string;
+  sectionLabel: string | JSX.Element;
   type?: AccordionType;
   tags?: string[];
 }

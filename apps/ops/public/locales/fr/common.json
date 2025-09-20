@@ -3262,6 +3262,9 @@
             "policy": "police",
             "contract": "contrat"
         },
+        "commonPhrases": {
+            "endingIn": "se terminant par"
+        },
         "allFields": {
             "policyBasics": "Bases de {{policyNomenclature}}",
             "effectiveDate": "Date d'effet",

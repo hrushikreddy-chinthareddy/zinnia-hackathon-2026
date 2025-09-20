@@ -230,15 +230,6 @@ export const formatDataField = (
         data != null &&
         !excludeFields.has(key);
     const formattedLabel = include && formatAsDataLabel(key, lineOfBusiness, t);
-    const displayIfSearched =
-        include &&
-        formattedLabel &&
-        (!searchValue ||
-            formattedLabel.toLowerCase().includes(searchValue.toLowerCase()));
-
-    if (!displayIfSearched) {
-        return null;
-    }
 
     const formattedData = formatAsDataValue(data, lineOfBusiness, t, key);
 
@@ -269,6 +260,17 @@ export const formatDataField = (
         formattedEntries[linkedField] = fieldLinkedField;
 
         return formattedEntries;
+    }
+
+    const displayIfSearched =
+        include &&
+        formattedLabel &&
+        (!searchValue ||
+            formattedLabel.toLowerCase().includes(searchValue.toLowerCase()) ||
+            formattedData.toLowerCase().includes(searchValue.toLowerCase()));
+
+    if (!displayIfSearched) {
+        return null;
     }
 
     const dataTuple: NestedDataTuple = [formattedLabel, formattedData];
@@ -322,6 +324,6 @@ export const removeExcludedAndEmptyFields = (
                   )
                 : null;
         })
-        .filter((tuple) => tuple != null);
-    return filteredTuples ?? null;
+        .filter((tuple) => tuple !== null);
+    return filteredTuples?.length ? filteredTuples : null;
 };

@@ -454,20 +454,21 @@ export const toSections = (
     }
     return {
         policyBasics: basicsAndSections.policyBasics,
-        policySections: (basicsAndSections.policySections?.map(
-            (policySection) => [
-                (policySection as unknown[])[0],
-                toFieldsAndSubsections(
-                    policySection as [
-                        string,
-                        unknown[] | Record<string, unknown>
-                    ],
+        policySections: basicsAndSections.policySections
+            ?.map((policySection) => {
+                const fieldsAndSubsections = toFieldsAndSubsections(
+                    policySection,
                     lineOfBusiness,
                     t,
                     searchValue
-                ),
-            ]
-        ) ?? []) as PolicySection[],
+                );
+
+                return fieldsAndSubsections.fields?.length ||
+                    fieldsAndSubsections.subSections?.length
+                    ? [policySection[0], fieldsAndSubsections]
+                    : null;
+            })
+            .filter((section) => section != null) as PolicySection[],
     };
 };
 
@@ -619,17 +620,20 @@ export const toFieldsAndSubsections = (
                     [subSectionTitleField]
                 );
 
-                return subSectionEntries?.length
-                    ? [
-                          formatAsDataValue(subSectionLabel, lineOfBusiness, t),
-                          subSectionEntries,
-                          {
-                              [tags]: subSectionTags, //FIXME
-                          },
-                      ]
-                    : null;
+                if (!subSectionEntries?.length) {
+                    return null;
+                }
+
+                const subSectionTuple = [
+                    formatAsDataValue(subSectionLabel, lineOfBusiness, t),
+                    subSectionEntries,
+                ];
+                (subSectionTuple as MetaData)[tags] = subSectionTags;
+
+                return subSectionTuple;
             })
             .filter((subSection) => subSection !== null);
+
         return subSections.length
             ? {
                   subSections: subSections as NestedDataTuple,
@@ -641,25 +645,35 @@ export const toFieldsAndSubsections = (
                 // If sectionData is an object, and a value within it is a nested object,
                 // also treat it as a subsection, but map the subsection title to the object key
                 if (fieldData instanceof Array) {
-                    const fieldEntries = fieldData.map((fieldObj) => {
-                        if (typeof fieldObj !== 'object' || fieldObj == null)
-                            return null;
-                        if (!(subSectionTitleField in fieldObj)) return null;
-                        fieldObj;
-                        const fieldLabel = fieldObj[subSectionTitleField];
-                        const fieldEntry = Object.entries(fieldObj);
-                        const subSectionData = removeExcludedAndEmptyFields(
-                            fieldEntry as NestedDataTuple,
-                            lineOfBusiness,
-                            t,
-                            undefined,
-                            undefined,
-                            searchValue
-                        );
+                    const fieldEntries = fieldData
+                        .map((fieldObj) => {
+                            if (
+                                typeof fieldObj !== 'object' ||
+                                fieldObj == null
+                            )
+                                return null;
+                            if (!(subSectionTitleField in fieldObj))
+                                return null;
+                            fieldObj;
+                            const fieldLabel = fieldObj[subSectionTitleField];
+                            const fieldEntry = Object.entries(fieldObj);
+                            const subSectionData = removeExcludedAndEmptyFields(
+                                fieldEntry as NestedDataTuple,
+                                lineOfBusiness,
+                                t,
+                                undefined,
+                                undefined,
+                                searchValue
+                            );
 
-                        (subSectionData as MetaData)[label] = fieldLabel;
-                        return subSectionData;
-                    });
+                            if (subSectionData == null) {
+                                return null;
+                            }
+
+                            (subSectionData as MetaData)[label] = fieldLabel;
+                            return subSectionData;
+                        })
+                        .filter((fieldEntry) => fieldEntry !== null);
 
                     // Only show non-empty subsections
                     if (fieldEntries?.length) {

@@ -3284,6 +3284,9 @@
             "policy": "póliza",
             "contract": "contrato"
         },
+        "commonPhrases": {
+            "endingIn": "terminando en"
+        },
         "allFields": {
             "policyBasics": "Básicos de {{policyNomenclature}}",
             "effectiveDate": "Fecha de vigencia",

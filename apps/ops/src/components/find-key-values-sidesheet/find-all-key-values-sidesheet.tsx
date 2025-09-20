@@ -65,7 +65,12 @@ const KeyValueBasics = ({
     searchValue: string;
 }) => (
     <Accordion
-        sectionLabel={preparedPolicy.formatAsSectionLabel('policyBasics')}
+        sectionLabel={
+            <Highlighter
+                text={preparedPolicy.formatAsSectionLabel('policyBasics')}
+                highlights={[searchValue]}
+            />
+        }
         type={AccordionType.NESTED}
     >
         <KeyValueFieldList
@@ -106,7 +111,12 @@ const KeyValueSections = ({
         return (
             <Accordion
                 key={`section_${i}`}
-                sectionLabel={preparedPolicy.formatAsSectionLabel(sectionLabel)}
+                sectionLabel={
+                    <Highlighter
+                        text={preparedPolicy.formatAsSectionLabel(sectionLabel)}
+                        highlights={[searchValue]}
+                    />
+                }
                 type={AccordionType.NESTED}
             >
                 {fields && (
@@ -150,13 +160,20 @@ const KeyValueSubSections = ({
     sectionLabel: string;
 }) => {
     return subSections?.map((subSection, i) => {
-        const [subSectionLabel, subSectionFields, subSectionMetaData] =
-            subSection as [string, NestedDataTuple, MetaData];
-        const subsectionTags = subSectionMetaData?.[tags];
+        const [subSectionLabel, subSectionFields] = subSection as [
+            string,
+            NestedDataTuple
+        ];
+        const subsectionTags = (subSection as MetaData)[tags];
         return (
             <div key={`subsection_${i}`} className={styles.subSection}>
                 <Accordion
-                    sectionLabel={String(subSectionLabel)}
+                    sectionLabel={
+                        <Highlighter
+                            text={String(subSectionLabel)}
+                            highlights={[searchValue]}
+                        />
+                    }
                     tags={subsectionTags}
                     type={AccordionType.NESTED}
                 >
@@ -260,7 +277,12 @@ const KeyValueNestedSubSections = ({
             <div key={`nested_subsection_${i}`} className={styles.subSection}>
                 <Accordion
                     key={String(subSectionLabel)}
-                    sectionLabel={String(subSectionLabel)}
+                    sectionLabel={
+                        <Highlighter
+                            text={String(subSectionLabel)}
+                            highlights={[searchValue]}
+                        />
+                    }
                     tags={subSectionTags}
                     type={AccordionType.NESTED}
                 >
@@ -314,9 +336,6 @@ const DataField = ({
     searchValue: string;
 }) => {
     const [fieldLabel, fieldData] = dataField;
-    const linkedField = link ? (
-        <Link href={link} text={fieldData} />
-    ) : undefined;
     return (
         <DotContainer
             dotLeftSide={
@@ -344,7 +363,13 @@ const DataField = ({
                 </div>
             }
             dotLeftSideClassName="typography-content-body-sm"
-            dotRightSide={linkedField ?? fieldData}
+            dotRightSide={
+                link ? (
+                    <Link href={link} text={fieldData} />
+                ) : (
+                    <Highlighter text={fieldData} highlights={[searchValue]} />
+                )
+            }
             dotRightSideClassName="typography-content-body-sm"
         />
     );

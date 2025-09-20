@@ -3304,6 +3304,9 @@
             "policy": "policy",
             "contract": "contract"
         },
+        "commonPhrases": {
+            "endingIn": "ending in"
+        },
         "allFields": {
             "policyBasics": "{{policyNomenclature, capitalize}} basics",
             "effectiveDate": "Effective date",
