@@ -132,7 +132,6 @@ const KeyValueSections = ({
                         preparedPolicy={preparedPolicy}
                         subSections={subSections}
                         searchValue={searchValue}
-                        sectionLabel={sectionLabel}
                     />
                 )}
             </Accordion>
@@ -152,12 +151,10 @@ const KeyValueSubSections = ({
     preparedPolicy,
     subSections,
     searchValue,
-    sectionLabel,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
     subSections: NestedDataTuple;
     searchValue: string;
-    sectionLabel: string;
 }) => {
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
@@ -222,7 +219,6 @@ const KeyValueFieldList = ({
                     return (
                         <KeyValueNestedSubSections
                             key={`subsection_${i}`}
-                            preparedPolicy={preparedPolicy}
                             subSections={field as NestedDataTuple[]} // FIXME
                             searchValue={searchValue}
                         />
@@ -234,7 +230,6 @@ const KeyValueFieldList = ({
                     return (
                         <DataField
                             key={`field_${i}`}
-                            preparedPolicy={preparedPolicy}
                             dataField={[key, String(data)]} // FIXME
                             searchValue={searchValue}
                             link={(field as MetaData)?.[link]}
@@ -259,11 +254,9 @@ const KeyValueFieldList = ({
  * @returns {JSX.Element[]}
  */
 const KeyValueNestedSubSections = ({
-    preparedPolicy,
     subSections,
     searchValue,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
     subSections: NestedDataTuple[];
     searchValue: string;
 }) => {
@@ -295,7 +288,6 @@ const KeyValueNestedSubSections = ({
                                 return typeof label === 'string' ? (
                                     <DataField
                                         key={`field_${j}`}
-                                        preparedPolicy={preparedPolicy}
                                         dataField={[label, String(data)]}
                                         searchValue={searchValue}
                                         link={fieldLink}
@@ -325,12 +317,10 @@ const KeyValueNestedSubSections = ({
  * @returns {JSX.Element}
  */
 const DataField = ({
-    preparedPolicy,
     dataField,
     link,
     searchValue,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
     dataField: [string, string];
     link?: string;
     searchValue: string;
@@ -467,17 +457,24 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
 
     */
 
-    if (!policy) return null; //FIXME: add loading state
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(
-        () => preparePolicy(policy, t, debouncedSearchValue),
+        () => (policy ? preparePolicy(policy, t, debouncedSearchValue) : null),
         [policy, debouncedSearchValue, t]
     );
 
     const { policyBasics, policySections } = useMemo(
-        () => preparedPolicy.toSections(),
+        () =>
+            preparedPolicy
+                ? preparedPolicy.toSections()
+                : {
+                      policyBasics: null,
+                      policySections: null,
+                  },
         [preparedPolicy]
     );
+
+    if (!preparedPolicy) return null; //FIXME: add loading state
 
     return (
         <SideSheet
