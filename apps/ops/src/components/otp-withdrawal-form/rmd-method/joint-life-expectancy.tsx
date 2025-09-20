@@ -269,17 +269,15 @@ export default function JointLifeExpectancy({
                 </Typography>
             )}
             <div className="flex flex-wrap gap-8 max-md:flex-col">
-                <div className="flex-1">
-                    <CheckboxText
-                        label={configs.checkboxLabel}
-                        isDisabled={isFormStateReadOnly}
-                        checked={isJointLifeExpectancy}
-                        onChange={() => {
-                            setisJointLifeExpectancy(!isJointLifeExpectancy);
-                        }}
-                        data-testid="is-joint-life-expectancy-test-id"
-                    />
-                </div>
+                <CheckboxText
+                    label={configs.checkboxLabel}
+                    isDisabled={isFormStateReadOnly}
+                    checked={isJointLifeExpectancy}
+                    onChange={() => {
+                        setisJointLifeExpectancy(!isJointLifeExpectancy);
+                    }}
+                    data-testid="is-joint-life-expectancy-test-id"
+                />
             </div>
 
             {isJointLifeExpectancy && (

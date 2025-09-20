@@ -1,6 +1,5 @@
 import { AgentData, ModifiedAgentData } from '@/types/agent';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
-import { LogWarn } from '@/utils/logging/errors';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
@@ -56,7 +55,7 @@ export const getAgentInformation = withLogging(
     const agentData = await mcsAgentSearch({ clientCode, agentId }, loggingCtx);
 
     if (agentData.error || !agentData.data) {
-      throw new LogWarn('No agent data recieved', {
+      throw new Error('No agent data recieved', {
         cause: { clientCode, agentId },
       });
     }

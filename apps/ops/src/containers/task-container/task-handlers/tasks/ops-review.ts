@@ -29,7 +29,7 @@ const opsReviewHandler: TaskHandler<ReviewPayload, NigoExceptionResponse[]> = {
 
         if (metadata[0]?.formSchema?.definitions) {
             metadata[0].formSchema.definitions.declineReasonEnum = {
-                enum: reasonList.map((reason) => JSON.stringify(reason)),
+                enum: reasonList.map((reason) => reason),
             };
         }
 

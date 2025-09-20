@@ -109,7 +109,7 @@ const SummaryStep = ({
                             <b>{t('bpm500Error')}</b>
                         </BannerAlert>
                     )}
-                    <div className="flex flex-row">
+                    <div className="flex flex-wrap gap-8 max-md:flex-col">
                         <CheckboxText
                             label={t('submitWithErrorsText')}
                             checked={isChecked}

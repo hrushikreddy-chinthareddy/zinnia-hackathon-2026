@@ -14,12 +14,20 @@ import PageLoader, {
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { addTransaction } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 
 import { buildReRegRequestBody } from './confirm-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';
@@ -55,6 +63,7 @@ const ConfirmStep = ({
         SOR,
         validationResponse,
     } = useBeneChange();
+    const { sessionId, partyId: userId } = usePermissionsContext();
 
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -117,10 +126,31 @@ const ConfirmStep = ({
             setSubmitFailed(true);
         } else {
             setNewCaseId(response?.caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.UPDATE_BENEFICIARIES,
+                    query: requestBody,
+                    caseId: response?.caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
         }
 
         setIsLoading(false);
-    }, [document, formData, clientId, signatureData, planCode, policy]);
+    }, [
+        document,
+        formData,
+        clientId,
+        signatureData,
+        planCode,
+        policy,
+        sessionId,
+        userId,
+    ]);
 
     const hasAutoSubmittedRef = useRef(false);
 

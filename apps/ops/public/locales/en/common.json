@@ -306,6 +306,9 @@
                 "policyDate": "Policy Date",
                 "issueState": "Issue State"
             },
+            "aiChatbot": {
+                "text": "Zinnia AI Assistant"
+            },
             "owner": {
                 "text": "Manage owners",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
@@ -319,7 +322,7 @@
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-payor"
             },
             "thirdPartyDesignee": {
-                "text": "Manage Third Party",
+                "text": "Manage third party",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-third-party-designee"
             },
             "beneficiary": {
@@ -1135,6 +1138,7 @@
         "submit": "Submit",
         "uploadDocument": "Upload Document",
         "fileUpload": {
+            "or": "or",
             "documentCategory": "Category",
             "documentType": "Type",
             "formNumber": "Form number",
@@ -2303,7 +2307,8 @@
                     "percetageOfAccountValue": "% of Account value",
                     "maximum": "Maximum amount",
                     "maturingGuranteePeriod": "Maturing guarantee period",
-                    "percentageOfAccumulatedValue": "% of accumulated value"
+                    "percentageOfAccumulatedValue": "% of accumulated value",
+                    "tenPercentageOfAccumulatedValue": "10% of Accumulated value"
                 },
                 "processTimeframe": {
                     "selectOne": "Select one",
@@ -3871,7 +3876,7 @@
             "TRUSTEE": "Trustee",
             "POWEROFATTORNEY": "Power of attorney",
             "AUTHORIZEDSIGNATORY": "Authorized signatory",
-            "OTHERINTERESTEDPARTY": "Other interested party",
+            "OTHERINTERESTEDPARTY": "Other Interested Party",
             "CONTINGENTOWNER": "Contingent owner",
             "CHECKING": "Checking"
         },
@@ -4008,6 +4013,7 @@
                 "pensionplan": "Pension Plan",
                 "ira-simple": "SIMPLE IRA",
                 "inheritedrothindividualretirementaccount": "Inherited Roth Individual Retirement Account",
+                "inheritedindividualretirementaccount": "Inherited Individual Retirement Account",
                 "convertedrothira": "Converted Roth IRA",
                 "corporatedeferredcomp(404)": "Corporate Deferred Compensation (404)",
                 "corporatepension": "Corporate Pension Plan",
@@ -5101,7 +5107,10 @@
             "riderInsured": "Rider Insured",
             "primaryWritingAgent": "Agent of Record",
             "additionalWritingAgent": "Additional Writing Agent",
-            "exchangeCompany": "Exchange Company"
+            "exchangeCompany": "Exchange Company",
+            "jointAnnuitant": "Joint Annuitant",
+            "otherInterestedParty": "Other Interested Party"
+
         }
     },
     "pageHeader": {
@@ -5441,6 +5450,7 @@
                 "address": "Address",
                 "allocations": "Allocations",
                 "bankaccount": "Bank Account",
+                "bank account": "Bank Account",
                 "communicationpreference": "Preferred Communication",
                 "email": "Email",
                 "emailaddress": "Email",
@@ -5856,6 +5866,9 @@
         },
         "type": "Type",
         "submissionType": "Submission Type",
+        "caseId": "Parent Case ID",
+        "caseTransactionType": "Case Transaction Type",
+        "caseCompletionDate": "Case Completion Date",
         "electronic": "Electronic",
         "paper": "Paper",
         "email": "Email",
@@ -7001,6 +7014,16 @@
             "noData": "No beneficiary details available."
         }
     },
+    "claimsFundRelease": {
+        "noData": "No claims fund release details available.",
+        "loadingTransactions": "Retrieving claims fund release details...",
+        "errorGettingTransactions": "Claims fund release data couldn't be retrieved.",
+        "claimClosureReasons": {
+            "spousalContinuation": "Settlement completed. The contract continues under Spousal Continuation (source: {{closureSource}})",
+            "deathClaimPaid": "Settlement completed. Death claim benefits have been paid to the beneficiary (source: {{closureSource}})"
+        },
+        "settlementInProgress": "Settlement is in progress."
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",
@@ -8069,7 +8092,7 @@
             "pdfError": "An error occured while generating the PDF.",
             "premiumMode": "Premium mode",
             "paymentMode": "Payment mode",
-            "cashValue": "Cash value",
+            "cashValue": "Cash values (end of year)",
             "duplicate": "Duplicate",
             "calculating": "Calculating",
             "ariaValuePerYear": "{{value}} per year",
@@ -8169,11 +8192,121 @@
             }
         }
     },
+    "zinniaAiAssistant": {
+        "header":"Zinnia AI Assistant",
+        "chat": {
+            "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
+            "inputPlaceholder": "Ask me anything",
+            "footerText": "Disclaimer: Zinnia chat can make mistakes.",
+            "errorMsg": "Sorry, I couldn’t get a response. Please try again later.",
+            "send": "Send",
+            "stop": "Stop",
+            "retry": "Retry",
+            "feedback": {
+                "thanksMsg": "Thanks for submitting your feedback",
+                "feedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
+                "submitFeedback": "Submit feedback",
+                "yourFeedback": "Your feedback",
+                "description": "Description",
+                "submit": "Submit",
+                "cancel": "Cancel",
+                "placeholder": "Your feedback message here...",
+                "positiveFeedbackComment": "Could you clarify what aspects of the feedback you found satisfactory? Your feedback is valuable for improving our service.",
+                "negativeFeedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
+                "validationError": "Please enter your feedback comment"
+            },
+            "followUpPlaceholder": "Ask your follow up questions here...",
+            "followUpButton": "Ask your follow up questions here"
+        },
+        "documents": {
+            "recentlyAdded": "Recently added files",
+            "recentlyModified": "Recently modified files",
+            "allDocs": "All documents",
+            "fileName": "File Name",
+            "createdAt": "Created at",
+            "updatedAt": "Updated at",
+            "noDoc": "No documents found",
+            "search": "Search Documents",
+            "docPreview": "Document Preview",
+            "noPreview": "Document preview is not available",
+            "resultsPerPage": "Results per page"
+        },
+        "admin": {
+            "tenants": {
+                "header": "Tenants",
+                "tenantId": "Zowie Tenant ID",
+                "createdDate": "Date Created",
+                "updatedDate": "Date Updated",
+                "noTenantsFound": "No Tenant Found",
+                "search": "Search tenants",
+                "sidesheet": {
+                    "overview": "Overview",
+                    "featureFlags": "Feature Flags",
+                    "integrations": "Integrations",
+                    "knowledgeBases": "Knowledge Bases",
+                    "retrievalAugmentedGeneration": "Retrieval Augmented Generation",
+                    "tableConfigurations": "Table Configurations",
+                    "users": "Users",
+                    "warehouse": "Warehouse"
+                }
+            },
+            "users": {
+                "header": "System Users",
+                "name": "Name",
+                "email": "Email",
+                "role": "Role",
+                "createdDate": "Date Created",
+                "updatedDate": "Date Updated",
+                "search": "Search users",
+                "noUsersFound": "No User Found"
+            }
+        },
+        "sidenav": {
+            "newChat": "New chat",
+            "sharepointDocuments": "Sharepoint Documents",
+            "recentlyAdded": "Recently added",
+            "recentlyModified": "Recently modified",
+            "allDocs": "All documents",
+            "recentChat": "Recent chat",
+            "search": "Search",
+            "noResultsFound": "No results found",
+            "noRecentChats": "No recent chats",
+            "loadingChats": "Loading chats...",
+            "settings": "Settings"
+        }
+    },
     "updateSuitabilityDataEntry": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Update suitability data was submitted.",
             "cta": "Go to case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "qualityAuditReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Review Quality Audit was submitted.",
+            "cta": "Go to Quality Audit",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "qualityAuditRework": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Rework on Quality Audit was submitted.",
+            "cta": "Go to Quality Audit",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "qualityReworkAuditReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Review Quality Audit Rework was submitted.",
+            "cta": "Go to Quality Audit",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

@@ -9,6 +9,7 @@ export enum FgaRoles {
   WELB_SALES_MATERIALS = 'entity:welb_sales_materials',
   CALL_LOG_ACCESS = 'entity:zinnia_live_call_log_audio',
   ILLUSTRATIONS_EXPERIENCE = 'entity:zinnia_live_illustrations_experience',
+  AIASSISTANT = 'entity:zinnia_live_ops_ai_assistant',
   USAGE_DASHBOARD_ENTITY = 'entity:zinnia_live_usage_dashboard',
   NOTES_ACCESS = 'entity:zinnia_live_notes',
   CALL_LOGS_ZL = 'entity:zinnia_live_call_logs',
@@ -86,6 +87,11 @@ export function createBulkCheckBodyRequest(partyId: string) {
         user,
         relation: FgaRelation.UiAccess,
         object: FgaRoles.USAGE_DASHBOARD_ENTITY,
+      },
+      {
+        user,
+        relation: FgaRelation.UiAccess,
+        object: FgaRoles.AIASSISTANT,
       },
       {
         user,
@@ -209,3 +215,4 @@ export function checkIfUserHasUsageAccess(
       tuple.allowed
   );
 }
+

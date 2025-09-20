@@ -9,7 +9,10 @@ import { IconType } from '@zinnia/bloom/components';
 import { useMemo } from 'react';
 
 import InputCheckBox from '@deps/components/checkbox-v2/input-checkbox';
-import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
+import {
+    csrApiHelper,
+    stringifyObjectValue,
+} from '@deps/helpers/csr-api-helpers';
 import { ApiProps, ApiResponseTypes, CardTypes } from '@deps/models/case/task';
 
 import { SingleCard } from '../../templates/card-templates/card-template';
@@ -66,7 +69,25 @@ function CheckboxesWidget<
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const currentOptions = useMemo(() => {
-        return enumOptions || customOptions || [];
+        const merged: any[] = (enumOptions || []).map((existing) => ({
+            ...existing,
+        }));
+
+        if (customOptions) {
+            (customOptions as any[])?.forEach((custom) => {
+                const index = merged.findIndex(
+                    (existing) =>
+                        stringifyObjectValue(existing.value) ===
+                        stringifyObjectValue(custom.value)
+                );
+                if (index !== -1) {
+                    merged[index] = { ...merged[index], ...custom };
+                } else {
+                    merged.push(custom);
+                }
+            });
+        }
+        return merged;
     }, [enumOptions, customOptions]);
 
     const newOptions = useMemo(() => {
@@ -88,7 +109,7 @@ function CheckboxesWidget<
             : [];
     }, [currentOptions, properties, cardType, icon, sectionTitle]);
 
-    async function fetchDetails(value: string) {
+    async function fetchDetails(value: any) {
         csrApiHelper(apiProps, { ...formContext?.customData, value }).then(
             (response) => {
                 if (apiProps.responseType === ApiResponseTypes.FormData) {
@@ -106,65 +127,47 @@ function CheckboxesWidget<
         );
     }
 
-    const handleOnChange = (optionValue: string) => {
+    const handleOnChange = (option: any) => {
         const current = Array.isArray(value) ? value.filter(Boolean) : [];
-        const newValue = current.includes(optionValue)
-            ? current.filter((v) => v !== optionValue)
-            : [...current, optionValue];
+
+        // Find if the value is already in the array
+        const stringifiedValue = stringifyObjectValue(option.value);
+        const isValueIncluded = current.some(
+            (v) => stringifyObjectValue(v) === stringifiedValue
+        );
+
+        // Create the new value array
+        const newValue = isValueIncluded
+            ? current.filter(
+                  (v) => stringifyObjectValue(v) !== stringifiedValue
+              )
+            : [...current, option.value];
+
         onChange(newValue);
         if (apiProps.apiUrl) {
-            fetchDetails(optionValue);
+            fetchDetails(stringifiedValue);
         }
     };
 
-    if (readonly) {
-        const selectedRecordIdSet = new Set(
-            (Array.isArray(value) ? value : [value])
-                .filter((val) => typeof val === 'object' && val?.recordId)
-                .map((val) => val.recordId)
-        );
+    // Convert the current values to strings for comparison
 
-        return (
-            <div>
-                {newOptions.map((option) => {
-                    let optionRecordId: string | null = null;
-                    try {
-                        const parsed = JSON.parse(option.value);
-                        optionRecordId = parsed?.recordId ?? null;
-                    } catch {}
+    const selectedValueStrings = new Set(
+        (Array.isArray(value) ? value : [])
+            .filter(Boolean)
+            .map(stringifyObjectValue)
+    );
 
-                    const isChecked =
-                        optionRecordId &&
-                        selectedRecordIdSet.has(optionRecordId);
-
-                    return (
-                        <div key={option.value} className="mb-4 flex">
-                            <InputCheckBox
-                                checked={!!isChecked}
-                                isDisabled={true}
-                                onChange={() => {}}
-                                className="mr-2"
-                            />
-                            {option.subElement
-                                ? option.subElement
-                                : option.label}
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    }
+    const isChecked = (option: any) =>
+        selectedValueStrings.has(stringifyObjectValue(option.value));
 
     return (
         <div>
             {newOptions.map((option: any) => (
-                <div key={option.value} className="mb-4 flex">
+                <div key={option.label} className="mb-4 flex">
                     <InputCheckBox
-                        checked={
-                            Array.isArray(value) && value.includes(option.value)
-                        }
-                        onChange={() => handleOnChange(option.value)}
-                        isDisabled={disabled || option.disabled}
+                        checked={isChecked(option)}
+                        onChange={() => handleOnChange(option)}
+                        isDisabled={disabled || readonly || option.disabled}
                         className="mr-2"
                     />
                     {option.subElement ? option.subElement : option.label}

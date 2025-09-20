@@ -101,7 +101,10 @@ export const DeathClaim = ({
     }, [policy]);
 
     const allAnnuitants = useMemo(() => {
-        return getNotifiersByRoles(policy, [PartyRole.ANNUITANT]);
+        return getNotifiersByRoles(policy, [
+            PartyRole.ANNUITANT,
+            PartyRole.JOINTANNUITANT,
+        ]);
     }, [policy]);
 
     const isSingleOwner = useMemo(() => {

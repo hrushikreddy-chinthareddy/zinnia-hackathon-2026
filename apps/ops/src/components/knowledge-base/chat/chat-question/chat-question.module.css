@@ -1,0 +1,14 @@
+.avatar {
+    padding: var(--measure-dimension-z-space-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 100%;
+    border: var(--color-fields-border-field-default-border) solid 1px;
+}
+.messageContainer {
+    flex: 1;
+    border: var(--color-fields-border-field-default-border) solid 1px;
+    padding: var(--measure-dimension-z-space-4);
+    border-radius: var(--measure-dimension-z-space-3);
+}

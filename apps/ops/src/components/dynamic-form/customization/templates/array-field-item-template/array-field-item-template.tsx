@@ -45,6 +45,7 @@ export default function ArrayFieldItemTemplate<
     const centralizedToolbar =
         uiSchema?.['ui:options']?.centralizedToolbar ?? false;
 
+    const noMargin = nobackground ? '' : 'my-2';
     return (
         <>
             {uiOptions?.templateType === 'table' ? (
@@ -56,7 +57,8 @@ export default function ArrayFieldItemTemplate<
                     </div>
                     <div
                         className={clsx(
-                            'ml-auto my-3',
+                            'ml-auto',
+                            noMargin,
                             centralizedToolbar && 'flex flex-col justify-center'
                         )}
                     >

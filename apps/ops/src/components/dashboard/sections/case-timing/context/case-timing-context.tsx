@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import {
     CompletedCaseTimeGroupByEnum,
     CompletedCaseTimeInputFilter,
@@ -75,7 +76,7 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const filter = {
         updatedDateStart: timerange.from,
-        updatedDateEnd: timerange.to,
+        updatedDateEnd: startOfTomorrowLocalIso(timerange.to),
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         process: formatProcessFilter(selectedProcess),

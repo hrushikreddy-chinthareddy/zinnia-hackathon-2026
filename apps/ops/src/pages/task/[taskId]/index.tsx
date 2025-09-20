@@ -289,7 +289,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 await applyDynamicOptions(
                     task,
                     accessToken,
-                    currentTaskMetadata
+                    currentTaskMetadata,
+                    loggingContext
                 );
                 const updatedTaskMetadata = await TaskMetadataHelper(
                     task,

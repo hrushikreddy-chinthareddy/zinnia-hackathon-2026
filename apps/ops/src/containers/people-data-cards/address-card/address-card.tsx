@@ -80,6 +80,7 @@ const AddressCard = ({
                 onCancel={() => sideSheet.handleOpen(false)}
                 party={party}
                 planCode={planCode}
+                policy={policyDetails.policy}
                 policyNumber={policyNumber}
                 setCurrentAddresses={setCurrentAddresses}
                 updateAddress={address ?? undefined}

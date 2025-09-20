@@ -1,14 +1,12 @@
 import { Party } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'next-i18next';
-import { FC, useContext, useState } from 'react';
+import { FC, useContext } from 'react';
 
 import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, {
-    isStillInactive,
-} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';

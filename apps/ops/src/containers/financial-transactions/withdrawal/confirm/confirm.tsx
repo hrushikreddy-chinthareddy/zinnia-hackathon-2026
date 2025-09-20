@@ -4,7 +4,7 @@ import {
 } from '@zinnia/api-types/types/bpm';
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import PageLoader, {
     PageLoaderVariant,
@@ -17,6 +17,10 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import {
+    buildOneTimeFinancialTransactionSubmittedEvent,
+    buildFullSurrenderSubmittedEvent,
+} from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import {
     TransactionResponseStatus,
@@ -27,6 +31,8 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSuccessfulEvent,
+    TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -68,28 +74,28 @@ const Confirm = ({ policy }: ConfirmProps) => {
             withdrawal,
             wireCheckPaymentsEnabled
         );
-        const response =
-            withdrawal.type === WithdrawalType.Surrender
-                ? await submitFullSurrenderWithdrawal(
-                      policy.product?.planCode,
-                      policy.policyNumber,
-                      requestBody as FullSurrenderRequest
-                  )
-                : await submitPartialWithdrawalOneTime(
-                      policy.product?.planCode,
-                      policy.policyNumber,
-                      requestBody as PartialWithdrawalOneTimeRequest
-                  );
+
+        const isSurrender = withdrawal.type === WithdrawalType.Surrender;
+        const response = isSurrender
+            ? await submitFullSurrenderWithdrawal(
+                  policy.product?.planCode,
+                  policy.policyNumber,
+                  requestBody as FullSurrenderRequest
+              )
+            : await submitPartialWithdrawalOneTime(
+                  policy.product?.planCode,
+                  policy.policyNumber,
+                  requestBody as PartialWithdrawalOneTimeRequest
+              );
 
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
                 session_id: sessionId,
                 userId: partyId,
-                type:
-                    withdrawal.type === WithdrawalType.Surrender
-                        ? TransactionType.FULL_SURRENDER
-                        : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
+                type: isSurrender
+                    ? TransactionType.FULL_SURRENDER
+                    : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
                 correlationId: requestBody.correlationId,
             }
         );
@@ -101,19 +107,37 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                isSurrender
+                    ? buildFullSurrenderSubmittedEvent({
+                          query: requestBody as FullSurrenderRequest,
+                          policy,
+                          caseId: response?.data?.caseId,
+                          sessionId,
+                          userId: partyId,
+                      })
+                    : buildOneTimeFinancialTransactionSubmittedEvent({
+                          query: requestBody as PartialWithdrawalOneTimeRequest,
+                          policy,
+                          caseId: response?.data?.caseId,
+                          sessionId,
+                          userId: partyId,
+                          transactionSubmittedEventType:
+                              TransactionSubmittedEventType.ONE_TIME_WITHDRAWAL,
+                      })
+            );
         }
 
         setIsLoading(false);
-    }, [
-        partyId,
-        policy.policyNumber,
-        policy.product?.planCode,
-        sessionId,
-        wireCheckPaymentsEnabled,
-        withdrawal,
-    ]);
+    }, [partyId, policy, sessionId, wireCheckPaymentsEnabled, withdrawal]);
+
+    const hasAutoSubmittedRef = useRef<unknown>(null);
 
     useEffect(() => {
+        if (hasAutoSubmittedRef.current === submit) return;
+        hasAutoSubmittedRef.current = submit;
         submit();
     }, [submit]);
 

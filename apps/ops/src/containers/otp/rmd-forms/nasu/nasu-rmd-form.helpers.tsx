@@ -1,5 +1,6 @@
 import { TFunction } from 'next-i18next';
 
+import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { BeneficiaryConfig } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import {
     BankingFields,
@@ -43,8 +44,6 @@ import { createValidator } from '../../utils/helper-utils';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helpers';
 
 export default function getNasuRmdConfig(t: TFunction) {
-    const cslnCheckStates = ['CA'];
-
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -304,6 +303,69 @@ export default function getNasuRmdConfig(t: TFunction) {
                 };
             },
         },
+        {
+            label: t('distributionMethod.dtcc'),
+            value: FormDisbursementSelections.DTCC,
+            fields: [
+                {
+                    fieldName: BankingFields.PayeeName,
+                    fieldLabel: t('distributionMethod.payeeName'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    maxLength: 40,
+                },
+                {
+                    fieldName: BankingFields.ParticipantId,
+                    fieldLabel: t('distributionMethod.participantId'),
+                    component: DisbursementFields.SelectParticipantId,
+                },
+                {
+                    fieldName: BankingFields.ContractNumber,
+                    fieldLabel: t('distributionMethod.onlyContractNumber'),
+                    component: DisbursementFields.BankTextField,
+                    maxLength: 30,
+                },
+            ],
+            getDefaultPayload({
+                paymentMethod,
+                payee,
+                participantId,
+                bank,
+            }: FormDisbursement) {
+                if (paymentMethod.text !== FormDisbursementSelections.DTCC) {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                }
+                return {
+                    ...DEFAULT_DISBURSEMENT_UPDATE,
+                    payeeName: payee?.name.text ?? '',
+                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
+                    contractNumber: bank?.[0]?.accountNumber ?? '',
+                    participantId: participantId?.text ?? '',
+                };
+            },
+            generatePayloadFromSelection: ({
+                payeeName,
+                participantId,
+                contractNumber,
+            }: DisbursementParts) => {
+                return {
+                    ...getDefaultFormDisbursementValues(),
+                    paymentMethod: { text: PaymentMethod.DTCC },
+                    participantId: { text: participantId ?? null },
+                    payee: {
+                        name: { text: payeeName ?? null },
+                        addresses: [],
+                        contractNumber: { text: null },
+                    },
+                    bank: [
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            accountNumber: contractNumber ?? '',
+                        },
+                    ],
+                };
+            },
+        },
     ];
 
     const signaturesConfig = [
@@ -499,12 +561,6 @@ export default function getNasuRmdConfig(t: TFunction) {
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
-        if (ownerSignature?.isDesignationPresent === null) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
         return errors;
     };
 
@@ -520,7 +576,6 @@ export default function getNasuRmdConfig(t: TFunction) {
         signaturesConfig,
         signaturesNotaryConfig,
         formValidation: rmdFormValidation,
-        cslnCheckStates,
         handleShouldShowDOBInOl4573,
         w4pSignaturesConfig,
         disbursementOptions,

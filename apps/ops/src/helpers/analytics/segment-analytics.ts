@@ -59,7 +59,6 @@ const segmentAnalyticsPage = (
 function segmentAnalyticsTrackEvent<T>(eventName: string, eventProps?: T) {
     if (!window?.analytics?.track) {
         console.warn('window.analytics.track() not found');
-
         return;
     }
 

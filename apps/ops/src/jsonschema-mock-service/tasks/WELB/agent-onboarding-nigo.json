@@ -91,43 +91,24 @@
                             }
                         },
                         "issuesResolved": {
-                            "type": "string",
                             "title": "Can you resolve the issues?",
                             "enumNames": ["Yes", "No"],
                             "enum": ["true", "false"]
                         },
-                        "uploadDocuments": {
-                            "type": "object",
-                            "title": "Link or upload document",
-                            "properties": {
-                                "upload": {
-                                    "type": "string"
-                                },
-                                "or": {
-                                    "type": "string",
-                                    "title": "or"
-                                },
-                                "attachment": {
-                                    "type": "array",
-                                    "title": "Upload",
-                                    "items": {
-                                        "title": "Upload",
-                                        "type": "string",
-                                        "format": "data-url"
-                                    }
-                                }
-                            }
-                        },
                         "attachments": {
                             "type": "array",
+                            "title": "Link or upload document",
                             "items": {
-                                "documentName": {
-                                    "title": "Name",
-                                    "type": "string"
-                                },
-                                "documentId": {
-                                    "title": "Document Id",
-                                    "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "title": "Document Id",
+                                        "type": "string"
+                                    },
+                                    "documentName": {
+                                        "title": "Document Name",
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }
@@ -166,7 +147,6 @@
                         "issuesResolved",
                         "declineReason",
                         "issueReason",
-                        "uploadDocuments",
                         "attachments"
                     ],
                     "ui:globalOptions": {
@@ -186,8 +166,8 @@
                         "items": {
                             "ui:options": {
                                 "canAdd": false,
-                                "templateType": "table",
-                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate",
+                                "templateType": "table"
                             },
                             "detailedReason": {
                                 "ui-widget": "ValueWidget",
@@ -254,45 +234,14 @@
                         },
                         "ui:hideError": true
                     },
-                    "uploadDocuments": {
-                        "inline": true,
-                        "ui:options": {
-                            "label": true,
-                            "omitValue": true
-                        },
-                        "upload": {
-                            "ui:widget": "AutoCompleteWidget",
-                            "ui:placeholder": "Find existing documents...",
-                            "ui:options": {
-                                "label": false,
-                                "icon": "Search"
-                            }
-                        },
-                        "or": {
-                            "ui:options": {
-                                "label": false,
-                                "inline": true
-                            }
-                        },
-                        "attachment": {
-                            "ui:options": {
-                                "label": false,
-                                "showFiles": false
-                            },
-                            "ui:props": {
-                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                                "apiMethod": "get"
-                            }
-                        }
-                    },
                     "attachments": {
+                        "inline": true,
+                        "ui:widget": "AttachmentWidget",
                         "ui:options": {
-                            "label": false,
-                            "addable": false,
-                            "removable": true,
-                            "ArrayFieldTemplate": "FileInfoTemplate"
+                            "label": true
                         }
                     },
+
                     "issueReason": {
                         "ui:options": {
                             "label": true,

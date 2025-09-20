@@ -163,12 +163,14 @@ interface generateLinkArgs {
     process?: Processes | ExtendedProcesses | undefined;
     carrierOrProductName?: string;
     submissionMethod?: string;
-    startDate?: string;
-    endDate?: string;
     groupBy?: CaseCountGroupByEnum;
     carrier?: string[] | string | null;
     product?: string;
     brokerDealer?: string[] | null;
+    createdDateStart?: string;
+    createdDateEnd?: string;
+    updatedDateStart?: string;
+    updatedDateEnd?: string;
     status?: string[] | null;
     category?: string | null;
     reason?: string | null;
@@ -180,13 +182,15 @@ export const generateCaseLink = ({
     process,
     carrierOrProductName,
     submissionMethod,
-    startDate,
-    endDate,
     groupBy,
     carrier,
     product,
     brokerDealer,
     status,
+    createdDateStart,
+    createdDateEnd,
+    updatedDateStart,
+    updatedDateEnd,
     category,
     reason,
     detailedReason,
@@ -226,11 +230,19 @@ export const generateCaseLink = ({
             `brokerDealerName=${encodeURIComponent(brokerDealers)}`
         );
     }
-    if (startDate) {
-        queryParams.push(`createdDateStart=${startDate}`);
+
+    //  Add date field based on the prop passed
+    if (createdDateStart) {
+        queryParams.push(`createdDateStart=${createdDateStart}`);
     }
-    if (endDate) {
-        queryParams.push(`createdDateEnd=${endDate}`);
+    if (createdDateEnd) {
+        queryParams.push(`createdDateEnd=${createdDateEnd}`);
+    }
+    if (updatedDateStart) {
+        queryParams.push(`updatedDateStart=${updatedDateStart}`);
+    }
+    if (updatedDateEnd) {
+        queryParams.push(`updatedDateEnd=${updatedDateEnd}`);
     }
     if (statuses) {
         queryParams.push(`caseStatus=${statuses}`);

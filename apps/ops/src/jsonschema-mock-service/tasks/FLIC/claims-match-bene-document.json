@@ -64,7 +64,7 @@
                                             "type": "array",
                                             "title": "Select associated beneficiaries",
                                             "items": {
-                                                "type": "string"
+                                                "$ref": "#/definitions/beneficiaryEnum"
                                             },
                                             "uniqueItems": true
                                         },
@@ -91,6 +91,9 @@
                                 }
                             }
                         }
+                    },
+                    "definitions": {
+                        "beneficiaryEnum": {}
                     }
                 },
                 "uiSchema": {
@@ -174,10 +177,10 @@
                                             "ui:field": "subTitle",
                                             "dataType": "ssn"
                                         }
-                                    },
-                                    "customOptions": []
+                                    }
                                 },
-                                "ui:hideError": true
+                                "ui:hideError": true,
+                                "customOptions": []
                             },
                             "deathCertificateReceived": {
                                 "ui:options": {

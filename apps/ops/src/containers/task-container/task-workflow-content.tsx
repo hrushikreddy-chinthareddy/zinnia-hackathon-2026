@@ -26,7 +26,7 @@ export const TaskWorkflowContent = ({
 }: TaskPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const { task } = useContext(TaskDataContext);
+    const { task, mappedDocuments } = useContext(TaskDataContext);
     const sideSheet = useSideSheetContext();
 
     const handleProgressBarClick = (step: Step) => {
@@ -40,7 +40,13 @@ export const TaskWorkflowContent = ({
     };
 
     const openSideSheet = () => {
-        const content = <GlobalTaskSideSheet taskId={task.id} type={'task'} />;
+        const content = (
+            <GlobalTaskSideSheet
+                taskId={task.id}
+                type={'task'}
+                mappedDocuments={mappedDocuments}
+            />
+        );
         sideSheet.changeSideSheetContent(
             `${
                 task.taskName

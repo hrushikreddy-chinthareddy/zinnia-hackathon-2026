@@ -9,7 +9,6 @@ import { ChangeAddressTemplate } from '../customization/templates/change-address
 import DifferenceTemplate from '../customization/templates/difference-template/difference-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import TransactionInstructionTemplate from '../customization/templates/instructions-template/transaction-instruction-template';
-import FileInfoTemplate from '../customization/templates/object-field-template/file-info-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import TextListTemplate from '../customization/templates/text-list-template';
 
@@ -20,7 +19,6 @@ export const UIArrayTemplateMap: Record<
     ['ArrayFieldTemplate']: ArrayFieldTemplate,
     ['ArrayFieldTableTemplate']: ArrayFieldTableTemplate,
     ['TextListTemplate']: TextListTemplate,
-    ['FileInfoTemplate']: FileInfoTemplate,
     ['TransactionsArrayFieldTemplate']: TransactionsArrayFieldTemplate,
 };
 

@@ -75,8 +75,9 @@ export async function POST(
       data: null,
       error: {
         status: 500,
-        name: 'Error submitting systematic program',
+        name: 'route-handler::systematic-program::submit::POST::error',
         message: 'error submitting systematic program',
+        correlationId: loggingContext.correlationId,
       },
     });
   }

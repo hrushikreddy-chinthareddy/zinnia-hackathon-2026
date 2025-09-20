@@ -4,6 +4,7 @@ import { TFunction } from 'next-i18next';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { CaseActivityContextProps } from '@deps/contexts/CaseActivityContext';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
+import { getName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
     AgingTimeRangesKeysExtended,
@@ -46,7 +47,7 @@ export const getPartiesFromCase = (
             const key = createPartyKey({ firstName, lastName, fullName, ssn });
             if (!acc[key]) {
                 const createdFullName = toTitleCase(
-                    fullName ?? `${firstName ?? ''} ${lastName ?? ''}`
+                    fullName || getName({ firstName, lastName })
                 );
                 acc[key] = {
                     id: key,

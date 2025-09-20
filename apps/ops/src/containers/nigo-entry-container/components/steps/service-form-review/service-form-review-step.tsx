@@ -48,6 +48,7 @@ export const ServiceFormReviewStep = ({
         handleStepContinue,
         filteredNigoException,
         isRenewals,
+        submitFailed,
     } = useServiceFormReview({
         t,
         docType,
@@ -68,6 +69,7 @@ export const ServiceFormReviewStep = ({
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink="/create-case"
+                    disableContinue={submitFailed === false}
                 />
             }
         >

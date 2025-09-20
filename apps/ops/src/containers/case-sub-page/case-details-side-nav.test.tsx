@@ -1,0 +1,75 @@
+import { render, screen } from '@testing-library/react';
+
+import { Processes } from '@deps/models/case/case';
+
+import CaseDetailsSideNav from './case-details-side-nav';
+
+describe('Case Details Side Nav Component', () => {
+    it('should render Case Details Side Nav Component', () => {
+        render(
+            <CaseDetailsSideNav
+                carrier="WELB"
+                CaseAdditionalDetails={{}}
+                process={Processes.AddressChange}
+                applicationType="Electronic"
+            />
+        );
+        expect(
+            screen.getByText('sidenav.navButtons.caseDetails')
+        ).toBeInTheDocument();
+        expect(screen.getByText('sidenav.type')).toBeInTheDocument();
+        expect(screen.getByText('sidenav.submissionType')).toBeInTheDocument();
+        expect(screen.getByText('Address change')).toBeInTheDocument();
+    });
+
+    describe('for Quality Audit linked parent Case Details', () => {
+        it('should display formatted parent case details when available', () => {
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{
+                        caseCompletionDate: '2025-08-03T17:49:24.863918',
+                        caseTransactionType: 'Agent Change',
+                        caseId: 'CA00001234',
+                    }}
+                    process={Processes.QualityAudit}
+                    applicationType="Electronic"
+                />
+            );
+            expect(screen.getByText('Quality audit')).toBeInTheDocument();
+            expect(screen.getByText('sidenav.caseId')).toBeInTheDocument();
+            expect(screen.getByText('CA00001234')).toBeInTheDocument();
+
+            expect(
+                screen.getByText('sidenav.caseCompletionDate')
+            ).toBeInTheDocument();
+            expect(screen.getByText('8/3/2025')).toBeInTheDocument();
+
+            expect(
+                screen.getByText('sidenav.caseTransactionType')
+            ).toBeInTheDocument();
+            expect(screen.getByText('Agent change')).toBeInTheDocument();
+        });
+
+        it('should not display parent case details when unavailable', () => {
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{}}
+                    process={Processes.QualityAudit}
+                    applicationType="Electronic"
+                />
+            );
+            expect(screen.getByText('Quality audit')).toBeInTheDocument();
+            expect(
+                screen.queryByText('sidenav.caseId')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByText('sidenav.caseCompletionDate')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByText('sidenav.caseTransactionType')
+            ).not.toBeInTheDocument();
+        });
+    });
+});

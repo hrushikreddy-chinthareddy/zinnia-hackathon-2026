@@ -1,7 +1,7 @@
-import { useQueries, UseQueryResult } from '@tanstack/react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import { AliasModel } from '@xd/api-types/dist/generated-types/partyreference';
 // AgencyOption should be in types directory not in a helpers module
-import { useCallback, useDebugValue, useEffect, useMemo } from 'react';
+import { useCallback, useDebugValue, useMemo } from 'react';
 
 import { AgentOption } from '@deps/components/client-case/client-case-create/agent-search/types';
 import {
@@ -10,14 +10,13 @@ import {
     getNearestAgenciesFromHierarchies,
 } from '@deps/components/client-case/client-case-create/create-client-case-form/create-client-case-form.helpers';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { getUserHierarchyListBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
 import {
     GetHierarchyResponse,
     MAIN_AGENCY_ROLE,
     UplineItem,
 } from '@deps/types/producers';
 
-import { isAgency, useHierarchyListQuery } from './pom';
+import { useHierarchyListQuery } from './pom';
 
 export const useAgencyOptions = (
     agentOption: AgentOption | undefined,
@@ -128,6 +127,7 @@ export const useAgencyOptions = (
         );
 
         return formatAgenciesForSelect(agenciesDropDownItems);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         authUserHierarchies,
         authUserAliases,

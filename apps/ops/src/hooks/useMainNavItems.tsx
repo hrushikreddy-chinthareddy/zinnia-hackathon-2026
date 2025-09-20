@@ -26,6 +26,7 @@ export const useMainNavItems = (): NavGroup[] => {
         showWelbSalesMaterials,
         isAllowReadIllustrations,
         hasUsagePermission,
+        hasAiAssistantPermissions,
         hasTestHarnessAccess,
     } = usePermissionsContext();
 
@@ -62,6 +63,7 @@ export const useMainNavItems = (): NavGroup[] => {
     const marketingStorefrontHref =
         t('site.navLinks.marketingStorefront.link') || '';
     const illustrationsText = t('site.navLinks.illustrations.text');
+    const aiAssistantText = t('site.navLinks.aiChatbot.text');
 
     const handleAnalytics = (linkText: string) => {
         segmentAnalyticsTrackEvent('navigation_clicked', {
@@ -133,6 +135,21 @@ export const useMainNavItems = (): NavGroup[] => {
                 href={'/illustrations/client-cases'}
                 onClick={() => handleAnalytics(illustrationsText)}
             />
+        ),
+    };
+
+    const aiAssistantLink = {
+        id: '/zinnia-ai-assistant',
+        display: aiAssistantText,
+        icon: IconType.SUPPORT,
+        isNewPage: true,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={'/zinnia-ai-assistant/chat'}
+                onClick={() => handleAnalytics(aiAssistantText)}
+                target="_blank"
+            ></NavLink>
         ),
     };
 
@@ -243,6 +260,7 @@ export const useMainNavItems = (): NavGroup[] => {
         {
             items: [
                 ...(hasUsagePermission ? [usageLink] : []),
+                ...(hasAiAssistantPermissions ? [aiAssistantLink] : []),
                 ...(isSuperAdmin ? [accessManagementLink] : []),
                 ...(showWelbSalesMaterials ? [toppanMerrillLink] : []),
                 ...(showTestHarness ? [testHarnessLink] : []),

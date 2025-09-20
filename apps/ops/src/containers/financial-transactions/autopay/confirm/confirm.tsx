@@ -4,7 +4,7 @@ import {
     SystematicProgram,
 } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import PageLoader, {
     PageLoaderVariant,
@@ -13,13 +13,20 @@ import { ParentPage } from '@deps/components/transaction-navigation-buttons/tran
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import {
     TransactionResponseStatus,
     submitSystematicProgramUpdate,
 } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 
 import {
     buildSystematicProgramUpdateRequestBody,
@@ -49,6 +56,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         keyPrefix: `${translationKeyPrefix}.confirm`,
     });
     const { t: defaultT } = useTranslation();
+    const { sessionId, partyId } = usePermissionsContext();
 
     const [submitFailed, setSubmitFailed] = useState(false);
     const [submitNigo, setSubmitNigo] = useState(false);
@@ -104,11 +112,27 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildSystematicProgramSubmittedEvent({
+                    action: isSetUp ? 'add' : 'update',
+                    query,
+                    policy,
+                    caseId: response?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                })
+            );
         }
         setIsLoading(false);
     };
 
+    const hasAutoSubmittedRef = useRef<unknown>(null);
+
     useEffect(() => {
+        if (hasAutoSubmittedRef.current === submit) return;
+        hasAutoSubmittedRef.current = submit;
         submit();
     }, []);
 

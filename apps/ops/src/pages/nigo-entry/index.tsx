@@ -526,7 +526,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     policyTypeDocumentsData?.items?.filter(
                         (item: PolicyDocument) =>
                             item?.documentNumber !== documentNumber
-                    );
+                    ) ?? [];
                 const sourceSystem = policies?.[0]?.source || null;
 
                 const isLC = sourceSystem

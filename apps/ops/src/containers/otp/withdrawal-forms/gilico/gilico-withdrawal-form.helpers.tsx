@@ -351,7 +351,6 @@ export default function getGilicoConfig(
         },
     ];
 
-    const cslnCheckStates = ['MA'];
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,
@@ -849,7 +848,6 @@ export default function getGilicoConfig(
     ];
 
     return {
-        cslnCheckStates,
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,

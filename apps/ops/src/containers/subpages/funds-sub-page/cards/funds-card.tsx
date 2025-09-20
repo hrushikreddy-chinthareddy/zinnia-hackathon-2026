@@ -91,6 +91,7 @@ const FundsCard = ({
                 sideSheet={sideSheet}
                 investmentType={policy.investmentType}
                 policyOwner={policy.allOwners[0].fullName}
+                policy={policy.policy}
             />
         );
         sideSheet.handleOpen(true);

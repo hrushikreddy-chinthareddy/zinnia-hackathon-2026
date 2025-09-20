@@ -49,6 +49,7 @@ export enum NonFinancialTransactions {
     Number = 'number',
     Phone = 'phone',
     Name = 'name',
+    BankAccountLabel = 'bank account',
 }
 
 export interface NonFinancialTransactionBody {
@@ -260,6 +261,33 @@ export const checkEligibilityPhoneChange = async (
                 ...parseErrorInformation(error),
                 payload: { planCode, policyNumber },
                 function: 'webnonfinancial.checkEligibilityPhoneChange',
+            }
+        );
+
+        return error?.data;
+    }
+};
+
+export const checkEligibilityCommunicationPreferenceChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/communicationpreference/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityCommunicationPreferenceChange::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber },
+                function:
+                    'webnonfinancial.checkEligibilityCommunicationPreferenceChange',
             }
         );
 
