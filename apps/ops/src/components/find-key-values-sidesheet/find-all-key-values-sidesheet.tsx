@@ -73,11 +73,7 @@ const KeyValueBasics = ({
         }
         type={AccordionType.NESTED}
     >
-        <KeyValueFieldList
-            preparedPolicy={preparedPolicy}
-            fields={policyBasics}
-            searchValue={searchValue}
-        />
+        <KeyValueFieldList fields={policyBasics} searchValue={searchValue} />
     </Accordion>
 );
 
@@ -121,7 +117,6 @@ const KeyValueSections = ({
             >
                 {fields && (
                     <KeyValueFieldList
-                        preparedPolicy={preparedPolicy}
                         fields={fields}
                         searchValue={searchValue}
                     />
@@ -129,7 +124,6 @@ const KeyValueSections = ({
 
                 {subSections && (
                     <KeyValueSubSections
-                        preparedPolicy={preparedPolicy}
                         subSections={subSections}
                         searchValue={searchValue}
                     />
@@ -148,11 +142,9 @@ const KeyValueSections = ({
  * @returns {JSX.Element[]}
  */
 const KeyValueSubSections = ({
-    preparedPolicy,
     subSections,
     searchValue,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
     subSections: NestedDataTuple;
     searchValue: string;
 }) => {
@@ -175,7 +167,6 @@ const KeyValueSubSections = ({
                     type={AccordionType.NESTED}
                 >
                     <KeyValueFieldList
-                        preparedPolicy={preparedPolicy}
                         fields={subSectionFields}
                         searchValue={searchValue}
                     />
@@ -198,11 +189,9 @@ const KeyValueSubSections = ({
  * @returns A JSX element representing the rendered field list
  */
 const KeyValueFieldList = ({
-    preparedPolicy,
     fields,
     searchValue,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
     fields: NestedDataTuple;
     searchValue: string;
 }) => {
