@@ -2,7 +2,6 @@ export type DataField = string | number | boolean | null;
 
 export type DataTuple = [string, DataField];
 
-// 3. Recursive tuple definition
 export type NestedDataTuple =
     | // Either an array of NestedDataTuple (like a tree of children):
     ((

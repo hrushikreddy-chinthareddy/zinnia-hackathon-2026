@@ -70,11 +70,14 @@ const formatAsSentenceCase = (words: string) => {
 };
 
 /**
- * Formats a section label as a human-readable string
+ * Given a label, a line of business, and a translation function, returns a formatted string for the section label.
+ * If an exact translation is available, it will be used. Otherwise, the function will replace "policy" with "contract" if not a life policy,
+ * apply industry term abbreviations and grammar corrections, and finally capitalize the first letter of the sentence.
  *
- * @param label The section label to format
+ * @param label The label to format
  * @param lineOfBusiness The line of business
- * @returns The formatted section label
+ * @param t The translation function
+ * @returns The formatted section label string
  */
 export const formatAsSectionLabel = (
     label: string,
@@ -105,10 +108,17 @@ export const formatAsSectionLabel = (
 };
 
 /**
- * Formats a data label as a human-readable string
+ * Formats a data label as a human-readable string, taking into account
+ * industry-specific abbreviations and grammar corrections.
  *
- * @param label The data label to format
- * @param lineOfBusiness The line of business
+ * If an exact translation is available, it will be used. Otherwise, the
+ * function will replace "policy" with "contract" if not a life policy,
+ * apply industry term abbreviations and grammar corrections, and finally
+ * capitalize the first letter of the sentence.
+ *
+ * @param {string} label The data label to format
+ * @param {LineOfBusiness} lineOfBusiness The line of business
+ * @param {TFunction} t The translation function
  * @returns The formatted data label
  */
 const formatAsDataLabel = (
@@ -152,15 +162,18 @@ const formatAsDataLabel = (
 };
 
 /**
- * Formats a field value as a human-readable string.
- * Depending on the field type, the value will be formatted as a string,
- * match from a map of known values, currency, date, or "--" for empty values.
+ * Formats a nested data tuple or a data field as a human-readable string
  *
- * @param fieldData The field data to format
+ * Attempts to translate enums first, then processes as numeric data if no translation found
+ * If the field name is provided, formats currency and date fields accordingly
+ * If the field data is an object, returns the object as is
+ * Otherwise, returns the field data as a string
+ *
+ * @param fieldData The nested data tuple or the data field to format
  * @param lineOfBusiness The line of business
- * @param fieldName The name of the field being formatted
- * @returns The formatted field value
- *
+ * @param t The translation function
+ * @param fieldName The field name (optional)
+ * @returns The formatted field data as a string
  */
 export const formatAsDataValue = (
     fieldData: NestedDataTuple | DataField,
@@ -194,16 +207,15 @@ export const formatAsDataValue = (
 };
 
 /**
- * Given a tuple of a field name and its value, and a line of business, returns a tuple of a
- * human-readable field name and field value.
+ * Formats a data field tuple as a human-readable string.
  *
- * The human-readable field name is formatted using {@link formatAsDataLabel}, and the
- * human-readable field value is formatted using {@link formatAsDataValue}.
- *
- * @param fieldData The tuple of a field name and its value
+ * @param tuple The data field tuple to format
  * @param lineOfBusiness The line of business
- * @returns A tuple of a human-readable field name and field value
- *
+ * @param t The translation function to use
+ * @param searchValue The search value to filter by
+ * @param fieldLink The field link to filter by
+ * @param fieldLinkedField The linked field to filter by
+ * @returns The formatted data field tuple
  */
 export const formatDataField = (
     tuple: NestedDataTuple,
@@ -282,13 +294,16 @@ export const formatDataField = (
 };
 
 /**
- * Given an array of key-value pairs, filters out any empty values and keys that
- * are excluded from display.
+ * Remove excluded and empty fields from a nested data tuple.
  *
- * @param tuples The array of key-value pairs to filter
- * @param additionalFieldsToExclude An optional array of additional fields to
- *      exclude from display
- * @returns The filtered array of key-value pairs
+ * @param tuples The nested data tuple to filter.
+ * @param lineOfBusiness The line of business to filter by.
+ * @param t The translation function to use.
+ * @param fieldLink The field link to filter by.
+ * @param linkedField The linked field to filter by.
+ * @param searchValue The search value to filter by.
+ * @param additionalFieldsToExclude Additional fields to exclude from the filtered result.
+ * @returns The filtered nested data tuple.
  */
 export const removeExcludedAndEmptyFields = (
     tuples: NestedDataTuple,

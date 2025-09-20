@@ -48,12 +48,13 @@ interface FindAllKeyValuesSidebarProps {
 }
 
 /**
- * Renders policy basics (fields directly on the policy object)
+ * A component that renders a list of key-value pairs based on the policyBasics
+ * and searchValue.
  *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {DataTuple[]} policyBasics
- * @param {string} searchValue
- * @returns {JSX.Element}
+ * @param {ReturnType<typeof preparePolicy>} preparedPolicy - The policy details
+ * @param {NestedDataTuple} policyBasics - The policy basics
+ * @param {string} searchValue - The search value
+ * @returns {JSX.Element} - A JSX element representing the key-value pairs
  */
 const KeyValueBasics = ({
     preparedPolicy,
@@ -78,8 +79,11 @@ const KeyValueBasics = ({
 );
 
 /**
- * Renders policy sections (fields nested under a section label).
- *
+ * Renders a list of policy sections.
+ * Each section is rendered as a separate Accordion item.
+ * The label of each section is highlighted if it matches the searchValue.
+ * Each section contains a list of DataField components and/or a list of subsections.
+ * The subsections are rendered recursively using the KeyValueSubSections component.
  * @param {ReturnType<typeof preparePolicy>} preparedPolicy
  * @param {PolicySection[]} policySections
  * @param {string} searchValue
@@ -132,14 +136,15 @@ const KeyValueSections = ({
         );
     });
 };
+
 /**
- * Renders subsections (fields nested under a section).
- *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {SubSection[]} subSections
- * @param {string} searchValue
- * @param {string} sectionLabel
- * @returns {JSX.Element[]}
+ * Renders a list of subsections.
+ * Each subsection is rendered as a separate Accordion item.
+ * The label of each subsection is highlighted if it matches the searchValue.
+ * Each subsection contains a list of DataField components.
+ * @param {NestedDataTuple} subSections A list of subsections to render
+ * @param {string} searchValue A string to highlight in the subsection labels
+ * @returns {JSX.Element[]} The rendered list of subsections
  */
 const KeyValueSubSections = ({
     subSections,
@@ -177,16 +182,12 @@ const KeyValueSubSections = ({
 };
 
 /**
- * Given a list of field tuples and a search value, renders a list of field
- * values. If the field value is an array, renders it as a subSection-in-subSection.
+ * Renders a list of fields from the given NestedDataTuple.
+ * If the field data is an array, renders it as a nested subSection.
  * Otherwise, renders it as a DataField.
- *
- * @param preparedPolicy The prepared policy to use for formatting
- * @param fields The list of field tuples to render
- * @param searchValue The search value to highlight in the rendered fields
- * @param metaData Optional metadata for the field list. If provided, will be
- * passed to the DataField component.
- * @returns A JSX element representing the rendered field list
+ * @param {NestedDataTuple} fields The NestedDataTuple of fields to render
+ * @param {string} searchValue The search value to highlight in the field labels
+ * @returns {JSX.Element} The rendered list of fields
  */
 const KeyValueFieldList = ({
     fields,
@@ -231,16 +232,13 @@ const KeyValueFieldList = ({
 };
 
 /**
- * Given a list of nested subsections, renders each subsection as a nested Accordion
- * with a single field list.
+ * Renders a list of nested subsections.
+ * Each subsection is rendered as a separate Accordion item.
+ * The label of each subsection is highlighted if it matches the searchValue.
+ * Each subsection contains a list of DataField components.
  *
- * Each subsection is rendered as an Accordion with the subsection label as the
- * section label, and the subsection tags as the tags.
- *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {DataRecord[]} subSections
- * @param {string} searchValue
- * @returns {JSX.Element[]}
+ * @param subSections A list of nested subsections.
+ * @param searchValue A string to highlight in the subsection labels.
  */
 const KeyValueNestedSubSections = ({
     subSections,
@@ -292,18 +290,13 @@ const KeyValueNestedSubSections = ({
 };
 
 /**
- * Given a policy field tuple, renders a single field as a DotContainer with:
+ * A component that renders a data field with a label and value.
+ * The label is highlighted if it matches the search value.
+ * The value is a link if a link is provided.
  *
- * - The field label on the left side, highlighted if it matches the search value.
- * - The field data on the right side, or a link to the field data if the field
- *   is a link field and the link is provided.
- *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {DataTuple} dataField
- * @param {string} link
- * @param {string} linkField
- * @param {string} searchValue
- * @returns {JSX.Element}
+ * @param dataField - The data field to render as [label, value]
+ * @param link - The link for the value
+ * @param searchValue - The search value to highlight in the label
  */
 const DataField = ({
     dataField,
@@ -355,20 +348,15 @@ const DataField = ({
 };
 
 /**
- * FindAllKeyValuesSidesheet is a Sidesheet component that allows users to search through the key values of a given policy.
+ * A Sidesheet component that displays all key-value pairs of a policy.
  *
- * The component takes in the `planCode` and `policyNumber` as props, and fetches the policy data from the API.
- * It also takes care of debouncing the search value and filtering the key values accordingly.
+ * When opened, it displays a date picker to select a date, and a search field to search
+ * key-value pairs. The date picker is disabled for future dates, and the search field
+ * filters down the key-value pairs based on the search value.
  *
- * The component renders a date picker that allows the user to select a date, and a search bar that allows the user to search for key values.
- * The results are then displayed in a table below, with the key values grouped by section.
- *
- * The component also handles loading and error states, and will display a loading overlay if the data is still being fetched,
- * or an error message if the data is not available.
- *
- * @param planCode - The code of the plan to fetch the policy for
- * @param policyNumber - The number of the policy to fetch
- * @returns - The rendered Sidesheet component
+ * @param {string} planCode - the plan code of the policy
+ * @param {string} policyNumber - the policy number of the policy
+ * @returns {JSX.Element} - the rendered component
  */
 export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     planCode,
