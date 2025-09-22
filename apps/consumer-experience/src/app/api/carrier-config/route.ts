@@ -5,17 +5,7 @@ import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export async function GET() {
   const commonLoggingContext = await buildCommonLogContext();
+  const response = await getCarrierConfig(commonLoggingContext);
 
-  try {
-    return NextResponse.json({
-      data: (await getCarrierConfig(commonLoggingContext)).data, //Since its wrapped in withLogging, just return data here.
-      error: null,
-    });
-  } catch (error) {
-    return NextResponse.json({
-      data: null,
-      error: 'something went wrong',
-      correlationId: commonLoggingContext?.correlationId,
-    });
-  }
+  return NextResponse.json(response);
 }
