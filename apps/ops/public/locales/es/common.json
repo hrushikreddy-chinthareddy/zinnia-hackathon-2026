@@ -7945,8 +7945,8 @@
                 "title": "Prima",
                 "initial": "Prima anual inicial",
                 "initialModal": "Prima modal inicial",
-                "target": "Prima planeada",
-                "mec": "Prima MEC",
+                "target": "Prima anual planeada",
+                "mec": "Prima MEC anual",
                 "initialBase": "Prima base inicial",
                 "totalInitial": "Prima inicial total",
                 "initialModalPremium": "Prima modal inicial"

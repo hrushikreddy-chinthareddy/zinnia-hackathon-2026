@@ -7965,8 +7965,8 @@
                 "title": "Prime",
                 "initial": "Prime annuelle initiale",
                 "initialModal": "Prime modale initiale",
-                "target": "Prime cible",
-                "mec": "Prime MEC",
+                "target": "Prime annuelle cible",
+                "mec": "Prime annuelle MEC",
                 "initialBase": "Prime de base initiale",
                 "totalInitial": "Prime initiale totale",
                 "initialModalPremium": "Prime modale initiale"

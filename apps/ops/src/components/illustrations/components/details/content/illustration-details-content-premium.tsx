@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
@@ -14,6 +15,8 @@ import {
     paymentMethods,
 } from './illustration-details-helpers';
 import { useIllustrationDetail } from '../../../providers/IllustrationDetailProvider';
+
+import type { Except } from 'type-fest';
 
 type PremiumEntryBase = {
     label: string;
@@ -41,11 +44,10 @@ type PremiumEntry = {
     >;
 }[keyof PremiumEntryTypes];
 
-export function useIllustrationPremiumData(): PremiumEntry[] {
+const useFormatters = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const illustration = useIllustrationDetail();
 
-    const formatters = {
+    return {
         currency:
             (value: number | null) =>
             (bold: boolean = false) =>
@@ -70,46 +72,75 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
                         {value ? t(value) : DEFAULT_ERROR_STRING}
                     </span>
                 ),
-    };
+    } satisfies Record<
+        keyof PremiumEntryTypes,
+        (value: any) => (bold: boolean) => ReactNode
+    >;
+};
+
+export function useIllustrationPremiumData(): PremiumEntry[] {
+    const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const illustration = useIllustrationDetail();
+
+    const formatters = useFormatters();
+
+    const addFormatter = (entry: Except<PremiumEntry, 'format'>) => ({
+        ...entry,
+        format:
+            // This could have been done in a single line but typescript
+            // made me do this instead
+            entry.type === 'currency'
+                ? formatters[entry.type](entry.value)
+                : entry.type === 'currencyPerYear'
+                ? formatters[entry.type](entry.value)
+                : formatters[entry.type](entry.value),
+    });
 
     if (!illustration) {
-        return [
-            {
-                label: t('clientCase.illustrationDetails.premium.initial'),
-                format: formatters.currency(null),
-                value: null,
-                type: 'currency',
-            },
-            {
-                label: t('clientCase.illustrationDetails.premium.target'),
-                format: formatters.currency(null),
-                value: null,
-                type: 'currency',
-            },
-        ];
+        return (
+            [
+                {
+                    label: t('clientCase.illustrationDetails.premium.initial'),
+                    value: null,
+                    type: 'currency',
+                },
+                {
+                    label: t('clientCase.illustrationDetails.premium.target'),
+                    value: null,
+                    type: 'currency',
+                },
+            ] as const
+        ).map(addFormatter);
     }
 
     const { options } = illustration.inputs;
 
     if (illustration.productType === ProductTypes.INDEX_UNIVERSAL_LIFE) {
-        const iulData = illustration.response.assumed.annualTimeSeriesData;
+        const iulAssumed = illustration.response.assumed;
 
         return (
             [
                 {
                     label: t('clientCase.illustrationDetails.premium.initial'),
-                    value: iulData[0]?.minimumPremiumAmount,
-                    type: 'currencyPerYear',
+                    value: iulAssumed.initial.totalPremium,
+                    type: 'currency',
                 },
                 {
                     label: t('clientCase.illustrationDetails.premium.target'),
-                    value: iulData.at(-1)?.minimumPremiumAmount ?? null,
-                    type: 'currencyPerYear',
+                    value: iulAssumed.initial.targetPremiumAmount,
+                    type: 'currency',
                 },
                 {
                     label: t('clientCase.illustrationDetails.premium.mec'),
-                    value: iulData[0]?.sevenPayPremiumAmount,
-                    type: 'currencyPerYear',
+                    value: iulAssumed.initial.modifiedEndowmentPremium,
+                    type: 'currency',
+                },
+                {
+                    label: t(
+                        'clientCase.illustrationDetails.premium.initialModal'
+                    ),
+                    value: iulAssumed.initial.totalModalPremium,
+                    type: 'currency',
                 },
                 {
                     label: t('clientCase.illustrationDetails.premiumMode'),
@@ -122,18 +153,10 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
                     type: 'text',
                 },
             ] as const
-        ).map((item) =>
-            item.type === 'currencyPerYear'
-                ? {
-                      ...item,
-                      format: formatters.currencyPerYear(item.value),
-                  }
-                : {
-                      ...item,
-                      format: formatters.text(item.value),
-                  }
-        );
+        ).map(addFormatter);
     }
+
+    // Term and Term ROP
 
     const baseData = illustration.response.assumed;
 
@@ -141,19 +164,16 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
         [
             {
                 label: t('clientCase.illustrationDetails.premium.initial'),
-
                 value: baseData.initial.totalPremium,
                 type: 'currency',
             },
             {
                 label: t('clientCase.illustrationDetails.premium.initialModal'),
-
                 value: baseData.initial.totalModalPremium,
                 type: 'currency',
             },
             {
                 label: t('clientCase.illustrationDetails.premiumMode'),
-
                 value: paymentFrequencies[options.paymentMode],
                 type: 'text',
             },
@@ -164,17 +184,7 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
                 type: 'text',
             },
         ] as const
-    ).map((item) =>
-        item.type === 'currency'
-            ? {
-                  ...item,
-                  format: formatters.currency(item.value),
-              }
-            : {
-                  ...item,
-                  format: formatters.text(item.value),
-              }
-    );
+    ).map(addFormatter);
 }
 
 // Utility function for font classes
