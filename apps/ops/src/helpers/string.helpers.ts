@@ -201,7 +201,10 @@ export const formatDateTime = (dateTime?: string) => {
 export const hasDigitsRegex = new RegExp(/\d+/);
 
 // Converts yyyy-mm-dd strings into m/d/yyyy
-export const convertKebabedDateString = (date: string | undefined): string => {
+export const convertKebabedDateString = (
+    date: string | undefined,
+    dateFormat?: string
+): string => {
     if (
         date === '' ||
         typeof date !== 'string' ||
@@ -215,7 +218,7 @@ export const convertKebabedDateString = (date: string | undefined): string => {
         return date;
     }
     const formattedDate = dayjs(date, ZAHARA_API_DATE_FORMAT).format(
-        DEFAULT_DATE_FORMAT
+        dateFormat || DEFAULT_DATE_FORMAT
     );
     if (!hasDigitsRegex.test(formattedDate)) {
         const error = new Error(`Invalid Date. Tried to parse ${date}`);

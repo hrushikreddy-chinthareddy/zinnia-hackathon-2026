@@ -11,10 +11,14 @@ import {
 
 import SelectComponent from '@deps/components/select/select';
 import {
+    MultiselectOption,
+    SimpleOption,
+} from '@deps/components/select/select.helpers';
+import {
     csrApiHelper,
     parseJsonValue,
     isString,
-    stringifyValue,
+    stringifyObjectValue,
 } from '@deps/helpers/csr-api-helpers';
 import {
     ApiProps,
@@ -27,29 +31,30 @@ function getValue(
     isSelected: boolean,
     value: string,
     enumOptions: EnumOptionsType[] | undefined,
-    selectedIndexes?: string | string[],
+    selectedIndexes?: string[] | string,
     multiple?: boolean
 ): string | string[] {
-    if (!enumOptions) {
-        return multiple ? [] : '';
-    }
+    if (!enumOptions) return multiple ? [] : '';
+
+    const index = enumOptions.findIndex((option) => option.value === value);
+
     if (multiple) {
-        const index = enumOptions.findIndex((option) => option.value === value);
         if (index !== -1 && Array.isArray(selectedIndexes)) {
             if (isSelected) {
-                return selectedIndexes.concat(index.toString());
+                return Array.from(
+                    new Set([...selectedIndexes, index.toString()])
+                );
             } else {
-                return selectedIndexes;
+                return selectedIndexes.filter((i) => i !== index.toString());
             }
         } else {
             return [index.toString()];
         }
     } else {
-        return enumOptions
-            .findIndex((option) => option.value === value)
-            .toString();
+        return index.toString();
     }
 }
+
 function SelectWidget<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
@@ -57,7 +62,6 @@ function SelectWidget<
 >({
     schema,
     id,
-    name,
     options,
     value,
     required,
@@ -80,6 +84,14 @@ function SelectWidget<
         ? uiSchema['ui:options'].enumOptions
         : options.enumOptions;
 
+    const selectOptions =
+        enumOptions?.map((option: any) => ({
+            value: stringifyObjectValue(option.value),
+            label: option.label,
+            displayText: option.label,
+            description: option.description,
+        })) ?? [];
+
     const { props, events } = getUiOptions<T, S, F>(uiSchema);
     const apiProps =
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -97,34 +109,41 @@ function SelectWidget<
             selectedIndexes = selectedIndexes?.filter(
                 (index) =>
                     index !==
-                    enumOptions
-                        ?.findIndex(
-                            (option) => option.value.toString() === value
-                        )
+                    selectOptions
+                        ?.findIndex((option) => option.value === value)
                         .toString()
             );
         }
         const newValue = getValue(
             isSelected,
             value,
-            enumOptions,
+            selectOptions,
             selectedIndexes,
             multiple
         );
-        onChange(
-            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal)
+
+        const finalValue = enumOptionsValueForIndex<S>(
+            newValue,
+            selectOptions,
+            optEmptyVal
         );
+
+        if (finalValue) {
+            const parsedValue = finalValue?.map((value: any) =>
+                parseJsonValue(value)
+            );
+            onChange(parsedValue);
+        }
     };
 
     const _onChangeSingle = async (value: string) => {
         const newValue = getValue(
             false,
             value,
-            enumOptions,
+            selectOptions,
             selectedIndexes,
             multiple
         );
-
         eventProps?.forEach((eventProp) => {
             if (eventProp?.taskEventType == EventType.onChange) {
                 const parsedValue = parseJsonValue(value);
@@ -135,18 +154,22 @@ function SelectWidget<
                     });
             }
         });
-
-        if (!apiProps.apiUrl)
-            return onChange(
-                enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal)
-            );
+        const finalValue = enumOptionsValueForIndex<S>(
+            newValue,
+            selectOptions,
+            optEmptyVal
+        );
+        if (!apiProps.apiUrl) return onChange(parseJsonValue(finalValue));
         await fetchDetails(value, newValue);
     };
 
     async function fetchDetails(value: string, newValue?: any) {
-        onChange(
-            enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal)
+        const finalValue = enumOptionsValueForIndex<S>(
+            newValue,
+            selectOptions,
+            optEmptyVal
         );
+        onChange(parseJsonValue(finalValue));
 
         const parsedValue = parseJsonValue(value);
 
@@ -167,35 +190,29 @@ function SelectWidget<
 
     const showPlaceholderOption = !multiple && schema.default === undefined;
     const normalizedValue = Array.isArray(value)
-        ? value.map((v) => (isString(v) ? v : stringifyValue(v)))
+        ? value.map((v) => (isString(v) ? v : stringifyObjectValue(v)))
         : isString(value)
         ? value
-        : stringifyValue(value);
+        : stringifyObjectValue(value);
     let selectedIndexes = enumOptionsIndexForValue<S>(
         normalizedValue,
-        enumOptions,
+        selectOptions,
         multiple
     );
 
     const selectedValues = multiple
-        ? enumOptions?.reduce(
+        ? selectOptions?.reduce(
               (acc: { [key: string]: string }, option, index) => {
                   if (selectedIndexes?.includes(index.toString())) {
-                      acc[option.value] = option.label;
+                      acc[option.value as string] = option.label;
                   }
                   return acc;
               },
               {}
           ) ?? {}
-        : enumOptions?.find((option) => option.value === value)?.value ?? '';
-
-    const selectOptions =
-        enumOptions?.map((option: any) => ({
-            value: option.value,
-            label: option.label,
-            displayText: option.label,
-            description: option.description,
-        })) ?? [];
+        : selectOptions?.find(
+              (option) => option.value === stringifyObjectValue(value)
+          )?.value ?? '';
 
     if (options.placeholder) {
         placeholder = options.placeholder || '';
@@ -223,7 +240,7 @@ function SelectWidget<
                         required={required}
                         disabled={disabled || readonly}
                         onChange={_onChange}
-                        options={selectOptions}
+                        options={selectOptions as MultiselectOption[]}
                         placeholder={placeholder}
                         className={
                             rawErrors.length > 0
@@ -259,7 +276,7 @@ function SelectWidget<
                         required={required}
                         disabled={disabled || readonly}
                         onChange={_onChangeSingle}
-                        options={selectOptions}
+                        options={selectOptions as SimpleOption[]}
                         placeholder={placeholder}
                         className="max-w-sm"
                         allowEmptyValue={uiSchema?.['ui:allowEmptyValue']}

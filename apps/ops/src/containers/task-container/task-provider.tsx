@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { CallCenterElement } from '@deps/models/case/send-document';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { TaskDataContext } from './task-context';
@@ -32,11 +32,16 @@ export const TaskProvider = ({
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
     const [submitFailed, setSubmitFailed] = useState(false);
     // const [metaData, setMetaData] = useState(taskMetadata);
+    const [mappedDocuments, setMappedDocuments] = useState<TaskDocument[]>(
+        initialTask?.mappedDocuments || []
+    );
 
     return (
         <TaskDataContext.Provider
             value={{
                 initialTask,
+                mappedDocuments,
+                setMappedDocuments,
                 task,
                 correlationId,
                 isReadyForDataEntry,

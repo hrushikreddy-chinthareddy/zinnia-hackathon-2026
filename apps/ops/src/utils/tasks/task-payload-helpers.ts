@@ -1,14 +1,9 @@
-import { normalizeFormData } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
-import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import {
     MatchingCase,
     PotentialMatches,
 } from '@deps/models/case/task/doc-matching-payment';
-import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-
-import { browserLogError } from '../browser-logging';
-import { parseErrorInformation } from '../server-logging';
+import { ManagementTask } from '@deps/models/case/task-instance';
 
 export const buildTaskPayload = (
     task: ManagementTask,
@@ -160,8 +155,6 @@ export const buildTaskPayload = (
  */
 
 export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
-    const finalFormData = normalizeFormData(formData);
-
     const removeOmittedProperties = (
         schema: any,
         data: any,
@@ -171,12 +164,30 @@ export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
             if (key.includes('ui')) return;
             const currentPath = [...parentPath, key];
             const options = schema[key]?.['ui:options'];
+
+            if (Array.isArray(data?.[key]) && schema[key]?.items) {
+                data[key].forEach((item: any) => {
+                    removeOmittedProperties(schema[key].items, item, []);
+                });
+            }
+
             if (options?.omitValue) {
                 let target = data;
                 for (let i = 0; i < parentPath.length; i++) {
-                    target = target?.[parentPath[i]];
+                    const currentKey = parentPath[i];
+                    // if key with omitValue is present in an array,
+                    // delete the key from all objects in the array and exit
+                    if (currentKey === 'items') {
+                        for (const item of target) {
+                            delete item[key];
+                        }
+                        return;
+                    }
+                    // Traverse deeper into the object/array
+                    target = target?.[currentKey];
                     if (!target) return;
                 }
+                // If traversal completed and target exists, delete the key
                 if (target) delete target[key];
             } else if (
                 typeof schema[key] === 'object' &&
@@ -187,38 +198,6 @@ export const cleanForm = (formData: any, taskMetadata: FormMetadata) => {
         });
     };
 
-    removeOmittedProperties(
-        taskMetadata.uiSchema,
-        finalFormData.data || finalFormData
-    );
-    return finalFormData;
-};
-
-export const attachFilesToMappedDocuments = async (
-    attachment: any,
-    task: ManagementTask,
-    correlationId: string
-): Promise<boolean> => {
-    try {
-        const attachments = [...(task.data?.attachments || []), attachment];
-        await updateTask(
-            {
-                ...task,
-                data: {
-                    ...task.data,
-                    attachments,
-                },
-                mappedDocuments: attachments,
-            },
-            correlationId,
-            TaskStatus.InProgress
-        );
-    } catch (error) {
-        browserLogError('updateTask::Error updating mapped documents to task', {
-            ...parseErrorInformation(error),
-            taskId: task.id,
-        });
-        return false;
-    }
-    return true;
+    removeOmittedProperties(taskMetadata.uiSchema, formData.data || formData);
+    return formData;
 };

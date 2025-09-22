@@ -12,13 +12,16 @@ import Radio, {
     RadioItem,
     RadioOrientation,
 } from '@deps/components/radio/radio';
-import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
+import {
+    csrApiHelper,
+    parseJsonValue,
+    stringifyObjectValue,
+} from '@deps/helpers/csr-api-helpers';
 import { ApiProps, ApiResponseTypes, CardTypes } from '@deps/models/case/task';
-import { baseAppUrl } from '@deps/queries/api-config';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 import { SingleCard } from '../../templates/card-templates/card-template';
 import { HyperLink } from '../hyper-link-widget/hyper-link-widget';
-const baseUrl = baseAppUrl + '/api/';
 
 const renderSubElement = (
     option: any,
@@ -81,27 +84,80 @@ function RadioWidget<
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
 
     const currentOptions = useMemo(() => {
-        return enumOptions || customOptions || [];
+        const enumOptionsArray = Array.isArray(enumOptions) ? enumOptions : [];
+
+        const merged: RadioItem[] = enumOptionsArray.map((existing) => ({
+            ...existing,
+        }));
+
+        if (customOptions && Array.isArray(customOptions)) {
+            (customOptions as RadioItem[]).forEach((custom) => {
+                if (!custom || typeof custom !== 'object') return;
+
+                try {
+                    const index = merged.findIndex(
+                        (existing) =>
+                            stringifyObjectValue(existing?.value) ===
+                            stringifyObjectValue(custom?.value)
+                    );
+                    if (index !== -1) {
+                        merged[index] = { ...merged[index], ...custom };
+                    } else {
+                        merged.push(custom);
+                    }
+                } catch (error) {
+                    merged.push(custom);
+                    browserLogError('Error processing radio options:', {
+                        error,
+                    });
+                }
+            });
+        }
+
+        return merged;
     }, [enumOptions, customOptions]);
 
     const newOptions = useMemo(() => {
-        return Array.isArray(currentOptions)
-            ? currentOptions.map((option: RadioItem) => ({
-                  label: option.label,
-                  value: option.value,
-                  disabled: enumDisabled?.includes(option.value) || false,
-                  subElement:
-                      option.subElement &&
-                      renderSubElement(
-                          option.subElement,
-                          properties,
-                          cardType,
-                          icon,
-                          sectionTitle as string
-                      ),
-              }))
-            : [];
-    }, [currentOptions]);
+        if (!Array.isArray(currentOptions) || currentOptions.length === 0) {
+            return [];
+        }
+
+        return currentOptions.map((option: RadioItem) => {
+            try {
+                return {
+                    label: option.label || String(option.value),
+                    value: stringifyObjectValue(option.value),
+                    disabled: enumDisabled?.includes(option.value) || false,
+                    subElement:
+                        option.subElement &&
+                        renderSubElement(
+                            option.subElement,
+                            properties,
+                            cardType,
+                            icon,
+                            sectionTitle as string
+                        ),
+                };
+            } catch (error) {
+                browserLogError('Error processing radio option:', {
+                    option,
+                    error,
+                });
+                return {
+                    label: String(option.label || option.value || ''),
+                    value: String(option.value || ''),
+                    disabled: false,
+                };
+            }
+        });
+    }, [
+        currentOptions,
+        enumDisabled,
+        properties,
+        cardType,
+        icon,
+        sectionTitle,
+    ]);
 
     async function fetchDetails(value: string) {
         csrApiHelper(apiProps, { ...formContext?.customData, value }).then(
@@ -122,7 +178,7 @@ function RadioWidget<
     }
 
     const handleOnChange = (event: any) => {
-        onChange(event.target.value);
+        onChange(parseJsonValue(event.target.value));
         if (apiProps.apiUrl) {
             fetchDetails(event.target.value);
         }
@@ -133,12 +189,16 @@ function RadioWidget<
             <>{enumOptions?.find((option) => option.value === value)?.label}</>
         );
 
+    const selectedValue = newOptions?.find(
+        (option) => option.value === stringifyObjectValue(value)
+    )?.value;
+
     return (
         <div>
             <Radio
                 id={id}
-                items={newOptions}
-                value={value}
+                items={newOptions as RadioItem[]}
+                value={selectedValue as string}
                 disabled={disabled}
                 readonly={readonly}
                 defaultValue={value}

@@ -1,16 +1,10 @@
 import { v4 as uuidv4 } from 'uuid';
 
-import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { stringifyValue } from '@deps/helpers/csr-api-helpers';
-import { getName } from '@deps/helpers/party-info-helpers';
-import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
-import { CaseIdentifier } from '@deps/models/case/case';
 import {
     CaseIdentifierType,
     FormMetadata,
     TaskType,
 } from '@deps/models/case/task';
-import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
 import {
     MatchingCase,
     TransactionData,
@@ -18,10 +12,6 @@ import {
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { searchTransactionsSSR } from '@deps/queries/api/transaction-search';
 
-import {
-    searchBeneficiaryByCaseId,
-    SearchTransactionFilters,
-} from '../../queries/api/beneficiary';
 import { LoggingContext, logWarn } from '../server-logging';
 
 export const TaskMetadataHelper = async (
@@ -101,139 +91,6 @@ export const TaskMetadataHelper = async (
                     return taskMetadata;
                 }
 
-                case TaskType.Claims_Match_Bene_Document: {
-                    const uiSchema = taskMetadata.uiSchema || {};
-                    const potentialMatchCriteria =
-                        task.data?.details?.documentEntityMatch
-                            ?.potentialMatchCriteria;
-                    const matchCriteria = ((uiSchema.details ??=
-                        {}).documentEntityMatch ??= {});
-
-                    const documents =
-                        task.data?.details?.documentEntityMatch?.documents;
-                    const targetFormSchema = taskMetadata.formSchema;
-
-                    if (TaskStatus.Completed) {
-                        if (
-                            task.data?.details?.documentEntityMatch?.matchRecord
-                        ) {
-                            task.data.details.documentEntityMatch.matchRecords =
-                                [
-                                    task.data.details.documentEntityMatch
-                                        .matchRecord,
-                                ];
-                        }
-                    }
-
-                    if (documents && targetFormSchema) {
-                        const uniqueDisplayNames = Array.from(
-                            new Set(
-                                documents.map(
-                                    (doc: any) => doc.metadata.displayName
-                                )
-                            )
-                        );
-                        const uniqueDocumentSources = Array.from(
-                            new Set(
-                                documents.map(
-                                    (doc: any) => doc.metadata.documentSource
-                                )
-                            )
-                        );
-                        const placeholderData: Record<string, any> = {
-                            metadata: {
-                                displayName:
-                                    stringifyValue(uniqueDisplayNames[0]) ?? '',
-                                documentSource:
-                                    stringifyValue(uniqueDocumentSources[0]) ??
-                                    '',
-                            },
-                            carrier: task.carrier ?? '',
-                        };
-
-                        taskMetadata.formSchema = replacePlaceholders(
-                            targetFormSchema,
-                            placeholderData,
-                            true
-                        );
-                    }
-
-                    let zlCaseId = '';
-                    let entityType = '';
-                    if (potentialMatchCriteria) {
-                        zlCaseId =
-                            potentialMatchCriteria.identifiers?.find(
-                                (id: { identifier: string }) =>
-                                    id.identifier ===
-                                    CaseIdentifierType.ZL_CASE_ID
-                            )?.value ?? '';
-                        entityType = Array.isArray(
-                            potentialMatchCriteria.entityType
-                        )
-                            ? potentialMatchCriteria.entityType[0] ?? ''
-                            : potentialMatchCriteria.entityType ?? '';
-                    }
-
-                    let beneficiaryMatches: BeneficiaryRecord[] = [];
-                    if (zlCaseId && entityType) {
-                        try {
-                            const filters: SearchTransactionFilters = {
-                                zlCaseId,
-                                entityType,
-                            };
-                            const apiResult = await searchBeneficiaryByCaseId(
-                                filters
-                            );
-                            beneficiaryMatches = Array.isArray(apiResult)
-                                ? apiResult
-                                : [];
-                        } catch (error: any) {
-                            logWarn('Error in TaskMetadataHelper', {
-                                ...error,
-                                loggingContext,
-                            });
-                        }
-                    } else {
-                        beneficiaryMatches = Array.isArray(
-                            task.data?.potentialMatches
-                        )
-                            ? task.data.potentialMatches
-                            : [];
-                    }
-
-                    const beneficiaryOptions =
-                        generateBeneficiaryOptions(beneficiaryMatches);
-
-                    matchCriteria.matchRecords.items = {
-                        type: 'string',
-                        enum: beneficiaryOptions.map((opt) => opt.value),
-                        enumNames: beneficiaryOptions.map((opt) => opt.label),
-                    };
-
-                    matchCriteria.matchRecords['ui:options'].customOptions =
-                        beneficiaryOptions;
-
-                    return taskMetadata;
-                }
-
-                case TaskType.Claims_Bene_Review: {
-                    const formSchema = taskMetadata.formSchema || {};
-                    const contractNumber =
-                        getCaseIdentifierValue(
-                            task.identifiers,
-                            CaseIdentifier.contractNumber
-                        ) || '';
-                    const data = { contractNumber: contractNumber };
-
-                    const updatedFormSchema = replacePlaceholders(
-                        formSchema,
-                        data,
-                        true
-                    );
-                    taskMetadata.formSchema = updatedFormSchema;
-                    return taskMetadata;
-                }
-
                 default:
                     return taskMetadata;
             }
@@ -284,28 +141,4 @@ const generatePotentialMatchesOptions = (
                 };
             }) || []
     );
-};
-
-const generateBeneficiaryOptions = (
-    beneficiaries: BeneficiaryRecord[]
-): any[] => {
-    return beneficiaries.map((item: BeneficiaryRecord) => {
-        const idField = item.recordId || item.zlCaseId || '';
-        const fullName = getName(item.entity?.party);
-        const data = {
-            entityType: item.entityType || '--',
-            recordId: idField,
-            beneficiaryName: fullName,
-        };
-        return {
-            value: stringifyValue(data),
-            label: '',
-            metadata: {
-                beneficiaryName: fullName,
-                ssn: item.entity?.party?.ssn || '--',
-                recordId: idField,
-                entityType: item.entityType || '--',
-            },
-        };
-    });
 };

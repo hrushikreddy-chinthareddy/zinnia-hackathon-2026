@@ -23,15 +23,13 @@ const paymentReviewHandler: TaskHandler<
 
         if (metadata[0]?.formSchema?.definitions) {
             metadata[0].formSchema.definitions.declineReason = {
-                enum: reasonList.map((reason) => JSON.stringify(reason)),
+                enum: reasonList,
             };
         }
 
-        metadata[0].uiSchema.declineReason['ui:options'].enumOptions =
-            reasonList.map((reason) => ({
-                label: reason.detailedReason,
-                value: JSON.stringify(reason),
-            }));
+        metadata[0].uiSchema.declineReason['ui:options'] = {
+            enumNames: reasonList.map((reason) => reason.detailedReason),
+        };
     },
 };
 

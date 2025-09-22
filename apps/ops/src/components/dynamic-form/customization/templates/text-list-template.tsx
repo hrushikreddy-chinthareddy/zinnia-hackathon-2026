@@ -4,7 +4,6 @@ import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { parseJsonValue } from '@deps/helpers/csr-api-helpers';
 
 const variantMap: { [key: string]: AssistiveTextVariant } = {
     error: AssistiveTextVariant.Error,
@@ -53,11 +52,7 @@ export default function TextListTemplate(
             const parseKey: string = formContextOptions?.parseKey ?? '';
 
             list = parseKey
-                ? data.map((item: string) =>
-                      typeof item !== 'object'
-                          ? parseJsonValue(item)[parseKey]
-                          : item[parseKey]
-                  )
+                ? data.map((item: { [key: string]: any }) => item[parseKey])
                 : data;
         }
     }

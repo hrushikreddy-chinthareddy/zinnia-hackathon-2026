@@ -66,7 +66,6 @@ describe('UncashedChecks', () => {
 
         it('#should render empty state when no transactions provided', () => {
             render(<UncashedChecks t={mockT} transactions={[]} />);
-            screen.debug();
             expect(
                 screen.getByText('transactionListing.noUncashedTransactions')
             ).toBeInTheDocument();

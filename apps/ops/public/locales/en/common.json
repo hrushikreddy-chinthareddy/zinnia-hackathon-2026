@@ -1138,6 +1138,7 @@
         "submit": "Submit",
         "uploadDocument": "Upload Document",
         "fileUpload": {
+            "or": "or",
             "documentCategory": "Category",
             "documentType": "Type",
             "formNumber": "Form number",
@@ -5862,6 +5863,9 @@
         },
         "type": "Type",
         "submissionType": "Submission Type",
+        "caseId": "Parent Case ID",
+        "caseTransactionType": "Case Transaction Type",
+        "caseCompletionDate": "Case Completion Date",
         "electronic": "Electronic",
         "paper": "Paper",
         "email": "Email",
@@ -8283,6 +8287,33 @@
             "title": "Got It!",
             "subTitle": "Update suitability data was submitted.",
             "cta": "Go to case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "qualityAuditReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Review Quality Audit was submitted.",
+            "cta": "Go to Quality Audit",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "qualityAuditRework": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Rework on Quality Audit was submitted.",
+            "cta": "Go to Quality Audit",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "qualityReworkAuditReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Review Quality Audit Rework was submitted.",
+            "cta": "Go to Quality Audit",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

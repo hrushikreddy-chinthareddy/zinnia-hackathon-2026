@@ -21,7 +21,7 @@ const applicationReviewHandler: TaskHandler<
 
         if (metadata[0]?.formSchema?.definitions) {
             metadata[0].formSchema.definitions.declineReason = {
-                enum: reasonList.map((reason) => JSON.stringify(reason)),
+                enum: reasonList,
             };
         }
 

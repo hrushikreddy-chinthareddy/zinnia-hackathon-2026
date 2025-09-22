@@ -5,7 +5,7 @@ import { InputHTMLAttributes } from 'react';
 
 import styles from './text-field.module.css';
 
-interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface TextFieldProps extends InputHTMLAttributes<HTMLInputElement> {
     id: string;
     label?: string;
     fieldSize?: 'small' | 'large';

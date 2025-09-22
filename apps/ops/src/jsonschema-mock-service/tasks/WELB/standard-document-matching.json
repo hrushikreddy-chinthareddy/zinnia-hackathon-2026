@@ -291,6 +291,7 @@
                                                 "ui:field": "additionInfo"
                                             }
                                         },
+
                                         "allOf": [
                                             {
                                                 "if": {
@@ -361,6 +362,7 @@
                                                                 }
                                                             }
                                                         },
+
                                                         "else": {
                                                             "if": {
                                                                 "properties": {
@@ -390,6 +392,7 @@
                                                 }
                                             }
                                         ],
+
                                         "dependencies": {
                                             "editDocument": {
                                                 "if": {
@@ -452,8 +455,16 @@
                                                                         "then": {
                                                                             "properties": {
                                                                                 "existingDocument": {
-                                                                                    "type": "string",
-                                                                                    "title": "Replace document on Case"
+                                                                                    "type": "object",
+                                                                                    "title": "Replace document on Case",
+                                                                                    "properties": {
+                                                                                        "documentId": {
+                                                                                            "type": "string"
+                                                                                        }
+                                                                                    },
+                                                                                    "required": [
+                                                                                        "documentId"
+                                                                                    ]
                                                                                 }
                                                                             },
                                                                             "required": [
@@ -566,12 +577,10 @@
                                             "label": true
                                         },
                                         "ui:hideError": true,
-                                        "ui:emptyValue": {
-                                            "matchType": ""
-                                        }
+                                        "ui:emptyValue": { "matchType": "" }
                                     },
                                     "existingDocument": {
-                                        "ui:widget": "AutoCompleteWidget",
+                                        "ui:field": "AutoCompleteField",
                                         "ui:hideError": true,
                                         "ui:options": {
                                             "label": false,

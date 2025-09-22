@@ -41,7 +41,7 @@ export function ViewTransactions({
             ? transactionEntity?.entity?.stopTransactions?.transactions ?? []
             : transactionEntity?.entity?.stopPrograms?.[prop] ?? [];
 
-    // For some cases we will get uncashTransactionIdentified  as undefined we need to support default behaviour
+    // For some cases we will get uncashTransactionIdentified  as undefined we need to support default behavior
     const isUncashedInProgress =
         prop === StepProgramTypes.UNCASHED &&
         transactionEntity?.entity?.stopTransactions
@@ -90,7 +90,10 @@ export function ViewTransactions({
 
     const displayInProgress = () => {
         return (
-            <div className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]">
+            <div
+                className="my-3 flex w-[436px] justify-between rounded border border-gray-100 p-[12px]"
+                data-testid="uncashed-in-progress"
+            >
                 <div className="text-sm font-bold">
                     <AssistiveText
                         text={t('transactionListing.identificationInProgress')}
@@ -159,7 +162,10 @@ export function ViewTransactions({
     }
 
     return (
-        <div className="flex w-full flex-col">
+        <div
+            className="flex w-full flex-col"
+            data-testid="view-transactions-section"
+        >
             <div>
                 {prop === StepProgramTypes.UNCASHED ? (
                     <div className="flex flex-row items-center gap-2 mb-4">

@@ -291,7 +291,6 @@ export const SingleCard = ({
 }: SingleCardProps) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-
     const title = extractField(properties, data, TaskFieldTypes.Title);
     const subtitle = extractField(properties, data, TaskFieldTypes.Subtitle);
 

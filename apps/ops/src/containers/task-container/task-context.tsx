@@ -2,7 +2,7 @@ import { createContext } from 'react';
 
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { CallCenterElement } from '@deps/models/case/send-document';
-import { ManagementTask } from '@deps/models/case/task-instance';
+import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 export type TaskState = {
     task: ManagementTask;
@@ -15,6 +15,7 @@ export type TaskState = {
     transactionSubType: CallCenterElement<string, SimpleOption>;
     formErrors: FormValidationErrors;
     submitFailed: boolean;
+    mappedDocuments: TaskDocument[];
     setTask: React.Dispatch<React.SetStateAction<ManagementTask>>;
     setIsReadyForDataEntry: React.Dispatch<React.SetStateAction<boolean>>;
     setExceptions: React.Dispatch<React.SetStateAction<string[]>>;
@@ -27,6 +28,7 @@ export type TaskState = {
     >;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
+    setMappedDocuments: React.Dispatch<React.SetStateAction<TaskDocument[]>>;
 };
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -41,6 +43,7 @@ export const taskDefaultValues = {
     transactionSubType: {} as CallCenterElement<string, SimpleOption>,
     formErrors: {} as FormValidationErrors,
     submitFailed: false,
+    mappedDocuments: [] as TaskDocument[],
     setTask: noop,
     setIsReadyForDataEntry: noop,
     setExceptions: noop,
@@ -49,6 +52,7 @@ export const taskDefaultValues = {
     setTransactionSubType: noop,
     setFormErrors: noop,
     setSubmitFailed: noop,
+    setMappedDocuments: noop,
 };
 
 export const TaskDataContext = createContext<TaskState>(taskDefaultValues);

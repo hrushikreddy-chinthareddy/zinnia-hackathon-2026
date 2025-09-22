@@ -1,0 +1,123 @@
+{
+    "id": "TA000000029070",
+    "caseId": "CA0000421765",
+    "source": "BPM.AppValidation",
+    "templateId": "7b9fc6ed-8b10-4ec9-80d8-adba3baa2996",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "NB_APPLICATION_REVIEW",
+    "taskName": "Application Review",
+    "taskDetails": "As part of the process, a review is required to ensure accuracy and completeness before proceeding with the next steps due to the inability to complete systematic validation and processing",
+    "status": "NEW",
+    "data": {
+        "issueResolved": false,
+        "details": {
+            "documentDetails": {
+                "documentId": "683736f30e92cc1f391b772d",
+                "documentSource": "EDS"
+            },
+            "onwerDetails": {
+                "lastName": "Our lady's",
+                "ssn": "564231321"
+            }
+        },
+        "attachments": [
+            {
+                "documentId": "683736f70e92cc1f391b7734",
+                "docCategory": "New Business",
+                "documentType": "NB ACCORD",
+                "documentExt": "pdf",
+                "documentName": "1035 EXCHANGE / ROLLOVER / TRANSFER eFORM 2"
+            }
+        ],
+        "declineReason": [
+            {
+                "category": "Application",
+                "reason": "Form",
+                "detailedReason": "State Disclosure form is incorrect for the product.",
+                "exceptionSubRefs": [],
+                "nmId": "NB.EM.103"
+            },
+            {
+                "category": "Application",
+                "reason": "Form",
+                "detailedReason": "California elderly abuse form is missing.",
+                "exceptionSubRefs": [],
+                "nmId": "NB.EM.108"
+            },
+            {
+                "category": "Application",
+                "reason": "Form",
+                "detailedReason": "Sales literature form is missing.",
+                "exceptionSubRefs": [],
+                "nmId": "NB.EM.095"
+            }
+        ],
+        "issuesList": [
+            {
+                "processingResolution": "Owner is a trust. Review the application document to confirm necessary trust certification documents are attached. Otherwise, log issue.",
+                "resolved": true,
+                "id": "d70c2724-0a9f-40df-b14f-c52033bde10f",
+                "externalId": "d70c2724-0a9f-40df-b14f-c52033bde10f",
+                "nmId": "NB.EM.042",
+                "type": "NOTE",
+                "category": "",
+                "reason": "",
+                "detailedReason": "",
+                "processingInstruction": "Reason: Owner is indicated as Trust. Review supporting documents for Trust Certification. Resolution: Owner is a trust. Review the application document to confirm necessary trust certification documents are attached. Otherwise, log issue.",
+                "processingReason": "Owner is indicated as Trust. Review supporting documents for Trust Certification."
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [
+        {
+            "documentId": "683736f70e92cc1f391b7734",
+            "documentName": "1035 EXCHANGE / ROLLOVER / TRANSFER eFORM 2",
+            "documentSource": null,
+            "createdDate": null
+        }
+    ],
+    "queue": "new_business",
+    "priority": "",
+    "escalated": false,
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497",
+    "assignedAt": "2025-06-19T03:51:27Z",
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-05-28T16:17:15Z",
+    "updatedBy": "Vijayalaxmi.Sambhane@zinnia.com",
+    "updatedByPartyId": "fa49a69c3939412d87b315cb39459497",
+    "updatedAt": "2025-06-20T14:42:19Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000421765"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2504726"
+        },
+        {
+            "identifier": "documentID",
+            "value": "683736f10e92cc1f391b7728"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "426536"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2504726"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELBWLB052820250000000411"
+        }
+    ],
+    "linkedTasks": [],
+    "externalId": "1dc4cdc4-5e00-4641-9798-d6c5d72982e3"
+}

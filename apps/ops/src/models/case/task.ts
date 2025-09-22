@@ -63,6 +63,9 @@ export enum TaskType {
     Ops_Review = 'OPS_REVIEW',
     Default_Case_DataEntry = 'DEFAULT_CASE_DATA_ENTRY',
     Policyupdate_Partydetails_Review = 'POLICYUPDATE_PARTYDETAILS_REVIEW',
+    Quality_Audit_Review = 'QUALITY_AUDIT_REVIEW',
+    Quality_Audit_Rework = 'QUALITY_AUDIT_REWORK',
+    Quality_Rework_Audit_Review = 'QUALITY_REWORK_AUDIT_REVIEW',
     Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
     Initiate_BeneChange_Transaction = 'INITIATE_BENECHANGE_TRANSACTION',
 }
@@ -281,3 +284,29 @@ export enum ActionTypes {
     Add = 'ADD',
     Remove = 'REMOVE',
 }
+
+export type AuditItem = {
+    id?: string;
+    histricalData?: boolean;
+    note?: string;
+    workId: string;
+    userDetails: UserDetails;
+};
+
+export type ReworkItem = {
+    auditId: string;
+    histricalData: boolean;
+    userDetails: UserDetails;
+    workId: string;
+    note: string;
+};
+export type UserDetails = {
+    partyId: string;
+    name: string;
+};
+export type AuditDetail = {
+    auditData?: AuditItem[];
+    reworkDetails?: ReworkItem[];
+    historicalReworkDetails?: ReworkItem[];
+    historicalAuditDetails?: AuditItem[];
+};

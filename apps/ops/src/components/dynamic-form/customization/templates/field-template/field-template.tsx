@@ -47,6 +47,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
     } = props;
     let { formData } = props;
     const uiOptions = getUiOptions(uiSchema);
+
     const helpText = uiOptions.help;
 
     const style = uiOptions?.style ?? '';
@@ -71,7 +72,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
         ''
     );
 
-    const isInlineWithoutLabel = !uiOptions?.label && uiOptions?.inline;
+    const isDataTypeInReadOnly = readonly && uiOptions?.dataType;
 
     if (uiOptions.isQuoted && formData && typeof formData === 'string') {
         formData = `"${formData}"`;
@@ -121,7 +122,10 @@ export function FieldTemplate(props: FieldTemplateProps) {
                             <Divider direction="horizontal" color="subtle" />
                         </div>
                     )}
-                    <div className={styles.children} key={id}>
+                    <div
+                        className={uiOptions.noMargin ? '' : styles.children}
+                        key={id}
+                    >
                         {displayLabel && (
                             <div className="mb-2 ">
                                 <Label
@@ -145,7 +149,8 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         typeof formData === 'string' &&
                         !(schema.enum || uiOptions.format === 'numeric') &&
                         !isLink &&
-                        !isInlineWithoutLabel
+                        !isDataTypeInReadOnly &&
+                        !uiOptions?.hidden
                             ? formData
                             : children}
                         {!hideError && errors}

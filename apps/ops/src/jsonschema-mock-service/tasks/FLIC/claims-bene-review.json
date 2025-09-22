@@ -281,7 +281,9 @@
                                                 "ui:options": {
                                                     "title": "Email",
                                                     "label": false,
-                                                    "disabled": true
+                                                    "disabled": true,
+                                                    "dataType": "email",
+                                                    "inline": true
                                                 }
                                             }
                                         }

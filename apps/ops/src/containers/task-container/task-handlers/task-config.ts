@@ -23,7 +23,12 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Payment_Follow_Up,
     TaskType.Ops_Review,
     TaskType.Day_150_Review,
+    TaskType.Claims_Match_Bene_Document,
     TaskType.Policyupdate_Partydetails_Review,
+    TaskType.Quality_Audit_Review,
     TaskType.Initiate_Postissue_Transaction,
     TaskType.Initiate_BeneChange_Transaction,
+    TaskType.Quality_Audit_Rework,
+    TaskType.Quality_Rework_Audit_Review,
+    TaskType.Claims_Bene_Review,
 ]);

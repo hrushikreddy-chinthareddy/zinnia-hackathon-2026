@@ -88,25 +88,10 @@
                             "title": "Suitability decision",
                             "$ref": "#/definitions/suitabilityStatusEnum"
                         },
-                        "attachment": {
-                            "type": "array",
-                            "title": "+ Add attachment",
-                            "items": {
-                                "type": "string",
-                                "format": "data-url"
-                            }
-                        },
                         "attachments": {
                             "type": "array",
                             "items": {
-                                "documentName": {
-                                    "title": "Name",
-                                    "type": "string"
-                                },
-                                "documentId": {
-                                    "title": "Document Id",
-                                    "type": "string"
-                                }
+                                "format": "data-url"
                             }
                         }
                     },
@@ -145,7 +130,6 @@
                         "rules",
                         "result",
                         "declineReason",
-                        "attachment",
                         "attachments"
                     ],
                     "$schema": "http: //json-schema.org/draft-07/schema#",
@@ -207,6 +191,7 @@
                     },
                     "result": {
                         "ui:widget": "radio",
+                        "ui:hideError": true,
                         "ui:options": {
                             "help": "Select suitability review decision",
                             "enumNames": ["Accept", "Decline"]
@@ -252,23 +237,12 @@
                         },
                         "ui:placeholder": "Select Issue"
                     },
-                    "attachment": {
-                        "ui:options": {
-                            "label": false,
-                            "showFiles": false,
-                            "omitValue": true
-                        },
-                        "ui:props": {
-                            "apiUrl": "case/v1/form/metadata?process=Suitability&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                            "apiMethod": "get"
-                        }
-                    },
                     "attachments": {
+                        "ui:widget": "FileWidget",
                         "ui:options": {
                             "label": false,
                             "addable": false,
-                            "removable": true,
-                            "ArrayFieldTemplate": "FileInfoTemplate"
+                            "removable": true
                         }
                     }
                 }

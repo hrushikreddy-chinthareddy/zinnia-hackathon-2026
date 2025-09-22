@@ -1143,6 +1143,7 @@
         "submit": "Enviar",
         "uploadDocument": "Subir Documento",
         "fileUpload": {
+            "or": "o",
             "documentCategory": "Categoría",
             "documentType": "Tipo",
             "formNumber": "Número de Formulario",
@@ -5812,6 +5813,9 @@
         },
         "type": "Tipo",
         "submissionType": "Tipo de envío",
+        "caseId": "ID del caso principal",
+        "caseTransactionType": "Tipo de transacción de caso",
+        "caseCompletionDate": "Fecha de finalización del caso",
         "electronic": "Electrónico",
         "paper": "Papel",
         "email": "Correo Electrónico",
@@ -8117,6 +8121,33 @@
             "subTitle": "Los datos de idoneidad se han enviado.",
             "cta": "Ir al caso",
             "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "qualityAuditReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Se envió el documento Review Quality Audit.",
+            "cta": "Ir a la Auditoría de Calidad",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "qualityAuditRework": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Se envió el documento Rework on Quality Audit.",
+            "cta": "Ir a la Auditoría de Calidad",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "qualityReworkAuditReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Se envió el documento Review Quality Audit Rework.",
+            "cta": "Ir a la Auditoría de Calidad",
+            "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }
     },
