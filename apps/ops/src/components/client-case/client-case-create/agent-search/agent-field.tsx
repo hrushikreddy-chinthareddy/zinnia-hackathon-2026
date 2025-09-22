@@ -219,6 +219,7 @@ const useSubscribeToProducerData = (
                   }
                 : {}),
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedAgent, agentData, onSelectAgent]);
 };
 
@@ -248,6 +249,7 @@ export const AgentField = ({
         });
 
         setSearchQuery(query);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const contextValue = useMemo(

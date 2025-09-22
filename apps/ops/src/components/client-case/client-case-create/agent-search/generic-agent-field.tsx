@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+
 import { AgentFieldLabel } from './agent-field-label';
 import { AgentInactiveField } from './agent-inactive-field';
 import { AgentSearchField } from './agent-search-field';
@@ -10,7 +12,11 @@ type GenericAgentFieldProps = {
 };
 
 export const GenericAgentField = ({ editable }: GenericAgentFieldProps) => {
-    const [state, setState] = useState<'INACTIVE' | 'SEARCH'>('INACTIVE');
+    const { writeClientCaseCarriers } = usePermissionsContext();
+    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+    const [state, setState] = useState<'INACTIVE' | 'SEARCH'>(
+        isSuperIllustrator ? 'SEARCH' : 'INACTIVE'
+    );
 
     return (
         <div>

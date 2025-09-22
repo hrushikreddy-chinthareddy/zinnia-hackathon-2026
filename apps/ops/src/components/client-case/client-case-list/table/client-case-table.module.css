@@ -48,4 +48,9 @@
     & button {
         z-index: 1 !important;
     }
+
+    .agentTrigger {
+        padding: 0 !important;
+        margin-left: var(--measure-dimension-gap-sm, 4px);
+    }
 }

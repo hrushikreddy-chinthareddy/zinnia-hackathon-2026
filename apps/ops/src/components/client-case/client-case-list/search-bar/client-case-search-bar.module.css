@@ -1,12 +1,20 @@
 .searchForm {
     display: flex;
     justify-content: flex-start;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md, 8px);
+}
+
+.searchInputs {
+    display: flex;
+    justify-content: flex-start;
 }
 
 .searchParams {
-    flex-shrink: 1;
     display: flex;
     justify-content: flex-start;
+    flex-shrink: 1;
+    height: 44px;
 
     .searchType {
         border-radius: var(--measure-dimension-radius-md, 8px)
@@ -14,6 +22,11 @@
             var(--measure-dimension-radius-none, 0px)
             var(--measure-dimension-radius-md, 8px);
         width: 228px;
+    }
+
+    .searchTypeContent {
+        transform: none !important;
+        opacity: 1 !important;
     }
 
     .searchInputWithIcon {

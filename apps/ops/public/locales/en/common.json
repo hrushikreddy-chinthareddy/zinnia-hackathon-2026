@@ -8031,6 +8031,7 @@
         "newClientCase": "+ New client case",
         "clientCasePermissions": "You do not have permission to take this action.",
         "searchBar": {
+            "searchByLabel": "Search By",
             "clientCase": "Client case",
             "agentName": "Agent name",
             "insuredName": "Insured name",
@@ -8192,7 +8193,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
             "inputPlaceholder": "Ask me anything",
