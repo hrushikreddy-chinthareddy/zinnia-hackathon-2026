@@ -5,9 +5,9 @@ import {
 } from '@xd/api-types/dist/generated-types/sor';
 
 import { RouteKey } from '@/route-map';
-import { logError, logTrace } from '@/utils/logging/log-fns';
+import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { isPayorOnly } from '@/utils/party';
+import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
 
 import { ComponentName } from './types';
 import { getLoggedInUserPolicyAndPartyData } from '../policy';
@@ -59,6 +59,17 @@ export const evaluateRouteRules = (
   partyRoles: PartyRole[]
 ): Record<RouteKey, () => boolean> | null => {
   const isNotPayor = !isPayorOnly(partyRoles);
+
+  const hasAcceptedRole = partyRolesAreInAllowedList(partyRoles);
+
+  if (!hasAcceptedRole) {
+    logWarn("User's roles were not in the included list of roles", {
+      cause: { partyRoles },
+    });
+    throw new Error("User's roles were not in the included list of roles", {
+      cause: { partyRoles },
+    });
+  }
 
   return {
     [RouteKey.ACCOUNT]: () =>
