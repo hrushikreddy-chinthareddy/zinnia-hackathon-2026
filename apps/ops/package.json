@@ -199,5 +199,5 @@
         "tokenize": "style-dictionary build",
         "typecheck": "tsc --project ./tsconfig.json"
     },
-    "version": "2.14.2"
+    "version": "2.16.0"
 }

@@ -3,7 +3,7 @@ import { PartyRole, ProductType } from '@xd/api-types/dist/generated-types/sor';
 import { RouteKey } from '@/route-map';
 import { logTrace } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { isPayorOnly } from '@/utils/party';
+import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
 
 import { ComponentName } from './types';
 import { getLoggedInUserPolicyAndPartyData } from '../policy';
@@ -118,6 +118,7 @@ describe('display-rules', () => {
 
     it('should allow all routes for non-payor with non-term policy', () => {
       (isPayorOnly as jest.Mock).mockReturnValue(false);
+      (partyRolesAreInAllowedList as jest.Mock).mockReturnValue(true);
 
       const result = evaluateRouteRules(mockPolicy, [PartyRole.OWNER]);
 
@@ -129,6 +130,7 @@ describe('display-rules', () => {
 
     it('should restrict routes for payor-only role', () => {
       (isPayorOnly as jest.Mock).mockReturnValue(true);
+      (partyRolesAreInAllowedList as jest.Mock).mockReturnValue(true);
 
       const result = evaluateRouteRules(mockPolicy, [PartyRole.PAYOR]);
 
