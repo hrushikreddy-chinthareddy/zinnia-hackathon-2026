@@ -8,13 +8,16 @@ import { transformMcsAgentData } from './transformers';
 
 const fileName = 'apps/consumer-experience/src/services/agent/index.ts';
 
+/**
+ * DEPRECATED
+ * This has been replaced by the POM distributors and products API call
+ */
 export const mcsAgentSearch = withLogging(
   async (
     { clientCode, agentId }: { clientCode: string; agentId: string },
     loggingCtx: CommonLogContext
   ): Promise<AgentData> => {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/${clientCode}/salesentity?idType=external&skip=0&take=1&id=${agentId}&IsClientChild=true`;
-
     const rawResponse = await ServerApi.get(url, undefined, loggingCtx);
 
     const response = await parseAPIResponse(rawResponse);
