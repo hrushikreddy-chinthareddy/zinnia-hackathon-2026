@@ -6,6 +6,7 @@ import React, { FormEvent, ForwardedRef } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { FormMetadata } from '@deps/models/case/task';
+import { TaskDocument } from '@deps/models/case/task-instance';
 
 import fields from './customization/fields/fields';
 import templates from './customization/templates/templates';
@@ -28,6 +29,8 @@ type DynamicFormProps = {
     formButtons?: any;
     formContext?: {
         customData: any;
+        mappedDocuments?: TaskDocument[];
+        setMappedDocuments?: (documents: TaskDocument[]) => void;
         isReadOnlyOverride?: boolean;
         setCustomData: (data: any) => void;
         onCancel?: () => void;

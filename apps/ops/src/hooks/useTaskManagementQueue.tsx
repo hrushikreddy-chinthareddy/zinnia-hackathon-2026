@@ -4,7 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { MessageType } from '@deps/models/case/task';
-import { AssignedTask, UnassignedTask } from '@deps/models/case/task-instance';
+import {
+    AssignedTask,
+    TaskStatus,
+    UnassignedTask,
+} from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
 import { getUserDataByPartyIds } from '@deps/queries/api/parties';
@@ -93,23 +97,32 @@ const useTaskManagementQueue = ({
 
         try {
             const assignedTasks = await getAssignedTasks();
+            const assignedTasksWithUser = assignedTasks.map((task) => ({
+                ...task,
+                assignee,
+            }));
+
             if (isHomePage()) {
-                if (assignedTasks.length > 0) {
-                    setTaskDetails(
-                        assignedTasks.map((task) => ({ ...task, assignee }))
-                    );
+                const activeTasks = assignedTasks.filter(
+                    (task) => task.status !== TaskStatus.Pending
+                );
+
+                if (activeTasks.length > 0) {
+                    setTaskDetails(assignedTasksWithUser);
                 } else {
                     const unassignedTasks = await getUnassignedTasks();
+
                     if (unassignedTasks.length > 0) {
                         setTaskDetails([
+                            ...assignedTasksWithUser,
                             { ...unassignedTasks[0], assignee: NO_ASSIGNEE },
                         ]);
+                    } else {
+                        setTaskDetails(assignedTasksWithUser);
                     }
                 }
             } else {
-                setTaskDetails(
-                    assignedTasks.map((task) => ({ ...task, assignee }))
-                );
+                setTaskDetails(assignedTasksWithUser);
             }
         } catch (error) {
             setErrorMessage(t('fetchTaskError') ?? '');

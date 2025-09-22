@@ -64,7 +64,6 @@ describe('Nasu withdrawal form config', () => {
             expect(current.disbursementOptions).toBeDefined();
             expect(current.formPartyConfigs).toBeDefined();
             expect(current.selectOneOptions).toBeDefined();
-            expect(current.cslnCheckStates).toBeDefined();
         });
     });
 

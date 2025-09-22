@@ -477,7 +477,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Notary,
         },
     ];
-    const cslnCheckStates = ['CA', 'CO', 'TX'];
 
     const eSignatureFieldConfig = {
         type: true,
@@ -510,7 +509,6 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
         signaturesConfig,
         additionalWithholdingAmountConfig,
         signaturesNotaryConfig,
-        cslnCheckStates,
         eSignatureFieldConfig,
         w4pSignaturesConfig,
     };

@@ -86,9 +86,12 @@ export async function POST(
     return NextResponse.json({
       data: null,
       error: {
-        name: 'error unknown',
-        message: 'error unknown',
+        name: 'bpm::partial-withdrawal-one-time::validation::POST::error',
+        message:
+          (error as Error).message ||
+          'Error fetching one time withdrawal validation',
         status: 500,
+        correlationId: loggingContext.correlationId,
       },
     });
   }

@@ -27,6 +27,7 @@ import {
     checkPhoneChangeEligibilityQuery,
     checkAddressChangeEligibilityQuery,
     checkEmailChangeEligibilityQuery,
+    checkCommunicationPreferenceChangeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
@@ -119,6 +120,27 @@ export const PersonSubPage = ({
         },
     });
 
+    const { data: communicationPreferenceChangeEligibility } = useQuery({
+        queryKey: [
+            'checkCommunicationPreferenceChangeEligibilityQuery',
+            planCode,
+            policyNumber,
+        ],
+        queryFn: () =>
+            checkCommunicationPreferenceChangeEligibilityQuery(
+                planCode as string,
+                policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleCommunicationPreferenceChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+
     const isAgent =
         selectedPartyRoles.includes(
             PartyRole.PRIMARYWRITINGAGENT.toLowerCase()
@@ -181,7 +203,10 @@ export const PersonSubPage = ({
                 <PersonPageHeader
                     selectedPolicyParty={selectedPolicyParty}
                     selectedPolicyPartyRoles={selectedPolicyPartyRoles}
-                    editable={editable}
+                    editable={
+                        editable &&
+                        communicationPreferenceChangeEligibility?.isEligibleCommunicationPreferenceChange
+                    }
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     partyStatus={selectedPolicyParty?.partyStatus}
                 />
@@ -225,7 +250,7 @@ export const PersonSubPage = ({
                 <EmailCard
                     editable={
                         editable &&
-                        phoneChangeEligibility?.isEligiblePhoneChange
+                        emailChangeEligibility?.isEligibleEmailChange
                     }
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}

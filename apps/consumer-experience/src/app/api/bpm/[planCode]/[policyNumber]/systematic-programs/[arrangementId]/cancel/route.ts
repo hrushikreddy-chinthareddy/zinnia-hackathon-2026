@@ -40,7 +40,7 @@ export async function POST(
   try {
     const response = await cancelSystematicProgram(
       { arrangementId, planCode, policyNumber },
-      paymentDetails,
+      { ...paymentDetails, correlationId: loggingContext.correlationId },
       loggingContext
     );
 
@@ -63,6 +63,8 @@ export async function POST(
       });
     }
 
+    // TODO: we need to update this to remove this throw, and make sure
+    // we are just passing what we get back from the service here
     throw new Error('Error submitting systematic premium');
   } catch (error) {
     logError('bpm::systematic-program::cancellation::POST::error', {
@@ -76,8 +78,9 @@ export async function POST(
       data: null,
       error: {
         status: 500,
-        name: 'Error fetching systematic program cancellation',
+        name: 'bpm::systematic-program::cancellation::POST::error',
         message: 'error fetching systematic program cancellation',
+        correlationId: loggingContext.correlationId,
       },
     });
   }

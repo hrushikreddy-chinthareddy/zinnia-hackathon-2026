@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -37,7 +36,6 @@ const DlicRmdWithdrawalForm = () => {
         signaturesConfig,
         additionalWithholdingAmountConfig,
         signaturesNotaryConfig,
-        cslnCheckStates,
         eSignatureFieldConfig,
         w4pSignaturesConfig,
     } = getDlicWithdrawalConfig(t);
@@ -140,10 +138,6 @@ const DlicRmdWithdrawalForm = () => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 

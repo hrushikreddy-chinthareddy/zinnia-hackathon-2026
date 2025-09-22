@@ -1,11 +1,13 @@
 import { TaskType } from '@deps/models/case/task';
+import { LoggingContext, logWarn } from '@deps/utils/server-logging';
 
 import { allowedTaskTypes } from './task-config';
 
 export async function applyDynamicOptions(
     task: any,
     accessToken: string = '',
-    currentTaskMetadata: any
+    currentTaskMetadata: any,
+    logCtx: LoggingContext
 ) {
     const { taskType } = task;
 
@@ -30,8 +32,14 @@ export async function applyDynamicOptions(
         // Pass the full task object to the handler so it can construct the correct payload
         const payload = handler.getPayload(task);
         const response = await handler.api(payload, accessToken);
-        handler.transformResponse(response, currentTaskMetadata, task);
+        handler.transformResponse(response, currentTaskMetadata, task, logCtx);
     } catch (error) {
-        console.error(`Error handling task ${validatedTaskType}:`, error);
+        logWarn(
+            `applyDynamicOptions:: Error handling task ${validatedTaskType}:`,
+            {
+                ...logCtx,
+                error,
+            }
+        );
     }
 }

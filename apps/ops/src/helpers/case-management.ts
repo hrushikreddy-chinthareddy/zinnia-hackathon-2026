@@ -25,6 +25,7 @@ export const getSearchValueObject = (
         caseId = '',
         agentFirstName = '',
         agentLastName = '',
+        agentSsn = '',
         firmName = '',
         documentNumber = '',
     }: SearchViewQuery,
@@ -35,6 +36,8 @@ export const getSearchValueObject = (
             return policyNumber ? { policyNumber } : {};
         case 'ssn':
             return ssn ? { ssn: ssn.replaceAll('-', '') } : {};
+        case 'agentSsn':
+            return agentSsn ? { agentSsn: agentSsn.replaceAll('-', '') } : {};
         case 'ownerFirstName':
         case 'ownerLastName':
             return {
@@ -307,6 +310,14 @@ export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => {
                     placeholder: '',
                 },
             ],
+        },
+        {
+            label: t('dashboard.search.buttons.agentSsn'),
+            value: 'agentSsn',
+            fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
+            placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
+            format: '###-##-####',
+            replaceValue: '-',
         },
         {
             label: t('dashboard.search.buttons.firmName'),

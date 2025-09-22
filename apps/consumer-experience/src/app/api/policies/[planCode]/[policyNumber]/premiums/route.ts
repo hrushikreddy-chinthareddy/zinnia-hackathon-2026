@@ -46,7 +46,11 @@ export async function GET(
     });
     return NextResponse.json({
       data: null,
-      error,
+      error: {
+        name: 'policies::premiums::GET::error',
+        message: 'Failed to get premiums',
+        correlationId: loggingContext.correlationId,
+      },
     });
   }
 }

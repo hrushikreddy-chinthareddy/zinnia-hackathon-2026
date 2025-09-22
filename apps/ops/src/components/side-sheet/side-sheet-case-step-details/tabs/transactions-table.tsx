@@ -94,7 +94,7 @@ export default function TransactionsTable({
                     </TableRow>
                 </TableHeader>
                 <TableBody className={clsx('typography-content-body-sm')}>
-                    {paginatedRTransactions?.map((transaction) => {
+                    {paginatedRTransactions?.map((transaction, index) => {
                         if (!transaction) return null;
                         const transactionStatus = getTransactionStatus(
                             transaction.action,
@@ -112,13 +112,17 @@ export default function TransactionsTable({
                             transaction?.amount || 0
                         );
                         return (
-                            <TableRow key={`task-${transaction.arrangementId}`}>
+                            <TableRow
+                                key={`task-${transaction.arrangementId}`}
+                                data-testid={`task-${transaction.arrangementId}`}
+                            >
                                 <TableCell className="typography-content-body-sm !px-3">
                                     <Content
                                         details={toSentenceCase(
                                             transaction.arrangementType
                                         )}
                                         variant={ContentVariant.BodySm}
+                                        data-testid={`task-arrangement-type-${index}`}
                                     />
                                     <Content
                                         className="text-[--color-base-text-text-secondary]"
@@ -126,20 +130,26 @@ export default function TransactionsTable({
                                             transaction.arrangementId
                                         )}
                                         variant={ContentVariant.BodySm}
+                                        data-testid={`task-arrangement-id-${index}`}
                                     />
                                 </TableCell>
                                 <TableCell className="typography-content-body-sm !px-3">
                                     <Content
                                         details={transactionStatus}
                                         variant={ContentVariant.BodySm}
+                                        data-testid={`task-arrangement-status-${index}`}
                                     />
                                     <Content
                                         className="text-[--color-base-text-text-secondary]"
                                         details={terminateDate}
                                         variant={ContentVariant.BodySm}
+                                        data-testid={`task-arrangement-terminate-date-${index}`}
                                     />
                                 </TableCell>
-                                <TableCell className="typography-content-body-sm !px-3">
+                                <TableCell
+                                    className="typography-content-body-sm !px-3"
+                                    data-testid={`task-amount-${index}`}
+                                >
                                     {amount}
                                 </TableCell>
                             </TableRow>

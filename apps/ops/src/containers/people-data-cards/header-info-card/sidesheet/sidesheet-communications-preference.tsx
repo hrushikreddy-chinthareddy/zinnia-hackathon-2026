@@ -42,6 +42,9 @@ import {
     getFormErrors,
     SideSheetCommnunicationPreferenceProps,
 } from '@deps/containers/people-data-cards/header-info-card/sidesheet/sidesheet-communications-preference.helpers';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -49,6 +52,11 @@ import {
     NonFinancialTransactions,
     updateEDeliveryPreferenceByPlanCode,
 } from '@deps/queries/api/bpm-non-financial';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 
 import { sortEmailsByType } from '../../email-card/email-card.helpers';
 
@@ -62,6 +70,7 @@ export const SidesheetCommunicationsPreference = ({
     party,
     planCode,
     policyNumber,
+    policy,
     setPreferredCommunication,
     emails,
     addresses,
@@ -70,10 +79,13 @@ export const SidesheetCommunicationsPreference = ({
         keyPrefix: 'people.sideSheet.communicationpreference',
     });
     const { t: defaultT } = useTranslation();
+    const { sessionId, partyId: userId } = usePermissionsContext();
 
     const INITIAL_BODY: CommunicationPreferenceChangeRequest = {
         correlationId: uuidV4(),
     };
+
+    const [loading, setLoading] = useState<boolean>(false);
 
     const [body, setBody] =
         useState<CommunicationPreferenceChangeRequest>(INITIAL_BODY);
@@ -96,11 +108,6 @@ export const SidesheetCommunicationsPreference = ({
     const partyId = party?.partyId ?? '';
 
     const partyFullName = party?.fullName ?? '';
-
-    const stopLoading =
-        currentErrors === undefined
-            ? true
-            : !!Object.entries(currentErrors).length;
 
     const mainCtaText = t('mainCta.update');
 
@@ -221,6 +228,8 @@ export const SidesheetCommunicationsPreference = ({
             )?.emailAddress;
         }
 
+        setLoading(true);
+
         const response = await updateEDeliveryPreferenceByPlanCode({
             planCode: planCode,
             policyNumber: policyNumber,
@@ -234,17 +243,36 @@ export const SidesheetCommunicationsPreference = ({
             },
         });
 
+        const onSuccessfulSubmit = (caseId: string) => {
+            setNewCaseId(caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.UPDATE_COMMUNICATION_PREFERENCE,
+                    query: {
+                        ...body,
+                        communicationPreference: {
+                            ...preferredCommunication,
+                            text: '',
+                        },
+                    },
+                    caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
+        };
+
         handleResponse({
             response,
             setViewState,
             setValidationResults,
-            setNewCaseId: () => {
-                if (response?.data?.caseId) {
-                    setNewCaseId(response.data.caseId);
-                    setPreferredCommunication(selectedContactInfo);
-                }
-            },
+            onSuccessfulSubmit,
         });
+
+        setLoading(false);
     };
 
     const sortedEmails = sortEmailsByType({ emails: emails });
@@ -454,11 +482,12 @@ export const SidesheetCommunicationsPreference = ({
                             onClick: onCancel,
                             text: t('general.cancel'),
                         }}
-                        stopLoading={stopLoading}
+                        stopLoading={!loading}
                         trackEventProps={{
                             type: TransactionType.COMMUNICATION_PREFERENCE_CHANGE,
                             correlationId: body.correlationId,
                         }}
+                        newSpinner={true}
                     />
                 </div>
             );

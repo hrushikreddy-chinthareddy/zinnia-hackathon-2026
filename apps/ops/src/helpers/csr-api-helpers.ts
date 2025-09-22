@@ -9,19 +9,40 @@ import { replacePlaceholders } from './value-placement.helpers';
 const baseUrl = baseAppUrl + '/api/';
 
 export function parseJsonValue(value: string) {
-    try {
-        return JSON.parse(value);
-    } catch (e) {
-        return value;
+    if (
+        typeof value === 'string' &&
+        ((value.startsWith('{') && value.endsWith('}')) ||
+            (value.startsWith('[') && value.endsWith(']')))
+    ) {
+        try {
+            return JSON.parse(value);
+        } catch (e) {
+            return value;
+        }
     }
+
+    // Return non-JSON-like strings as is
+    return value;
 }
 
 export function isString(v: unknown) {
     return typeof v === 'string';
 }
 
-export const stringifyValue = (v: unknown) =>
-    typeof v === 'string' ? v : JSON.stringify(v);
+export const stringifyObjectValue = (v: unknown) => {
+    // Only stringify if the value is an object
+    if (v !== null && typeof v === 'object') {
+        return JSON.stringify(
+            Object.keys(v)
+                .sort()
+                .reduce<Record<string, unknown>>((acc, key) => {
+                    acc[key] = v[key as keyof typeof v];
+                    return acc;
+                }, {})
+        );
+    }
+    return v;
+};
 
 function deduplicate<T>(items: T[]): T[] {
     const seen = new Map<string, T>();
@@ -80,11 +101,7 @@ export const csrApiHelper = async (
                     const values =
                         filteredResponse?.map((item: any) => {
                             const filteredItem = item[(response as any)?.[key]];
-                            return filteredItem
-                                ? filteredItem
-                                : strigify
-                                ? stringifyValue(item)
-                                : item;
+                            return filteredItem ? filteredItem : item;
                         }) || [];
 
                     mapDataToKeys[key] = deduplicate(values);
@@ -117,11 +134,7 @@ export const csrApiHelper = async (
                 Object.keys(response).forEach((key) => {
                     mapDataToKeys[key] = filteredApiData?.map((item: any) => {
                         const filteredItem = item[(response as any)?.[key]];
-                        return filteredItem
-                            ? filteredItem
-                            : strigify
-                            ? stringifyValue(item)
-                            : item;
+                        return filteredItem ? filteredItem : item;
                     });
                 });
                 return mapDataToKeys;

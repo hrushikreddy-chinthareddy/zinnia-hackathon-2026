@@ -15,7 +15,6 @@ import useNassauConfig from './nasu-ssw-form-helpers';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import TaxOL4753Attachment from '@deps/components/otp-withdrawal-form/tax-ol4753-attachment';
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import SswEditSelection from '../ssw-edit-selection';
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import W4pTaxForm from '@deps/components/w4p-tax-form/w4p-tax-form';
@@ -35,7 +34,6 @@ export function NassauSSWForm() {
         setFormData,
         initialForm,
         isFormStateReadOnly,
-        contractIssueState,
         formErrors,
         formESignatureData,
         setFormESignatureData,
@@ -49,7 +47,6 @@ export function NassauSSWForm() {
         formPartyConfigs,
         disbursementOptions,
         systematicWithdrawalOptions,
-        cslnCheckStates,
         defaultValues,
         handleShouldShowDOBInOl4573,
         w4pSignaturesConfig,
@@ -131,10 +128,7 @@ export function NassauSSWForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 w4pSignaturesConfig={w4pSignaturesConfig}
             />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
+
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

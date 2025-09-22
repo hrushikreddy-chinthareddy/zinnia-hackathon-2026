@@ -498,8 +498,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         auditTrial: true,
     };
 
-    const cslnCheckStates = ['CA', 'MO', 'TX', 'RI'];
-
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -523,7 +521,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
         irsSignatureConfig,
         signaturesConfig,
         eSignatureFieldConfig,
-        cslnCheckStates,
         w4pSignaturesConfig,
     };
 }

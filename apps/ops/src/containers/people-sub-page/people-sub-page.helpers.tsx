@@ -61,8 +61,8 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
             return t('chipFilter.partyRole.commissionagent');
         case PartyRoleChipToText.ThirdPartyDesignee:
             return t('chipFilter.partyRole.thirdPartyDesignee');
-        case PartyRoleChipToText.Annuitant:
-            return t('chipFilter.partyRole.annuitant');
+        case PartyRoleChipToText.JointAnnuitant:
+            return t('chipFilter.partyRole.jointAnnuitant');
         case PartyRoleChipToText.PrimaryOwner:
             return t('chipFilter.partyRole.owner');
         case PartyRoleChipToText.PolicyJointOwner:
@@ -87,6 +87,8 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
             return t('chipFilter.partyRole.additionalWritingAgent');
         case PartyRoleChipToText.ExchangeCompany:
             return t('chipFilter.partyRole.exchangeCompany');
+        case PartyRoleChipToText.OtherIntresedParty:
+            return t('chipFilter.partyRole.otherInterestedParty');
         default:
             return text;
     }

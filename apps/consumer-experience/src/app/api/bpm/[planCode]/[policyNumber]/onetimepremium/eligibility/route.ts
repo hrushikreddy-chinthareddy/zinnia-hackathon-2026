@@ -8,7 +8,7 @@ export async function GET(
   request: NextRequest,
   { params }: { params: { planCode: string; policyNumber: string } }
 ) {
-  const loggingContext = buildNextReqLoggingContext(request);
+  const loggingContext = await buildNextReqLoggingContext(request);
 
   logTrace('bpm::onetimepremium::eligibility::GET::start', {
     ...loggingContext,
@@ -41,7 +41,12 @@ export async function GET(
 
     return NextResponse.json({
       data: null,
-      error: error,
+      error: {
+        message: (error as Error).message,
+        name: (error as Error).name,
+        status: 500,
+        correlationId: loggingContext.correlationId,
+      },
     });
   }
 }

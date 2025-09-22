@@ -346,7 +346,7 @@ export default function TaxWithholdings({
             )}
 
             {isIowaResident && (
-                <div className="mt-4">
+                <div className="mt-4 flex flex-wrap gap-8 max-md:flex-col">
                     <CheckboxText
                         label={t(`iowaResident`)}
                         checked={noWithholdings}

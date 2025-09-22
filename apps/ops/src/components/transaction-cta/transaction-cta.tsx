@@ -21,6 +21,8 @@ import {
     TransactionContinueClickedEvent,
 } from '@deps/types/segment-analytics';
 
+import NewSpinnerButton from '../spinner-button/new-spinner-button';
+
 export interface TransactionCtaProps extends TransactionClickProps {
     className?: string;
     mainCta: {
@@ -33,6 +35,7 @@ export interface TransactionCtaProps extends TransactionClickProps {
         onClick?: () => void;
     };
     stopLoading?: boolean;
+    newSpinner?: boolean;
 }
 
 const TransactionCta = ({
@@ -41,6 +44,7 @@ const TransactionCta = ({
     secondaryCta,
     stopLoading,
     trackEventProps,
+    newSpinner = false,
 }: TransactionCtaProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'transactions.transactionCta',
@@ -117,12 +121,22 @@ const TransactionCta = ({
     return (
         <div className={clsx('flex flex-col gap-4', className)}>
             <div className="flex items-center gap-8">
-                <SpinnerButton
-                    stopLoading={stopLoading}
-                    size={ButtonSize.Small}
-                    text={mainCta.text}
-                    onClick={onContinueClick}
-                />
+                {!newSpinner ? (
+                    <SpinnerButton
+                        stopLoading={stopLoading}
+                        size={ButtonSize.Small}
+                        text={mainCta.text}
+                        onClick={onContinueClick}
+                    />
+                ) : (
+                    <NewSpinnerButton
+                        loading={!stopLoading}
+                        size={ButtonSize.Small}
+                        text={mainCta.text}
+                        onClick={onContinueClick}
+                    />
+                )}
+
                 {hasSecondaryCta &&
                     (secondaryCta?.onClick ? (
                         <NavElement

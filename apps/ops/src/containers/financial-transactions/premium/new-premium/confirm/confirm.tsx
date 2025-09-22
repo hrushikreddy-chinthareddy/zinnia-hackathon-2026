@@ -1,6 +1,6 @@
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import PageLoader, {
     PageLoaderVariant,
@@ -11,6 +11,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildOneTimeFinancialTransactionSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import {
     TransactionResponseStatus,
@@ -20,6 +21,8 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
+    TransactionSuccessfulEvent,
+    TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 
 import { buildNewPremiumRequestBody } from '../new-premium.helpers';
@@ -82,12 +85,23 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildOneTimeFinancialTransactionSubmittedEvent({
+                    query,
+                    policy,
+                    caseId: response?.data?.caseId,
+                    sessionId,
+                    userId: partyId,
+                    transactionSubmittedEventType:
+                        TransactionSubmittedEventType.ONE_TIME_PREMIUM,
+                })
+            );
         }
 
         setIsLoading(false);
     }, [
-        policy.product?.planCode,
-        policy.policyNumber,
+        policy,
         caseId,
         effectiveDate,
         reverseInitiator,
@@ -98,7 +112,11 @@ const Confirm = ({ policy }: ConfirmProps) => {
         partyId,
     ]); //TODO: What happens when unecessary dependencies are removed? Will it break?
 
+    const hasAutoSubmittedRef = useRef<unknown>(null);
+
     useEffect(() => {
+        if (hasAutoSubmittedRef.current === submit) return;
+        hasAutoSubmittedRef.current = submit;
         submit();
     }, [submit]);
 

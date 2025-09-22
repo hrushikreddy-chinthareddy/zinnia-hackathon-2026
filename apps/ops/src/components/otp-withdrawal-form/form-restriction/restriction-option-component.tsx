@@ -72,16 +72,19 @@ export default function RestrictionOptionComponent<T>({
                             key={`${legend}Select-${value}`}
                             className={containerClasses}
                         >
-                            <CheckboxText
-                                checked={isChecked(value, restriction)}
-                                label={label}
-                                onChange={toggleRestriction(
-                                    value,
-                                    setRestriction
-                                )}
-                                isDisabled={isFormStateReadOnly}
-                            />
-                            {subElement}
+                            <div className="flex flex-wrap gap-8 max-md:flex-col">
+                                <CheckboxText
+                                    checked={isChecked(value, restriction)}
+                                    label={label}
+                                    onChange={toggleRestriction(
+                                        value,
+                                        setRestriction
+                                    )}
+                                    isDisabled={isFormStateReadOnly}
+                                />
+
+                                {subElement}
+                            </div>
                         </div>
                     );
                 })}

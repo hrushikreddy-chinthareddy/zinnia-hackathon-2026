@@ -17,6 +17,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { FieldVariant } from '@deps/components/fields/field';
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import {
     BooleanValue,
     EntityTypeValue,
@@ -951,4 +952,24 @@ export const entityTypeOptions = (t: TFunction) => {
             value: EntityTypeValue.Other,
         },
     ];
+};
+
+export const createMainCta = (t: TFunction, handleContinue: () => void) => {
+    return {
+        text: t('general.continue'),
+        onClick: handleContinue,
+    };
+};
+
+export const createSecondaryCta = (
+    t: TFunction,
+    policy: Policy,
+    parentPage: ParentPage
+) => {
+    const { policyNumber, product } = policy;
+
+    return {
+        text: t('general.leaveTransaction'),
+        href: `/policies/${product?.planCode}/${policyNumber}/policy/${parentPage}`,
+    };
 };

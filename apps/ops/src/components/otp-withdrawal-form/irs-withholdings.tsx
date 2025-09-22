@@ -121,15 +121,13 @@ export default function IrsWithholding({
             containerClassNames="border-b-2 border-gray-100"
             classNames="w-full"
         >
-            <div className="flex flex-wrap gap-8 max-md:flex-col">
-                <div className="flex-1">
-                    <CheckboxText
-                        label={t('isW4R')}
-                        checked={isIrsChecked}
-                        onChange={() => setIrsChecked(!isIrsChecked)}
-                        isDisabled={isFormStateReadOnly}
-                    />
-                </div>
+            <div className=" flex flex-wrap gap-8 max-md:flex-col">
+                <CheckboxText
+                    label={t('isW4R')}
+                    checked={isIrsChecked}
+                    onChange={() => setIrsChecked(!isIrsChecked)}
+                    isDisabled={isFormStateReadOnly}
+                />
             </div>
             {isIrsChecked && (
                 <div

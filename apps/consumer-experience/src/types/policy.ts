@@ -1,6 +1,5 @@
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
-  AccountType,
   Address,
   BankAccount,
   Email,
@@ -263,7 +262,7 @@ export interface PaymentHistory {
   frequency?: 'one-time' | 'initial' | null;
   type?: keyof typeof Reason;
   bankDetails?: {
-    accountType?: AccountType;
+    accountType?: string;
     accountNumber?: string;
     partyId?: string;
   };

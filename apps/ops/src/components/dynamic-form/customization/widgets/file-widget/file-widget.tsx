@@ -2,7 +2,6 @@ import {
     dataURItoBlob,
     FormContextType,
     getTemplate,
-    getUiOptions,
     Registry,
     RJSFSchema,
     StrictRJSFSchema,
@@ -11,23 +10,27 @@ import {
 } from '@rjsf/utils';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Toast, ToastVariant } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import dayjs from 'dayjs';
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useAttachments } from '@deps/hooks/useAttachments';
 import { EDSDocumentRequestBody } from '@deps/models/case/document';
+import { ActionTypes } from '@deps/models/case/task';
+import { TaskDocument } from '@deps/models/case/task-instance';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { attachFilesToMappedDocuments } from '@deps/utils/tasks/task-payload-helpers';
 
 import FileAttachmentComponent from './file-attachment.component';
 import style from './file-widget.module.css';
+import FileListing from '../../components/file-listing/file-listing';
 
 const INTERVAL = 3000;
 
@@ -145,112 +148,155 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
     }, [] as FileInfoType[]);
 }
 
-function FileWidget<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any
->(widgetProps: WidgetProps<T, S, F>) {
+function FileWidget(widgetProps: WidgetProps) {
+    const { multiple, onChange, value, formContext } = widgetProps;
+
+    const { attachments, handleSetAttachments } = useAttachments({
+        initialFiles: value,
+        multiple: multiple ?? true,
+        onChange,
+        formContext,
+    });
+
+    return (
+        <>
+            <FileUploadComponent
+                widgetProps={widgetProps}
+                setAttachments={handleSetAttachments}
+                attachments={attachments}
+            />
+            {attachments?.length ? (
+                <FileListing
+                    attachments={attachments}
+                    setAttachments={handleSetAttachments}
+                    widgetProps={widgetProps}
+                />
+            ) : null}
+        </>
+    );
+}
+
+export default FileWidget;
+
+export interface FileAttachmentProps {
+    setAttachments: (file: TaskDocument, operationType?: ActionTypes) => void;
+    widgetProps: WidgetProps;
+    attachments?: TaskDocument[];
+}
+
+function FileUploadComponent({
+    setAttachments,
+    widgetProps,
+}: FileAttachmentProps) {
     const {
         disabled,
         readonly,
         required,
         multiple,
-        onChange,
         value,
         options,
-        name,
         registry,
-        schema,
-        uiSchema,
         formContext,
     } = widgetProps;
-
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'general',
     });
-    const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    const BaseInputTemplate = getTemplate(
         'BaseInputTemplate',
         registry,
         options
     );
     const sideSheet = useSideSheetContext();
 
-    const { showFiles } = getUiOptions<T, S, F>(uiSchema);
-
     const [toastMessage, setToastMessage] = useState<any>(undefined);
     const [toastVariant, setToastVariant] = useState<any>(undefined);
+    const [loader, setLoader] = useState(false);
 
     const onSubmit = (data: EDSDocumentRequestBody, files: any) => {
-        const attachments = [...(formContext?.customData?.attachments || [])];
-        const failedUploads: string[] = []; // Track failed uploads
+        if (loader) {
+            return;
+        }
 
-        const uploadPromises = Object.keys(files).map(async (key: string) => {
-            const { blob, name } = dataURItoBlob(files[key]);
-            const metaData = {
-                ...data,
-                sourceFileName: name,
-                documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
-                fileType: getFileSubtype(blob),
-                docClassification: SearchRequest.documentClassification.INBOUND,
-                sourceSystem: SourceSystem.ZL,
-                zinniaLiveCaseId: formContext?.customData?.caseId,
-                parentCarrierCode: formContext?.customData?.carrier ?? '',
-                correlationId: formContext?.correlationId || '',
-            };
-            try {
-                const response = await uploadDocumentV2(metaData, files[key]);
+        try {
+            setLoader(true);
 
-                if (response?.documentId) {
-                    const attachment = {
-                        documentId: response.documentId,
-                        documentCategory: metaData?.docCategory,
-                        documentType: metaData?.documentType,
-                        documentExt: metaData?.fileType,
-                        documentName:
-                            metaData?.documentTypeDescription || name || '',
+            const failedUploads: string[] = []; // Track failed uploads
+
+            const uploadPromises = Object.keys(files).map(
+                async (key: string) => {
+                    const { blob, name } = dataURItoBlob(files[key]);
+                    const metaData = {
+                        ...data,
+                        sourceFileName: name,
+                        documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
+                        fileType: getFileSubtype(blob),
+                        docClassification:
+                            SearchRequest.documentClassification.INBOUND,
+                        sourceSystem: SourceSystem.ZL,
+                        zinniaLiveCaseId: formContext?.customData?.caseId,
+                        parentCarrierCode:
+                            formContext?.customData?.carrier ?? '',
+                        correlationId: formContext?.correlationId || '',
                     };
-                    attachments.push(attachment);
+                    try {
+                        const response = await uploadDocumentV2(
+                            metaData,
+                            files[key]
+                        );
 
-                    const task = formContext?.customData?.task;
-                    return await attachFilesToMappedDocuments(
-                        attachment,
-                        task,
-                        formContext?.correlationId || ''
+                        if (response?.documentId) {
+                            const attachment = {
+                                documentId: response.documentId,
+                                documentCategory: metaData?.docCategory,
+                                documentType: metaData?.documentType,
+                                documentExt: metaData?.fileType,
+                                documentName:
+                                    metaData?.documentTypeDescription ||
+                                    name ||
+                                    '',
+                            };
+                            setAttachments(attachment, ActionTypes.Add);
+                        } else {
+                            failedUploads.push(name); // Add the file name to the failed uploads list
+                        }
+                    } catch (error) {
+                        // Log the error and track the failed file
+                        browserLogError(
+                            'FileWidget: Error uploading document:',
+                            {
+                                ...parseErrorInformation(error),
+                            }
+                        );
+                        failedUploads.push(name); // Add the file name to the failed uploads list
+                    }
+                }
+            );
+
+            Promise.allSettled(uploadPromises).then(() => {
+                if (failedUploads.length > 0) {
+                    // Notify the user about failed uploads
+                    setToastVariant(ToastVariant.Error);
+                    setToastMessage(
+                        t(`fileUploadToastMessages.fileUploadError`, {
+                            failedUploads: failedUploads.join(', '),
+                        })
                     );
                 } else {
-                    failedUploads.push(name); // Add the file name to the failed uploads list
+                    setToastVariant(ToastVariant.Success);
+                    setToastMessage(
+                        t(`fileUploadToastMessages.fileUploadSuccess`, {})
+                    );
                 }
-            } catch (error) {
-                // Log the error and track the failed file
-                browserLogError('FileWidget: Error uploading document:', {
-                    ...parseErrorInformation(error),
-                });
-                failedUploads.push(name); // Add the file name to the failed uploads list
-            }
-        });
 
-        Promise.allSettled(uploadPromises).then(() => {
-            if (formContext?.setCustomData) {
-                formContext.setCustomData({ attachments: attachments });
-            }
-
-            if (failedUploads.length > 0) {
-                // Notify the user about failed uploads
-                setToastVariant(ToastVariant.Error);
-                setToastMessage(
-                    t(`fileUploadToastMessages.fileUploadError`, {
-                        failedUploads: failedUploads.join(', '),
-                    })
-                );
-            } else {
-                setToastVariant(ToastVariant.Success);
-                setToastMessage(
-                    t(`fileUploadToastMessages.fileUploadSuccess`, {})
-                );
-            }
-
-            sideSheet.handleOpen(false);
-        });
+                sideSheet.handleOpen(false);
+            });
+        } catch (error) {
+            browserLogError('Error uploading document:', {
+                ...parseErrorInformation(error),
+            });
+        } finally {
+            setLoader(false);
+        }
     };
 
     const handleChange = useCallback(
@@ -276,7 +322,7 @@ function FileWidget<
 
                 const content = (
                     <div className="p-6">
-                        <FilesInfo<T, S, F>
+                        <FilesInfo
                             filesInfo={filesInfoEvent}
                             onRemove={rmFile}
                             registry={registry}
@@ -290,16 +336,27 @@ function FileWidget<
                             onSubmit={(formData: EDSDocumentRequestBody) =>
                                 onSubmit(formData, newValue)
                             }
+                            loader={loader}
                         />
                     </div>
                 );
-                ``;
-
                 sideSheet.changeSideSheetContent(t('uploadDocument'), content);
                 sideSheet.handleOpen(true);
             });
         },
-        [multiple, onChange, value, onSubmit, options.filePreview]
+        [multiple, setAttachments, value, onSubmit, options.filePreview, loader]
+    );
+
+    const rmFile = useCallback(
+        (index: number) => {
+            if (multiple) {
+                const newValue = value.filter(
+                    (_: any, i: number) => i !== index
+                );
+                setAttachments(newValue);
+            }
+        },
+        [multiple, value, setAttachments]
     );
 
     useEffect(() => {
@@ -312,33 +369,19 @@ function FileWidget<
         }
     }, [toastMessage, toastVariant]);
 
-    const rmFile = useCallback(
-        (index: number) => {
-            if (multiple) {
-                const newValue = value.filter(
-                    (_: any, i: number) => i !== index
-                );
-                onChange(newValue);
-            } else {
-                onChange(undefined);
-            }
-        },
-        [multiple, value, onChange]
-    );
-    const filesInfo = useMemo(
-        () => extractFileInfo(Array.isArray(value) ? value : [value]),
-        [value]
-    );
+    const readOnlyClassName = clsx({
+        'cursor-pointer': !readonly,
+        '!border-gray-300 !text-gray-200': readonly,
+    });
 
-    const readonlyClass = readonly ? '!cursor-not-allowed opacity-50' : '';
     return (
         <>
-            <div className={`mt-1 ${readonlyClass}`}>
+            <div className="mt-1">
                 <label
                     htmlFor={widgetProps.id}
-                    className={`${style.customFileUpload} ${readonlyClass}`}
+                    className={clsx(style.customFileUpload, readOnlyClassName)}
                 >
-                    {schema?.title ?? t('upload')}
+                    {t('fileUpload.upload')}
                 </label>
                 <BaseInputTemplate
                     {...widgetProps}
@@ -348,18 +391,10 @@ function FileWidget<
                     onChangeOverride={handleChange}
                     value=""
                     accept={options.accept ? String(options.accept) : undefined}
-                    className={`${style.input} ${readonlyClass}`}
+                    className={style.input}
                 />
             </div>
-            {showFiles && (
-                <FilesInfo<T, S, F>
-                    filesInfo={filesInfo}
-                    onRemove={rmFile}
-                    registry={registry}
-                    preview={options.filePreview}
-                    options={options}
-                />
-            )}
+
             {toastMessage && toastVariant && (
                 <div className="fixed bottom-4 right-10 z-50">
                     <Toast variant={toastVariant}>{toastMessage}</Toast>
@@ -369,4 +404,4 @@ function FileWidget<
     );
 }
 
-export default FileWidget;
+export { FileUploadComponent };

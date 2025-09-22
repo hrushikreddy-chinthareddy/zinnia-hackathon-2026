@@ -54,6 +54,7 @@ export interface PermissionsContextProps {
     isAllowReadIllustrations: boolean;
     hasEditServiceRequestAccess?: boolean;
     hasUsagePermission: boolean;
+    hasAiAssistantPermissions: boolean;
     hasCallLogsAccess: boolean;
     hasNotesAccess: boolean;
     hasTestHarnessAccess: boolean;
@@ -251,6 +252,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.ILLUSTRATIONS_EXPERIENCE,
                 FgaRelation.UiAccess
             );
+            const hasAiAssistantPermissions = !!checkRelation(
+                data,
+                FgaRoles.AIASSISTANT,
+                FgaRelation.UiAccess
+            );
             const hasCallLogsAccess = !!checkRelation(
                 data,
                 FgaRoles.CALL_LOGS_ZL,
@@ -261,7 +267,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.NOTES_ACCESS,
                 FgaRelation.UiAccess
             );
-
             const hasTestHarnessAccess = !!checkRelation(
                 data,
                 FgaRoles.TEST_HARNESS_ACCESS,
@@ -295,6 +300,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasPolicyIndexPageAccess: !!hasPolicyIndexPageAccess,
                 isAllowReadIllustrations,
                 hasUsagePermission: !!hasUsage,
+                hasAiAssistantPermissions,
                 hasCallLogsAccess,
                 hasNotesAccess,
                 hasTestHarnessAccess,
@@ -350,6 +356,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasEditServiceRequestAccess:
                     !!hasEditServiceRequestAccess?.data,
                 hasUsagePermission: !!fgaRoleData?.hasUsagePermission,
+                hasAiAssistantPermissions:
+                    featureFlags[FEATURE_FLAGS.AI_ASSISTANT] &&
+                    !!fgaRoleData?.hasAiAssistantPermissions,
                 hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
                 hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,

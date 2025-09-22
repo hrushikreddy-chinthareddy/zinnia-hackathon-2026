@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
 import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -31,7 +30,6 @@ export default function NasuRmdWithdrawalForm() {
     });
     const {
         formPartyConfigs,
-        cslnCheckStates,
         signaturesConfig,
         signaturesNotaryConfig,
         formValidation,
@@ -135,14 +133,6 @@ export default function NasuRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 shouldShowDOBInOl4573={shouldShowDOBInOl4573}
             />
-            <FormDisbursement
-                isFormStateReadOnly={isFormStateReadOnly}
-                options={disbursementOptions}
-            />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}

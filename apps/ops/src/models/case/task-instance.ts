@@ -78,8 +78,11 @@ export type ManagementTask<T = TaskStatus> = {
 export type TaskDocument = {
     documentId: string;
     documentName: string;
-    documentSource: DocumentSource;
+    documentSource?: DocumentSource;
     fileType?: string;
+    docCategory?: string;
+    documentExt?: string;
+    documentType?: string;
 };
 
 export enum DocumentSource {
@@ -147,6 +150,7 @@ export interface TaskSideSheetProps {
     featureFlagDecisions?: FeatureFlags;
     taskDescription?: string;
     taskName?: string;
+    mappedDocuments?: TaskDocument[];
     onTaskClaimSuccess?: () => void;
 }
 

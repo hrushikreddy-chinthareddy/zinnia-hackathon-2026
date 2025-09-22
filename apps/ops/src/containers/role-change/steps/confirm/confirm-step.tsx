@@ -14,11 +14,19 @@ import PageLoader, {
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyRole, RoleLabel, Roles } from '@deps/constants/policy';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { submitRoleChange } from '@deps/queries/api/role-change';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import {
+    TransactionSuccessfulEvent,
+    SegmentTrackedEventName,
+    TransactionSubmittedEventType,
+} from '@deps/types/segment-analytics';
 
 import { buildRoleChangeRequestBody } from '../../role-change-helper';
 
@@ -39,6 +47,7 @@ const ConfirmStep = ({
         keyPrefix: 'roleChange.confirm',
     });
     const router = useRouter();
+    const { sessionId, partyId: userId } = usePermissionsContext();
 
     const [submitFailed, setSubmitFailed] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -76,10 +85,42 @@ const ConfirmStep = ({
                 setSubmitNigo(true);
             }
             setNewCaseId(response?.data?.caseId);
+
+            let transactionType;
+            switch (role) {
+                case PolicyRole.OWNER:
+                    transactionType =
+                        TransactionSubmittedEventType.UPDATE_OWNER;
+                    break;
+                case PolicyRole.JOINTOWNER:
+                    transactionType =
+                        TransactionSubmittedEventType.UPDATE_JOINT_OWNER;
+                    break;
+                // BPB - TODO - there's not really a way to remove a payor without adding at the same time?
+                case PolicyRole.PAYOR:
+                    transactionType = TransactionSubmittedEventType.ADD_PAYOR;
+                    break;
+                case PolicyRole.THIRDPARTYDESIGNEE:
+                default:
+                    transactionType =
+                        TransactionSubmittedEventType.ADD_THIRD_PARTY;
+                    break;
+            }
+            segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
+                SegmentTrackedEventName.TransactionSubmitted,
+                buildNonFinancialTransactionsSubmittedEvent({
+                    transactionSubmittedEventType: transactionType,
+                    query: roleBody,
+                    caseId: response?.data?.caseId,
+                    policy,
+                    sessionId,
+                    userId,
+                })
+            );
         }
 
         setIsLoading(false);
-    }, [policy]);
+    }, [policy, userId, sessionId]);
 
     const hasAutoSubmittedRef = useRef(false);
 

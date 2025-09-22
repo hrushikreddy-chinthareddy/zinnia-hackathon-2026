@@ -78,7 +78,6 @@ describe('#Flic SSW form config', () => {
             expect(current.signaturesConfig).toBeDefined();
             expect(current.fundWithdrawnMethodOptions).toBeDefined();
             expect(current.systematicWithdrawalOptions).toBeDefined();
-            expect(current.cslnCheckStates).toBeDefined();
         });
     });
 

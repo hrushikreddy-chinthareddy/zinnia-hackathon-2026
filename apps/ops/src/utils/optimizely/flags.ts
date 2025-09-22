@@ -155,6 +155,7 @@ export enum FEATURE_FLAGS {
     SEND_CORRESPONDENCE = 'send_correspondence',
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
     USAGE_STATS_DASHBOARD = 'usage_stats_dashboard',
+    AI_ASSISTANT = 'ai_assistant',
     IDN_DEATH_CLAIM_FLIC = 'claims-feature-flic-idn-death-claim',
     OWNER_CHANGE_TRANSACTION = 'owner_change_transaction',
     JOINT_OWNER_CHANGE_TRANSACTION = 'joint_owner_change_transaction',
@@ -167,4 +168,5 @@ export enum FEATURE_FLAGS {
     BENE_TRUST_TYPE_ENUM = 'bene_trust_type_enum',
     BANK_CHANGE_TRANSACTION = 'bank_change_transaction',
     BANK_CHANGE_DELETE_TRANSACTION = 'bank_change_delete_transaction',
+    FKV_SHOW_ALL = 'fkv-show-all',
 }

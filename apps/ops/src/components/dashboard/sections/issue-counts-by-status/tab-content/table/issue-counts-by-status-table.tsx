@@ -302,8 +302,8 @@ export const IssueCountsByStatusTable = () => {
                                 {paginatedData.map((item) => {
                                     const link = generateCaseLink({
                                         process: selectedProcess,
-                                        startDate: timerange.from,
-                                        endDate: timerange.to,
+                                        createdDateStart: timerange.from,
+                                        createdDateEnd: timerange.to,
                                         issueStatus: exceptionStatus,
                                         carrier: filter.carrier,
                                         brokerDealer: filter.brokerDealerName,

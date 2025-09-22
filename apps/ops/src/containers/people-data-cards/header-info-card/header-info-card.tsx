@@ -96,6 +96,7 @@ const CommunicationPreferenceField = ({
                 emails={partyInfo?.emails ?? []}
                 addresses={partyInfo?.addresses ?? []}
                 policyNumber={policyDetails.policyNumber}
+                policy={policyDetails.policy}
             />
         );
         sidesheet.handleOpen(true);

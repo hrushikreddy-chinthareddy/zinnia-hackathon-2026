@@ -41,7 +41,9 @@ export const NigoEntryProvider = ({
         CallCenterElement<FormDetails, FormDetails>
     >({} as CallCenterElement<FormDetails, FormDetails>);
     const [formErrors, setFormErrors] = useState<FormValidationErrors>({});
-    const [submitFailed, setSubmitFailed] = useState(false);
+    const [submitFailed, setSubmitFailed] = useState(
+        undefined as boolean | undefined
+    );
     const [formComment, setFormComment] = useState({} as FormComment);
     const [initRelatedDocCount, _] = useState(relatedDocCount);
     const [areAttachmentsViewed, setAreAttachmentsViewed] = useState(false);

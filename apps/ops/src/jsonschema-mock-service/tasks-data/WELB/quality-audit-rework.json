@@ -1,0 +1,145 @@
+{
+    "process": "Quality Audit",
+    "carrier": "WELB",
+    "taskType": "QUALITY_AUDIT_REWORK",
+    "taskName": "Quality Audit Rework",
+    "caseId": "CA0000429003",
+    "taskDetails": "",
+    "status": "",
+    "data": {
+        "details": {
+            "documents": [
+                {
+                    "documentId": "68b018704c44ce057f231ae9",
+                    "documentSource": "EDS",
+                    "docType": "POLPGFORM",
+                    "documentName": "Policy Pages Forms"
+                }
+            ]
+        },
+        "workId": "Work002",
+        "reworkRequired": true,
+        "auditDetails": [
+            {
+                "processName": "LoanApplicationReview",
+                "category": "Financial",
+                "subCategory": "HomeLoan",
+                "processorName": "AliceSmith",
+                "taskType": "REVIEW",
+                "auditCompleted": true,
+                "recordId": "31ed489d-3676-4bbc-97d4-effe15ede9db",
+                "sourceApplicationError": null,
+                "negligibleError": false,
+                "processorDetails": {
+                    "name": "PROC101",
+                    "department": "Loans",
+                    "location": "Bangalore"
+                },
+                "auditData": [
+                    {
+                        "id": "123",
+                        "note": "test note",
+                        "workId": "Work001",
+                        "attachments": [],
+                        "userDetails": {
+                            "name": "testUser",
+                            "partyId": "testUser_id"
+                        },
+                        "reworkDateTime": "2025-08-28:18:00"
+                    },
+                    {
+                        "id": "5555",
+                        "note": "test note 2",
+                        "workId": "Work002",
+                        "attachments": [
+                            {
+                                "documentName": "testDocument",
+                                "documentId": "12345",
+                                "documentSource": "test2",
+                                "docType": "test"
+                            }
+                        ],
+                        "userDetails": {
+                            "name": "testUser",
+                            "partyId": "testUser_id"
+                        },
+                        "reworkDateTime": "2025-08-28:18:00"
+                    }
+                ],
+                "reworkDetails": [
+                    {
+                        "attachments": [
+                            {
+                                "documentId": "doc-123",
+                                "documentName": "doc_name"
+                            }
+                        ],
+                        "note": "rework note",
+                        "auditId": "123",
+                        "workId": "Work002",
+                        "userDetails": {
+                            "userName": "shweta- test",
+                            "userId": "test"
+                        }
+                    }
+                ]
+            },
+            {
+                "processName": "KYCVerification",
+                "category": "Compliance",
+                "subCategory": "Identity",
+                "processorName": "BobJohnson",
+                "taskType": "REWORK",
+                "auditCompleted": false,
+                "recordId": "669e5232-aa54-4eb9-820f-8c5bd7f71328",
+                "sourceApplicationError": "Documentmismatch",
+                "negligibleError": false,
+                "processorDetails": {
+                    "name": "Test User",
+                    "partyId": "32432fdsfd"
+                },
+                "auditData": [
+                    {
+                        "id": "1234",
+                        "note": "test note",
+                        "workId": "Work001",
+                        "attachments": [
+                            {
+                                "documentName": "testDocument",
+                                "documentId": "1234",
+                                "documentSource": "test",
+                                "docType": "test"
+                            }
+                        ],
+                        "userDetails": {
+                            "name": "testUser",
+                            "partyId": "testUser_id"
+                        },
+                        "reworkDateTime": "2025-08-28:18:00"
+                    }
+                ],
+                "reworkDetails": [
+                    {
+                        "attachments": [
+                            {
+                                "documentId": "doc-123",
+                                "documentName": "doc_name"
+                            }
+                        ],
+                        "note": "rework note",
+                        "auditId": "1234",
+                        "workId": "Work002",
+                        "userDetails": {
+                            "name": "shweta- test",
+                            "partyId": "test"
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497"
+}

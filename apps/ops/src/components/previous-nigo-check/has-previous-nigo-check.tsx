@@ -23,7 +23,7 @@ const HasPreviousNigo = ({
             containerClassNames="border-b-2 border-gray-100"
             classNames="w-full"
         >
-            <div className="flex-1 mt-5">
+            <div className="flex flex-wrap gap-8 max-md:flex-col mt-5">
                 <CheckboxText
                     label={t('hasPreviousNigo')}
                     checked={isNigoChecked}

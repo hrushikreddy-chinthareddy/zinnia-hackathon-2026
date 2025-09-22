@@ -1,8 +1,7 @@
 import { ApiResponse } from '@/services/types'; // Assuming ApiResponse is exported from here
 
 import { getErrorCause, getErrorMessage } from './error-details';
-import { LogWarn } from './errors';
-import { logError, logTrace, logWarn } from './log-fns';
+import { logTrace } from './log-fns';
 import { CommonLogContext } from './server-logging';
 
 type ServerFunction<T extends unknown[], R> = (
@@ -66,25 +65,14 @@ export function withLogging<T extends unknown[], R>(
         error.status = cause.status;
       }
 
-      if (err instanceof LogWarn) {
-        // 3- Log warn
-        logWarn(
-          `ServerFunction::${additionalLoggingContext.functionName}::warn`,
-          {
-            ...loggingContext,
-            error,
-          }
-        );
-      } else {
-        // 3- Log error
-        logError(
-          `ServerFunction::${additionalLoggingContext.functionName}::error`,
-          {
-            ...loggingContext,
-            error,
-          }
-        );
-      }
+      logTrace(
+        `ServerFunction::${additionalLoggingContext.functionName}::error`,
+        {
+          ...loggingContext,
+          duration: performance.now() - startTime,
+          error,
+        }
+      );
 
       return {
         data: null,

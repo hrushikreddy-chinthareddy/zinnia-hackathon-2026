@@ -75,7 +75,6 @@ describe('getDlicConfig', () => {
         expect(config.signaturesNotaryConfig).toBeDefined();
         expect(config.additionalWithholdingAmountConfig).toBeDefined();
         expect(config.irsSignatureConfig).toBeDefined();
-        expect(config.cslnCheckStates).toBeDefined();
         expect(config.eSignatureFieldConfig).toBeDefined();
         expect(config.sswUpdateFastOptions).toBeDefined();
     });
@@ -424,10 +423,6 @@ describe('getDlicConfig', () => {
                 systematicStartDate: 'sswProgram.warnings.systematicStartDate',
             });
         });
-    });
-
-    it('should have cslnCheckStates as expected', () => {
-        expect(config.cslnCheckStates).toEqual(['CA', 'CO', 'TX']);
     });
 
     it('should have eSignatureFieldConfig with correct keys', () => {

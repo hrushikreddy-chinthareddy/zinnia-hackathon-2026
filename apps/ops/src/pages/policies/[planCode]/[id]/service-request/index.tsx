@@ -198,7 +198,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 await applyDynamicOptions(
                     defaultTask,
                     accessToken,
-                    currentTaskMetadata
+                    currentTaskMetadata,
+                    loggingContext
                 );
                 return {
                     props: {

@@ -1,7 +1,6 @@
 {
     "formId": "ae8263a3-9fb2-4dfa-bf35-0dd707732da2",
     "process": "Agent Onboarding",
-    "carrier": "WELB",
     "taskType": "BACKGROUND_REVIEW",
     "formSchema": {
         "type": "object"
@@ -82,38 +81,20 @@
                             "title": "Can you proceed?",
                             "enum": ["NO"]
                         },
-                        "uploadDocuments": {
-                            "type": "object",
-                            "title": "Link or upload document",
-                            "properties": {
-                                "upload": {
-                                    "type": "string"
-                                },
-                                "or": {
-                                    "type": "string",
-                                    "title": "or"
-                                },
-                                "attachment": {
-                                    "type": "array",
-                                    "title": "Upload",
-                                    "items": {
-                                        "title": "Upload",
-                                        "type": "string",
-                                        "format": "data-url"
-                                    }
-                                }
-                            }
-                        },
                         "attachments": {
                             "type": "array",
+                            "title": "Link or upload document",
                             "items": {
-                                "documentName": {
-                                    "title": "Name",
-                                    "type": "string"
-                                },
-                                "documentId": {
-                                    "title": "Document Id",
-                                    "type": "string"
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "title": "Document Id",
+                                        "type": "string"
+                                    },
+                                    "documentName": {
+                                        "title": "Document Name",
+                                        "type": "string"
+                                    }
                                 }
                             }
                         }
@@ -130,8 +111,8 @@
                                         "declineReason": {
                                             "title": "Reason for decline",
                                             "type": "array",
+                                            "uniqueItems": true,
                                             "items": {
-                                                "type": "string",
                                                 "$ref": "#/definitions/declineReason"
                                             }
                                         },
@@ -159,7 +140,6 @@
                         "issuesResolved",
                         "declineReason",
                         "reviewFailureReasonDisplay",
-                        "uploadDocuments",
                         "attachments"
                     ],
                     "ui:globalOptions": {
@@ -272,43 +252,11 @@
                             "omitValue": true
                         }
                     },
-                    "uploadDocuments": {
-                        "inline": true,
-                        "ui:options": {
-                            "label": true,
-                            "omitValue": true
-                        },
-                        "upload": {
-                            "ui:widget": "AutoCompleteWidget",
-                            "ui:placeholder": "Find existing documents...",
-                            "ui:options": {
-                                "label": false,
-                                "icon": "Search"
-                            }
-                        },
-                        "or": {
-                            "ui:options": {
-                                "label": false,
-                                "inline": true
-                            }
-                        },
-                        "attachment": {
-                            "ui:options": {
-                                "label": false,
-                                "showFiles": false
-                            },
-                            "ui:props": {
-                                "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                                "apiMethod": "get"
-                            }
-                        }
-                    },
                     "attachments": {
+                        "inline": true,
+                        "ui:widget": "AttachmentWidget",
                         "ui:options": {
-                            "label": false,
-                            "addable": false,
-                            "removable": true,
-                            "ArrayFieldTemplate": "FileInfoTemplate"
+                            "label": true
                         }
                     }
                 }

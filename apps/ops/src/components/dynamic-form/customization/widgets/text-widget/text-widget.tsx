@@ -18,8 +18,10 @@ export const TextWidget = function (props: WidgetProps) {
         label,
         placeholder,
         readonly,
+        hideError,
     } = props;
-    const { inline, prefix, inlinetext, dataType, hideError, type } =
+
+    const { inline, prefix, inlinetext, dataType, type } =
         getUiOptions(uiSchema);
     if (inline) {
         return (

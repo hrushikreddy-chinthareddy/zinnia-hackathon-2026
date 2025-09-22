@@ -72,6 +72,7 @@ export function useServiceFormReview({
         sectionOption,
         documentIndexingInfo,
         formErrors,
+        submitFailed,
         setFormErrors,
         setSubmitFailed,
         setMessages,
@@ -432,5 +433,6 @@ export function useServiceFormReview({
         handleStepContinue,
         filteredNigoException,
         isRenewals,
+        submitFailed,
     };
 }

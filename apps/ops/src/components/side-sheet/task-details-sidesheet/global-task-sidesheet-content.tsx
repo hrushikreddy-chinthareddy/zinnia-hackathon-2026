@@ -198,6 +198,7 @@ export default function GlobalTaskSideSheet({
     taskName,
     featureFlagDecisions,
     onTaskClaimSuccess,
+    mappedDocuments,
 }: TaskSideSheetProps) {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
@@ -444,7 +445,9 @@ export default function GlobalTaskSideSheet({
     const isUserAssociatedWithTask =
         user?.partyId !== '' && user?.partyId === task?.assigneePartyId;
 
-    const documentsList = transformDocument(task.mappedDocuments || []);
+    const documentsList = transformDocument(
+        mappedDocuments ?? task.mappedDocuments ?? []
+    );
 
     let allowedTaskStatusForStartBtnDisplay = [
         TaskStatus.New,

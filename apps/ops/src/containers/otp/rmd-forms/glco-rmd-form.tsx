@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
 import BeneficiaryInfo from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -32,7 +31,6 @@ export default function GlcoRmdWithdrawalForm() {
     const {
         signaturesConfig,
         formPartyConfigs,
-        cslnCheckStates,
         irsSignatureConfig,
         formValidation,
         w4pSignaturesConfig,
@@ -135,10 +133,6 @@ export default function GlcoRmdWithdrawalForm() {
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
         </>
     );
 

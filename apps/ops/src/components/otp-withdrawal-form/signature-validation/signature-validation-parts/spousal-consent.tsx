@@ -46,16 +46,14 @@ const SpousalConsent = () => {
 
     return (
         <div className="mt-4 flex flex-wrap gap-8 max-md:flex-col">
-            <div className="flex-1">
-                <CheckboxText
-                    label={t(
-                        'caseWithdrawal.request.signatureValidation.spouseConsentText'
-                    )}
-                    checked={spousalConsent}
-                    onChange={() => setSpousalConsent(!spousalConsent)}
-                    isDisabled={isFormStateReadOnly}
-                />
-            </div>
+            <CheckboxText
+                label={t(
+                    'caseWithdrawal.request.signatureValidation.spouseConsentText'
+                )}
+                checked={spousalConsent}
+                onChange={() => setSpousalConsent(!spousalConsent)}
+                isDisabled={isFormStateReadOnly}
+            />
         </div>
     );
 };

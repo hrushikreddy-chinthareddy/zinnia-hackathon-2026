@@ -2,7 +2,6 @@ import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CslnCheck from '@deps/components/otp-withdrawal-form/csln-check';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -40,7 +39,6 @@ export default function NasuWithdrawalForm() {
         disbursementOptions,
         fundWithdrawnMethodOptions,
         selectOneOptions,
-        cslnCheckStates,
         fullWithdrawalOptions,
         reasonOptions,
         defaultValues,
@@ -55,7 +53,6 @@ export default function NasuWithdrawalForm() {
         setFormValidator,
         setFormData,
         initialForm,
-        contractIssueState,
         isFormStateReadOnly,
         parties,
         partyRoles,
@@ -153,10 +150,6 @@ export default function NasuWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 shouldShowDOBInOl4573={shouldShowDOBInOl4573}
             />
-            {(ownerStateOfResidence || contractIssueState) &&
-                [ownerStateOfResidence, contractIssueState].some(
-                    (state) => state && cslnCheckStates.includes(state)
-                ) && <CslnCheck isFormStateReadOnly={isFormStateReadOnly} />}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

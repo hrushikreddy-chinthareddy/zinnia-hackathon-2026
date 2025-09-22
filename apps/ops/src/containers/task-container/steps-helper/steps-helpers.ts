@@ -12,6 +12,7 @@ import { getClaimReverseUncashTxnSteps } from './claims-reverse-uncashed-transac
 import { getClaimStopUncashTxnSteps } from './claims-stop-uncashed-transactions';
 import getDefaultTaskSteps from './default-task-steps';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
+import { getQualityAuditSteps } from './quality-audit-steps';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
 import { getTOANigoSteps } from './toa-nigo';
@@ -92,6 +93,11 @@ export const getFormSteps = (
             break;
         case TaskType.Day_150_Review:
             steps = getDay150ReviewSteps(props);
+            break;
+        case TaskType.Quality_Audit_Review:
+        case TaskType.Quality_Audit_Rework:
+        case TaskType.Quality_Rework_Audit_Review:
+            steps = getQualityAuditSteps(props);
             break;
         case TaskType.Update_Suitability_DataEntry:
             steps = getUpdateSuitabilityDataSteps(props);

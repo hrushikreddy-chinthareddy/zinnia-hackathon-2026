@@ -80,6 +80,7 @@ export const BankCard = ({
                 party={party}
                 planCode={planCode}
                 policyNumber={policyNumber}
+                policy={policyDetails.policy}
                 onCancel={() => sideSheet.handleOpen(false)}
                 setCurrentBankAccounts={setCurrentBankAccounts}
                 updatedBank={bankAccount as BankAccount}

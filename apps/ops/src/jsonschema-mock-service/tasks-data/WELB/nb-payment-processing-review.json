@@ -1,13 +1,33 @@
 {
-    "id": "c32eedc0-4ee9-4761-8da6-c87c858ab0cf",
-    "correlationid": "e2761fab-98eb-4115-a3dc-fe5440e7bef5",
-    "source": "BPM.PaymentProcessing",
+    "id": "TA000000019793",
+    "caseId": "CA0000394985",
+    "taskType": "NB_PAYMENT_PROCESSING_REVIEW",
     "carrier": "WELB",
-    "specversion": "V1",
-    "type": "task.nbpaymentprocessingreview.newrequested",
-    "datacontenttype": "application/json",
-    "time": "2025-03-24T18:31:50.8297762",
-    "data": "{\"taskType\":\"NB_PAYMENT_PROCESSING_REVIEW\",\"carrier\":\"WELB\",\"status\":\"NEW\",\"externalId\":\"b4e2229b-06be-4980-b177-cf83a92ff656\",\"taskName\":\"New Business Payment Processing Review\",\"process\":\"Payment Processing\",\"data\":{\"details\":{\"paymentRecord\":{\"grossAmount\":100000.0,\"netAmount\":0.0,\"amountReceived\":null}},\"issuesList\":[{\"id\":\"cfa79566-e3ec-42ac-9b11-5be9cac5118f\",\"externalId\":\"cfa79566-e3ec-42ac-9b11-5be9cac5118f\",\"nmid\":\"PP.EM.004\",\"type\":\"NOTE\",\"processingInstruction\":\"Resolution: NB payment processing could not be completed due to app validation results being NIGO.\",\"processingResolution\":\"NB payment processing could not be completed due to app validation results being NIGO.\"}]},\"exceptions\":[{\"externalId\":\"cfa79566-e3ec-42ac-9b11-5be9cac5118f\"}],\"documents\":[]}",
+    "status": "NEW",
+    "externalId": "b4e2229b-06be-4980-b177-cf83a92ff656",
+    "taskName": "New Business Payment Processing Review",
+    "process": "New Business",
+    "data": {
+        "details": {
+            "paymentRecord": {
+                "grossAmount": 100000.0,
+                "netAmount": 0.0,
+                "amountReceived": null
+            }
+        },
+        "issuesList": [
+            {
+                "id": "cfa79566-e3ec-42ac-9b11-5be9cac5118f",
+                "externalId": "cfa79566-e3ec-42ac-9b11-5be9cac5118f",
+                "nmId": "PP.EM.004",
+                "type": "NOTE",
+                "processingInstruction": "Resolution: NB payment processing could not be completed due to app validation results being NIGO.",
+                "processingResolution": "NB payment processing could not be completed due to app validation results being NIGO."
+            }
+        ]
+    },
+    "exceptions": [{ "externalId": "cfa79566-e3ec-42ac-9b11-5be9cac5118f" }],
+    "documents": [],
     "identifiers": [
         {
             "identifier": "correlationId",

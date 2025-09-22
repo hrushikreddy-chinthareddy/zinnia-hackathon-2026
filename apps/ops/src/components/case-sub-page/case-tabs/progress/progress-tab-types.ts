@@ -28,7 +28,7 @@ export type CaseAdditionalStepData = {
     id: string;
     label: string;
     value: string;
-    type: string;
+    type?: string;
     dataType: string;
     entityType: string;
     source: string;

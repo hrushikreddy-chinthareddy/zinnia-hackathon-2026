@@ -7,6 +7,7 @@ export enum TransactionsAdditionalDataStepIds {
     stopRMD = 'verifyFunds.stopRMD',
     stopSpecialPrograms = 'verifyFunds.stopSpecialPrograms',
     stopUncashedTransactions = 'verifyFunds.stopUncashedTransactions',
+    claimsFundRelease = 'claims.fundRelease',
 }
 
 export enum BeneNotification {
