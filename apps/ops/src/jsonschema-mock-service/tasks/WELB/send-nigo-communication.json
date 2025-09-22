@@ -40,12 +40,6 @@
                                 }
                             }
                         },
-                        "issueResolved": {
-                            "type": "boolean",
-                            "title": "Can you resolve the issues?",
-                            "enumNames": ["Yes", "No"],
-                            "enum": [true, false]
-                        },
                         "uploadDocuments": {
                             "type": "object",
                             "title": "Link or upload document",
@@ -80,34 +74,70 @@
                                     "type": "string"
                                 }
                             }
+                        },
+                        "process": {
+                            "type": "string",
+                            "title": "process"
                         }
                     },
                     "dependencies": {
-                        "issueResolved": {
-                            "oneOf": [
-                                {
-                                    "properties": {
-                                        "issueResolved": {
-                                            "enum": [true]
-                                        }
-                                    }
-                                },
-                                {
-                                    "properties": {
-                                        "issueResolved": {
-                                            "enum": [false]
-                                        },
-                                        "issueReason": {
-                                            "type": "object",
-                                            "title": "The status reason for the task will be set to:",
-                                            "description": "NIGO's unable to be resolved"
-                                        }
+                        "process": {
+                            "if": {
+                                "properties": {
+                                    "process": {
+                                        "const": "Policy Update"
                                     }
                                 }
-                            ]
+                            },
+                            "then": {
+                                "properties": {
+                                    "communicatedToAgent": {
+                                        "type": "boolean",
+                                        "title": "Have you communicated the NIGO reason to requester and agent?",
+                                        "enumNames": ["Yes", "No"],
+                                        "enum": [true, false]
+                                    }
+                                },
+                                "required": ["communicatedToAgent"]
+                            },
+                            "else": {
+                                "properties": {
+                                    "issueResolved": {
+                                        "type": "boolean",
+                                        "title": "Can you resolve the issues?",
+                                        "enumNames": ["Yes", "No"],
+                                        "enum": [true, false]
+                                    }
+                                },
+                                "dependencies": {
+                                    "issueResolved": {
+                                        "oneOf": [
+                                            {
+                                                "properties": {
+                                                    "issueResolved": {
+                                                        "enum": [true]
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "properties": {
+                                                    "issueResolved": {
+                                                        "enum": [false]
+                                                    },
+                                                    "issueReason": {
+                                                        "type": "object",
+                                                        "title": "The status reason for the task will be set to:",
+                                                        "description": "NIGO's unable to be resolved"
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "required": ["issueResolved"]
+                            }
                         }
-                    },
-                    "required": ["issueResolved"]
+                    }
                 },
                 "uiSchema": {
                     "ui:order": [
@@ -115,8 +145,10 @@
                         "issueResolved",
                         "declineReason",
                         "issueReason",
+                        "communicatedToAgent",
                         "uploadDocuments",
-                        "attachments"
+                        "attachments",
+                        "process"
                     ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -207,11 +239,21 @@
                             "ArrayFieldTemplate": "FileInfoTemplate"
                         }
                     },
+                    "communicatedToAgent": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true,
+                            "inline": true
+                        }
+                    },
                     "issueReason": {
                         "ui:options": {
                             "label": true,
                             "ObjectFieldTemplate": "InstructionsTemplate"
                         }
+                    },
+                    "process": {
+                        "ui:widget": "hidden"
                     }
                 }
             }

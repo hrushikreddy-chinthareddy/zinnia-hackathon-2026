@@ -9,6 +9,7 @@
     "taskName": "Post Issue NIGO Review",
     "status": "NEW",
     "data": {
+        "process": "Policy Update",
         "rules": [
             {
                 "ruleName": "validateAddNewAddress",
