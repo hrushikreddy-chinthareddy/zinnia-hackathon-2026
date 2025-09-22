@@ -3627,7 +3627,7 @@
             "underwritingDecision": "Underwriting decision",
             "featureId": "Feature ID",
             "featureSubType": "Feature sub type",
-            "funds": "Funds",
+            "combinedFunds": "Funds",
             "modelId": "Model id",
             "interestGuaranteedPeriod": "Interest guaranteed period",
             "match": "Match",

@@ -456,8 +456,6 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
         [preparedPolicy]
     );
 
-    console.log('.....', policy);
-
     if (!preparedPolicy) return null; //FIXME: add loading state
 
     return (

@@ -3627,7 +3627,7 @@
             "underwritingDecision": "Decisión de suscripción",
             "featureId": "ID de característica",
             "featureSubType": "Subtipo de característica",
-            "funds": "Fondos",
+            "combinedFunds": "Fondos",
             "modelId": "ID del modelo",
             "interestGuaranteedPeriod": "Período de interés garantizado",
             "match": "Coincidencia",
@@ -8036,7 +8036,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Hola, soy agente virtual. Tenga en cuenta que esta función está actualmente en fase beta.\n¿Cómo puedo ayudarle?",
             "inputPlaceholder": "Pregúntame cualquier cosa",

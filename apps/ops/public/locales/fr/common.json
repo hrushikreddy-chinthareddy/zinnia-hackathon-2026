@@ -305,7 +305,7 @@
             },
             "aiChatbot": {
                 "text": "Assistant AI de Zinnia"
-             },
+            },
             "propriétaire": {
                 "text": "Gérer les propriétaires",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
@@ -3605,7 +3605,7 @@
             "underwritingDecision": "Décision de souscription",
             "featureId": "ID de caractéristique",
             "featureSubType": "Sous-type de caractéristique",
-            "funds": "Fonds",
+            "combinedFunds": "Fonds",
             "modelId": "ID du modèle",
             "interestGuaranteedPeriod": "Période garantie des intérêts",
             "match": "Appariement",
@@ -8083,7 +8083,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
             "inputPlaceholder": "Demande-moi n'importe quoi",

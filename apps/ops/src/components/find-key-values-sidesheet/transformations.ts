@@ -880,13 +880,14 @@ function parseAllocation(
               fallbackTitle: sectionTitle,
           })
         : undefined;
+
     return {
         ...acc,
         ...(funds && {
             policySections: [
                 ...acc.policySections,
                 [
-                    'funds',
+                    'combinedFunds',
                     {
                         ...currentVal,
                         ...funds,
