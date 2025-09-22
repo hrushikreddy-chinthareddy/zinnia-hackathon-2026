@@ -129,13 +129,14 @@ export async function middleware(req: NextRequest) {
     // we only want to do this once per session. We will store the value on the user object
     if (!session?.user.hasSignedTermsAndConditions) {
       // call API to check if the user has signed the terms and conditions
+
       const termsAndConditionsRequest = await ServerApi.get(
         `${consumerExperienceAPIBaseUrl}/agreementToTermsAndConditions`
       );
-      const data = await termsAndConditionsRequest.json();
       // set the AGREED_TO_TERMS_AND_CONDITIONS_COOKIE_KEY cookie
       // getSession will pick this up and we can then use the user object to see if they have signed the terms and conditions
       if (termsAndConditionsRequest.status === 200) {
+        const data = await termsAndConditionsRequest.json();
         await setTermsAndConditionsCookie(
           (data as TermsAndConditionApiResponse).agreedToTermsAndConditions,
           resNext
