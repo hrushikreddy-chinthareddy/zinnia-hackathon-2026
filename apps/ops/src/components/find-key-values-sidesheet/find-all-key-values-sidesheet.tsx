@@ -209,7 +209,7 @@ const KeyValueFieldList = ({
                     return (
                         <KeyValueNestedSubSections
                             key={`subsection_${i}`}
-                            subSections={field as NestedDataTuple[]} // FIXME
+                            subSections={field as NestedDataTuple[]}
                             searchValue={searchValue}
                         />
                     );
@@ -220,13 +220,18 @@ const KeyValueFieldList = ({
                     return (
                         <DataField
                             key={`field_${i}`}
-                            dataField={[key, String(data)]} // FIXME
+                            dataField={[key, String(data)]}
                             searchValue={searchValue}
                             link={(field as MetaData)?.[link]}
                         />
                     );
                 }
             })}
+            <KeyValueNestedSubSections
+                key={`subsection_`}
+                subSections={fields as NestedDataTuple[]}
+                searchValue={searchValue}
+            />
         </div>
     );
 };
@@ -450,6 +455,8 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                   },
         [preparedPolicy]
     );
+
+    console.log('.....', policy);
 
     if (!preparedPolicy) return null; //FIXME: add loading state
 

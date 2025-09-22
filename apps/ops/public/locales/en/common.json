@@ -5110,7 +5110,6 @@
             "exchangeCompany": "Exchange Company",
             "jointAnnuitant": "Joint Annuitant",
             "otherInterestedParty": "Other Interested Party"
-
         }
     },
     "pageHeader": {
@@ -8193,7 +8192,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
             "inputPlaceholder": "Ask me anything",

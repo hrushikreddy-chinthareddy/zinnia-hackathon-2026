@@ -240,6 +240,7 @@ export const toSections = (
             people,
         ] as PolicySection);
     }
+
     return {
         policyBasics: basicsAndSections.policyBasics,
         policySections: basicsAndSections.policySections
@@ -484,6 +485,13 @@ export const toFieldsAndSubsections = (
                     }
 
                     return null;
+                } else if (typeof fieldData === 'object' && fieldData != null) {
+                    // In some cases the data is a nested object, so it needs a label
+                    (fieldData as MetaData)[label] = formatAsSectionLabel(
+                        subSectionName,
+                        lineOfBusiness,
+                        t
+                    );
                 }
 
                 // Otherwise, the value is meant to be displayed, so just append the key-value pair
@@ -495,7 +503,6 @@ export const toFieldsAndSubsections = (
                 );
             })
             .filter((field) => field !== null);
-
         return {
             fields,
         };
