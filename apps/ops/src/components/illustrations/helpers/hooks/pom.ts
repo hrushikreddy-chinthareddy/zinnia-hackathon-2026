@@ -62,18 +62,22 @@ type CombinedQueryResult<T> =
 
 const getQueryResultsMeta = <T>(results: UseQueryResult<T>[]) => ({
     isPending: results.some((result) => result.isPending),
-    hasError: results.some((result) => result.isError),
     isFetching: results.some((result) => result.isFetching),
     errors: results.map((result) => result.error),
 });
 
-const wrapCombinedQueryResultsData = <T, MT>(
-    queryResults: UseQueryResult<T>[],
-    combine: (results: UseQueryResult<T>[]) => MT
-): CombinedQueryResult<MT> => {
-    const { isPending, hasError, isFetching, errors } =
-        getQueryResultsMeta<T>(queryResults);
-
+const buildCombinedQueryResult = <T>({
+    data,
+    isPending,
+    isFetching,
+    errors,
+}: {
+    data: T | undefined;
+    isPending: boolean;
+    isFetching: boolean;
+    errors?: (Error | null)[];
+}): CombinedQueryResult<T> => {
+    const hasError = !!errors?.length;
     if (isPending) {
         return {
             data: undefined,
@@ -85,11 +89,9 @@ const wrapCombinedQueryResultsData = <T, MT>(
         };
     }
 
-    const data = combine(queryResults);
-
     if (hasError && !isPending) {
         return {
-            data,
+            data: data!,
             isFetching,
             isPending,
             isLoading: false,
@@ -99,13 +101,28 @@ const wrapCombinedQueryResultsData = <T, MT>(
     }
 
     return {
-        data,
+        data: data!,
         isFetching,
         isPending: false,
         isLoading: false,
         hasError: false,
         errors: null,
     };
+};
+
+const wrapCombinedQueryResultsData = <T, MT>(
+    queryResults: UseQueryResult<T>[],
+    combine: (results: UseQueryResult<T>[]) => MT
+): CombinedQueryResult<MT> => {
+    const { isPending, isFetching, errors } =
+        getQueryResultsMeta<T>(queryResults);
+
+    return buildCombinedQueryResult({
+        data: combine(queryResults),
+        isPending,
+        isFetching,
+        errors,
+    });
 };
 
 export const mapCombinedQueryResult = <T, MT>(
@@ -121,6 +138,28 @@ export const mapCombinedQueryResult = <T, MT>(
         ...combinedResults,
         data: mapperFn(combinedResults.data),
     };
+};
+
+export const useReduceCombinedResults = <T>(
+    leftResult: CombinedQueryResult<unknown>,
+    rightResult: CombinedQueryResult<T>
+): CombinedQueryResult<T | undefined> => {
+    const results = [leftResult, rightResult];
+    const { data } = rightResult;
+    const isPending = results.some(({ isPending }) => isPending);
+    const isFetching = results.some(({ isFetching }) => isFetching);
+
+    return useMemo(() => {
+        return buildCombinedQueryResult({
+            data,
+            isPending,
+            isFetching,
+            errors: [
+                ...(rightResult.errors ?? []),
+                ...(leftResult.errors ?? []),
+            ].filter((error): error is Error => !!error),
+        });
+    }, [data, isPending, isFetching, leftResult.errors, rightResult.errors]);
 };
 
 export const POM_QUERY_PREFIXES = {
