@@ -12,6 +12,7 @@ export type EAppData = {
     mecPremium?: number;
     faceAmount?: number;
     initialPremium?: number;
+    initialModalPremium?: number;
     cashValue?: number;
     paymentMode?: string;
     premiumMode?: string;

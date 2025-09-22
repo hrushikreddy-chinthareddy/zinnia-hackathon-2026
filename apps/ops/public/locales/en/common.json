@@ -8100,11 +8100,13 @@
             },
             "premium": {
                 "title": "Premium",
-                "initial": "Initial premium",
+                "initial": "Initial annual premium",
+                "initialModal": "Initial modal premium",
                 "target": "Target premium",
                 "mec": "MEC premium",
                 "initialBase": "Initial base premium",
-                "totalInitial": "Total initial premium"
+                "totalInitial": "Total initial premium",
+                "initialModalPremium": "Initial modal premium"
             },
             "riders": {
                 "title": "Riders",

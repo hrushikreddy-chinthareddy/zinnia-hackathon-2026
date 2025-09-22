@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypes } from '@deps/types/product';
+import { Prettify } from '@deps/utils/types';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';
 import {
+    formatIllustrationDetailCurrency,
     formatIllustrationDetailYearlyCurrency,
     paymentFrequencies,
     paymentMethods,
@@ -18,17 +20,26 @@ type PremiumEntryBase = {
     format: (isBold?: boolean) => React.ReactNode;
 };
 
-type PremiumEntry = PremiumEntryBase &
-    (
-        | {
-              value: number | null;
-              type: 'currency';
-          }
-        | {
-              value: string | null;
-              type: 'text';
-          }
-    );
+type PremiumEntryTypes = {
+    currency: {
+        value: number | null;
+    };
+    currencyPerYear: {
+        value: number | null;
+    };
+    text: {
+        value: string | null;
+    };
+};
+
+type PremiumEntry = {
+    [K in keyof PremiumEntryTypes]: Prettify<
+        {
+            type: K;
+        } & PremiumEntryBase &
+            PremiumEntryTypes[K]
+    >;
+}[keyof PremiumEntryTypes];
 
 export function useIllustrationPremiumData(): PremiumEntry[] {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -36,6 +47,14 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
 
     const formatters = {
         currency:
+            (value: number | null) =>
+            (bold: boolean = false) =>
+                value == null ? (
+                    <span>{DEFAULT_ERROR_STRING}</span>
+                ) : (
+                    formatIllustrationDetailCurrency(t, value, bold)
+                ),
+        currencyPerYear:
             (value: number | null) =>
             (bold: boolean = false) =>
                 value == null ? (
@@ -80,17 +99,17 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
                 {
                     label: t('clientCase.illustrationDetails.premium.initial'),
                     value: iulData[0]?.minimumPremiumAmount,
-                    type: 'currency',
+                    type: 'currencyPerYear',
                 },
                 {
                     label: t('clientCase.illustrationDetails.premium.target'),
                     value: iulData.at(-1)?.minimumPremiumAmount ?? null,
-                    type: 'currency',
+                    type: 'currencyPerYear',
                 },
                 {
                     label: t('clientCase.illustrationDetails.premium.mec'),
                     value: iulData[0]?.sevenPayPremiumAmount,
-                    type: 'currency',
+                    type: 'currencyPerYear',
                 },
                 {
                     label: t('clientCase.illustrationDetails.premiumMode'),
@@ -104,10 +123,10 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
                 },
             ] as const
         ).map((item) =>
-            item.type === 'currency'
+            item.type === 'currencyPerYear'
                 ? {
                       ...item,
-                      format: formatters.currency(item.value),
+                      format: formatters.currencyPerYear(item.value),
                   }
                 : {
                       ...item,
@@ -121,15 +140,15 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
     return (
         [
             {
-                label: t('clientCase.illustrationDetails.premium.initialBase'),
+                label: t('clientCase.illustrationDetails.premium.initial'),
 
-                value: baseData.coverages.base.premium,
+                value: baseData.initial.totalPremium,
                 type: 'currency',
             },
             {
-                label: t('clientCase.illustrationDetails.premium.totalInitial'),
+                label: t('clientCase.illustrationDetails.premium.initialModal'),
 
-                value: baseData.annualTimeSeriesData[0].premiumAmount,
+                value: baseData.initial.totalModalPremium,
                 type: 'currency',
             },
             {

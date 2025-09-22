@@ -18,6 +18,7 @@ const dataToTitleMap: Record<
     mecPremium: { label: 'MEC premium', type: 'money' },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
+    initialModalPremium: { label: 'Initial modal premium', type: 'money' },
     cashValue: { label: 'Cash values (end of year)', type: 'money' },
     paymentMode: { label: 'Payment mode', type: 'string' },
     premiumMode: { label: 'Premium mode', type: 'string' },

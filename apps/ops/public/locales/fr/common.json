@@ -7963,11 +7963,13 @@
             },
             "premium": {
                 "title": "Prime",
-                "initial": "Prime initiale",
+                "initial": "Prime annuelle initiale",
+                "initialModal": "Prime modale initiale",
                 "target": "Prime cible",
                 "mec": "Prime MEC",
                 "initialBase": "Prime de base initiale",
-                "totalInitial": "Prime initiale totale"
+                "totalInitial": "Prime initiale totale",
+                "initialModalPremium": "Prime modale initiale"
             },
             "riders": {
                 "title": "Avenants de politique",

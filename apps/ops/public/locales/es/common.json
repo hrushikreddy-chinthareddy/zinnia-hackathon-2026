@@ -7943,11 +7943,13 @@
             },
             "premium": {
                 "title": "Prima",
-                "initial": "Prima inicial",
+                "initial": "Prima anual inicial",
+                "initialModal": "Prima modal inicial",
                 "target": "Prima planeada",
                 "mec": "Prima MEC",
                 "initialBase": "Prima base inicial",
-                "totalInitial": "Prima inicial total"
+                "totalInitial": "Prima inicial total",
+                "initialModalPremium": "Prima modal inicial"
             },
             "riders": {
                 "title": "Adicionales",
