@@ -4,10 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 
 import styles from './transaction-accordion.module.css';
-
-type PanelHeights = {
-    [key: number]: number;
-};
+import { Action, BeneficiaryRole, PanelHeights, TabTitle } from './types';
 
 const TransactionAccordion = ({
     schema,
@@ -40,14 +37,14 @@ const TransactionAccordion = ({
         const updatedList = [...value];
         updatedList[index] = {
             ...updatedList[index],
-            action: checked ? 'DELETE' : 'UPDATE',
+            action: checked ? Action.DELETE : Action.UPDATE,
         };
         onChange(updatedList);
     };
 
     const handleAddItem = () => {
         const newItem = {
-            action: 'ADD',
+            action: Action.ADD,
             isIrrevocable: 'No',
             isPerStirpes: 'No',
             party: {
@@ -85,7 +82,7 @@ const TransactionAccordion = ({
                 ],
             },
             partyRole: {
-                beneficiaryRole: 'Primary Beneficiary',
+                beneficiaryRole: BeneficiaryRole.PRIMARYBENEFICIARY,
             },
         };
 
@@ -96,11 +93,11 @@ const TransactionAccordion = ({
 
     const setTitle = (item: any, index: number) => {
         let title = `Item ${index + 1}`;
-        if (tabTitle == 'Owner Details') {
+        if (tabTitle == TabTitle.OwnerDetails) {
             title = item.partyRole;
-        } else if (tabTitle == 'Beneficiary Details') {
+        } else if (tabTitle == TabTitle.BeneficiaryDetails) {
             title = item.partyRole.beneficiaryRole;
-        } else if (tabTitle == 'Signature') {
+        } else if (tabTitle == TabTitle.Signature) {
             title = item.signType;
         }
         return title;
@@ -132,10 +129,10 @@ const TransactionAccordion = ({
                 const title = setTitle(item, index);
                 const isActive = activeIndex === index;
                 const panelHeight = heights[index] || 0;
-                const isMarkedForRemoval = item?.action === 'DELETE';
-                const isBeneAddition = item?.action === 'ADD';
+                const isMarkedForRemoval = item?.action === Action.DELETE;
+                const isBeneAddition = item?.action === Action.ADD;
                 const hideIrrevocableSignType =
-                    item.signType === 'Irrevocable Beneficiary' &&
+                    item.signType === BeneficiaryRole.IRREVOCABLEBENEFICIARY &&
                     !isIrrevocableBene;
 
                 return (
