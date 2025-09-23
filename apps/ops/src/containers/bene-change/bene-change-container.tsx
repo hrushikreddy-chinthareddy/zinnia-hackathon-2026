@@ -141,7 +141,10 @@ const BeneChangeContainer = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = await validateTransaction(requestBody);
+        const response = await validateTransaction({
+            ...requestBody,
+            planCode,
+        });
         return response;
     }, [
         document,
@@ -234,6 +237,7 @@ const BeneChangeContainer = ({
                         clientId={clientId as string}
                         parentPage={parentPage}
                         leaveTransactionLink={leaveTransactionLink}
+                        isBeneChange={true}
                     />
                 ),
                 screenReaderLabel: t('tabs.confirm'),
