@@ -326,6 +326,7 @@ export const SelectBank = ({
             <div className={styles.addBank}>
               <PaymentusAddPaymentMethod
                 policyNumber={policyNumber}
+                planCode={planCode}
                 onAddPaymentMethod={onAddPaymentMethod}
               />
             </div>
