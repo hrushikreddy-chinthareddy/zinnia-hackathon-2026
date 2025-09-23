@@ -9,8 +9,8 @@
 }
 
 .skipLink::before {
-  content: '';
   position: absolute;
+  content: '';
   top: calc(-1 * var(--measure-dimension-margin-xxs));
   left: calc(-1 * var(--measure-dimension-margin-xs));
   right: calc(-1 * var(--measure-dimension-margin-xs));
