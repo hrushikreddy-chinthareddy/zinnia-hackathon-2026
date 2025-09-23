@@ -866,12 +866,12 @@ export const getPaymentHistory = withLogging(
     }
 
     if (
-      (completedTransactionsRes.status === 'fulfilled' &&
-        (!!completedTransactionsRes.value.error ||
-          !completedTransactionsRes.value.data)) ||
-      (pendingTransactionsRes.status === 'fulfilled' &&
-        (!!pendingTransactionsRes.value.error ||
-          !pendingTransactionsRes.value.data))
+      completedTransactionsRes.status === 'fulfilled' &&
+      (!!completedTransactionsRes.value.error ||
+        !completedTransactionsRes.value.data) &&
+      pendingTransactionsRes.status === 'fulfilled' &&
+      (!!pendingTransactionsRes.value.error ||
+        !pendingTransactionsRes.value.data)
     ) {
       throw new Error('Transactions returned an error', {
         cause: {
