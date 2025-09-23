@@ -30,3 +30,7 @@ export type PolicySection = [
         subSections?: NestedDataTuple;
     }
 ];
+
+export const [Expand, Collapse] = [true, false];
+
+export type ExpandCollapse = typeof Expand | typeof Collapse;

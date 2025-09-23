@@ -14,7 +14,7 @@ import {
     Link,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -33,6 +33,9 @@ import {
     MetaData,
     DataTuple,
     PolicySection,
+    Collapse,
+    ExpandCollapse,
+    Expand,
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -60,10 +63,12 @@ const KeyValueBasics = ({
     preparedPolicy,
     policyBasics,
     searchValue,
+    treeState,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
     policyBasics: NestedDataTuple;
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => (
     <Accordion
         sectionLabel={
@@ -73,8 +78,13 @@ const KeyValueBasics = ({
             />
         }
         type={AccordionType.NESTED}
+        treeState={treeState}
     >
-        <KeyValueFieldList fields={policyBasics} searchValue={searchValue} />
+        <KeyValueFieldList
+            fields={policyBasics}
+            searchValue={searchValue}
+            treeState={treeState}
+        />
     </Accordion>
 );
 
@@ -93,10 +103,12 @@ const KeyValueSections = ({
     preparedPolicy,
     policySections,
     searchValue,
+    treeState,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
     policySections: PolicySection[];
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => {
     return policySections?.map((policySection, i) => {
         const [sectionLabel, sectionData] = policySection;
@@ -118,11 +130,13 @@ const KeyValueSections = ({
                     />
                 }
                 type={AccordionType.NESTED}
+                treeState={treeState}
             >
                 {fields && (
                     <KeyValueFieldList
                         fields={fields}
                         searchValue={searchValue}
+                        treeState={treeState}
                     />
                 )}
 
@@ -130,6 +144,7 @@ const KeyValueSections = ({
                     <KeyValueSubSections
                         subSections={subSections}
                         searchValue={searchValue}
+                        treeState={treeState}
                     />
                 )}
             </Accordion>
@@ -149,9 +164,11 @@ const KeyValueSections = ({
 const KeyValueSubSections = ({
     subSections,
     searchValue,
+    treeState,
 }: {
     subSections: NestedDataTuple;
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => {
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
@@ -170,10 +187,12 @@ const KeyValueSubSections = ({
                     }
                     tags={subsectionTags}
                     type={AccordionType.NESTED}
+                    treeState={treeState}
                 >
                     <KeyValueFieldList
                         fields={subSectionFields}
                         searchValue={searchValue}
+                        treeState={treeState}
                     />
                 </Accordion>
             </div>
@@ -192,9 +211,11 @@ const KeyValueSubSections = ({
 const KeyValueFieldList = ({
     fields,
     searchValue,
+    treeState,
 }: {
     fields: NestedDataTuple;
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => {
     return (
         <div className={styles.itemsList}>
@@ -211,6 +232,7 @@ const KeyValueFieldList = ({
                             key={`subsection_${i}`}
                             subSections={field as NestedDataTuple[]}
                             searchValue={searchValue}
+                            treeState={treeState}
                         />
                     );
                 }
@@ -231,6 +253,7 @@ const KeyValueFieldList = ({
                 key={`subsection_`}
                 subSections={fields as NestedDataTuple[]}
                 searchValue={searchValue}
+                treeState={treeState}
             />
         </div>
     );
@@ -248,9 +271,11 @@ const KeyValueFieldList = ({
 const KeyValueNestedSubSections = ({
     subSections,
     searchValue,
+    treeState,
 }: {
     subSections: NestedDataTuple[];
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => {
     return subSections.map((subSection, i) => {
         const subSectionLabel = (subSection as MetaData)[label];
@@ -270,6 +295,7 @@ const KeyValueNestedSubSections = ({
                     }
                     tags={subSectionTags}
                     type={AccordionType.NESTED}
+                    treeState={treeState}
                 >
                     <div className={styles.itemsList}>
                         {(subSection as NestedDataTuple[])
@@ -368,6 +394,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     policyNumber,
 }) => {
     const [date, setDate] = useState('');
+    const [treeState, setTreeState] = useState(Collapse);
     const [fieldError, setFieldError] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const queryClient = useQueryClient();
@@ -456,6 +483,12 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
         [preparedPolicy]
     );
 
+    // If the search value changes to non-empty, expand the tree
+    // (the tree will be cropped to matching search results)
+    useEffect(() => {
+        debouncedSearchValue && setTreeState(Expand);
+    }, [debouncedSearchValue]);
+
     if (!preparedPolicy) return null; //FIXME: add loading state
 
     return (
@@ -509,11 +542,29 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                     loading={fieldError || isFetching || isError}
                 >
                     <div className={styles.container}>
+                        <div>
+                            <Button
+                                mode="link"
+                                size="small"
+                                onClick={() =>
+                                    setTreeState((treeState) => !treeState)
+                                }
+                            >
+                                <Icon
+                                    type={IconType.CHEVRON_RIGHT}
+                                    small={true}
+                                />
+                                {treeState === Expand
+                                    ? 'Collapse all'
+                                    : 'Expand all'}
+                            </Button>
+                        </div>
                         {policyBasics && (
                             <KeyValueBasics
                                 preparedPolicy={preparedPolicy}
                                 policyBasics={policyBasics as NestedDataTuple[]}
                                 searchValue={searchValue}
+                                treeState={treeState}
                             />
                         )}
 
@@ -522,6 +573,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                                 preparedPolicy={preparedPolicy}
                                 policySections={policySections}
                                 searchValue={searchValue}
+                                treeState={treeState}
                             />
                         )}
                     </div>
