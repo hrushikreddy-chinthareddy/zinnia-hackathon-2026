@@ -1,9 +1,11 @@
-import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
+import { Swizzle_Host_Defaults_Contracts_PagedResponse_1 } from '@zinnia/api-types/types/pom';
 
 import { EnterpriseTokenApi } from '@/services/enterprise-api-token-http';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+
+import { formatPomAgentData } from './transformers';
 
 const fileName = 'apps/consumer-experience/src/services/agent/index.ts';
 
@@ -11,7 +13,7 @@ export const pomAgentSearch = withLogging(
   async (
     { clientCode, agentId }: { clientCode: string; agentId: string },
     loggingCtx: CommonLogContext
-  ): Promise<POM_Producer_Models_SearchProducersResult> => {
+  ) => {
     const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/distributors/v1/producers/search?limit=10&offset=0`;
 
     const rawResponse = await EnterpriseTokenApi.post(
@@ -23,13 +25,13 @@ export const pomAgentSearch = withLogging(
       }),
       {
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
+      loggingCtx
     );
 
-    console.log({ rawResponse });
+    const response: Swizzle_Host_Defaults_Contracts_PagedResponse_1 =
+      await parseAPIResponse(rawResponse);
 
-    const response = await parseAPIResponse(rawResponse);
-    console.log({ response });
     if (!rawResponse?.ok) {
       const responseDetails = await logApiNotOkDetails({
         rawResponse,
@@ -45,7 +47,9 @@ export const pomAgentSearch = withLogging(
       });
     }
 
-    return response.results?.[0];
+    const formattedAgentData = formatPomAgentData(response.results?.[0]);
+
+    return formattedAgentData;
   },
   {
     file: fileName,

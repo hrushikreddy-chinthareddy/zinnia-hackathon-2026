@@ -31,14 +31,6 @@ export const HeaderPolicyDetails = async ({
     loggingContext
   );
 
-  // const { data: agentData } = await getAgentInformation(
-  //   {
-  //     clientCode: policyData?.carrierId || '',
-  //     agentId: policyData?.primaryAgentExternalId || '',
-  //   },
-  //   loggingContext
-  // );
-
   const { data: pomAgentData } = await pomAgentSearch(
     {
       clientCode: policyData?.carrierId || '',
@@ -93,7 +85,7 @@ export const HeaderPolicyDetails = async ({
         </p>
         {/* There is the possibility that an agent id is on the policy, but no agent data
           is returned from mcs so null check is on the name rather than on the full object */}
-        {pomAgentData && (pomAgentData.firstName || pomAgentData?.lastName) && (
+        {pomAgentData && (
           <>
             <span>Agent:</span>
             <AgentSidesheet agentData={pomAgentData} />

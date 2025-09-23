@@ -17,12 +17,15 @@ export const AgentSidesheet = ({
     return null;
   }
 
+  const { firstName, lastName, businessPhone, email, businessAddress } =
+    agentData;
+
   return (
     <SideSheet
       header="Agent Information"
       trigger={
         <Button size="small" mode="link" style={{ display: 'inline-block' }}>
-          {toTitleCase(agentData.firstName)} {toTitleCase(agentData.lastName)}
+          {toTitleCase(firstName)} {toTitleCase(lastName)}
         </Button>
       }
     >
@@ -30,47 +33,46 @@ export const AgentSidesheet = ({
         <div>
           <h2 className="mb-lg">Name</h2>
           <p>
-            {toTitleCase(agentData.firstName)} {toTitleCase(agentData.lastName)}
+            {toTitleCase(firstName)} {toTitleCase(lastName)}
           </p>
         </div>
-        {agentData.businessAddress && (
+        {businessAddress && (
           <div>
             <h2 className="mb-lg">Address</h2>
 
             <FieldData Label={<Label>Office</Label>}>
               <Address
-                addrCountry={agentData.businessAddress.country}
-                addrLine1={toTitleCase(agentData.businessAddress.line)}
-                addrLine2={toTitleCase(agentData.businessAddress.line2)}
-                city={toTitleCase(agentData.businessAddress.city)}
-                state={agentData.businessAddress.state}
-                zipCode={agentData.businessAddress.zipCode}
+                addrCountry={businessAddress.country}
+                addrLine1={toTitleCase(businessAddress.line)}
+                addrLine2={toTitleCase(businessAddress.line2)}
+                city={toTitleCase(businessAddress.city)}
+                state={businessAddress.state}
+                zipCode={businessAddress.zipCode}
               />
             </FieldData>
           </div>
         )}
-        {agentData.businessPhone && (
+        {businessPhone && (
           <div>
             <h2 className="mb-lg">Phone</h2>
 
             {/* TODO: Need to format this */}
             <FieldData Label={<Label>Work phone</Label>}>
               <PiiWrapper>
-                {agentData.businessPhone.countryCode}-
-                {agentData.businessPhone.number}
+                {businessPhone.countryCode}-{businessPhone.number}
               </PiiWrapper>
             </FieldData>
           </div>
         )}
 
-        {agentData.email && (
+        {email && (
           <div>
             <h2 className="mb-lg">Email</h2>
 
             <FieldData Label={<Label>Work email</Label>}>
               <div>
                 <p className="typography-content-body-sm">
-                  <Email emailAddress={agentData.email} />
+                  <Email emailAddress={email} />
                 </p>
               </div>
             </FieldData>
