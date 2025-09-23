@@ -1,0 +1,4266 @@
+openapi: 3.0.1
+info:
+  title: Producer Onboarding Management API
+  description: >-
+    The entry point of the Producer Onboarding Management API. Includes API
+    versions: 1
+  version: all
+servers:
+  - url: https://api.zinnia.io
+paths:
+  /distributors/v1/carriers/{carrierShortName}:
+    get:
+      tags:
+        - Carriers
+      summary: Gets a carrier, its parent and children given a carrier short name
+      parameters:
+        - name: carrierShortName
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetCarrierByShortNameResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetCarrierByShortNameResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetCarrierByShortNameResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/hierarchies:
+    post:
+      tags:
+        - Hierarchies
+      summary: Creates a hierarchy
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PostHierarchyRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PostHierarchyRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PostHierarchyRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostHierarchyResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostHierarchyResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostHierarchyResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '422':
+          description: Client Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    get:
+      tags:
+        - Hierarchies
+      summary: >-
+        Fetches a hierarchy given a producer NPN, a product name, and a
+        transaction date
+      parameters:
+        - name: producerLookupId
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: productName
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: transactionDate
+          in: query
+          style: form
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/hierarchies/{id}:
+    patch:
+      tags:
+        - Hierarchies
+      summary: Updates the effective and expiry dates of a hierarchy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PatchHierarchyRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PatchHierarchyRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PatchHierarchyRequest'
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '422':
+          description: Client Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    get:
+      tags:
+        - Hierarchies
+      summary: Fetches a hierarchy given a hierarchy id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/hierarchies/{id}/producers:
+    get:
+      tags:
+        - Hierarchies
+      summary: Retrieves all producers in a hierarchy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetProducersResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetProducersResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetProducersResponse
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/hierarchies/selling-code/{sellingCode}:
+    get:
+      tags:
+        - Hierarchies
+      summary: Fetches a hierarchy given a selling code
+      parameters:
+        - name: sellingCode
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetHierarchyResponse
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/hierarchies/selling-code/{sellingCode}/downline:
+    get:
+      tags:
+        - Hierarchies
+      summary: Fetches a hierarchy downline group given a selling code
+      parameters:
+        - name: sellingCode
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: PartialFullName
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: CarrierShortName
+          in: query
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: >-
+                      #/components/schemas/POM.Hierarchy.Models.HierarchyDownlineItem
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: >-
+                      #/components/schemas/POM.Hierarchy.Models.HierarchyDownlineItem
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: >-
+                      #/components/schemas/POM.Hierarchy.Models.HierarchyDownlineItem
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/hierarchies/search:
+    post:
+      tags:
+        - Hierarchies
+      summary: Searches for hierarchies
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.SearchHierarchiesRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.SearchHierarchiesRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.SearchHierarchiesRequest
+      responses:
+        '207':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/{nationalProducerNumber}/appointments:
+    post:
+      tags:
+        - Producers
+      summary: Creates a state appointments for a producer
+      description: >-
+        The API caller needs the 'write_appointments' permission, combined with
+        the provided carrier short name (e.g., SBGC), to perform the
+        authorization check using the FGA check service.
+      parameters:
+        - name: nationalProducerNumber
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.PostProducerAppointmentRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.PostProducerAppointmentRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.PostProducerAppointmentRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.PostProducerAppointmentResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.PostProducerAppointmentResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.PostProducerAppointmentResponse
+    patch:
+      tags:
+        - Producers
+      summary: Deletes a list of appointments of producers
+      description: >-
+        The API caller needs the 'write_appointments' permission, combined with
+        the provided carrier short name (e.g., SBGC), to perform the
+        authorization check using the FGA check service.
+      parameters:
+        - name: nationalProducerNumber
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: carrierShortName
+          in: query
+          required: true
+          style: form
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.DeleteAppointmentsRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.DeleteAppointmentsRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.DeleteAppointmentsRequest
+      responses:
+        '207':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/appointments/health:
+    get:
+      tags:
+        - Producers
+      summary: Check the health of the appointments service
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '503':
+          description: Server Error
+  /distributors/v1/producers/{npn}/appointments/unsubscribe:
+    post:
+      tags:
+        - Producers
+      summary: Unsubscribes a producer from appointment updates from vendor
+      parameters:
+        - name: npn
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.PostDisconnectProducerRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.PostDisconnectProducerRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.PostDisconnectProducerRequest
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '500':
+          description: Server Error
+  /distributors/v1/producers:
+    get:
+      tags:
+        - Producers
+      summary: >-
+        Retrieves the producer with the given id, producer type and carrier
+        short name
+      description: >-
+        The API caller must have the 'read_producer' permission which is used
+        with the provided carrier short name (example: SBGC) to make the
+        authorization check with the FGA check service.
+      parameters:
+        - name: producerType
+          in: query
+          required: true
+          style: form
+          schema:
+            $ref: '#/components/schemas/POM.Models.ProducerType'
+        - name: lookupId
+          in: query
+          required: true
+          style: form
+          schema:
+            type: string
+        - name: carrierShortName
+          in: query
+          required: true
+          style: form
+          schema:
+            type: string
+        - name: callLicensesAndAppointmentsVendor
+          in: query
+          style: form
+          schema:
+            type: boolean
+            default: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Swizzle.Api.Contracts.GetProducerResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swizzle.Api.Contracts.GetProducerResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Swizzle.Api.Contracts.GetProducerResponse'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    post:
+      tags:
+        - Producers
+      summary: Creates a producer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PostProducerRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PostProducerRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.PostProducerRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostProducerResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostProducerResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostProducerResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '422':
+          description: Client Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/{id}:
+    get:
+      tags:
+        - Producers
+      summary: Gets the producer by ID (NPN or SSN)
+      description: The API caller must have the 'read_producer' permission
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Swizzle.Api.Contracts.GetProducerResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swizzle.Api.Contracts.GetProducerResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Swizzle.Api.Contracts.GetProducerResponse'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+    patch:
+      tags:
+        - Producers
+      summary: Update a producer
+      description: >-
+        The API caller must have the 'write_producer' permission which is used
+        with the provided carrier short name (example: SBGC) to make the
+        authorization check with the FGA check service.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          schema:
+            type: string
+        - name: producerType
+          in: query
+          style: form
+          schema:
+            $ref: '#/components/schemas/POM.Models.ProducerType'
+        - name: carrierShortName
+          in: query
+          style: form
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/POM.Producer.Models.ProducerPatchRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/POM.Producer.Models.ProducerPatchRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/POM.Producer.Models.ProducerPatchRequest'
+      responses:
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/producers:
+    get:
+      tags:
+        - Producers
+      summary: >-
+        Retrieves all producers whose names start with the given partialFullName
+        and match the carrierShortName
+      description: >-
+        The API caller must have the 'read_producer' permission which is used
+        with the provided carrier short name (example: SBGC) to make the
+        authorization check with the FGA check service.
+      parameters:
+        - name: partialFullName
+          in: query
+          required: true
+          style: form
+          schema:
+            type: string
+        - name: carrierShortName
+          in: query
+          required: true
+          style: form
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetProducersByNameResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetProducersByNameResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.GetProducersByNameResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '429':
+          description: Too Many Requests
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/search-criteria:
+    post:
+      tags:
+        - Producers
+      summary: >-
+        Retrieves a paginated list of producers by fullName, taxId,
+        nationalProducerNumber, selling code or email by multiple search
+        criteria
+      description: The API caller must have the 'read_producer' permission
+      parameters:
+        - name: sortBy
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: sortOrder
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          style: form
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.SearchProducerMultipleCriteriaRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.SearchProducerMultipleCriteriaRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.SearchProducerMultipleCriteriaRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult,
+                  POM.Producer.Models, Version=1.0.0.0, Culture=neutral,
+                  PublicKeyToken=null]]
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult,
+                  POM.Producer.Models, Version=1.0.0.0, Culture=neutral,
+                  PublicKeyToken=null]]
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult,
+                  POM.Producer.Models, Version=1.0.0.0, Culture=neutral,
+                  PublicKeyToken=null]]
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/search:
+    post:
+      tags:
+        - Producers
+      summary: >-
+        Retrieves a paginated list of producers by fullName, taxId,
+        nationalProducerNumber, selling code or email
+      description: The API caller must have the 'read_producer' permission
+      parameters:
+        - name: sortBy
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: sortOrder
+          in: query
+          style: form
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: true
+          style: form
+          schema:
+            maximum: 50
+            minimum: 1
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          required: true
+          style: form
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.SearchProducerRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.SearchProducerRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/Swizzle.Api.Contracts.SearchProducerRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult,
+                  POM.Producer.Models, Version=1.0.0.0, Culture=neutral,
+                  PublicKeyToken=null]]
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult,
+                  POM.Producer.Models, Version=1.0.0.0, Culture=neutral,
+                  PublicKeyToken=null]]
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult,
+                  POM.Producer.Models, Version=1.0.0.0, Culture=neutral,
+                  PublicKeyToken=null]]
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '403':
+          description: Forbidden
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/onboard:
+    post:
+      tags:
+        - Producers
+      summary: Onboards a producer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.OnboardProducerRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.OnboardProducerRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.OnboardProducerRequest
+      responses:
+        '201':
+          description: Created
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.OnboardProducerResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.OnboardProducerResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.OnboardProducerResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '422':
+          description: Client Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/report:
+    post:
+      tags:
+        - Producers
+      summary: Generates a producer verification report
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.PostProducerValidationReportRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.PostProducerValidationReportRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.PostProducerValidationReportRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostProducerResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostProducerResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.PostProducerResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/producers/validate:
+    post:
+      tags:
+        - Producers
+      summary: Validates the creation of a producer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.OnboardProducerRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.OnboardProducerRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/Swizzle.Api.Contracts.OnboardProducerRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.OnboardProducerResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.OnboardProducerResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/Swizzle.Api.Contracts.OnboardProducerResponse
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '422':
+          description: Client Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/internal/s3/upload-event:
+    post:
+      tags:
+        - SimulateS
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - File
+              type: object
+              properties:
+                File:
+                  type: string
+                  format: binary
+            encoding:
+              File:
+                style: form
+      responses:
+        '200':
+          description: Success
+  /distributors/v1/trainings/files:
+    post:
+      tags:
+        - Trainings
+      summary: >-
+        Starts the process to create the RegEd training request files for
+        producers
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '422':
+          description: Client Error
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+  /distributors/v1/trainings/files/process:
+    post:
+      tags:
+        - Trainings
+      summary: >-
+        Starts the process to update producers' trainings based on the training
+        files received daily from RegEd
+      responses:
+        '200':
+          description: Success
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Microsoft.AspNetCore.Mvc.ProblemDetails'
+        '500':
+          description: Server Error
+  /distributors/v1/vertafore/producerquery:
+    post:
+      tags:
+        - Vertafore
+      summary: Handles vertafore request for producerquery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerResponse
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerResponse
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerResponse
+  /distributors/v1/vertafore/onboardingservices:
+    post:
+      tags:
+        - Vertafore
+      summary: Handles vertafore request for producerquery
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRequest
+          text/json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRequest
+          application/*+json:
+            schema:
+              $ref: >-
+                #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRequest
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRes
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRes
+            text/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRes
+components:
+  schemas:
+    Microsoft.AspNetCore.Mvc.ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: {}
+    POM.Hierarchy.Models.HierarchyDownlineItem:
+      type: object
+      properties:
+        sellingCode:
+          type: string
+          nullable: true
+        npn:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+        level:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        fullName:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        emailAddress:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.DisconnectAgencyRequest:
+      required:
+        - agencyName
+        - ein
+        - npn
+        - principalEmail
+        - principalFirstName
+        - principalLastName
+      type: object
+      properties:
+        agencyName:
+          minLength: 1
+          type: string
+        principalFirstName:
+          minLength: 1
+          type: string
+        principalLastName:
+          minLength: 1
+          type: string
+        principalEmail:
+          minLength: 1
+          type: string
+        ein:
+          minLength: 1
+          type: string
+        npn:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.DisconnectAgentRequest:
+      required:
+        - email
+        - firstName
+        - lastName
+        - npn
+        - ssn
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+        firstName:
+          minLength: 1
+          type: string
+        lastName:
+          minLength: 1
+          type: string
+        ssn:
+          minLength: 1
+          type: string
+        npn:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeAdditionalProperties:
+      type: object
+      properties:
+        property:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProperty
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeAppointment:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        company:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeCompany
+        status:
+          type: string
+          nullable: true
+        effectiveDate:
+          type: string
+          nullable: true
+        isPending:
+          type: string
+          nullable: true
+        type:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeAppointmentType
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeAppointmentType:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeAppointments:
+      type: object
+      properties:
+        appointment:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeAppointment
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeCompany:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        naicId:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeCorporation:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        principal:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeIndividual
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeGenericResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          nullable: true
+        processingMessages:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProcessingMessage
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeIndividual:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        ssn:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        birthDate:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        npn:
+          type: string
+          nullable: true
+        producerRating:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRating
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeLicense:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        type:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeType
+        state:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        statusDate:
+          type: string
+          nullable: true
+        copyReceived:
+          type: string
+          nullable: true
+        expirationDate:
+          type: string
+          nullable: true
+        number:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeLicenses:
+      type: object
+      properties:
+        license:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeLicense
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeLoa:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        type:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeType
+        state:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        statusDate:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeLoas:
+      type: object
+      properties:
+        loa:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeLoa
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRequest:
+      type: object
+      properties:
+        recruiterOnboardingRequest:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeRecruiterOnboardingRequest
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeOnboardingRes:
+      type: object
+      properties:
+        recruiterOnboardingResponse:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.VertaforeRecruiterOnboardingResponse
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeOrganization:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        ein:
+          type: string
+          nullable: true
+        npn:
+          type: string
+          nullable: true
+        producerRating:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRating
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProcessingMessage:
+      type: object
+      properties:
+        processingMessage:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProcessingStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducer:
+      type: object
+      properties:
+        individual:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeIndividual
+        organization:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeOrganization
+        connected:
+          type: boolean
+        licenses:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeLicenses
+        loas:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeLoas
+        residentStates:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeResidentStates
+        appointments:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeAppointments
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducerCriteria:
+      type: object
+      properties:
+        entityType:
+          type: string
+          nullable: true
+        tin:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducerQuery:
+      type: object
+      properties:
+        producerCriteria:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerCriteria
+        sectionConfiguration:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeSectionConfiguration
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducerQueryResponse:
+      type: object
+      properties:
+        genericResponse:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeGenericResponse
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRating:
+      type: object
+      properties:
+        code:
+          type: string
+          nullable: true
+        producerRating:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducerRequest:
+      type: object
+      properties:
+        producerQuery:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerQuery
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProducerResponse:
+      type: object
+      properties:
+        producerQueryResponse:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducerQueryResponse
+        processingStatus:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProcessingStatus
+        producer:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeProducer
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeProperty:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeRecruiterOnboardingRequest:
+      type: object
+      properties:
+        packetType:
+          type: string
+          nullable: true
+        externalSubmitterName:
+          type: string
+          nullable: true
+        individual:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeIndividual
+        corporation:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeCorporation
+        additionalProperties:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeAdditionalProperties
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeResidentState:
+      type: object
+      properties:
+        primary:
+          type: string
+          nullable: true
+        residentState:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeResidentStates:
+      type: object
+      properties:
+        residentState:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.LicensesAndAppointments.Models.MCS.VertaforeResidentState
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeSectionConfiguration:
+      type: object
+      properties:
+        activeOnly:
+          type: boolean
+          nullable: true
+        sectionType:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.MCS.VertaforeType:
+      type: object
+      properties:
+        value:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.PostProducerAppointmentRequest:
+      required:
+        - carrierShortName
+        - effectiveDate
+        - isResident
+        - licenseNumber
+        - linesOfAuthority
+        - state
+        - status
+      type: object
+      properties:
+        carrierShortName:
+          minLength: 1
+          type: string
+        status:
+          $ref: '#/components/schemas/POM.Producer.Models.AppointmentStatus'
+        state:
+          minLength: 1
+          type: string
+        isResident:
+          type: boolean
+        licenseNumber:
+          minLength: 1
+          type: string
+        productCompany:
+          type: string
+          nullable: true
+        linesOfAuthority:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Models.LicenseAndAppointmentLineOfAuthority
+        effectiveDate:
+          type: string
+          format: date-time
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.PostProducerAppointmentResponse:
+      required:
+        - company
+        - lineOfAuthority
+        - state
+        - status
+      type: object
+      properties:
+        status:
+          minLength: 1
+          type: string
+        state:
+          minLength: 1
+          type: string
+        lineOfAuthority:
+          minLength: 1
+          type: string
+        company:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.LicensesAndAppointments.Models.VertaforeRecruiterOnboardingResponse:
+      type: object
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+          nullable: true
+        packetId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Models.Address:
+      required:
+        - city
+        - country
+        - line
+        - state
+        - type
+        - zipCode
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/POM.Models.AddressTypes'
+        line:
+          minLength: 1
+          type: string
+        line2:
+          type: string
+          nullable: true
+        city:
+          minLength: 1
+          type: string
+        state:
+          minLength: 1
+          type: string
+        country:
+          minLength: 1
+          type: string
+        zipCode:
+          minLength: 1
+          type: string
+        effectiveDates:
+          $ref: '#/components/schemas/POM.Models.EffectiveDates'
+      additionalProperties: false
+    POM.Models.AddressTypes:
+      enum:
+        - Residential
+        - Mailing
+        - Business
+      type: string
+    POM.Models.Adjudications:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/POM.Models.Results'
+        carrierResult:
+          $ref: '#/components/schemas/POM.Models.CarrierResults'
+      additionalProperties: false
+    POM.Models.AdjudicationsDocument:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/POM.Models.Results'
+        carrierResult:
+          $ref: '#/components/schemas/POM.Models.CarrierResults'
+      additionalProperties: false
+    POM.Models.AlternateId:
+      required:
+        - carrierShortName
+        - key
+        - value
+      type: object
+      properties:
+        carrierShortName:
+          minLength: 1
+          type: string
+        key:
+          minLength: 1
+          type: string
+        value:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.Models.BackgroundCheckDocument:
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/POM.Models.Statuses'
+        adjudication:
+          $ref: '#/components/schemas/POM.Models.AdjudicationsDocument'
+        requestDate:
+          type: string
+          format: date-time
+        completionDate:
+          type: string
+          format: date-time
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+        publishCaseUpdates:
+          type: boolean
+        caseId:
+          type: string
+          nullable: true
+        correlationId:
+          type: string
+          format: uuid
+          nullable: true
+      additionalProperties: false
+    POM.Models.BankingInformation:
+      type: object
+      properties:
+        bankName:
+          type: string
+          nullable: true
+        routingNumber:
+          type: string
+          nullable: true
+        accountNumber:
+          type: string
+          nullable: true
+        branchNumber:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Models.Carrier:
+      required:
+        - carrierShortName
+        - name
+      type: object
+      properties:
+        carrierShortName:
+          minLength: 1
+          type: string
+        name:
+          minLength: 1
+          type: string
+        externalMasterId:
+          type: string
+          nullable: true
+        externalCarrierCode:
+          type: string
+          nullable: true
+        id:
+          type: string
+          nullable: true
+        parentCompany:
+          $ref: '#/components/schemas/POM.Models.Carrier'
+        childrenCompanies:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Carrier'
+          nullable: true
+      additionalProperties: false
+    POM.Models.CarrierResults:
+      enum:
+        - Approved
+        - Denied
+        - Dispute
+      type: string
+    POM.Models.ContactPerson:
+      required:
+        - firstName
+        - lastName
+      type: object
+      properties:
+        firstName:
+          minLength: 1
+          type: string
+        lastName:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.Models.EffectiveDates:
+      required:
+        - isCurrent
+      type: object
+      properties:
+        startDate:
+          type: string
+          description: Start date of activity
+          format: date
+          nullable: true
+        endDate:
+          type: string
+          description: End date of activity, optional when `isCurrent` is `true`
+          format: date
+          nullable: true
+        isCurrent:
+          type: boolean
+      additionalProperties: false
+      description: >-
+        Represents the beginning and the end of an activity and whether is
+        currently being pursued
+    POM.Models.Employer:
+      required:
+        - address
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        address:
+          $ref: '#/components/schemas/POM.Models.Address'
+        jobTitle:
+          type: string
+          nullable: true
+        effectiveDates:
+          $ref: '#/components/schemas/POM.Models.EffectiveDates'
+        contactInfo:
+          $ref: '#/components/schemas/POM.Models.ThirdPartyContactInfo'
+      additionalProperties: false
+    POM.Models.PaidAffiliate:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/POM.Models.Address'
+        taxIdentification:
+          $ref: '#/components/schemas/POM.Models.TaxIdentification'
+      additionalProperties: false
+    POM.Models.Parent:
+      required:
+        - producerType
+        - role
+      type: object
+      properties:
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Address'
+          nullable: true
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        payoutFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentInfo:
+          $ref: '#/components/schemas/POM.Models.PaymentInfo'
+        hierarchyId:
+          type: string
+          nullable: true
+        level:
+          type: integer
+          format: int32
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+        sellingCode:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Models.PaymentFrequencyPreference:
+      enum:
+        - Annual
+        - Monthly
+        - Quarterly
+        - Weekly
+        - BiWeekly
+        - EveryThirdFriday
+        - Daily
+      type: string
+    POM.Models.PaymentInfo:
+      type: object
+      properties:
+        taxId:
+          type: string
+          nullable: true
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+      additionalProperties: false
+    POM.Models.PaymentMethod:
+      enum:
+        - Check
+        - Eft
+        - Nscc
+      type: string
+    POM.Models.PhoneNumber:
+      required:
+        - number
+        - type
+      type: object
+      properties:
+        countryCode:
+          type: string
+          default: '+1'
+          nullable: true
+        number:
+          minLength: 1
+          type: string
+          format: 10 digit phone number - including area code
+        extension:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/POM.Models.PhoneNumberType'
+      additionalProperties: false
+    POM.Models.PhoneNumberType:
+      enum:
+        - Primary
+        - Alternate
+        - Residential
+        - Business
+        - Cellular
+        - FaxNumber
+        - TollFreeNumber
+        - Unknown
+      type: string
+    POM.Models.ProducerRoles:
+      enum:
+        - GeneralAgency
+        - BrokerDealer
+        - IndependentMarketingOrganization
+        - ThirdPartyMarketer
+        - RegisteredInvestmentAdvisor
+        - Rep
+      type: string
+    POM.Models.ProducerType:
+      enum:
+        - Corporation
+        - Individual
+      type: string
+    POM.Models.Product:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.Models.Results:
+      enum:
+        - Pass
+        - Fail
+        - Review
+      type: string
+    POM.Models.Role:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    POM.Models.Statuses:
+      enum:
+        - Pending
+        - Completed
+        - Cancelled
+        - Error
+      type: string
+    POM.Models.TaxIdentification:
+      type: object
+      properties:
+        value:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/POM.Models.TaxIdentificationType'
+      additionalProperties: false
+    POM.Models.TaxIdentificationType:
+      enum:
+        - Ssn
+        - Ein
+      type: string
+    POM.Models.ThirdPartyContactInfo:
+      type: object
+      properties:
+        phoneNumber:
+          $ref: '#/components/schemas/POM.Models.PhoneNumber'
+        contactPerson:
+          $ref: '#/components/schemas/POM.Models.ContactPerson'
+        email:
+          type: string
+          format: email
+          nullable: true
+        postalAddress:
+          $ref: '#/components/schemas/POM.Models.Address'
+      additionalProperties: false
+      description: Information allowing the verification via a third party
+    POM.Producer.Domain.Repository.Documents.AmlTraining:
+      type: object
+      properties:
+        vendor:
+          type: string
+          nullable: true
+        courseName:
+          type: string
+          nullable: true
+        completionDate:
+          type: string
+          format: date
+          nullable: true
+        expiryDate:
+          type: string
+          format: date
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Domain.Repository.Documents.ProducerDocument:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        creationDate:
+          type: string
+          format: date
+          nullable: true
+          deprecated: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+        lookupId:
+          type: string
+          nullable: true
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        firstName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        birthDate:
+          type: string
+          format: date
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        taxPayerIdentificationNumber:
+          type: string
+          nullable: true
+        employerIdentificationNumber:
+          type: string
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        employers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Employer'
+          nullable: true
+        licensesAndAppointments:
+          $ref: '#/components/schemas/POM.Producer.Models.LicensesAndAppointments'
+        amlTrainings:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Domain.Repository.Documents.AmlTraining
+          nullable: true
+        productTrainings:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Domain.Repository.Documents.ProductTraining
+          nullable: true
+        stateTrainings:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Domain.Repository.Documents.StateTraining
+          nullable: true
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.PhoneNumber'
+          nullable: true
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Address'
+          nullable: true
+        backgroundChecks:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.BackgroundCheckDocument'
+          nullable: true
+        creationStatus:
+          type: string
+          nullable: true
+        caseId:
+          type: string
+          nullable: true
+        hierarchiesId:
+          type: array
+          items:
+            type: string
+          nullable: true
+        productTrainingIds:
+          type: array
+          items:
+            type: string
+          nullable: true
+        stateTrainingIds:
+          type: array
+          items:
+            type: string
+          nullable: true
+        hierarchiesInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/POM.Producer.Models.HierarchyInfo'
+          nullable: true
+        correlationId:
+          type: string
+          format: uuid
+          nullable: true
+        hasLatestLicensesAndAppointments:
+          type: boolean
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Role'
+          nullable: true
+        channel:
+          $ref: '#/components/schemas/POM.Producer.Models.AgencyChannel'
+        taxIdentification:
+          $ref: '#/components/schemas/POM.Models.TaxIdentification'
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+        chequeInformation:
+          $ref: '#/components/schemas/POM.Producer.Models.ChequeInformation'
+        nscc:
+          $ref: '#/components/schemas/POM.Producer.Models.Nscc'
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        carrierShortNames:
+          type: array
+          items:
+            type: string
+          nullable: true
+        carrierToLineOfBusiness:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          nullable: true
+        trigram:
+          type: string
+          nullable: true
+        sellingCodes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        partyId:
+          type: string
+          nullable: true
+        alternateIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.AlternateId'
+          nullable: true
+        carrierSellingCodeRoles:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/POM.Producer.Models.SellingCodeRole'
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Domain.Repository.Documents.ProductTraining:
+      type: object
+      properties:
+        productName:
+          type: string
+          nullable: true
+        completionDate:
+          type: string
+          format: date
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Domain.Repository.Documents.StateTraining:
+      type: object
+      properties:
+        vendor:
+          type: string
+          nullable: true
+        courseName:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        trainingHours:
+          type: integer
+          format: int32
+          nullable: true
+        completionDate:
+          type: string
+          format: date
+          nullable: true
+        expiryDate:
+          type: string
+          format: date
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.AgencyChannel:
+      enum:
+        - IndependentPlanners
+        - IndependentMarketingOrganization
+        - RegisteredInvestmentAdvisors
+      type: string
+    POM.Producer.Models.Appointment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        state:
+          type: string
+          nullable: true
+        type:
+          type: string
+          nullable: true
+        effectiveDate:
+          type: string
+          format: date-time
+          nullable: true
+        terminationDate:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          $ref: '#/components/schemas/POM.Producer.Models.AppointmentStatus'
+        company:
+          type: string
+          nullable: true
+        licenseType:
+          type: string
+          nullable: true
+        licenseCategory:
+          type: string
+          nullable: true
+        stateProducerNumber:
+          type: string
+          nullable: true
+        residentCountyCode:
+          type: string
+          nullable: true
+        counties:
+          type: array
+          items:
+            type: string
+          nullable: true
+        terminationReason:
+          type: string
+          nullable: true
+        residentState:
+          type: boolean
+        resident:
+          type: boolean
+          nullable: true
+        linesOfAuthority:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Models.LicenseAndAppointmentLineOfAuthority
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.AppointmentStatus:
+      enum:
+        - Approved
+        - Terminated
+        - JustInTime
+        - Pending
+        - StatePending
+        - PendingTermination
+        - Unknown
+      type: string
+    POM.Producer.Models.BackgroundCheck:
+      required:
+        - status
+      type: object
+      properties:
+        requestId:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/POM.Models.Statuses'
+        adjudication:
+          $ref: '#/components/schemas/POM.Models.Adjudications'
+        requestDate:
+          type: string
+          format: date-time
+        completionDate:
+          type: string
+          format: date-time
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.ChequeInformation:
+      type: object
+      properties:
+        chequeName:
+          type: string
+          nullable: true
+        address:
+          $ref: '#/components/schemas/POM.Models.Address'
+      additionalProperties: false
+    POM.Producer.Models.ExternalHierarchy:
+      type: object
+      properties:
+        producerLookupId:
+          type: string
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Product'
+          nullable: true
+        effectiveDate:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+        uplineProducersInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.UplineProducerItem'
+          nullable: true
+        payToLookupId:
+          type: string
+          nullable: true
+        paidAffiliate:
+          $ref: '#/components/schemas/POM.Models.PaidAffiliate'
+        level:
+          type: integer
+          format: int32
+        sellingCode:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    POM.Producer.Models.HierarchyInfo:
+      type: object
+      properties:
+        commissionPercentage:
+          type: integer
+          format: int64
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.License:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        residentState:
+          type: boolean
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        statusDate:
+          type: string
+          format: date-time
+          nullable: true
+        effectiveDate:
+          type: string
+          format: date-time
+          nullable: true
+        expirationDate:
+          type: string
+          format: date-time
+          nullable: true
+        number:
+          type: string
+          nullable: true
+        inactivationReason:
+          type: string
+          nullable: true
+        suspensionStartDate:
+          type: string
+          format: date-time
+          nullable: true
+        suspensionEndDate:
+          type: string
+          format: date-time
+          nullable: true
+        lineOfAuthorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.LineOfAuthority'
+          nullable: true
+        linesOfAuthority:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Models.LicenseAndAppointmentLineOfAuthority
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.LicenseAndAppointmentLineOfAuthority:
+      enum:
+        - Life
+        - Casualty
+        - Property
+        - LifeHealthAndVariable
+        - Annuity
+        - VariableLife
+        - Di
+        - Fixed
+        - Health
+        - Medical
+        - LongTerm
+        - MutualFund
+        - PreNeed
+        - Variable
+        - VarLife
+        - Unknown
+      type: string
+    POM.Producer.Models.LicensesAndAppointments:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/POM.Producer.Models.ProducerStatus'
+        licenses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.License'
+          nullable: true
+        appointments:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.Appointment'
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.LineOfAuthority:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        statusDate:
+          type: string
+          format: date-time
+        issueDate:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        inactivationReason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.Nscc:
+      type: object
+      properties:
+        participantId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.ParentInformation:
+      type: object
+      properties:
+        parentId:
+          type: string
+          nullable: true
+        parentName:
+          type: string
+          nullable: true
+        parentType:
+          type: string
+          nullable: true
+        parentNationalProducerNumber:
+          type: string
+          nullable: true
+        parentTaxId:
+          type: string
+          nullable: true
+        parentMasterNumber:
+          type: string
+          nullable: true
+        channel:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.Producer:
+      required:
+        - email
+        - hierarchiesInfo
+        - producerType
+      type: object
+      properties:
+        lookupId:
+          type: string
+          nullable: true
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        caseId:
+          type: string
+          nullable: true
+        correlationId:
+          type: string
+          format: uuid
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        taxPayerIdentificationNumber:
+          type: string
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        email:
+          minLength: 1
+          type: string
+        hierarchiesInfo:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/POM.Producer.Models.HierarchyInfo'
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.PhoneNumber'
+          nullable: true
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Address'
+          nullable: true
+        employers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Employer'
+          nullable: true
+        backgroundCheck:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.BackgroundCheck'
+          nullable: true
+        hierarchy:
+          $ref: '#/components/schemas/POM.Producer.Models.ParentInformation'
+        licenses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.License'
+          nullable: true
+        training:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.Training'
+          nullable: true
+        appointments:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.Appointment'
+          nullable: true
+        lineOfAuthorities:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.LineOfAuthority'
+          nullable: true
+        carrierShortNames:
+          type: array
+          items:
+            type: string
+          nullable: true
+        id:
+          type: string
+          nullable: true
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Role'
+          nullable: true
+        channel:
+          $ref: '#/components/schemas/POM.Producer.Models.AgencyChannel'
+        taxIdentification:
+          $ref: '#/components/schemas/POM.Models.TaxIdentification'
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+        chequeInformation:
+          $ref: '#/components/schemas/POM.Producer.Models.ChequeInformation'
+        nscc:
+          $ref: '#/components/schemas/POM.Producer.Models.Nscc'
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        paymentInfo:
+          $ref: '#/components/schemas/POM.Models.PaymentInfo'
+        carrierToLineOfBusiness:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+            nullable: true
+          nullable: true
+          readOnly: true
+        sellingCodes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        partyId:
+          type: string
+          nullable: true
+        alternateIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.AlternateId'
+          nullable: true
+        carrierSellingCodeRoles:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/POM.Producer.Models.SellingCodeRole'
+            nullable: true
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.ProducerNameMatch:
+      required:
+        - email
+        - lookupId
+        - name
+        - type
+      type: object
+      properties:
+        lookupId:
+          minLength: 1
+          type: string
+        name:
+          minLength: 1
+          type: string
+        type:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        email:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    POM.Producer.Models.ProducerPatchRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.PhoneNumber'
+          nullable: true
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Address'
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        taxPayerIdentificationNumber:
+          type: string
+          nullable: true
+        channel:
+          $ref: '#/components/schemas/POM.Producer.Models.AgencyChannel'
+        employerIdentificationNumber:
+          type: string
+          nullable: true
+        taxIdentification:
+          $ref: '#/components/schemas/POM.Models.TaxIdentification'
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+        chequeInformation:
+          $ref: '#/components/schemas/POM.Producer.Models.ChequeInformation'
+        nscc:
+          $ref: '#/components/schemas/POM.Producer.Models.Nscc'
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        carrierShortNames:
+          type: array
+          items:
+            type: string
+          nullable: true
+        trigram:
+          type: string
+          nullable: true
+        business:
+          type: string
+          nullable: true
+        caseId:
+          type: string
+          nullable: true
+        correlationId:
+          type: string
+          format: uuid
+          nullable: true
+        sellingCodes:
+          type: array
+          items:
+            type: string
+          nullable: true
+        partyId:
+          type: string
+          nullable: true
+        alternateIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.AlternateId'
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.ProducerStatus:
+      enum:
+        - PendingVertaforeCreation
+        - Created
+      type: string
+    POM.Producer.Models.SearchProducersResult:
+      type: object
+      properties:
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        id:
+          type: string
+          nullable: true
+        partyId:
+          type: string
+          nullable: true
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        producerName:
+          type: string
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        taxPayerIdentificationNumber:
+          type: string
+          nullable: true
+        carrierSellingCodes:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/POM.Producer.Models.SellingCodeRole'
+            nullable: true
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        businessPhone:
+          $ref: '#/components/schemas/POM.Models.PhoneNumber'
+        businessAddress:
+          $ref: '#/components/schemas/POM.Models.Address'
+        alternateIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.AlternateId'
+          nullable: true
+        parentsInformation:
+          $ref: '#/components/schemas/POM.Producer.Models.ParentInformation'
+        license:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.License'
+          nullable: true
+        appointments:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.Appointment'
+          nullable: true
+        training:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.Training'
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.SellingCodeRole:
+      type: object
+      properties:
+        sellingCode:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    POM.Producer.Models.Training:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        courseName:
+          type: string
+          nullable: true
+        courseNumber:
+          type: string
+          nullable: true
+        regEdId:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        completionDate:
+          type: string
+          nullable: true
+        expirationDate:
+          type: string
+          nullable: true
+        vendorName:
+          type: string
+          nullable: true
+        productName:
+          type: string
+          nullable: true
+        state:
+          type: string
+          nullable: true
+        trainingHours:
+          type: string
+          nullable: true
+      additionalProperties: false
+    POM.Producer.Models.UplineProducerItem:
+      type: object
+      properties:
+        lookupId:
+          type: string
+          nullable: true
+        level:
+          type: integer
+          format: int32
+        sellingCode:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    Swizzle.Api.Contracts.CarrierResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.DeleteAppointmentsRequest:
+      type: object
+      properties:
+        appointmentIds:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.GetCarrierByShortNameResponse:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+        parentCompany:
+          $ref: '#/components/schemas/Swizzle.Api.Contracts.CarrierResponse'
+        childrenCompanies:
+          type: array
+          items:
+            $ref: '#/components/schemas/Swizzle.Api.Contracts.CarrierResponse'
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.GetHierarchyResponse:
+      type: object
+      properties:
+        producerLookupId:
+          type: string
+          nullable: true
+        carrier:
+          $ref: '#/components/schemas/POM.Models.Carrier'
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Product'
+          nullable: true
+        effectiveDate:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+        upline:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Parent'
+          nullable: true
+        payTo:
+          $ref: '#/components/schemas/POM.Models.Parent'
+        paidAffiliate:
+          $ref: '#/components/schemas/POM.Models.PaidAffiliate'
+        level:
+          type: integer
+          format: int32
+        sellingCode:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    Swizzle.Api.Contracts.GetProducerResponse:
+      type: object
+      properties:
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        caseId:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        taxPayerIdentificationNumber:
+          type: string
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        phoneNumbers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.PhoneNumber'
+          nullable: true
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Address'
+          nullable: true
+        employers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Employer'
+          nullable: true
+        backgroundChecks:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.BackgroundCheck'
+          nullable: true
+        hasLatestLicensesAndAppointments:
+          type: boolean
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Role'
+          nullable: true
+        channel:
+          $ref: '#/components/schemas/POM.Producer.Models.AgencyChannel'
+        licensesAndAppointments:
+          $ref: '#/components/schemas/POM.Producer.Models.LicensesAndAppointments'
+        carrierShortNames:
+          type: array
+          items:
+            type: string
+          nullable: true
+        alternateIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.AlternateId'
+          nullable: true
+        carrierSellingCodeRoles:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/POM.Producer.Models.SellingCodeRole'
+            nullable: true
+          nullable: true
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+      additionalProperties: false
+    Swizzle.Api.Contracts.GetProducersByNameResponse:
+      required:
+        - producers
+      type: object
+      properties:
+        producers:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.ProducerNameMatch'
+      additionalProperties: false
+    Swizzle.Api.Contracts.GetProducersResponse:
+      type: object
+      properties:
+        producers:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/POM.Producer.Domain.Repository.Documents.ProducerDocument
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.OnboardProducerRequest:
+      required:
+        - email
+        - onboardingCarrierShortName
+        - producerType
+      type: object
+      properties:
+        onboardingCarrierShortName:
+          minLength: 1
+          type: string
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        email:
+          minLength: 1
+          type: string
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        caseId:
+          type: string
+          nullable: true
+        correlationId:
+          type: string
+          format: uuid
+          nullable: true
+        externalHierarchies:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.ExternalHierarchy'
+          nullable: true
+        channel:
+          $ref: '#/components/schemas/POM.Producer.Models.AgencyChannel'
+        employerIdentificationNumber:
+          type: string
+          nullable: true
+        callLicensesAndAppointmentsVendor:
+          type: boolean
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+      additionalProperties: false
+    Swizzle.Api.Contracts.OnboardProducerResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        result:
+          $ref: '#/components/schemas/POM.Producer.Models.Producer'
+      additionalProperties: false
+    Swizzle.Api.Contracts.PatchHierarchyRequest:
+      type: object
+      properties:
+        effectiveDate:
+          type: string
+          format: date-time
+          nullable: true
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.PostDisconnectProducerRequest:
+      required:
+        - entityType
+      type: object
+      properties:
+        entityType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        individual:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.DisconnectAgentRequest
+        corporation:
+          $ref: >-
+            #/components/schemas/POM.LicensesAndAppointments.Models.DisconnectAgencyRequest
+      additionalProperties: false
+    Swizzle.Api.Contracts.PostHierarchyRequest:
+      type: object
+      properties:
+        producerLookupId:
+          type: string
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Product'
+          nullable: true
+        effectiveDate:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+        uplineProducersInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.UplineProducerItem'
+          nullable: true
+        payToLookupId:
+          type: string
+          nullable: true
+        paidAffiliate:
+          $ref: '#/components/schemas/POM.Models.PaidAffiliate'
+        level:
+          type: integer
+          format: int32
+        sellingCode:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    Swizzle.Api.Contracts.PostHierarchyResponse:
+      type: object
+      properties:
+        producerLookupId:
+          type: string
+          nullable: true
+        carrierShortName:
+          type: string
+          nullable: true
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.Product'
+          nullable: true
+        effectiveDate:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+          nullable: true
+        uplineProducersInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.UplineProducerItem'
+          nullable: true
+        payToLookupId:
+          type: string
+          nullable: true
+        paidAffiliate:
+          $ref: '#/components/schemas/POM.Models.PaidAffiliate'
+        level:
+          type: integer
+          format: int32
+        sellingCode:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/POM.Models.ProducerRoles'
+      additionalProperties: false
+    Swizzle.Api.Contracts.PostProducerRequest:
+      required:
+        - carrierShortName
+        - email
+        - producerType
+      type: object
+      properties:
+        carrierShortName:
+          minLength: 1
+          type: string
+        producerType:
+          $ref: '#/components/schemas/POM.Models.ProducerType'
+        email:
+          minLength: 1
+          type: string
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true
+        middleName:
+          type: string
+          nullable: true
+        fullName:
+          type: string
+          nullable: true
+        dateOfBirth:
+          type: string
+          format: date
+          nullable: true
+        nationalProducerNumber:
+          type: string
+          nullable: true
+        socialSecurityNumber:
+          type: string
+          nullable: true
+        caseId:
+          type: string
+          nullable: true
+        correlationId:
+          type: string
+          format: uuid
+        externalHierarchies:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.ExternalHierarchy'
+          nullable: true
+        channel:
+          $ref: '#/components/schemas/POM.Producer.Models.AgencyChannel'
+        employerIdentificationNumber:
+          type: string
+          nullable: true
+        alternateIds:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Models.AlternateId'
+          nullable: true
+        paymentMethod:
+          $ref: '#/components/schemas/POM.Models.PaymentMethod'
+        paymentFrequencyPreference:
+          $ref: '#/components/schemas/POM.Models.PaymentFrequencyPreference'
+        bankingInformation:
+          $ref: '#/components/schemas/POM.Models.BankingInformation'
+      additionalProperties: false
+    Swizzle.Api.Contracts.PostProducerResponse:
+      type: object
+      properties:
+        result:
+          $ref: '#/components/schemas/POM.Producer.Models.Producer'
+      additionalProperties: false
+    Swizzle.Api.Contracts.PostProducerValidationReportRequest:
+      required:
+        - carrierShortName
+      type: object
+      properties:
+        carrierShortName:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Swizzle.Api.Contracts.SearchCriteria:
+      required:
+        - searchType
+        - searchValue
+      type: object
+      properties:
+        searchType:
+          $ref: '#/components/schemas/Swizzle.Api.Contracts.SearchType'
+        searchValue:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    Swizzle.Api.Contracts.SearchHierarchiesRequest:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: >-
+              #/components/schemas/Swizzle.Api.Contracts.SearchHierarchiesRequestItem
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.SearchHierarchiesRequestItem:
+      type: object
+      properties:
+        carrierId:
+          type: string
+          nullable: true
+        productCode:
+          type: string
+          nullable: true
+        dateOfTransaction:
+          type: string
+          nullable: true
+        contractId:
+          type: string
+          nullable: true
+        agentId:
+          type: string
+          nullable: true
+        agencyId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.SearchProducerMultipleCriteriaRequest:
+      required:
+        - criteria
+      type: object
+      properties:
+        carrierShortName:
+          type: string
+          nullable: true
+        criteria:
+          type: array
+          items:
+            $ref: '#/components/schemas/Swizzle.Api.Contracts.SearchCriteria'
+      additionalProperties: false
+    Swizzle.Api.Contracts.SearchProducerRequest:
+      required:
+        - searchType
+        - searchValue
+      type: object
+      properties:
+        searchType:
+          $ref: '#/components/schemas/Swizzle.Api.Contracts.SearchType'
+        searchValue:
+          minLength: 1
+          type: string
+        carrierShortName:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Swizzle.Api.Contracts.SearchType:
+      enum:
+        - FirstName
+        - LastName
+        - ProducerName
+        - TaxId
+        - NationalProducerNumber
+        - Email
+        - SellingCode
+        - Upn
+        - Aor
+        - Role
+      type: string
+    Swizzle.Host.Defaults.Contracts.PagedResponse`1[[POM.Producer.Models.SearchProducersResult, POM.Producer.Models, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/POM.Producer.Models.SearchProducersResult'
+          nullable: true
+      additionalProperties: false
+  securitySchemes:
+    CIAMOpenIdConnect:
+      type: openIdConnect
+      description: OpenId Connect authentication
+      openIdConnectUrl: https://login.zinnia.com/.well-known/openid-configuration
+      x-kong-security-openid-connect:
+        config:
+          run_on_preflight: true
+          audience_claim:
+            - aud
+          audience_required:
+            - https://api.zinnia.io
+          auth_methods:
+            - bearer
+            - client_credentials
+          scopes: []
+          client_credentials_param_type:
+            - header
+        enabled: true
+        protocols:
+          - http
+          - https

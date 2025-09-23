@@ -52,6 +52,7 @@ import {
   banksByPartyId,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+
 import { LimitedPolicyParty } from './types';
 
 export const allBeneficiaries = (policy: Policy) => {

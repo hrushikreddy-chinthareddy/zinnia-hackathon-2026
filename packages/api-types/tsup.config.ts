@@ -19,6 +19,7 @@ export default defineConfig((options: Options) => ({
     'src/generated-types/knowledgebase',
     'src/generated-types/correspondence',
     'src/generated-types/aggregation',
+    'src/generated-types/pom',
   ],
   clean: true,
   dts: true,
