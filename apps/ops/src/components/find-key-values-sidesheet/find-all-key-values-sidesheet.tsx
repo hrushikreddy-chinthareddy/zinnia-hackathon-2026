@@ -26,7 +26,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import styles from './find-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
 import {
-    NestedDataTuple,
+    NestedData,
     label,
     tags,
     link,
@@ -55,7 +55,7 @@ interface FindAllKeyValuesSidebarProps {
  * and searchValue.
  *
  * @param {ReturnType<typeof preparePolicy>} preparedPolicy - The policy details
- * @param {NestedDataTuple} policyBasics - The policy basics
+ * @param {NestedData} policyBasics - The policy basics
  * @param {string} searchValue - The search value
  * @returns {JSX.Element} - A JSX element representing the key-value pairs
  */
@@ -66,7 +66,7 @@ const KeyValueBasics = ({
     treeState,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    policyBasics: NestedDataTuple;
+    policyBasics: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
 }) => (
@@ -157,7 +157,7 @@ const KeyValueSections = ({
  * Each subsection is rendered as a separate Accordion item.
  * The label of each subsection is highlighted if it matches the searchValue.
  * Each subsection contains a list of DataField components.
- * @param {NestedDataTuple} subSections A list of subsections to render
+ * @param {NestedData} subSections A list of subsections to render
  * @param {string} searchValue A string to highlight in the subsection labels
  * @returns {JSX.Element[]} The rendered list of subsections
  */
@@ -166,14 +166,14 @@ const KeyValueSubSections = ({
     searchValue,
     treeState,
 }: {
-    subSections: NestedDataTuple;
+    subSections: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
             string,
-            NestedDataTuple
+            NestedData
         ];
         const subsectionTags = (subSection as MetaData)[tags];
         return (
@@ -204,7 +204,7 @@ const KeyValueSubSections = ({
  * Renders a list of fields from the given NestedDataTuple.
  * If the field data is an array, renders it as a nested subSection.
  * Otherwise, renders it as a DataField.
- * @param {NestedDataTuple} fields The NestedDataTuple of fields to render
+ * @param {NestedData} fields The NestedDataTuple of fields to render
  * @param {string} searchValue The search value to highlight in the field labels
  * @returns {JSX.Element} The rendered list of fields
  */
@@ -213,7 +213,7 @@ const KeyValueFieldList = ({
     searchValue,
     treeState,
 }: {
-    fields: NestedDataTuple;
+    fields: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
@@ -230,7 +230,7 @@ const KeyValueFieldList = ({
                     return (
                         <KeyValueNestedSubSections
                             key={`subsection_${i}`}
-                            subSections={field as NestedDataTuple[]}
+                            subSections={field as NestedData[]}
                             searchValue={searchValue}
                             treeState={treeState}
                         />
@@ -251,7 +251,7 @@ const KeyValueFieldList = ({
             })}
             <KeyValueNestedSubSections
                 key={`subsection_`}
-                subSections={fields as NestedDataTuple[]}
+                subSections={fields as NestedData[]}
                 searchValue={searchValue}
                 treeState={treeState}
             />
@@ -273,7 +273,7 @@ const KeyValueNestedSubSections = ({
     searchValue,
     treeState,
 }: {
-    subSections: NestedDataTuple[];
+    subSections: NestedData[];
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
@@ -298,7 +298,7 @@ const KeyValueNestedSubSections = ({
                     treeState={treeState}
                 >
                     <div className={styles.itemsList}>
-                        {(subSection as NestedDataTuple[])
+                        {(subSection as NestedData[])
                             .map((field, j) => {
                                 const [label, data] = field as DataTuple;
                                 const fieldLink = (field as MetaData)[link];
@@ -562,7 +562,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                         {policyBasics && (
                             <KeyValueBasics
                                 preparedPolicy={preparedPolicy}
-                                policyBasics={policyBasics as NestedDataTuple[]}
+                                policyBasics={policyBasics as NestedData[]}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />

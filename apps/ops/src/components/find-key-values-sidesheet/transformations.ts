@@ -18,12 +18,11 @@ import {
 import { sectionVisibility } from './translations/section-visibility';
 import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
-    NestedDataTuple,
+    NestedData,
     label,
     tags,
     link,
     linkedField,
-    DataField,
     MetaData,
     PolicySection,
 } from './types';
@@ -57,7 +56,7 @@ export const preparePolicy = (
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
     toSections: (policyOverride?: Policy) => {
-        policyBasics: NestedDataTuple[] | null;
+        policyBasics: NestedData[] | null;
         policySections: PolicySection[];
     };
     formatAsSectionLabel: (label: string) => string;
@@ -115,7 +114,7 @@ export const toSections = (
     productType?: ProductType,
     allPartiesById?: Record<string, Party>
 ): {
-    policyBasics: NestedDataTuple[] | null;
+    policyBasics: NestedData[] | null;
     policySections: PolicySection[];
 } => {
     const policyTuples = Object.entries(policy);
@@ -124,7 +123,7 @@ export const toSections = (
             acc,
             [currentKey, currentVal]
         ): {
-            policyBasics: NestedDataTuple[] | null;
+            policyBasics: NestedData[] | null;
             policySections: PolicySection[];
         } => {
             // If the value is an object, treat it as a section
@@ -389,8 +388,8 @@ export const toFieldsAndSubsections = (
     t: TFunction,
     searchValue?: string
 ): {
-    fields?: NestedDataTuple;
-    subSections?: NestedDataTuple;
+    fields?: NestedData;
+    subSections?: NestedData;
 } => {
     const subSectionTitleField =
         sectionTypeToSubSectionTitleFields[sectionName];
@@ -429,7 +428,7 @@ export const toFieldsAndSubsections = (
                 }
 
                 const subSectionTuple = [
-                    formatAsDataValue(subSectionLabel, lineOfBusiness, t),
+                    formatAsDataValue(subSectionLabel, t),
                     subSectionEntries,
                 ];
                 (subSectionTuple as MetaData)[tags] = subSectionTags;
@@ -440,7 +439,7 @@ export const toFieldsAndSubsections = (
 
         return subSections.length
             ? {
-                  subSections: subSections as NestedDataTuple,
+                  subSections: subSections as NestedData,
               }
             : {};
     } else {
@@ -453,16 +452,15 @@ export const toFieldsAndSubsections = (
                         .map((fieldObj) => {
                             if (
                                 typeof fieldObj !== 'object' ||
-                                fieldObj == null
-                            )
+                                fieldObj == null ||
+                                !(subSectionTitleField in fieldObj)
+                            ) {
                                 return null;
-                            if (!(subSectionTitleField in fieldObj))
-                                return null;
-                            fieldObj;
+                            }
                             const fieldLabel = fieldObj[subSectionTitleField];
                             const fieldEntry = Object.entries(fieldObj);
                             const subSectionData = removeExcludedAndEmptyFields(
-                                fieldEntry as NestedDataTuple,
+                                fieldEntry as NestedData,
                                 lineOfBusiness,
                                 t,
                                 undefined,
@@ -496,7 +494,7 @@ export const toFieldsAndSubsections = (
 
                 // Otherwise, the value is meant to be displayed, so just append the key-value pair
                 return formatDataField(
-                    [subSectionName, fieldData as DataField],
+                    [subSectionName, fieldData] as NestedData,
                     lineOfBusiness,
                     t,
                     searchValue
@@ -635,9 +633,7 @@ function parsePeople(
                 ...(party.dateOfBirth && { dob: party.dateOfBirth }),
                 ...(ssn && { ssn }),
                 ...(partyTags && {
-                    [tags]: partyTags.map((tag) =>
-                        formatAsDataValue(tag, lineOfBusiness, t)
-                    ),
+                    [tags]: partyTags.map((tag) => formatAsDataValue(tag, t)),
                 }),
             };
 
@@ -664,7 +660,7 @@ function parseLoanValues(
     sectionTitle: string,
     t: TFunction,
     acc: {
-        policyBasics: NestedDataTuple[] | null;
+        policyBasics: NestedData[] | null;
         policySections: PolicySection[];
     },
     currentVal: Policy['loanValues']
@@ -707,7 +703,7 @@ function parseRiders(
     allPartiesById: Record<string, Party> | undefined,
     t: TFunction,
     acc: {
-        policyBasics: NestedDataTuple[] | null;
+        policyBasics: NestedData[] | null;
         policySections: PolicySection[];
     },
     currentKey: string,
@@ -773,7 +769,7 @@ function parseSystematicPrograms(
     t: TFunction,
     lineOfBusiness: LineOfBusiness,
     acc: {
-        policyBasics: NestedDataTuple[] | null;
+        policyBasics: NestedData[] | null;
         policySections: PolicySection[];
     },
     currentKey: string,
@@ -809,13 +805,7 @@ function parseSystematicPrograms(
                     percentage: partyData.percentage,
                     paymentForm: partyData.paymentForm,
                     ...(partyData.partyRole && {
-                        [tags]: [
-                            formatAsDataValue(
-                                partyData.partyRole,
-                                lineOfBusiness,
-                                t
-                            ),
-                        ],
+                        [tags]: [formatAsDataValue(partyData.partyRole, t)],
                     }),
                 };
 
@@ -859,7 +849,7 @@ function parseAllocation(
     sectionTitle: string,
     t: TFunction,
     acc: {
-        policyBasics: NestedDataTuple[] | null;
+        policyBasics: NestedData[] | null;
         policySections: PolicySection[];
     },
     currentVal: Policy['allocation']

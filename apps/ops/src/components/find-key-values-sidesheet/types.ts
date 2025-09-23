@@ -2,10 +2,12 @@ export type DataField = string | number | boolean | null;
 
 export type DataTuple = [string, DataField];
 
-export type NestedDataTuple =
-    | // Either an array of NestedDataTuple (like a tree of children):
-    ((
-          | NestedDataTuple[]
+export type NestedDataTuple = [string, NestedData];
+
+export type NestedData =
+    // Either an array of NestedDataTuple (like a tree of children):
+    | ((
+          | NestedData[]
           // Or a tuple of [DataField, DataField | NestedDataTuple]:
           | DataTuple
       ) &
@@ -26,8 +28,8 @@ export const linkedField = Symbol('linkedField');
 export type PolicySection = [
     string,
     {
-        fields?: NestedDataTuple;
-        subSections?: NestedDataTuple;
+        fields?: NestedData;
+        subSections?: NestedData;
     }
 ];
 
