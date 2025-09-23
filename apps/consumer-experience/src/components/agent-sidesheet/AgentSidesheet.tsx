@@ -60,7 +60,8 @@ export const AgentSidesheet = ({
             <FieldData Label={<Label>Work phone</Label>}>
               <PiiWrapper>
                 {formatPhoneNumber(
-                  businessPhone.countryCode + businessPhone.number
+                  (businessPhone.countryCode ? businessPhone.countryCode : '') +
+                    businessPhone.number
                 )}
               </PiiWrapper>
             </FieldData>
