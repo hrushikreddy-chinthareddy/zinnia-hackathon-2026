@@ -305,7 +305,7 @@
             },
             "aiChatbot": {
                 "text": "Assistant AI de Zinnia"
-             },
+            },
             "propriétaire": {
                 "text": "Gérer les propriétaires",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
@@ -7894,6 +7894,7 @@
         "newClientCase": "+ Nouveau client case",
         "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
         "searchBar": {
+            "searchByLabel": "Rechercher Par",
             "clientCase": "Client case",
             "agentName": "Nom de l'agent",
             "insuredName": "Nom de l'assuré",
@@ -7963,11 +7964,13 @@
             },
             "premium": {
                 "title": "Prime",
-                "initial": "Prime initiale",
-                "target": "Prime cible",
-                "mec": "Prime MEC",
+                "initial": "Prime annuelle initiale",
+                "initialModal": "Prime modale initiale",
+                "target": "Prime annuelle cible",
+                "mec": "Prime annuelle MEC",
                 "initialBase": "Prime de base initiale",
-                "totalInitial": "Prime initiale totale"
+                "totalInitial": "Prime initiale totale",
+                "initialModalPremium": "Prime modale initiale"
             },
             "riders": {
                 "title": "Avenants de politique",
@@ -8080,7 +8083,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
             "inputPlaceholder": "Demande-moi n'importe quoi",

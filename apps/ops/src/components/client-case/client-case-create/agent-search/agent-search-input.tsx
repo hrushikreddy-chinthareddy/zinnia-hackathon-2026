@@ -63,11 +63,17 @@ export const AgentSearchTextInput = ({
                     fieldSize={FieldSize.Small}
                     placeholder={t('clientCase.searchBar.agentName') as string}
                 />
-                <div className={styles.searchCancelIcon}>
-                    <IconButton onClick={onCancel}>
-                        <Icon type={IconType.CLOSE} height={24} width={24} />
-                    </IconButton>
-                </div>
+                {searchQuery && (
+                    <div className={styles.searchCancelIcon}>
+                        <IconButton onClick={onCancel}>
+                            <Icon
+                                type={IconType.CLOSE}
+                                height={24}
+                                width={24}
+                            />
+                        </IconButton>
+                    </div>
+                )}
             </div>
             <Button
                 mode="secondary"

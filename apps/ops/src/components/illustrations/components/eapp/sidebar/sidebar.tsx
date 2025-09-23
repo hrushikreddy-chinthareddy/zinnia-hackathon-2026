@@ -14,10 +14,11 @@ const dataToTitleMap: Record<
     { label: string; type: 'money' | 'string' }
 > = {
     solveFor: { label: 'Solve for', type: 'string' },
-    targetPremium: { label: 'Target premium', type: 'money' },
-    mecPremium: { label: 'MEC premium', type: 'money' },
+    targetPremium: { label: 'Target annual premium', type: 'money' },
+    mecPremium: { label: 'MEC annual premium', type: 'money' },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
+    initialModalPremium: { label: 'Initial modal premium', type: 'money' },
     cashValue: { label: 'Cash values (end of year)', type: 'money' },
     paymentMode: { label: 'Payment mode', type: 'string' },
     premiumMode: { label: 'Premium mode', type: 'string' },

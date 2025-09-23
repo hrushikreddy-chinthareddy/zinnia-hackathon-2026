@@ -58,6 +58,12 @@
     }
     .clientState {
         width: 94px;
+
+        .clientStateOptions {
+            transform: none !important;
+            opacity: 1 !important;
+        }
+
         button {
             height: 44px;
         }

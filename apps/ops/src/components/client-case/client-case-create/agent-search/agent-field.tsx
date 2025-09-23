@@ -1,17 +1,21 @@
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { groupBy, sortBy } from 'lodash';
+import { groupBy, sortBy, uniq } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
+    getNearestAgenciesFromUpline,
     POM_QUERY_PREFIXES,
     useAuthenticatedAgentAgencies,
     useDownlineListQuery,
     useGetProducerById,
     useGetProducersListQuery,
+    useHierarchyListQuery,
+    useReduceCombinedResults,
 } from '@deps/components/illustrations/helpers/hooks/pom';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import {
     GetDownlineResponse,
+    GetHierarchyResponse,
     PRODUCER_SEARCH_RESULT_TYPES,
     ProducerSearchResult,
     ProducersResponse,
@@ -20,6 +24,30 @@ import {
 import { AgentFieldContextProvider } from './agent-field-context';
 import { GenericAgentField } from './generic-agent-field';
 import { AgentOption } from './types';
+
+/**
+ * Returns the nearest agencies for each hierarchy of an agent
+ *
+ * @param sellingCodes Agent selling codes
+ */
+const useAgentAgencyIds = (sellingCodes: string[]) =>
+    useHierarchyListQuery(
+        sellingCodes,
+        useCallback(
+            (results: UseQueryResult<GetHierarchyResponse | null>[]) => {
+                const agencyIds = results
+                    .map((result) => result?.data)
+                    .filter((data): data is GetHierarchyResponse => !!data)
+                    .flatMap(({ upline }) =>
+                        getNearestAgenciesFromUpline(upline)
+                    )
+                    .map((agency) => agency.sellingCode);
+
+                return uniq(agencyIds);
+            },
+            []
+        )
+    );
 
 const useNormalUserAgentOptions = (searchQuery: string) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
@@ -30,8 +58,12 @@ const useNormalUserAgentOptions = (searchQuery: string) => {
     const sellingCodes =
         agencies?.map((agency) => agency.agentSellingCode) ?? [];
 
-    return useDownlineListQuery(
-        !isSuperIllustrator ? sellingCodes : [],
+    const agencyIdsCombinedResult = useAgentAgencyIds(sellingCodes);
+
+    const { data: agencyIds } = agencyIdsCombinedResult;
+
+    const agentOptionsCombinedResult = useDownlineListQuery(
+        !isSuperIllustrator && agencyIds ? agencyIds : [],
         searchQuery,
         useCallback(
             (results: UseQueryResult<GetDownlineResponse[][] | null>[]) => {
@@ -66,6 +98,11 @@ const useNormalUserAgentOptions = (searchQuery: string) => {
             },
             []
         )
+    );
+
+    return useReduceCombinedResults(
+        agencyIdsCombinedResult,
+        agentOptionsCombinedResult
     );
 };
 
@@ -182,6 +219,7 @@ const useSubscribeToProducerData = (
                   }
                 : {}),
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedAgent, agentData, onSelectAgent]);
 };
 
@@ -211,6 +249,7 @@ export const AgentField = ({
         });
 
         setSearchQuery(query);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const contextValue = useMemo(

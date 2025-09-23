@@ -5046,6 +5046,30 @@ export const farmersBlueprintIU0101 = {
                                                 fr: '',
                                             },
                                         },
+                                        {
+                                            id: 'c3d143b4-15ae-40dc-8e52-1653fdfde6df',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'mathOperator',
+                                                        value: 0,
+                                                        nodeIds: [
+                                                            'face-amount',
+                                                            'accidental-death-benefit-rider-benefit',
+                                                        ],
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                        mathOperator:
+                                                            'subtract',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: "The Accidental Death Benefit Rider Amount cannot exceed the Farmers Index Universal Life policy's face amount",
+                                                fr: '',
+                                            },
+                                        },
                                     ],
                                 },
                                 {

@@ -40,7 +40,6 @@ export const AgentInactiveField = ({
             {editable && (
                 <IconButton onClick={onEdit}>
                     <EditIcon
-                        color="blue"
                         height={'20px'}
                         width={'20px'}
                         className={styles.editIcon}

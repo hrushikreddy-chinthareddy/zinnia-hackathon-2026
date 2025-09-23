@@ -369,7 +369,7 @@ export function getIllustrationDataFromResponse(data: any, formInputs: any) {
     return {
         faceAmount:
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
-        initialPremium:
+        initialModalPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
         termLength: `${
             formInputs?.fixedCostPeriod || DEFAULT_ERROR_STRING

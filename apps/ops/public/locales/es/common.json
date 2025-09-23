@@ -7874,6 +7874,7 @@
         "newClientCase": "+  Nuevo client case",
         "clientCasePermissions": "No tienes permiso para realizar esta acción.",
         "searchBar": {
+            "searchByLabel": "Buscar Por",
             "clientCase": "Client case",
             "agentName": "Nombre de agente",
             "insuredName": "Nombre del asegurado",
@@ -7943,11 +7944,13 @@
             },
             "premium": {
                 "title": "Prima",
-                "initial": "Prima inicial",
-                "target": "Prima planeada",
-                "mec": "Prima MEC",
+                "initial": "Prima anual inicial",
+                "initialModal": "Prima modal inicial",
+                "target": "Prima anual planeada",
+                "mec": "Prima MEC anual",
                 "initialBase": "Prima base inicial",
-                "totalInitial": "Prima inicial total"
+                "totalInitial": "Prima inicial total",
+                "initialModalPremium": "Prima modal inicial"
             },
             "riders": {
                 "title": "Adicionales",
@@ -8033,7 +8036,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Hola, soy agente virtual. Tenga en cuenta que esta función está actualmente en fase beta.\n¿Cómo puedo ayudarle?",
             "inputPlaceholder": "Pregúntame cualquier cosa",

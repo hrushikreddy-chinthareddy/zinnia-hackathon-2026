@@ -37,6 +37,7 @@
 .scrollableContainer {
     max-height: 300px;
     overflow: auto;
+    scrollbar-color: rgb(var(--color-300-gray)) transparent;
 }
 
 .loaderContainer {
@@ -61,8 +62,9 @@
         display: flex;
         gap: var(--measure-dimension-gap-lg);
     }
+
     .editIcon {
-        cursor: pointer;
+        color: #00628b;
     }
 }
 
@@ -71,6 +73,10 @@
     min-height: 44px;
     padding-left: 3.25rem;
     padding-right: 3.25rem;
+    &:focus {
+        outline: none;
+        box-shadow: none;
+    }
 }
 
 .searchInputIcon {

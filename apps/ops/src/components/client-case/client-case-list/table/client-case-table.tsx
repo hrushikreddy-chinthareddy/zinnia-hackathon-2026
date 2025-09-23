@@ -143,7 +143,7 @@ const generateTableContent = (
                     </TableCell>
                     <TableCell>
                         <Typography
-                            variant={TypographyVariant.Caption}
+                            variant={TypographyVariant.BodySm}
                             className={styles.detail}
                         >
                             {formatRelativeTime(lastModified)}
@@ -204,6 +204,7 @@ export const ClientCaseTable = () => {
                                                 className="text-primary"
                                             />
                                         }
+                                        triggerClassName={styles.agentTrigger}
                                     >
                                         {t(
                                             'clientCase.clientCaseTable.agentTooltip'
@@ -211,7 +212,11 @@ export const ClientCaseTable = () => {
                                     </Tooltip>,
                                 ]}
                             >
-                                {t('clientCase.clientCaseTable.agent')}
+                                <Typography
+                                    variant={TypographyVariant.BodySmBold}
+                                >
+                                    {t('clientCase.clientCaseTable.agent')}
+                                </Typography>
                             </Label>
                         </div>
                     </TableHeaderSortWrapper>

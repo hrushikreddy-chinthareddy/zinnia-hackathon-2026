@@ -69,7 +69,9 @@ export default withAuthAndLogging(
             const fileBuffer = await fs.readFile(file.filepath);
 
             // Create a Blob from the file buffer with the appropriate MIME type
-            const blob = new Blob([fileBuffer], { type: file.mimetype });
+            const blob = new Blob([new Uint8ClampedArray(fileBuffer)], {
+                type: file.mimetype,
+            });
 
             // Initialize a new FormData object
             const formData = new FormData();

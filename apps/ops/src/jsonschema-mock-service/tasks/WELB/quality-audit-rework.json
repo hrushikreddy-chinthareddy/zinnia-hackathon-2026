@@ -1,7 +1,6 @@
 {
     "formId": "2d06963a-f7ce-46bb-bde4-0b3674853685",
     "process": "Quality Audit",
-    "carrier": "WELB",
     "taskType": "QUALITY_AUDIT_REWORK",
     "taskName": "Quality Audit Rework",
     "formSchema": {

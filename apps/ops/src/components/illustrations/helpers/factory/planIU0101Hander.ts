@@ -833,12 +833,12 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
     return {
         faceAmount:
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
-        initialPremium:
+        initialModalPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
         targetPremium:
             data?.assumed?.initial?.targetPremiumAmount || DEFAULT_ERROR_STRING,
         mecPremium:
-            data?.assumed?.annualTimeSeriesData?.[0]?.sevenPayPremiumAmount ||
+            data?.assumed?.initial?.modifiedEndowmentPremium ||
             DEFAULT_ERROR_STRING,
         ...netSurrenderValue,
     };
