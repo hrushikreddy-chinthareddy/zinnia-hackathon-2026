@@ -16,7 +16,6 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -264,15 +263,7 @@ export default function Steps({
     return (
         <ul {...rest}>
             {steps.filter(stepFilter).map((step, index) => (
-                <Step
-                    key={index}
-                    step={
-                        {
-                            ...step,
-                            name: toSentenceCase(step?.name),
-                        } as TransformedStep
-                    }
-                />
+                <Step key={index} step={step} />
             ))}
         </ul>
     );

@@ -8,7 +8,7 @@ import { TFunction } from 'next-i18next';
 import { DocumentPreviewerProps } from '@deps/components/document-viewer/document-previewer';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
-import { toTitleCase, toSentenceCase } from '@deps/helpers/string.helpers';
+import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import { Case, Statuses } from '@deps/models/case/case';
 import { DocumentInstance } from '@deps/models/case/document-instance';
 import {
@@ -240,22 +240,25 @@ export class TransformedStep {
             const translation = this.parentStage.parentCase.t(
                 `caseOverview.tabs.entityTypes.${entityType.toLowerCase()}`
             );
+
             const label = this.stepRaw?.instanceInfo?.label;
             if (label) {
-                this.name = `${translation}: ${toTitleCase(
+                this.name = `${toTitleCase(translation)}: ${toTitleCase(
                     label ?? this.stepRaw?.label
                 )}`;
             } else {
-                this.name = translation;
+                this.name = toTitleCase(translation);
             }
             return;
         }
-        this.name = this.parentStage.parentCase.t(
-            [`caseManagementApiKeys.steps.${this.id}`, this.stepRaw.label],
-            {
-                subType: this.parentStage.parentCase.processSubType,
-                process: this.parentStage.parentCase.process,
-            }
+        this.name = toTitleCase(
+            this.parentStage.parentCase.t(
+                [`caseManagementApiKeys.steps.${this.id}`, this.stepRaw.label],
+                {
+                    subType: this.parentStage.parentCase.processSubType,
+                    process: this.parentStage.parentCase.process,
+                }
+            ) || undefined
         );
         this.description =
             this.parentStage.parentCase.t(
