@@ -6,6 +6,7 @@ import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import useOnEditClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -82,7 +83,7 @@ const CommunicationPreferenceField = ({
         }
     }, [contactValue]);
 
-    const handleEditClick = () => {
+    const openSidesheet = () => {
         sidesheet.changeSideSheetContent(
             <SideSheetPeopleHeader
                 action={NonFinancialTransactionActions.Edit}
@@ -101,6 +102,11 @@ const CommunicationPreferenceField = ({
         );
         sidesheet.handleOpen(true);
     };
+
+    const handleEditClick = useOnEditClick({
+        defaultCallback: openSidesheet,
+        party: currentParty?.party,
+    });
 
     return (
         <div className="mr-8 break-all">
