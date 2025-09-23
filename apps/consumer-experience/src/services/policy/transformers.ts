@@ -661,8 +661,6 @@ export const transformPolicyDetails = (policy: Policy): PolicyWithAgent => {
   // TODO: add comments about how this logic works
   const primaryAgentId = primaryServicingAgentId || primaryWritingAgentId;
 
-  console.log(policy.parties?.find(p => p.partyId === primaryAgentId));
-
   return {
     policyStatus: policy?.policyStatus || PolicyStatus.NOTISSUED,
     product: {

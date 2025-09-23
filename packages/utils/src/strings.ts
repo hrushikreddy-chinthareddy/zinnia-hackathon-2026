@@ -84,7 +84,7 @@ export const formatPhoneNumber = (phoneNumber: string) => {
   // - Optional area code (\d{3})
   // - First part of the rest of the phone number (\d{3})
   // - Second part of the rest of the phone number (\d{4})
-  const match = phoneNumber.match(/^(\d{1,3})?(\d{3})?(\d{3})(\d{4})$/);
+  const match = phoneNumber.match(/^(\+?\d{1,3})?(\d{3})?(\d{3})(\d{4})$/);
 
   // If the phone number doesn't match the expected format, return the original phone number
   if (!match) {

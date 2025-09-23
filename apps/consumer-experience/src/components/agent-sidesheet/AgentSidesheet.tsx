@@ -1,7 +1,7 @@
 'use client';
 import { POM_Producer_Models_SearchProducersResult } from '@xd/api-types/dist/generated-types/pom';
 import { Address, Button, Label, SideSheet } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
+import { formatPhoneNumber, toTitleCase } from '@zinnia/utils';
 
 import styles from './AgentSidesheet.module.css';
 import { FieldData } from '../field-data/FieldData';
@@ -59,7 +59,9 @@ export const AgentSidesheet = ({
             {/* TODO: Need to format this */}
             <FieldData Label={<Label>Work phone</Label>}>
               <PiiWrapper>
-                {businessPhone.countryCode}-{businessPhone.number}
+                {formatPhoneNumber(
+                  businessPhone.countryCode + businessPhone.number
+                )}
               </PiiWrapper>
             </FieldData>
           </div>

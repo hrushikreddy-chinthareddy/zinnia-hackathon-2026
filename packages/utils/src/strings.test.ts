@@ -52,6 +52,12 @@ describe('formatPhoneNumber', () => {
     expect(formatPhoneNumber(input)).toBe(expectedOutput);
   });
 
+  test('formats phone number with country code including "+"', () => {
+    const input = '+18673452345';
+    const expectedOutput = '+1-867-345-2345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
   test('formats phone number with area code and rest of the phone number', () => {
     const input = '8673452345';
     const expectedOutput = '867-345-2345';
