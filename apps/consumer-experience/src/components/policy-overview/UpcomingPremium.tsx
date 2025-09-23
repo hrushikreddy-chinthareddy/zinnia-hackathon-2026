@@ -1,44 +1,45 @@
-import { PolicyStatus, Status } from '@zinnia/api-types/types/sor';
+import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-
-dayjs.extend(isSameOrAfter);
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
+
+dayjs.extend(isSameOrAfter);
+
 import { getPremiumEligibility } from '@/services/bpm';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { getUpcomingPremium } from '@/services/policy';
+import { getPolicyFeatures } from '@/services/policy/features';
 import { formatUSDollars } from '@/utils/currency';
-import { isNullEmptyOrUndefined } from '@/utils/data';
-import { standardDateMonthDayYear } from '@/utils/dates';
-import { logError } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 import { CancelAutopaySidesheet } from './CancelAutopaySidesheet';
 import styles from './PolicyOverview.module.css';
-import { AutopayStatus, determineAutopayDisplayAndEligibility } from './utils';
+import {
+  AutopayStatus,
+  determineAutopayDisplayAndEligibility,
+  upcomingPaymentDetails,
+} from './utils';
 import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
-const UPCOMING_PREMIUM = 'Premiums';
+import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
+import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
 
 export const UpcomingPremium = async ({
   planCode,
   policyNumber,
   extended,
-  title = UPCOMING_PREMIUM,
 }: {
   planCode: string;
   policyNumber: string;
   extended?: boolean;
-  title?: string;
 }) => {
   const loggingContext = await buildCommonLogContext();
   const { featureFlags, carrierConfig } =
@@ -47,7 +48,11 @@ export const UpcomingPremium = async ({
     featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM] &&
     carrierConfig?.systematicPremium.enabled;
 
-  const [upcomingResult, ottpResult] = await Promise.allSettled([
+  const [
+    systematicUpcomingResult,
+    ottpEligibilityResult,
+    policyFeaturesResult,
+  ] = await Promise.allSettled([
     getUpcomingPremium(
       {
         planCode,
@@ -59,15 +64,23 @@ export const UpcomingPremium = async ({
       planCode,
       policyNumber,
     }),
+    getPolicyFeatures(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    ),
   ]);
 
-  if (upcomingResult?.status === 'rejected') {
-    logError('Error fetching upcoming premium', upcomingResult.reason);
-  }
+  const policyFeatures =
+    policyFeaturesResult?.status === 'fulfilled'
+      ? policyFeaturesResult.value?.data?.data
+      : [];
 
   const { data, error } =
-    upcomingResult?.status === 'fulfilled'
-      ? upcomingResult.value
+    systematicUpcomingResult && systematicUpcomingResult.status === 'fulfilled'
+      ? systematicUpcomingResult.value
       : {
           data: null,
           error: {
@@ -76,14 +89,10 @@ export const UpcomingPremium = async ({
           },
         };
 
-  if (ottpResult?.status === 'rejected') {
-    logError('Error fetching upcoming premium', ottpResult.reason);
-  }
-
   const ottpPaymentDisabled =
-    ottpResult?.status !== 'fulfilled' ||
-    !!ottpResult?.value?.data?.reason ||
-    !!ottpResult?.value?.error;
+    ottpEligibilityResult?.status !== 'fulfilled' ||
+    !!ottpEligibilityResult?.value?.data?.reason ||
+    !!ottpEligibilityResult?.value?.error;
 
   let cancelAutopayEnabled = false;
   let manageAutopayLinkDisplay = 'Set up autopay';
@@ -106,6 +115,7 @@ export const UpcomingPremium = async ({
     manageAutopayEnabled = addManageEligible;
   }
 
+  // TODO: not sure if this is what should happen here if just the upcoming value fails
   if (error) {
     return (
       <div className="space-mb-gap-lg">
@@ -118,46 +128,38 @@ export const UpcomingPremium = async ({
   }
 
   const {
-    amount,
+    amount: upcomingPaymentAmount,
     arrangementId,
     nextActivityDate,
     nextActivityStatus,
     policyStatus,
-    lineOfBusiness,
+    productType,
     frequency,
   } = data;
 
-  let currentAmount = amount;
-
-  if (policyStatus === PolicyStatus.LAPSE) {
-    currentAmount = 0;
-  }
-
-  const paymentCaption = () => {
-    if (policyStatus === PolicyStatus.LAPSE) {
-      return <span className={styles.error}>Payment</span>;
-    }
-
-    const upcomingPaymentValid =
-      nextActivityDate &&
+  const upcomingPaymentValid =
+    (nextActivityDate &&
       nextActivityStatus === Status.ACTIVE &&
       // There was a bug in the back end code, where these programs couldn't be end dated at first, so they
       // were setting the end date to 2044 OR setting the date to  a way to indicate they were no longer active. That has since been
       // updated (10/2024) and we can rely on the status to indicate if the upcoming payment is active, HOWEVER,
       // there are still some in the system that are "inactive" based on their date. We are not accounting for any with
       // 2044 dates here, but are checking if date is in the past.
-      dayjs(nextActivityDate).isSameOrAfter(dayjs(), 'day');
+      dayjs(nextActivityDate).isSameOrAfter(dayjs(), 'day')) ||
+    false;
 
-    return upcomingPaymentValid
-      ? `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`
-      : 'No premium scheduled';
-  };
-
-  const upcomingPremContent = isNullEmptyOrUndefined(currentAmount) ? (
-    <p className="typography-content-body-sm">{DEFAULT_UNAVAILABLE_STRING}</p>
-  ) : (
-    <p className="typography-content-value">{formatUSDollars(currentAmount)}</p>
-  );
+  const {
+    amount: paymentAmount,
+    caption,
+    label,
+  } = upcomingPaymentDetails({
+    policyStatus,
+    policyFeatures,
+    upcomingPaymentAmount,
+    upcomingPaymentValid,
+    nextActivityDate,
+    productType,
+  });
 
   return (
     <ClickableCardContainer>
@@ -175,18 +177,23 @@ export const UpcomingPremium = async ({
             Label={
               <Label
                 interactiveElements={[
-                  <UpcomingPremiumPopover
-                    key="upcoming-popover"
-                    lineOfBusiness={lineOfBusiness}
-                  />,
+                  <UpcomingPremiumPopover key="upcoming-popover" />,
                 ]}
               >
-                {title}
+                {label}
               </Label>
             }
-            caption={paymentCaption()}
+            caption={caption}
           >
-            {upcomingPremContent}
+            {isNullEmptyOrUndefined(paymentAmount) ? (
+              <p className="typography-content-body-sm">
+                {DEFAULT_UNAVAILABLE_STRING}
+              </p>
+            ) : (
+              <p className="typography-content-value">
+                {formatUSDollars(paymentAmount)}
+              </p>
+            )}
           </FieldData>
         </div>
       </ClickableCardContainer.LinkContent>
@@ -233,7 +240,7 @@ export const UpcomingPremium = async ({
                   arrangementId={arrangementId}
                   disabled={!cancelAutopayEnabled}
                   frequency={frequency}
-                  paymentAmount={amount}
+                  paymentAmount={paymentAmount || 0}
                   planCode={planCode}
                   policyNumber={policyNumber}
                   nextActivityDate={nextActivityDate}
