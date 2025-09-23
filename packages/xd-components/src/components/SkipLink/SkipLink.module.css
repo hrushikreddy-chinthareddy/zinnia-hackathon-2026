@@ -3,14 +3,8 @@
   top: 1.5rem;
   left: 2rem;
   z-index: 9999;
-  text-decoration: none;
   opacity: 0;
   transition: opacity 0.1s ease-out;
-  white-space: nowrap;
-  clip: unset;
-  width: auto;
-  height: auto;
-  overflow: visible;
   pointer-events: none;
 }
 
@@ -31,4 +25,11 @@
 .skipLink:focus-visible {
   opacity: 1;
   pointer-events: auto;
+  outline-offset: 4px;
+  outline-color: var(--color-base-border-border-secondary-color);
+  border-radius: var(--measure-dimension-radius-md);
+}
+
+.skipLink:hover {
+  outline: none;
 }
