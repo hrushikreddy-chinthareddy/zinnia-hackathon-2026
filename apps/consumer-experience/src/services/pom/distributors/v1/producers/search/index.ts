@@ -7,7 +7,7 @@ import { withLogging } from '@/utils/logging/with-logging';
 
 import { formatPomAgentData } from './transformers';
 
-const fileName = 'apps/consumer-experience/src/services/agent/index.ts';
+const FILE_NAME = '/src/services/pom/distributors/v1/producers/search/index.ts';
 
 export const pomAgentSearch = withLogging(
   async (
@@ -52,7 +52,7 @@ export const pomAgentSearch = withLogging(
     return formattedAgentData;
   },
   {
-    file: fileName,
+    file: FILE_NAME,
     functionName: 'pomAgentSearch',
   }
 );

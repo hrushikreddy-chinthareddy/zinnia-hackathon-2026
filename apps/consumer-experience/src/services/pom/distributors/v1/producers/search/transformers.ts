@@ -1,6 +1,6 @@
 import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
 
-type FilterdPomAgentData = Pick<
+export type FilteredPomAgentData = Pick<
   POM_Producer_Models_SearchProducersResult,
   'firstName' | 'lastName' | 'email' | 'businessPhone' | 'businessAddress'
 >;
@@ -11,7 +11,7 @@ type FilterdPomAgentData = Pick<
  */
 export const formatPomAgentData = (
   agentResponse: POM_Producer_Models_SearchProducersResult | undefined
-): FilterdPomAgentData | undefined => {
+): FilteredPomAgentData | undefined => {
   if (!agentResponse) {
     return agentResponse;
   }
