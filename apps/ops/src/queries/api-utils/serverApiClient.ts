@@ -17,6 +17,7 @@ export enum StatusCode {
     NotFound = 404,
     TooManyRequests = 429,
     InternalServerError = 500,
+    OK = 200,
 }
 
 export interface AxiosAuthRequestConfig extends AxiosRequestConfig {

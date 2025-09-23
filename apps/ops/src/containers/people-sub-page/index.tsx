@@ -22,11 +22,11 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
-import AgentParty from '@deps/helpers/policy-sor/AgentParty';
+import NewAgentParty from '@deps/helpers/policy-sor/NewAgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
-import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
-import { AgentData } from '@deps/types/agents';
+import { getPomAgentData } from '@deps/queries/api/agents';
+import { PomAgentData } from '@deps/types/agents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import ManagePeople from './manage-people';
@@ -145,19 +145,19 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                 agent?.partyId,
             ],
             queryFn: () =>
-                getAgentDataQuery(
-                    agent?.agentExternalId,
-                    clientCode,
-                    policy?.policyNumber,
-                    policy?.product?.planCode
-                ),
+                getPomAgentData({
+                    id: agent?.agentExternalId,
+                    policyNumber: policy?.policyNumber,
+                    planCode: policy?.product?.planCode,
+                }),
             enabled:
                 !!agent.agentExternalId &&
-                !!clientCode &&
                 !!policy.policyNumber &&
                 !!policy.product?.planCode,
-            select: (data: AgentData | undefined) =>
-                data ? new AgentParty(data, agent) : undefined,
+            select: (data) =>
+                data
+                    ? new NewAgentParty(data as PomAgentData, agent)
+                    : undefined,
         })),
         combine: (results) => {
             return {
@@ -165,6 +165,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
             };
         },
     });
+
     const handleRadioClick = (value: string) => {
         const selectedTagList = convertToTagText(value, t);
 

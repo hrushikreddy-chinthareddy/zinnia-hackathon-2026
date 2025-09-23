@@ -19,6 +19,7 @@ import { PolicyParty } from './Parties';
 
 // unsure if this is the direction we want to head, or if we should treat this as a separate class.
 // My assumption is we'll want agent data to be used in a different way than policy party data, since we can't do things like update party information
+
 export const transformAgentDataToParty = (
     agentData: AgentData | undefined,
     partyData: Party
