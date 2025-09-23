@@ -1,5 +1,4 @@
 import { SurrenderState } from '@/components/providers/surrender/types';
-import { ApiResponse } from '@/services';
 import {
   FullSurrenderBPMResponse,
   FullSurrenderSubmissionResponse,
@@ -14,7 +13,7 @@ export const postFullSurrenderValidation = async ({
   planCode: string;
   policyNumber: string;
   body: SurrenderState;
-}): Promise<ApiResponse<FullSurrenderBPMResponse>> => {
+}): Promise<FullSurrenderBPMResponse> => {
   const response = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/fullsurrender/validation`,
