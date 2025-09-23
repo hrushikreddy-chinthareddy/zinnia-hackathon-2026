@@ -56,32 +56,3 @@ export const pomAgentSearch = withLogging(
     functionName: 'pomAgentSearch',
   }
 );
-
-// export const getAgentInformation = withLogging(
-//   async (
-//     {
-//       clientCode,
-//       agentId,
-//     }: {
-//       clientCode: string;
-//       agentId: string;
-//     },
-//     loggingCtx: CommonLogContext
-//   ): Promise<ModifiedAgentData | null> => {
-//     const agentData = await mcsAgentSearch({ clientCode, agentId }, loggingCtx);
-
-//     if (agentData.error || !agentData.data) {
-//       throw new Error('No agent data recieved', {
-//         cause: { clientCode, agentId },
-//       });
-//     }
-
-//     const normalizedAgentData = transformMcsAgentData(agentData.data);
-
-//     return { ...normalizedAgentData, agentId };
-//   },
-//   {
-//     file: fileName,
-//     functionName: 'getAgentInformation',
-//   }
-// );
