@@ -3,8 +3,6 @@ import {
     ProductType,
 } from '@xd/api-types/dist/generated-types/sor';
 
-import { DataKey } from '../types';
-
 type ExceptionalPlanCode = string;
 
 const LIFE_ONLY = new Set([LineOfBusiness.LIFE]);
@@ -24,7 +22,7 @@ const NEVER = new Set([]);
  * Fields that should not be displayed
  */
 export const sectionVisibility: Record<
-    DataKey,
+    string,
     Set<LineOfBusiness | ProductType | ExceptionalPlanCode>
 > = {
     loanValues: UL_IUL_TR0101,

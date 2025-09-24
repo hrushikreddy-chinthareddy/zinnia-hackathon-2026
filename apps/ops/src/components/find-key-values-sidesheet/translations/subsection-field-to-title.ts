@@ -1,10 +1,8 @@
-import { DataKey } from '../types';
-
 /*
  * For subsections represented as arrays, select the field that maps to the
  * subsection title.
  */
-export const sectionTypeToSubSectionTitleFields: Record<DataKey, string> = {
+export const sectionTypeToSubSectionTitleFields: Record<string, string> = {
     charges: 'chargeType',
     features: 'featureType',
     policyFeatures: 'featureType',

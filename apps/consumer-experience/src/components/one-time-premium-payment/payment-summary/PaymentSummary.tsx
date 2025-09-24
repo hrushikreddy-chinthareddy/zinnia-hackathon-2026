@@ -37,7 +37,8 @@ export const PaymentSummary = ({
   const { state } = useOttp();
   const { paymentFee, paymentAmount } = state;
   const form = useForm();
-  const { stepInfo: currentStepInfo } = useSteppedWorkflowContext();
+  const { stepInfo: currentStepInfo, setPrimaryButtonDisabled } =
+    useSteppedWorkflowContext();
 
   const calculateFeeAmount = useMemo(() => {
     if (!paymentFee) {
@@ -62,11 +63,14 @@ export const PaymentSummary = ({
       };
       return await submitOttp(policyNumber, planCode, ottpRequest);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       router.push(currentStepInfo?.nextStepUrl);
     },
     onError: () => {
       router.push('error');
+    },
+    onMutate: () => {
+      setPrimaryButtonDisabled(true);
     },
   });
 
@@ -76,7 +80,10 @@ export const PaymentSummary = ({
     mutation.mutate();
   };
 
-  if (mutation.isPending || mutation.isError || mutation.isSuccess) {
+  // Show pending state while:
+  // - The mutation is pending
+  // - The mutation is successful, as we want to wait for the redirect in the onSuccess callback to finish unmounting the component
+  if (mutation.isPending || mutation.isSuccess) {
     return <PaymentLoading />;
   }
 

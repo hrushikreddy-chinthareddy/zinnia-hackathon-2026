@@ -15,7 +15,7 @@ import {
 } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import { useParams, useRouter } from 'next/navigation';
-import { CSSProperties, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -71,7 +71,7 @@ export const SummaryPage = () => {
   const router = useRouter();
   const { state } = useWithdrawals();
   const form = useForm();
-  const { stepInfo } = useSteppedWorkflowContext();
+  const { stepInfo, setPrimaryButtonDisabled } = useSteppedWorkflowContext();
 
   const totalFederalAmount = useMemo(
     () =>
@@ -127,8 +127,9 @@ export const SummaryPage = () => {
 
   const {
     data: validationResponse,
-    isLoading: validationLoading,
     isError: validationError,
+    isSuccess: isValidationSuccess,
+    isFetching: isValidationFetching,
   } = useQuery({
     queryKey: ['getPartialWithdrawalOneTimeValidation', state],
     queryFn: () => {
@@ -139,6 +140,26 @@ export const SummaryPage = () => {
       });
     },
   });
+
+  if (validationError) {
+    router.push('error');
+  }
+
+  if (isValidationFetching) {
+    setPrimaryButtonDisabled(true);
+
+    return <PaymentLoading />;
+  }
+
+  if (isValidationSuccess) {
+    setPrimaryButtonDisabled(false);
+  }
+
+  if (
+    validationResponse?.status === TransactionFailureResponse.status.FAILURE
+  ) {
+    setPrimaryButtonDisabled(true);
+  }
 
   const paymentSummaryStepDetails = [
     {
@@ -223,198 +244,182 @@ export const SummaryPage = () => {
 
   const distributionMethod = state.distributionMethodStep.distributionType;
 
-  if (!validationResponse) {
-    return <PaymentLoading />;
-  }
-
-  const { data, error } = validationResponse;
-
-  if (error || validationError) {
-    router.push('error');
-  }
-
-  if (validationLoading || !data) {
-    return <PaymentLoading />;
-  }
-
   return (
-    <>
-      <form
-        id="submit-form"
-        style={
-          {
-            '--field-container-gap': 'var(--measure-dimension-gap-sm)',
-          } as CSSProperties
-        }
-        onSubmit={form.handleSubmit(onSubmit)}
-        className={styles.paymentSummaryContainer}
-      >
-        <div className={styles.paymentSummaryDetails}>
-          <FieldData Label={<Label>Withdrawal date</Label>}>
-            {state.withdrawalAmountStep.effectiveDate}
-          </FieldData>
-          <FieldData
-            Label={
-              <Label
-                interactiveElements={[
-                  <Button
-                    onClick={() => handleEdit(WithdrawalSteps.AMOUNT)}
-                    mode="link"
-                    key="withdrawal-type"
-                    size="small"
-                  >
-                    <Icon small type={IconType.EDIT_ALT} />
-                  </Button>,
-                ]}
-              >
-                Withdrawal type
-              </Label>
-            }
-          >
-            {toSentenceCase(state.withdrawalAmountStep.withdrawalType)}
-          </FieldData>
-          <FieldData
-            Label={
-              <Label
-                interactiveElements={[
-                  <Button
-                    size="small"
-                    mode="link"
-                    key="withdrawal-method"
-                    onClick={() => handleEdit(WithdrawalSteps.METHOD)}
-                  >
-                    <Icon small type={IconType.EDIT_ALT} />
-                  </Button>,
-                ]}
-              >
-                Fund Withdrawal Method
-              </Label>
-            }
-          >
-            {fundWithdrawalMethodText}
-          </FieldData>
-          <FieldData
-            Label={
-              <Label
-                interactiveElements={[
-                  <Button
-                    size="small"
-                    mode="link"
-                    key="payee"
-                    onClick={() => handleEdit(WithdrawalSteps.PAYEE)}
-                  >
-                    <Icon small type={IconType.EDIT_ALT} />
-                  </Button>,
-                ]}
-              >
-                Payee
-              </Label>
-            }
-          >
-            <Payee payee={state.payeeStep.payeeName} />
-          </FieldData>
+    validationResponse && (
+      <>
+        <form
+          id="submit-form"
+          onSubmit={form.handleSubmit(onSubmit)}
+          className={styles.paymentSummaryContainer}
+        >
+          <div className={styles.paymentSummaryDetails}>
+            <FieldData Label={<Label>Withdrawal date</Label>}>
+              {state.withdrawalAmountStep.effectiveDate}
+            </FieldData>
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Button
+                      onClick={() => handleEdit(WithdrawalSteps.AMOUNT)}
+                      mode="link"
+                      key="withdrawal-type"
+                      size="small"
+                    >
+                      <Icon small type={IconType.EDIT_ALT} />
+                    </Button>,
+                  ]}
+                >
+                  Withdrawal type
+                </Label>
+              }
+            >
+              {toSentenceCase(state.withdrawalAmountStep.withdrawalType)}
+            </FieldData>
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Button
+                      size="small"
+                      mode="link"
+                      key="withdrawal-method"
+                      onClick={() => handleEdit(WithdrawalSteps.METHOD)}
+                    >
+                      <Icon small type={IconType.EDIT_ALT} />
+                    </Button>,
+                  ]}
+                >
+                  Fund Withdrawal Method
+                </Label>
+              }
+            >
+              {fundWithdrawalMethodText}
+            </FieldData>
+            <FieldData
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Button
+                      size="small"
+                      mode="link"
+                      key="payee"
+                      onClick={() => handleEdit(WithdrawalSteps.PAYEE)}
+                    >
+                      <Icon small type={IconType.EDIT_ALT} />
+                    </Button>,
+                  ]}
+                >
+                  Payee
+                </Label>
+              }
+            >
+              <Payee payee={state.payeeStep.payeeName} />
+            </FieldData>
 
-          <FieldData
-            caption={
-              distributionMethod === DisbursementPaymentForm.ACH
-                ? 'Bank'
-                : 'Address'
-            }
-            Label={
-              <Label
-                interactiveElements={[
-                  <Button
-                    size="small"
-                    mode="link"
-                    key="distribution-method"
-                    onClick={() => handleEdit(WithdrawalSteps.DISTRIBUTION)}
-                  >
-                    <Icon small type={IconType.EDIT_ALT} />
-                  </Button>,
-                ]}
-              >
-                Distribution method
-              </Label>
-            }
-          >
-            <div className="typography-content-body-sm">
-              {distributionMethod === DisbursementPaymentForm.ACH && (
-                <>
-                  <div>
-                    <BankName
-                      bankName={state.distributionMethodStep.bank?.branchName}
-                    />
-                  </div>
-                  <div>
-                    <span className="typography-content-body-sm">
-                      ending in
-                    </span>{' '}
-                    <AccountNumber
-                      accountNumber={
-                        state.distributionMethodStep.bank?.accountNumber
-                      }
-                    />
-                  </div>
-                </>
-              )}
-              {distributionMethod === DisbursementPaymentForm.CHECK && (
-                <Address
-                  addrLine1={state.distributionMethodStep.address?.addrLine1}
-                  city={state.distributionMethodStep.address?.city}
-                  state={state.distributionMethodStep.address?.state}
-                  zipCode={state.distributionMethodStep.address?.zipCode}
-                  addrCountry={
-                    state.distributionMethodStep.address?.addrCountry
-                  }
-                  addrLine2={state.distributionMethodStep.address?.addrLine2}
-                  addrLine3={state.distributionMethodStep.address?.addrLine3}
-                  zipExt={state.distributionMethodStep.address?.zipExt}
-                />
-              )}
-            </div>
-          </FieldData>
-        </div>
-        <PaymentSummaryStep
-          className={styles.paymentSummaryStepContainer}
-          transactionSummary={paymentSummaryStepDetails}
-          total={{
-            label: (
-              <Label
-                interactiveElements={[
-                  <LabelPopover title="Premium payment" key="premium payment">
+            <FieldData
+              caption={
+                distributionMethod === DisbursementPaymentForm.ACH
+                  ? 'Bank'
+                  : 'Address'
+              }
+              Label={
+                <Label
+                  interactiveElements={[
+                    <Button
+                      size="small"
+                      mode="link"
+                      key="distribution-method"
+                      onClick={() => handleEdit(WithdrawalSteps.DISTRIBUTION)}
+                    >
+                      <Icon small type={IconType.EDIT_ALT} />
+                    </Button>,
+                  ]}
+                >
+                  Distribution method
+                </Label>
+              }
+            >
+              <div className="typography-content-body-sm">
+                {distributionMethod === DisbursementPaymentForm.ACH && (
+                  <>
                     <div>
-                      <p>
-                        Enter the amount you would like to pay into your policy.
-                        Keep in mind there are limits (set by federal laws) to
-                        the amount you can pay without impacting your coverage
-                        or losing tax advantages.{' '}
-                      </p>
+                      <BankName
+                        bankName={state.distributionMethodStep.bank?.branchName}
+                      />
                     </div>
-                  </LabelPopover>,
-                ]}
-              >
-                Total withdrawal
-              </Label>
-            ),
-            deposit: totalAmount,
-          }}
-        />
-      </form>
-      {data?.status === TransactionFailureResponse.status.FAILURE && (
-        <div>
-          {data.validationResult?.map(
-            (result, index) =>
-              result.resolution?.length && (
-                <AssistiveText
-                  className="mb-md"
-                  key={index}
-                  variant={AssistiveTextVariant.Error}
-                  text={result.resolution}
-                />
-              )
-          )}
-        </div>
-      )}
-    </>
+                    <div>
+                      <span className="typography-content-body-sm">
+                        ending in
+                      </span>{' '}
+                      <AccountNumber
+                        accountNumber={
+                          state.distributionMethodStep.bank?.accountNumber
+                        }
+                      />
+                    </div>
+                  </>
+                )}
+                {distributionMethod === DisbursementPaymentForm.CHECK && (
+                  <Address
+                    addrLine1={state.distributionMethodStep.address?.addrLine1}
+                    city={state.distributionMethodStep.address?.city}
+                    state={state.distributionMethodStep.address?.state}
+                    zipCode={state.distributionMethodStep.address?.zipCode}
+                    addrCountry={
+                      state.distributionMethodStep.address?.addrCountry
+                    }
+                    addrLine2={state.distributionMethodStep.address?.addrLine2}
+                    addrLine3={state.distributionMethodStep.address?.addrLine3}
+                    zipExt={state.distributionMethodStep.address?.zipExt}
+                  />
+                )}
+              </div>
+            </FieldData>
+          </div>
+          <PaymentSummaryStep
+            className={styles.paymentSummaryStepContainer}
+            transactionSummary={paymentSummaryStepDetails}
+            total={{
+              label: (
+                <Label
+                  interactiveElements={[
+                    <LabelPopover title="Premium payment" key="premium payment">
+                      <div>
+                        <p>
+                          Enter the amount you would like to pay into your
+                          policy. Keep in mind there are limits (set by federal
+                          laws) to the amount you can pay without impacting your
+                          coverage or losing tax advantages.{' '}
+                        </p>
+                      </div>
+                    </LabelPopover>,
+                  ]}
+                >
+                  Total withdrawal
+                </Label>
+              ),
+              deposit: totalAmount,
+            }}
+          />
+        </form>
+        {validationResponse?.status ===
+          TransactionFailureResponse.status.FAILURE && (
+          <div>
+            {validationResponse.validationResult?.map(
+              (result, index) =>
+                result.resolution?.length && (
+                  <AssistiveText
+                    className="mb-md"
+                    key={index}
+                    variant={AssistiveTextVariant.Error}
+                    text={result.resolution}
+                  />
+                )
+            )}
+          </div>
+        )}
+      </>
+    )
   );
 };

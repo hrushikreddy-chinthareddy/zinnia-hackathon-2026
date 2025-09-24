@@ -64,3 +64,46 @@ export const formatCurrencyLocal = (value: number | string): string => {
 export const formatWithHash = (id: string) => {
   return `#${id}`;
 };
+
+/**
+ *
+ * Takes in the following combinations for phone numbers and formats them:
+ * - 1234567890 -> 123-456-7890
+ * - 123-456-7890 -> 123-456-7890
+ * - 21234567890 -> 2-123-456-7890
+ * - (123) 456-7890 -> 123-456-7890
+ * - (123)456-7890 -> 123-456-7890
+ * - +1 (123) 456-7890 -> 1-123-456-7890
+ * - +1 (123)456-7890 -> 1-123-456-7890
+ *
+ */
+export const formatPhoneNumber = (phoneNumber: string) => {
+  // Regular expression to match and capture the parts of the phone number
+  // The regex captures:
+  // - Optional country code (\d{1,3})
+  // - Optional area code (\d{3})
+  // - First part of the rest of the phone number (\d{3})
+  // - Second part of the rest of the phone number (\d{4})
+  const match = phoneNumber.match(/^(\+?\d{1,3})?(\d{3})?(\d{3})(\d{4})$/);
+
+  // If the phone number doesn't match the expected format, return the original phone number
+  if (!match) {
+    return phoneNumber; // Silently fail by returning the original input
+  }
+
+  // Extract the captured groups from the regex match
+  const [, countryCode, areaCode, restOfPhonePrefix, restOfPhoneSuffix] = match;
+
+  // Create an array with the captured parts, filtering out any undefined parts
+
+  const formattedPhone = [
+    countryCode,
+    areaCode,
+    restOfPhonePrefix,
+    restOfPhoneSuffix,
+  ]
+    .filter(Boolean) // Remove undefined parts
+    .join('-'); // Join the parts with dashes
+
+  return formattedPhone;
+};

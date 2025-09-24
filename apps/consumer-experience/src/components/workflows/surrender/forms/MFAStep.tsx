@@ -13,7 +13,8 @@ import { submitFullSurrender } from '@/queries/fullsurrender-queries';
 export const MFAStep = () => {
   const router = useRouter();
   const needsVerification = useNeedsVerificationCode();
-  const { stepInfo, cancelUrl } = useSteppedWorkflowContext();
+  const { stepInfo, cancelUrl, setPrimaryButtonDisabled } =
+    useSteppedWorkflowContext();
   const { state } = useSurrender();
   const { policyNumber, planCode } = usePolicyUrlInputs();
 
@@ -24,6 +25,9 @@ export const MFAStep = () => {
         policyNumber,
         body: state,
       });
+    },
+    onMutate: () => {
+      setPrimaryButtonDisabled(true);
     },
     onSuccess: ({ data }) => {
       if (data?.caseId?.length) {
@@ -48,7 +52,10 @@ export const MFAStep = () => {
     submitSurrender();
   }
 
-  if (mutation.isPending || mutation.isPending) {
+  // Show pending state while:
+  // - The mutation is pending
+  // - The mutation is successful, as we want to wait for the redirect in the onSuccess callback to finish unmounting the component
+  if (mutation.isPending || mutation.isSuccess) {
     return <PaymentLoading />;
   }
 

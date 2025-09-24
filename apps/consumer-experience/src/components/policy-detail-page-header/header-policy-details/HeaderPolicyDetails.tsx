@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
 import { AgentSidesheet } from '@/components/agent-sidesheet/AgentSidesheet';
-import { getAgentInformation } from '@/services/agent';
 import { getPolicyDetails } from '@/services/policy';
+import { pomAgentSearch } from '@/services/pom/distributors/v1/producers/search';
 import { isAnnuity, policyStatusDisplayText } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
@@ -31,7 +31,7 @@ export const HeaderPolicyDetails = async ({
     loggingContext
   );
 
-  const { data: agentData } = await getAgentInformation(
+  const { data: pomAgentData } = await pomAgentSearch(
     {
       clientCode: policyData?.carrierId || '',
       agentId: policyData?.primaryAgentExternalId || '',
@@ -85,10 +85,10 @@ export const HeaderPolicyDetails = async ({
         </p>
         {/* There is the possibility that an agent id is on the policy, but no agent data
           is returned from mcs so null check is on the name rather than on the full object */}
-        {agentData && agentData.fullName && (
+        {pomAgentData && (
           <>
             <span>Agent:</span>
-            <AgentSidesheet agentData={agentData} />
+            <AgentSidesheet agentData={pomAgentData} />
           </>
         )}
       </div>

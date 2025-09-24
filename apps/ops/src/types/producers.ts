@@ -14,7 +14,7 @@ export interface GetHierarchyResponse {
 
 export const MAIN_AGENCY_ROLE = 'GeneralAgency';
 
-type AgencyRole =
+export type AgencyRole =
     | typeof MAIN_AGENCY_ROLE
     | 'BrokerDealer'
     | 'IndependentMarketingOrganization'

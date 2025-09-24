@@ -3,7 +3,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { CSSProperties } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
@@ -25,24 +24,9 @@ import { SummaryTable } from './SummaryTable';
 export const SummaryForm = () => {
   const router = useRouter();
   const { state } = useSystematicPremiums();
-  const { stepInfo } = useSteppedWorkflowContext();
+  const { stepInfo, setPrimaryButtonDisabled } = useSteppedWorkflowContext();
   const { planCode, policyNumber } = usePolicyUrlInputs();
   const form = useForm();
-
-  const {
-    data: validationResponse,
-    isError: validationError,
-    isLoading,
-  } = useQuery({
-    queryKey: [QueryKeys.SYSTEMATIC_PREMIUMS_VALIDATION, state],
-    queryFn: () => {
-      return getSystematicPremiumValidation({
-        planCode,
-        policyNumber,
-        body: state,
-      });
-    },
-  });
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -52,9 +36,13 @@ export const SummaryForm = () => {
         body: state,
       });
     },
+    onMutate: () => {
+      setPrimaryButtonDisabled(true);
+    },
     onSuccess: data => {
       if (data && 'caseId' in data) {
         router.push(stepInfo.nextStepUrl);
+        setPrimaryButtonDisabled(false);
       } else {
         router.push(
           `error?${TRANSACTION_ERROR_QUERY_PARAM}=${TransactionErrorType.SUBMISSION_FAILED}`
@@ -66,59 +54,82 @@ export const SummaryForm = () => {
     },
   });
 
-  // We include the validationError and mutation states here because the navigation is loading
-  // but the execution continues. So the form renders for a flash before the
-  // redirect has taken effect.
-  if (
-    isLoading ||
-    validationError ||
-    mutation.isError ||
-    mutation.isPending ||
-    mutation.isSuccess
-  ) {
-    if (validationError) {
-      router.push('error');
-    }
+  const {
+    data: validationResponse,
+    isError: validationError,
+    isSuccess: isValidationSuccess,
+    isFetching: isValidationFetching,
+  } = useQuery({
+    queryKey: [
+      QueryKeys.SYSTEMATIC_PREMIUMS_VALIDATION,
+      planCode,
+      policyNumber,
+      state,
+    ],
+    queryFn: () =>
+      getSystematicPremiumValidation({
+        planCode,
+        policyNumber,
+        body: state,
+      }),
+  });
 
+  if (validationError) {
+    router.push('error');
+  }
+
+  // Show pending state while:
+  // - The mutation is pending
+  // - The validation is fetching
+  // - The mutation is successful, as we want to wait for the redirect in the onSuccess callback to finish unmounting the component
+  if (isValidationFetching || mutation.isPending || mutation.isSuccess) {
+    setPrimaryButtonDisabled(true);
     return <PaymentLoading />;
   }
 
-  const onSubmit = () => {
-    if (mutation.isPending) {
-      return;
+  if (isValidationSuccess) {
+    setPrimaryButtonDisabled(false);
+  }
+
+  if (
+    validationResponse?.status === TransactionFailureResponse.status.FAILURE
+  ) {
+    setPrimaryButtonDisabled(true);
+  }
+
+  const onSubmit = async () => {
+    if (isValidationFetching || mutation.isPending) return;
+
+    if (
+      validationResponse?.status === TransactionFailureResponse.status.SUCCESS
+    ) {
+      mutation.mutate();
     }
-    mutation.mutate();
   };
 
   return (
-    <>
-      <form
-        id="submit-form"
-        style={
-          {
-            '--field-container-gap': 'var(--measure-dimension-gap-sm)',
-          } as CSSProperties
-        }
-        onSubmit={form.handleSubmit(onSubmit)}
-      >
-        <SummaryTable policyNumber={policyNumber} planCode={planCode} />
-      </form>
-      {validationResponse?.status ===
-        TransactionFailureResponse.status.FAILURE && (
-        <div>
-          {validationResponse.validationResult?.map(
-            (result, index) =>
-              result.resolution?.length && (
-                <AssistiveText
-                  className="mb-md"
-                  key={index}
-                  variant={AssistiveTextVariant.Error}
-                  text={result.error + ' ' + result.resolution}
-                />
-              )
-          )}
-        </div>
-      )}
-    </>
+    validationResponse && (
+      <div>
+        <form id="submit-form" onSubmit={form.handleSubmit(onSubmit)}>
+          <SummaryTable policyNumber={policyNumber} planCode={planCode} />
+        </form>
+        {validationResponse?.status ===
+          TransactionFailureResponse.status.FAILURE && (
+          <div className="mt-lg">
+            {validationResponse.validationResult?.map(
+              (result, index) =>
+                result.resolution?.length && (
+                  <AssistiveText
+                    className="mb-md"
+                    key={index}
+                    variant={AssistiveTextVariant.Error}
+                    text={result.error + ' ' + result.resolution}
+                  />
+                )
+            )}
+          </div>
+        )}
+      </div>
+    )
   );
 };

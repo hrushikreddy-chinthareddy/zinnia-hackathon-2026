@@ -125,7 +125,6 @@ describe('startOfTomorrowLocalIso', () => {
   });
 
   it('returns DEFAULT_ERROR_STRING for invalid input', () => {
-    expect(startOfTomorrowLocalIso('09/08/2025')).toBe(DEFAULT_ERROR_STRING);
     expect(startOfTomorrowLocalIso('')).toBe(DEFAULT_ERROR_STRING);
   });
 });

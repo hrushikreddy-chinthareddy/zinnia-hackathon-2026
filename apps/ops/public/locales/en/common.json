@@ -3309,6 +3309,9 @@
             "policy": "policy",
             "contract": "contract"
         },
+        "commonPhrases": {
+            "endingIn": "ending in"
+        },
         "allFields": {
             "policyBasics": "{{policyNomenclature, capitalize}} basics",
             "effectiveDate": "Effective date",
@@ -3624,7 +3627,7 @@
             "underwritingDecision": "Underwriting decision",
             "featureId": "Feature ID",
             "featureSubType": "Feature sub type",
-            "funds": "Funds",
+            "combinedFunds": "Funds",
             "modelId": "Model id",
             "interestGuaranteedPeriod": "Interest guaranteed period",
             "match": "Match",
@@ -5107,7 +5110,6 @@
             "exchangeCompany": "Exchange Company",
             "jointAnnuitant": "Joint Annuitant",
             "otherInterestedParty": "Other Interested Party"
-
         }
     },
     "pageHeader": {

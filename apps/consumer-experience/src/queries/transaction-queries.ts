@@ -4,8 +4,8 @@ import { SystematicPremiumsState } from '@/components/providers/systematic-premi
 import { WithdrawalsState } from '@/components/providers/withdrawals/types';
 import { ApiResponse } from '@/services';
 import {
+  PwotWithdrawalBPMResponse,
   WithdrawalSubmissionResponse,
-  WithdrawalValidationResposne,
 } from '@/services/bpm/partial-withdrawal';
 import {
   SystematicProgramBPMResponse,
@@ -23,13 +23,19 @@ export const getPartialWithdrawalOneTimeValidation = async ({
   planCode: string;
   policyNumber: string;
   body: WithdrawalsState;
-}): Promise<WithdrawalValidationResposne> => {
-  return await (
+}): Promise<PwotWithdrawalBPMResponse> => {
+  const response = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/partial-withdrawal-one-time/validation`,
       JSON.stringify(body)
     )
   ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  return response.data;
 };
 
 export const submitPartialWithdrawalOneTime = async ({
@@ -41,12 +47,18 @@ export const submitPartialWithdrawalOneTime = async ({
   policyNumber: string;
   body: WithdrawalsState;
 }): Promise<WithdrawalSubmissionResponse> => {
-  return await (
+  const response = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/partial-withdrawal-one-time`,
       JSON.stringify(body)
     )
   ).json();
+
+  if (response.error || !response) {
+    throw response.error;
+  }
+
+  return response.data;
 };
 
 export const getSystematicPremiumValidation = async ({
@@ -58,8 +70,6 @@ export const getSystematicPremiumValidation = async ({
   policyNumber: string;
   body: SystematicPremiumsState;
 }): Promise<SystematicProgramBPMResponse> => {
-  // TODO: update thiis to follow the pattern of the other queries where
-  // we throw if there is an error returned so that we can use the tanstack utilities
   const response = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/systematic-programs/validate`,

@@ -1,4 +1,11 @@
 import { TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
+import {
+  FeatureType,
+  PolicyFeature,
+  PolicyStatus,
+  ProductType,
+} from '@xd/api-types/dist/generated-types/sor';
+import { standardDateMonthDayYear } from '@xd/utils/dist';
 
 import {
   getAddSystematicProgramEligibility,
@@ -73,5 +80,72 @@ export const determineAutopayDisplayAndEligibility = async ({
     cancelAutopayEligible,
     addManageEligible: manageAutopayEligible || addAutopayEligible,
     autopayCurrentState,
+  };
+};
+
+export const upcomingPaymentDetails = ({
+  policyStatus,
+  policyFeatures,
+  upcomingPaymentValid,
+  upcomingPaymentAmount,
+  nextActivityDate,
+  productType,
+}: {
+  policyStatus: PolicyStatus;
+  policyFeatures?: PolicyFeature[] | null;
+  upcomingPaymentValid?: boolean;
+  upcomingPaymentAmount?: number;
+  nextActivityDate: string;
+  productType?: ProductType;
+}): { amount?: number; label: string; caption?: string | null } => {
+  let amount;
+  let label = 'Premium due';
+  let caption;
+
+  if (policyStatus === PolicyStatus.PENDINGLAPSE) {
+    const pendingLapseDueDetails = policyFeatures?.find(
+      item => item.featureType === FeatureType.LAPSEASSESSMENT
+    );
+
+    amount = pendingLapseDueDetails?.totalMinimumRequiredAmount;
+    caption =
+      pendingLapseDueDetails?.endDate &&
+      `Due by ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`;
+
+    return {
+      amount,
+      label,
+      caption,
+    };
+  }
+
+  if (upcomingPaymentValid) {
+    amount = upcomingPaymentAmount;
+    label = 'Scheduled premium';
+    caption =
+      nextActivityDate &&
+      `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`;
+  }
+
+  if (!upcomingPaymentValid) {
+    if (productType === ProductType.TERM) {
+      const billingFeature = policyFeatures?.find(
+        item => item.featureType === FeatureType.BILLING
+      );
+
+      amount = billingFeature?.paymentAmount;
+      label = 'Premium due';
+      caption =
+        billingFeature?.effectiveDate &&
+        `Due by ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`;
+    } else {
+      amount = 0;
+    }
+  }
+
+  return {
+    amount,
+    label,
+    caption,
   };
 };

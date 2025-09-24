@@ -36,7 +36,7 @@ type PWOTWithdrawalBPMErrorResponse = {
   status: TransactionFailureResponse.status.FAILURE;
 } & TransactionFailureResponse;
 
-type PwotWithdrawalBPMResponse =
+export type PwotWithdrawalBPMResponse =
   | PWOTWithdrawalBPMSucessResponse
   | PWOTWithdrawalBPMErrorResponse;
 

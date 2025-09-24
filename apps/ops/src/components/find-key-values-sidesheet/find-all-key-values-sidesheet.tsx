@@ -2,6 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import { Accordion } from '@xd/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
+import useDebounce from '@xd/xd-components/src/hooks/useDebounce';
 import {
     SideSheet,
     Icon,
@@ -13,7 +14,7 @@ import {
     Link,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -25,15 +26,16 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import styles from './find-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
 import {
-    DataRecord,
-    DataTuple,
+    NestedData,
     label,
-    link,
-    linkedField,
-    MetaData,
-    PolicySection,
-    SubSection,
     tags,
+    link,
+    MetaData,
+    DataTuple,
+    PolicySection,
+    Collapse,
+    ExpandCollapse,
+    Expand,
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -49,37 +51,49 @@ interface FindAllKeyValuesSidebarProps {
 }
 
 /**
- * Renders policy basics (fields directly on the policy object)
+ * A component that renders a list of key-value pairs based on the policyBasics
+ * and searchValue.
  *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {DataTuple[]} policyBasics
- * @param {string} searchValue
- * @returns {JSX.Element}
+ * @param {ReturnType<typeof preparePolicy>} preparedPolicy - The policy details
+ * @param {NestedData} policyBasics - The policy basics
+ * @param {string} searchValue - The search value
+ * @returns {JSX.Element} - A JSX element representing the key-value pairs
  */
 const KeyValueBasics = ({
     preparedPolicy,
     policyBasics,
     searchValue,
+    treeState,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
-    policyBasics: DataTuple[];
+    policyBasics: NestedData;
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => (
     <Accordion
-        sectionLabel={preparedPolicy.formatAsSectionLabel('policyBasics')}
+        sectionLabel={
+            <Highlighter
+                text={preparedPolicy.formatAsSectionLabel('policyBasics')}
+                highlights={[searchValue]}
+            />
+        }
         type={AccordionType.NESTED}
+        treeState={treeState}
     >
         <KeyValueFieldList
-            preparedPolicy={preparedPolicy}
             fields={policyBasics}
             searchValue={searchValue}
+            treeState={treeState}
         />
     </Accordion>
 );
 
 /**
- * Renders policy sections (fields nested under a section label).
- *
+ * Renders a list of policy sections.
+ * Each section is rendered as a separate Accordion item.
+ * The label of each section is highlighted if it matches the searchValue.
+ * Each section contains a list of DataField components and/or a list of subsections.
+ * The subsections are rendered recursively using the KeyValueSubSections component.
  * @param {ReturnType<typeof preparePolicy>} preparedPolicy
  * @param {PolicySection[]} policySections
  * @param {string} searchValue
@@ -89,16 +103,17 @@ const KeyValueSections = ({
     preparedPolicy,
     policySections,
     searchValue,
+    treeState,
 }: {
     preparedPolicy: ReturnType<typeof preparePolicy>;
     policySections: PolicySection[];
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => {
-    return policySections.map(([sectionLabel, sectionData], i) => {
-        const { fields, subSections } = preparedPolicy.toFieldsAndSubsections([
-            sectionLabel,
-            sectionData,
-        ]);
+    return policySections?.map((policySection, i) => {
+        const [sectionLabel, sectionData] = policySection;
+        const { fields, subSections } = sectionData;
+
         if (
             typeof sectionLabel !== 'string' ||
             (fields == null && subSections == null)
@@ -108,175 +123,196 @@ const KeyValueSections = ({
         return (
             <Accordion
                 key={`section_${i}`}
-                sectionLabel={preparedPolicy.formatAsSectionLabel(sectionLabel)}
+                sectionLabel={
+                    <Highlighter
+                        text={preparedPolicy.formatAsSectionLabel(sectionLabel)}
+                        highlights={[searchValue]}
+                    />
+                }
                 type={AccordionType.NESTED}
+                treeState={treeState}
             >
                 {fields && (
                     <KeyValueFieldList
-                        preparedPolicy={preparedPolicy}
                         fields={fields}
                         searchValue={searchValue}
+                        treeState={treeState}
                     />
                 )}
 
                 {subSections && (
                     <KeyValueSubSections
-                        preparedPolicy={preparedPolicy}
                         subSections={subSections}
                         searchValue={searchValue}
-                        sectionLabel={sectionLabel}
+                        treeState={treeState}
                     />
                 )}
             </Accordion>
         );
     });
 };
+
 /**
- * Renders subsections (fields nested under a section).
- *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {SubSection[]} subSections
- * @param {string} searchValue
- * @param {string} sectionLabel
- * @returns {JSX.Element[]}
+ * Renders a list of subsections.
+ * Each subsection is rendered as a separate Accordion item.
+ * The label of each subsection is highlighted if it matches the searchValue.
+ * Each subsection contains a list of DataField components.
+ * @param {NestedData} subSections A list of subsections to render
+ * @param {string} searchValue A string to highlight in the subsection labels
+ * @returns {JSX.Element[]} The rendered list of subsections
  */
 const KeyValueSubSections = ({
-    preparedPolicy,
     subSections,
     searchValue,
-    sectionLabel,
+    treeState,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
-    subSections: SubSection[];
+    subSections: NestedData;
     searchValue: string;
-    sectionLabel: string;
+    treeState: ExpandCollapse;
 }) => {
-    return subSections?.map(
-        ([subSectionLabel, subSectionFields, subSectionMetaData], i) => {
-            const subsectionTags = subSectionMetaData?.[tags];
-            return (
-                <div key={`subsection_${i}`} className={styles.subSection}>
-                    <Accordion
-                        sectionLabel={String(subSectionLabel)}
-                        tags={subsectionTags}
-                        type={AccordionType.NESTED}
-                    >
-                        <KeyValueFieldList
-                            preparedPolicy={preparedPolicy}
-                            fields={subSectionFields}
-                            searchValue={searchValue}
-                            metaData={subSectionMetaData}
+    return subSections?.map((subSection, i) => {
+        const [subSectionLabel, subSectionFields] = subSection as [
+            string,
+            NestedData
+        ];
+        const subsectionTags = (subSection as MetaData)[tags];
+        return (
+            <div key={`subsection_${i}`} className={styles.subSection}>
+                <Accordion
+                    sectionLabel={
+                        <Highlighter
+                            text={String(subSectionLabel)}
+                            highlights={[searchValue]}
                         />
-                    </Accordion>
-                </div>
-            );
-        }
-    );
+                    }
+                    tags={subsectionTags}
+                    type={AccordionType.NESTED}
+                    treeState={treeState}
+                >
+                    <KeyValueFieldList
+                        fields={subSectionFields}
+                        searchValue={searchValue}
+                        treeState={treeState}
+                    />
+                </Accordion>
+            </div>
+        );
+    });
 };
 
 /**
- * Given a list of field tuples and a search value, renders a list of field
- * values. If the field value is an array, renders it as a subSection-in-subSection.
+ * Renders a list of fields from the given NestedDataTuple.
+ * If the field data is an array, renders it as a nested subSection.
  * Otherwise, renders it as a DataField.
- *
- * @param preparedPolicy The prepared policy to use for formatting
- * @param fields The list of field tuples to render
- * @param searchValue The search value to highlight in the rendered fields
- * @param metaData Optional metadata for the field list. If provided, will be
- * passed to the DataField component.
- * @returns A JSX element representing the rendered field list
+ * @param {NestedData} fields The NestedDataTuple of fields to render
+ * @param {string} searchValue The search value to highlight in the field labels
+ * @returns {JSX.Element} The rendered list of fields
  */
 const KeyValueFieldList = ({
-    preparedPolicy,
     fields,
     searchValue,
-    metaData,
+    treeState,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
-    fields: DataTuple[];
+    fields: NestedData;
     searchValue: string;
-    metaData?: MetaData;
+    treeState: ExpandCollapse;
 }) => {
     return (
         <div className={styles.itemsList}>
-            {fields.map((field, i) => {
+            {fields?.map((field, i) => {
                 // If the field data is an array, render it as a
                 // subSection-in-subSection
-                const [, unformattedData] = field;
-                if (unformattedData instanceof Array) {
+                const [key, data] = field as unknown[];
+
+                // The data returned is either a Tuple or an Array of Tuples;
+                // If the first element (key) is an array, it's a nested subSection
+                if (key instanceof Array) {
                     return (
-                        <KeyValueNestedSubSection
+                        <KeyValueNestedSubSections
                             key={`subsection_${i}`}
-                            preparedPolicy={preparedPolicy}
-                            subSections={unformattedData as DataRecord[]}
+                            subSections={field as NestedData[]}
                             searchValue={searchValue}
+                            treeState={treeState}
                         />
                     );
                 }
 
                 // Otherwise, just render it as a DataField
-                return (
-                    <DataField
-                        key={`field_${i}`}
-                        preparedPolicy={preparedPolicy}
-                        dataField={field}
-                        searchValue={searchValue}
-                        link={metaData?.[link]}
-                        linkField={metaData?.[linkedField]}
-                    />
-                );
+                if (typeof key === 'string') {
+                    return (
+                        <DataField
+                            key={`field_${i}`}
+                            dataField={[key, String(data)]}
+                            searchValue={searchValue}
+                            link={(field as MetaData)?.[link]}
+                        />
+                    );
+                }
             })}
+            <KeyValueNestedSubSections
+                key={`subsection_`}
+                subSections={fields as NestedData[]}
+                searchValue={searchValue}
+                treeState={treeState}
+            />
         </div>
     );
 };
 
 /**
- * Given a list of nested subsections, renders each subsection as a nested Accordion
- * with a single field list.
+ * Renders a list of nested subsections.
+ * Each subsection is rendered as a separate Accordion item.
+ * The label of each subsection is highlighted if it matches the searchValue.
+ * Each subsection contains a list of DataField components.
  *
- * Each subsection is rendered as an Accordion with the subsection label as the
- * section label, and the subsection tags as the tags.
- *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {DataRecord[]} subSections
- * @param {string} searchValue
- * @returns {JSX.Element[]}
+ * @param subSections A list of nested subsections.
+ * @param searchValue A string to highlight in the subsection labels.
  */
-const KeyValueNestedSubSection = ({
-    preparedPolicy,
+const KeyValueNestedSubSections = ({
     subSections,
     searchValue,
+    treeState,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
-    subSections: DataRecord[];
+    subSections: NestedData[];
     searchValue: string;
+    treeState: ExpandCollapse;
 }) => {
     return subSections.map((subSection, i) => {
-        const subSectonLabel = subSection[label];
-        if (subSectonLabel == null) return null;
-        const subSectionTags = subSection[tags] as string[];
-        const subSectionLink = subSection[link] as string;
-        const subSectionLinkField = subSection[linkedField] as string;
+        const subSectionLabel = (subSection as MetaData)[label];
+        if (subSectionLabel == null) return null;
+
+        const subSectionTags = (subSection as MetaData)[tags] as string[];
+
         return (
             <div key={`nested_subsection_${i}`} className={styles.subSection}>
                 <Accordion
-                    sectionLabel={String(subSectonLabel)}
+                    key={String(subSectionLabel)}
+                    sectionLabel={
+                        <Highlighter
+                            text={String(subSectionLabel)}
+                            highlights={[searchValue]}
+                        />
+                    }
                     tags={subSectionTags}
                     type={AccordionType.NESTED}
+                    treeState={treeState}
                 >
                     <div className={styles.itemsList}>
-                        {Object.entries(subSection).map((dataField, j) => {
-                            return (
-                                <DataField
-                                    key={`field_${j}`}
-                                    preparedPolicy={preparedPolicy}
-                                    dataField={dataField}
-                                    searchValue={searchValue}
-                                    link={subSectionLink}
-                                    linkField={subSectionLinkField}
-                                />
-                            );
-                        })}
+                        {(subSection as NestedData[])
+                            .map((field, j) => {
+                                const [label, data] = field as DataTuple;
+                                const fieldLink = (field as MetaData)[link];
+                                // FIXME: disallow Symbol in field label
+                                return typeof label === 'string' ? (
+                                    <DataField
+                                        key={`field_${j}`}
+                                        dataField={[label, String(data)]}
+                                        searchValue={searchValue}
+                                        link={fieldLink}
+                                    />
+                                ) : null;
+                            })
+                            .filter((field) => field !== null)}
                     </div>
                 </Accordion>
             </div>
@@ -285,42 +321,24 @@ const KeyValueNestedSubSection = ({
 };
 
 /**
- * Given a policy field tuple, renders a single field as a DotContainer with:
+ * A component that renders a data field with a label and value.
+ * The label is highlighted if it matches the search value.
+ * The value is a link if a link is provided.
  *
- * - The field label on the left side, highlighted if it matches the search value.
- * - The field data on the right side, or a link to the field data if the field
- *   is a link field and the link is provided.
- *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {DataTuple} dataField
- * @param {string} link
- * @param {string} linkField
- * @param {string} searchValue
- * @returns {JSX.Element}
+ * @param dataField - The data field to render as [label, value]
+ * @param link - The link for the value
+ * @param searchValue - The search value to highlight in the label
  */
 const DataField = ({
-    preparedPolicy,
     dataField,
     link,
-    linkField,
     searchValue,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
-    dataField: DataTuple;
+    dataField: [string, string];
     link?: string;
-    linkField?: string;
     searchValue: string;
 }) => {
-    /**
-     * If the field cannot be formatted, return null
-     */
-    const formattedField = preparedPolicy.formatDataField(dataField);
-    if (!formattedField) return null;
-    const [fieldLabel, fieldData] = formattedField;
-    const linkedField =
-        link && linkField === dataField[0] ? (
-            <Link href={link} text={fieldData} />
-        ) : undefined;
+    const [fieldLabel, fieldData] = dataField;
     return (
         <DotContainer
             dotLeftSide={
@@ -348,33 +366,35 @@ const DataField = ({
                 </div>
             }
             dotLeftSideClassName="typography-content-body-sm"
-            dotRightSide={linkedField ?? fieldData}
+            dotRightSide={
+                link ? (
+                    <Link href={link} text={fieldData} />
+                ) : (
+                    <Highlighter text={fieldData} highlights={[searchValue]} />
+                )
+            }
             dotRightSideClassName="typography-content-body-sm"
         />
     );
 };
 
 /**
- * FindAllKeyValuesSidesheet is a Sidesheet component that allows users to search through the key values of a given policy.
+ * A Sidesheet component that displays all key-value pairs of a policy.
  *
- * The component takes in the `planCode` and `policyNumber` as props, and fetches the policy data from the API.
- * It also takes care of debouncing the search value and filtering the key values accordingly.
+ * When opened, it displays a date picker to select a date, and a search field to search
+ * key-value pairs. The date picker is disabled for future dates, and the search field
+ * filters down the key-value pairs based on the search value.
  *
- * The component renders a date picker that allows the user to select a date, and a search bar that allows the user to search for key values.
- * The results are then displayed in a table below, with the key values grouped by section.
- *
- * The component also handles loading and error states, and will display a loading overlay if the data is still being fetched,
- * or an error message if the data is not available.
- *
- * @param planCode - The code of the plan to fetch the policy for
- * @param policyNumber - The number of the policy to fetch
- * @returns - The rendered Sidesheet component
+ * @param {string} planCode - the plan code of the policy
+ * @param {string} policyNumber - the policy number of the policy
+ * @returns {JSX.Element} - the rendered component
  */
 export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     planCode,
     policyNumber,
 }) => {
     const [date, setDate] = useState('');
+    const [treeState, setTreeState] = useState(Collapse);
     const [fieldError, setFieldError] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const queryClient = useQueryClient();
@@ -434,9 +454,9 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
         }
     };
 
-    /*
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
+    /*
     // When user searches, filter down the key values
     const filteredKeys = useMemo(() => {
         return filterOnSearchHandler(keyValues, {
@@ -446,15 +466,30 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
 
     */
 
-    if (!policy) return null; //FIXME: add loading state
-
     // This retains all the persistent extracted data on the policy
-    const preparedPolicy = useMemo(() => preparePolicy(policy, t), [policy]);
+    const preparedPolicy = useMemo(
+        () => (policy ? preparePolicy(policy, t, debouncedSearchValue) : null),
+        [policy, debouncedSearchValue, t]
+    );
 
     const { policyBasics, policySections } = useMemo(
-        () => preparedPolicy.toSections(),
+        () =>
+            preparedPolicy
+                ? preparedPolicy.toSections()
+                : {
+                      policyBasics: null,
+                      policySections: null,
+                  },
         [preparedPolicy]
     );
+
+    // If the search value changes to non-empty, expand the tree
+    // (the tree will be cropped to matching search results)
+    useEffect(() => {
+        debouncedSearchValue && setTreeState(Expand);
+    }, [debouncedSearchValue]);
+
+    if (!preparedPolicy) return null; //FIXME: add loading state
 
     return (
         <SideSheet
@@ -507,17 +542,40 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                     loading={fieldError || isFetching || isError}
                 >
                     <div className={styles.container}>
-                        <KeyValueBasics
-                            preparedPolicy={preparedPolicy}
-                            policyBasics={policyBasics}
-                            searchValue={searchValue}
-                        />
+                        <div>
+                            <Button
+                                mode="link"
+                                size="small"
+                                onClick={() =>
+                                    setTreeState((treeState) => !treeState)
+                                }
+                            >
+                                <Icon
+                                    type={IconType.CHEVRON_RIGHT}
+                                    small={true}
+                                />
+                                {treeState === Expand
+                                    ? 'Collapse all'
+                                    : 'Expand all'}
+                            </Button>
+                        </div>
+                        {policyBasics && (
+                            <KeyValueBasics
+                                preparedPolicy={preparedPolicy}
+                                policyBasics={policyBasics as NestedData[]}
+                                searchValue={searchValue}
+                                treeState={treeState}
+                            />
+                        )}
 
-                        <KeyValueSections
-                            preparedPolicy={preparedPolicy}
-                            policySections={policySections}
-                            searchValue={searchValue}
-                        />
+                        {policySections && (
+                            <KeyValueSections
+                                preparedPolicy={preparedPolicy}
+                                policySections={policySections}
+                                searchValue={searchValue}
+                                treeState={treeState}
+                            />
+                        )}
                     </div>
                 </BlurOverlayLoader>
             </div>

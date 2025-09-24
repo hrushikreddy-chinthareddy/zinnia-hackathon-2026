@@ -1,5 +1,12 @@
 // BPB note: this is being loosely typed from a QA response as the  API doesn't have a spec
 
+import { PhoneType } from '@xd/api-types/dist/generated-types/sor';
+import { ProducerType } from '@xd/pom/src/types';
+
+import { CarrierCode } from '@deps/constants/policy';
+
+import { AgencyRole } from './producers';
+
 // certain string values may be enumerated, and the unknowns I just couldn't infer or didnt' need for now
 export interface AgentData {
     accordiaAgentIndicator: boolean;
@@ -135,6 +142,35 @@ export interface AgentData {
     training: unknown[];
 }
 
+export interface PomAgentData {
+    alternateIds: AlternateIds[];
+    businessPhone: AgentPhone;
+    businessAddress: AgentAddress;
+    carrierSellingCodes: CarrierSellingCodes;
+    email: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    middleName: string | undefined;
+    nationalProducerNumber: string | undefined;
+    partyId: string | undefined;
+    producerType: ProducerType;
+    socialSecurityNumber: string | undefined;
+}
+export type AlternateIds = {
+    carrierShortName: typeof CarrierCode;
+    key: string | null;
+    value: string | null;
+};
+
+export interface SellingCode {
+    sellingCode: string | null;
+    role: AgencyRole;
+}
+
+export type CarrierSellingCodes = {
+    [key in CarrierCode]: SellingCode[];
+};
+
 export interface LineOfAuthority {
     id: string;
     salesAppointmentId: string;
@@ -190,6 +226,11 @@ export interface AgentAddress {
     salesEntityId: string | null;
     stateCode: string | null; // 2-digit state code?
     zip: string | null;
+    type: string | null;
+    line: string | null;
+    line2: string | null;
+    state: string | null;
+    zipCode: string | null;
 }
 
 export interface AgentPhone {
@@ -205,6 +246,7 @@ export interface AgentPhone {
     phoneType: string | null;
     phoneTypeId: number | null;
     salesEntityId: string | null;
+    type: PhoneType | null;
 }
 
 export interface AgentEmail {

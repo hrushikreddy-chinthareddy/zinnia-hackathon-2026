@@ -120,7 +120,7 @@ export async function middleware(req: NextRequest) {
   // TODO: use the carrier config with `requiresSSO` property and `redirectAfterLogout`
   if (!session && currentSubDomain === Subdomains.FARMERS) {
     return NextResponse.redirect(
-      CARRIER_REDIRECT_URLS[CarrierName.FARMERS].MY_PROFILE
+      CARRIER_REDIRECT_URLS[CarrierName.FARMERS].POLICY_SUMMARY
     );
   }
 

@@ -72,16 +72,20 @@ export const Addresses = ({
                     address.addressId === preferredAddressIndicator &&
                     !infoOnly;
 
+                const defaultKey = `${addressType}-${index}`;
+
                 return (
                     <div
                         className={clsx('flex flex-col items-start', {
                             hidden: !showAdditional && index > 3,
                         })}
-                        key={addressId}
+                        key={addressId ?? `${addressType}-${index}`}
                     >
                         <div className="flex items-center gap-1">
                             <Label
-                                id={`people-address-card-${addressId}`}
+                                id={`people-address-card-${
+                                    addressId ?? defaultKey
+                                }`}
                                 label={t(
                                     mapAddressTypeToTranslation({
                                         addressType,
@@ -95,7 +99,9 @@ export const Addresses = ({
                             {isPending && <PendingTag />}
                             {editable && !isPending && (
                                 <IconButton
-                                    aria-describedby={`people-address-card-${addressId}`}
+                                    aria-describedby={`people-address-card-${
+                                        addressId ?? defaultKey
+                                    }`}
                                     onClick={() =>
                                         onEditClick({
                                             address,
