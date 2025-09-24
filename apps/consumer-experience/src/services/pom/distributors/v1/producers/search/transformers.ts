@@ -2,7 +2,13 @@ import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/typ
 
 export type FilteredPomAgentData = Pick<
   POM_Producer_Models_SearchProducersResult,
-  'firstName' | 'lastName' | 'email' | 'businessPhone' | 'businessAddress'
+  | 'firstName'
+  | 'lastName'
+  | 'email'
+  | 'businessPhone'
+  | 'businessAddress'
+  | 'producerType'
+  | 'producerName'
 >;
 
 /**
@@ -22,5 +28,7 @@ export const formatPomAgentData = (
     email: agentResponse.email,
     businessPhone: agentResponse.businessPhone,
     businessAddress: agentResponse.businessAddress,
+    producerType: agentResponse.producerType,
+    producerName: agentResponse.producerName,
   };
 };
