@@ -54,7 +54,11 @@ export const PolicyBadgeStatus = ({
     return (
         <div className="mt-[-3px]">
             {!!status && !!tooltip && (
-                <Tooltip placement={tooltipPlacements} body={tooltip}>
+                <Tooltip
+                    placement={tooltipPlacements}
+                    body={tooltip}
+                    popoverClassName="max-w-[75vw]" // Increase min size at small viewports
+                >
                     <Badge
                         rounded={true}
                         label={status}
