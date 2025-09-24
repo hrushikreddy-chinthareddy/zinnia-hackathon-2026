@@ -1,6 +1,6 @@
 {
-    "id": "TA000000052811",
-    "caseId": "CA0000488417",
+    "id": "TA000000054889",
+    "caseId": "CA0000494168",
     "source": "Zinnia.BPMTransactions",
     "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
     "process": "Policy Update",
@@ -108,7 +108,7 @@
             {
                 "action": "UPDATE",
                 "actionType": "BENE_CHANGE",
-                "isIrrevocable": "Yes",
+                "isIrrevocable": true,
                 "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
                 "relationshipToParty": "SPOUSE",
@@ -195,7 +195,7 @@
             {
                 "action": "ADD",
                 "actionType": "BENE_CHANGE",
-                "isIrrevocable": "No",
+                "isIrrevocable": false,
                 "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
                 "relationshipToParty": "TRUSTEEOFINCOMPETENT",
@@ -269,6 +269,14 @@
                     "signGurantee": "",
                     "signPrintName": "",
                     "signType": "Owner"
+                },
+                {
+                    "isSignedPresent": "No",
+                    "signDate": null,
+                    "signDesignation": "",
+                    "signGurantee": "",
+                    "signPrintName": "",
+                    "signType": "Joint Owner"
                 },
                 {
                     "isSignedPresent": "No",

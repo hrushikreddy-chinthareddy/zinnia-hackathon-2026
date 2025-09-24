@@ -1,5 +1,5 @@
 {
-    "formId": "9569c24d-250e-45bd-ab0f-c85f04a192a9",
+    "formId": "9224b9cf-bec2-40be-afb0-7070799962d2",
     "process": "Policy Update",
     "taskType": "INITIATE_BENECHANGE_TRANSACTION",
     "processSubType": "Beneficiary Change",
@@ -398,7 +398,46 @@
                                                 }
                                             }
                                         ]
-                                    }
+                                    },
+                                    "default": [
+                                        {
+                                            "partyType": "INDIVIDUAL",
+                                            "partyRole": "Owner",
+                                            "firstName": "",
+                                            "middleName": "",
+                                            "lastName": "",
+                                            "dateOfBirth": "",
+                                            "trustType": "",
+                                            "phones": [
+                                                {
+                                                    "dialNumber": ""
+                                                }
+                                            ],
+                                            "emails": [
+                                                {
+                                                    "emailAddress": ""
+                                                }
+                                            ],
+                                            "addresses": [
+                                                {
+                                                    "addressLine1": "",
+                                                    "addressType": "Residential Address",
+                                                    "city": "",
+                                                    "state": "",
+                                                    "zipCode": "",
+                                                    "zipCodeExtension": ""
+                                                },
+                                                {
+                                                    "addressLine1": "",
+                                                    "addressType": "Mailing Address",
+                                                    "city": "",
+                                                    "state": "",
+                                                    "zipCode": "",
+                                                    "zipCodeExtension": ""
+                                                }
+                                            ]
+                                        }
+                                    ]
                                 }
                             }
                         }
@@ -674,9 +713,10 @@
                                         "enum": ["Yes", "No"]
                                     },
                                     "isIrrevocable": {
-                                        "type": "string",
+                                        "type": "boolean",
                                         "title": "Irrevocable",
-                                        "enum": ["Yes", "No"]
+                                        "enum": [true, false],
+                                        "enumNames": ["Yes", "No"]
                                     },
                                     "party": {
                                         "type": "object",
@@ -888,10 +928,10 @@
                                                             "title": "Prefix",
                                                             "enum": [
                                                                 "",
-                                                                "Dr.",
-                                                                "Mr.",
-                                                                "Mrs.",
-                                                                "Ms."
+                                                                "DR",
+                                                                "MR",
+                                                                "MRS",
+                                                                "MS"
                                                             ]
                                                         },
                                                         "firstName": {
@@ -967,38 +1007,20 @@
                                                                 "GRANTORTRUST"
                                                             ]
                                                         },
-                                                        "uploadDocuments": {
-                                                            "type": "object",
-                                                            "title": "Link or upload the supporting document(s)",
-                                                            "properties": {
-                                                                "upload": {
-                                                                    "type": "string"
-                                                                },
-                                                                "or": {
-                                                                    "type": "string",
-                                                                    "title": "or"
-                                                                },
-                                                                "attachment": {
-                                                                    "type": "array",
-                                                                    "title": "Upload",
-                                                                    "items": {
-                                                                        "title": "Upload",
-                                                                        "type": "string",
-                                                                        "format": "data-url"
-                                                                    }
-                                                                }
-                                                            }
-                                                        },
                                                         "attachments": {
                                                             "type": "array",
+                                                            "title": "Link or upload the supporting document(s)",
                                                             "items": {
-                                                                "documentName": {
-                                                                    "title": "Name",
-                                                                    "type": "string"
-                                                                },
-                                                                "documentId": {
-                                                                    "title": "Document Id",
-                                                                    "type": "string"
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "documentName": {
+                                                                        "title": "Name",
+                                                                        "type": "string"
+                                                                    },
+                                                                    "documentId": {
+                                                                        "title": "Document Id",
+                                                                        "type": "string"
+                                                                    }
                                                                 }
                                                             }
                                                         },
@@ -1076,7 +1098,50 @@
                                     }
                                 },
                                 "required": ["relationshipToParty"]
-                            }
+                            },
+                            "default": [
+                                {
+                                    "relationshipToParty": "SPOUSE",
+                                    "isIrrevocable": false,
+                                    "isPerStirpes": "No",
+                                    "party": {
+                                        "partyType": "INDIVIDUAL",
+                                        "gender": "MALE",
+                                        "preferredCommunicationType": "EMAIL",
+                                        "identifications": [
+                                            {
+                                                "identificationValue": ""
+                                            }
+                                        ],
+                                        "addresses": [
+                                            {
+                                                "addressLine1": "",
+                                                "addressLine2": "",
+                                                "addressLine3": "",
+                                                "addressType": "RESIDENCE",
+                                                "city": "",
+                                                "state": "",
+                                                "zipCode": "",
+                                                "zipCodeExtension": ""
+                                            }
+                                        ],
+                                        "phones": [
+                                            {
+                                                "phoneType": "HOME",
+                                                "dialNumber": ""
+                                            }
+                                        ],
+                                        "emails": [
+                                            {
+                                                "emailAddress": ""
+                                            }
+                                        ]
+                                    },
+                                    "partyRole": {
+                                        "beneficiaryRole": "Primary Beneficiary"
+                                    }
+                                }
+                            ]
                         }
                     }
                 },
@@ -1130,7 +1195,7 @@
                                 }
                             },
                             "isIrrevocable": {
-                                "ui:widget": "radio",
+                                "ui:widget": "RadioWidget",
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
                                 }
@@ -1173,7 +1238,6 @@
                                     "lastName",
                                     "suffix",
                                     "trustType",
-                                    "uploadDocuments",
                                     "attachments",
                                     "trustDate",
                                     "supportingDocumentAttached",
@@ -1248,11 +1312,10 @@
                                     }
                                 },
                                 "attachments": {
+                                    "inline": true,
+                                    "ui:widget": "AttachmentWidget",
                                     "ui:options": {
-                                        "label": false,
-                                        "addable": false,
-                                        "removable": true,
-                                        "ArrayFieldTemplate": "FileInfoTemplate"
+                                        "label": true
                                     }
                                 },
                                 "supportingDocumentAttached": {
@@ -1537,7 +1600,27 @@
                                                 "default": null
                                             }
                                         }
-                                    }
+                                    },
+                                    "default": [
+                                        {
+                                            "isSignedPresent": "No",
+                                            "signDate": null,
+                                            "signDesignation": "",
+                                            "signType": "Owner"
+                                        },
+                                        {
+                                            "isSignedPresent": "No",
+                                            "signDate": null,
+                                            "signDesignation": "",
+                                            "signType": "Joint Owner"
+                                        },
+                                        {
+                                            "isSignedPresent": "No",
+                                            "signDate": null,
+                                            "signDesignation": "",
+                                            "signType": "Irrevocable Beneficiary"
+                                        }
+                                    ]
                                 }
                             }
                         }

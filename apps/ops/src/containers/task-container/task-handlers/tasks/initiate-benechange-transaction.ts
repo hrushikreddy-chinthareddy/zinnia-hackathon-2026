@@ -125,7 +125,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                 return {
                     relationshipToParty: role?.relationshipToParty ?? 'OTHER',
                     isPerStirpes: bene.isPerStirpes ?? 'No',
-                    isIrrevocable: bene.isIrrevocable ?? 'No',
+                    isIrrevocable: bene.isIrrevocable ?? false,
                     action: 'UPDATE',
                     partyRole: {
                         beneficiaryRole:

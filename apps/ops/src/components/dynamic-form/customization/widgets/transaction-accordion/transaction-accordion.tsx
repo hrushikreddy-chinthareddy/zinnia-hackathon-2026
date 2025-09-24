@@ -17,7 +17,8 @@ const TransactionAccordion = ({
 }: WidgetProps) => {
     const { ObjectField } = registry.fields;
     const { tabTitle, showAddBtn, showDeleteBtn, hideAccordion } = options;
-    const { isIrrevocableBene } = formContext.customData.signatureData;
+    const isIrrevocableBene =
+        formContext.customData.signatureData?.isIrrevocableBene || false;
 
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const [heights, setHeights] = useState<PanelHeights>({});
