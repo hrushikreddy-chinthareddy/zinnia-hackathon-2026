@@ -1,16 +1,24 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
-import { TFunction, useTranslation } from 'next-i18next';
+import { TFunction } from 'next-i18next';
 
-import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
+import { excludeFields } from './translations/exclude-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
-import { DataTuple, FieldData } from './types';
+import {
+    label,
+    tags,
+    link,
+    linkedField,
+    NestedData,
+    DataField,
+    NestedDataTuple,
+} from './types';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition
@@ -63,20 +71,21 @@ const formatAsSentenceCase = (words: string) => {
 };
 
 /**
- * Formats a section label as a human-readable string
+ * Given a label, a line of business, and a translation function, returns a formatted string for the section label.
+ * If an exact translation is available, it will be used. Otherwise, the function will replace "policy" with "contract" if not a life policy,
+ * apply industry term abbreviations and grammar corrections, and finally capitalize the first letter of the sentence.
  *
- * @param label The section label to format
+ * @param label The label to format
  * @param lineOfBusiness The line of business
- * @returns The formatted section label
+ * @param t The translation function
+ * @returns The formatted section label string
  */
 export const formatAsSectionLabel = (
     label: string,
     lineOfBusiness: LineOfBusiness,
     t: TFunction
 ) => {
-    const { t: tr } = useTranslation(TranslationFiles.COMMON);
-
-    const exactTranslation = tr(`policy.allFields.${label}`, {
+    const exactTranslation = t(`policy.allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -100,20 +109,25 @@ export const formatAsSectionLabel = (
 };
 
 /**
- * Formats a data label as a human-readable string
+ * Formats a data label as a human-readable string, taking into account
+ * industry-specific abbreviations and grammar corrections.
  *
- * @param label The data label to format
- * @param lineOfBusiness The line of business
+ * If an exact translation is available, it will be used. Otherwise, the
+ * function will replace "policy" with "contract" if not a life policy,
+ * apply industry term abbreviations and grammar corrections, and finally
+ * capitalize the first letter of the sentence.
+ *
+ * @param {string} label The data label to format
+ * @param {LineOfBusiness} lineOfBusiness The line of business
+ * @param {TFunction} t The translation function
  * @returns The formatted data label
  */
-const formatAsDataLabel = (
+export const formatAsDataLabel = (
     label: string,
     lineOfBusiness: LineOfBusiness,
     t: TFunction
 ) => {
-    const { t: tr } = useTranslation(TranslationFiles.COMMON);
-
-    const exactTranslation = tr(`policy.allFields.${label}`, {
+    const exactTranslation = t(`policy.allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -149,18 +163,21 @@ const formatAsDataLabel = (
 };
 
 /**
- * Formats a field value as a human-readable string.
- * Depending on the field type, the value will be formatted as a string,
- * match from a map of known values, currency, date, or "--" for empty values.
+ * Formats a nested data tuple or a data field as a human-readable string
  *
- * @param fieldData The field data to format
+ * Attempts to translate enums first, then processes as numeric data if no translation found
+ * If the field name is provided, formats currency and date fields accordingly
+ * If the field data is an object, returns the object as is
+ * Otherwise, returns the field data as a string
+ *
+ * @param fieldData The nested data tuple or the data field to format
  * @param lineOfBusiness The line of business
- * @param fieldName The name of the field being formatted
- * @returns The formatted field value
- *
+ * @param t The translation function
+ * @param fieldName The field name (optional)
+ * @returns The formatted field data as a string
  */
 export const formatAsDataValue = (
-    fieldData: FieldData,
+    fieldData: NestedData | DataField,
     t: TFunction,
     fieldName?: string
 ) => {
@@ -182,33 +199,139 @@ export const formatAsDataValue = (
     if (fieldName && dateFields.has(fieldName))
         return convertKebabedDateString(String(fieldData) || undefined);
 
-    if (typeof fieldData === 'object' && fieldData !== null)
-        return JSON.stringify(fieldData, null, 2); // FIXME: should never be object
+    if (typeof fieldData === 'object') {
+        return fieldData;
+    }
 
     return String(fieldData);
 };
 
 /**
- * Given a tuple of a field name and its value, and a line of business, returns a tuple of a
- * human-readable field name and field value.
+ * Formats a data field tuple as a human-readable string.
  *
- * The human-readable field name is formatted using {@link formatAsDataLabel}, and the
- * human-readable field value is formatted using {@link formatAsDataValue}.
- *
- * @param fieldData The tuple of a field name and its value
+ * @param tuple The data field tuple to format
  * @param lineOfBusiness The line of business
- * @returns A tuple of a human-readable field name and field value
- *
+ * @param t The translation function to use
+ * @param searchValue The search value to filter by
+ * @param fieldLink The field link to filter by
+ * @param fieldLinkedField The linked field to filter by
+ * @returns The formatted data field tuple
  */
 export const formatDataField = (
-    [fieldName, fieldData]: DataTuple,
+    tuple: NestedData | NestedDataTuple,
     lineOfBusiness: LineOfBusiness,
-    t: TFunction
-): [string, string] | null => {
-    // Allow metadata (not rendered directly) via Symbols
-    if (typeof fieldName !== 'string' || fieldData == null) return null;
-    return [
-        formatAsDataLabel(fieldName, lineOfBusiness, t),
-        formatAsDataValue(fieldData, t, fieldName),
-    ];
+    t: TFunction,
+    searchValue?: string,
+    fieldLink?: string,
+    fieldLinkedField?: string
+): NestedData => {
+    if (!isTuple(tuple)) {
+        return null;
+    }
+
+    const [key, data] = tuple;
+    const include =
+        key != null &&
+        typeof key === 'string' &&
+        data != null &&
+        !excludeFields.has(key);
+    const formattedLabel = include && formatAsDataLabel(key, lineOfBusiness, t);
+
+    const formattedData = formatAsDataValue(data, t, key);
+
+    if (typeof formattedData === 'object' && formattedData != null) {
+        const fieldTags = formattedData[tags];
+        const fieldLabel = formattedData[label];
+        const fieldLink = formattedData[link];
+        const fieldLinkedField = formattedData[linkedField];
+        const formattedEntries = removeExcludedAndEmptyFields(
+            Object.entries(formattedData),
+            lineOfBusiness,
+            t,
+            fieldLink,
+            fieldLinkedField,
+            searchValue
+        );
+
+        if (formattedEntries == null) {
+            return null;
+        }
+
+        formattedEntries[tags] = fieldTags;
+        formattedEntries[label] = fieldLabel;
+        formattedEntries[link] = fieldLink;
+        formattedEntries[linkedField] = fieldLinkedField;
+
+        return formattedEntries;
+    }
+
+    const displayIfSearched =
+        include &&
+        formattedLabel &&
+        (!searchValue ||
+            formattedLabel.toLowerCase().includes(searchValue.toLowerCase()) ||
+            formattedData.toLowerCase().includes(searchValue.toLowerCase()));
+
+    if (!displayIfSearched) {
+        return null;
+    }
+
+    const dataTuple: NestedData = [formattedLabel, formattedData];
+
+    if (fieldLinkedField === key) {
+        dataTuple[link] = fieldLink;
+    }
+    return dataTuple;
 };
+
+/**
+ * Remove excluded and empty fields from a nested data tuple.
+ *
+ * @param tuples The nested data tuple to filter.
+ * @param lineOfBusiness The line of business to filter by.
+ * @param t The translation function to use.
+ * @param fieldLink The field link to filter by.
+ * @param linkedField The linked field to filter by.
+ * @param searchValue The search value to filter by.
+ * @param additionalFieldsToExclude Additional fields to exclude from the filtered result.
+ * @returns The filtered nested data tuple.
+ */
+export const removeExcludedAndEmptyFields = (
+    tuples: NestedData,
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction,
+    fieldLink?: string,
+    linkedField?: string,
+    searchValue?: string,
+    additionalFieldsToExclude?: string[]
+): NestedData => {
+    const filteredTuples = tuples
+        ?.map((tuple) => {
+            // Ensure tuple is valid
+            if (!isTuple(tuple)) {
+                return null;
+            }
+            tuple;
+            return !(
+                additionalFieldsToExclude &&
+                new Set(additionalFieldsToExclude).has(tuple[0])
+            )
+                ? formatDataField(
+                      tuple,
+                      lineOfBusiness,
+                      t,
+                      searchValue,
+                      fieldLink,
+                      linkedField
+                  )
+                : null;
+        })
+        .filter((tuple) => tuple !== null);
+    return filteredTuples?.length ? filteredTuples : null;
+};
+
+export const isTuple = (tuple: any): tuple is NestedDataTuple =>
+    tuple != null &&
+    Array.isArray(tuple) &&
+    tuple.length === 2 &&
+    typeof tuple[0] === 'string';

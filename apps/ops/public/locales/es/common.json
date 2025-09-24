@@ -3309,6 +3309,9 @@
             "policy": "póliza",
             "contract": "contrato"
         },
+        "commonPhrases": {
+            "endingIn": "terminando en"
+        },
         "allFields": {
             "policyBasics": "Básicos de {{policyNomenclature}}",
             "effectiveDate": "Fecha de vigencia",
@@ -3624,7 +3627,7 @@
             "underwritingDecision": "Decisión de suscripción",
             "featureId": "ID de característica",
             "featureSubType": "Subtipo de característica",
-            "funds": "Fondos",
+            "combinedFunds": "Fondos",
             "modelId": "ID del modelo",
             "interestGuaranteedPeriod": "Período de interés garantizado",
             "match": "Coincidencia",

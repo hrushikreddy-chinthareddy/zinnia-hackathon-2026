@@ -3287,6 +3287,9 @@
             "policy": "police",
             "contract": "contrat"
         },
+        "commonPhrases": {
+            "endingIn": "se terminant par"
+        },
         "allFields": {
             "policyBasics": "Bases de {{policyNomenclature}}",
             "effectiveDate": "Date d'effet",
@@ -3602,7 +3605,7 @@
             "underwritingDecision": "Décision de souscription",
             "featureId": "ID de caractéristique",
             "featureSubType": "Sous-type de caractéristique",
-            "funds": "Fonds",
+            "combinedFunds": "Fonds",
             "modelId": "ID du modèle",
             "interestGuaranteedPeriod": "Période garantie des intérêts",
             "match": "Appariement",
