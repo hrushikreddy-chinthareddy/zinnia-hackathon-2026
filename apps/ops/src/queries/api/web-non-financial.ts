@@ -51,16 +51,16 @@ export const addBeneChangeTransaction = async (body: any): Promise<any> => {
     try {
         browserLogInfo('webNonFinancial::Adding a transaction', {
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
             function: 'webnonfinancial.addTransaction',
         });
         const { data } = await client.put<any, AxiosResponse>(
-            `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
             body
         );
         browserLogInfo('webNonFinancial::Added a transaction', {
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
             function: 'webnonfinancial.addTransaction',
         });
         return data;
@@ -68,7 +68,7 @@ export const addBeneChangeTransaction = async (body: any): Promise<any> => {
         browserLogError('webNonFinancial::Failed to add transaction', {
             ...parseErrorInformation(error),
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
+            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary`,
             function: 'webnonfinancial.addTransaction',
         });
         return error;
@@ -81,19 +81,20 @@ export const validateTransaction = async (body: any): Promise<any> => {
     try {
         browserLogInfo('BeneficiaryChange::Validating a transaction', {
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
+            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
             function: 'webnonfinancial.validateTransaction',
         });
         const { data } = await client.post<any, AxiosResponse>(
-            `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
+            `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
             body
         );
+
         return data;
     } catch (error: any) {
         browserLogError('BeneficiaryChange::Failed to validate transaction', {
             ...parseErrorInformation(error),
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
+            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
             function: 'webnonfinancial.validateTransaction',
         });
         return error;
