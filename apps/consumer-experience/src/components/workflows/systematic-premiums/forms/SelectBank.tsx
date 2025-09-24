@@ -19,6 +19,7 @@ import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
 import { SystematicPremiumsAction } from '@/components/providers/systematic-premiums/types';
 import { useSystematicPremiums } from '@/components/providers/systematic-premiums/useSystematicPremiums';
+import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
@@ -165,6 +166,16 @@ export const SelectBank = ({
                 className={styles.banksContainer}
               >
                 {activeBanks?.map((bankDetail, index) => {
+                  if (bankDetail.pending) {
+                    return (
+                      <SkeletonLoader
+                        className={styles.bankContainer}
+                        key={index}
+                        width={'100%'}
+                        height={'75px'}
+                      />
+                    );
+                  }
                   return (
                     <Controller
                       name="payorBank"

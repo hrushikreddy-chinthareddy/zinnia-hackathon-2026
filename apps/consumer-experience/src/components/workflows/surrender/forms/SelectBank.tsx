@@ -34,6 +34,7 @@ import {
   SurrenderAction,
 } from '@/components/providers/surrender/types';
 import { useSurrender } from '@/components/providers/surrender/useSurrender';
+import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
@@ -247,6 +248,16 @@ export const SelectBank = ({
                 className={styles.banksContainer}
               >
                 {activeBanks?.map((bankDetail, index) => {
+                  if (bankDetail.pending) {
+                    return (
+                      <SkeletonLoader
+                        className={styles.bankContainer}
+                        key={index}
+                        width={'100%'}
+                        height={'75px'}
+                      />
+                    );
+                  }
                   return (
                     <label
                       key={`${index}-${bankDetail.branchName}`}

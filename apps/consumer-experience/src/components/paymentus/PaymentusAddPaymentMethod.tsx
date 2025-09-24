@@ -4,6 +4,7 @@ import { Icon, IconType, SideSheet } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 
 import { QueryKeys } from '@/queries/query-keys';
+import { PaymentMethod } from '@/types/payment';
 import { FormSteps } from '@/types/transactions';
 
 import {
@@ -53,6 +54,18 @@ export const PaymentusAddPaymentMethod = ({
           `${message.BankName || message.Type} ${removeStars(message.MaskedAccountNumber)} is being added. `
         );
         setStep(FormSteps.SUCCESS);
+
+        //Add pending bank to the cache so we can display a skeleton loader int he list.
+        queryClient.setQueryData(
+          [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
+          (old: PaymentMethod[]) => [
+            ...old,
+            {
+              pending: true,
+            },
+          ]
+        );
+        //Trigger a cache clear so that when it updates, the skeleton loader gets replaced with the new bank
         queryClient.invalidateQueries({
           queryKey: [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
         });

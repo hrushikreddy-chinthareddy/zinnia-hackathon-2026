@@ -20,6 +20,7 @@ import { AccountNumber } from '@/components/pii/AccountNumber';
 import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
 import { OttpAction } from '@/components/providers/one-time-premium-payment/types';
+import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { PaymentMethod } from '@/types/payment';
 import { lineOfBusinessUrlPath } from '@/utils/data';
@@ -98,6 +99,16 @@ export const SelectBank = ({
           className={styles.banksContainer}
         >
           {activeBanks?.map((bankDetail, index) => {
+            if (bankDetail.pending) {
+              return (
+                <SkeletonLoader
+                  className={styles.bankContainer}
+                  key={index}
+                  width={'100%'}
+                  height={'75px'}
+                />
+              );
+            }
             return (
               <div
                 key={`${index}-${bankDetail.branchName}`}
