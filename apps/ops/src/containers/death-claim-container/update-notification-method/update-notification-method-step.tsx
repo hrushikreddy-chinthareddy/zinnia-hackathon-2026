@@ -18,6 +18,8 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
+import { CaseIdentifier } from '@deps/models/case/case';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { updateNotificationMethod } from '@deps/queries/api/web-non-financial';
 
@@ -72,6 +74,10 @@ const UpdateNotificationMethodStep = ({
     const [errors, setErrors] = useState<FormValidationErrors>();
 
     const partyData = { ...transactionData?.entity?.party };
+    const caseId = getCaseIdentifierValue(
+        transactionData?.identifiers || [],
+        CaseIdentifier.ZlCaseId
+    );
 
     const validateForm = () => {
         switch (notificationMethodSelected) {
@@ -306,6 +312,7 @@ const UpdateNotificationMethodStep = ({
                     planCode={policy?.product?.planCode}
                     policyNumber={policy?.policyNumber}
                     parentPage={ParentPage.None}
+                    leaveTransactionLink={`/cases/${caseId}/`}
                 />
             }
         >
