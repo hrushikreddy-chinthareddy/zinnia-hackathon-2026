@@ -22,8 +22,8 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
-import NewAgentParty from '@deps/helpers/policy-sor/NewAgentParty';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
@@ -135,30 +135,31 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
 
     const clientCode = policy?.carrierId;
     const { data: agentData } = useQueries({
-        queries: agentParties?.map((agent) => ({
+        queries: agentParties?.map((party) => ({
             queryKey: [
                 'agentData',
-                agent.agentExternalId,
+                party.agentExternalId,
                 clientCode,
                 policy?.policyNumber,
                 policy?.product?.planCode,
-                agent?.partyId,
+                party?.partyId,
             ],
             queryFn: () =>
                 getPomAgentData({
-                    id: agent?.agentExternalId,
+                    id: party?.agentExternalId,
                     policyNumber: policy?.policyNumber,
                     planCode: policy?.product?.planCode,
                 }),
             enabled:
-                !!agent.agentExternalId &&
+                !!party.agentExternalId &&
                 !!policy.policyNumber &&
                 !!policy.product?.planCode,
             select: (data) =>
                 data
-                    ? new NewAgentParty(data as PomAgentData, agent)
+                    ? new PomAgentParty(data as PomAgentData, party) // [PomAgentParty] => { ...party: data }
                     : undefined,
         })),
+
         combine: (results) => {
             return {
                 data: results.map((result) => result.data),
@@ -174,6 +175,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
             filterTagList: selectedTagList,
         });
     };
+
     // If `ALL` is selected, do not filter
     let filteredNameTags =
         peopleRolesFilter.filterValue === 'All'
@@ -192,14 +194,16 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
     // Add agent data if there is any
     if (agentData && agentData.length > 0) {
         filteredNameTags = filteredNameTags.map((tag) => {
-            const isAgent = agentData.some(
-                (agent) => agent?.partyId === tag.partyId
-            );
+            const isAgent = agentData.some((agent) => {
+                return agent?.party?.agentExternalId === tag.agentExternalId;
+            });
             if (isAgent) {
                 const agent = agentData.find(
-                    (agent) => agent?.partyId === tag.partyId
+                    (agent) =>
+                        agent?.party?.agentExternalId === tag.agentExternalId
                 );
-                return agent?.party as NameTag;
+                // NOTE: this is complicated but POM and Zahara partyId for the same agent DO NOT match - MR
+                return { ...agent?.party, partyId: tag.partyId } as NameTag;
             } else {
                 return tag;
             }
@@ -274,7 +278,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                         <div className="flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
                             <ManagePeople policy={policyDetails} />
                         </div>
-
                         <div>
                             {isBeneficiarySelected && (
                                 <div className="w-full">

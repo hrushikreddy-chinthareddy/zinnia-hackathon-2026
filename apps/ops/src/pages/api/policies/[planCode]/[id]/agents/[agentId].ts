@@ -50,10 +50,12 @@ export default withAuthAndLogging(
         }
 
         try {
+            const carrierId = policyRequest?.data?.data?.carrierId;
             const agentDataUrl = `${apiServerBaseUrl}/distributors/v1/producers/search?limit=10&offset=0`;
             const agentDataBody = {
                 searchType: 'SellingCode',
                 searchValue: agentId,
+                carrierShortName: carrierId,
             };
 
             const agentDataResponse = await EnterpriseTokenApi.post(
@@ -77,6 +79,8 @@ export default withAuthAndLogging(
                 return res.json(
                     agentPartySanitizer(agentDataResponseObject.results[0])
                 );
+            } else {
+                return res.status(200).json({ message: 'No results found' });
             }
         } catch (error: any) {
             logWarn('getPolicyAgentDetails:error', {

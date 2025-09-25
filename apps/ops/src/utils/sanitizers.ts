@@ -563,7 +563,7 @@ export const agentPartySanitizer = (
             socialSecurityNumber: formatSSN(socialSecurityNumber),
         };
     } catch (e) {
-        logErrorWithoutContext('sanitizers::newAgentParty::error', {
+        logErrorWithoutContext('sanitizers::PomAgentParty::error', {
             ...parseErrorInformation(e),
         });
         throw e;
