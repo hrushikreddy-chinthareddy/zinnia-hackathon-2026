@@ -2095,6 +2095,7 @@
                 "mail": "Adresse postale"
             },
             "startNotification": "Historique",
+            "packets": "Paquets",
             "sendTo": "Envoyer à",
             "contactMethod": "Méthode de contact",
             "scheduledNotification": "Tentative {{followup}} programmée pour {{date}}",
