@@ -132,7 +132,7 @@ const fetchCaseLegacy = withLogging(
   }
 );
 
-const searchCases = withLogging(
+export const searchCases = withLogging(
   async (
     searchData: CaseSearchCriteria,
     loggingCtx: CommonLogContext
@@ -177,39 +177,3 @@ const searchCases = withLogging(
     functionName: 'searchCases',
   }
 );
-
-export const searchCasesByPolicyNumber = async ({
-  policyNumber,
-  // TODO: i'm assuming i should include this because policyNumber is not
-  // guaranteed unique?
-  carrierCode: _carrierCode,
-  loggingCtx,
-}: {
-  policyNumber: string;
-  carrierCode?: string;
-  loggingCtx: CommonLogContext;
-}): Promise<CaseSearchServiceResponse> => {
-  try {
-    // TODO: do i need to transform this response at all?
-    const response = await searchCases({ policyNumber }, loggingCtx);
-
-    if (!response.data?.data) {
-      throw new Error('No data in response');
-    }
-    return {
-      data: response.data.data,
-      error: null,
-    };
-  } catch (error) {
-    logError('error thrown in searchCasesByPolicyNumber', { error });
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        // TODO: fix this to be the status
-        status: 500,
-        name: 'searchCasesByPolicyNumber Error',
-      },
-    };
-  }
-};
