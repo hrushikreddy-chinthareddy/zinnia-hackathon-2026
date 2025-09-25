@@ -234,7 +234,7 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
     },
 
     getPayload: (task: any, logCtx?: LoggingContext) => ({
-        category: ['Form', 'Signature', 'Account Information', 'Data Entry'],
+        category: ['Beneficiary Change'],
         businessProcess: task?.process,
         carrier: task?.carrier,
         policyNumber: task?.data?.policyNumber,
