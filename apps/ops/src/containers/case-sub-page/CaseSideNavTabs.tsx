@@ -74,7 +74,11 @@ export default function CaseSideNavTabs({
                         </TabTrigger>
                     ))}
                 </TabList>
-                <TabContent className="w-full" value={TabViews.people}>
+                <TabContent
+                    className="w-full"
+                    value={TabViews.people}
+                    tabIndex={undefined} // Prevent focus state as this is not interactive content
+                >
                     <Parties
                         parties={sideNavData.parties}
                         caseStatus={caseDetails.caseStatus}
