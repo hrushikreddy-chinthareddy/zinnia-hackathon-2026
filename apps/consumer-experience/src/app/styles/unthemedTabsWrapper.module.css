@@ -1,7 +1,6 @@
 .unthemedTabsWrapper {
   display: flex;
   gap: var(--measure-dimension-gap-xl);
-  padding-left: var(--measure-dimension-padding-2xl);
 
   button,
   a {

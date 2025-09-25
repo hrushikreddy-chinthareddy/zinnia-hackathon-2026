@@ -125,9 +125,6 @@ export const DocumentsView = async ({
   return (
     <div className="container">
       <DocumentsTabs
-        lineOfBusiness={lineOfBusiness}
-        planCode={planCode}
-        policyNumber={policyNumber}
         activeTab={activeTab}
         showTaxDocuments={showTaxDocuments}
       />

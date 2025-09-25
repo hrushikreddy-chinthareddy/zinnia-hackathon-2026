@@ -16,6 +16,7 @@ import { getPolicyForHeaderDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
+import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -27,11 +28,13 @@ export const metadata: Metadata = {
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: {
     planCode: string;
     policyNumber: string;
   };
+  searchParams: { type: DocumentCategory };
 }) {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
@@ -71,7 +74,11 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <SurrenderedPolicy />
+          <SurrenderedPolicy
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
           <CallForAssistance customInstruction="with surrender questions." />
         </Suspense>
       );

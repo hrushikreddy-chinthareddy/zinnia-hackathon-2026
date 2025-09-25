@@ -11,13 +11,14 @@ import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOver
 import { Coverage } from '@/components/policy-overview/Coverage';
 import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
-import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
+import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/surrendered/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { LargeSkeleCard } from '@/components/skeleton-loader/policy-page/policy-page-skeletons';
 import { getPolicyForHeaderDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
+import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -28,11 +29,13 @@ export const metadata: Metadata = {
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: {
     planCode: string;
     policyNumber: string;
   };
+  searchParams: { type: DocumentCategory };
 }) {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
@@ -75,8 +78,11 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <SurrenderedPolicy />
-          <CallForAssistance customInstruction="with surrender questions." />
+          <SurrenderedPolicy
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
         </Suspense>
       );
     }

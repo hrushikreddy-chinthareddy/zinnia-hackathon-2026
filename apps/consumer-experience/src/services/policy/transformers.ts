@@ -637,7 +637,12 @@ export const transformPolicyStatusDetails = (
     };
   }
 
-  if (freeLookActive && policyStatus !== PolicyStatus.CANCELEDFREELOOK) {
+  if (
+    freeLookActive &&
+    policyStatus !== PolicyStatus.CANCELEDFREELOOK &&
+    // @TODO: verify which statuses would be valid to display freeLookActive
+    policyStatus !== PolicyStatus.SURRENDERED
+  ) {
     return {
       policyStatus: FeatureType.FREELOOK,
       endDate: freeLookFeature?.endDate,

@@ -87,12 +87,6 @@ export const routeMap: Record<RouteKey, RouteMap> = {
     source: '/loans',
     title: 'Loans',
   },
-  [RouteKey.MY_COVERAGE]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/my-coverage',
-    source: '/my-coverage',
-    title: 'Coverage',
-  },
   [RouteKey.NOTIFICATIONS]: {
     destination:
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/notifications',
@@ -137,6 +131,13 @@ export const routeMap: Record<RouteKey, RouteMap> = {
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/account/withdrawals',
     source: '/withdrawals',
     title: 'Withdrawals',
+  },
+  // @TODO CUI-1070: This is moved for now until route restrictions for subroutes under /my-coverage are fixed
+  [RouteKey.MY_COVERAGE]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/my-coverage',
+    source: '/my-coverage',
+    title: 'Coverage',
   },
 };
 
