@@ -3154,7 +3154,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'MINIMUM_NON_MEC',
                                             text: {
-                                                en: 'Minimum Non-MEC',
+                                                en: 'Minimum Non-MEC (Max Cash Value)',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
