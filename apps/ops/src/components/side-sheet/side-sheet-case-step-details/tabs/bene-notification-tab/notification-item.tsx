@@ -11,14 +11,18 @@ import { useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import {
     DeliveryMethods,
     NotificationStatus,
     INotification,
     FollowupId,
+    LetterPartyRoles,
+    FollowUpLetter,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Title, { TitleVariant } from '@deps/components/title/title';
+import DocumentCard from '@deps/components/workflows/document/document-card';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import {
     formatFaxNumber,
@@ -37,6 +41,7 @@ import {
 } from './bene-notification-tab.helpers';
 
 interface NotificationItemProps {
+    carrier: string;
     notification: INotification;
     index: number;
     notifications: INotification[];
@@ -104,9 +109,14 @@ function DeliveryMethodDetails({
 const getSentNotificationStatusText = (
     notification: INotification,
     attemptCount: number,
+    carrier: string,
     t: TFunction
 ) => {
-    const { sendDateTime, deliveryMethod } = notification;
+    const { sendDateTime, deliveryMethod, followupLetters } = notification;
+    const beneFollowUpLetter = followupLetters?.find(
+        (letter: FollowUpLetter) => letter.letterParty === LetterPartyRoles.BENE
+    );
+
     const dateText = sendDateTime ? standardMonthDayYear(sendDateTime) : '';
     const notificationText = t('caseOverview.notifications.sendNotification', {
         followup: attemptCount,
@@ -114,6 +124,34 @@ const getSentNotificationStatusText = (
     const [isOpen, setIsOpen] = useState(false);
     const handleStateChange = (state: boolean) => {
         setIsOpen(state);
+    };
+
+    const renderBenePacketDetails = (beneFollowUpLetter: FollowUpLetter) => {
+        const { documentId, documentDisplayName, fileType } =
+            beneFollowUpLetter;
+        return (
+            <>
+                <Content
+                    variant={ContentVariant.BodySmBold}
+                    details={t('caseOverview.notifications.packets') as string}
+                />
+                <DocumentCard
+                    key={'documentId'}
+                    cardClass="mt-2 mb-4"
+                    document={{
+                        documentId: documentId ?? '',
+                        displayName:
+                            documentDisplayName &&
+                            `${documentDisplayName}_${attemptCount}`,
+                        docTypeView: DocumentTypeView.Correspondence,
+                        carrier: carrier,
+                    }}
+                    isViewButtonHiddenForEMLType={
+                        fileType?.toLowerCase() === 'eml'
+                    }
+                />
+            </>
+        );
     };
 
     return (
@@ -143,7 +181,10 @@ const getSentNotificationStatusText = (
                         </div>
                         <div className="flex items-center gap-2">
                             {getPreferredDeliveryIcon(deliveryMethod)}
-                            <AccordionTrigger className="flex items-center">
+                            <AccordionTrigger
+                                data-testid="accordion-trigger"
+                                className="flex items-center"
+                            >
                                 <ChevronDown
                                     className={`chevron-down rotate-270 transition-transform duration-300 lg:mt-0 ${
                                         isOpen ? 'rotate-0' : ''
@@ -155,6 +196,8 @@ const getSentNotificationStatusText = (
                         </div>
                     </AccordionHeader>
                     <AccordionContent className="pt-4">
+                        {beneFollowUpLetter?.documentId &&
+                            renderBenePacketDetails(beneFollowUpLetter)}
                         <Content
                             variant={ContentVariant.BodySmBold}
                             details={
@@ -331,6 +374,7 @@ const getNextResetNotification = (
 
 export const NotificationItem = ({
     notification,
+    carrier,
     index,
     notifications,
 }: NotificationItemProps) => {
@@ -363,7 +407,12 @@ export const NotificationItem = ({
                 getReceiveNotificationStatusText(notification, t)}
             {notification.send === true &&
                 notification.followupId !== FollowupId.fifth &&
-                getSentNotificationStatusText(notification, attemptCount, t)}
+                getSentNotificationStatusText(
+                    notification,
+                    attemptCount,
+                    carrier,
+                    t
+                )}
             {notification.followupStatus === NotificationStatus.Resend &&
                 getResendNotificationStatusText(notification, t)}
             {notification.followupStatus === NotificationStatus.Reset &&

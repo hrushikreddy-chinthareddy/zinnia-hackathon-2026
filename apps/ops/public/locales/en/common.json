@@ -2096,6 +2096,7 @@
                 "mail": "Mailing Address"
             },
             "startNotification": "History",
+            "packets": "Packets",
             "sendTo": "Send to",
             "contactMethod": "Contact Method",
             "scheduledNotification": "Attempt {{followup}} scheduled for {{date}}",

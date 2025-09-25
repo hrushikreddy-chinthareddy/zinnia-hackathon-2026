@@ -200,6 +200,7 @@ const StartStep = ({
                             }) => (
                                 <DocumentCard
                                     key={doc.documentId}
+                                    cardClass="w-[455px] mb-2"
                                     document={{
                                         documentId: doc.documentId,
                                         documentName: doc.documentName,
