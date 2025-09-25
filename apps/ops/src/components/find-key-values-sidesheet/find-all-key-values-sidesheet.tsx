@@ -12,6 +12,8 @@ import {
     FieldTypes,
     FieldSize as BloomFieldSize,
     Link,
+    Popover,
+    PopoverPlacement,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
@@ -332,37 +334,38 @@ const KeyValueNestedSubSections = ({
 const DataField = ({
     dataField,
     link,
+    toolTip,
     searchValue,
 }: {
     dataField: [string, string];
     link?: string;
+    toolTip?: string;
     searchValue: string;
 }) => {
     const [fieldLabel, fieldData] = dataField;
     return (
         <DotContainer
             dotLeftSide={
-                <div>
+                <div className={styles.fieldLabel}>
                     <Highlighter text={fieldLabel} highlights={[searchValue]} />
-                    {/* FIXME: add tooltip
-                    {item.tooltip && (
+                    {toolTip && (
                         <Popover
-                            placement={
-                                PopoverPlacement.TopRight
+                            title={toolTip}
+                            trigger={
+                                <Icon
+                                    type={IconType.CIRCLE_INFO}
+                                    color="var(--color-base-icon-icon-tooltip)"
+                                    small
+                                />
                             }
-                            title={item.tooltip}
-                            body={
-                                item.tooltipBody
-                            }
+                            placement={PopoverPlacement.TopLeft}
                         >
-                            <CircleInfoIcon
-                                height={'16px'}
-                                width={'16px'}
-                                className="text-primary"
-                            />
+                            <div className="typography-content-body-sm">
+                                uhm? Now, what is the deal here? lots of text
+                                maybe?
+                            </div>
                         </Popover>
                     )}
-                    */}
                 </div>
             }
             dotLeftSideClassName="typography-content-body-sm"

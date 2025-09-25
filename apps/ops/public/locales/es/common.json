@@ -3312,6 +3312,31 @@
         "commonPhrases": {
             "endingIn": "terminando en"
         },
+        "toolTips": {
+            "preTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base que antecede a la promulgación de la Ley de Equidad Fiscal y Responsabilidad.",
+            "preTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de que se promulgó la Ley de Equidad Fiscal y Responsabilidad en 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de que se promulgó la Ley Técnica y de Ingresos Misceláneos en 1988.",
+            "netAmountAtRisk": "Este factor ayuda a la compañía de seguros a entender cuánto dinero está en riesgo si el asegurado en el {{policyNomenclature}} falleciera hoy. Se utiliza para fines financieros y contables.",
+            "modifiedEndowmentContractAuthorization": "Esto describe qué proceso de autorización, si lo hay, se requiere para transacciones que puedan convertir el {{policyNomenclature}} en un MEC, que significa contrato de dotación modificado.",
+            "projectedLapseIndicator": "Si es verdadero, significa que se espera que el {{policyNomenclature}} caduque dentro del próximo año de {{policyNomenclature}} basado en su valor de cuenta actual, pagos de primas, costo del seguro (COI) y otros cargos de la póliza.",
+            "loanInterestMethod": "Esto le indica cómo se aplica el interés del préstamo. Atrasado significa que el interés se cobra al final del año del {{policyNomenclature}}. Esto significa que un pago a mitad de año puede reducir el monto de interés diario y, por lo tanto, el interés adeudado al final del año. Anticipado significa que la aseguradora cobra el interés anual del préstamo por adelantado el día que se inicia el préstamo. Así que si el préstamo se toma a mitad del año de la póliza, se cobra el interés por la mitad restante del año al inicio del préstamo. Si el reembolso del préstamo ocurre dentro del año de la póliza, normalmente no hay reembolso del interés pagado por adelantado.",
+            "annualWithdrawalLimitNoCoverageDecrease": "Los propietarios pueden retirar esta cantidad sin afectar su cobertura. En otras palabras, pueden retirar esta cantidad y mantener intacto su beneficio por fallecimiento.",
+            "marketValueAdjustmentIndicator": "Si es verdadero, indica si se aplica un ajuste por valor de mercado a este contrato o inversión.",
+            "remainingRequiredMinimumDistributionAmount": "Esto muestra cuánto de la cantidad RMD queda por tomar para el año en curso.",
+            "sevenPayTestBasis": "Esto es cuánto ha pagado el propietario en primas (menos cualquier retiro) durante la ventana activa de la prueba de prima de 7 pagos.",
+            "deathBenefitOption": "Algunas pólizas incluyen la opción de aumentar la cobertura con el tiempo. El beneficio por fallecimiento nivelado se mantiene igual durante la vida del {{policyNomenclature}}. Un beneficio por fallecimiento creciente aumenta a medida que aumenta el valor en cuenta de la póliza.",
+            "cumulativeGrossDeathBenefitAmount": "Esto es lo que paga el {{policyNomenclature}} cuando fallece el asegurado. Generalmente es igual al beneficio por fallecimiento base (también conocido como el monto nominal) pero puede incluir adiciones (como primas devueltas) en algunos casos.",
+            "netDeathBenefit": "Esto es aproximadamente cuánto recibirán los beneficiarios de un reclamo por fallecimiento. La cantidad refleja el beneficio por fallecimiento bruto total menos los préstamos pendientes. No incluye cargos por intereses que solo pueden calcularse en el momento en que se procesa un reclamo por fallecimiento. Considérelo una cantidad útil pero inexacta.",
+            "minimumCoverageAmount": "Esta es la cantidad mínima a la que un propietario puede reducir su beneficio por fallecimiento. Menor cobertura puede conllevar primas más bajas y consecuencias fiscales negativas. Si la disminución crea una brecha lo suficientemente grande entre el beneficio por fallecimiento y las primas pagadas, la póliza puede no cumplir las pruebas normativas y perder ventajas fiscales. Todos los cambios reinician el período de siete años para la prueba de 7 pagos.",
+            "maximumCoverageAmount": "Esta es la cantidad máxima a la que un propietario puede aumentar su beneficio por fallecimiento. Las solicitudes de aumento deben pasar por el proceso de suscripción para su aprobación. Todos los cambios reinician el período de siete años para la prueba de 7 pagos.",
+            "minimumCoverageDecreaseAmount": "Esto se refiere a la reducción mínima en cobertura que un propietario puede hacer por año de {{policyNomenclature}}.",
+            "maximumCoverageDecreaseAmount": "Esto se refiere a la mayor reducción en cobertura que un propietario puede hacer por año de {{policyNomenclature}}.",
+            "minimumCoverageIncreaseAmount": "Esto se refiere al incremento mínimo por el cual un propietario puede aumentar su cobertura en un solo año de {{policyNomenclature}}.",
+            "maximumCoverageIncreaseAmount": "Esto se refiere al incremento máximo por el cual un propietario puede aumentar su cobertura en un solo año de {{policyNomenclature}}.",
+            "grossDeathBenefitAmount": "Este es el monto de esta capa de cobertura o anexo que se añadirá al beneficio por fallecimiento.",
+            "featureIndicator": "Si es verdadero, significa que una característica determinada está incluida en el contrato.",
+            "reducedPaidUpFaceAmount": "Este es el monto reducido del beneficio por fallecimiento que resulta si el propietario elige la opción de pago reducido (RPU)."
+        },
         "allFields": {
             "policyBasics": "Básicos de {{policyNomenclature}}",
             "effectiveDate": "Fecha de vigencia",
