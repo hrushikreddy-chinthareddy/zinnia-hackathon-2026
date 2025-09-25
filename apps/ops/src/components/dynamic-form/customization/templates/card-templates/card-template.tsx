@@ -419,15 +419,22 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
     );
 };
 
-export const DocumentActions = ({ document, t }: any) => {
+export const DocumentActions = ({
+    document,
+    t,
+    isViewButtonHiddenForEMLType = false,
+}: any) => {
     const docId =
         document.documentId ||
         ((document as DocumentWithSource).documentID as string);
+    const documentType =
+        (document as DocumentWithSource).documentSource ||
+        (document as MetadataSearchResponse).documentClassification ||
+        document.docTypeView;
 
     const [loading, download] = useDocumentDownload(
         docId,
-        (document as DocumentWithSource).documentSource ||
-            (document as MetadataSearchResponse).documentClassification,
+        documentType,
         document.carrier,
         document.displayName || docId,
         document.fileType
@@ -440,19 +447,24 @@ export const DocumentActions = ({ document, t }: any) => {
 
     return (
         <>
-            <div className="px-4">
-                <DocumentPreviewer
-                    className="flex max-w-[234px] pt-1"
-                    activeDocType={DocumentTypeView.Case}
-                    carrier={document?.carrier || ''}
-                    displayName={document?.displayName || ''}
-                    documentId={
-                        document?.documentId ?? (document?.documentID as string)
-                    }
-                >
-                    {t('general.view')}
-                </DocumentPreviewer>
-            </div>
+            {!isViewButtonHiddenForEMLType && (
+                <div className="px-4">
+                    <DocumentPreviewer
+                        className="flex max-w-[234px] pt-1"
+                        activeDocType={
+                            document.docTypeView ?? DocumentTypeView.Case
+                        }
+                        carrier={document?.carrier || ''}
+                        displayName={document?.displayName || ''}
+                        documentId={
+                            document?.documentId ??
+                            (document?.documentID as string)
+                        }
+                    >
+                        {t('general.view')}
+                    </DocumentPreviewer>
+                </div>
+            )}
             <div className="px-2">
                 <NavElement
                     onClick={handleClick}

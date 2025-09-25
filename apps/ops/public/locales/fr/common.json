@@ -2095,6 +2095,7 @@
                 "mail": "Adresse postale"
             },
             "startNotification": "Historique",
+            "packets": "Paquets",
             "sendTo": "Envoyer à",
             "contactMethod": "Méthode de contact",
             "scheduledNotification": "Tentative {{followup}} programmée pour {{date}}",
@@ -6051,6 +6052,10 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "paiement"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
             }
@@ -8078,10 +8083,11 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Vues de la page Zinnia Live"
+                "title": "Vues de la page Zinnia Live",
+                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vues de cas Zinnia Live par transaction"
+                "title": "Top 5 des cas de Zinnia Live"
             }
         }
     },

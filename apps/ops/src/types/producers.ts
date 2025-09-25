@@ -1,18 +1,31 @@
+import type { LiteralUnion, ValueOf } from 'type-fest';
+
 export interface GetHierarchyResponse {
     producerLookupId: string;
     carrier: Carrier;
     products: Product[];
     effectiveDate: string;
-    expiryDate: string;
+    expiryDate?: string;
     upline: Upline | null;
-    payTo: PayTo;
-    paidAffiliate: PaidAffiliate;
+    payTo?: PayTo;
+    paidAffiliate?: PaidAffiliate;
     level: number;
     sellingCode: string;
-    role: string;
+    role: ProducerRole;
 }
 
-export const MAIN_AGENCY_ROLE = 'GeneralAgency';
+export const PRODUCER_ROLES = {
+    GENERAL_AGENCY: 'GeneralAgency',
+    BROKER_DEALER: 'BrokerDealer',
+    INDEPENDENT_MARKETING_ORGANIZATION: 'IndependentMarketingOrganization',
+    THIRD_PARTY_MARKETER: 'ThirdPartyMarketer',
+    REGISTERED_INVESTMENT_ADVISOR: 'RegisteredInvestmentAdvisor',
+    REP: 'Rep',
+} as const;
+
+export type ProducerRole = LiteralUnion<ValueOf<typeof PRODUCER_ROLES>, string>;
+
+export const MAIN_AGENCY_ROLE = PRODUCER_ROLES.GENERAL_AGENCY;
 
 export type AgencyRole =
     | typeof MAIN_AGENCY_ROLE
@@ -25,7 +38,7 @@ export type AgencyRole =
 export interface GetDownlineResponse {
     sellingCode: string | null;
     npn: string | null;
-    role: AgencyRole;
+    role: ProducerRole;
     level: number;
     isActive: boolean;
     firstName?: string;
@@ -37,8 +50,8 @@ export interface GetDownlineResponse {
 export interface Carrier {
     carrierShortName: string;
     name: string;
-    externalMasterId: string;
-    externalCarrierCode: string;
+    externalMasterId?: string;
+    externalCarrierCode?: string;
     id: string;
     parentCompany?: Carrier;
     childrenCompanies?: Carrier[];
@@ -58,12 +71,12 @@ export interface UplineItem {
     addresses: Address[];
     producerType: string;
     nationalProducerNumber: string;
-    payoutFrequencyPreference: string;
-    paymentMethod: string;
+    payoutFrequencyPreference?: string;
+    paymentMethod?: string;
     paymentInfo?: PaymentInfo;
     hierarchyId: string;
     level: number;
-    role: string;
+    role: ProducerRole;
     sellingCode: string;
 }
 
@@ -131,9 +144,10 @@ export const PRODUCER_SEARCH_RESULT_TYPES = {
     CORPORATION: 'Corporation',
 } as const;
 
-export type ProducerSearchResultType =
-    | (typeof PRODUCER_SEARCH_RESULT_TYPES)[keyof typeof PRODUCER_SEARCH_RESULT_TYPES]
-    | (string & {});
+export type ProducerSearchResultType = LiteralUnion<
+    ValueOf<typeof PRODUCER_SEARCH_RESULT_TYPES>,
+    string
+>;
 
 export interface ProducerSearchResult {
     name: string;

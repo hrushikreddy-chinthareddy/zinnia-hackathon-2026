@@ -3,6 +3,7 @@ import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 import { Result, t, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
+import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
@@ -64,10 +65,7 @@ const ridersSchema = t.object(
                 'values',
                 t.union(t.array(t.string), t.undefined)
             ),
-            t.optionalProperty(
-                'ownerAge',
-                t.union(t.array(t.number), t.undefined)
-            )
+            t.optionalProperty('ownerAge', t.union(t.string, t.undefined))
         )
     ),
     t.optionalProperty(
@@ -120,10 +118,7 @@ const ridersSchema = t.object(
                 'values',
                 t.union(t.array(t.string), t.undefined)
             ),
-            t.optionalProperty(
-                'faceAmount',
-                t.union(t.array(t.string), t.undefined)
-            )
+            t.optionalProperty('faceAmount', t.union(t.number, t.undefined))
         )
     ),
     t.optionalProperty(
@@ -292,7 +287,8 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty(
         'nonNicotineConversionAtAge18',
         t.union(t.array(t.string), t.undefined)
-    )
+    ),
+    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -415,8 +411,9 @@ function createIllustrationPayload(
             participants: [
                 {
                     participantId: uuid(),
-                    issueAge:
-                        values.riders.ownerWaiverOfDeductionRider?.ownerAge,
+                    issueAge: calculateAgeNumber(
+                        values.riders.ownerWaiverOfDeductionRider?.ownerAge
+                    ),
                 },
             ],
         });
@@ -739,6 +736,7 @@ function createIllustrationPayload(
                 distributions: {
                     frequency: FARMERS_HARDCODED_DATA.distributionFrequency,
                     sequence: distributionSequence,
+                    loanInterestOption: values.loanInterestOption,
                 },
             }),
     };

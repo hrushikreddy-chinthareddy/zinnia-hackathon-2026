@@ -24,7 +24,6 @@ import {
 import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
-import { ReactComponent as UserGroup } from '@deps/styles/elements/icons/icons_outlined/user-group.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
@@ -32,7 +31,10 @@ import { NameCard } from '../people-data-cards/name-card/name-card';
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 
 interface InteriorPeoplePageHeaderContainerProps {
-    selectedPolicyParty?: Party;
+    selectedPolicyParty?: Party & {
+        producerName?: string;
+        producerType?: string;
+    };
     selectedPolicyPartyRoles?: PolicyPartyRoles[];
     editable?: boolean;
     partyStatus?: PartyStatus;

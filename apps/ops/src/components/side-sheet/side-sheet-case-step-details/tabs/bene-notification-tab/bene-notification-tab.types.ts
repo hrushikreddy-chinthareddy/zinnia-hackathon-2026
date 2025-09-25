@@ -15,6 +15,11 @@ export enum FollowupId {
     fifth = 5,
 }
 
+export enum LetterPartyRoles {
+    BENE = 'BENE',
+    AGENT = 'AGENT',
+}
+
 export enum NotificationStatus {
     Send = 'SEND',
     Receive = 'RECEIVE',
@@ -28,11 +33,19 @@ export enum NotificationStatus {
     Exception = 'TERMINATE',
 }
 
+export interface FollowUpLetter {
+    letterParty: LetterPartyRoles | string;
+    documentDisplayName?: string;
+    documentId?: string;
+    fileType?: string;
+}
+
 export interface INotification {
     notificationName: string;
     followupScheduleId: number;
     followupId: number;
     followupAttemptId: number;
+    followupLetters?: FollowUpLetter[];
     deliveryMethod: DeliveryMethods;
     address?: any;
     email?: string;

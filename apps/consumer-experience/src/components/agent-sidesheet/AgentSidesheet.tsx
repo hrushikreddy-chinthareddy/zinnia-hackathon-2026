@@ -1,6 +1,11 @@
 'use client';
+import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
 import { Address, Button, Label, SideSheet } from '@zinnia/bloom/components';
-import { formatPhoneNumber, toTitleCase } from '@zinnia/utils';
+import {
+  DEFAULT_ERROR_STRING,
+  formatPhoneNumber,
+  toTitleCase,
+} from '@zinnia/utils';
 
 import { FilteredPomAgentData } from '@/services/pom/distributors/v1/producers/search/transformers';
 
@@ -18,24 +23,34 @@ export const AgentSidesheet = ({
     return null;
   }
 
-  const { firstName, lastName, businessPhone, email, businessAddress } =
-    agentData;
+  const {
+    firstName,
+    lastName,
+    businessPhone,
+    email,
+    businessAddress,
+    producerType,
+    producerName,
+  } = agentData;
+
+  const name =
+    producerType === POM_Models_ProducerType.INDIVIDUAL
+      ? ` ${toTitleCase(firstName)} ${toTitleCase(lastName)}`
+      : producerName;
 
   return (
     <SideSheet
       header="Agent Information"
       trigger={
         <Button size="small" mode="link" style={{ display: 'inline-block' }}>
-          {toTitleCase(firstName)} {toTitleCase(lastName)}
+          {name || DEFAULT_ERROR_STRING}
         </Button>
       }
     >
       <div className={styles.personalInfo}>
         <div>
           <h2 className="mb-lg">Name</h2>
-          <p>
-            {toTitleCase(firstName)} {toTitleCase(lastName)}
-          </p>
+          <p> {name || DEFAULT_ERROR_STRING}</p>
         </div>
         {businessAddress && (
           <div>

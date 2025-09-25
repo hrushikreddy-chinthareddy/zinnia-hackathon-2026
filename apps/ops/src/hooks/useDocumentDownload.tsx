@@ -56,9 +56,10 @@ export const useDocumentDownload = (
             if (data?.blob) {
                 saveAs(
                     data?.blob,
-                    `${documentName.replace(/[^A-Z0-9]/gi, '')}.${
-                        data?.fileExtension
-                    }`
+                    `${documentName.replace(
+                        /[^A-Z0-9]/gi,
+                        ''
+                    )}.${data?.fileExtension?.toLowerCase()}`
                 );
             }
         },

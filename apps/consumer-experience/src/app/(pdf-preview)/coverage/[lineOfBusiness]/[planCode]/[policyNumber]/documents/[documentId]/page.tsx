@@ -8,6 +8,7 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { DocumentsVersion } from '@/types/carrier-config';
 import { DocumentCategory } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { createQueryString } from '@/utils/strings';
 
@@ -34,11 +35,12 @@ export default async function DocumentPreview({
     docCategory: DocumentCategory;
   };
 }) {
+  const commonLoggingContext = await buildCommonLogContext();
   const flags = await getFeatureFlags();
-  const { documents } = await getCarrierConfig();
+  const { data } = await getCarrierConfig(commonLoggingContext);
   const shouldUseV2 =
     !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
-    documents.version === DocumentsVersion.V2;
+    data?.documents.version === DocumentsVersion.V2;
   const { lineOfBusiness, documentId, ...otherParams } = params;
   const { fileName, ...otherSearchParams } = searchParams;
   let docDownloadUrl;

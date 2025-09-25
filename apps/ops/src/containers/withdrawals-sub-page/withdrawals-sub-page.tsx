@@ -3,6 +3,7 @@ import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import {
     ArrangementType,
     FlatExtra,
+    Frequency,
     Policy,
     Reason,
 } from '@zinnia/api-types/types/sor';
@@ -27,6 +28,7 @@ import {
     getParty,
 } from '@deps/helpers/payments.helpers';
 import { TempAnnuityArrangementTypes } from '@deps/helpers/policy-sor/SystematicPrograms';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
@@ -48,6 +50,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'withdrawals.upcoming',
     });
+    const { t: defaultT } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
     const { systematicPrograms } = policyDetails;
     const getPayout = (type: ArrangementType) => {
@@ -244,6 +247,15 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             t,
                             keyPrefix: 'withdrawals.upcoming',
                         })}
+                        paymentFrequencyText={
+                            t('paymentFrequencyText', {
+                                paymentMode: getFrequency(
+                                    withdrawalProgram?.frequency as Frequency,
+                                    defaultT
+                                ),
+                                paymentType: t('paymentType.payment'),
+                            }) || undefined
+                        }
                         footerLinks={[
                             {
                                 href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=WITHDRAWAL`,
@@ -298,6 +310,15 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             t,
                             keyPrefix: 'withdrawals.upcoming',
                         })}
+                        paymentFrequencyText={
+                            t('paymentFrequencyText', {
+                                paymentMode: getFrequency(
+                                    rmdProgram?.frequency as Frequency,
+                                    defaultT
+                                ),
+                                paymentType: t('paymentType.payment'),
+                            }) || undefined
+                        }
                         titleCase={false}
                         footerLinks={[
                             {
@@ -332,7 +353,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                     !isUserPermissionedToWithdraw,
                             },
                         ]}
-                        displayCardWithZeroAmount={false}
+                        displayCardWithZeroAmount={true}
                         hasProgram={hasRmdProgram}
                     />
                 </>

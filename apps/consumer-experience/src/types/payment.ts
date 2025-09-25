@@ -9,4 +9,5 @@ export interface PaymentMethod {
   type?: PaymentusAccountType;
   appliesToPartyId?: string;
   nameOnAccount?: string;
+  pending?: boolean;
 }

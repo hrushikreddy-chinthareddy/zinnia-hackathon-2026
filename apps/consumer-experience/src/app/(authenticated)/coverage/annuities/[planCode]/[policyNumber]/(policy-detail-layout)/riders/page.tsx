@@ -20,8 +20,8 @@ export default async function Riders({
 }: {
   params: PolicyRequestInputs;
 }) {
-  const { riders: ridersConfig } = await getCarrierConfig();
   const loggingContext = await buildCommonLogContext();
+  const { data: ridersConfig } = await getCarrierConfig(loggingContext);
   const { data, error } = await getRiders(
     {
       planCode: params.planCode,
@@ -55,7 +55,9 @@ export default async function Riders({
               <Rider
                 key={rider.riderCode}
                 {...rider}
-                showUnbornChildRider={ridersConfig.showUnbornChildRider}
+                showUnbornChildRider={
+                  !!ridersConfig?.riders?.showUnbornChildRider
+                }
               />
             ))}
           </div>
@@ -73,7 +75,9 @@ export default async function Riders({
               <Rider
                 key={rider.riderCode}
                 {...rider}
-                showUnbornChildRider={ridersConfig.showUnbornChildRider}
+                showUnbornChildRider={
+                  !!ridersConfig?.riders?.showUnbornChildRider
+                }
               />
             ))}
           </div>
@@ -89,7 +93,9 @@ export default async function Riders({
                 {...rider}
                 // Hide popover for any additional features that have an effective date
                 hidePopover={!!rider.effectiveDate}
-                showUnbornChildRider={ridersConfig.showUnbornChildRider}
+                showUnbornChildRider={
+                  !!ridersConfig?.riders?.showUnbornChildRider
+                }
               />
             );
           })}

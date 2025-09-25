@@ -1,29 +1,36 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { toQuerySearchParams } from '@xd/xd-components/src/utils/Strings';
+import { usePathname } from 'next/navigation';
 import useWindowSize from 'react-use/lib/useWindowSize';
 
 import documentStyles from '@/app/styles/unthemedTabsWrapper.module.css';
 import { ClientOnly } from '@/components/client-only/ClientOnly';
 import { Link } from '@/components/link/Link';
 import { DocumentCategory } from '@/types/document';
-import { lineOfBusinessUrlPath } from '@/utils/data';
 
 export const DocumentsTabs = ({
-  lineOfBusiness,
-  planCode,
-  policyNumber,
   activeTab,
   showTaxDocuments,
 }: {
-  lineOfBusiness: LineOfBusiness;
-  planCode: string;
-  policyNumber: string;
   activeTab: DocumentCategory;
   showTaxDocuments: boolean;
 }) => {
-  const lineOfBusinessPath = lineOfBusinessUrlPath(lineOfBusiness);
   const { width } = useWindowSize();
+
+  const pathname = usePathname();
+
+  const documentLink = `${pathname}?${toQuerySearchParams({
+    type: DocumentCategory.DOCUMENTS,
+  })}`;
+
+  const statementsLink = `${pathname}?${toQuerySearchParams({
+    type: DocumentCategory.STATEMENTS,
+  })}`;
+
+  const taxLink = `${pathname}?${toQuerySearchParams({
+    type: DocumentCategory.TAX,
+  })}`;
 
   return (
     <ClientOnly>
@@ -31,7 +38,7 @@ export const DocumentsTabs = ({
         <li>
           <Link
             isInternal
-            href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents`}
+            href={documentLink}
             className={`${activeTab === DocumentCategory.DOCUMENTS ? documentStyles.selected : ''}`}
           >
             Correspondence
@@ -40,7 +47,7 @@ export const DocumentsTabs = ({
         <li>
           <Link
             isInternal
-            href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.STATEMENTS}`}
+            href={statementsLink}
             className={`${activeTab === DocumentCategory.STATEMENTS ? documentStyles.selected : ''}`}
           >
             Statements
@@ -50,7 +57,7 @@ export const DocumentsTabs = ({
           <li>
             <Link
               isInternal
-              href={`/coverage/${lineOfBusinessPath}/${planCode}/${policyNumber}/documents?type=${DocumentCategory.TAX}`}
+              href={taxLink}
               className={`${activeTab === DocumentCategory.TAX ? documentStyles.selected : ''}`}
             >
               {width < 501 ? 'Tax' : 'Tax Documents'}

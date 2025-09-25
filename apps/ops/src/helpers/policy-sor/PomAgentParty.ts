@@ -15,12 +15,20 @@ export const transformPomAgentDataToParty = (
     // TODO: replace PomAgentData type with POM_Producer_Models_SearchProducersResult
     agentData: PomAgentData | undefined,
     partyData: Party
-): Party => {
-    const party: Party = {
+): Party & {
+    producerType: string | undefined;
+    producerName: string | undefined;
+} => {
+    const party: Party & {
+        producerType: string | undefined;
+        producerName: string | undefined;
+    } = {
         ...partyData,
         firstName: agentData?.firstName,
         lastName: agentData?.lastName,
         middleName: agentData?.middleName,
+        producerType: agentData?.producerType,
+        producerName: agentData?.producerName,
         addresses: [
             {
                 addressLine1: agentData?.businessAddress.line || undefined,
@@ -68,7 +76,7 @@ export const transformPomAgentDataToParty = (
     return party;
 };
 
-export default class NewAgentParty extends PolicyParty {
+export default class PomAgentParty extends PolicyParty {
     public get isAgent(): boolean {
         return true;
     }

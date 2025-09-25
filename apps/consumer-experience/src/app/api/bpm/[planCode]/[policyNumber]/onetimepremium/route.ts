@@ -29,7 +29,6 @@ export async function POST(
 
   const paymentDetails = await _request.json();
 
-  // @Anssam: investigate this
   // TODO: should this go here or into the function that calls it?
   const ottpRequest = {
     // TODO: do we need to check for current caseId?

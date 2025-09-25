@@ -72,7 +72,7 @@ export type LoggingContext = {
     [key: string]: any; // any other values
 };
 
-type RouteHandlerWithLoggingContext = (
+export type RouteHandlerWithLoggingContext = (
     ...args: [
         ...Parameters<NextApiHandler>,
         ...[loggingContext: LoggingContext]

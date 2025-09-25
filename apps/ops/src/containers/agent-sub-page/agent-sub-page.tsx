@@ -8,11 +8,12 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import NewAgentParty from '@deps/helpers/policy-sor/NewAgentParty';
+import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
 import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
 
 import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
+import EmptyCard from '../people-data-cards/empty-card/empty-card';
 
 export type AgentSubPage = {
     partyId: string;
@@ -44,7 +45,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
         enabled: !!policyNumber && !!agentId && !!planCode,
         select: (data) =>
             data
-                ? new NewAgentParty(data as PomAgentData, selectedPolicyParty)
+                ? new PomAgentParty(data as PomAgentData, selectedPolicyParty)
                 : undefined,
     });
 
@@ -55,7 +56,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     <Loader />
                 </div>
             )}
-            {!isLoading && agentData && (
+            {!isLoading && agentData ? (
                 <>
                     <PersonPageHeader
                         selectedPolicyParty={agentData?.party}
@@ -103,6 +104,10 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                         policyNumber={policyNumber}
                     />
                 </>
+            ) : (
+                <div className="p-4">
+                    <EmptyCard text={'No Agent data available.'} />
+                </div>
             )}
         </div>
     );

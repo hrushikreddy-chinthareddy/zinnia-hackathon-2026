@@ -2,36 +2,53 @@ import { useTranslation } from 'next-i18next';
 
 import { DocumentActions } from '@deps/components/dynamic-form/customization/templates/card-templates/card-template';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { ReactComponent as DOCUMENT_TEXT_ICON } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 
 interface IDocumentCard {
+    cardClass?: string;
     document: {
         documentId: string;
-        documentName: string;
-        displayName: string;
-        documentExt: string;
+        documentName?: string;
+        displayName?: string;
+        documentExt?: string;
+        docTypeView?: DocumentTypeView;
         carrier: string;
     };
+    isViewButtonHiddenForEMLType?: boolean;
 }
+
 const DocumentCard: React.FC<IDocumentCard> = (props) => {
     const { t } = useTranslation();
-    const { document } = props;
+    const { document, cardClass, isViewButtonHiddenForEMLType } = props;
     return (
         <div
-            className={`flex w-[455px] rounded border border-gray-100 p-[12px] mb-2 ${''}`}
+            className={`flex rounded border border-gray-100 p-[12px] ${
+                cardClass ?? ''
+            }`}
         >
             <div className="px-2">
                 <DOCUMENT_TEXT_ICON width={25} height={25} />
             </div>
             <div className="grow">
-                <div className="text-sm font-bold break-all">
-                    <PiiWrapper>{document.displayName}</PiiWrapper>
-                </div>
+                {document.displayName && (
+                    <div className="text-sm font-bold break-all">
+                        <PiiWrapper>{document.displayName}</PiiWrapper>
+                    </div>
+                )}
                 <div className="flex items-center text-sm font-normal text-gray-300">
-                    <PiiWrapper>Document ID: {document.documentId}</PiiWrapper>
+                    <PiiWrapper>
+                        {t('caseOverview.sidesheet.documentId', {
+                            documentId: document.documentId,
+                        })}
+                    </PiiWrapper>
                 </div>
             </div>
-            <DocumentActions document={document} t={t} />
+            <DocumentActions
+                t={t}
+                document={document}
+                isViewButtonHiddenForEMLType={isViewButtonHiddenForEMLType}
+            />
         </div>
     );
 };

@@ -210,7 +210,6 @@ export const PersonSubPage = ({
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     partyStatus={selectedPolicyParty?.partyStatus}
                 />
-
                 {beneficiaryRole && (
                     <>
                         <hr className="h-0.5 border-none bg-gray-200" />
