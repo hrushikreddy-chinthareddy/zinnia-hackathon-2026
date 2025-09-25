@@ -8,7 +8,13 @@ import isoWeek from 'dayjs/plugin/isoWeek';
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 
-import { downloadCSV } from '../utils';
+import {
+    downloadCSV,
+    UiRoles,
+    UI_ROLE_ORDER,
+    ROLE_OPTIONS,
+    toUiRole,
+} from '../utils';
 
 export enum TimeframeFilterOptions {
     Last6Months = '6M',
@@ -30,13 +36,84 @@ export const startDates: Record<TimeframeFilterOptions, string> = {
 
 dayjs.extend(isoWeek);
 
-export const roles = [
-    { value: 'All', label: 'All' },
-    { value: 'Call Center', label: 'Call Center' },
-    { value: 'Operations', label: 'Operations' },
-    { value: 'Selling Agent', label: 'Selling Agent' },
-    { value: 'Zinnia User', label: 'Zinnia User' },
-];
+export const roles = ROLE_OPTIONS;
+
+type Row = { process: string; role: string; count: number };
+
+export const categoryValueTooltip: Highcharts.TooltipFormatterCallbackFunction =
+    function (this) {
+        const category = String(this.x ?? '');
+        const seriesName = this.series?.name ?? '';
+        const yVal =
+            typeof this.y === 'number'
+                ? this.y.toString()
+                : String(this.y ?? '');
+
+        return `<b>${category}</b><br/>${seriesName}: <b>${yVal}</b>`;
+    };
+
+export function toProcessRoleRows(rawData: any[] | undefined): Row[] {
+    if (!rawData?.length) return [];
+    const rows: Row[] = [];
+
+    for (const p of rawData) {
+        const process = p.name ?? 'Unknown';
+        const roleBuckets: any[] = Array.isArray(p.values) ? p.values : [];
+        for (const rb of roleBuckets) {
+            if (rb.key !== 'userRole') continue;
+            const role = rb.name ?? 'Unknown';
+            let total = 0;
+            if (Array.isArray(rb.values) && rb.values.length) {
+                for (const d of rb.values) total += Number(d.count ?? 0);
+            } else {
+                total = Number(rb.count ?? 0);
+            }
+            rows.push({ process, role, count: total });
+        }
+    }
+    return rows;
+}
+
+export function top5ProcessesByVisibleRoles(rows: Row[]): string[] {
+    const totals = new Map<string, number>();
+
+    for (let i = 0; i < rows.length; i++) {
+        const r = rows[i];
+        const uiRole = toUiRole(r.role);
+        if (!uiRole) continue;
+        totals.set(r.process, (totals.get(r.process) ?? 0) + r.count);
+    }
+    const arr = Array.from(totals.entries());
+    arr.sort((a, b) => b[1] - a[1]); // descending
+    const top5 = arr.slice(0, 5).map(([name]) => name);
+    return top5;
+}
+
+export function toGroupedBarSeriesFromRows(
+    rows: Row[],
+    categories: string[],
+    colors: string[]
+) {
+    const pos: Record<string, number> = {};
+    categories.forEach((c, i) => (pos[c] = i));
+
+    const byRole = new Map<UiRoles, number[]>();
+    for (const r of UI_ROLE_ORDER)
+        byRole.set(r, Array(categories.length).fill(0));
+
+    for (const r of rows) {
+        const uiRole = toUiRole(r.role);
+        if (!uiRole) continue;
+        const i = pos[r.process];
+        if (i != null) byRole.get(uiRole)![i] += r.count;
+    }
+
+    return UI_ROLE_ORDER.map((name, idx) => ({
+        name,
+        data: byRole.get(name)!,
+        color: colors[idx],
+    }));
+}
 
 export const generateSeries = (
     loginsData: UserViewsOutputLevel1[] | undefined,
@@ -85,4 +162,44 @@ export const PrepareUserViewsCSV = (
 
     const csv = rows.join('\n');
     downloadCSV(csv, filename);
+};
+
+// Build a 0-filled role bucket in the same order as ROLE_UI_ORDER
+const makeZeroRoleRow = (): Record<UiRoles, number> => {
+    const o = {} as Record<UiRoles, number>;
+    for (const r of UI_ROLE_ORDER) o[r] = 0;
+    return o;
+};
+
+export const PrepareTop5CaseViewsCSV = (
+    raw: UserViewsOutputLevel1[],
+    filename = 'Zinnia-Live-Top-5-Case-Views.csv'
+) => {
+    const flatRows = toProcessRoleRows(raw);
+    const categories = top5ProcessesByVisibleRoles(flatRows);
+
+    const byProcess = new Map<string, Record<UiRoles, number>>(
+        categories.map((p) => [p, makeZeroRoleRow()])
+    );
+
+    for (const { process, role, count } of flatRows) {
+        const uiRole = toUiRole(role);
+        if (!uiRole) continue;
+
+        const bucket = byProcess.get(process); // undefined if not Top-5
+        if (!bucket) continue;
+        bucket[uiRole] += count;
+    }
+    const header = ['Case type', ...UI_ROLE_ORDER, 'Total'];
+    const lines: string[] = [header.join(',')];
+
+    for (const process of categories) {
+        const r = byProcess.get(process) ?? makeZeroRoleRow();
+        const roleValues = UI_ROLE_ORDER.map((role) => r[role] ?? 0);
+        const total = roleValues.reduce((a, b) => a + b, 0);
+
+        lines.push([process, ...roleValues, total].join(','));
+    }
+
+    downloadCSV(lines.join('\n'), filename);
 };

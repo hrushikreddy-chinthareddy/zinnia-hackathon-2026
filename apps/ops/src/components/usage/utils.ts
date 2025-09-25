@@ -27,6 +27,58 @@ export const friendlyGroupByNameForUserViews: Record<
     [UserViewsGroupByEnum.USER_ROLE]: 'User Role',
 };
 
+// === Roles (API + UI) ===============================================
+
+// Role values as they come from the API
+export enum ApiRoles {
+    All = 'All',
+    Agent = 'Agent',
+    CallCenter = 'Call Center',
+    Operations = 'Operations',
+    SellingAgent = 'Selling Agent',
+    ZinniaCallCenter = 'Zinnia Call Center',
+    ZinniaOperations = 'Zinnia Operations',
+    ZinniaUser = 'Zinnia User',
+}
+
+// How we *show* roles in charts/legend
+export enum UiRoles {
+    Agent = 'Agent',
+    ZinniaCallCenter = 'Zinnia Call Center',
+    ZinniaOperations = 'Zinnia Operations',
+}
+
+// Dropdown options for the “Role” select
+export const ROLE_OPTIONS = [
+    { value: ApiRoles.All, label: 'All' },
+    { value: ApiRoles.Agent, label: 'Agent' },
+    { value: ApiRoles.ZinniaCallCenter, label: 'Zinnia Call Center' },
+    { value: ApiRoles.ZinniaOperations, label: 'Zinnia Operations' },
+];
+
+// The order we want series displayed in charts/exports
+export const UI_ROLE_ORDER = [
+    UiRoles.Agent,
+    UiRoles.ZinniaCallCenter,
+    UiRoles.ZinniaOperations,
+];
+
+// Map from API roles → our visible UI roles (undefined = hidden)
+export const API_TO_UI_ROLE: Record<ApiRoles, UiRoles | undefined> = {
+    [ApiRoles.Agent]: UiRoles.Agent,
+    [ApiRoles.ZinniaCallCenter]: UiRoles.ZinniaCallCenter,
+    [ApiRoles.ZinniaOperations]: UiRoles.ZinniaOperations,
+    [ApiRoles.All]: undefined,
+    [ApiRoles.ZinniaUser]: undefined,
+    [ApiRoles.CallCenter]: undefined,
+    [ApiRoles.Operations]: undefined,
+    [ApiRoles.SellingAgent]: undefined,
+};
+
+// Helper to map arbitrary strings from API → UiRole | undefined
+export const toUiRole = (apiRoleName: string): UiRoles | undefined =>
+    API_TO_UI_ROLE[apiRoleName as ApiRoles];
+
 export const downloadCSV = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);

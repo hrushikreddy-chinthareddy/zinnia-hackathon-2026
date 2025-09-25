@@ -8083,10 +8083,11 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Vues de la page Zinnia Live"
+                "title": "Vues de la page Zinnia Live",
+                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vues de cas Zinnia Live par transaction"
+                "title": "Top 5 des cas de Zinnia Live"
             }
         }
     },

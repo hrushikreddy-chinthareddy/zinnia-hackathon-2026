@@ -17,6 +17,7 @@ type UsageCommonLayoutProps = {
         data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[],
         csvFileName: string
     ) => void;
+    description?: string;
 };
 
 const UsageHeaderLayout = ({
@@ -24,11 +25,20 @@ const UsageHeaderLayout = ({
     data,
     csvFileName,
     csvFunction,
+    description,
 }: UsageCommonLayoutProps) => {
     const { t } = useTranslation();
     return (
-        <div className="flex justify-between items-center w-full">
-            <Typography variant={TypographyVariant.H2}>{title}</Typography>
+        <div className="flex justify-between items-baseline w-full">
+            <div className="flex flex-col gap-1">
+                <Typography variant={TypographyVariant.H2}>{title}</Typography>
+                {description &&
+                    (typeof description === 'string' ? (
+                        <p className="typography-content-body">{description}</p>
+                    ) : (
+                        description
+                    ))}
+            </div>
             <div
                 className="flex items-center gap-2"
                 onClick={() => {

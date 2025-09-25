@@ -8027,10 +8027,11 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Zinnia Live Page Views"
+                "title": "Zinnia Live Page Views",
+                "description": "Shows number of case views for selected user groups only."
             },
             "zinniaLiveCaseViews": {
-                "title": "Zinnia Live Case Views by Transaction"
+                "title": "Zinnia Live Top 5 Case Views"
             }
         }
     },
