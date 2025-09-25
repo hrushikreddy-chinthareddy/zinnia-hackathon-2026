@@ -18,7 +18,9 @@ export type AliasWithSellingCode = Brand<AliasModel, 'AliasWithSellingcode'>;
 /**
  * Filter aliases that have an external party identifier with a selling code
  */
-const filterAliasesWithSellingCode = (aliases: AliasModel[] | undefined) => {
+export const filterAliasesWithSellingCode = (
+    aliases: AliasModel[] | undefined
+) => {
     if (!aliases) {
         return;
     }

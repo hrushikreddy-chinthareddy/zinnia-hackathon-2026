@@ -35,7 +35,7 @@ type additionalDataProps = {
     user: UserProfile;
 };
 
-enum ErrorOrigin {
+export enum ErrorOrigin {
     ClientCase = 'client-case-manager-api',
     NewBusiness = 'new-business-api',
     partyReference = 'party-reference-api',
@@ -55,7 +55,6 @@ const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
 const INTERNAL_ERROR_LABEL = 'We were unable to create this client case.';
 const EXTERNAL_ERROR_LABEL =
     'We were unable to create the required client case due to external issues';
-
 //This should be  just a red    ict page or maybe a redirect with urk params read and user/permision validation
 export default function Illustrations({
     fetchingErrorMessage,
@@ -95,8 +94,10 @@ export default function Illustrations({
                 }
                 break;
             case ErrorOrigin.ClientCase:
-            case ErrorOrigin.Internal:
                 setBannerText(INTERNAL_ERROR_LABEL);
+                break;
+            case ErrorOrigin.Internal:
+                setBannerText(fetchingErrorMessage ?? INTERNAL_ERROR_LABEL);
                 break;
 
             default:
