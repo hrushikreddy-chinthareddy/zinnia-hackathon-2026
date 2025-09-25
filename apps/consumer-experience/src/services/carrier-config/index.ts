@@ -33,6 +33,9 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
         manageChanges: ManageChange.INTERNAL,
       },
     },
+    riders: {
+      showUnbornChildRider: false,
+    },
     account: {
       surrender: {
         enabled: false,
@@ -109,6 +112,9 @@ export const getCarrierConfig = async (): Promise<CarrierConfig> => {
         ...defaultConfig,
         documents: {
           version: DocumentsVersion.V2,
+        },
+        riders: {
+          showUnbornChildRider: true,
         },
       };
 

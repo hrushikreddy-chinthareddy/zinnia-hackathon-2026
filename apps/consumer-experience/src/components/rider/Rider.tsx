@@ -21,6 +21,7 @@ import { LabelPopover } from '../label-popover/LabelPopover';
 
 interface RiderProps extends PolicyRider {
   hidePopover?: boolean;
+  showUnbornChildRider?: boolean;
 }
 
 export const Rider = ({
@@ -30,6 +31,7 @@ export const Rider = ({
   description,
   effectiveDate,
   unbornChildIndicator,
+  showUnbornChildRider = false,
   insured,
   status,
   title,
@@ -40,7 +42,7 @@ export const Rider = ({
     FEATURE_FLAGS.EVERLY_CHILD_RIDER
   );
   const showChildRiderField =
-    childRiderFeatureFlag && coverageId === 'Rider_CTR';
+    showUnbornChildRider && childRiderFeatureFlag && coverageId === 'Rider_CTR';
 
   return (
     <div className={styles.riderContainer}>
