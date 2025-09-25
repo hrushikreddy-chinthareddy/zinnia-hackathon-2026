@@ -69,7 +69,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
         firstName: party?.firstName ?? '',
         middleName: party?.middleName ?? '',
         lastName: party?.lastName ?? '',
-        dateOfBirth: party?.dateOfBirth ?? '',
+        dateOfBirth: party?.dateOfBirth ?? null,
         trustType: party?.trustType ?? '',
         ...(options.includeEmails && { emails: party?.emails ?? [] }),
         ...(options.includePhones && { phones: party?.phones ?? [] }),

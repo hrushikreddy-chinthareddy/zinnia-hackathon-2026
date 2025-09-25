@@ -196,9 +196,10 @@
                                                 ]
                                             },
                                             "dateOfBirth": {
-                                                "type": "string",
                                                 "format": "date",
-                                                "title": "Date of birth"
+                                                "title": "Date of birth",
+                                                "type": ["string", "null"],
+                                                "default": null
                                             },
                                             "emails": {
                                                 "type": "array",
@@ -406,7 +407,7 @@
                                             "firstName": "",
                                             "middleName": "",
                                             "lastName": "",
-                                            "dateOfBirth": "",
+                                            "dateOfBirth": null,
                                             "trustType": "",
                                             "phones": [
                                                 {
@@ -499,11 +500,6 @@
                                             "Individual",
                                             "Trust",
                                             "Estate/Organization"
-                                        ],
-                                        "enumDisabled": [
-                                            "INDIVIDUAL",
-                                            "TRUST",
-                                            "ORGANIZATION"
                                         ]
                                     }
                                 },
@@ -1563,7 +1559,8 @@
                                     "type": "boolean",
                                     "enum": [true, false],
                                     "enumNames": ["Yes", "No"],
-                                    "title": "Is there an irrevocable beneficiary?"
+                                    "title": "Is there an irrevocable beneficiary?",
+                                    "default": false
                                 },
                                 "signatures": {
                                     "type": "array",
