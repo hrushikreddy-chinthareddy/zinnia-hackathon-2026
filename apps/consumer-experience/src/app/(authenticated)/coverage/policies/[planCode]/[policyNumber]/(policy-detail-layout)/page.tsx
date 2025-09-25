@@ -9,7 +9,7 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOverviewLinks';
 import { Coverage } from '@/components/policy-overview/Coverage';
-import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
+import { CancelledFreelook } from '@/components/policy-overview/non-active-statuses/cancelled-freelook/CancelledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/surrendered/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
@@ -90,8 +90,12 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.CANCELEDFREELOOK) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <CanceledFreelook />
-          <CallForAssistance customInstruction="with policy questions." />
+          <CancelledFreelook
+            lineOfBusiness={LineOfBusiness.LIFE}
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
         </Suspense>
       );
     }

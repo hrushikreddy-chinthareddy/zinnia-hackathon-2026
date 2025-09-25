@@ -31,7 +31,9 @@ export const evaluateComponentVisibilityRules = (
   // this should be temporary, but this whole setup should be temporary
   // and ideally should be handled by CIAM
   const isNotPayor = !isPayorOnly(partyRoles);
-  const isCancelled = policy.policyStatus === PolicyStatus.SURRENDERED;
+  const isCancelled =
+    policy.policyStatus === PolicyStatus.SURRENDERED ||
+    policy.policyStatus === PolicyStatus.CANCELEDFREELOOK;
   const isTerm = policy.product?.productType === ProductType.TERM;
 
   return {
@@ -64,7 +66,9 @@ export const evaluateRouteRules = (
   partyRoles: PartyRole[]
 ): Record<RouteKey, () => boolean> | null => {
   const isNotPayor = !isPayorOnly(partyRoles);
-  const isCancelled = policy.policyStatus === PolicyStatus.SURRENDERED;
+  const isCancelled =
+    policy.policyStatus === PolicyStatus.SURRENDERED ||
+    policy.policyStatus === PolicyStatus.CANCELEDFREELOOK;
 
   const hasAcceptedRole = partyRolesAreInAllowedList(partyRoles);
 
