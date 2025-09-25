@@ -22,7 +22,10 @@ const dataToTitleMap: Record<
     cashValue: { label: 'Cash values (end of year)', type: 'money' },
     paymentMode: { label: 'Payment mode', type: 'string' },
     premiumMode: { label: 'Premium mode', type: 'string' },
-    netSurrenderValue: { label: 'Cash values (end of year)', type: 'money' },
+    netSurrenderValue: {
+        label: 'Endowment Benefit: End of Year',
+        type: 'money',
+    },
     netSurrenderAmountt5Years: { label: 'At 5 years', type: 'money' },
     netSurrenderAmountt10Years: { label: 'At 10 years', type: 'money' },
     netSurrenderAmountt15Years: { label: 'At 15 years', type: 'money' },
@@ -80,7 +83,9 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                                 <p
                                     className={`typography-labels-field-label ${style.dataPointTitle}`}
                                 >
-                                    {dataToTitleMap[d as keyof EAppData].label}
+                                    {dataToTitleMap[d as keyof EAppData].label}{' '}
+                                    {d === 'netSurrenderValue' &&
+                                        data.termLength?.split(' ').at(0)}
                                 </p>
                                 <p className="typography-content-body-sm-bold">
                                     {dataToTitleMap[d as keyof EAppData]
