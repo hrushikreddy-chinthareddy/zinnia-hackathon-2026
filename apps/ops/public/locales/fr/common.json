@@ -6052,6 +6052,10 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "paiement"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
             }

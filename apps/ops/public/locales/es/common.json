@@ -6086,6 +6086,10 @@
             "rmdAutopay": "Pago automático de RMD próximo",
             "cancelWithdrawalAutopayTitle": "Cancelar sistemáticamente {{type}}",
             "cancelAutopay": "Cancelar pago automático",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "pago"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
             }

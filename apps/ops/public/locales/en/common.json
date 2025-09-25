@@ -6136,6 +6136,10 @@
             "rmdAutopay": "Upcoming RMD Autopay",
             "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
             "cancelAutopay": "Cancel autopay",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "payment"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
             }
