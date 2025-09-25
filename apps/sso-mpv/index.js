@@ -126,6 +126,12 @@ app.get('/health', (_, res) => {
   res.send('ok');
 });
 
+// Global error handling middleware
+app.use((err, res) => {
+  logger.error(err.message);
+  res.status(500).sendFile('error.html', htmlFiles);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
