@@ -3,6 +3,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Icon, IconType, SideSheet } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 
+import { QueryKeys } from '@/queries/query-keys';
+import { PaymentMethod } from '@/types/payment';
 import { FormSteps } from '@/types/transactions';
 
 import {
@@ -19,9 +21,11 @@ const removeStars = (str: string) => str.replace(/\*/g, '');
 // Test Credit Cards: https://www.paypalobjects.com/en_GB/vhelp/paypalmanager_help/credit_card_numbers.htm
 export const PaymentusAddPaymentMethod = ({
   policyNumber,
+  planCode,
   onAddPaymentMethod,
 }: {
   policyNumber: string;
+  planCode: string;
   onAddPaymentMethod?: () => void;
 }) => {
   const queryClient = useQueryClient();
@@ -50,6 +54,21 @@ export const PaymentusAddPaymentMethod = ({
           `${message.BankName || message.Type} ${removeStars(message.MaskedAccountNumber)} is being added. `
         );
         setStep(FormSteps.SUCCESS);
+
+        //Add pending bank to the cache so we can display a skeleton loader int he list.
+        queryClient.setQueryData(
+          [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
+          (old: PaymentMethod[]) => [
+            ...old,
+            {
+              pending: true,
+            },
+          ]
+        );
+        //Trigger a cache clear so that when it updates, the skeleton loader gets replaced with the new bank
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
+        });
       }
     };
 
@@ -67,6 +86,7 @@ export const PaymentusAddPaymentMethod = ({
     queryClient.invalidateQueries({
       queryKey: [PAYMENTUS_ADD_CC_TOKEN, PAYMENTUS_ADD_BANK_TOKEN],
     });
+
     // call success add bank callback when closing the sidesheet
     step === FormSteps.SUCCESS && onAddPaymentMethod?.();
   };

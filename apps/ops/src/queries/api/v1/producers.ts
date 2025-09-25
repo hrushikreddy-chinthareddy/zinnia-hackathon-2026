@@ -115,7 +115,6 @@ export const getProducersByNameAndCarrier = async (
 
 export const getProducerById = async (id: string) => {
     try {
-        // hit our route handler which uses the enterprise token api
         // carrierShortName query param should be replaced in the future, we are adding this as a temporal solution.
         const request = client.get<any, AxiosResponse<ApiGetProducerResponse>>(
             `${baseAppUrl}/api/distributors/v1/producers/${id}?carrierShortName=FNWL`
