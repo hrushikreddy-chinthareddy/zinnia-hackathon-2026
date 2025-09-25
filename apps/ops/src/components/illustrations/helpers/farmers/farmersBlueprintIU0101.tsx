@@ -5562,6 +5562,8 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'owner-date-of-birth',
+                                    outputPath:
+                                        'riders.ownerWaiverOfDeductionRider.ownerAge',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -6314,7 +6316,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-b252ac5d-d727-495d-b4d4-1a687b466626',
                                     selectOptions: [
                                         {
-                                            value: 'borrow',
+                                            value: 'BORROW',
                                             text: {
                                                 en: 'Borrow',
                                             },
@@ -6322,7 +6324,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'cash',
+                                            value: 'CASH',
                                             text: {
                                                 en: 'Cash',
                                             },
@@ -6332,7 +6334,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     referenceLabel: '',
-                                    defaultValue: 'borrow',
+                                    defaultValue: 'BORROW',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [

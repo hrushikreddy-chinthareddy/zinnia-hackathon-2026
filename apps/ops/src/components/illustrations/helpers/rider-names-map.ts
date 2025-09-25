@@ -10,6 +10,7 @@ const _riderNamesMap = {
     overloanProtection: 'Overloan Protection',
     waiverOfDeduction: 'Waiver of Deduction',
     waiverOfPremium: 'Waiver of Premium',
+    guaranteedInsurabilityBenefit: 'Guaranteed Insurability Benefit',
 } as const;
 
 export const riderNamesMap = _riderNamesMap as typeof _riderNamesMap &

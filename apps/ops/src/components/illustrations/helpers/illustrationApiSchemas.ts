@@ -266,7 +266,7 @@ const illustrationPayloadFlatExtraSchema = t.object(
 );
 
 const illustrationPayloadParticipantSchema = t.object(
-    t.property('issueAge', t.number),
+    t.property('issueAge', t.union(t.number, t.undefined)),
     t.property('participantId', t.string),
     t.optionalProperty('underwritingClass', t.enum(UnderwritingClass)),
     t.optionalProperty('subStandardRating', t.enum(SubStandardRating)),
