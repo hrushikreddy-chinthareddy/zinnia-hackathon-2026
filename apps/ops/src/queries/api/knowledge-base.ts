@@ -7,6 +7,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import {
     ClientDetailsResponse,
+    DislikeReasonsPayload,
     DocumentsDisplayType,
     FeedbackType,
     GetAllUserDetailsResponse,
@@ -156,7 +157,8 @@ export const sendResponseFeedback = async (
     messageId: string,
     email: string,
     feedbackType: FeedbackType,
-    comment?: string
+    comment?: string,
+    dislikeReason?: DislikeReasonsPayload | null
 ) => {
     if (!messageId || !email || !feedbackType) {
         browserLogError(
@@ -171,6 +173,7 @@ export const sendResponseFeedback = async (
             messageId,
             feedbackType,
             ...(comment ? { comment } : {}),
+            ...(feedbackType === FeedbackType.Dislike ? { dislikeReason } : { dislikeReason: null }),
         });
         return data.success ? data.body : null;
     } catch (error) {

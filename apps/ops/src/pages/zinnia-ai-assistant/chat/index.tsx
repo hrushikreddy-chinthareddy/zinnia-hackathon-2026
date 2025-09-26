@@ -1,7 +1,7 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatInput from '@deps/components/knowledge-base/chat/chat-input/chat-input';
@@ -158,6 +158,7 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
     });
     const { currentMessages } = useKnowledgeBaseContext();
     const endref = useRef<HTMLDivElement | null>(null);
+    const [isCompleted, setIsCompleted] = useState(false);
 
     useEffect(() => {
         endref.current?.scrollIntoView({ behavior: 'smooth' });
@@ -170,36 +171,38 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
                 <div className=" flex-1 flex flex-col gap-2">
                     {currentMessages.length > 0 ? (
                         <div className="flex flex-col gap-4 my-4 max-h-[65vh] overflow-y-auto ">
-                            {currentMessages.map((message: any) => {
-                                const {
-                                    role,
-                                    id,
-                                    questionId,
-                                    content,
-                                    sourceDocuments,
-                                    feedbackType,
-                                    feedbackComment,
-                                } = message;
-                                return role === MessageRole.User ? (
-                                    <ChatQuestion key={id} question={content} />
-                                ) : (
-                                    <ChatResponse
-                                        key={id}
-                                        email={opsUserData?.email || ''}
-                                        questionId={questionId}
-                                        responseId={id}
-                                        response={content}
-                                        sourceDocuments={sourceDocuments}
-                                        submittedFeedbackType={feedbackType}
-                                        submittedFeedbackComment={
-                                            feedbackComment
-                                        }
-                                        showFeedbackControls={
-                                            id !== BOT_ERROR_MESSAGE_ID
-                                        }
-                                    />
-                                );
-                            })}
+                            {currentMessages.map(
+                                (message, index) => {
+                                    return message.role === MessageRole.User ? (
+                                        <ChatQuestion
+                                            key={message.id}
+                                            question={message.content}
+                                        />
+                                    ) : (
+                                        <ChatResponse
+                                            key={message.id}
+                                            email={opsUserData?.email || ''}
+                                            questionId={message.questionId ?? ''}
+                                            responseId={message.id}
+                                            response={message.content}
+                                            sourceDocuments={message.sourceDocuments}
+                                            submittedFeedbackType={message.feedbackType}
+                                            submittedFeedbackComment={
+                                                message.feedbackComment
+                                            }
+                                            showFeedbackControls={
+                                                message.id !== BOT_ERROR_MESSAGE_ID
+                                            }
+                                            isCompleted={
+                                                index !==
+                                                    currentMessages.length - 1
+                                                    ? true
+                                                    : isCompleted
+                                            }
+                                        />
+                                    );
+                                }
+                            )}
                             <div ref={endref} />
                         </div>
                     ) : (
@@ -211,7 +214,10 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
                         </Typography>
                     )}
                 </div>
-                <ChatInput opsUserData={opsUserData} />
+                <ChatInput
+                    opsUserData={opsUserData}
+                    setIsCompleted={setIsCompleted}
+                />
             </div>
         </div>
     );

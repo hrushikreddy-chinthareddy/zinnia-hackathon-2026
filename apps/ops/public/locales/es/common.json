@@ -8065,7 +8065,36 @@
                 "placeholder": "Escribe tu mensaje de comentarios aquí...",
                 "positiveFeedbackComment": "¿Podría aclarar qué aspectos de sus comentarios fueron satisfactorios? Su opinión es valiosa para mejorar nuestro servicio.",
                 "negativeFeedbackComment": "¿Podría aclarar qué aspectos de sus comentarios no fueron satisfactorios? Su opinión es valiosa para mejorar nuestro servicio.",
-                "validationError": "Por favor, ingrese su comentario"
+                "validationError": "Por favor, ingrese su comentario",
+                "dislikeReasonsHeader": "Por favor, seleccione un motivo por el cual no le gusta la respuesta.",
+                "dislikeReasons": {
+                    "incorrectResponse": "Respuesta incorrecta (la respuesta no coincide con la pregunta)",
+                    "languageIssue": "Problema de idioma/estilo (poco claro, demasiado complejo) / Respuesta incompleta (respuesta demasiado corta, careció de detalles)",
+                    "relevantDocumentMissing": "Documento relevante faltante (el bot omitió una referencia clave)",
+                    "infoMissing": "Información faltante en los documentos (vacíos en las directrices/contenido)",
+                    "linksLabel": "Si tiene enlace(s) a un documento relevante, por favor compártalos aquí (separados por comas si hay varios):"
+                },
+                "opsIntakeFormLink": "Permítanos crear un formulario de Ops Intake para usted",
+                "opsIntakeForm": {
+                    "heading": "Formulario de Ops Intake / Retroalimentación",
+                    "placeholder": "Escriba algo...",
+                    "processName": "Nombre de la directriz/pasos/proceso",
+                    "blockOfBusiness": "Bloque de negocio afectado",
+                    "blockOfBusinessAssistiveText": "¿La solicitud es aplicable a otros bloques de negocio? Si es así, ¿a cuáles?",
+                    "processDescription": "Descripción del proceso y transacciones afectadas",
+                    "reasonForSubmittingRequest": "Describa por qué está enviando esta solicitud",
+                    "outcomeExpected": "¿Cuál es el resultado que espera lograr?",
+                    "smeEmail": "Proporcione el correo electrónico del experto en la materia o del contacto de su equipo con quien puede trabajar el BA.",
+                    "priority": "Prioridad",
+                    "requestFrequency": "¿Con qué frecuencia se realiza esta solicitud? (diaria, semanal, mensual, anual)",
+                    "requestFrequencyAssistiveText": "Si está solicitando que un proceso manual sea automatizado, nos gustaría entender la frecuencia de ese proceso manual.",
+                    "benefitMetrics": "Cualquier métrica sobre cómo este cambio beneficiará a Operaciones",
+                    "benefitMetricsAssistiveText": "Tiempos promedio del proceso, mejoras en auditorías de calidad u otras métricas que pueda considerar."
+                },
+                "errors": {
+                    "inValidDomain": "Solo se permiten correos electrónicos de Zinnia",
+                    "inValidEmail": "Por favor, ingrese una dirección de correo electrónico válida"
+                }
             },
             "followUpPlaceholder": "Haga sus preguntas de seguimiento aquí...",
             "followUpButton": "Haga sus preguntas de seguimiento aquí"

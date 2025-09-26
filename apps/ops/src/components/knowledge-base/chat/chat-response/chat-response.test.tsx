@@ -20,6 +20,7 @@ const defaultProps = {
     ],
     submittedFeedbackType: null,
     submittedFeedbackComment: null,
+    isCompleted: true,
 };
 
 const mockBrowserLogError = jest.fn();
@@ -55,6 +56,12 @@ jest.mock('marked', () => ({
 
 jest.mock('dompurify', () => ({
     sanitize: jest.fn((html) => html),
+}));
+
+jest.mock('@deps/hooks/knowledge-base/useChatStream', () => ({
+    useChatStream: () => ({
+        isStreaming: false,
+    }),
 }));
 
 describe('ChatResponse', () => {
@@ -161,7 +168,8 @@ describe('ChatResponse', () => {
                 'response-123',
                 'test@zinnia.com',
                 FeedbackType.Like,
-                'test comment'
+                'test comment',
+                null
             );
             expect(mockBrowserLogTrace).toHaveBeenCalledWith(
                 'Feedback message sent successfully'
@@ -169,17 +177,21 @@ describe('ChatResponse', () => {
         });
     });
 
-    it('sends dislike feedback only on clicking downvote and submitting feedback comment', async () => {
+    it('sends dislike feedback only on clicking downvote and submitting feedback comment along with dislike reasons', async () => {
         (sendResponseFeedback as jest.Mock).mockResolvedValue(true);
-        const { getByRole } = render(<ChatResponse {...defaultProps} />);
+        const { getByRole, getAllByRole } = render(<ChatResponse {...defaultProps} />);
         const dislikeButton = getByRole('button', { name: /downvote-button/i });
         fireEvent.click(dislikeButton);
 
         const textbox = getByRole('textbox');
+        fireEvent.change(textbox, { target: { value: 'test comment' } });
+
+        const radioButtons = getAllByRole('radio');
+        fireEvent.click(radioButtons[0]);
+
         const submitButton = getByRole('button', {
             name: /submit-feedback-msg/i,
         });
-        fireEvent.change(textbox, { target: { value: 'test comment' } });
         fireEvent.click(submitButton);
 
         await waitFor(() => {
@@ -187,28 +199,13 @@ describe('ChatResponse', () => {
                 'response-123',
                 'test@zinnia.com',
                 FeedbackType.Dislike,
-                'test comment'
+                'test comment',
+                expect.any(Object)
             );
             expect(mockBrowserLogTrace).toHaveBeenCalledWith(
                 'Feedback message sent successfully'
             );
         });
-    });
-
-    it('shows error when empty comment is submitted', async () => {
-        (sendResponseFeedback as jest.Mock).mockResolvedValue(true);
-        const { getByRole, getByText } = render(
-            <ChatResponse {...defaultProps} />
-        );
-        const dislikeButton = getByRole('button', { name: /downvote-button/i });
-        fireEvent.click(dislikeButton);
-
-        const submitButton = getByRole('button', {
-            name: /submit-feedback-msg/i,
-        });
-        fireEvent.click(submitButton);
-
-        expect(getByText('chat.feedback.validationError')).toBeInTheDocument();
     });
 
     it('logs errors when fails to send a feedback on clicking upvote', async () => {
@@ -238,15 +235,19 @@ describe('ChatResponse', () => {
     it('logs errors when fails to send a feedback comment', async () => {
         const testError = new Error('Network failure');
         (sendResponseFeedback as jest.Mock).mockRejectedValue(testError);
-        const { getByRole } = render(<ChatResponse {...defaultProps} />);
+        const { getByRole, getAllByRole } = render(<ChatResponse {...defaultProps} />);
         const dislikeButton = getByRole('button', { name: /downvote-button/i });
         fireEvent.click(dislikeButton);
 
         const textbox = getByRole('textbox');
+        fireEvent.change(textbox, { target: { value: 'test comment' } });
+
+        const radioButtons = getAllByRole('radio');
+        fireEvent.click(radioButtons[0]);
+
         const submitButton = getByRole('button', {
             name: /submit-feedback-msg/i,
         });
-        fireEvent.change(textbox, { target: { value: 'test comment' } });
         fireEvent.click(submitButton);
 
         await waitFor(() => {
@@ -254,7 +255,8 @@ describe('ChatResponse', () => {
                 'response-123',
                 'test@zinnia.com',
                 FeedbackType.Dislike,
-                'test comment'
+                'test comment',
+                expect.any(Object)
             );
             expect(mockBrowserLogError).toHaveBeenCalledWith(
                 'Error sending feedback message::',
@@ -281,22 +283,6 @@ describe('ChatResponse', () => {
         });
         fireEvent.click(cancelButton);
         expect(textbox).not.toBeVisible();
-    });
-
-    it('shows error when response is disliked and feedback comment textbox is tried to close without submitting', async () => {
-        (sendResponseFeedback as jest.Mock).mockResolvedValue(true);
-        const { getByRole, getByText } = render(
-            <ChatResponse {...defaultProps} />
-        );
-        const dislikeButton = getByRole('button', { name: /downvote-button/i });
-        fireEvent.click(dislikeButton);
-        const textbox = getByRole('textbox');
-        expect(textbox).toBeVisible();
-        const cancelButton = getByRole('button', {
-            name: /cancel-feedback-msg/i,
-        });
-        fireEvent.click(cancelButton);
-        expect(getByText('chat.feedback.validationError')).toBeInTheDocument();
     });
 
     it('opens the followup modal when clicking on ask follow up questions button', async () => {

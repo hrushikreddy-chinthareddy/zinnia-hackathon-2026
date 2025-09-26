@@ -1,0 +1,6 @@
+.textboxContainer {
+  border: var(--color-fields-border-field-default-border) solid 2px;
+  padding: var(--measure-dimension-z-space-4);
+  border-radius: var(--measure-dimension-z-space-3);
+  resize: none;
+}

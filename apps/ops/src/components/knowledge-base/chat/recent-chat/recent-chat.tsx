@@ -60,9 +60,7 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
     const [isLastSearchPage, setIsLastSearchPage] = useState(false);
 
     const isSearchActive = searchTerm.trim().length >= 3;
-    const chatsToRender = isSearchActive
-        ? searchResults
-        : chatHistory.filter((chat) => (chat.messageCount ?? 0) > 1);
+    const chatsToRender = isSearchActive ? searchResults : chatHistory;
 
     const clientName =
         opsUserData?.client?.find((c) => c.id === selectedClientId)?.name || '';
@@ -253,13 +251,11 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                             <div
                                 tabIndex={0}
                                 key={itemSessionId}
-                                className={`flex gap-2 items-center py-2 cursor-pointer ${
-                                    styles.itemhover
-                                } ${
-                                    itemSessionId === sessionId
+                                className={`flex gap-2 items-center py-2 cursor-pointer ${styles.itemhover
+                                    } ${itemSessionId === sessionId
                                         ? styles.activeItem
                                         : ''
-                                }`}
+                                    }`}
                                 onClick={() =>
                                     handleViewChatHistory(itemSessionId || '')
                                 }
@@ -281,13 +277,13 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                                         variant={TypographyVariant.BodySmBold}
                                     >
                                         {sessionTitle &&
-                                        sessionTitle?.length <=
+                                            sessionTitle?.length <=
                                             SESSION_TITLE_MAX_LEN
                                             ? sessionTitle
                                             : `${sessionTitle?.slice(
-                                                  0,
-                                                  SESSION_TITLE_MAX_LEN
-                                              )}...`}
+                                                0,
+                                                SESSION_TITLE_MAX_LEN
+                                            )}...`}
                                     </Typography>
                                     <Typography
                                         variant={TypographyVariant.BodySm}
