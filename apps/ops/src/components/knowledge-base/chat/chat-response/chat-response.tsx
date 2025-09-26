@@ -21,7 +21,10 @@ import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { sendResponseFeedback } from '@deps/queries/api/knowledge-base';
 import { ReactComponent as Dislike } from '@deps/styles/elements/icons/icons_outlined/thumb-down.svg';
 import { ReactComponent as Like } from '@deps/styles/elements/icons/icons_outlined/thumb-up.svg';
-import { DislikeReasonsPayload, FeedbackType } from '@deps/types/knowledge-base';
+import {
+    DislikeReasonsPayload,
+    FeedbackType,
+} from '@deps/types/knowledge-base';
 import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
 
 import styles from './chat-response.module.css';
@@ -63,7 +66,8 @@ const ChatResponse = ({
         useState(false);
     const [showFeedbackTextbox, setShowFeedbackTextbox] = useState(false);
     const [showFollowUp, setShowFollowUp] = useState(false);
-    const [dislikeReason, setDislikeReason] = useState<DislikeReasonsPayload | null>(null);
+    const [dislikeReason, setDislikeReason] =
+        useState<DislikeReasonsPayload | null>(null);
     const endref = useRef<HTMLDivElement | null>(null);
     const html = DOMPurify.sanitize(marked.parse(response || '') as string);
 
@@ -76,8 +80,12 @@ const ChatResponse = ({
         if (feedbackType === FeedbackType.Dislike) {
             if (!dislikeReason?.reason) return false;
 
-            if (dislikeReason?.reason === t('chat.feedback.dislikeReasons.infoMissing') &&
-                (!dislikeReason?.metadata || Object.keys(dislikeReason.metadata).length === 0)) {
+            if (
+                dislikeReason?.reason ===
+                    t('chat.feedback.dislikeReasons.infoMissing') &&
+                (!dislikeReason?.metadata ||
+                    Object.keys(dislikeReason.metadata).length === 0)
+            ) {
                 return false;
             }
         }
@@ -203,9 +211,11 @@ const ChatResponse = ({
     }, [response]);
 
     if (!response?.trim()) {
-        return <div>
-            <Loader variant={LoaderVariant.CTA} />
-        </div>;
+        return (
+            <div>
+                <Loader variant={LoaderVariant.CTA} />
+            </div>
+        );
     }
 
     return (
@@ -258,7 +268,7 @@ const ChatResponse = ({
                                         disabled={
                                             Boolean(
                                                 submittedFeedbackComment ||
-                                                submittedFeedbackType
+                                                    submittedFeedbackType
                                             ) ||
                                             feedbackMessageSubmitted ||
                                             isStreaming
@@ -271,7 +281,7 @@ const ChatResponse = ({
                                         className={
                                             (feedbackType ||
                                                 submittedFeedbackType) ===
-                                                FeedbackType.Like
+                                            FeedbackType.Like
                                                 ? styles.activeFeedbackButton
                                                 : ''
                                         }
@@ -284,7 +294,7 @@ const ChatResponse = ({
                                         disabled={
                                             Boolean(
                                                 submittedFeedbackComment ||
-                                                submittedFeedbackType
+                                                    submittedFeedbackType
                                             ) ||
                                             feedbackMessageSubmitted ||
                                             isStreaming
@@ -297,7 +307,7 @@ const ChatResponse = ({
                                         className={
                                             (feedbackType ||
                                                 submittedFeedbackType) ===
-                                                FeedbackType.Dislike
+                                            FeedbackType.Dislike
                                                 ? styles.activeFeedbackButton
                                                 : ''
                                         }
@@ -354,102 +364,127 @@ const ChatResponse = ({
                         {submittedFeedbackComment
                             ? renderFeedbackComment(submittedFeedbackComment)
                             : feedbackType &&
-                            (feedbackMessageSubmitted ||
-                                feedbackTypeSubmitted ? (
-                                feedbackMessageSubmitted &&
-                                renderFeedbackComment(feedbackComment)
-                            ) : (
-                                <div
-                                    className={`${styles.submitFeedback} flex flex-col gap-4`}
-                                >
-                                    <Typography
-                                        variant={TypographyVariant.BodySmBold}
-                                    >
-                                        {feedbackType === FeedbackType.Like
-                                            ? t(
-                                                'chat.feedback.positiveFeedbackComment'
-                                            )
-                                            : <>{
-                                                t(
-                                                    'chat.feedback.negativeFeedbackComment'
-                                                )
-                                            }
-                                                <span className="text-red-700">*</span>
-                                            </>}
-                                    </Typography>
-                                    {showFeedbackTextbox ? (
-                                        <div>
-                                            <textarea
-                                                className={`${styles.textarea} !outline-none !ring-0 text-gray-900`}
-                                                value={feedbackComment}
-                                                onChange={(e) => {
-                                                    setFeedbackComment(e.target.value);
-                                                }}
-                                                placeholder={
-                                                    t(
-                                                        'chat.feedback.placeholder'
-                                                    ) || ''
-                                                }
-                                            ></textarea>
+                              (feedbackMessageSubmitted ||
+                              feedbackTypeSubmitted ? (
+                                  feedbackMessageSubmitted &&
+                                  renderFeedbackComment(feedbackComment)
+                              ) : (
+                                  <div
+                                      className={`${styles.submitFeedback} flex flex-col gap-4`}
+                                  >
+                                      <Typography
+                                          variant={TypographyVariant.BodySmBold}
+                                      >
+                                          {feedbackType ===
+                                          FeedbackType.Like ? (
+                                              t(
+                                                  'chat.feedback.positiveFeedbackComment'
+                                              )
+                                          ) : (
+                                              <>
+                                                  {t(
+                                                      'chat.feedback.negativeFeedbackComment'
+                                                  )}
+                                                  <span className="text-red-700">
+                                                      *
+                                                  </span>
+                                              </>
+                                          )}
+                                      </Typography>
+                                      {showFeedbackTextbox ? (
+                                          <div>
+                                              <textarea
+                                                  className={`${styles.textarea} !outline-none !ring-0 text-gray-900`}
+                                                  value={feedbackComment}
+                                                  onChange={(e) => {
+                                                      setFeedbackComment(
+                                                          e.target.value
+                                                      );
+                                                  }}
+                                                  placeholder={
+                                                      t(
+                                                          'chat.feedback.placeholder'
+                                                      ) || ''
+                                                  }
+                                              ></textarea>
 
-                                            {feedbackType === FeedbackType.Dislike && (
-                                                <DislikeReasons
-                                                    dislikeReason={dislikeReason || {} as DislikeReasonsPayload}
-                                                    onDislikeReasonChange={handleDislikeReasonChange}
-                                                />
-                                            )}
-                                            <div className="flex gap-2 justify-end mt-4">
-                                                <Button
-                                                    aria-label="cancel-feedback-msg"
-                                                    size={ButtonSize.Small}
-                                                    onClick={() => {
-                                                        setFeedbackComment('');
-                                                        setShowFeedbackTextbox(false);
-                                                        setDislikeReason(null);
-                                                        if (feedbackType === FeedbackType.Dislike) {
-                                                            setFeedbackType(null);
-                                                        }
-                                                    }}
-                                                >
-                                                    {t(
-                                                        'chat.feedback.cancel'
-                                                    )}
-                                                </Button>
-                                                <Button
-                                                    aria-label="submit-feedback-msg"
-                                                    size={ButtonSize.Small}
-                                                    onClick={() =>
-                                                        handleSendFeedbackMessage()
-                                                    }
-                                                    disabled={!validateFeedbackPayload()}
-                                                >
-                                                    {t(
-                                                        'chat.feedback.submit'
-                                                    )}
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <div className="flex justify-end">
-                                            <Button
-                                                aria-label="submit-feedback-button"
-                                                type={ButtonType.Primary}
-                                                size={ButtonSize.Small}
-                                                onClick={() =>
-                                                    setShowFeedbackTextbox(
-                                                        true
-                                                    )
-                                                }
-                                                className="mt-4"
-                                            >
-                                                {t(
-                                                    'chat.feedback.submitFeedback'
-                                                )}
-                                            </Button>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                              {feedbackType ===
+                                                  FeedbackType.Dislike && (
+                                                  <DislikeReasons
+                                                      dislikeReason={
+                                                          dislikeReason ||
+                                                          ({} as DislikeReasonsPayload)
+                                                      }
+                                                      onDislikeReasonChange={
+                                                          handleDislikeReasonChange
+                                                      }
+                                                  />
+                                              )}
+                                              <div className="flex gap-2 justify-end mt-4">
+                                                  <Button
+                                                      aria-label="cancel-feedback-msg"
+                                                      size={ButtonSize.Small}
+                                                      onClick={() => {
+                                                          setFeedbackComment(
+                                                              ''
+                                                          );
+                                                          setShowFeedbackTextbox(
+                                                              false
+                                                          );
+                                                          setDislikeReason(
+                                                              null
+                                                          );
+                                                          if (
+                                                              feedbackType ===
+                                                              FeedbackType.Dislike
+                                                          ) {
+                                                              setFeedbackType(
+                                                                  null
+                                                              );
+                                                          }
+                                                      }}
+                                                  >
+                                                      {t(
+                                                          'chat.feedback.cancel'
+                                                      )}
+                                                  </Button>
+                                                  <Button
+                                                      aria-label="submit-feedback-msg"
+                                                      size={ButtonSize.Small}
+                                                      onClick={() =>
+                                                          handleSendFeedbackMessage()
+                                                      }
+                                                      disabled={
+                                                          !validateFeedbackPayload()
+                                                      }
+                                                  >
+                                                      {t(
+                                                          'chat.feedback.submit'
+                                                      )}
+                                                  </Button>
+                                              </div>
+                                          </div>
+                                      ) : (
+                                          <div className="flex justify-end">
+                                              <Button
+                                                  aria-label="submit-feedback-button"
+                                                  type={ButtonType.Primary}
+                                                  size={ButtonSize.Small}
+                                                  onClick={() =>
+                                                      setShowFeedbackTextbox(
+                                                          true
+                                                      )
+                                                  }
+                                                  className="mt-4"
+                                              >
+                                                  {t(
+                                                      'chat.feedback.submitFeedback'
+                                                  )}
+                                              </Button>
+                                          </div>
+                                      )}
+                                  </div>
+                              ))}
                     </>
                 )}
                 <div ref={endref} />

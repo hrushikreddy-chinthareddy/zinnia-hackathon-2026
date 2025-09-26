@@ -179,7 +179,9 @@ describe('ChatResponse', () => {
 
     it('sends dislike feedback only on clicking downvote and submitting feedback comment along with dislike reasons', async () => {
         (sendResponseFeedback as jest.Mock).mockResolvedValue(true);
-        const { getByRole, getAllByRole } = render(<ChatResponse {...defaultProps} />);
+        const { getByRole, getAllByRole } = render(
+            <ChatResponse {...defaultProps} />
+        );
         const dislikeButton = getByRole('button', { name: /downvote-button/i });
         fireEvent.click(dislikeButton);
 
@@ -235,7 +237,9 @@ describe('ChatResponse', () => {
     it('logs errors when fails to send a feedback comment', async () => {
         const testError = new Error('Network failure');
         (sendResponseFeedback as jest.Mock).mockRejectedValue(testError);
-        const { getByRole, getAllByRole } = render(<ChatResponse {...defaultProps} />);
+        const { getByRole, getAllByRole } = render(
+            <ChatResponse {...defaultProps} />
+        );
         const dislikeButton = getByRole('button', { name: /downvote-button/i });
         fireEvent.click(dislikeButton);
 

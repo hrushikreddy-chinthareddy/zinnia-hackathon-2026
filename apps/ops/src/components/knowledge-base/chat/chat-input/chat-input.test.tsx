@@ -86,7 +86,9 @@ describe('ChatInput', () => {
             />
         );
         expect(getByRole('textbox')).toBeInTheDocument();
-        expect(getByRole('button', { name: /send-button/i })).toBeInTheDocument();
+        expect(
+            getByRole('button', { name: /send-button/i })
+        ).toBeInTheDocument();
     });
 
     it('calls createNewChatSession when no sessionId exists', async () => {
@@ -279,7 +281,7 @@ describe('ChatInput', () => {
         fireEvent.change(input, { target: { value: mockMessage } });
         fireEvent.click(getByRole('button', { name: /send-button/i }));
 
-        // Now click retry
+        // click retry
         fireEvent.click(retryButton);
 
         await waitFor(() => {

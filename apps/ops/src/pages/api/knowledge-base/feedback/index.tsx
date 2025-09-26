@@ -19,14 +19,22 @@ export default withAuthAndLogging(
         loggingContext
     ) => {
         const accessToken = (await getAccessToken(req, res)).accessToken;
-        const { email, messageId, feedbackType, comment = '', dislikeReason = null } = req.body;
+        const {
+            email,
+            messageId,
+            feedbackType,
+            comment = '',
+            dislikeReason = null,
+        } = req.body;
 
         if (!email || !messageId || !feedbackType) {
             logError(
                 'Error searching chat sessions:: missing email, messageId or feedbackType',
                 loggingContext
             );
-            return res.status(HttpStatusCode.BadRequest).json({ error: 'missing email, messageId or feedbackType' });
+            return res
+                .status(HttpStatusCode.BadRequest)
+                .json({ error: 'missing email, messageId or feedbackType' });
         }
 
         const url = `${apiServerBaseUrl}/api/v1/chat/messages/${messageId}/feedback`;
@@ -43,7 +51,7 @@ export default withAuthAndLogging(
                     email,
                     feedbackType,
                     comment,
-                    dislikeReason
+                    dislikeReason,
                 },
                 {
                     headers: {
@@ -61,7 +69,9 @@ export default withAuthAndLogging(
                 ...parseErrorInformation(error),
                 ...loggingContext,
             });
-            res.status(error?.status ?? HttpStatusCode.InternalServerError).json(error?.data ?? null);
+            res.status(
+                error?.status ?? HttpStatusCode.InternalServerError
+            ).json(error?.data ?? null);
         }
     },
     {
