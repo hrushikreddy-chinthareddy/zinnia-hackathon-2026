@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { NotificationCenter } from '@/components/notification-center/NotificationCenter';
 import { getPageTitle, RouteKey } from '@/route-map';
-import { searchCasesByPolicyNumber } from '@/services/case';
+import { searchCases } from '@/services/case';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError } from '@/utils/logging/log-fns';
@@ -31,13 +31,15 @@ export default async function NotificationsPage({ params }: Props) {
 
   if (!notificationViewEnabled) return notFound();
 
-  const { data: cases, error } = await searchCasesByPolicyNumber({
-    policyNumber: params.policyNumber,
+  const { data: cases, error } = await searchCases(
+    {
+      policyNumber: params.policyNumber,
+    },
     loggingCtx
-  });
+  );
 
-  if (cases && cases.length > 0) {
-    initialNotifications = cases;
+  if (cases?.data && cases.data.length > 0) {
+    initialNotifications = cases.data;
   }
 
   if (error) {
