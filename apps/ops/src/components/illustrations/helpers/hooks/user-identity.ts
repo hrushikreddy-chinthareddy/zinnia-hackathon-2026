@@ -4,6 +4,7 @@ import {
 } from '@xd/api-types/dist/generated-types/partyreference';
 import { identity, uniq } from 'lodash';
 import { useMemo } from 'react';
+import { SetRequired } from 'type-fest';
 
 import { Brand } from '@deps/utils/types';
 
@@ -13,7 +14,10 @@ const SELLING_CODE_FIELD = 'SELLING_CODE';
  * To brand aliases that we know have an external party identifier with a
  * selling code
  */
-export type AliasWithSellingCode = Brand<AliasModel, 'AliasWithSellingcode'>;
+export type AliasWithSellingCode = Brand<
+    SetRequired<AliasModel, 'carrier' | 'externalPartyIds'>,
+    'AliasWithSellingcode'
+>;
 
 /**
  * Filter aliases that have an external party identifier with a selling code
@@ -24,8 +28,10 @@ export const filterAliasesWithSellingCode = (
     if (!aliases) {
         return;
     }
-    return aliases.filter((alias) =>
-        alias.externalPartyIds?.some((id) => id.key === SELLING_CODE_FIELD)
+    return aliases.filter(
+        (alias) =>
+            alias.carrier &&
+            alias.externalPartyIds?.some((id) => id.key === SELLING_CODE_FIELD)
     ) as AliasWithSellingCode[];
 };
 
@@ -45,18 +51,35 @@ export const useAllAliasesWithSellingCode = (
  */
 export const getSellingCodesFromAliases = (aliases: AliasModel[] | undefined) =>
     uniq(
-        (aliases?.map(getSellingCodeFromAlias)?.filter(identity) as string[]) ??
-            []
+        aliases
+            ?.map((alias) => getSellingCodeFromAlias(alias))
+            ?.filter(
+                (
+                    obj
+                ): obj is { sellingCode: string; carrierShortName: string } =>
+                    !!(obj?.sellingCode && obj?.carrierShortName)
+            ) ?? []
     );
 
-export const getSellingCodeFromAlias = (
-    alias: AliasModel
-): string | undefined =>
-    alias.externalPartyIds?.find((id) => id.key === SELLING_CODE_FIELD)?.value;
+export const getSellingCodeFromAlias = (alias: AliasModel) => {
+    const carrierShortName = alias.carrier?.toUpperCase();
+    const sellingCode = alias.externalPartyIds?.find(
+        (id) => id.key === SELLING_CODE_FIELD
+    )?.value as string | undefined;
+
+    if (!carrierShortName || !sellingCode) {
+        return;
+    }
+
+    return {
+        carrierShortName,
+        sellingCode,
+    };
+};
 
 export const getSellingCodeFromAliasWithSellingCode = (
     alias: AliasWithSellingCode
-): string => getSellingCodeFromAlias(alias)!;
+) => getSellingCodeFromAlias(alias)!;
 
 // TODO: Confirm if this is the way to find the main alias
 export const getMainAlias = (aliases: AliasWithSellingCode[]) => {
