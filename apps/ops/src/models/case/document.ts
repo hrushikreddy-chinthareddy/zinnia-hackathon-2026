@@ -27,6 +27,7 @@ export enum DocumentType {
     Purchase = 'Purchase',
     StatementOfUnderstanding = 'Statement of Understanding',
     Systematic = 'Systematic',
+    Output = 'Output',
 }
 
 // FIXME: move out of models
