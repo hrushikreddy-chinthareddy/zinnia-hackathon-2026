@@ -14,81 +14,16 @@
                 "title": "Post Issue NIGO Review",
                 "formSchema": {
                     "type": "object",
-                    "properties": {
-                        "rules": {
-                            "type": "array",
-                            "title": "",
-                            "items": {
-                                "type": "object",
-                                "title": "",
-                                "properties": {
-                                    "reason": {
-                                        "type": "string",
-                                        "title": "Issues",
-                                        "default": ""
-                                    },
-                                    "detailedReason": {
-                                        "type": "string",
-                                        "title": "Processing Instructions",
-                                        "default": ""
-                                    },
-                                    "resolved": {
-                                        "type": "boolean",
-                                        "title": "Resolved"
-                                    }
-                                }
-                            }
-                        },
-                        "uploadDocuments": {
-                            "type": "object",
-                            "title": "Link or upload document",
-                            "properties": {
-                                "upload": {
-                                    "type": "string"
-                                },
-                                "or": {
-                                    "type": "string",
-                                    "title": "or"
-                                },
-                                "attachment": {
-                                    "type": "array",
-                                    "title": "Upload",
-                                    "items": {
-                                        "title": "Upload",
-                                        "type": "string",
-                                        "format": "data-url"
-                                    }
-                                }
-                            }
-                        },
-                        "attachments": {
-                            "type": "array",
-                            "title": "Link or upload document",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "documentId": {
-                                        "title": "Document Id",
-                                        "type": "string"
-                                    },
-                                    "documentName": {
-                                        "title": "Document Name",
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "process": {
-                            "type": "string",
-                            "title": "process"
-                        }
-                    },
+                    
                     "dependencies": {
                         "process": {
                             "if": {
                                 "properties": {
                                     "process": {
                                         "const": "Policy Update"
+                                    },
+                                    "processSubType": {
+                                        "const": "Agent Change"
                                     }
                                 }
                             },
@@ -113,6 +48,75 @@
                                     }
                                 },
                                 "dependencies": {
+                                    "properties": {
+                                        "rules": {
+                                            "type": "array",
+                                            "title": "",
+                                            "items": {
+                                                "type": "object",
+                                                "title": "",
+                                                "properties": {
+                                                    "reason": {
+                                                        "type": "string",
+                                                        "title": "Issues",
+                                                        "default": ""
+                                                    },
+                                                    "detailedReason": {
+                                                        "type": "string",
+                                                        "title": "Processing Instructions",
+                                                        "default": ""
+                                                    },
+                                                    "resolved": {
+                                                        "type": "boolean",
+                                                        "title": "Resolved"
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "process": {
+                                            "type": "string",
+                                            "title": "process"
+                                        }
+                                    },
+                                    "uploadDocuments": {
+                                        "type": "object",
+                                        "title": "Link or upload document",
+                                        "properties": {
+                                            "upload": {
+                                                "type": "string"
+                                            },
+                                            "or": {
+                                                "type": "string",
+                                                "title": "or"
+                                            },
+                                            "attachment": {
+                                                "type": "array",
+                                                "title": "Upload",
+                                                "items": {
+                                                    "title": "Upload",
+                                                    "type": "string",
+                                                    "format": "data-url"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "attachments": {
+                                        "type": "array",
+                                        "title": "Link or upload document",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "documentId": {
+                                                    "title": "Document Id",
+                                                    "type": "string"
+                                                },
+                                                "documentName": {
+                                                    "title": "Document Name",
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    },
                                     "issueResolved": {
                                         "oneOf": [
                                             {
