@@ -1,6 +1,12 @@
-import { ButtonProps, Loader } from '@zinnia/bloom/components';
+import { Loader } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
-import { RefAttributes, useEffect, useMemo, useState } from 'react';
+import {
+  RefAttributes,
+  useEffect,
+  useMemo,
+  useState,
+  ComponentProps,
+} from 'react';
 
 import { CancelDialogLink } from './common/CancelDialogLink';
 import { FormHeader } from './common/FormHeader';
@@ -83,7 +89,7 @@ const WorkflowContainer = ({
   workflowSteps,
   children,
 }: SteppedWorkflowProps) => {
-  const { stepInfo, currentStep, primaryButtonDisabled } =
+  const { stepInfo, currentStep, primaryButtonDisabled, primaryButtonLoading } =
     useSteppedWorkflowContext();
   const [isValidating, setIsValidating] = useState(true);
   const router = useRouter();
@@ -95,9 +101,11 @@ const WorkflowContainer = ({
     return currentStep.title === lastStep?.title;
   }, [currentStep.title, workflowSteps]);
 
-  let nextButtonProps: ButtonProps & RefAttributes<HTMLButtonElement> = {
+  let nextButtonProps: ComponentProps<typeof Button> &
+    RefAttributes<HTMLButtonElement> = {
     children: currentStep?.actions?.primary?.text ?? 'Continue',
     disabled: primaryButtonDisabled,
+    loading: primaryButtonLoading,
   };
 
   useEffect(() => {

@@ -1,13 +1,12 @@
 import { Icon, IconType, Button } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { IllustrationAgentDetails } from '@deps/types/illustrations';
 
 import styles from './agent-search.module.css';
 import { AgentOption } from './types';

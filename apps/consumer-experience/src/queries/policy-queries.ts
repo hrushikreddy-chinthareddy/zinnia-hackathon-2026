@@ -3,6 +3,7 @@ import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds/types';
+import { LimitedPolicyParty } from '@/services/policy/types';
 import {
   PolicyProfile,
   PolicyRequestInputs,
@@ -11,7 +12,6 @@ import {
   UpcomingPremium,
 } from '@/types/policy';
 import { CarrierListDetail } from '@/utils/carriers';
-import { LimitedPolicyParty } from '@/services/policy/types';
 
 export const getPolicyParties = async ({
   planCode,
@@ -149,11 +149,9 @@ export const getUpcomingPremium = async ({
   return response.data;
 };
 
-export const getPoliciesByCarrier = async (carriers?: string[]) => {
+export const getAllPoliciesForCarriers = async () => {
   const response: ApiResponse<CarrierListDetail[]> = await (
-    await ClientApi.get(
-      `/api/policies/by-carrier?carriers=${carriers?.join(',')}`
-    )
+    await ClientApi.get(`/api/policies/by-carrier`)
   ).json();
 
   if (response.error || !response) {

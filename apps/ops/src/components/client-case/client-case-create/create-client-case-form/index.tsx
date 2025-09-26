@@ -426,6 +426,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         selectedAgentOption,
         loggedInUserMainAlias,
         loggedInUserMainSellingCode,
+        isSuperIllustrator,
+        handleSelectAgentOption,
     ]);
 
     return (
@@ -661,6 +663,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 )}
                 <div className={styles.clientState}>
                     <Select
+                        contentClassName={styles.clientStateOptions}
                         options={usStatesSelectList}
                         label={
                             <Label>

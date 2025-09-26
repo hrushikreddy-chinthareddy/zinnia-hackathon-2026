@@ -1,3 +1,4 @@
+import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
 import {
     Address,
     BankAccount,
@@ -546,6 +547,23 @@ export const mcsResponseSanitizer = (
         };
     } catch (e) {
         logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', {
+            ...parseErrorInformation(e),
+        });
+        throw e;
+    }
+};
+
+export const agentPartySanitizer = (
+    agent: POM_Producer_Models_SearchProducersResult
+) => {
+    try {
+        const { socialSecurityNumber } = agent;
+        return {
+            ...agent,
+            socialSecurityNumber: formatSSN(socialSecurityNumber),
+        };
+    } catch (e) {
+        logErrorWithoutContext('sanitizers::PomAgentParty::error', {
             ...parseErrorInformation(e),
         });
         throw e;

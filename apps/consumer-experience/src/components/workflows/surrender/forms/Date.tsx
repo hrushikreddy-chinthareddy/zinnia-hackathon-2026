@@ -23,7 +23,7 @@ import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import { default as styles } from '../Surrender.module.css';
 
-export const Date = () => {
+export const Date = ({ netSurrenderValue }: { netSurrenderValue: number }) => {
   const { state, dispatch } = useSurrender();
   const { stepInfo } = useSteppedWorkflowContext();
   const router = useRouter();
@@ -33,9 +33,6 @@ export const Date = () => {
     defaultValues: state.dateStep,
   });
 
-  // @TODO: CUI-919 - get this from the policy
-  const NET_SURRENDER_VALUE = 250343.12;
-
   const onSubmit: SubmitHandler<z.infer<typeof dateStepSchema>> = () => {
     dispatch({
       type: SurrenderAction.SET_SURRENDER_DATE_STEP,
@@ -44,7 +41,7 @@ export const Date = () => {
           surrenderDate: dayjs(form.getValues('surrenderDate')).format(
             ZAHARA_DATE_FORMAT
           ),
-          netSurrenderValue: NET_SURRENDER_VALUE,
+          netSurrenderValue: netSurrenderValue,
         },
       },
     });
@@ -75,7 +72,7 @@ export const Date = () => {
         </Label>
         {/* @TODO: CUI-919 - get this from the policy */}
         <p className="typography-content-value">
-          {formatUSDollars(NET_SURRENDER_VALUE)}
+          {formatUSDollars(netSurrenderValue)}
         </p>
       </div>
 

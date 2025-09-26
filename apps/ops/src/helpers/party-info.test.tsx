@@ -37,7 +37,10 @@ import {
     getFullName,
 } from './party-info-helpers';
 
-const partyInfo: Party = {
+const partyInfo: Party & {
+    producerName: string | undefined;
+    producerType: string | undefined;
+} = {
     partyId: 'Party_PI_1',
     beneficiaryPercentage: 0,
     partyType: PartyType.INDIVIDUAL,
@@ -120,6 +123,8 @@ const partyInfo: Party = {
     timestamp: '',
     trustDate: '',
     identifications: [],
+    producerName: '',
+    producerType: '',
 };
 
 const coverage: PolicyCoverage = {

@@ -37,7 +37,7 @@ export const ProfileView = async ({
   policyNumber: string;
 }) => {
   const flags = await getFeatureFlags();
-
+  const commonLoggingContext = await buildCommonLogContext();
   const showCommunicationPreferences =
     flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
   const allowBankingChanges =
@@ -46,7 +46,7 @@ export const ProfileView = async ({
     flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
   const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
-  const { payment } = await getCarrierConfig();
+  const { data } = await getCarrierConfig(commonLoggingContext);
 
   let preferencesData = [] as EDeliveryPreferenceModel[];
   const loggingContext = await buildCommonLogContext();
@@ -110,12 +110,12 @@ export const ProfileView = async ({
 
   const bank = () => {
     if (
-      payment.provider === PaymentProvider.PAYMENTUS &&
+      data?.payment.provider === PaymentProvider.PAYMENTUS &&
       showFarmersPaymentus
     ) {
       return (
         <PaymentDetails
-          verifyIdentityRequired={payment.verifyIdentityRequired}
+          verifyIdentityRequired={data?.payment.verifyIdentityRequired}
           policyNumber={policyNumber}
           planCode={planCode}
         />
@@ -130,7 +130,7 @@ export const ProfileView = async ({
           allowBankingChanges={allowBankingChanges}
           initialProfileData={profileData}
           lineOfBusiness={lineOfBusiness}
-          verifyIdentityRequired={payment.verifyIdentityRequired}
+          verifyIdentityRequired={data?.payment.verifyIdentityRequired}
         />
       </>
     );

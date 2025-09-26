@@ -1,6 +1,15 @@
 import { PartyRole } from '@zinnia/api-types/types/sor';
 
-import { isPartyOwner, isPartyPayor, isPayorOnly } from './party';
+import { logTrace } from '@/utils/logging/log-fns';
+
+import {
+  isPartyOwner,
+  isPartyPayor,
+  isPayorOnly,
+  partyRolesAreInAllowedList,
+} from './party';
+
+jest.mock('@/utils/logging/log-fns');
 
 describe('Party Role Utility Functions', () => {
   describe('isPartyOwner', () => {
@@ -48,6 +57,60 @@ describe('Party Role Utility Functions', () => {
       expect(
         isPayorOnly([PartyRole.INSURED, PartyRole.PAYOR, PartyRole.OWNER])
       ).toBe(false);
+    });
+  });
+
+  describe('partyRolesAreInAllowedList', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return true when roles are in the accepted list', () => {
+      const mockPartyRoles = [PartyRole.OWNER, PartyRole.INSURED];
+
+      const result = partyRolesAreInAllowedList(mockPartyRoles);
+
+      expect(result).toBe(true);
+    });
+
+    it('should return false when no roles are in the accepted list', () => {
+      const mockPartyRoles = [PartyRole.AGENT];
+
+      const result = partyRolesAreInAllowedList(mockPartyRoles);
+
+      expect(result).toBe(false);
+      expect(logTrace).toHaveBeenCalledWith(
+        'Party roles were not found in allowed list',
+        {
+          filteredPartyRoles: [],
+          partyRoles: mockPartyRoles,
+          acceptedRoles: expect.any(Array),
+        }
+      );
+    });
+
+    it('should return true when at least one role is in the accepted list', () => {
+      const mockPartyRoles = [PartyRole.OWNER, PartyRole.AGENT];
+
+      const result = partyRolesAreInAllowedList(mockPartyRoles);
+
+      expect(result).toBe(true);
+    });
+
+    it('should handle an empty roles array', () => {
+      const mockPartyRoles = <PartyRole[]>[];
+
+      const result = partyRolesAreInAllowedList(mockPartyRoles);
+
+      expect(result).toBe(false);
+      expect(logTrace).toHaveBeenCalledWith(
+        'Party roles were not found in allowed list',
+        {
+          filteredPartyRoles: [],
+          partyRoles: mockPartyRoles,
+          acceptedRoles: expect.any(Array),
+        }
+      );
     });
   });
 });

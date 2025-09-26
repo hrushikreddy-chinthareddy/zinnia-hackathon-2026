@@ -95,7 +95,11 @@ export const renderTiffPagesToContainer = async (
             const rgbaData = convertToRGBA(page);
             if (!rgbaData) continue;
 
-            const imageData = new ImageData(rgbaData, page.width, page.height);
+            const imageData = new ImageData(
+                new Uint8ClampedArray(rgbaData),
+                page.width,
+                page.height
+            );
             const viewerState: ViewerState = {
                 imageData,
                 width: page.width,
@@ -115,7 +119,9 @@ export const renderTiffPagesToContainer = async (
         });
         // Fallback: download the tiff file
         try {
-            const blob = new Blob([binary], { type: 'image/tiff' });
+            const blob = new Blob([new Uint8ClampedArray(binary)], {
+                type: 'image/tiff',
+            });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;

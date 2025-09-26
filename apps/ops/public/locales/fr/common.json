@@ -305,7 +305,7 @@
             },
             "aiChatbot": {
                 "text": "Assistant AI de Zinnia"
-             },
+            },
             "propriétaire": {
                 "text": "Gérer les propriétaires",
                 "link": "/policies/{{planCode}}/{{id}}/policy/roles/manage-owner"
@@ -2095,6 +2095,7 @@
                 "mail": "Adresse postale"
             },
             "startNotification": "Historique",
+            "packets": "Paquets",
             "sendTo": "Envoyer à",
             "contactMethod": "Méthode de contact",
             "scheduledNotification": "Tentative {{followup}} programmée pour {{date}}",
@@ -3287,6 +3288,9 @@
             "policy": "police",
             "contract": "contrat"
         },
+        "commonPhrases": {
+            "endingIn": "se terminant par"
+        },
         "allFields": {
             "policyBasics": "Bases de {{policyNomenclature}}",
             "effectiveDate": "Date d'effet",
@@ -3602,7 +3606,7 @@
             "underwritingDecision": "Décision de souscription",
             "featureId": "ID de caractéristique",
             "featureSubType": "Sous-type de caractéristique",
-            "funds": "Fonds",
+            "combinedFunds": "Fonds",
             "modelId": "ID du modèle",
             "interestGuaranteedPeriod": "Période garantie des intérêts",
             "match": "Appariement",
@@ -6048,6 +6052,10 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "paiement"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
             }
@@ -7894,6 +7902,7 @@
         "newClientCase": "+ Nouveau client case",
         "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
         "searchBar": {
+            "searchByLabel": "Rechercher Par",
             "clientCase": "Client case",
             "agentName": "Nom de l'agent",
             "insuredName": "Nom de l'assuré",
@@ -7963,11 +7972,13 @@
             },
             "premium": {
                 "title": "Prime",
-                "initial": "Prime initiale",
-                "target": "Prime cible",
-                "mec": "Prime MEC",
+                "initial": "Prime annuelle initiale",
+                "initialModal": "Prime modale initiale",
+                "target": "Prime annuelle cible",
+                "mec": "Prime annuelle MEC",
                 "initialBase": "Prime de base initiale",
-                "totalInitial": "Prime initiale totale"
+                "totalInitial": "Prime initiale totale",
+                "initialModalPremium": "Prime modale initiale"
             },
             "riders": {
                 "title": "Avenants de politique",
@@ -8072,15 +8083,16 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Vues de la page Zinnia Live"
+                "title": "Vues de la page Zinnia Live",
+                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vues de cas Zinnia Live par transaction"
+                "title": "Top 5 des cas de Zinnia Live"
             }
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
             "inputPlaceholder": "Demande-moi n'importe quoi",

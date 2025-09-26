@@ -8,7 +8,7 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOverviewLinks';
-import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
+import { CancelledFreelook } from '@/components/policy-overview/non-active-statuses/cancelled-freelook/CancelledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
 import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
 import { LargeSkeleCard } from '@/components/skeleton-loader/policy-page/policy-page-skeletons';
@@ -16,6 +16,7 @@ import { getPolicyForHeaderDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
+import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -27,11 +28,13 @@ export const metadata: Metadata = {
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: {
     planCode: string;
     policyNumber: string;
   };
+  searchParams: { type: DocumentCategory };
 }) {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
@@ -71,7 +74,11 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <SurrenderedPolicy />
+          <SurrenderedPolicy
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
           <CallForAssistance customInstruction="with surrender questions." />
         </Suspense>
       );
@@ -80,8 +87,12 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.CANCELEDFREELOOK) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <CanceledFreelook />
-          <CallForAssistance customInstruction="with questions." />
+          <CancelledFreelook
+            lineOfBusiness={LineOfBusiness.ANNUITY}
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
         </Suspense>
       );
     }

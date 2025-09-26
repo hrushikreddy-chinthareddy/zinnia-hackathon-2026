@@ -2099,6 +2099,7 @@
                 "mail": "Dirección postal"
             },
             "startNotification": "Historial",
+            "packets": "Paquetes",
             "sendTo": "Enviar a",
             "contactMethod": "Método de contacto",
             "scheduledNotification": "Intento {{followup}} programado para {{date}}",
@@ -3309,6 +3310,9 @@
             "policy": "póliza",
             "contract": "contrato"
         },
+        "commonPhrases": {
+            "endingIn": "terminando en"
+        },
         "allFields": {
             "policyBasics": "Básicos de {{policyNomenclature}}",
             "effectiveDate": "Fecha de vigencia",
@@ -3624,7 +3628,7 @@
             "underwritingDecision": "Decisión de suscripción",
             "featureId": "ID de característica",
             "featureSubType": "Subtipo de característica",
-            "funds": "Fondos",
+            "combinedFunds": "Fondos",
             "modelId": "ID del modelo",
             "interestGuaranteedPeriod": "Período de interés garantizado",
             "match": "Coincidencia",
@@ -6082,6 +6086,10 @@
             "rmdAutopay": "Pago automático de RMD próximo",
             "cancelWithdrawalAutopayTitle": "Cancelar sistemáticamente {{type}}",
             "cancelAutopay": "Cancelar pago automático",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "pago"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
             }
@@ -7834,10 +7842,11 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Visitas de página en vivo de Zinnia"
+                "title": "Visitas de página en vivo de Zinnia",
+                "description": "Muestra el número de visualizaciones de casos únicamente para grupos de usuarios seleccionados."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vistas de casos de Zinnia Live por transacción"
+                "title": "Los 5 casos más vistos de Zinnia Live"
             }
         }
     },
@@ -7874,6 +7883,7 @@
         "newClientCase": "+  Nuevo client case",
         "clientCasePermissions": "No tienes permiso para realizar esta acción.",
         "searchBar": {
+            "searchByLabel": "Buscar Por",
             "clientCase": "Client case",
             "agentName": "Nombre de agente",
             "insuredName": "Nombre del asegurado",
@@ -7943,11 +7953,13 @@
             },
             "premium": {
                 "title": "Prima",
-                "initial": "Prima inicial",
-                "target": "Prima planeada",
-                "mec": "Prima MEC",
+                "initial": "Prima anual inicial",
+                "initialModal": "Prima modal inicial",
+                "target": "Prima anual planeada",
+                "mec": "Prima MEC anual",
                 "initialBase": "Prima base inicial",
-                "totalInitial": "Prima inicial total"
+                "totalInitial": "Prima inicial total",
+                "initialModalPremium": "Prima modal inicial"
             },
             "riders": {
                 "title": "Adicionales",
@@ -8033,7 +8045,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Hola, soy agente virtual. Tenga en cuenta que esta función está actualmente en fase beta.\n¿Cómo puedo ayudarle?",
             "inputPlaceholder": "Pregúntame cualquier cosa",

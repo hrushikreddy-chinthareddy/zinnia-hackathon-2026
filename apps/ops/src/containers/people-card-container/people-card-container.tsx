@@ -1,3 +1,4 @@
+import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
 import { PartyType } from '@zinnia/api-types/types/sor';
 import { useContext } from 'react';
 
@@ -76,6 +77,8 @@ const mapDataToPeopleCard = ({
         beneficiaryPercentage,
         partyId,
         agentPercentage,
+        producerType,
+        producerName,
     } = party;
     const {
         selectedTagList,
@@ -91,6 +94,10 @@ const mapDataToPeopleCard = ({
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
+            if (producerType === POM_Models_ProducerType.CORPORATION) {
+                name = toTitleCase(safeString(producerName));
+                break;
+            }
             if (!firstName && !!fullName) {
                 name = toTitleCase(safeString(fullName));
             } else {

@@ -1,17 +1,11 @@
 import { NextResponse } from 'next/server';
 
 import { getCarrierConfig } from '@/services/carrier-config';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export async function GET() {
-  try {
-    return NextResponse.json({
-      data: await getCarrierConfig(),
-      error: null,
-    });
-  } catch (error) {
-    return NextResponse.json({
-      data: null,
-      error: 'something went wrong',
-    });
-  }
+  const commonLoggingContext = await buildCommonLogContext();
+  const response = await getCarrierConfig(commonLoggingContext);
+
+  return NextResponse.json(response);
 }

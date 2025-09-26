@@ -2096,6 +2096,7 @@
                 "mail": "Mailing Address"
             },
             "startNotification": "History",
+            "packets": "Packets",
             "sendTo": "Send to",
             "contactMethod": "Contact Method",
             "scheduledNotification": "Attempt {{followup}} scheduled for {{date}}",
@@ -3309,6 +3310,9 @@
             "policy": "policy",
             "contract": "contract"
         },
+        "commonPhrases": {
+            "endingIn": "ending in"
+        },
         "allFields": {
             "policyBasics": "{{policyNomenclature, capitalize}} basics",
             "effectiveDate": "Effective date",
@@ -3624,7 +3628,7 @@
             "underwritingDecision": "Underwriting decision",
             "featureId": "Feature ID",
             "featureSubType": "Feature sub type",
-            "funds": "Funds",
+            "combinedFunds": "Funds",
             "modelId": "Model id",
             "interestGuaranteedPeriod": "Interest guaranteed period",
             "match": "Match",
@@ -5107,7 +5111,6 @@
             "exchangeCompany": "Exchange Company",
             "jointAnnuitant": "Joint Annuitant",
             "otherInterestedParty": "Other Interested Party"
-
         }
     },
     "pageHeader": {
@@ -6133,6 +6136,10 @@
             "rmdAutopay": "Upcoming RMD Autopay",
             "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
             "cancelAutopay": "Cancel autopay",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "payment"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
             }
@@ -8020,10 +8027,11 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Zinnia Live Page Views"
+                "title": "Zinnia Live Page Views",
+                "description": "Shows number of case views for selected user groups only."
             },
             "zinniaLiveCaseViews": {
-                "title": "Zinnia Live Case Views by Transaction"
+                "title": "Zinnia Live Top 5 Case Views"
             }
         }
     },
@@ -8031,6 +8039,7 @@
         "newClientCase": "+ New client case",
         "clientCasePermissions": "You do not have permission to take this action.",
         "searchBar": {
+            "searchByLabel": "Search By",
             "clientCase": "Client case",
             "agentName": "Agent name",
             "insuredName": "Insured name",
@@ -8100,11 +8109,13 @@
             },
             "premium": {
                 "title": "Premium",
-                "initial": "Initial premium",
-                "target": "Target premium",
-                "mec": "MEC premium",
+                "initial": "Initial annual premium",
+                "initialModal": "Initial modal premium",
+                "target": "Target annual premium",
+                "mec": "MEC annual premium",
                 "initialBase": "Initial base premium",
-                "totalInitial": "Total initial premium"
+                "totalInitial": "Total initial premium",
+                "initialModalPremium": "Initial modal premium"
             },
             "riders": {
                 "title": "Riders",
@@ -8190,7 +8201,7 @@
         }
     },
     "zinniaAiAssistant": {
-        "header":"Zinnia AI Assistant",
+        "header": "Zinnia AI Assistant",
         "chat": {
             "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
             "inputPlaceholder": "Ask me anything",

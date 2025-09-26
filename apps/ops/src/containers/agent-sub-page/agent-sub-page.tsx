@@ -1,5 +1,6 @@
+import { useQuery } from '@tanstack/react-query';
 import { Loader } from '@zinnia/bloom/components';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 
 import PersonPageHeader from '@deps/containers/page-header/interior-people-page-header';
 import AddressCard from '@deps/containers/people-data-cards/address-card/address-card';
@@ -7,19 +8,18 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import AgentParty from '@deps/helpers/policy-sor/AgentParty';
-import { getAgentData } from '@deps/queries/api/agents';
+import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
+import { getPomAgentData } from '@deps/queries/api/agents';
+import { PomAgentData } from '@deps/types/agents';
 
 import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
-import FirmInformationCard from '../people-data-cards/firm-information-card/firm-information-card';
+import EmptyCard from '../people-data-cards/empty-card/empty-card';
 
 export type AgentSubPage = {
     partyId: string;
 };
 
 export const AgentSubPage = ({ partyId }: AgentSubPage) => {
-    const [agentData, setAgentData] = useState<AgentParty>();
-    const [isLoading, setIsLoading] = useState(true);
     const { policy, policyDetails } = useContext(PolicyData);
 
     const { parties, partyRoles, policyNumber, product } = policy ?? {};
@@ -38,29 +38,16 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
     }, [partyRoles, selectedPolicyParty?.partyId]);
 
     const agentId = selectedPolicyParty?.agentExternalId;
-    const clientCode = policy?.carrierId;
 
-    const fetchAgentData = useCallback(async () => {
-        try {
-            const result = await getAgentData({
-                clientCode,
-                id: agentId,
-                policyNumber,
-                planCode,
-            });
-            setAgentData(new AgentParty(result, selectedPolicyParty));
-        } catch (error) {
-            console.error('Unable to fetch agent details', error);
-            setAgentData(new AgentParty(undefined, selectedPolicyParty));
-        } finally {
-            setIsLoading(false);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [agentId, clientCode]);
-
-    useEffect(() => {
-        fetchAgentData();
-    }, [fetchAgentData]);
+    const { data: agentData, isLoading } = useQuery({
+        queryKey: ['agentData', agentId, policyNumber, planCode],
+        queryFn: () => getPomAgentData({ id: agentId, policyNumber, planCode }),
+        enabled: !!policyNumber && !!agentId && !!planCode,
+        select: (data) =>
+            data
+                ? new PomAgentParty(data as PomAgentData, selectedPolicyParty)
+                : undefined,
+    });
 
     return (
         <div className="shadow-elevation-light-04">
@@ -69,7 +56,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     <Loader />
                 </div>
             )}
-            {!isLoading && agentData && (
+            {!isLoading && agentData ? (
                 <>
                     <PersonPageHeader
                         selectedPolicyParty={agentData?.party}
@@ -79,11 +66,8 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
-                    <FirmInformationCard selectedPolicyParty={agentData} />
-
-                    <hr className=" h-0.5 border-none bg-gray-100" />
                     <AllocationCard
-                        allocation={agentData?.party?.agentPercentage}
+                        allocation={agentData?.party?.partyPercentage}
                         deathBenefit={null}
                     />
 
@@ -120,6 +104,10 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                         policyNumber={policyNumber}
                     />
                 </>
+            ) : (
+                <div className="p-4">
+                    <EmptyCard text={'No Agent data available.'} />
+                </div>
             )}
         </div>
     );

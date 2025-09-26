@@ -1,5 +1,4 @@
 import { createContext, ReactNode, useContext } from 'react';
-import { createStore } from 'zustand';
 
 import { IllustrationAgentDetails } from '@deps/types/illustrations';
 

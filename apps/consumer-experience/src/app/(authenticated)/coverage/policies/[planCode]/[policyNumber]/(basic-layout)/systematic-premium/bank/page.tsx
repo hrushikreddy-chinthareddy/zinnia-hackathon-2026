@@ -10,7 +10,7 @@ import { buildCommonLogContext } from '@/utils/logging/server-logging';
 const BankPage = async ({ params }: PolicyRequestInputsParams) => {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
-  const { payment } = await getCarrierConfig();
+  const { data } = await getCarrierConfig(loggingContext);
 
   const { data: initialPaymentMethods } = await getPaymentMethods(
     {
@@ -27,7 +27,7 @@ const BankPage = async ({ params }: PolicyRequestInputsParams) => {
         planCode={planCode}
         initialPaymentMethods={initialPaymentMethods || []}
         lineOfBusiness={LineOfBusiness.LIFE}
-        paymentProvider={payment.provider}
+        paymentProvider={data?.payment.provider}
       />
     </SystematicPremiums>
   );

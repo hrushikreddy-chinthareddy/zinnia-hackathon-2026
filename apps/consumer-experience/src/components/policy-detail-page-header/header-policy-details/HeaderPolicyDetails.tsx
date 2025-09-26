@@ -1,15 +1,13 @@
-'use client';
-import { useQuery } from '@tanstack/react-query';
 import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
 
 import { AgentSidesheet } from '@/components/agent-sidesheet/AgentSidesheet';
-import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
-import { getAgentInformation } from '@/queries/agent-queries';
-import { getPolicyDetails } from '@/queries/policy-queries';
+import { getPolicyDetails } from '@/services/policy';
+import { pomAgentSearch } from '@/services/pom/distributors/v1/producers/search';
 import { isAnnuity, policyStatusDisplayText } from '@/utils/data';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
@@ -20,29 +18,29 @@ export interface Props extends HTMLAttributes<HTMLDivElement> {
   lineOfBusiness?: LineOfBusiness;
 }
 
-export const HeaderPolicyDetails = ({
+export const HeaderPolicyDetails = async ({
   className,
   lineOfBusiness = LineOfBusiness.LIFE,
   planCode,
   policyNumber,
 }: Props) => {
-  const { data, error, isLoading } = useQuery({
-    queryKey: ['policyData', planCode, policyNumber],
-    queryFn: () => getPolicyDetails(planCode, policyNumber),
-  });
+  const loggingContext = await buildCommonLogContext();
 
-  const { data: agentData, isLoading: agentDataLoading } = useQuery({
-    queryKey: ['agentData', data?.primaryAgentExternalId, policyNumber],
-    queryFn: () =>
-      getAgentInformation({
-        clientCode: data?.carrierId,
-        agentId: data?.primaryAgentExternalId,
-      }),
-    enabled: !!data?.primaryAgentExternalId,
-  });
+  const { data: policyData, error: policyError } = await getPolicyDetails(
+    { planCode, policyNumber },
+    loggingContext
+  );
+
+  const { data: pomAgentData } = await pomAgentSearch(
+    {
+      clientCode: policyData?.carrierId || '',
+      agentId: policyData?.primaryAgentExternalId || '',
+    },
+    loggingContext
+  );
 
   const badgeVariant = () => {
-    switch (data?.policyStatus) {
+    switch (policyData?.policyStatus) {
       case PolicyStatus.PENDINGISSUED:
       case PolicyStatus.ACTIVE:
         return BadgeVariant.SUCCESS;
@@ -57,17 +55,7 @@ export const HeaderPolicyDetails = ({
     }
   };
 
-  if (isLoading || agentDataLoading) {
-    return (
-      <div className="stacked-items my-sm">
-        <SkeletonLoader width="150px" height="14px" className="mb-sm" />
-        <SkeletonLoader width="150px" height="14px" className="mb-sm" />
-        <SkeletonLoader width="150px" height="14px" className="mb-sm" />
-      </div>
-    );
-  }
-
-  if (!data || error) {
+  if (!policyData || policyError) {
     return null;
   }
 
@@ -84,30 +72,30 @@ export const HeaderPolicyDetails = ({
       <div className={`mr-md ${styles.mobileBadge}`}>
         <Badge
           label={toSentenceCase(
-            policyStatusDisplayText[data?.policyStatus as PolicyStatus]
+            policyStatusDisplayText[policyData.policyStatus as PolicyStatus]
           )}
           variant={badgeVariant()}
         />
       </div>
       <div>
-        <p>{data?.product?.marketingName}</p>
+        <p>{policyData.product?.marketingName}</p>
         <p>
           <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
           <span>{policyNumber}</span>
         </p>
         {/* There is the possibility that an agent id is on the policy, but no agent data
           is returned from mcs so null check is on the name rather than on the full object */}
-        {agentData && agentData.fullName && (
+        {pomAgentData && (
           <>
             <span>Agent:</span>
-            <AgentSidesheet agentData={agentData} />
+            <AgentSidesheet agentData={pomAgentData} />
           </>
         )}
       </div>
       <div className={`ml-md ${styles.desktopBadge}`}>
         <Badge
           label={toSentenceCase(
-            policyStatusDisplayText[data?.policyStatus as PolicyStatus]
+            policyStatusDisplayText[policyData.policyStatus as PolicyStatus]
           )}
           variant={badgeVariant()}
         />

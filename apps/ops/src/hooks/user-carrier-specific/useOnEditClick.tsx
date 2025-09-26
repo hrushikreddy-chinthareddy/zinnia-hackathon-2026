@@ -4,20 +4,21 @@ import { useCallback } from 'react';
 
 import useUserCarrier from './useUserCarrier';
 
-// Handles client-specific logic for when a farmers user clicks
-// the "add" or "edit" button for an email or phone belonging to a person with an ecn
+type Callback<T = void> = T extends void ? () => void : (args: T) => void;
+
 /**
- * the "add" or "edit" button for an email or phone belonging to a person with an ecn
+ * Handles client-specific logic for when a farmers user clicks
+ * the "add" or "edit" button for an email or phone or comms pref change belonging to a person with an ecn
  *
  * @param defaultCallback The default callback to use when the user is not a farmers user or the person does not have an ecn
  * @param party The party a user is trying to edit
  * @returns A callback that handles client-specific logic for when a farmers user clicks
  */
-export default function useAddOrEditPhoneOrEmailClick<T = any>({
+export default function useAddOrEditPhoneOrEmailClick<T = void>({
     defaultCallback,
     party,
 }: {
-    defaultCallback: (args: T) => void;
+    defaultCallback: Callback<T>;
     party: Party | undefined;
 }) {
     const userCarrier = useUserCarrier();

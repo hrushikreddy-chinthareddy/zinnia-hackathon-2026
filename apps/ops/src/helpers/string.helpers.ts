@@ -116,7 +116,8 @@ export const formatPhone = (phone: Phone) => {
 
     let phoneNumber = '';
     if (!isNullEmptyOrUndefined(phone.countryCode)) {
-        phoneNumber += `+${phone.countryCode} `;
+        // Remove "+" if returned from the API
+        phoneNumber += `+${phone.countryCode?.replace(/\+/g, '')} `;
     }
 
     if (!isNullEmptyOrUndefined(phone.areaCode)) {
@@ -262,6 +263,9 @@ export const getFormattedDateTime = (date: Date) => {
 // Format SSN return ****-**-1234
 export const formatSSN = (ssn?: string | null): string => {
     if (!ssn) return DEFAULT_ERROR_STRING;
+
+    // If API returns "--" in SSN response, don't format it
+    if (ssn === DEFAULT_ERROR_STRING) return ssn;
 
     // Remove any non-numeric characters except asterisks
     const cleanedSSN = ssn.replace(/[^\d*]/g, '');

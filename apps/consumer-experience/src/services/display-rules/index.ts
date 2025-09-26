@@ -1,13 +1,14 @@
 import {
   PartyRole,
   Policy,
+  PolicyStatus,
   ProductType,
 } from '@xd/api-types/dist/generated-types/sor';
 
 import { RouteKey } from '@/route-map';
-import { logError, logTrace } from '@/utils/logging/log-fns';
+import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { isPayorOnly } from '@/utils/party';
+import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
 
 import { ComponentName } from './types';
 import { getLoggedInUserPolicyAndPartyData } from '../policy';
@@ -30,6 +31,9 @@ export const evaluateComponentVisibilityRules = (
   // this should be temporary, but this whole setup should be temporary
   // and ideally should be handled by CIAM
   const isNotPayor = !isPayorOnly(partyRoles);
+  const isCancelled =
+    policy.policyStatus === PolicyStatus.SURRENDERED ||
+    policy.policyStatus === PolicyStatus.CANCELEDFREELOOK;
   const isTerm = policy.product?.productType === ProductType.TERM;
 
   return {
@@ -48,6 +52,9 @@ export const evaluateComponentVisibilityRules = (
     [ComponentName.PREMIUM_PAYOR_BACK_URL]: () => isPayorNotOwner,
     [ComponentName.OTTP_PAYMENT_SUMMARY_ACCOUNT_VALUE]: () => !isTerm || !!skip,
     [ComponentName.NOTIFICATIONS]: () => isNotPayor || !!skip,
+    [ComponentName.OVERVIEW_COVERAGE_CARD]: () => !isCancelled || !!skip,
+    [ComponentName.OVERVIEW_ACCOUNT_VALUE_CARD]: () =>
+      (!isCancelled && !isTerm) || !!skip,
     [ComponentName.SYSTEMATIC_PREMIUM_AUTOPAY_WITH_QUOTE_VALUES]: () =>
       isTerm || !!skip,
     [ComponentName.OTPP_EDITABLE_PAYMENT_AMOUNT]: () => !isTerm || !!skip,
@@ -59,27 +66,43 @@ export const evaluateRouteRules = (
   partyRoles: PartyRole[]
 ): Record<RouteKey, () => boolean> | null => {
   const isNotPayor = !isPayorOnly(partyRoles);
+  const isCancelled =
+    policy.policyStatus === PolicyStatus.SURRENDERED ||
+    policy.policyStatus === PolicyStatus.CANCELEDFREELOOK;
+
+  const hasAcceptedRole = partyRolesAreInAllowedList(partyRoles);
+
+  if (!hasAcceptedRole) {
+    logWarn("User's roles were not in the included list of roles", {
+      cause: { partyRoles },
+    });
+    throw new Error("User's roles were not in the included list of roles", {
+      cause: { partyRoles },
+    });
+  }
 
   return {
     [RouteKey.ACCOUNT]: () =>
-      isNotPayor && policy.product?.productType !== ProductType.TERM,
-    [RouteKey.ALLOCATIONS]: () => isNotPayor,
-    [RouteKey.BENEFICIARIES]: () => isNotPayor,
-    [RouteKey.BENEFICIARY]: () => isNotPayor,
+      isNotPayor &&
+      policy.product?.productType !== ProductType.TERM &&
+      !isCancelled,
+    [RouteKey.ALLOCATIONS]: () => isNotPayor && !isCancelled,
+    [RouteKey.BENEFICIARIES]: () => isNotPayor && !isCancelled,
+    [RouteKey.BENEFICIARY]: () => isNotPayor && !isCancelled,
     [RouteKey.COVERAGE]: () => true,
-    [RouteKey.DETAILS]: () => true,
-    [RouteKey.DOCUMENTS]: () => isNotPayor,
-    [RouteKey.HISTORY]: () => true,
-    [RouteKey.LOANS]: () => isNotPayor,
-    [RouteKey.MY_COVERAGE]: () => isNotPayor,
-    [RouteKey.NOTIFICATIONS]: () => isNotPayor,
-    [RouteKey.PREMIUM]: () => true,
-    [RouteKey.PREMIUM_DETAILS]: () => true,
-    [RouteKey.PREMIUM_HISTORY]: () => true,
-    [RouteKey.PROFILE]: () => true,
-    [RouteKey.RIDERS]: () => isNotPayor,
-    [RouteKey.SURRENDER]: () => isNotPayor,
-    [RouteKey.WITHDRAWALS]: () => isNotPayor,
+    [RouteKey.DETAILS]: () => !isCancelled,
+    [RouteKey.DOCUMENTS]: () => isNotPayor && !isCancelled,
+    [RouteKey.HISTORY]: () => !isCancelled,
+    [RouteKey.LOANS]: () => isNotPayor && !isCancelled,
+    [RouteKey.MY_COVERAGE]: () => isNotPayor && !isCancelled,
+    [RouteKey.NOTIFICATIONS]: () => isNotPayor && !isCancelled,
+    [RouteKey.PREMIUM]: () => !isCancelled,
+    [RouteKey.PREMIUM_DETAILS]: () => !isCancelled,
+    [RouteKey.PREMIUM_HISTORY]: () => !isCancelled,
+    [RouteKey.PROFILE]: () => !isCancelled,
+    [RouteKey.RIDERS]: () => isNotPayor && !isCancelled,
+    [RouteKey.SURRENDER]: () => isNotPayor && !isCancelled,
+    [RouteKey.WITHDRAWALS]: () => isNotPayor && !isCancelled,
   };
 };
 
