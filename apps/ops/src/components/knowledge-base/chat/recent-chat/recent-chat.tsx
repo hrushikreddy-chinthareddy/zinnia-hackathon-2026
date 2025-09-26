@@ -251,11 +251,13 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                             <div
                                 tabIndex={0}
                                 key={itemSessionId}
-                                className={`flex gap-2 items-center py-2 cursor-pointer ${styles.itemhover
-                                    } ${itemSessionId === sessionId
+                                className={`flex gap-2 items-center py-2 cursor-pointer ${
+                                    styles.itemhover
+                                } ${
+                                    itemSessionId === sessionId
                                         ? styles.activeItem
                                         : ''
-                                    }`}
+                                }`}
                                 onClick={() =>
                                     handleViewChatHistory(itemSessionId || '')
                                 }
@@ -277,13 +279,13 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                                         variant={TypographyVariant.BodySmBold}
                                     >
                                         {sessionTitle &&
-                                            sessionTitle?.length <=
+                                        sessionTitle?.length <=
                                             SESSION_TITLE_MAX_LEN
                                             ? sessionTitle
                                             : `${sessionTitle?.slice(
-                                                0,
-                                                SESSION_TITLE_MAX_LEN
-                                            )}...`}
+                                                  0,
+                                                  SESSION_TITLE_MAX_LEN
+                                              )}...`}
                                     </Typography>
                                     <Typography
                                         variant={TypographyVariant.BodySm}

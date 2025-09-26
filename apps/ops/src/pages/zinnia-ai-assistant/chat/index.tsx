@@ -171,38 +171,39 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
                 <div className=" flex-1 flex flex-col gap-2">
                     {currentMessages.length > 0 ? (
                         <div className="flex flex-col gap-4 my-4 max-h-[65vh] overflow-y-auto ">
-                            {currentMessages.map(
-                                (message, index) => {
-                                    return message.role === MessageRole.User ? (
-                                        <ChatQuestion
-                                            key={message.id}
-                                            question={message.content}
-                                        />
-                                    ) : (
-                                        <ChatResponse
-                                            key={message.id}
-                                            email={opsUserData?.email || ''}
-                                            questionId={message.questionId ?? ''}
-                                            responseId={message.id}
-                                            response={message.content}
-                                            sourceDocuments={message.sourceDocuments}
-                                            submittedFeedbackType={message.feedbackType}
-                                            submittedFeedbackComment={
-                                                message.feedbackComment
-                                            }
-                                            showFeedbackControls={
-                                                message.id !== BOT_ERROR_MESSAGE_ID
-                                            }
-                                            isCompleted={
-                                                index !==
-                                                    currentMessages.length - 1
-                                                    ? true
-                                                    : isCompleted
-                                            }
-                                        />
-                                    );
-                                }
-                            )}
+                            {currentMessages.map((message, index) => {
+                                return message.role === MessageRole.User ? (
+                                    <ChatQuestion
+                                        key={message.id}
+                                        question={message.content}
+                                    />
+                                ) : (
+                                    <ChatResponse
+                                        key={message.id}
+                                        email={opsUserData?.email || ''}
+                                        questionId={message.questionId ?? ''}
+                                        responseId={message.id}
+                                        response={message.content}
+                                        sourceDocuments={
+                                            message.sourceDocuments
+                                        }
+                                        submittedFeedbackType={
+                                            message.feedbackType
+                                        }
+                                        submittedFeedbackComment={
+                                            message.feedbackComment
+                                        }
+                                        showFeedbackControls={
+                                            message.id !== BOT_ERROR_MESSAGE_ID
+                                        }
+                                        isCompleted={
+                                            index !== currentMessages.length - 1
+                                                ? true
+                                                : isCompleted
+                                        }
+                                    />
+                                );
+                            })}
                             <div ref={endref} />
                         </div>
                     ) : (

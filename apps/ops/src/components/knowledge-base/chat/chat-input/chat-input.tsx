@@ -29,10 +29,7 @@ type ChatInputProps = {
     setIsCompleted: (isCompleted: boolean) => void;
 };
 
-const ChatInput = ({
-    opsUserData,
-    setIsCompleted,
-}: ChatInputProps) => {
+const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
@@ -65,30 +62,25 @@ const ChatInput = ({
     useEffect(() => {
         if (!botMsgIdRef.current) return;
         if (sources.length >= 1) setLoading(false);
-        setCurrentMessages(prev =>
-            prev.map(m =>
+        setCurrentMessages((prev) =>
+            prev.map((m) =>
                 m.id === botMsgIdRef.current
                     ? {
-                        ...m,
-                        content:
-                            (response && response.length > 0
-                                ? response
-                                : status) || '',
-                        sourceDocuments: sources || [],
-                        ...(questionId && { questionId }),
-                        ...(responseId && { id: responseId ?? botMsgIdRef.current }),
-                    }
+                          ...m,
+                          content:
+                              (response && response.length > 0
+                                  ? response
+                                  : status) || '',
+                          sourceDocuments: sources || [],
+                          ...(questionId && { questionId }),
+                          ...(responseId && {
+                              id: responseId ?? botMsgIdRef.current,
+                          }),
+                      }
                     : m
             )
         );
-    }, [
-        response,
-        setCurrentMessages,
-        status,
-        sources,
-        questionId,
-        responseId,
-    ]);
+    }, [response, setCurrentMessages, status, sources, questionId, responseId]);
 
     useEffect(() => {
         setIsCompleted(!isStreamingRef.current);
@@ -106,7 +98,7 @@ const ChatInput = ({
                 role: MessageRole.User,
                 content: message,
             };
-            setCurrentMessages(prev => [...prev, userMessage]);
+            setCurrentMessages((prev) => [...prev, userMessage]);
             lastMessage.current = message;
             let newSession = false;
             if (!sessionId) {
@@ -131,7 +123,7 @@ const ChatInput = ({
             await sendMessage(currentSessionId, message);
             const botMsgId = uuidv4();
             botMsgIdRef.current = botMsgId;
-            setCurrentMessages(prev => [
+            setCurrentMessages((prev) => [
                 ...prev,
                 {
                     id: botMsgId,
@@ -141,12 +133,12 @@ const ChatInput = ({
             ]);
 
             if (newSession) {
-                setChatHistoryReloadTrigger(prev => prev + 1);
+                setChatHistoryReloadTrigger((prev) => prev + 1);
             }
         } catch (error: any) {
             browserLogError('Error sending message::', { error });
 
-            setCurrentMessages(prev => [
+            setCurrentMessages((prev) => [
                 ...prev,
                 {
                     id: BOT_ERROR_MESSAGE_ID,
@@ -166,7 +158,7 @@ const ChatInput = ({
 
     const retryLastMessage = () => {
         if (!lastMessage.current) return;
-        setCurrentMessages(prev => prev.slice(0, prev.length - 2));
+        setCurrentMessages((prev) => prev.slice(0, prev.length - 2));
         handleMessageSend(lastMessage.current);
     };
 
@@ -221,12 +213,13 @@ const ChatInput = ({
                                         }
                                     >
                                         <SendButton
-                                            className={`!w-[30px] transition-all duration-300 ${isStreaming ||
+                                            className={`!w-[30px] transition-all duration-300 ${
+                                                isStreaming ||
                                                 loading ||
                                                 !message.trim()
-                                                ? 'text-gray-400'
-                                                : 'text-gray-700'
-                                                }`}
+                                                    ? 'text-gray-400'
+                                                    : 'text-gray-700'
+                                            }`}
                                         />
                                     </Button>
                                 }
@@ -235,17 +228,16 @@ const ChatInput = ({
                             </Tooltip>
                         )}
                         {currentMessages?.find(
-                            message =>
-                                message.content === t('chat.errorMsg')
+                            (message) => message.content === t('chat.errorMsg')
                         ) && (
-                                <button
-                                    aria-label="retry-button"
-                                    type="button"
-                                    onClick={retryLastMessage}
-                                >
-                                    {t('chat.retry')}
-                                </button>
-                            )}
+                            <button
+                                aria-label="retry-button"
+                                type="button"
+                                onClick={retryLastMessage}
+                            >
+                                {t('chat.retry')}
+                            </button>
+                        )}
                     </div>
                 </div>
                 <Typography

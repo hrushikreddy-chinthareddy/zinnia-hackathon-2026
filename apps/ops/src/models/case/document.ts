@@ -11,6 +11,22 @@ export enum DocumentType {
     SuitabilityReview = 'SuitabilityReview',
     CallLogs = 'Call Log',
     Spif = 'SPIF',
+    AnnuityApplication = 'Annuity Application',
+    AssetAllocator = 'Asset Allocator',
+    FinancialInternalConversion = 'Financial Internal Conversion',
+    IncomingTransfer = 'Incoming Transfer',
+    InternalConversion = 'Internal Conversion',
+    Loan = 'Loan',
+    LoanPayment = 'Loan Payment',
+    NBComparisonForm = 'NB Comparison Form',
+    NBPurchase = 'NB Purchase',
+    NBPurchaseWApp = 'NB Purchase w App',
+    NBReplacementForm = 'NB Replacement Form',
+    NBSuitabilityForm = 'NB Suitability Form',
+    Purchase = 'Purchase',
+    Rereg = 'Rereg',
+    StatementOfUnderstanding = 'Statement of Understanding',
+    Systematic = 'Systematic',
 }
 
 export enum DocumentFileExtension {

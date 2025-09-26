@@ -173,7 +173,9 @@ export const sendResponseFeedback = async (
             messageId,
             feedbackType,
             ...(comment ? { comment } : {}),
-            ...(feedbackType === FeedbackType.Dislike ? { dislikeReason } : { dislikeReason: null }),
+            ...(feedbackType === FeedbackType.Dislike
+                ? { dislikeReason }
+                : { dislikeReason: null }),
         });
         return data.success ? data.body : null;
     } catch (error) {

@@ -91,8 +91,8 @@ export enum SSEEventType {
 export type DislikeReasonsPayload = {
     reason: string;
     links: string[] | null;
-    metadata: OpsIntakeFormPayload | null
-}
+    metadata: OpsIntakeFormPayload | null;
+};
 
 export type OpsIntakeFormPayload = {
     processName: string;
@@ -103,4 +103,4 @@ export type OpsIntakeFormPayload = {
     priority: string;
     requestFrequency: string;
     benefitMetrics: string;
-}
+};

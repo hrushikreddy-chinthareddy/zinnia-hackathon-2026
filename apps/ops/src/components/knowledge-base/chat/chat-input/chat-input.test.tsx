@@ -86,7 +86,9 @@ describe('ChatInput', () => {
             />
         );
         expect(getByRole('textbox')).toBeInTheDocument();
-        expect(getByRole('button', { name: /send-button/i })).toBeInTheDocument();
+        expect(
+            getByRole('button', { name: /send-button/i })
+        ).toBeInTheDocument();
     });
 
     it('calls createNewChatSession when no sessionId exists', async () => {
