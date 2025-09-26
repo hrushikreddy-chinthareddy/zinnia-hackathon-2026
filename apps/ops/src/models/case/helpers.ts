@@ -11,10 +11,10 @@ export const docTypes: {
     [CaseType.Renewal]: DocumentType.Exchange,
     [CaseType.Rmd]: DocumentType.Rmd,
     [CaseType.Withdrawal]: DocumentType.Redemption,
-    [CaseType.SSW]: DocumentType.SSW,
+    [CaseType.SSW]: DocumentType.Systematic,
     [CaseType.Reg60]: DocumentType.Reg60,
     [CaseType.AddressChange]: DocumentType.AddressChange,
-    [CaseType.ReReg]: DocumentType.ReReg,
+    [CaseType.ReReg]: DocumentType.Rereg,
     [CaseType.Suitability]: DocumentType.Suitability,
     [CaseType.SuitabilityReview]: DocumentType.SuitabilityReview,
 };
@@ -26,10 +26,10 @@ export const caseTypes: {
     [DocumentType.Exchange]: CaseType.Renewal,
     [DocumentType.Rmd]: CaseType.Rmd,
     [DocumentType.Redemption]: CaseType.Withdrawal,
-    [DocumentType.SSW]: CaseType.SSW,
+    [DocumentType.Systematic]: CaseType.SSW,
     [DocumentType.Reg60]: CaseType.Reg60,
     [DocumentType.AddressChange]: CaseType.AddressChange,
-    [DocumentType.ReReg]: CaseType.ReReg,
+    [DocumentType.Rereg]: CaseType.ReReg,
 };
 
 export const CaseApiVersionMapper: Record<CaseType, ApiVersion> = {

@@ -20,7 +20,10 @@ import {
 } from '@deps/contexts/OptimizelyContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
-import { DocumentType as ExcludeDocumentTypes } from '@deps/models/case/document';
+import {
+    excludeDocumentTypes,
+    includeDocumentTypes,
+} from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
@@ -74,10 +77,8 @@ export default function DocumentsTab({
                     ? SearchRequest.documentClassification.INBOUND
                     : SearchRequest.documentClassification.OUTBOUND,
             zinniaLiveCaseId: caseDetails.id,
-            excludeDocumentTypes: [
-                ExcludeDocumentTypes.CallLogs,
-                ExcludeDocumentTypes.Spif,
-            ],
+            excludeDocumentTypes,
+            documentType: includeDocumentTypes.join(','),
         };
     }, [caseDetails, docSource]);
 
@@ -97,10 +98,8 @@ export default function DocumentsTab({
                 caseDetails?.planCode ||
                 caseDetails?.additionalData?.planCode ||
                 policy?.planCode,
-            excludeDocumentTypes: [
-                ExcludeDocumentTypes.CallLogs,
-                ExcludeDocumentTypes.Spif,
-            ],
+            excludeDocumentTypes,
+            includeDocumentTypes,
         };
     }, [caseDetails, policy, docSource]);
 

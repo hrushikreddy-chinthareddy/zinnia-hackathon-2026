@@ -1,12 +1,13 @@
+// FIXME: this should be coming from auto-generated API types
+// Note: the document types read by the API are not case-sensitive
 export enum DocumentType {
     Exchange = 'Exchange',
     Oft = 'Outgoing Transfer',
     Redemption = 'Redemption',
     Rmd = 'Required Minimum Distribution',
-    SSW = 'SYSTEMATIC',
     Reg60 = 'NB Reg 60',
     AddressChange = 'Address Change',
-    ReReg = 'ReReg',
+    Rereg = 'Rereg',
     Suitability = 'Suitability',
     SuitabilityReview = 'SuitabilityReview',
     CallLogs = 'Call Log',
@@ -24,10 +25,31 @@ export enum DocumentType {
     NBReplacementForm = 'NB Replacement Form',
     NBSuitabilityForm = 'NB Suitability Form',
     Purchase = 'Purchase',
-    Rereg = 'Rereg',
     StatementOfUnderstanding = 'Statement of Understanding',
     Systematic = 'Systematic',
 }
+
+// FIXME: move out of models
+export const excludeDocumentTypes = [DocumentType.CallLogs, DocumentType.Spif];
+export const includeDocumentTypes = [
+    DocumentType.AddressChange,
+    DocumentType.AnnuityApplication,
+    DocumentType.AssetAllocator,
+    DocumentType.Exchange,
+    DocumentType.FinancialInternalConversion,
+    DocumentType.IncomingTransfer,
+    DocumentType.InternalConversion,
+    DocumentType.Loan,
+    DocumentType.LoanPayment,
+    DocumentType.NBComparisonForm,
+    DocumentType.NBPurchase,
+    DocumentType.NBPurchaseWApp,
+    DocumentType.NBReplacementForm,
+    DocumentType.NBSuitabilityForm,
+    DocumentType.Purchase,
+    DocumentType.StatementOfUnderstanding,
+    DocumentType.Systematic,
+];
 
 export enum DocumentFileExtension {
     Png = 'png',

@@ -43,7 +43,10 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
-import { DocumentType } from '@deps/models/case/document';
+import {
+    excludeDocumentTypes,
+    includeDocumentTypes,
+} from '@deps/models/case/document';
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
 import {
@@ -241,7 +244,8 @@ export default function GlobalTaskSideSheet({
             documentClassification:
                 SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: task.caseId,
-            excludeDocumentTypes: [DocumentType.CallLogs, DocumentType.Spif],
+            excludeDocumentTypes,
+            documentType: includeDocumentTypes.join(','),
         };
     }, [task]);
 

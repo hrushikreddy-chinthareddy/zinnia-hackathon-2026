@@ -110,7 +110,7 @@ const BeneChangeContainer = ({
         ) {
             documentResult = await fetchDocument(
                 formData.businessKey,
-                DocumentType.ReReg,
+                DocumentType.Rereg,
                 ''
             );
 
