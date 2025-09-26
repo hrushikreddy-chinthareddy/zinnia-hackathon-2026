@@ -115,6 +115,9 @@ export const getCarrierConfig = withLogging(
           documents: {
             version: DocumentsVersion.V2,
           },
+          riders: {
+            showUnbornChildRider: true,
+          },
         };
 
       default:
