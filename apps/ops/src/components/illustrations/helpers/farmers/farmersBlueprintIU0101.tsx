@@ -1765,6 +1765,103 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     isCustom: true,
                                     defaultValue: 'NONETABLE',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'juvenileSubstandard',
+                                                isEqual: false,
+                                                targetNodeId: 'premium-class',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'table-rating',
+                                    outputPath: 'subStandardRating',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '77e9506a-417c-4b6e-8858-e1f56644255e',
+                                    partName:
+                                        'custom-a9e37ed6-bd3b-4abe-8a33-060f514911ec',
+                                    selectOptions: [
+                                        {
+                                            value: 'NONETABLE',
+                                            text: {
+                                                en: 'None',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                        {
+                                            value: 'TABLEA',
+                                            text: {
+                                                en: 'A',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEB',
+                                            text: {
+                                                en: 'B',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEC',
+                                            text: {
+                                                en: 'C',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLED',
+                                            text: {
+                                                en: 'D',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'NONETABLE',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'juvenileSubstandard',
+                                                isEqual: true,
+                                                targetNodeId: 'premium-class',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'money',
