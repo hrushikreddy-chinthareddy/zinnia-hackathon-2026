@@ -44,6 +44,7 @@ import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import {
+    appendIncludeDocumentTypes,
     excludeDocumentTypes,
     includeDocumentTypes,
 } from '@deps/models/case/document';
@@ -245,7 +246,9 @@ export default function GlobalTaskSideSheet({
                 SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: task.caseId,
             excludeDocumentTypes,
-            documentType: includeDocumentTypes.join(','),
+            ...(appendIncludeDocumentTypes(task.carrier) && {
+                documentType: includeDocumentTypes.join(','),
+            }),
         };
     }, [task]);
 

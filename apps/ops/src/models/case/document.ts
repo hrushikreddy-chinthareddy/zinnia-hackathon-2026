@@ -28,9 +28,11 @@ export enum DocumentType {
     StatementOfUnderstanding = 'Statement of Understanding',
     Systematic = 'Systematic',
     Output = 'Output',
+    Attachment = 'Attachment',
+    FC = 'FC',
 }
 
-// FIXME: move out of models
+// FIXME: move out of models (and into env vars or external config)
 export const excludeDocumentTypes = [DocumentType.CallLogs, DocumentType.Spif];
 export const includeDocumentTypes = [
     DocumentType.AddressChange,
@@ -50,7 +52,19 @@ export const includeDocumentTypes = [
     DocumentType.Purchase,
     DocumentType.StatementOfUnderstanding,
     DocumentType.Systematic,
+    DocumentType.Output,
 ];
+
+// The document type filtering (include list) only exists for the following carrier codes:
+export const appendIncludeDocumentTypes = (carrierId?: string) => {
+    const carriersWithIncludeDocumentTypes = new Set([
+        'GLCO', // Kuvare
+        'ULIC', // Kuvare
+        'ULPC', // Kuvare
+        'SBGC', // SecurityBenefit
+    ]);
+    return !!(carrierId && carriersWithIncludeDocumentTypes.has(carrierId));
+};
 
 export enum DocumentFileExtension {
     Png = 'png',

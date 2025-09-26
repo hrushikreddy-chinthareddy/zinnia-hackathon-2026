@@ -26,6 +26,7 @@ import {
     PolicyDocument,
     excludeDocumentTypes,
     includeDocumentTypes,
+    appendIncludeDocumentTypes,
 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
@@ -118,7 +119,9 @@ const NormalDocs = ({
             orderBy: 'documentDate',
             orderByDirection: SearchRequest.orderByDirection.DESC,
             excludeDocumentTypes,
-            documentType: includeDocumentTypes.join(','),
+            ...(appendIncludeDocumentTypes(policy?.carrierId) && {
+                documentType: includeDocumentTypes.join(','),
+            }),
         };
     }, [documentType, policy, isFirstYearSelected, yearSelection]);
 

@@ -21,6 +21,7 @@ import {
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
 import {
+    appendIncludeDocumentTypes,
     excludeDocumentTypes,
     includeDocumentTypes,
 } from '@deps/models/case/document';
@@ -99,7 +100,9 @@ export default function DocumentsTab({
                 caseDetails?.additionalData?.planCode ||
                 policy?.planCode,
             excludeDocumentTypes,
-            includeDocumentTypes,
+            ...(appendIncludeDocumentTypes(caseDetails.carrier) && {
+                documentType: includeDocumentTypes.join(','),
+            }),
         };
     }, [caseDetails, policy, docSource]);
 
