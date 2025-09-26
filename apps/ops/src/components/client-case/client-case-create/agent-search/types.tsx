@@ -6,5 +6,6 @@ export type AgentOption = Prettify<
         sellingCodes: string[];
         npn?: string;
         lookupId?: string;
+        carrierShortName: string;
     }
 >;

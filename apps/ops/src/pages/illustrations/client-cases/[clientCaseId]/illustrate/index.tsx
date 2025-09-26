@@ -10,6 +10,10 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import IllustrationCaseSumary from '@deps/components/illustrations/components/case-details/case-summary/case-summary';
 import IllustrationProductList from '@deps/components/illustrations/components/case-details/product-list/product-list';
 import IllustrationDetails from '@deps/components/illustrations/components/details/illustration-details';
+import {
+    buildHierarchyQueryOptions,
+    POM_QUERY_PREFIXES,
+} from '@deps/components/illustrations/helpers/hooks/pom';
 import { useClientCaseId } from '@deps/components/illustrations/helpers/hooks/use-client-case-id';
 import { SelectedIllustrationProvider } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
@@ -20,6 +24,7 @@ import {
     getClientCase,
     getProductsByCarrier,
 } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
+import { getUserHierarchyBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { ApiResponse } from '@deps/types/api-response';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
@@ -58,20 +63,36 @@ export default function ClientCaseIllustrations() {
         ),
     });
 
+    const { data: clientCaseUserHierarchy } = useQuery(
+        buildHierarchyQueryOptions({
+            sellingCode: clientCase?.agentDetails?.sellingCode,
+            // TODO: Use the correct carrier code for this client case
+            carrierShortName: 'FNWL',
+        })
+    );
+
     const {
         data: products = [],
         isLoading: isLoadingProducts,
         isError: isErrorProducts,
         isFetching: isFetchingProducts,
     } = useQuery({
-        queryKey: ['productList'],
+        queryKey: [
+            'productList',
+            clientCaseUserHierarchy?.carrier.carrierShortName,
+        ],
         queryFn: () => {
-            return getProductsByCarrier('', 'FNWL', '');
+            return getProductsByCarrier(
+                '',
+                clientCaseUserHierarchy?.carrier.carrierShortName || '',
+                ''
+            );
         },
         select: useCallback(
             (data: ApiResponse<Product[]>) => data.data || [],
             []
         ),
+        enabled: !!clientCaseUserHierarchy?.carrier.carrierShortName,
     });
 
     return (

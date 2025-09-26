@@ -47,6 +47,7 @@ import {
     getSearchValueObject,
     toggleLabels,
 } from '@deps/helpers/case-management';
+import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import {
     doesUserHavePagePermissions,
     getUserData,
@@ -248,24 +249,30 @@ const CaseManagementDashboard = ({
         enabled: loadedStoredFilters,
     });
 
-    const [liveResultsMessage, setLiveResultsMessage] = useState<string>('');
-    useEffect(() => {
-        if (caseSearchData) {
-            setLiveResultsMessage('');
-            const msg = t('policy.documents.xToYOfZ', {
-                numberOfItems: caseManagementFilters.offset + 1,
-                currentIndex: Math.min(
+    const liveResultsMessage = useMemo(() => {
+        if (caseSearchData?.data.length) {
+            return t('policy.documents.xToYOfZ', {
+                x: caseManagementFilters.offset + 1,
+                y: Math.min(
                     caseManagementFilters.offset + limit,
                     caseSearchData.total || 0
                 ),
-                total: `${caseSearchData.total?.toLocaleString() ?? '0'}${
+                z: `${caseSearchData.total?.toLocaleString() ?? '0'}${
                     caseSearchData.total === 10000 ? '+' : ''
                 }`,
             });
-            const timer = setTimeout(() => setLiveResultsMessage(msg), 50);
-            return () => clearTimeout(timer);
+        } else {
+            return !isEmptyObject(caseManagementFilters.searchValue)
+                ? t('caseManagementDashboard.search.empty.title')
+                : t('caseManagementDashboard.search.empty.titleFilters');
         }
-    }, [caseSearchData, caseManagementFilters.offset, limit, t]);
+    }, [
+        caseSearchData,
+        caseManagementFilters.offset,
+        limit,
+        t,
+        caseManagementFilters.searchValue,
+    ]);
 
     useEffect(() => {
         if (loadedStoredFilters) {
@@ -457,9 +464,6 @@ const CaseManagementDashboard = ({
                     sortDirection={caseManagementFilters.sortDirection}
                     sortBy={caseManagementFilters.sortBy}
                 />
-                <div aria-live="polite" aria-atomic="true" className="sr-only">
-                    {liveResultsMessage}
-                </div>
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography
                         variant={TypographyVariant.BodySm}
@@ -489,7 +493,6 @@ const CaseManagementDashboard = ({
         caseManagementFilters.sortBy,
         caseSearchData,
         handleCreatedBySort,
-        liveResultsMessage,
         t,
         paginationControls,
     ]);
@@ -604,6 +607,9 @@ const CaseManagementDashboard = ({
                         />
                     </div>
                 </fieldset>
+                <div aria-live="polite" aria-atomic="true" className="sr-only">
+                    {liveResultsMessage}
+                </div>
                 {tableContent}
             </>
         </CaseManagementFiltersContext.Provider>
