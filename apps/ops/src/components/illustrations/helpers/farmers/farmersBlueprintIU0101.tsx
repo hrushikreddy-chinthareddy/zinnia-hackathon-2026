@@ -4031,6 +4031,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'illustrate-1035',
+                                    outputPath: 'illustrate1035',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -4077,49 +4078,6 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Non-1035 Lump Sum Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'non-1035-lump-sum-amount',
-                                    outputPath: 'non1035LumpSumAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '7f96885f-59e9-484c-9962-7c84bec5c2be',
-                                    partName:
-                                        'custom-73c4bc3b-2785-4152-bd23-a550f7b334ca',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'yes',
-                                                isEqual: true,
-                                                targetNodeId: 'illustrate-1035',
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
                                         en: 'External 1035 Exchange Amount ',
                                         fr: '',
                                     },
@@ -4129,7 +4087,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -4173,7 +4131,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -4200,6 +4158,38 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         ],
                                     },
+                                },
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Non-1035 Lump Sum Amount',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'non-1035-lump-sum-amount',
+                                    outputPath: 'non1035LumpSumAmount',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '7f96885f-59e9-484c-9962-7c84bec5c2be',
+                                    partName:
+                                        'custom-73c4bc3b-2785-4152-bd23-a550f7b334ca',
+                                    validateAs: 'decimal',
+                                    isCustom: true,
                                 },
                             ],
                             displayAsCard: false,

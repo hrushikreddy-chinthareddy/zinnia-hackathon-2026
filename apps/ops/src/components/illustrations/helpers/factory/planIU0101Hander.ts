@@ -278,8 +278,7 @@ const farmersEntitiesSchema = t.object(
         'internal1035ExchangeAmount',
         t.union(t.number, t.undefined)
     ),
-    t.optionalProperty('exchangeBasis1035', t.union(t.number, t.undefined)),
-    t.optionalProperty('mec1035', t.union(t.string, t.undefined)),
+
     t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
     distributionAmountTableSchema,
 
@@ -288,7 +287,8 @@ const farmersEntitiesSchema = t.object(
         'nonNicotineConversionAtAge18',
         t.union(t.array(t.string), t.undefined)
     ),
-    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined))
+    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -519,6 +519,19 @@ function createIllustrationPayload(
 
     const underWritingClass = getUnderWritingClass(values.premiumClass);
 
+    const exchanges = {
+        internal: {
+            amount: values.internal1035ExchangeAmount,
+            basis: values.internal1035ExchangeAmount,
+            isModifiedEndowmentContract: false,
+        },
+        external: {
+            amount: values.external1035ExchangeAmount,
+            basis: values.external1035ExchangeAmount,
+            isModifiedEndowmentContract: false,
+        },
+    };
+
     const output = {
         calculationType: values.illustrationType,
         source: FARMERS_HARDCODED_DATA.source,
@@ -697,19 +710,13 @@ function createIllustrationPayload(
                     },
                 }),
             }),
-            exchanges: {
-                internalAmount: values.internal1035ExchangeAmount,
-                externalAmount: values.external1035ExchangeAmount,
-                basis: values.exchangeBasis1035,
-                isMec: values.mec1035,
-                carryOverLoan: 1,
-            },
             ...(values.nonNicotineConversionAtAge18 && {
                 juvenileReclassification:
                     values.nonNicotineConversionAtAge18[0] ===
                     'non-NicotineConversionAtAge18',
             }),
         },
+        ...(values.illustrate1035 === 'yes' && { exchanges }),
         fundAllocations: [
             {
                 allocationPercent: values.longTermFixedAccountAllocation,
