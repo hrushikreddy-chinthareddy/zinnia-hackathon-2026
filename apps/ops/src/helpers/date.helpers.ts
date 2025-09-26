@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 
 import {
+    DEFAULT_DATETIME_DISPLAY_FORMAT,
     NUMERIC_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
@@ -59,3 +60,13 @@ export const getUtcDate = (
 
     return dayjs(dateWithTime).utc().format(ZAHARA_API_DATE_FORMAT);
 };
+
+export function convertToUserTimezone(
+    dateTime: string,
+    format: string = DEFAULT_DATETIME_DISPLAY_FORMAT
+) {
+    const userTz = dayjs.tz.guess();
+
+    const localTime = dayjs.utc(dateTime).tz(userTz);
+    return `${localTime.format(format)} ${localTime.format('Z')}`;
+}

@@ -61,7 +61,7 @@ export const TextWidget = function (props: WidgetProps) {
     return readonly ? (
         value
     ) : (
-        <div className="max-w-sm flex w-full flex-col">
+        <div className="max-w-sm flex w-full flex-col pl-1">
             <TextField
                 className={readonly || disabled ? style.readOnly : ''}
                 placeholder={placeholder}

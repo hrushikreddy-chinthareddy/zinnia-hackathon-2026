@@ -8,6 +8,10 @@
     width: 100%;
 }
 
+.noMargin {
+    padding-left: 2px;
+}
+
 .labelRequired {
     font-family: Lato;
     font-size: 14px;
