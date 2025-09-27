@@ -12,14 +12,180 @@ servers:
   - url: https://api.zinnia.io
     description: PROD Environment
 paths:
-  '/document/v3/documents/{documentId}':
+  /document/v3/service-request-form/update/{documentId}:
+    put:
+      tags:
+        - ServiceRequestForms V3
+      summary: Updates a service request form using the provided ID
+      description: >-
+        Updates a service request form based on the given ID. The form details
+        will be modified as per the provided information.
+      operationId: updateSRFDocuments
+      parameters:
+        - name: x-correlation-id
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - metadata
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                metadata:
+                  $ref: '#/components/schemas/ServiceRequestFormUpdateMetaData'
+      responses:
+        '204':
+          description: service request form updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/ServiceRequestFormMetadataOperationsResponse
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidRequest:
+                  summary: Invalid input
+                  description: InvalidRequest
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: Invalid request format
+                    responseCode: 400
+                MissingField:
+                  summary: Missing required field
+                  description: MissingField
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: "'documentType' is required"
+                    responseCode: 400
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AccessDenied:
+                  summary: Access denied
+                  description: AccessDenied
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: User not authorized to perform this action
+                    responseCode: 403
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnexpectedError:
+                  summary: Unexpected server error
+                  description: UnexpectedError
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: An unexpected error occurred
+                    responseCode: 500
+  /document/v3/documents/{documentId}:
+    get:
+      tags:
+        - Documents V3
+      summary: gets metadata for a document
+      description: fetches metadata details, including version history if requested
+      operationId: getMetadataByDocumentId
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: x-correlation-id
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: isAllVersionsNeeded
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: documentType
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: documentClassification
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - INBOUND
+              - OUTBOUND
+        - name: parentCarrierCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: isSEDDocumentId
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: history
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: document metadata retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataByIdResponse'
+        '400':
+          description: document metadata retrieval failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataByIdResponse'
+        '404':
+          description: document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataByIdResponse'
     put:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: updates document on the basis of provided id
-      description: updates document on the basis of provided id
+        - Documents V3
+      summary: updates document content or metadata
+      description: modifies metadata and optionally replaces the file
       operationId: updateDocuments
       parameters:
         - name: x-correlation-id
@@ -44,27 +210,33 @@ paths:
                   type: string
                   format: binary
                 metadata:
-                  $ref: '#/components/schemas/Metadata'
+                  $ref: '#/components/schemas/MetadataUpdate'
       responses:
         '204':
           description: document updated successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataOperationsResponse'
         '400':
           description: document update failed
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataOperationsResponse'
-  '/document/v3/documents/bulk':
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataOperationsResponse'
+  /document/v3/documents/bulk:
     put:
       tags:
-        - document-controller
-      summary: update documents in bulk
-      description: update multiple documents in bulk
-      operationId: updateDocumentsInBulk
+        - Documents V3
+      summary: updates multiple documents
+      description: applies metadata changes in bulk
+      operationId: updates multiple documents
       parameters:
         - name: x-correlation-id
           in: header
@@ -73,7 +245,7 @@ paths:
             type: string
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: array
               items:
@@ -83,23 +255,204 @@ paths:
         '200':
           description: documents updated successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/BulkUpdateResponse'
         '400':
           description: documents update failed
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/BulkUpdateResponse'
-  '/document/v3/documents':
+  /document/v3/service-request-form/upload:
+    post:
+      tags:
+        - ServiceRequestForms V3
+      summary: Uploads a service request form and saves its details
+      description: >-
+        Uploads a service request form and stores its details in the system. A
+        document ID will be provided for reference.
+      operationId: uploadServiceRequestForm
+      parameters:
+        - name: x-correlation-id
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - metadata
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                metadata:
+                  $ref: '#/components/schemas/ServiceRequestFormMetaData'
+      responses:
+        '201':
+          description: Service request form uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRequestFormUploadResponse'
+        '400':
+          description: Service request form upload failed
+          content:
+            application/json:
+              examples:
+                InvalidRequest:
+                  summary: Invalid input
+                  description: InvalidRequest
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: Invalid request format
+                    responseCode: 400
+                MissingField:
+                  summary: Missing required field
+                  description: MissingField
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: "'documentType' is required"
+                    responseCode: 400
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AccessDenied:
+                  summary: Access denied
+                  description: AccessDenied
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: User not authorized to perform this action
+                    responseCode: 403
+        '500':
+          description: Internal server error occurred while processing the upload.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnexpectedError:
+                  summary: Unexpected server error
+                  description: UnexpectedError
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: An unexpected error occurred
+                    responseCode: 500
+  /document/v3/service-request-form/search:
+    post:
+      tags:
+        - ServiceRequestForms V3
+      summary: Searches for a service request form based on the provided criteria
+      description: >-
+        Searches for a service request form using the given details. Results
+        will be returned based on the specified search criteria.
+      operationId: searchServiceRequestForms
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: x-correlation-id
+          in: query
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequestFormSearchRequest'
+        required: true
+      responses:
+        '200':
+          description: service request forms retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchServiceRequestFormResponse'
+        '400':
+          description: service request forms retrieval failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidRequest:
+                  summary: Invalid input
+                  description: InvalidRequest
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: Invalid request format
+                    responseCode: 400
+                MissingField:
+                  summary: Missing required field
+                  description: MissingField
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: "'documentType' is required"
+                    responseCode: 400
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AccessDenied:
+                  summary: Access denied
+                  description: AccessDenied
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: User not authorized to perform this action
+                    responseCode: 403
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnexpectedError:
+                  summary: Unexpected server error
+                  description: UnexpectedError
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: An unexpected error occurred
+                    responseCode: 500
+  /document/v3/documents:
     post:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: uploads files in AWS S3 and stores metadata in db
-      description: uploads document and return document ID from db
+        - Documents V3
+      summary: uploads a document and saves its metadata
+      description: accepts a file with metadata and returns a document ID
       operationId: uploadDocuments
       parameters:
         - name: x-correlation-id
@@ -125,22 +478,28 @@ paths:
         '201':
           description: document stored successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentUploadResponse'
         '400':
           description: document storage failed
           content:
-            'application/json':
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentUploadResponse'
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentUploadResponse'
     delete:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: Deletes documents based on the provided IDs
-      description: Deletes multiple documents based on the provided list of IDs
+        - Documents V3
+      summary: removes multiple documents
+      description: deletes documents based on provided IDs
       operationId: deleteDocuments
       parameters:
         - name: x-correlation-id
@@ -150,50 +509,53 @@ paths:
             type: string
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               type: array
               items:
                 type: string
               example:
-                - '6753587970cba5484a244cd2'
-                - '6753587970cba5484a244cd3'
-                - '6753587970cba5484a244cd4'
+                - 6753587970cba5484a244cd2
+                - 6753587970cba5484a244cd3
+                - 6753587970cba5484a244cd4
               description: List of document IDs to be deleted
         required: true
       responses:
         '204':
           description: Documents deleted successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataOperationsResponse'
         '400':
           description: Document deletion failed for one or more documents
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataOperationsResponse'
-        '401':
+        '403':
           description: Unauthorized access
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataOperationsResponse'
-  '/document/v3/documents/search':
+  /document/v3/documents/search:
     post:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: searches document on the basis of provided input request
-      description: searches document on the basis of provided input request
+        - Documents V3
+      summary: searches for documents
+      description: >-
+        finds documents based on filters like document classification, document
+        type, policy number etc
       operationId: searchDocuments
       parameters:
         - name: limit
           in: query
           required: false
           schema:
+            maximum: 1000
             type: integer
             format: int32
             default: 10
@@ -211,7 +573,7 @@ paths:
             type: string
       requestBody:
         content:
-          'application/json':
+          application/json:
             schema:
               $ref: '#/components/schemas/SearchRequest'
         required: true
@@ -219,23 +581,267 @@ paths:
         '200':
           description: documents retrieved successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/SearchDocumentResponse'
         '400':
           description: documents retrieval failed
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/SearchDocumentResponse'
-  '/document/v3/documents/{documentId}/url':
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchDocumentResponse'
+  /document/v3/documents/delete:
+    post:
+      security:
+        - Auth0: []
+      tags:
+        - Documents V3
+      summary: deletes multiple documents
+      description: deletes documents based on provided IDs
+      operationId: deleteDocuments_1
+      parameters:
+        - name: x-correlation-id
+          in: header
+          required: false
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+              example:
+                - 6753587970cba5484a244cd2
+                - 6753587970cba5484a244cd3
+                - 6753587970cba5484a244cd4
+              description: List of document IDs to be deleted
+        required: true
+      responses:
+        '204':
+          description: Documents deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataOperationsResponse'
+        '400':
+          description: Document deletion failed for one or more documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataOperationsResponse'
+        '403':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MetadataOperationsResponse'
+  /document/v3/documentType/search:
+    post:
+      security:
+        - Auth0: []
+      tags:
+        - DocumentTypeInformation V3
+      summary: searches for document type info
+      description: >-
+        Searches document types based on the given request and returns matching
+        results.
+      operationId: searchDocumentTypes
+      parameters:
+        - name: x-correlation-id
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentTypeSearchRequest'
+        required: true
+      responses:
+        '200':
+          description: Document types retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchDocumentTypeResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidRequest:
+                  summary: Invalid input
+                  description: InvalidRequest
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: Invalid request format
+                    responseCode: 400
+                MissingField:
+                  summary: Missing required field
+                  description: MissingField
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: "'documentType' is required"
+                    responseCode: 400
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AccessDenied:
+                  summary: Access denied
+                  description: AccessDenied
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: User not authorized to perform this action
+                    responseCode: 403
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnexpectedError:
+                  summary: Unexpected server error
+                  description: UnexpectedError
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: An unexpected error occurred
+                    responseCode: 500
+  /document/v3/service-request-form/{documentId}/download:
+    get:
+      tags:
+        - ServiceRequestForms V3
+      summary: Retrieves a service request form by its ID
+      description: >-
+        Retrieves the service request form based on the provided ID. If a
+        document key is available, the form is returned as binary data;
+        otherwise, a public URL to access the form is provided.
+      operationId: downloadSRFDocument
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: x-correlation-id
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: documentClassification
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - INBOUND
+              - OUTBOUND
+        - name: parentCarrierCode
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: service request form downloaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceRequestFormDownloadResponse'
+        '400':
+          description: service request form download failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                InvalidRequest:
+                  summary: Invalid input
+                  description: InvalidRequest
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: Invalid request format
+                    responseCode: 400
+                MissingField:
+                  summary: Missing required field
+                  description: MissingField
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: documentType is required
+                    responseCode: 400
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                AccessDenied:
+                  summary: Access denied
+                  description: AccessDenied
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: User not authorized to perform this action
+                    responseCode: 403
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                UnexpectedError:
+                  summary: Unexpected server error
+                  description: UnexpectedError
+                  value:
+                    correlationId: 123e4567-e89b-12d3-a456-426614174000
+                    isSuccess: false
+                    message: An unexpected error occurred
+                    responseCode: 500
+  /document/v3/documents/{documentId}/url:
     get:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: retrieves the pre-signed url for a document by id
-      description: retrieves the pre-signed url for a document by id
+        - Documents V3
+      summary: fetches a secure download URL
+      description: generates a temporary pre-signed URL for document access
       operationId: getDocumentUrl
       parameters:
         - name: documentId
@@ -252,24 +858,24 @@ paths:
         '200':
           description: pre-signed url retrieved successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentUrlFetchResponse'
         '400':
           description: failed to fetch pre-signed URL
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentUrlFetchResponse'
-  '/document/v3/documents/{documentId}/metadata':
+  /document/v3/documents/{documentId}/metadata:
     get:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: fetches all metadata by document id
-      description: fetches all metadata by document id
-      operationId: getMetadataByDocumentId
+        - Documents V3
+      summary: gets metadata for a document
+      description: fetches metadata details, including version history if requested
+      operationId: getMetadataByDocumentId_1
       parameters:
         - name: documentId
           in: path
@@ -292,27 +898,52 @@ paths:
           required: false
           schema:
             type: string
+        - name: documentClassification
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - INBOUND
+              - OUTBOUND
+        - name: parentCarrierCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: isSEDDocumentId
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: history
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: document metadata retrieved successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataByIdResponse'
         '400':
           description: document metadata retrieval failed
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/MetadataByIdResponse'
-  '/document/v3/documents/{documentId}/download':
+  /document/v3/documents/{documentId}/download:
     get:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: fetches and downloads any document by id
-      description: fetches and downloads any document by id
+        - Documents V3
+      summary: retrieves a document by ID
+      description: downloads a document based on its unique identifier
       operationId: downloadDocument
       parameters:
         - name: documentId
@@ -325,25 +956,62 @@ paths:
           required: false
           schema:
             type: string
+        - name: documentClassification
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - INBOUND
+              - OUTBOUND
+        - name: parentCarrierCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: policyNumber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: planCode
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: isSEDDocumentId
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+        - name: history
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
       responses:
         '200':
           description: document downloaded successfully
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentDownloadResponse'
         '400':
           description: document download failed
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/DocumentDownloadResponse'
-  '/document/v3/documents/taxForms/{formId}':
+  /document/v3/tax-forms/{formId}/download:
     get:
       security:
         - Auth0: []
       tags:
-        - document-controller
+        - Taxforms V3
+      summary: downloads a tax form
+      description: retrieves a tax form by its unique ID
       operationId: downloadTaxForm
       parameters:
         - name: formId
@@ -358,27 +1026,42 @@ paths:
             type: string
         - name: clientCode
           in: query
-          required: true
+          required: false
           schema:
             type: string
-        - name: alias
+        - name: parentCarrierCode
           in: query
           required: false
           schema:
             type: string
         - name: fChar
           in: query
-          required: true
+          required: false
           schema:
             type: string
         - name: ssn
           in: query
-          required: true
+          required: false
           schema:
             type: string
         - name: contractNumber
           in: query
-          required: true
+          required: false
+          schema:
+            type: string
+        - name: policyNumber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: planNumber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: planCode
+          in: query
+          required: false
           schema:
             type: string
         - name: taxYear
@@ -387,45 +1070,63 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: taxFormType
+        - name: sourceSystem
           in: query
           required: false
           schema:
-            type: integer
-            format: int32
-        - name: cutoffMonth
-          in: query
-          required: false
-          schema:
-            maximum: 12
-            minimum: 0
-            type: integer
-            format: int32
-            default: 1
+            type: string
+            default: LC
       responses:
         '200':
           description: OK
           content:
-            'application/json':
+            application/json:
               schema:
                 $ref: '#/components/schemas/TaxformDownloadResponse'
-  '/document/v3/documents/taxForms':
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxformDownloadResponse'
+  /document/v3/tax-forms:
     get:
       security:
         - Auth0: []
       tags:
-        - document-controller
-      summary: fetches taxForms from SOVOS
+        - Taxforms V3
+      summary: retrieves tax forms
+      description: fetches tax forms based on client and year filters
       operationId: getTaxForms
       parameters:
         - name: clientCode
           in: query
-          required: true
+          required: false
+          schema:
+            type: string
+        - name: parentCarrierCode
+          in: query
+          required: false
           schema:
             type: string
         - name: contractNumber
           in: query
-          required: true
+          required: false
+          schema:
+            type: string
+        - name: policyNumber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: planNumber
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: planCode
+          in: query
+          required: false
           schema:
             type: string
         - name: taxYear
@@ -434,20 +1135,6 @@ paths:
           schema:
             type: integer
             format: int32
-        - name: alias
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: cutoffMonth
-          in: query
-          required: false
-          schema:
-            maximum: 12
-            minimum: 0
-            type: integer
-            format: int32
-            default: 1
         - name: ssn
           in: query
           required: false
@@ -466,18 +1153,15 @@ paths:
           in: query
           required: false
           schema:
-            type: string
+            type: array
+            items:
+              type: string
         - name: sourceSystem
           in: query
           required: false
           schema:
             type: string
-        - name: taxFormType
-          in: query
-          required: false
-          schema:
-            type: integer
-            format: int32
+            default: LC
         - name: x-correlation-id
           in: header
           required: false
@@ -487,18 +1171,105 @@ paths:
         '200':
           description: OK
           content:
-            'application/json':
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaxformResponseList'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
               schema:
                 $ref: '#/components/schemas/TaxformResponseList'
 components:
   schemas:
-    Metadata:
+    ServiceRequestFormUpdateMetaData:
       type: object
       properties:
-        documentId:
+        publicFormUrl:
           type: string
-          description: Unique ID in mongo db
-          example: 670e23dfab593b4387210b81
+          description: Publicly accessible URL
+          example: >-
+            https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+        formId:
+          type: string
+          description: Id to the specific form instance
+          example: '1234567'
+        formName:
+          type: string
+          description: Name or title of the form
+          example: Annuity Surrender Form
+        parentCarrierCode:
+          type: string
+          description: The code of the parent carrier
+          example: EVGL
+        fileType:
+          type: string
+          description: The type of file
+          example: PDF
+        formType:
+          type: string
+          description: Type of the form
+          example: Redemption
+        formSubType:
+          type: string
+          description: Further classification of the form type
+          example: Full Surrender
+        formCategory:
+          type: string
+          description: Category that describes the purpose of the form
+          example: Financial
+        barcodeContent:
+          type: string
+          description: Barcode data used for identifying or scanning the form
+          example: 13qwf312wfw312fqe2jtyktym
+        stateApplicable:
+          type: string
+          description: State where the form is applicable or valid
+          example: NY
+        formStatus:
+          type: string
+          description: formStatus
+          example: ACTIVE
+    ErrorResponse:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+        message:
+          type: string
+          description: Response message
+          example: >-
+            No document types found/Invalid request/Access denied for document
+            metadata fetch
+        statusCode:
+          type: integer
+          description: status code
+          format: int32
+        success:
+          type: boolean
+    ServiceRequestFormMetadataOperationsResponse:
+      type: object
+      properties:
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+    IdentifierInfo:
+      type: object
+      properties:
+        identifier:
+          type: string
+        value:
+          type: string
+      description: List of identifier-value pairs
+      example:
+        identifier: sourceDocId
+        value: '12345'
+    MetadataUpdate:
+      type: object
+      properties:
         docClassification:
           type: string
           description: Document classification to identify document type
@@ -506,11 +1277,10 @@ components:
           enum:
             - INBOUND
             - OUTBOUND
-            - SERVICE_REQUEST_FORM
         parentCarrierCode:
           type: string
           description: Parent Company code
-          example: NASU
+          example: EVGL
         source:
           type: string
           description: Source of the document
@@ -532,15 +1302,12 @@ components:
             - POST_ISSUE
             - DEATH
             - CORRESPONDENCE
-            - TAX_FORMS
+            - AGENT
+            - SUITABILITY
         childCarrierCode:
           type: string
           description: Child company code
-          example: DLNY
-        formVersion:
-          type: string
-          description: Form version
-          example: V1
+          example: EVGL
         documentType:
           type: string
           description: Document type
@@ -560,19 +1327,11 @@ components:
         planCode:
           type: string
           description: Plan code
-          example: '565'
-        productName:
-          type: string
-          description: Product name
-          example: Annuity Policy
+          example: '235'
         policyNumber:
           type: string
           description: Policy number
-          example: '23109168'
-        productCategory:
-          type: string
-          description: Product category
-          example: Insurance
+          example: '23576001'
         brokerMasterNumber:
           type: string
           description: Broker master number
@@ -589,26 +1348,6 @@ components:
           type: string
           description: Broker external ID
           example: BROKER456
-        brokerName:
-          type: string
-          description: Broker name
-          example: ABC Brokerage
-        agentFirstName:
-          type: string
-          description: Agent first name
-          example: John
-        agentLastName:
-          type: string
-          description: Agent last name
-          example: Doe
-        agentEmailAddress:
-          type: string
-          description: Agent email address
-          example: agent@example.com
-        agentTaxId:
-          type: string
-          description: Agent tax ID
-          example: '987654321'
         mailTrackingNumber:
           type: string
           description: Mail tracking number
@@ -617,25 +1356,6 @@ components:
           type: string
           description: Delivery method
           example: EMAIL
-          enum:
-            - PRINT
-            - EMAIL
-        ownerFirstName:
-          type: string
-          description: Owner first name
-          example: Jane
-        ownerMiddleName:
-          type: string
-          description: Owner middle name
-          example: A.
-        ownerLastName:
-          type: string
-          description: Owner last name
-          example: Smith
-        ownerSSN:
-          type: string
-          description: Owner SSN or tax ID
-          example: 123-45-6789
         emailFrom:
           type: string
           description: Email 'from' address
@@ -648,15 +1368,6 @@ components:
           type: string
           description: Email subject
           example: New Business Application
-        emailDateTime:
-          type: string
-          description: Date and time of the email
-          format: date-time
-          example: '2023-01-01T10:30:00Z'
-        startPage:
-          type: string
-          description: Start page of the document
-          example: '1'
         pageCount:
           type: integer
           description: Total page count
@@ -676,15 +1387,12 @@ components:
           example: Indexation
         docAccessLevel:
           type: string
-          description: Access level of the document
+          description: Specifies who can access the document based on their role.
           example: CLIENT_COPY
           enum:
             - CLIENT_COPY
             - AGENT_COPY
-        originalTextIndex:
-          type: string
-          description: Original text index
-          example: Index001
+            - CARRIER_ONLY
         participantAccountNumber:
           type: string
           description: Participant account number
@@ -692,19 +1400,7 @@ components:
         sourceFileName:
           type: string
           description: Source file name
-          example: Q100720JHLILFGRC1LETTER.pdf\\01010001 GENLTR Document_395069591.pdf
-        roles:
-          type: string
-          description: Roles associated with the document
-          example: Admin, User
-        sedDocumentSchemaType:
-          type: string
-          description: SED document schema type
-          example: SchemaType1
-        stockNumber:
-          type: string
-          description: Stock number
-          example: STK5678
+          example: 052725FTADHOCLETTERS_R_20485_1207637_711.pdf
         distributionChannel:
           type: string
           description: Distribution channel
@@ -717,29 +1413,45 @@ components:
           type: string
           description: Document number
           example: DOC9876
-        customFields:
-          type: object
-          additionalProperties:
-            type: string
-            description: Custom fields as a key-value map
-            example: '{"customField1":"value1"}'
-        sourceDocId:
-          type: string
-          description: Source document ID
-          example: SRC123456
-        docPopUrl:
-          type: string
-          description: Document URL
-          example: https://docpop.example.com/documents/2448728
         periodYear:
           type: integer
           description: Document period year
           format: int32
           example: 2024
-        periodQuarter:
+        quarterPeriod:
           type: string
           description: Document period quarter
           example: Q2
+          enum:
+            - Q1
+            - Q2
+            - Q3
+            - Q4
+        appVersion:
+          type: integer
+          description: App Version
+          format: int32
+          example: 1
+        scenario:
+          type: string
+          description: Scenario
+          example: duplicate
+          enum:
+            - duplicate
+            - replace
+        linkedDocumentId:
+          type: string
+          description: Linked document ID
+          example: 693e23dfab593b4387210k92
+        identifiers:
+          type: array
+          description: List of identifier-value pairs
+          items:
+            $ref: '#/components/schemas/IdentifierInfo'
+        documentId:
+          type: string
+          description: Unique document ID
+          example: 670e23dfab593b4387210b81
     MetadataOperationsResponse:
       type: object
       properties:
@@ -751,6 +1463,11 @@ components:
           type: string
           description: Response message
           example: Document updated/deleted successfully
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
         success:
           type: boolean
     BulkUpdateResponse:
@@ -759,35 +1476,398 @@ components:
         correlationId:
           type: string
           description: Unique ID for correlating requests
-          example: '123e4567-e89b-12d3-a456-426614174000'
+          example: 123e4567-e89b-12d3-a456-426614174000
         successfulDocumentIds:
           type: array
           description: List of successfully updated document IDs
           items:
             type: string
             description: List of successfully updated document IDs
-            example: '67124697f3bef2497b6accfb,67724697f3bef2497b6accfb'
+            example: 67124697f3bef2497b6accfb
         failedUpdates:
           type: array
           items:
             $ref: '#/components/schemas/ErrorUpdateResponse'
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
     ErrorUpdateResponse:
       type: object
       properties:
         documentId:
           type: string
-          description: Unique document ID in mongo db
+          description: Unique document ID
           example: 67124697f3bef2497b6accfb
         message:
           type: string
           description: Response message
           example: Document ID cannot be empty!
+    ServiceRequestFormMetaData:
+      type: object
+      properties:
+        publicFormUrl:
+          type: string
+          description: Publicly accessible URL
+          example: >-
+            https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf
+        formId:
+          type: string
+          description: Id to the specific form instance
+          example: '1234567'
+        formName:
+          type: string
+          description: Name or title of the form
+          example: Annuity Surrender Form
+        parentCarrierCode:
+          type: string
+          description: The code of the parent carrier
+          example: EVGL
+        fileType:
+          type: string
+          description: The type of file
+          example: PDF
+        formType:
+          type: string
+          description: Type of the form
+          example: Redemption
+        formSubType:
+          type: string
+          description: Further classification of the form type
+          example: Full Surrender
+        formCategory:
+          type: string
+          description: Category that describes the purpose of the form
+          example: Financial
+        barcodeContent:
+          type: string
+          description: Barcode data used for identifying or scanning the form
+          example: 13qwf312wfw312fqe2jtyktym
+        stateApplicable:
+          type: string
+          description: State where the form is applicable or valid
+          example: NY
+    ServiceRequestFormUploadResponse:
+      type: object
+      properties:
+        documentId:
+          type: string
+          description: Unique document ID
+          example: 670e23dfab593b4387210b81
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+    ServiceRequestFormSearchRequest:
+      required:
+        - parentCarrierCode
+      type: object
+      properties:
+        parentCarrierCode:
+          type: string
+          description: client code associated with the document search
+          example: EVGL
+        formId:
+          type: string
+          description: Id to the specific form instance
+          example: 123456 CA
+        stateApplicable:
+          type: string
+          description: State where the form is applicable or valid
+          example: NY
+        formCategory:
+          type: string
+          description: Category of the form
+          example: Financial
+        formType:
+          type: string
+          description: Type of form
+          example: Redemption
+        formSubType:
+          type: string
+          description: More specific classification under the form type
+          example: Full Surrender
+        orderBy:
+          type: string
+          description: >-
+            The field used to sort the search results; defaults to 'createDate'
+            if not specified
+          example: createDate
+        orderByDirection:
+          type: string
+          description: >-
+            Direction of the sort order for search results, either ascending or
+            descending
+          example: DESC
+          enum:
+            - ASC
+            - DESC
+    MetadataSRFSearchResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          description: id
+          example: 67124697f3bef2497b6accfb
+        formId:
+          type: string
+          description: Id to the specific form instance
+          example: 01 12345 3456 US
+        formStatus:
+          type: integer
+          description: Status of the form
+          format: int32
+          example: 1
+        formName:
+          type: string
+          description: Name of the form
+          example: Annuity Payout Benefits Form
+        publicFormUrl:
+          type: string
+          description: Publicly accessible URL where the form can be viewed or downloaded
+          example: https//:zinnia.srf.com
+        uploadedDate:
+          type: string
+          description: Date and time when the form was uploaded
+          format: date-time
+          example: '2025-03-10T15:58:56.081Z'
+        formCategory:
+          type: string
+          description: Category that describes the purpose of the form
+          example: Withdrawal
+        stateApplicable:
+          type: string
+          description: State where the form is applicable or valid
+          example: NY
+        fileType:
+          type: string
+          description: The type of file format for the form
+          example: PDF
+        formVersion:
+          type: string
+          description: Version number of the form
+          example: '1'
+        formType:
+          type: string
+          description: Type of the form
+          example: Redemption
+        formSubType:
+          type: string
+          description: Further classification of the form type
+          example: Full Surrender
+        barcodeContent:
+          type: string
+          description: Barcode data used for identifying or scanning the form
+          example: 13qwf312wfw312fqe2jtyktym
+    SearchServiceRequestFormResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of total documents found matching the search criteria
+          format: int64
+          example: 100
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetadataSRFSearchResponse'
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+    Metadata:
+      required:
+        - docClassification
+        - documentDate
+        - fileType
+        - parentCarrierCode
+      type: object
+      properties:
+        docClassification:
+          type: string
+          description: Document classification to identify document type
+          example: INBOUND
+          enum:
+            - INBOUND
+            - OUTBOUND
+        parentCarrierCode:
+          type: string
+          description: Parent Company code
+          example: EVGL
+        source:
+          type: string
+          description: Source of the document
+          example: Email
+        formNumber:
+          type: string
+          description: Form number
+          example: '123456'
+        fileType:
+          type: string
+          description: File type
+          example: PDF
+        docCategory:
+          type: string
+          description: Document category
+          example: NEW_BUSINESS
+          enum:
+            - NEW_BUSINESS
+            - POST_ISSUE
+            - DEATH
+            - CORRESPONDENCE
+            - AGENT
+            - SUITABILITY
+        childCarrierCode:
+          type: string
+          description: Child company code
+          example: EVGL
+        documentType:
+          type: string
+          description: Document type
+          example: NB Application
+        documentDate:
+          type: string
+          description: Date of the document
+          format: date-time
+        documentTypeDescription:
+          type: string
+          description: Description of the document type
+          example: Deferred Annuity Application
+        zinniaLiveCaseId:
+          type: string
+          description: Zinnia Live Case ID
+          example: ZLC09876
+        planCode:
+          type: string
+          description: Plan code
+          example: '235'
+        policyNumber:
+          type: string
+          description: Policy number
+          example: '23576001'
+        brokerMasterNumber:
+          type: string
+          description: Broker master number
+          example: BKR123456
+        repMasterNumber:
+          type: string
+          description: Rep master number
+          example: REP987654
+        agentExternalID:
+          type: string
+          description: Agent external ID
+          example: AGENT123
+        brokerExternalID:
+          type: string
+          description: Broker external ID
+          example: BROKER456
+        mailTrackingNumber:
+          type: string
+          description: Mail tracking number
+          example: '4453166346'
+        deliveryMethod:
+          type: string
+          description: Delivery method
+          example: EMAIL
+        emailFrom:
+          type: string
+          description: Email 'from' address
+          example: sender@example.com
+        emailTo:
+          type: string
+          description: Email 'to' address
+          example: recipient@example.com
+        emailSubject:
+          type: string
+          description: Email subject
+          example: New Business Application
+        pageCount:
+          type: integer
+          description: Total page count
+          format: int64
+          example: 5
+        appId:
+          type: string
+          description: Application ID
+          example: EDJ041120240000000001
+        mailShipDate:
+          type: string
+          description: Mail ship date
+          format: date-time
+        sourceSystem:
+          type: string
+          description: Source system
+          example: Indexation
+        docAccessLevel:
+          type: string
+          description: Specifies who can access the document based on their role.
+          example: CLIENT_COPY
+          enum:
+            - CLIENT_COPY
+            - AGENT_COPY
+            - CARRIER_ONLY
+        participantAccountNumber:
+          type: string
+          description: Participant account number
+          example: ACC12345
+        sourceFileName:
+          type: string
+          description: Source file name
+          example: 052725FTADHOCLETTERS_R_20485_1207637_711.pdf
+        distributionChannel:
+          type: string
+          description: Distribution channel
+          example: Online
+        displayName:
+          type: string
+          description: Display name of the document
+          example: New Business Policy Document
+        documentNumber:
+          type: string
+          description: Document number
+          example: DOC9876
+        periodYear:
+          type: integer
+          description: Document period year
+          format: int32
+          example: 2024
+        quarterPeriod:
+          type: string
+          description: Document period quarter
+          example: Q2
+          enum:
+            - Q1
+            - Q2
+            - Q3
+            - Q4
+        appVersion:
+          type: integer
+          description: App Version
+          format: int32
+          example: 1
+        scenario:
+          type: string
+          description: Scenario
+          example: duplicate
+          enum:
+            - duplicate
+            - replace
+        linkedDocumentId:
+          type: string
+          description: Linked document ID
+          example: 693e23dfab593b4387210k92
+        identifiers:
+          type: array
+          description: List of identifier-value pairs
+          items:
+            $ref: '#/components/schemas/IdentifierInfo'
     DocumentUploadResponse:
       type: object
       properties:
         documentId:
           type: string
-          description: Unique ID in mongo db
+          description: Unique ID
           example: 670e23dfab593b4387210b81
         correlationId:
           type: string
@@ -797,26 +1877,57 @@ components:
           type: string
           description: Response message
           example: Document uploaded successfully
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
         success:
           type: boolean
+    Period:
+      type: object
+      properties:
+        periodYear:
+          type: integer
+          description: The year part of the period associated with the document
+          format: int32
+          example: 2023
+        periodQuarters:
+          type: array
+          description: List of quarters associated with the period
+          example:
+            - Q1
+            - Q2
+          items:
+            type: string
+            description: List of quarters associated with the period
+            enum:
+              - Q1
+              - Q2
+              - Q3
+              - Q4
+      description: The year part of the period associated with the document
+      example:
+        periodYear: 2023
+        periodQuarters:
+          - Q1
+          - Q2
     SearchRequest:
       type: object
       properties:
         parentCarrierCode:
           type: string
-          description: List of client codes associated with the document search
-          example: NASU
+          description: Client codes associated with the document search
+          example: EVGL
         documentClassification:
           type: string
-          description:
+          description: >-
             Classification of the document indicating type, e.g., inbound or
             outbound
           example: INBOUND
           enum:
             - INBOUND
             - OUTBOUND
-            - SERVICE_REQUEST_FORM
-            - TAX_FORMS
         documentType:
           type: string
           description: Type of document, defining its primary purpose
@@ -830,108 +1941,146 @@ components:
             - POST_ISSUE
             - DEATH
             - CORRESPONDENCE
-            - TAX_FORMS
+            - AGENT
+            - SUITABILITY
         policyNumber:
           type: string
           description: Policy number associated with the document, used for identification
-          example: '23109168'
+          example: '23576001'
         planCode:
           type: string
           description: Plan code associated with the document, used for identification
-          example: plan67890f
-        documentDate:
-          type: string
-          description: Date when the document was created or issued
-          format: date
-          example: 2024-10-23
+          example: '235'
         documentStartDate:
           type: string
           description: Start date of the document period for filtering results
           format: date
-          example: 2024-10-01
+          example: '2024-10-01'
         documentEndDate:
           type: string
           description: End date of the document period for filtering results
           format: date
-          example: 2024-10-31
+          example: '2024-10-31'
         documentStatus:
           type: array
-          description:
+          description: >-
             List of statuses the document may have, supporting filtering by
             multiple statuses
           items:
             type: string
-            description:
-              List of statuses the document may have, supporting filtering by
-              multiple statuses
-            example: 'ACTIVE'
             enum:
               - ACTIVE
               - INACTIVE
-        periodYear:
-          type: integer
+          example:
+            - ACTIVE
+        periods:
+          type: array
           description: The year part of the period associated with the document
-          format: int32
-          example: 2024
-        periodQuarter:
-          type: string
-          description:
-            Quarter of the year associated with the document's period, in Q1-Q4
-            format
-          example: Q2
-        ownerSSN:
-          type: string
-          description:
-            Social Security Number of the document's owner, partially masked
-            for security
-          example: 123-45-6789
+          example:
+            - periodYear: 2023
+              periodQuarters:
+                - Q1
+                - Q2
+            - periodYear: 2024
+              periodQuarters: []
+          items:
+            $ref: '#/components/schemas/Period'
         appId:
           type: string
           description: Application ID tied to the document for tracking and retrieval
-          example: XXXXEDJ041120240000000001
+          example: EDJ041120240000000001
         zinniaLiveCaseId:
           type: string
           description: Unique case ID in the Zinnia system associated with the document
           example: ZLC09876
-        agentTaxId:
-          type: string
-          description: Tax ID associated with the agent handling the document
-          example: TAX987654
         orderBy:
           type: string
-          description: The field used to order search results; default is document category
-          example: documentCategory
+          description: The field used to order search results; default is document date
+          example: documentDate
         orderByDirection:
           type: string
-          description:
+          description: >-
             Direction of the sort order for search results, either ascending or
             descending
-          example: ASC
+          example: DESC
           enum:
             - ASC
             - DESC
+        recipient:
+          type: string
+          description: Recipient of the document
+          example: AGENT
+          enum:
+            - AGENT
+            - CLIENT
+        appVersion:
+          type: integer
+          description: App Version
+          format: int32
+          example: 1
+        identifiers:
+          type: array
+          description: List of identifier-value pairs
+          items:
+            $ref: '#/components/schemas/IdentifierInfo'
+        importStartDate:
+          type: string
+          description: Import Start date of the document period for filtering results
+          format: date-time
+        importEndDate:
+          type: string
+          description: Import End date of the document period for filtering results
+          format: date-time
+        masterAgentNumber:
+          type: string
+          description: Master Agent Number
+          example: MA98416687
+        externalId:
+          type: string
+          description: External ID
+          example: EDJ041120240000000001
+        excludeDocumentTypes:
+          type: array
+          description: To exclude specified document types from the API response payload
+          example:
+            - NB Supporting Document
+            - Address Change
+          items:
+            type: string
+            description: To exclude specified document types from the API response payload
+            example: '["NB Supporting Document","Address Change"]'
     MetadataSearchResponse:
       type: object
       properties:
         documentClassification:
           type: string
           description: Document classification to identify document type
-          example: Inbound
+          example: INBOUND
+          enum:
+            - INBOUND
+            - OUTBOUND
         source:
           type: string
           description: Source of the document
           example: Email
+        sourceFileName:
+          type: string
+          description: Actual name of the document
+          example: 052725FTADHOCLETTERS_R_20485_1207637_711.pdf
         planCode:
           type: string
           description: Plan code associated with the document
-          example: '565'
+          example: '235'
         documentStatus:
           type: integer
-          description: Current status of the document
+          description: >-
+            Indicates the current status of the document. '1' for ACTIVE, '0'
+            for INACTIVE.
           format: int32
+          example: 1
         documentId:
           type: string
-          description: Unique ID of the document in MongoDB
+          description: Unique ID of the document
           example: 67124697f3bef2497b6accfb
         documentDate:
           type: string
@@ -961,14 +2110,10 @@ components:
           type: string
           description: Tracking ID for the document
           example: '4453166346'
-        parentCarrierCode:
-          type: string
-          description: Client code associated with the document
-          example: NASU
         policyNumber:
           type: string
           description: Policy number linked to the document
-          example: '23109168'
+          example: '23576001'
         createDate:
           type: string
           description: Creation date of the document
@@ -977,10 +2122,6 @@ components:
           type: string
           description: Correlation ID for the document
           example: 12345-corr-67890
-        docPopUrl:
-          type: string
-          description: Document's URL in the Document Pop system
-          example: https://docpop.example.com/documents/2448728
         periodYear:
           type: integer
           description: Year related to the document period
@@ -1006,14 +2147,58 @@ components:
           type: string
           description: Master number of the representative associated with the document
           example: REP987654
+        documentNumber:
+          type: string
+          description: >-
+            Document number associated with the document (if present) else
+            document Id
+          example: 670e23dfab593b4387210b81 or 20241230-M-463066
+        appVersion:
+          type: integer
+          description: App Version
+          format: int32
+          example: 1
+        displayCode:
+          type: integer
+          description: >-
+            Numeric code representing the document access level:1 = CLIENT_COPY,
+            2 = AGENT_COPY, 13 = CARRIER_ONLY.
+          format: int32
+          example: 1
+        formNumber:
+          type: string
+          description: formNumber
+          example: '1234'
+        scenario:
+          type: string
+          description: Scenario
+          example: duplicate
+        linkedDocumentId:
+          type: string
+          description: Linked document ID
+          example: 693e23dfab593b4387210k92
+        identifiers:
+          type: array
+          description: List of identifier-value pairs
+          items:
+            $ref: '#/components/schemas/IdentifierInfo'
+        importDate:
+          type: string
+          description: Document create/import date
+          format: date-time
     SearchDocumentResponse:
       type: object
       properties:
         count:
           type: integer
-          description: Number of documents found
+          description: Number of total documents found matching the search criteria
+          format: int64
+          example: 100
+        statusCode:
+          type: integer
+          description: Status code of the response
           format: int32
-          example: 10
+          example: 200
         documents:
           type: array
           items:
@@ -1021,20 +2206,240 @@ components:
         correlationId:
           type: string
           description: Unique ID for correlating requests
-          example: '123e4567-e89b-12d3-a456-426614174000'
+          example: 123e4567-e89b-12d3-a456-426614174000
         message:
           type: string
           description: Response message
           example: Documents retrieved successfully
         success:
           type: boolean
+    DocumentTypeSearchRequest:
+      required:
+        - parentCarrierCode
+      type: object
+      properties:
+        parentCarrierCode:
+          type: string
+          description: Parent carrier code associated with the document search
+          example: EVGL
+        documentCategory:
+          type: string
+          description: Category of the document, such as New Business or Claim
+          example: NEW_BUSINESS
+          enum:
+            - NEW_BUSINESS
+            - POST_ISSUE
+            - DEATH
+            - CORRESPONDENCE
+            - AGENT
+            - SUITABILITY
+        documentType:
+          type: string
+          description: Type of document, defining its primary purpose
+          example: NB State Replacement
+        formNumber:
+          type: string
+          description: Form number
+          example: 01 00804 0724 IL
+        documentClassification:
+          type: string
+          description: >-
+            Classification of the document indicating type, e.g., inbound or
+            outbound
+          example: INBOUND
+          enum:
+            - INBOUND
+            - OUTBOUND
+        applicableState:
+          type: string
+          description: US state
+          example: IL
+        orderBy:
+          type: string
+          description: The field used to order search results; default is documentType Id
+          example: documentInfoId
+        orderByDirection:
+          type: string
+          description: >-
+            Direction of the sort order for search results, either ascending or
+            descending
+          example: ASC
+          enum:
+            - ASC
+            - DESC
+    DocumentTypeResponse:
+      type: object
+      properties:
+        documentInfoId:
+          type: string
+          description: Unique Id of the document
+          example: 67eeb1be802e8538b7f00a9c
+        parentCarrierCode:
+          type: string
+          description: Code for the carrier/client
+          example: EVGL
+        documentCategory:
+          type: string
+          description: Document category
+          example: New Business
+        documentType:
+          type: string
+          description: Specific type of the document
+          example: NB Application
+        formNumber:
+          type: string
+          description: Form number of the document.
+          example: 01 00617 0724 US
+        documentTypeDescription:
+          type: string
+          description: A detailed description of the document type.
+          example: Deferred Annuity Application
+        companyName:
+          type: string
+          description: Name of the company to which the document is related.
+          example: Wellabe
+        documentClassification:
+          type: string
+          description: Classification of the document (e.g., Inbound, Outbound)
+          example: Inbound
+        applicableState:
+          type: string
+          description: US State for which the document is applicable
+          example: IL
+        createDate:
+          type: string
+          format: date-time
+          description: The creation timestamp of the document type
+          example: '2025-04-03T16:05:18.057Z'
+        documentCategoryKey:
+          type: string
+          description: A unique key representing the document category
+          example: NEW_BUSINESS
+    SearchDocumentTypeResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of documentType found matching the search criteria
+          format: int64
+          example: 100
+        documentTypeList:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentTypeResponse'
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+    TaxformResponse:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          description: Policy number
+          example: '633033992'
+        name:
+          type: string
+          description: Name of the form
+          example: 1099-R
+        formId:
+          type: string
+          description: Form ID
+          example: '105'
+        taxYear:
+          type: string
+          description: Tax year
+          example: '2022'
+        planCode:
+          type: string
+          description: Plan Code
+          example: '633033992'
+        fchar:
+          type: string
+    TaxformResponseList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Number of tax forms found
+          format: int32
+          example: 10
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxformResponse'
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+        isSuccess:
+          type: boolean
+          description: Response status
+          example: true
+        message:
+          type: string
+          description: Response message
+          example: Taxform retrieved successfully
+    TaxformDownloadResponse:
+      type: object
+      properties:
+        fileExtension:
+          type: string
+          description: File extension of the document
+          example: pdf
+        binaryData:
+          type: string
+          description: Binary data of the document
+          example: wdvb2ekllkk189w0enjansle..
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
+        isSuccess:
+          type: boolean
+          description: Response status
+          example: true
+        message:
+          type: string
+          description: Response message
+          example: Taxform downloaded successfully
+    ServiceRequestFormDownloadResponse:
+      type: object
+      properties:
+        fileExtension:
+          type: string
+          description: File extension of the document
+          example: pdf
+        formName:
+          type: string
+          description: Name of the document
+          example: NB Application
+        binaryData:
+          type: string
+          description: Binary data of the document
+          example: wdvb2ekllkk189w0enjansle..
+        correlationId:
+          type: string
+          description: Unique ID for correlating requests
+          example: 123e4567-e89b-12d3-a456-426614174000
     DocumentUrlFetchResponse:
       type: object
       properties:
         preSignedUrl:
           type: string
           description: Pre-signed URL for document
-          example: https://s3.amazonaws.com/zinnia-documents/123e4567-e89b-12d3-a456-426614174000
+          example: >-
+            https://s3.amazonaws.com/zinnia-documents/123e4567-e89b-12d3-a456-426614174000
         correlationId:
           type: string
           description: Unique ID for correlating requests
@@ -1043,6 +2448,11 @@ components:
           type: string
           description: Response message
           example: Document fetched successfully
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
         success:
           type: boolean
     MetadataByIdResponse:
@@ -1058,6 +2468,11 @@ components:
           type: string
           description: Response message
           example: Document retrieved successfully
+        statusCode:
+          type: integer
+          description: Status code of the response
+          format: int32
+          example: 200
         success:
           type: boolean
     MetadataResponse:
@@ -1067,22 +2482,10 @@ components:
           type: string
           description: Source system or origin of the document
           example: Email
-        parentCarrierCode:
-          type: string
-          description: Client code associated with the document
-          example: NASU
-        childCarrierCode:
-          type: string
-          description: child Company code
-          example: DLNY
         documentId:
           type: string
-          description: Unique ID in mongo db
+          description: Unique document ID
           example: 670e23dfab593b4387210b81
-        sourceDocId:
-          type: string
-          description: Source document ID for tracking in external systems
-          example: SRC123456
         formNumber:
           type: string
           description: Form number associated with the document
@@ -1094,7 +2497,10 @@ components:
         documentClassification:
           type: string
           description: Classification of the document, e.g., inbound or outbound
-          example: Inbound
+          example: INBOUND
+          enum:
+            - INBOUND
+            - OUTBOUND
         documentType:
           type: string
           description: Type of document indicating its purpose
@@ -1109,17 +2515,15 @@ components:
           example: Deferred Annuity Application
         documentStatus:
           type: integer
-          description: Status of the document
+          description: >-
+            Indicates the current status of the document. '1' for ACTIVE, '0'
+            for INACTIVE.
           format: int32
           example: 1
         version:
           type: string
           description: Version of the document
           example: '1'
-        formVersion:
-          type: string
-          description: Version of the form associated with the document
-          example: v1.0
         documentDate:
           type: string
           description: Date of the document
@@ -1131,19 +2535,11 @@ components:
         planCode:
           type: string
           description: Plan code
-          example: '565'
-        productName:
-          type: string
-          description: Name of the product associated with the document
-          example: Annuity Plan
+          example: '235'
         policyNumber:
           type: string
           description: Policy number associated with the document
-          example: '23109168'
-        productCategory:
-          type: string
-          description: Category of the product associated with the document
-          example: Insurance
+          example: '23576001'
         brokerMasterNumber:
           type: string
           description: Broker master number associated with the document
@@ -1160,26 +2556,6 @@ components:
           type: string
           description: External ID of the broker associated with the document
           example: BRK12345
-        brokerName:
-          type: string
-          description: Name of the broker associated with the document
-          example: John Smith
-        agentFirstName:
-          type: string
-          description: First Name of the agent associated with the document
-          example: Jane
-        agentLastName:
-          type: string
-          description: Last Name of the agent associated with the document
-          example: Doe
-        agentEmailAddress:
-          type: string
-          description: Email address of the agent associated with the document
-          example: XHbN8@example.com
-        agentTaxId:
-          type: string
-          description: Tax ID of the agent associated with the document
-          example: '123456789'
         mailTrackingNumber:
           type: string
           description: Mail tracking number
@@ -1188,22 +2564,6 @@ components:
           type: string
           description: Delivery method
           example: Email
-        ownerFirstName:
-          type: string
-          description: Owner's first name
-          example: Jane
-        ownerMiddleName:
-          type: string
-          description: Owner's middle name
-          example: Joe
-        ownerLastName:
-          type: string
-          description: Owner's last name
-          example: Doe
-        ownerSSN:
-          type: string
-          description: Owner's SSN
-          example: '123456789'
         emailFrom:
           type: string
           description: Email address
@@ -1216,10 +2576,6 @@ components:
           type: string
           description: Email subject
           example: Deferred Annuity Application
-        emailDateTime:
-          type: string
-          description: Email date time
-          format: date-time
         appId:
           type: string
           description: Application ID
@@ -1235,15 +2591,7 @@ components:
         sourceFileName:
           type: string
           description: Name of the file in source system
-          example: files/123456.pdf
-        docPopUrl:
-          type: string
-          description: Document URL
-          example: https://docpop.example.com/documents/2448728
-        stockNumber:
-          type: string
-          description: Stock number of the document
-          example: '123456'
+          example: 052725FTADHOCLETTERS_R_20485_1207637_711.pdf
         displayName:
           type: string
           description: Display name of the document
@@ -1261,6 +2609,33 @@ components:
           type: string
           description: Quarter of the document period in Q1-Q4 format
           example: Q2
+        documentNumber:
+          type: string
+          description: >-
+            Document number associated with the document (if present) else
+            document Id
+          example: 670e23dfab593b4387210b81 or 20241230-M-463066
+        documentVersions:
+          type: array
+          description: Previous versions of the document
+          items:
+            $ref: '#/components/schemas/MetadataResponse'
+        scenario:
+          type: string
+          description: Scenario
+          example: duplicate
+          enum:
+            - duplicate
+            - replace
+        linkedDocumentId:
+          type: string
+          description: Linked document ID
+          example: 693e23dfab593b4387210k92
+        identifiers:
+          type: array
+          description: List of identifier-value pairs
+          items:
+            $ref: '#/components/schemas/IdentifierInfo'
     DocumentDownloadResponse:
       type: object
       properties:
@@ -1284,86 +2659,26 @@ components:
           type: string
           description: Response message
           example: Document downloaded successfully
-        success:
-          type: boolean
-    TaxformResponse:
-      type: object
-      properties:
-        contractNumber:
-          type: string
-          description: Contract number
-          example: '633033992'
-        name:
-          type: string
-          description: Name of the form
-          example: 1099-R
-        formId:
-          type: string
-          description: Form ID
-          example: '105'
-        taxYear:
-          type: string
-          description: Tax year
-          example: '2022'
-        fchar:
-          type: string
-    TaxformResponseList:
-      type: object
-      properties:
-        count:
+        statusCode:
           type: integer
-          description: Number of tax forms found
+          description: Status code of the response
           format: int32
-          example: 10
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/TaxformResponse'
-        correlationId:
-          type: string
-          description: Unique ID for correlating requests
-          example: 123e4567-e89b-12d3-a456-426614174000
-        message:
-          type: string
-          description: Response message
-          example: Taxform retrieved successfully
+          example: 200
         success:
           type: boolean
-    TaxformDownloadResponse:
-      type: object
-      properties:
-        fileExtension:
-          type: string
-          description: File extension of the document
-          example: pdf
-        binaryData:
-          type: string
-          description: Binary data of the document
-          example: wdvb2ekllkk189w0enjansle..
-        correlationId:
-          type: string
-          description: Unique ID for correlating requests
-          example: 123e4567-e89b-12d3-a456-426614174000
-        message:
-          type: string
-          description: Response message
-          example: Taxform downloaded successfully
-        success:
-          type: boolean
-
   securitySchemes:
     Auth0:
       type: openIdConnect
-      openIdConnectUrl: 'https://login.qa.zinnia.com/.well-known/openid-configuration'
+      openIdConnectUrl: https://login.qa.zinnia.com/.well-known/openid-configuration
       x-kong-security-openid-connect:
         config:
           run_on_preflight: true
           scopes_claim:
-            - 'https://qa.api.zinnia.io/permissions'
+            - https://qa.api.zinnia.io/permissions
           audience_claim:
             - aud
           audience_required:
-            - 'https://qa.api.zinnia.io'
+            - https://qa.api.zinnia.io
           auth_methods:
             - bearer
           scopes: []
