@@ -28,8 +28,6 @@ export enum DocumentType {
     StatementOfUnderstanding = 'Statement of Understanding',
     Systematic = 'Systematic',
     Output = 'Output',
-    Attachment = 'Attachment',
-    FC = 'FC',
 }
 
 // FIXME: move out of models (and into env vars or external config)
