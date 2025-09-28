@@ -101,7 +101,6 @@ export default function DocumentsTab({
         }
         const documentClassification =
             // TODO MG: This is duped above - add to more shareable util function
-            // also verify that we should be using DocumentTypeView.Policy instead of DocumentTypeView.Case
             docSource === (DocumentTypeView.Policy as string)
                 ? SearchRequest.documentClassification.INBOUND
                 : SearchRequest.documentClassification.OUTBOUND;
