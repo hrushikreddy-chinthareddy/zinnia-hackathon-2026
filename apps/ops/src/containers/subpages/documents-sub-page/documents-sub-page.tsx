@@ -107,22 +107,33 @@ const NormalDocs = ({
 
             optionalParams = { documentEndDate, documentStartDate };
         }
-        return {
+
+        const documentClassification =
+            documentType === DocumentTypeView.Policy
+                ? SearchRequest.documentClassification.INBOUND
+                : SearchRequest.documentClassification.OUTBOUND;
+
+        const params: SearchRequest = {
             ...optionalParams,
-            documentClassification:
-                documentType === DocumentTypeView.Policy
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+            documentClassification,
             policyNumber: policy.policyNumber,
             planCode: policy?.product?.planCode,
             parentCarrierCode: policy?.carrierId,
             orderBy: 'documentDate',
             orderByDirection: SearchRequest.orderByDirection.DESC,
+            // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
             excludeDocumentTypes,
-            ...(appendIncludeDocumentTypes(policy?.carrierId) && {
-                documentType: includeDocumentTypes.join(','),
-            }),
         };
+
+        if (
+            documentClassification ===
+                SearchRequest.documentClassification.INBOUND &&
+            appendIncludeDocumentTypes(policy?.carrierId)
+        ) {
+            params.documentType = includeDocumentTypes.join(',');
+        }
+
+        return params;
     }, [documentType, policy, isFirstYearSelected, yearSelection]);
 
     const goToPage = useCallback(

@@ -29,6 +29,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
 const getKnownCaseDocIds = (caseDetails: Case): string[] => {
@@ -39,6 +40,7 @@ const getKnownCaseDocIds = (caseDetails: Case): string[] => {
     );
     documentNumberId?.value && knownDocIds.add(documentNumberId?.value);
 
+    // TODO MG: ticket for this TODO if needed
     // TODO - get children cases and do the same thing once children/secondary cases are implemented
 
     return Array.from(knownDocIds);
@@ -70,40 +72,59 @@ export default function DocumentsTab({
         if (!caseDetails?.id) {
             return null;
         }
+        const documentClassification =
+            docSource === (DocumentTypeView.Policy as string)
+                ? SearchRequest.documentClassification.INBOUND
+                : SearchRequest.documentClassification.OUTBOUND;
 
-        return {
+        const searchBody: SearchRequest = {
             parentCarrierCode: caseDetails.carrier,
-            documentClassification:
-                docSource === (DocumentTypeView.Policy as string)
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+            documentClassification,
             zinniaLiveCaseId: caseDetails.id,
+            // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
             excludeDocumentTypes,
-            documentType: includeDocumentTypes.join(','),
         };
+
+        if (
+            documentClassification ===
+            SearchRequest.documentClassification.INBOUND
+        ) {
+            searchBody.documentType = includeDocumentTypes.join(',');
+        }
+
+        return searchBody;
     }, [caseDetails, docSource]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.policyNumber) {
             return null;
         }
+        const documentClassification =
+            docSource === (DocumentTypeView.Policy as string)
+                ? SearchRequest.documentClassification.INBOUND
+                : SearchRequest.documentClassification.OUTBOUND;
 
-        return {
+        const body: SearchRequest = {
             parentCarrierCode: caseDetails.carrier,
-            documentClassification:
-                docSource === (DocumentTypeView.Policy as string)
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+            documentClassification,
             policyNumber: caseDetails.policyNumber,
             planCode:
                 caseDetails?.planCode ||
                 caseDetails?.additionalData?.planCode ||
                 policy?.planCode,
+            // TODO MG: ticket to fix spec/types
+            // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
             excludeDocumentTypes,
-            ...(appendIncludeDocumentTypes(caseDetails.carrier) && {
-                documentType: includeDocumentTypes.join(','),
-            }),
         };
+
+        if (
+            documentClassification ===
+                SearchRequest.documentClassification.INBOUND &&
+            appendIncludeDocumentTypes(policy?.carrierId)
+        ) {
+            body.documentType = includeDocumentTypes.join(',');
+        }
+        return body;
     }, [caseDetails, policy, docSource]);
 
     const handleDocSourceChange = (value: string) => {
