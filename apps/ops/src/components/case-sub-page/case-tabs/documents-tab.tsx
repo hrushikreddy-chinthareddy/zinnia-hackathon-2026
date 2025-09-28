@@ -21,9 +21,9 @@ import {
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
 import {
-    appendIncludeDocumentTypes,
+    includeDocumentTypeForInboundSearch,
     excludeDocumentTypes,
-    includeDocumentTypes,
+    includeDocumentTypesInbound,
 } from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
@@ -89,7 +89,7 @@ export default function DocumentsTab({
             documentClassification ===
             SearchRequest.documentClassification.INBOUND
         ) {
-            searchBody.documentType = includeDocumentTypes.join(',');
+            searchBody.documentType = includeDocumentTypesInbound.join(',');
         }
 
         return searchBody;
@@ -100,6 +100,8 @@ export default function DocumentsTab({
             return null;
         }
         const documentClassification =
+            // TODO MG: This is duped above - add to more shareable util function
+            // also verify that we should be using DocumentTypeView.Policy instead of DocumentTypeView.Case
             docSource === (DocumentTypeView.Policy as string)
                 ? SearchRequest.documentClassification.INBOUND
                 : SearchRequest.documentClassification.OUTBOUND;
@@ -120,9 +122,9 @@ export default function DocumentsTab({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            appendIncludeDocumentTypes(policy?.carrierId)
+            includeDocumentTypeForInboundSearch(policy?.carrierId)
         ) {
-            body.documentType = includeDocumentTypes.join(',');
+            body.documentType = includeDocumentTypesInbound.join(',');
         }
         return body;
     }, [caseDetails, policy, docSource]);

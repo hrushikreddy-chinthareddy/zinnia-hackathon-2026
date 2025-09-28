@@ -32,7 +32,7 @@ export enum DocumentType {
 
 // FIXME: move out of models (and into env vars or external config)
 export const excludeDocumentTypes = [DocumentType.CallLogs, DocumentType.Spif];
-export const includeDocumentTypes = [
+export const includeDocumentTypesInbound = [
     DocumentType.AddressChange,
     DocumentType.AnnuityApplication,
     DocumentType.AssetAllocator,
@@ -47,14 +47,18 @@ export const includeDocumentTypes = [
     DocumentType.NBPurchaseWApp,
     DocumentType.NBReplacementForm,
     DocumentType.NBSuitabilityForm,
+    DocumentType.Oft,
+    DocumentType.Output,
     DocumentType.Purchase,
+    DocumentType.Redemption,
+    DocumentType.Rmd,
+    DocumentType.Rereg,
     DocumentType.StatementOfUnderstanding,
     DocumentType.Systematic,
-    DocumentType.Output,
 ];
 
 // The document type filtering (include list) only exists for the following carrier codes:
-export const appendIncludeDocumentTypes = (carrierId?: string) => {
+export const includeDocumentTypeForInboundSearch = (carrierId?: string) => {
     const carriersWithIncludeDocumentTypes = new Set([
         'GLCO', // Kuvare
         'ULIC', // Kuvare

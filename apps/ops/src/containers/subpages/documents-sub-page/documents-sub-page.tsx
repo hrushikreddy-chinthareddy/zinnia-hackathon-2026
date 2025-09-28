@@ -25,8 +25,8 @@ import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
     excludeDocumentTypes,
-    includeDocumentTypes,
-    appendIncludeDocumentTypes,
+    includeDocumentTypesInbound,
+    includeDocumentTypeForInboundSearch,
 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
@@ -128,9 +128,9 @@ const NormalDocs = ({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            appendIncludeDocumentTypes(policy?.carrierId)
+            includeDocumentTypeForInboundSearch(policy?.carrierId)
         ) {
-            params.documentType = includeDocumentTypes.join(',');
+            params.documentType = includeDocumentTypesInbound.join(',');
         }
 
         return params;
