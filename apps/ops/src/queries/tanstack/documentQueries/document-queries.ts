@@ -23,6 +23,7 @@ const buildV2SearchArgs = ({
 }): DocumentApiRequestInputs => {
     return {
         source:
+            // TODO MG: util function for this
             searchBody.documentClassification?.toLowerCase() === 'inbound'
                 ? DocumentTypeView.Policy
                 : DocumentTypeView.Correspondence,

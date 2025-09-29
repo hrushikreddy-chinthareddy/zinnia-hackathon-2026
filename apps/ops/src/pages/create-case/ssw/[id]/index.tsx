@@ -400,7 +400,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 serverSideTranslations(locale, [TranslationFiles.COMMON]),
                 getDocumentV2SSR(
                     documentNumber,
-                    DocumentType.SSW,
+                    DocumentType.Systematic,
                     clientId.toUpperCase(),
                     accessToken,
                     loggingContext

@@ -290,7 +290,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         documentNumber
                             ? getDocumentV2SSR(
                                   documentNumber,
-                                  DocumentType.SSW,
+                                  DocumentType.Systematic,
                                   clientCode?.toUpperCase(),
                                   accessToken as string,
                                   loggingContext
