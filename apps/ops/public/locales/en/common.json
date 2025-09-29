@@ -8016,10 +8016,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Zinnia Live Unique Logins by Role"
+                "title": "Zinnia Live Unique Logins",
+                "description": "Shows unique logins for selected user groups only."
             },
             "myPolicyView": {
-                "title": "MyPolicyView Unique Logins"
+                "title": "MyPolicyView Unique Logins",
+                "description": "Shows unique logins for customers only."
             },
             "uniqueUsers": "Unique users",
             "date": "Date",
@@ -8028,10 +8030,11 @@
         "pageViews": {
             "zinniaLivePageViews": {
                 "title": "Zinnia Live Page Views",
-                "description": "Shows number of case views for selected user groups only."
+                "description": "Shows number of page views for selected user groups only."
             },
             "zinniaLiveCaseViews": {
-                "title": "Zinnia Live Top 5 Case Views"
+                "title": "Zinnia Live Top Case Views",
+                "description": "Shows number of case views for selected user groups only."
             }
         }
     },

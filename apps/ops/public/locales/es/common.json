@@ -7831,10 +7831,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Inicios de sesión únicos de Zinnia Live por rol"
+                "title": "Inicios de sesión únicos de Zinnia Live",
+                "description": "Muestra inicios de sesión únicos únicamente para grupos de usuarios seleccionados."
             },
             "myPolicyView": {
-                "title": "Inicios de sesión únicos de MyPolicyView"
+                "title": "Inicios de sesión únicos de MyPolicyView",
+                "description": "Muestra inicios de sesión únicos solo para clientes."
             },
             "uniqueUsers": "Usuarios únicos",
             "date": "Fecha",
@@ -7843,10 +7845,11 @@
         "pageViews": {
             "zinniaLivePageViews": {
                 "title": "Visitas de página en vivo de Zinnia",
-                "description": "Muestra el número de visualizaciones de casos únicamente para grupos de usuarios seleccionados."
+                "description": "Muestra el número de páginas vistas solo para grupos de usuarios seleccionados."
             },
             "zinniaLiveCaseViews": {
-                "title": "Los 5 casos más vistos de Zinnia Live"
+                "title": "Los casos más vistos de Zinnia Live",
+                "description": "Muestra el número de visualizaciones de casos únicamente para grupos de usuarios seleccionados."
             }
         }
     },

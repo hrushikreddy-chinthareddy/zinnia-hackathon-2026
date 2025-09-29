@@ -85,7 +85,7 @@ export const ZinniaLiveCaseViewsByTransaction = ({
             <UsageHeaderLayout
                 title={title}
                 description={String(
-                    t('usage.pageViews.zinniaLivePageViews.description') ?? ''
+                    t('usage.pageViews.zinniaLiveCaseViews.description') ?? ''
                 )}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
                 csvFileName={generateCSVFileName(

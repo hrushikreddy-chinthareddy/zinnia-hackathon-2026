@@ -8072,10 +8072,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Connexions uniques à Zinnia Live par rôle"
+                "title": "Connexions uniques à Zinnia Live",
+                "description": "Affiche les connexions uniques pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "myPolicyView": {
-                "title": "MyPolicyView Connexions uniques"
+                "title": "MyPolicyView Connexions uniques",
+                "description": "Affiche les identifiants de connexion uniques pour les clients uniquement."
             },
             "uniqueUsers": "Utilisateurs uniques",
             "date": "Date",
@@ -8084,10 +8086,11 @@
         "pageViews": {
             "zinniaLivePageViews": {
                 "title": "Vues de la page Zinnia Live",
-                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
+                "description": "Affiche le nombre de pages vues pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "zinniaLiveCaseViews": {
-                "title": "Top 5 des cas de Zinnia Live"
+                "title": "Top des cas de Zinnia Live",
+                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
             }
         }
     },
