@@ -371,7 +371,6 @@ export const getActiveRoleParty = (
     );
 
     if (!activeRole || activeRole.length === 0) {
-        console.log('No active owner found');
         if (setExistingRoleData) {
             setExistingRoleData([]);
         }
@@ -506,7 +505,7 @@ export const buildRoleChangeRequestBody = (
         addresses = [],
         identifications = [],
         preferredCommunicationType = null,
-        trustDate = null,
+        trustDate,
         entityType,
     } = party;
 
@@ -617,7 +616,7 @@ export const buildRoleChangeRequestBody = (
             entityType:
                 partyType === PartyType.ORGANIZATION ? entityType : null,
             trustDate:
-                isRoleCheck && partyType === PartyType.TRUST
+                partyType === PartyType.TRUST
                     ? getFormattedZaharaDate(trustDate)
                     : null,
         },
