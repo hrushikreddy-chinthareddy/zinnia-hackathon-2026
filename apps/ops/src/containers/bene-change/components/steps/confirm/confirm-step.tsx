@@ -14,6 +14,7 @@ import PageLoader, {
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
@@ -31,6 +32,7 @@ import {
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildReRegRequestBody } from './confirm-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';
@@ -84,6 +86,9 @@ const ConfirmStep = ({
         () => validationResponse?.status === TransactionResponseStatus.Success,
         [validationResponse]
     );
+    const { featureFlags } = useOptimizely();
+    const invokeNewBeneChangeApi =
+        featureFlags[FEATURE_FLAGS.BENE_CHANGE_NEW_API];
 
     const submit = useCallback(async () => {
         let documentResult;
@@ -126,9 +131,10 @@ const ConfirmStep = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = isBeneChange
-            ? await addBeneChangeTransaction({ ...requestBody, planCode })
-            : await addTransaction(requestBody);
+        const response =
+            isBeneChange && invokeNewBeneChangeApi
+                ? await addBeneChangeTransaction({ ...requestBody, planCode })
+                : await addTransaction(requestBody);
         if (response.status !== 'ACCEPTED') {
             setSubmitFailed(true);
         } else {

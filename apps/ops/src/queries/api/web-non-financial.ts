@@ -75,17 +75,24 @@ export const addBeneChangeTransaction = async (body: any): Promise<any> => {
     }
 };
 
-export const validateTransaction = async (body: any): Promise<any> => {
+export const validateTransaction = async (
+    body: any,
+    invokeNewBeneChangeApi?: boolean
+): Promise<any> => {
     const { businessKey, correlationid, carrierId, policyNumber, planCode } =
         body || {};
+
+    const validateBeneUrl = invokeNewBeneChangeApi
+        ? `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`
+        : `${baseUrl}/transactions/bene/validation`;
     try {
         browserLogInfo('BeneficiaryChange::Validating a transaction', {
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
+            url: validateBeneUrl,
             function: 'webnonfinancial.validateTransaction',
         });
         const { data } = await client.post<any, AxiosResponse>(
-            `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
+            validateBeneUrl,
             body
         );
 
@@ -94,7 +101,7 @@ export const validateTransaction = async (body: any): Promise<any> => {
         browserLogError('BeneficiaryChange::Failed to validate transaction', {
             ...parseErrorInformation(error),
             payload: { businessKey, correlationid, carrierId, policyNumber },
-            url: `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/PrimaryBeneficiary/validation`,
+            url: validateBeneUrl,
             function: 'webnonfinancial.validateTransaction',
         });
         return error;
