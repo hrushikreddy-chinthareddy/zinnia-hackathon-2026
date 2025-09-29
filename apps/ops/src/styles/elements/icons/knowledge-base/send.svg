@@ -1,0 +1,12 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 24 24"
+  fill="currentColor"
+>
+  <g opacity="0.9" stokeWidth="1">
+    <rect x="2" y="7"  width="2" height="2" fill="#BDBDBD" />
+    <rect x="0" y="11" width="5.5" height="2" fill="#BDBDBD" />
+    <rect x="2" y="15" width="2" height="2" fill="#BDBDBD" />
+  </g>
+  <path d="M4 4L20 12L4 20L7 13L13 12L7 11L4 4Z" fill="currentColor" />
+</svg>

@@ -1,6 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
+import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
     calculateTickInterval,
@@ -36,6 +38,7 @@ import UsageHeaderLayout from '../usage-common-header';
 import { colors, generateCSVFileName } from '../utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
+    const { t } = useTranslation();
     const [role, setRole] = useState('All');
 
     const rolesToPass = useUserRolesFilter({ role, roles });
@@ -54,7 +57,7 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const filter = {
         pageType: ['Cases', 'Policies'],
         dateStart: timerange.from,
-        dateEnd: timerange.to,
+        dateEnd: startOfTomorrowLocalIso(timerange.to) || undefined,
         userRole: rolesToPass,
     };
 
@@ -84,6 +87,9 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h">
             <UsageHeaderLayout
                 title={title}
+                description={String(
+                    t('usage.pageViews.zinniaLivePageViews.description') ?? ''
+                )}
                 data={zinniaLivePageViewsData?.data || []}
                 csvFileName={generateCSVFileName(
                     'Zinnia Live',

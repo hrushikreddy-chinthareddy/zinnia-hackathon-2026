@@ -2095,6 +2095,7 @@
                 "mail": "Adresse postale"
             },
             "startNotification": "Historique",
+            "packets": "Paquets",
             "sendTo": "Envoyer à",
             "contactMethod": "Méthode de contact",
             "scheduledNotification": "Tentative {{followup}} programmée pour {{date}}",
@@ -2187,7 +2188,7 @@
             "pleaseCheck": "Veuillez en cocher une",
             "primaryOwner": "Propriétaire principal",
             "printedName": "Nom imprimé",
-            "renewalPeriodError": "Une période de renouvellement est requise",
+            "renewalPeriodError": "L’allocation totale entre tous les fonds doit être égale à 100 %",
             "selectOption": "Choisir une option",
             "signPresent": "Signature présente",
             "signatureValidation": "Validation des signatures",
@@ -6076,6 +6077,10 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "paiement"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
             }
@@ -7922,6 +7927,7 @@
         "newClientCase": "+ Nouveau client case",
         "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
         "searchBar": {
+            "searchByLabel": "Rechercher Par",
             "clientCase": "Client case",
             "agentName": "Nom de l'agent",
             "insuredName": "Nom de l'assuré",
@@ -7991,11 +7997,13 @@
             },
             "premium": {
                 "title": "Prime",
-                "initial": "Prime initiale",
-                "target": "Prime cible",
-                "mec": "Prime MEC",
+                "initial": "Prime annuelle initiale",
+                "initialModal": "Prime modale initiale",
+                "target": "Prime annuelle cible",
+                "mec": "Prime annuelle MEC",
                 "initialBase": "Prime de base initiale",
-                "totalInitial": "Prime initiale totale"
+                "totalInitial": "Prime initiale totale",
+                "initialModalPremium": "Prime modale initiale"
             },
             "riders": {
                 "title": "Avenants de politique",
@@ -8089,10 +8097,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Connexions uniques à Zinnia Live par rôle"
+                "title": "Connexions uniques à Zinnia Live",
+                "description": "Affiche les connexions uniques pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "myPolicyView": {
-                "title": "MyPolicyView Connexions uniques"
+                "title": "MyPolicyView Connexions uniques",
+                "description": "Affiche les identifiants de connexion uniques pour les clients uniquement."
             },
             "uniqueUsers": "Utilisateurs uniques",
             "date": "Date",
@@ -8100,10 +8110,12 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Vues de la page Zinnia Live"
+                "title": "Vues de la page Zinnia Live",
+                "description": "Affiche le nombre de pages vues pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vues de cas Zinnia Live par transaction"
+                "title": "Top des cas de Zinnia Live",
+                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
             }
         }
     },
@@ -8128,7 +8140,36 @@
                 "placeholder": "Votre message de commentaires ici...",
                 "positiveFeedbackComment": "Pourriez-vous préciser quels aspects de votre retour vous ont semblé satisfaisants ? Votre avis est précieux pour améliorer notre service.",
                 "negativeFeedbackComment": "Pourriez-vous préciser quels aspects de votre retour vous ont semblé insatisfaisants ? Votre avis est précieux pour améliorer notre service.",
-                "validationError": "Veuillez saisir votre commentaire"
+                "validationError": "Veuillez saisir votre commentaire",
+                "dislikeReasonsHeader": "Veuillez sélectionner une raison pour ne pas apprécier la réponse.",
+                "dislikeReasons": {
+                    "incorrectResponse": "Réponse incorrecte (la réponse ne correspond pas à la question)",
+                    "languageIssue": "Problème de langue/style (peu clair, trop complexe) / Réponse incomplète (réponse trop courte, manque de détails)",
+                    "relevantDocumentMissing": "Document pertinent manquant (le bot a omis une référence clé)",
+                    "infoMissing": "Informations manquantes dans les documents (lacunes dans les directives/contenu)",
+                    "linksLabel": "Si vous avez des liens vers un document pertinent, veuillez les partager ici (séparés par des virgules si plusieurs) :"
+                },
+                "opsIntakeFormLink": "Nous pouvons créer un formulaire d’Ops Intake pour vous",
+                "opsIntakeForm": {
+                    "heading": "Formulaire Ops Intake / Retour d’expérience",
+                    "placeholder": "Écrivez quelque chose...",
+                    "processName": "Nom de la directive / étapes / processus",
+                    "blockOfBusiness": "Bloc d’activité concerné",
+                    "blockOfBusinessAssistiveText": "La demande est-elle applicable à d’autres blocs d’activité ? Si oui, lesquels ?",
+                    "processDescription": "Description du processus et des transactions affectées",
+                    "reasonForSubmittingRequest": "Expliquez pourquoi vous soumettez cette demande",
+                    "outcomeExpected": "Quel résultat attendez-vous d’obtenir ?",
+                    "smeEmail": "Indiquez l’adresse e-mail de l’expert métier/contact de votre équipe avec lequel le BA peut collaborer.",
+                    "priority": "Priorité",
+                    "requestFrequency": "À quelle fréquence cette demande est-elle effectuée ? (quotidienne, hebdomadaire, mensuelle, annuelle)",
+                    "requestFrequencyAssistiveText": "Si vous demandez l’automatisation d’un processus manuel, nous aimerions connaître la fréquence de ce processus manuel.",
+                    "benefitMetrics": "Toutes les mesures sur la manière dont ce changement bénéficiera aux opérations",
+                    "benefitMetricsAssistiveText": "Temps moyen des processus, améliorations des audits de qualité ou toute autre mesure pertinente que vous pouvez identifier."
+                },
+                "errors": {
+                    "inValidDomain": "Seuls les e-mails de Zinnia sont autorisés",
+                    "inValidEmail": "Veuillez saisir une adresse e-mail valide"
+                }
             },
             "followUpPlaceholder": "Posez vos questions complémentaires ici...",
             "followUpButton": "Posez vos questions complémentaires ici"

@@ -20,18 +20,15 @@ import { DiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
-import { putCaseTask } from '@deps/queries/api/v1/task';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { FormSuccessMessageKey } from '@deps/types/localStorage';
 import { TaskTypeTranslation } from '@deps/types/translation-mapping';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { buildForm, buildFormV2 } from '../utils/withdrawal-form-helpers';
+import { buildFormV2 } from '../utils/withdrawal-form-helpers';
 
 export type FormControlsProps = {
     t: TFunction;
@@ -146,30 +143,18 @@ export function FormControls({
         setIsLoading(true);
         setTaskApiError('');
 
-        let successfulCaseUpdate;
-        if (
-            TaskApiVersionMapper[formState.initialForm.taskType] ===
-            ApiVersion.v2
-        ) {
-            successfulCaseUpdate = await updateTask(
-                formState.initialForm.caseId,
-                formState.initialForm?.taskId,
-                buildFormV2(
-                    formState.currentFormState === TaskStatus.InProgress
-                        ? TaskStatus.InProgress
-                        : TaskStatus.New,
-                    document,
-                    formState
-                ),
-                timer
-            );
-        } else {
-            successfulCaseUpdate = await putCaseTask(
-                formState.initialForm.caseId,
-                formState.initialForm.taskId,
-                buildForm(CaseStatus.Pending, document, formState)
-            );
-        }
+        const successfulCaseUpdate = await updateTask(
+            formState.initialForm.caseId,
+            formState.initialForm?.taskId,
+            buildFormV2(
+                formState.currentFormState === TaskStatus.InProgress
+                    ? TaskStatus.InProgress
+                    : TaskStatus.New,
+                document,
+                formState
+            ),
+            timer
+        );
 
         if (!successfulCaseUpdate) {
             setTaskApiError(t('saveAsDraftError') as string);
@@ -182,24 +167,12 @@ export function FormControls({
         setIsLoading(true);
         setTaskApiError('');
         if (validateForm() && areDiaryNotesViewed) {
-            let successfulCaseUpdate;
-            if (
-                TaskApiVersionMapper[formState.initialForm.taskType] ===
-                ApiVersion.v2
-            ) {
-                successfulCaseUpdate = await updateTask(
-                    formState.initialForm.caseId,
-                    formState.initialForm?.taskId,
-                    buildFormV2(TaskStatus.Completed, document, formState),
-                    timer
-                );
-            } else {
-                successfulCaseUpdate = await putCaseTask(
-                    formState.initialForm.caseId,
-                    formState.initialForm.taskId,
-                    buildForm(CaseStatus.Submit, document, formState)
-                );
-            }
+            const successfulCaseUpdate = await updateTask(
+                formState.initialForm.caseId,
+                formState.initialForm?.taskId,
+                buildFormV2(TaskStatus.Completed, document, formState),
+                timer
+            );
 
             if (successfulCaseUpdate) {
                 if (isLocalStorageEnabled()) {
@@ -241,25 +214,7 @@ export function FormControls({
         if (confirmCancel) {
             setIsLoading(true);
             setTaskApiError('');
-            if (
-                TaskApiVersionMapper[formState.initialForm.taskType] ===
-                ApiVersion.v2
-            ) {
-                router.push('/create-case/');
-            } else {
-                const successfulCaseUpdate = await putCaseTask(
-                    formState.initialForm.caseId,
-                    formState.initialForm.taskId,
-                    buildForm(CaseStatus.Cancelled, document, formState)
-                );
-                setIsLoading(false);
-
-                if (successfulCaseUpdate) {
-                    router.push('/create-case/');
-                } else {
-                    setTaskApiError(t('cancelError') as string);
-                }
-            }
+            router.push('/create-case/');
         }
     };
 

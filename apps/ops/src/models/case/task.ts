@@ -248,6 +248,7 @@ export enum DataFormattingTypes {
     TitleCase = 'titleCase',
     Percentage = 'percentage',
     Phone = 'phone',
+    DateTime = 'dateTime',
 }
 
 export interface AddressFormFields {

@@ -866,12 +866,12 @@ export const getPaymentHistory = withLogging(
     }
 
     if (
-      (completedTransactionsRes.status === 'fulfilled' &&
-        (!!completedTransactionsRes.value.error ||
-          !completedTransactionsRes.value.data)) ||
-      (pendingTransactionsRes.status === 'fulfilled' &&
-        (!!pendingTransactionsRes.value.error ||
-          !pendingTransactionsRes.value.data))
+      completedTransactionsRes.status === 'fulfilled' &&
+      (!!completedTransactionsRes.value.error ||
+        !completedTransactionsRes.value.data) &&
+      pendingTransactionsRes.status === 'fulfilled' &&
+      (!!pendingTransactionsRes.value.error ||
+        !pendingTransactionsRes.value.data)
     ) {
       throw new Error('Transactions returned an error', {
         cause: {
@@ -1299,8 +1299,12 @@ export const getLoggedInUserPolicyAndPartyData = withLogging(
     }
 
     // try to get partyRoles from the party reference API
+    // TODO: right now the partyRoles setting below is overriding this, this is
+    // the preferred way of getting party roles but does not work for all carriers right now
     let partyRoles = getPartyRolesByPolicyNumber(partyRefData, policyNumber);
-
+    // We need to find the policy they are currently
+    // viewing and see if it exists on the party reference data of the
+    // current logged in user
     const policyPartyId =
       getPolicyPartyIdByPolicyNumber(partyRefData, policyNumber) || '';
 
@@ -1312,6 +1316,9 @@ export const getLoggedInUserPolicyAndPartyData = withLogging(
         getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND
       );
     }
+
+    // TODO: this overrides the partyRoles from above right now, we need to reevaluate
+    // if this should. There were instances where alias does not return on the partyRef data
     partyRoles = getPartyRolesFromPolicyPartyId(policyPartyId, policyData);
 
     return {

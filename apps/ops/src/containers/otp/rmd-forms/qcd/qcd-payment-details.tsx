@@ -51,6 +51,7 @@ const QcdPaymentDetails: React.FC<QcdPaymentDetailsProps> = ({
                             ? FieldVariant.Inactive
                             : FieldVariant.Default
                     }
+                    maxLength={40}
                 />
                 <Field
                     className="w-54 my-2"

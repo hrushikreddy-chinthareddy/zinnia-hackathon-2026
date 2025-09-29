@@ -22,7 +22,7 @@ interface SelectBankWrapperProps {
   policyNumber: string;
   initialPaymentMethods: PaymentMethod[];
   lineOfBusiness: LineOfBusiness;
-  paymentProvider: PaymentProvider;
+  paymentProvider?: PaymentProvider;
   activeAddresses?: Address[];
 }
 

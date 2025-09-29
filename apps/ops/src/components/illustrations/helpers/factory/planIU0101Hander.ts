@@ -3,6 +3,7 @@ import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 import { Result, t, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
+import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
@@ -64,10 +65,7 @@ const ridersSchema = t.object(
                 'values',
                 t.union(t.array(t.string), t.undefined)
             ),
-            t.optionalProperty(
-                'ownerAge',
-                t.union(t.array(t.number), t.undefined)
-            )
+            t.optionalProperty('ownerAge', t.union(t.string, t.undefined))
         )
     ),
     t.optionalProperty(
@@ -120,10 +118,7 @@ const ridersSchema = t.object(
                 'values',
                 t.union(t.array(t.string), t.undefined)
             ),
-            t.optionalProperty(
-                'faceAmount',
-                t.union(t.array(t.string), t.undefined)
-            )
+            t.optionalProperty('faceAmount', t.union(t.number, t.undefined))
         )
     ),
     t.optionalProperty(
@@ -283,8 +278,7 @@ const farmersEntitiesSchema = t.object(
         'internal1035ExchangeAmount',
         t.union(t.number, t.undefined)
     ),
-    t.optionalProperty('exchangeBasis1035', t.union(t.number, t.undefined)),
-    t.optionalProperty('mec1035', t.union(t.string, t.undefined)),
+
     t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
     distributionAmountTableSchema,
 
@@ -292,7 +286,9 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty(
         'nonNicotineConversionAtAge18',
         t.union(t.array(t.string), t.undefined)
-    )
+    ),
+    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -415,8 +411,9 @@ function createIllustrationPayload(
             participants: [
                 {
                     participantId: uuid(),
-                    issueAge:
-                        values.riders.ownerWaiverOfDeductionRider?.ownerAge,
+                    issueAge: calculateAgeNumber(
+                        values.riders.ownerWaiverOfDeductionRider?.ownerAge
+                    ),
                 },
             ],
         });
@@ -521,6 +518,19 @@ function createIllustrationPayload(
     const premiumDuration = values.premiumDuration || 0;
 
     const underWritingClass = getUnderWritingClass(values.premiumClass);
+
+    const exchanges = {
+        internal: {
+            amount: values.internal1035ExchangeAmount,
+            basis: values.internal1035ExchangeAmount,
+            isModifiedEndowmentContract: false,
+        },
+        external: {
+            amount: values.external1035ExchangeAmount,
+            basis: values.external1035ExchangeAmount,
+            isModifiedEndowmentContract: false,
+        },
+    };
 
     const output = {
         calculationType: values.illustrationType,
@@ -700,19 +710,13 @@ function createIllustrationPayload(
                     },
                 }),
             }),
-            exchanges: {
-                internalAmount: values.internal1035ExchangeAmount,
-                externalAmount: values.external1035ExchangeAmount,
-                basis: values.exchangeBasis1035,
-                isMec: values.mec1035,
-                carryOverLoan: 1,
-            },
             ...(values.nonNicotineConversionAtAge18 && {
                 juvenileReclassification:
                     values.nonNicotineConversionAtAge18[0] ===
                     'non-NicotineConversionAtAge18',
             }),
         },
+        ...(values.illustrate1035 === 'yes' && { exchanges }),
         fundAllocations: [
             {
                 allocationPercent: values.longTermFixedAccountAllocation,
@@ -739,6 +743,7 @@ function createIllustrationPayload(
                 distributions: {
                     frequency: FARMERS_HARDCODED_DATA.distributionFrequency,
                     sequence: distributionSequence,
+                    loanInterestOption: values.loanInterestOption,
                 },
             }),
     };
@@ -833,12 +838,12 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
     return {
         faceAmount:
             data?.assumed?.initial?.totalFaceAmount || DEFAULT_ERROR_STRING,
-        initialPremium:
+        initialModalPremium:
             data?.assumed?.initial?.totalModalPremium || DEFAULT_ERROR_STRING,
         targetPremium:
             data?.assumed?.initial?.targetPremiumAmount || DEFAULT_ERROR_STRING,
         mecPremium:
-            data?.assumed?.annualTimeSeriesData?.[0]?.sevenPayPremiumAmount ||
+            data?.assumed?.initial?.modifiedEndowmentPremium ||
             DEFAULT_ERROR_STRING,
         ...netSurrenderValue,
     };

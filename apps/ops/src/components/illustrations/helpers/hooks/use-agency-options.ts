@@ -17,10 +17,11 @@ import {
 } from '@deps/types/producers';
 
 import { useHierarchyListQuery } from './pom';
+import { AliasWithSellingCode } from './user-identity';
 
 export const useAgencyOptions = (
     agentOption: AgentOption | undefined,
-    aliasesWithSellingCodes: AliasModel[] | undefined
+    aliasesWithSellingCodes: AliasWithSellingCode[] | undefined
 ) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
@@ -30,6 +31,7 @@ export const useAgencyOptions = (
         sellingCode: alias.externalPartyIds?.find(
             (id) => id.key === 'SELLING_CODE'
         )?.value as string,
+        carrierShortName: alias.carrier,
         fullName:
             alias?.fullName || (alias?.firstName && alias?.lastName)
                 ? `${alias?.firstName} ${alias?.lastName}`
@@ -41,24 +43,17 @@ export const useAgencyOptions = (
             return [];
         }
 
-        const { firstName, lastName } = agentOption;
+        const { firstName, lastName, carrierShortName } = agentOption;
 
         return agentOption.sellingCodes.map((sellingCode) => ({
             sellingCode,
+            carrierShortName,
             fullName:
                 firstName && lastName
                     ? `${firstName} ${lastName}`
                     : firstName || lastName,
         }));
     }, [agentOption]);
-
-    const authUserSellingCodes = authUserAliases?.map(
-        ({ sellingCode }) => sellingCode
-    );
-
-    const clientCaseAgentSellingCodes = clientCaseAgentAliases
-        .map(({ sellingCode }) => sellingCode || '')
-        .filter((sellingCode) => !!sellingCode);
 
     const hierarchyCombiner = useCallback(
         (results: UseQueryResult<GetHierarchyResponse | null>[]) =>
@@ -69,19 +64,38 @@ export const useAgencyOptions = (
     );
 
     const { data: authUserHierarchies } = useHierarchyListQuery(
-        authUserSellingCodes ?? [],
+        authUserAliases,
         hierarchyCombiner
     );
 
-    const { data: clientCaseAgentHierarchy } = useHierarchyListQuery(
-        clientCaseAgentSellingCodes,
+    const { data: clientCaseAgentHierarchies } = useHierarchyListQuery(
+        clientCaseAgentAliases,
         hierarchyCombiner
     );
 
     const agencyOptions = useMemo(() => {
+        // If the agent is an agency, return all "root-agencies" of the agent
+        const rootAgencyOptions = clientCaseAgentHierarchies
+            ?.filter(({ role }) => role === MAIN_AGENCY_ROLE)
+            ?.map(({ sellingCode }) => {
+                const agentData = clientCaseAgentAliases?.find(
+                    (item) => item.sellingCode === sellingCode
+                )!;
+
+                return {
+                    value: sellingCode,
+                    textValue: agentData.fullName,
+                    agentSellingCode: sellingCode,
+                } as AgencyOption;
+            });
+
+        if (rootAgencyOptions?.length) {
+            return rootAgencyOptions;
+        }
+
         if (isSuperIllustrator) {
             const groupedAgencies = getNearestAgenciesFromHierarchies(
-                clientCaseAgentHierarchy ?? []
+                clientCaseAgentHierarchies ?? []
             );
 
             const agencies = groupedAgencies.flatMap(
@@ -101,29 +115,9 @@ export const useAgencyOptions = (
             return null;
         }
 
-        const rootAgencyOptions = authUserHierarchies
-            ?.filter(({ role }) => role === MAIN_AGENCY_ROLE)
-            ?.map(({ sellingCode }) => {
-                const agentData = authUserAliases
-                    .concat(clientCaseAgentAliases)
-                    .find((item) => item.sellingCode === sellingCode)!;
-
-                return {
-                    value: sellingCode,
-                    textValue: agentData.fullName,
-                    agentSellingCode: sellingCode,
-                } as AgencyOption;
-            });
-
-        if (rootAgencyOptions?.length) {
-            // TODO: what about if I have two alias that are genral_agencies in diferent herarchies. What are the criteria to choose?
-            const FIRST_GENERAL_AGENCY = 0;
-            return [rootAgencyOptions[FIRST_GENERAL_AGENCY]];
-        }
-
         const agenciesDropDownItems = getCommonAgenciesFromHierarchies(
             authUserHierarchies ?? [],
-            clientCaseAgentHierarchy ?? []
+            clientCaseAgentHierarchies ?? []
         );
 
         return formatAgenciesForSelect(agenciesDropDownItems);
@@ -131,7 +125,7 @@ export const useAgencyOptions = (
     }, [
         authUserHierarchies,
         authUserAliases,
-        clientCaseAgentHierarchy,
+        clientCaseAgentHierarchies,
         clientCaseAgentAliases,
     ]);
 

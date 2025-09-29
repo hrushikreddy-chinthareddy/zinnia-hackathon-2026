@@ -23,12 +23,12 @@ export type UserMessage = {
 
 export type ChatbotMessage = {
     id: string;
-    questionId: string;
+    questionId?: string;
     role: MessageRole.Bot;
     content: string;
-    sourceDocuments: SourceDocument[];
-    feedbackType: FeedbackType | null;
-    feedbackComment: string | null;
+    sourceDocuments?: SourceDocument[];
+    feedbackType?: FeedbackType | null;
+    feedbackComment?: string | null;
 };
 
 export const BOT_ERROR_MESSAGE_ID = 'bot_error';
@@ -79,3 +79,28 @@ export interface PaginatedResponse<T> {
 }
 
 export type GetAllUserDetailsResponse = PaginatedResponse<UserResponse>;
+
+export enum SSEEventType {
+    STATUS = 'status',
+    TOKEN = 'token',
+    SOURCES = 'sources',
+    COMPLETE = 'complete',
+    ERROR = 'error',
+}
+
+export type DislikeReasonsPayload = {
+    reason: string;
+    links: string[] | null;
+    metadata: OpsIntakeFormPayload | null;
+};
+
+export type OpsIntakeFormPayload = {
+    processName: string;
+    blockOfBusiness: string;
+    processDescription: string;
+    outcomeExpected: string;
+    smeEmail: string;
+    priority: string;
+    requestFrequency: string;
+    benefitMetrics: string;
+};

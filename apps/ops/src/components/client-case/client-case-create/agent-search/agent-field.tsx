@@ -1,19 +1,22 @@
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { groupBy, sortBy } from 'lodash';
+import { groupBy, sortBy, uniqBy, zip } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
+    getNearestAgenciesFromUpline,
     POM_QUERY_PREFIXES,
     useAuthenticatedAgentAgencies,
     useDownlineListQuery,
     useGetProducerById,
     useGetProducersListQuery,
+    useHierarchyListQuery,
+    useReduceCombinedResults,
 } from '@deps/components/illustrations/helpers/hooks/pom';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import {
     GetDownlineResponse,
+    GetHierarchyResponse,
     PRODUCER_SEARCH_RESULT_TYPES,
-    ProducerSearchResult,
     ProducersResponse,
 } from '@deps/types/producers';
 
@@ -21,89 +24,149 @@ import { AgentFieldContextProvider } from './agent-field-context';
 import { GenericAgentField } from './generic-agent-field';
 import { AgentOption } from './types';
 
+/**
+ * Returns the nearest agencies for each hierarchy of an agent
+ *
+ * @param sellingCodes Agent selling codes
+ */
+const useAgentAgencyIds = (
+    params: { sellingCode: string; carrierShortName: string }[]
+) =>
+    useHierarchyListQuery(
+        params,
+        useCallback(
+            (results: UseQueryResult<GetHierarchyResponse | null>[]) => {
+                const agencyIds = results
+                    .map((result) => result?.data)
+                    .filter((data): data is GetHierarchyResponse => !!data)
+                    .map(({ upline, carrier }) => ({
+                        agencies: getNearestAgenciesFromUpline(upline),
+                        carrier,
+                    }))
+                    .flatMap(({ agencies, carrier }) =>
+                        agencies.map((agency) => ({
+                            sellingCode: agency.sellingCode,
+                            carrierShortName: carrier.carrierShortName,
+                        }))
+                    );
+
+                return uniqBy(agencyIds, 'sellingCode');
+            },
+            []
+        )
+    );
+
 const useNormalUserAgentOptions = (searchQuery: string) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
 
-    const { data: agencies } = useAuthenticatedAgentAgencies();
+    const { data: authAgencyData } = useAuthenticatedAgentAgencies();
 
     const sellingCodes =
-        agencies?.map((agency) => agency.agentSellingCode) ?? [];
+        authAgencyData?.map((agency) => ({
+            sellingCode: agency.agentSellingCode,
+            carrierShortName: agency.carrierShortName,
+        })) ?? [];
 
-    return useDownlineListQuery(
-        !isSuperIllustrator ? sellingCodes : [],
-        searchQuery,
-        useCallback(
-            (results: UseQueryResult<GetDownlineResponse[][] | null>[]) => {
-                const downlines = results
-                    .map((result) => result?.data)
-                    .flat(2)
-                    .filter((data): data is GetDownlineResponse => !!data);
+    const agencyIdsCombinedResult = useAgentAgencyIds(sellingCodes);
 
-                const agentOptions = Object.entries(
-                    groupBy(downlines, 'npn')
-                ).map(([npn, downlines]) => {
-                    const downlineWithDetails = downlines.find(
-                        ({ firstName, lastName, emailAddress }) =>
-                            firstName && lastName && emailAddress
+    const { data: agencyIds } = agencyIdsCombinedResult;
+
+    const agentOptionsCombinedResult = useDownlineListQuery(
+        !isSuperIllustrator ? agencyIds ?? [] : [],
+        {
+            partialFullName: searchQuery,
+            combine: useCallback(
+                (
+                    results: UseQueryResult<GetDownlineResponse[][] | null>[]
+                ): AgentOption[] => {
+                    const downlines = zip(results, authAgencyData!).flatMap(
+                        ([result, authAgencyData]) =>
+                            (result?.data?.flat(2) ?? []).map((downline) => ({
+                                ...downline,
+                                carrierShortName:
+                                    authAgencyData!.carrierShortName,
+                            }))
                     );
 
-                    return {
-                        firstName: downlineWithDetails?.firstName,
-                        lastName: downlineWithDetails?.lastName,
-                        email: downlineWithDetails?.emailAddress,
-                        npn,
-                        sellingCodes: downlines
-                            .map(({ sellingCode }) => sellingCode)
-                            .filter(
-                                (sellingCode): sellingCode is string =>
-                                    !!sellingCode
-                            ),
-                    };
-                });
+                    const agentOptions = Object.entries(
+                        groupBy(downlines, 'npn')
+                    ).map(([npn, downline]) => {
+                        const downlineWithDetails = downline.find(
+                            ({ firstName, lastName, emailAddress }) =>
+                                firstName && lastName && emailAddress
+                        );
 
-                return agentOptions;
-            },
-            []
-        )
+                        return {
+                            firstName: downlineWithDetails?.firstName,
+                            lastName: downlineWithDetails?.lastName,
+                            email: downlineWithDetails?.emailAddress,
+                            npn,
+                            carrierShortName: downline[0].carrierShortName,
+                            sellingCodes: downline
+                                .map(({ sellingCode }) => sellingCode)
+                                .filter(
+                                    (sellingCode): sellingCode is string =>
+                                        !!sellingCode
+                                ),
+                        };
+                    });
+
+                    return agentOptions;
+                },
+                [authAgencyData]
+            ),
+        }
+    );
+
+    return useReduceCombinedResults(
+        agencyIdsCombinedResult,
+        agentOptionsCombinedResult
     );
 };
 
 const useSuperIllustratorAgentOptions = (searchQuery: string) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
 
-    return useGetProducersListQuery(
-        writeClientCaseCarriers,
-        searchQuery,
-        useCallback(
+    return useGetProducersListQuery(writeClientCaseCarriers, {
+        partialFullName: searchQuery,
+        combine: useCallback(
             (results: UseQueryResult<ProducersResponse>[]) =>
                 sortBy(
-                    results
-                        .map((result) => result?.data?.producers)
-                        .flat()
-                        .filter(
-                            (producer): producer is ProducerSearchResult =>
-                                producer != null
-                        )
-                        .filter(
-                            (producer) =>
-                                producer.type ===
-                                PRODUCER_SEARCH_RESULT_TYPES.INDIVIDUAL
-                        )
-                        .map(({ lookupId, name, email }) => ({
-                            npn: lookupId,
-                            firstName: name,
-                            email,
-                            // This endpoint does not return any agent selling
-                            // code this is not a problem because we are gonna
-                            // request them later
-                            sellingCodes: [] as string[],
-                        })),
+                    uniqBy(
+                        zip(results, writeClientCaseCarriers)
+                            .flatMap(
+                                ([result, carrierShortName]) =>
+                                    result?.data?.producers.map((producer) => ({
+                                        ...producer,
+                                        carrierShortName: carrierShortName!,
+                                    })) ?? []
+                            )
+                            .filter(
+                                (producer) =>
+                                    producer.type ===
+                                    PRODUCER_SEARCH_RESULT_TYPES.INDIVIDUAL
+                            )
+                            .map(
+                                ({ lookupId, name, email, carrierShortName }) =>
+                                    ({
+                                        lookupId,
+                                        firstName: name,
+                                        email,
+                                        carrierShortName,
+                                        // This endpoint does not return any agent selling
+                                        // code this is not a problem because we are gonna
+                                        // request them later
+                                        sellingCodes: [] as string[],
+                                    } as AgentOption)
+                            ),
+                        'lookupId'
+                    ),
                     'firstName'
                 ),
-            []
-        )
-    );
+            [writeClientCaseCarriers]
+        ),
+    });
 };
 
 const useAgentOptions = (searchQuery: string) => {
@@ -114,7 +177,6 @@ const useAgentOptions = (searchQuery: string) => {
         useSuperIllustratorAgentOptions(searchQuery);
 
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
-
     return isSuperIllustrator
         ? superIllustratorAgentOptionsResult
         : normalUserAgentOptionsResult;
@@ -129,7 +191,10 @@ const useSubscribeToProducerData = (
 ) => {
     const selectedAgentLookupId = selectedAgent?.lookupId || selectedAgent?.npn;
 
-    const { data: agentData } = useGetProducerById(selectedAgentLookupId);
+    const { data: agentData } = useGetProducerById(
+        selectedAgentLookupId,
+        selectedAgent?.carrierShortName
+    );
 
     useEffect(() => {
         if (!selectedAgent) {
@@ -182,6 +247,7 @@ const useSubscribeToProducerData = (
                   }
                 : {}),
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectedAgent, agentData, onSelectAgent]);
 };
 
@@ -211,6 +277,7 @@ export const AgentField = ({
         });
 
         setSearchQuery(query);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const contextValue = useMemo(

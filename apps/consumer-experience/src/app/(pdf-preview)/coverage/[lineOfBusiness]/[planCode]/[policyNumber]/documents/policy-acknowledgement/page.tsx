@@ -12,6 +12,7 @@ import { DocumentsVersion } from '@/types/carrier-config';
 import { DocumentV3SearchItem, ExtendedDocumentMeta } from '@/types/document';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logInfo } from '@/utils/logging/log-fns';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import previewStyles from '../[documentId]/Preview.module.css';
@@ -38,12 +39,13 @@ export default async function PolicyAcknowledgementDocumentPreview({
   };
 }) {
   const flags = await getFeatureFlags();
-  const { documents } = await getCarrierConfig();
+  const commonLoggingContext = await buildCommonLogContext();
+  const { data } = await getCarrierConfig(commonLoggingContext);
   const { lineOfBusiness, policyNumber, planCode } = params;
   const { clientCode } = searchParams;
   const shouldUseV2 =
     !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
-    documents.version === DocumentsVersion.V2;
+    data?.documents.version === DocumentsVersion.V2;
 
   const policyDocuments = shouldUseV2
     ? await getDocumentsV2({

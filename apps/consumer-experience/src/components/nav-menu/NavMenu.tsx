@@ -17,13 +17,9 @@ import { Link } from '@/components/link/Link';
 import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useCarrierConfig } from '@/hooks/use-carrier-config';
 import useMock from '@/hooks/use-mock';
-import { getPoliciesByCarrier } from '@/queries/policy-queries';
+import { getAllPoliciesForCarriers } from '@/queries/policy-queries';
 import { CarrierNames } from '@/types/carriers';
-import {
-  baseExperienceCarriers,
-  CarrierListDetail,
-  getCarrierSubdomainByName,
-} from '@/utils/carriers';
+import { CarrierListDetail, getCarrierSubdomainByName } from '@/utils/carriers';
 
 import styles from './NavMenu.module.css';
 
@@ -61,7 +57,7 @@ export const NavMenu = ({
 
   const { data } = useQuery({
     queryKey: ['carrierPolicyDetails'],
-    queryFn: () => getPoliciesByCarrier(baseExperienceCarriers),
+    queryFn: () => getAllPoliciesForCarriers(),
     // Only fetch policies if the carrier config is set and the sso is not enabled
     enabled: !!carrierConfig && !carrierConfig?.sso.enabled,
   });

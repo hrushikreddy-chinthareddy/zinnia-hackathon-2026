@@ -165,8 +165,9 @@ export const formatRelativeTime = (
   return `${diffInDays} day${diffInDays !== 1 ? "s" : ""} ago`;
 };
 
+//This function can take in a YMD string(Format YYYY-MM-DD) or an ISO string(Format YYYY-MM-DDTHH:mm:ss.SSSZ) and return an ISO string
 export const startOfTomorrowLocalIso = (ymd: string) => {
-  const base = dayjs(ymd, ENTERPRISE_DATE_FORMAT, true);
+  const base = dayjs(ymd);
   if (!base.isValid()) return DEFAULT_ERROR_STRING;
 
   // add one day, clamp to start of day (local), then express that instant in UTC ISO

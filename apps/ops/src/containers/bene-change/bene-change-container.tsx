@@ -26,6 +26,8 @@ import DocSelectionStep from './components/steps/doc-selection/doc-selection-ste
 import OwnersInfoStep from './components/steps/owner-info/owners-info-step';
 import SignatureStep from './components/steps/signature/signature-step';
 import SummaryStep from './components/steps/summary/summary-step';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface BeneChangeContainerProps {
     policy: Policy;
@@ -87,6 +89,9 @@ const BeneChangeContainer = ({
                 : skipToken,
         enabled: !!planCode && !!policyNumber,
     });
+    const { featureFlags } = useOptimizely();
+    const invokeNewBeneChangeApi =
+        featureFlags[FEATURE_FLAGS.BENE_CHANGE_NEW_API];
 
     useEffect(() => {
         if (!data) return;
@@ -110,7 +115,7 @@ const BeneChangeContainer = ({
         ) {
             documentResult = await fetchDocument(
                 formData.businessKey,
-                DocumentType.ReReg,
+                DocumentType.Rereg,
                 ''
             );
 
@@ -141,7 +146,15 @@ const BeneChangeContainer = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = await validateTransaction(requestBody);
+        const response = invokeNewBeneChangeApi
+            ? await validateTransaction(
+                  {
+                      ...requestBody,
+                      planCode,
+                  },
+                  invokeNewBeneChangeApi
+              )
+            : await validateTransaction(requestBody, invokeNewBeneChangeApi);
         return response;
     }, [
         document,
@@ -234,6 +247,7 @@ const BeneChangeContainer = ({
                         clientId={clientId as string}
                         parentPage={parentPage}
                         leaveTransactionLink={leaveTransactionLink}
+                        isBeneChange={true}
                     />
                 ),
                 screenReaderLabel: t('tabs.confirm'),

@@ -105,6 +105,7 @@ export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
             {notifications.map((notification, index) => (
                 <NotificationItem
                     notification={notification}
+                    carrier={carrier}
                     index={index}
                     notifications={notifications}
                     key={`notifications-${index}`}

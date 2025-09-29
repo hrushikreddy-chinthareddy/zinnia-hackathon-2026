@@ -72,6 +72,7 @@ export const PaymentProfilesList: FC<PaymentProfilesListProps> = ({
       </div>
       <PaymentusAddPaymentMethod
         policyNumber={policyNumber}
+        planCode={planCode}
         onAddPaymentMethod={onAddPaymentMethod}
       />
     </div>

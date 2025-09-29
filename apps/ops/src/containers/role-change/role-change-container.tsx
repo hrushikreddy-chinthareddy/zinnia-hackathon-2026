@@ -1,4 +1,3 @@
-import { toTitleCase } from '@xd/utils/dist';
 import {
     PartyRole,
     Policy,
@@ -65,7 +64,13 @@ const RoleChangeContainer = ({
                 role.toUpperCase() as PartyRole
             ),
         }));
-    }, []);
+    }, [
+        policy?.parties,
+        policy?.partyRoles,
+        role,
+        setExistingRoleData,
+        setRoleData,
+    ]);
 
     const getProcessSubType = () => {
         if (role === PolicyRole.PAYOR) {

@@ -34,6 +34,10 @@
   --body-6xl: var(--typography-content-body-6xl);
   --body-7xl: var(--typography-content-body-7xl);
   /* spacing */
+  --space-sm: var(--measure-dimension-gap-sm);
+  --space-md: var(--measure-dimension-gap-md);
+  --space-lg: var(--measure-dimension-gap-lg);
+  --space-1: var(--measure-dimension-gap-xl);
   --space-2: var(--measure-dimension-gap-2xl);
   --space-3: var(--measure-dimension-gap-3xl);
   /* fonts */

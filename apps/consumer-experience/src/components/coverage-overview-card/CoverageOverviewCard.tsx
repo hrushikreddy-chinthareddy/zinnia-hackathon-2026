@@ -1,8 +1,10 @@
-import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import styles from '@/app/(authenticated)/coverage/policies.module.css';
+import { useComponentVisibility } from '@/hooks/use-component-visibility';
 import { getRedirectUrl, RouteKey, routeMap } from '@/route-map';
+import { ComponentName } from '@/services/display-rules/types';
 import { CarrierPolicyDetails } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
@@ -32,6 +34,11 @@ export const CoverageOverviewCard = ({
       })
     : `/coverage/${lineOfBusinessUrlPath(policy?.lineOfBusiness)}/${policy.planCode}/${policy.policyNumber}`;
 
+  const { data: componentVisibility } = useComponentVisibility(
+    policy.planCode,
+    policy.policyNumber
+  );
+
   return (
     <ClickableCardContainer>
       <ClickableCardContainer.LinkContent
@@ -49,8 +56,9 @@ export const CoverageOverviewCard = ({
             summary={{ ...policy }}
           />
           <div className={styles.policyCardPolicyValues}>
-            {/* Hide Account value for term products */}
-            {policy.product?.productType !== ProductType.TERM && (
+            {componentVisibility?.[
+              ComponentName.OVERVIEW_ACCOUNT_VALUE_CARD
+            ] && (
               <FieldData
                 className="mr-3xl typography-content-body-sm-bold"
                 Label={
@@ -79,22 +87,23 @@ export const CoverageOverviewCard = ({
                 {formatUSDollars(policy.endingAccountValue)}
               </FieldData>
             )}
-            {policy.lineOfBusiness === LineOfBusiness.LIFE && (
-              <FieldData
-                className="typography-content-body-sm-bold"
-                Label={
-                  <Label
-                    interactiveElements={[
-                      <CoveragePopover key="coverage-popover" />,
-                    ]}
-                  >
-                    Coverage
-                  </Label>
-                }
-              >
-                {formatUSDollars(policy.totalCoverageAmount)}
-              </FieldData>
-            )}
+            {policy.lineOfBusiness === LineOfBusiness.LIFE &&
+              componentVisibility?.[ComponentName.OVERVIEW_COVERAGE_CARD] && (
+                <FieldData
+                  className="typography-content-body-sm-bold"
+                  Label={
+                    <Label
+                      interactiveElements={[
+                        <CoveragePopover key="coverage-popover" />,
+                      ]}
+                    >
+                      Coverage
+                    </Label>
+                  }
+                >
+                  {formatUSDollars(policy.totalCoverageAmount)}
+                </FieldData>
+              )}
             {policy.lineOfBusiness === LineOfBusiness.ANNUITY && (
               <FieldData
                 className="typography-content-body-sm-bold"

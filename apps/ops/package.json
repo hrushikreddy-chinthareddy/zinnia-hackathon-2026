@@ -88,6 +88,7 @@
         "react-stately": "^3.25.0",
         "sharp": "^0.32.6",
         "tiff": "^7.0.0",
+        "type-fest": "^4.41.0",
         "typegate": "^0.0.50",
         "uuid": "^9.0.0",
         "xml2js": "^0.6.2",
@@ -146,6 +147,7 @@
         "jsdom": "^21.1.0",
         "lint-staged": "^13.1.0",
         "next-router-mock": "^0.9.2",
+        "node-mocks-http": "^1.17.2",
         "orval": "^6.25.0",
         "postcss": "^8.4.31",
         "postcss-loader": "^7.1.0",
@@ -199,5 +201,5 @@
         "tokenize": "style-dictionary build",
         "typecheck": "tsc --project ./tsconfig.json"
     },
-    "version": "2.14.2"
+    "version": "2.16.0"
 }

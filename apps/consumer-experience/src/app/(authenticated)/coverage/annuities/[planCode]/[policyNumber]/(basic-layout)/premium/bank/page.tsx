@@ -4,14 +4,16 @@ import { SelectBankWrapper } from '@/components/one-time-premium-payment/select-
 import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export default async function SelectBankPage({
   params,
 }: {
   params: PolicyRequestInputs;
 }) {
+  const commonLoggingContext = await buildCommonLogContext();
   const { planCode, policyNumber } = params;
-  const { payment } = await getCarrierConfig();
+  const { data } = await getCarrierConfig(commonLoggingContext);
 
   return (
     <OneTimePremium
@@ -23,7 +25,7 @@ export default async function SelectBankPage({
         policyNumber={policyNumber}
         planCode={planCode}
         lineOfBusiness={LineOfBusiness.ANNUITY}
-        paymentProvider={payment.provider}
+        paymentProvider={data?.payment.provider}
       />
     </OneTimePremium>
   );

@@ -1,17 +1,72 @@
+// FIXME: this should be coming from auto-generated API types
+// Note: the document types read by the API are not case-sensitive
 export enum DocumentType {
     Exchange = 'Exchange',
     Oft = 'Outgoing Transfer',
     Redemption = 'Redemption',
     Rmd = 'Required Minimum Distribution',
-    SSW = 'SYSTEMATIC',
     Reg60 = 'NB Reg 60',
     AddressChange = 'Address Change',
-    ReReg = 'ReReg',
+    Rereg = 'Rereg',
     Suitability = 'Suitability',
     SuitabilityReview = 'SuitabilityReview',
     CallLogs = 'Call Log',
     Spif = 'SPIF',
+    AnnuityApplication = 'Annuity Application',
+    AssetAllocator = 'Asset Allocator',
+    FinancialInternalConversion = 'Financial Internal Conversion',
+    IncomingTransfer = 'Incoming Transfer',
+    InternalConversion = 'Internal Conversion',
+    Loan = 'Loan',
+    LoanPayment = 'Loan Payment',
+    NBComparisonForm = 'NB Comparison Form',
+    NBPurchase = 'NB Purchase',
+    NBPurchaseWApp = 'NB Purchase w App',
+    NBReplacementForm = 'NB Replacement Form',
+    NBSuitabilityForm = 'NB Suitability Form',
+    Purchase = 'Purchase',
+    StatementOfUnderstanding = 'Statement of Understanding',
+    Systematic = 'Systematic',
+    Output = 'Output',
 }
+
+// FIXME: move out of models (and into env vars or external config)
+export const excludeDocumentTypes = [DocumentType.CallLogs, DocumentType.Spif];
+export const includeDocumentTypesInbound = [
+    DocumentType.AddressChange,
+    DocumentType.AnnuityApplication,
+    DocumentType.AssetAllocator,
+    DocumentType.Exchange,
+    DocumentType.FinancialInternalConversion,
+    DocumentType.IncomingTransfer,
+    DocumentType.InternalConversion,
+    DocumentType.Loan,
+    DocumentType.LoanPayment,
+    DocumentType.NBComparisonForm,
+    DocumentType.NBPurchase,
+    DocumentType.NBPurchaseWApp,
+    DocumentType.NBReplacementForm,
+    DocumentType.NBSuitabilityForm,
+    DocumentType.Oft,
+    DocumentType.Output,
+    DocumentType.Purchase,
+    DocumentType.Redemption,
+    DocumentType.Rmd,
+    DocumentType.Rereg,
+    DocumentType.StatementOfUnderstanding,
+    DocumentType.Systematic,
+];
+
+// The document type filtering (include list) only exists for the following carrier codes:
+export const includeDocumentTypeForInboundSearch = (carrierId?: string) => {
+    const carriersWithIncludeDocumentTypes = new Set([
+        'GLCO', // Kuvare
+        'ULIC', // Kuvare
+        'ULPC', // Kuvare
+        'SBGC', // SecurityBenefit
+    ]);
+    return !!(carrierId && carriersWithIncludeDocumentTypes.has(carrierId));
+};
 
 export enum DocumentFileExtension {
     Png = 'png',

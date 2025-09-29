@@ -6,49 +6,9 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
-import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import { TaskView } from './progress-tab-types';
-
-export const SupportedTaskMap = [
-    TaskType.SuitabilityReview,
-    TaskType.SuitabilityDataEntry,
-    TaskType.PURCHASE_DOCUMENT_MATCHING,
-    TaskType.Agent_Nigo,
-    TaskType.Attachment_Nigo,
-    TaskType.Application_Nigo,
-    TaskType.PremiumNigo,
-    TaskType.Review_Ofac,
-    TaskType.Agent_Onboarding_Nigo,
-    TaskType.TOA_Nigo,
-    TaskType.Agent_Review,
-    TaskType.Standard_Document_Matching,
-    TaskType.Application_Review,
-    TaskType.AppDataEntry,
-    TaskType.Prenote_Nigo,
-    TaskType.Agent_Onboarding_Review,
-    TaskType.ReturnPayment,
-    TaskType.Send_Nigo_Communication,
-    TaskType.Initiate_Postissue_Transaction,
-    TaskType.TOA_Review,
-    TaskType.Prenote_Review,
-    TaskType.Payment_Processing_Review,
-    TaskType.Duplicate_Review,
-    TaskType.Payment_Follow_Up,
-    TaskType.Suitaibility_DataEntry_Nigo_Review,
-    TaskType.Claims_Identify_Uncashed_Transactions,
-    TaskType.Claims_Reverse_Uncashed_Transactions,
-    TaskType.Claims_Stop_Uncashed_Transactions,
-    TaskType.Background_Nigo,
-    TaskType.Background_Review,
-    TaskType.Purchase_enrichment,
-    TaskType.Cost_Basis_Review,
-    TaskType.Claims_Fi_Escheatment_Task,
-    TaskType.Bene_Address_Verification,
-    TaskType.Claims_Bene_Review,
-    TaskType.Bene_Call,
-];
 
 type StatusConfigItem = {
     check: (status: Statuses) => boolean;

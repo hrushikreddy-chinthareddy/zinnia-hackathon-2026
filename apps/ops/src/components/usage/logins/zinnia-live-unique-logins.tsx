@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
+import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 
@@ -30,7 +31,7 @@ import {
 } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName } from '../utils';
+import { colors, generateCSVFileName, ApiRoles } from '../utils';
 
 export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
     const { t } = useTranslation();
@@ -49,9 +50,13 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
     const filter = {
         userStatus: ['active'],
         systemSource: ['ZinniaLive'],
-        userRole: ['Call Center', 'Operations', 'Selling Agent'],
+        userRole: [
+            ApiRoles.Agent,
+            ApiRoles.ZinniaCallCenter,
+            ApiRoles.ZinniaOperations,
+        ],
         dateStart: timerange.from,
-        dateEnd: timerange.to || undefined,
+        dateEnd: startOfTomorrowLocalIso(timerange.to) || undefined,
     };
 
     const {
@@ -93,6 +98,9 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h justify-between">
             <UsageHeaderLayout
                 title={title}
+                description={String(
+                    t('usage.logins.zinniaLive.description') ?? ''
+                )}
                 data={zinniaLiveLoginsData?.data ?? []}
                 csvFileName={generateCSVFileName(
                     'Zinnia Live Unique Logins by Role',

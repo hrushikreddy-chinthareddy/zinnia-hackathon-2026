@@ -1,47 +1,56 @@
-import { PRODUCERS_API_ORIGIN } from '@deps/queries/api/server/v1/producers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
-import { EnterpriseTokenApi } from '@deps/services/enterprise-api-token-http';
-import {
-    logWarn,
-    parseErrorInformation,
-    withAuthAndLogging,
-} from '@deps/utils/server-logging';
+import { isApiResponseError } from '@deps/services/api-proxy';
+import { createEnterpriseTokenRequestProxy } from '@deps/services/enterprise-api-token-http';
+import { GetHierarchyResponse } from '@deps/types/producers';
+import { logWarn, withAuthAndLogging } from '@deps/utils/server-logging';
+
+const logPrefix = 'POM::getDownlineBySellingcode';
 
 // Will proxy any request made to the next server directly to the gateway apis
 export default withAuthAndLogging(
-    async (req, res, loggingContext) => {
-        const { sellingCode } = req.query;
-
-        try {
-            const producersUrl = `${apiServerBaseUrl}/distributors/v1/hierarchies/selling-code/${sellingCode}`;
-            const producersHierarchyResponse = await EnterpriseTokenApi.get(
-                producersUrl,
-                {},
-                loggingContext
-            );
-            const producersHierarchyResponseObject =
-                await producersHierarchyResponse.json();
-
-            if (producersHierarchyResponseObject.message) {
-                throwTypedError(
-                    producersHierarchyResponseObject.message,
-                    PRODUCERS_API_ORIGIN
-                );
+    createEnterpriseTokenRequestProxy<GetHierarchyResponse>({
+        upstreamBaseURL: apiServerBaseUrl,
+        matchedURLPath: '/api',
+        allowedMethods: ['GET'],
+        omittedParams: ['sellingCode'],
+        onProxyRes: (proxyRes, req, res, logCtx) => {
+            if (!proxyRes?.data?.upline) {
+                return logWarn(`${logPrefix}:proxyResHandler::missing-upline`, {
+                    ...logCtx,
+                    error: 'Hierarchy does not have an upline',
+                    hierarchySellingcode: req.query.sellingCode,
+                });
             }
 
-            res.json(producersHierarchyResponseObject);
-        } catch (error: any) {
-            logWarn(
-                'distributors/v1/hierarchies/selling-code/:selling-code::error',
-                {
-                    ...parseErrorInformation(error),
-                    ...loggingContext,
-                }
+            const hasUplineAgency = proxyRes.data.upline.find(
+                (uplineItem) => uplineItem?.producerType === 'GeneralAgency'
             );
-            res.status(500).json(null);
-        }
-    },
+
+            if (!hasUplineAgency) {
+                logWarn(`${logPrefix}:proxyResHandler::missing-upline-agency`, {
+                    ...logCtx,
+                    error: 'Hierarchy upline does not have a GeneralAgency',
+                    hierarchySellingcode: req.query.sellingCode,
+                });
+            }
+        },
+        onProxyErr: (proxyRes, req, res, logCtx) => {
+            if (isApiResponseError(proxyRes.data)) {
+                logWarn(`${logPrefix}:proxyErrHandler::error`, {
+                    ...logCtx,
+                    error: proxyRes.data.message,
+                });
+            }
+
+            if (proxyRes.status === 404) {
+                logWarn(`${logPrefix}:proxyErrHandler::not-found`, {
+                    ...logCtx,
+                    error: 'Hierarchy was not found',
+                    hierarchySellingCode: req.query.sellingCode,
+                });
+            }
+        },
+    }),
     {
         file: 'distributors/v1/hierarchies/selling-code/:selling-code',
         function: 'routeHandler',

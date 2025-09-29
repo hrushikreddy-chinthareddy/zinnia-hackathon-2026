@@ -16,6 +16,7 @@ export enum CaseIdentifier {
     DocumentNum = 'documentNum',
     TransactionId = 'transactionId',
     PolicyNumber = 'policyNumber',
+    ZlCaseId = 'zlCaseId',
 }
 
 // CaseAdditionalData doesn't exist on the spec yet, typing based off QA response

@@ -60,9 +60,7 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
     const [isLastSearchPage, setIsLastSearchPage] = useState(false);
 
     const isSearchActive = searchTerm.trim().length >= 3;
-    const chatsToRender = isSearchActive
-        ? searchResults
-        : chatHistory.filter((chat) => (chat.messageCount ?? 0) > 1);
+    const chatsToRender = isSearchActive ? searchResults : chatHistory;
 
     const clientName =
         opsUserData?.client?.find((c) => c.id === selectedClientId)?.name || '';

@@ -52,6 +52,7 @@ import {
   banksByPartyId,
 } from '@/utils/data';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+
 import { LimitedPolicyParty } from './types';
 
 export const allBeneficiaries = (policy: Policy) => {
@@ -636,7 +637,12 @@ export const transformPolicyStatusDetails = (
     };
   }
 
-  if (freeLookActive && policyStatus !== PolicyStatus.CANCELEDFREELOOK) {
+  if (
+    freeLookActive &&
+    policyStatus !== PolicyStatus.CANCELEDFREELOOK &&
+    // @TODO: verify which statuses would be valid to display freeLookActive
+    policyStatus !== PolicyStatus.SURRENDERED
+  ) {
     return {
       policyStatus: FeatureType.FREELOOK,
       endDate: freeLookFeature?.endDate,

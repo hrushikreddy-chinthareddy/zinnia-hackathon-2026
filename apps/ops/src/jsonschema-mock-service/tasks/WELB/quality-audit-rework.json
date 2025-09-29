@@ -1,7 +1,6 @@
 {
     "formId": "2d06963a-f7ce-46bb-bde4-0b3674853685",
     "process": "Quality Audit",
-    "carrier": "WELB",
     "taskType": "QUALITY_AUDIT_REWORK",
     "taskName": "Quality Audit Rework",
     "formSchema": {
@@ -401,9 +400,12 @@
                                         "hideError": true
                                     },
                                     "reworkDateTime": {
+                                        "ui:inline": true,
                                         "ui:options": {
                                             "inline": true,
-                                            "label": false
+                                            "label": false,
+                                            "dataType": "dateTime",
+                                            "disabled": true
                                         }
                                     },
                                     "attachments": {
@@ -460,9 +462,12 @@
                                         }
                                     },
                                     "reworkDateTime": {
+                                        "ui:inline": true,
                                         "ui:options": {
                                             "inline": true,
-                                            "label": false
+                                            "label": false,
+                                            "dataType": "dateTime",
+                                            "disabled": true
                                         }
                                     },
                                     "note": {

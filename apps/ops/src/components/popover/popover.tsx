@@ -43,6 +43,13 @@ export default function Popover({
     const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
     const router = useRouter();
+
+    const handleEscapeKeyDown = (event: KeyboardEvent) => {
+        // DEPU-6604: In cases where this may be used in a side sheet, we need to stop propagation
+        // to prevent the side sheet from closing
+        event.stopPropagation();
+    };
+
     if (router) {
         const isPoliciesPage = router.pathname.includes('policies');
         const hideTooltips =
@@ -53,6 +60,7 @@ export default function Popover({
             return null;
         }
     }
+
     const popoverContent = (
         <div className={clsx(commonPopoverClasses, popoverClassName)}>
             <div className="flex justify-between">
@@ -93,6 +101,7 @@ export default function Popover({
                     side={side}
                     className="z-20 my-0.5"
                     data-testid={PopoverTest.Content}
+                    onEscapeKeyDown={handleEscapeKeyDown}
                 >
                     {popoverContent}
                 </ReactPopover.Content>

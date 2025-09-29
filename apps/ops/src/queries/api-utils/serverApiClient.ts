@@ -17,6 +17,7 @@ export enum StatusCode {
     NotFound = 404,
     TooManyRequests = 429,
     InternalServerError = 500,
+    OK = 200,
 }
 
 export interface AxiosAuthRequestConfig extends AxiosRequestConfig {
@@ -51,6 +52,43 @@ export abstract class ServerApiClient {
             httpsAgent: agent,
             headers,
         };
+    }
+
+    async request<T = any, R = AxiosResponse<T>>(
+        config: AxiosAuthRequestConfig,
+        logCtx: LoggingContext
+    ) {
+        const now = performance.now();
+        const configWithToken = await this.addToken(
+            config,
+            logCtx?.correlationId
+        );
+        const correlationId = configWithToken.headers?.['x-correlation-id'];
+
+        const loggingContext = {
+            ...logCtx,
+            file: 'serverApiClient',
+            function: 'request',
+            method: config.method,
+            url: config.url,
+            correlationId,
+        };
+        logTrace('serverApiClient::request', loggingContext);
+        try {
+            const result = await this.instance.request<T, R>(configWithToken);
+            logTrace('serverApiClient::request::success', {
+                ...loggingContext,
+                duration: performance.now() - now,
+            });
+            return result;
+        } catch (ex: any) {
+            logWarn('serverApiClient::request::error', {
+                ...loggingContext,
+                ...parseErrorInformation(ex),
+                duration: performance.now() - now,
+            });
+            throw ex?.response ?? ex;
+        }
     }
 
     async get<T = any, R = AxiosResponse<T>>(

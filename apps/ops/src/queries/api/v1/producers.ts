@@ -11,12 +11,16 @@ import {
 } from '@deps/types/producers';
 
 export const getHierarchyBySellingCode = async (
-    sellingCode: string
+    sellingCode: string,
+    params: { carrierShortName: string }
 ): Promise<ApiResponse<GetHierarchyResponse>> => {
     try {
         // hit our route handler which uses the enterprise token api
         const request = client.get<any, AxiosResponse<GetHierarchyResponse>>(
-            `${baseAppUrl}/api/distributors/v1/hierarchies/selling-code/${sellingCode}`
+            `${baseAppUrl}/api/distributors/v1/hierarchies/selling-code/${sellingCode}`,
+            {
+                params,
+            }
         );
 
         const response = await request;
@@ -47,12 +51,24 @@ export const getHierarchyBySellingCode = async (
 
 export const getDownlineBySellingCode = async (
     sellingCode: string,
-    partialFullName: string
+    {
+        carrierShortName,
+        partialFullName,
+    }: {
+        carrierShortName: string;
+        partialFullName: string;
+    }
 ) => {
     try {
         // hit our route handler which uses the enterprise token api
         const request = client.get<any, AxiosResponse<GetDownlineResponse[][]>>(
-            `${baseAppUrl}/api/distributors/v1/hierarchies/selling-code/${sellingCode}/downline?partialFullName=${partialFullName}`
+            `${baseAppUrl}/api/distributors/v1/hierarchies/selling-code/${sellingCode}/downline`,
+            {
+                params: {
+                    partialFullName,
+                    carrierShortName,
+                },
+            }
         );
         const response = await request;
         if (response.status === StatusCode.Okay) {
@@ -113,12 +129,10 @@ export const getProducersByNameAndCarrier = async (
     }
 };
 
-export const getProducerById = async (id: string) => {
+export const getProducerById = async (id: string, carrierShortName: string) => {
     try {
-        // hit our route handler which uses the enterprise token api
-        // carrierShortName query param should be replaced in the future, we are adding this as a temporal solution.
         const request = client.get<any, AxiosResponse<ApiGetProducerResponse>>(
-            `${baseAppUrl}/api/distributors/v1/producers/${id}?carrierShortName=FNWL`
+            `${baseAppUrl}/api/distributors/v1/producers/${id}?carrierShortName=${carrierShortName}`
         );
         const response = await request;
         if (response.status === StatusCode.Okay) {

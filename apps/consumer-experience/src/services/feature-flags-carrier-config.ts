@@ -1,10 +1,13 @@
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
+
 import { getCarrierConfig } from './carrier-config';
 import { getFeatureFlags } from './feature-flags';
 
 export const getFeatureFlagsWithCarrierConfig = async () => {
+  const loggingContext = await buildCommonLogContext();
   const [featureFlagsResult, carrierConfigResult] = await Promise.allSettled([
     getFeatureFlags(),
-    getCarrierConfig(),
+    getCarrierConfig(loggingContext),
   ]);
 
   if (featureFlagsResult.status === 'rejected') {
@@ -25,7 +28,7 @@ export const getFeatureFlagsWithCarrierConfig = async () => {
         : null,
     carrierConfig:
       carrierConfigResult.status === 'fulfilled'
-        ? carrierConfigResult.value
+        ? carrierConfigResult.value.data
         : null,
   };
 };

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 
 import { NotificationCenter } from '@/components/notification-center/NotificationCenter';
 import { getPageTitle, RouteKey } from '@/route-map';
-import { searchCasesByPolicyNumber } from '@/services/case';
+import { searchCases } from '@/services/case';
 import { getFeatureFlags } from '@/services/feature-flags';
 import {
   CaseAcknowledgmentItem,
@@ -28,7 +28,7 @@ interface Props {
 
 export default async function NotificationsPage({ params }: Props) {
   const flags = await getFeatureFlags();
-  const loggingCtx = await buildCommonLogContext()
+  const loggingCtx = await buildCommonLogContext();
   let initialNotifications: Array<CaseInstanceSummary> | undefined;
   let initialAcknowledgedNotifications: Array<CaseAcknowledgmentItem> = [];
   const notificationViewEnabled =
@@ -36,16 +36,20 @@ export default async function NotificationsPage({ params }: Props) {
 
   if (!notificationViewEnabled) return notFound();
 
-  const { data: cases, error } = await searchCasesByPolicyNumber({
-    policyNumber: params.policyNumber,
+  const { data: cases, error } = await searchCases(
+    {
+      policyNumber: params.policyNumber,
+    },
     loggingCtx
-  });
+  );
 
   if (
-    cases &&
-    [cases, params.planCode, params.policyNumber].every(arr => arr.length > 0)
+    cases?.data &&
+    [cases.data, params.planCode, params.policyNumber].every(
+      arr => arr.length > 0
+    )
   ) {
-    initialNotifications = cases;
+    initialNotifications = cases.data;
     const { data: acknowledgedCases, error: acknowledgedCasesError } =
       await fetchAcknowledgedCases({
         planCode: params.planCode,

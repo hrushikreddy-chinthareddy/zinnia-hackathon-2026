@@ -1,10 +1,8 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 
-import {
-    createNewChatSession,
-    getChatbotResponse,
-} from '@deps/queries/api/knowledge-base';
+import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
+import { createNewChatSession } from '@deps/queries/api/knowledge-base';
 import { BOT_ERROR_MESSAGE_ID, MessageRole } from '@deps/types/knowledge-base';
 
 import ChatInput from './chat-input';
@@ -15,21 +13,24 @@ const mockBrowserLogError = jest.fn();
 const mockBrowserLogTrace = jest.fn();
 const mockUseKnowledgeBaseContext = jest.fn();
 const mockSetChatHistoryReloadTrigger = jest.fn();
+const mockSendMessage = jest.fn();
+const mockStopStreaming = jest.fn();
 
-jest.mock('@deps/utils/browser-logging', () => {
-    return {
-        browserLogError: (...args: any[]) => mockBrowserLogError(...args),
-        browserLogTrace: (...args: any[]) => mockBrowserLogTrace(...args),
-    };
-});
+jest.mock('@deps/utils/browser-logging', () => ({
+    browserLogError: (...args: any[]) => mockBrowserLogError(...args),
+    browserLogTrace: (...args: any[]) => mockBrowserLogTrace(...args),
+}));
 
 jest.mock('@deps/queries/api/knowledge-base', () => ({
     createNewChatSession: jest.fn(),
-    getChatbotResponse: jest.fn(),
 }));
 
 jest.mock('@deps/contexts/KnowledgeBaseContext', () => ({
     useKnowledgeBaseContext: () => mockUseKnowledgeBaseContext(),
+}));
+
+jest.mock('@deps/hooks/knowledge-base/useChatStream', () => ({
+    useChatStream: jest.fn(),
 }));
 
 const mockOpsUserData: MeResponse = {
@@ -37,13 +38,7 @@ const mockOpsUserData: MeResponse = {
     name: 'Test',
     email: 'test@zinnia.com',
     role: MeResponse.role.ASSOCIATE,
-    client: [
-        {
-            id: 'client-123',
-            name: 'Security Benefit',
-            default: true,
-        },
-    ],
+    client: [{ id: 'client-123', name: 'Security Benefit', default: true }],
 };
 
 describe('ChatInput', () => {
@@ -51,18 +46,12 @@ describe('ChatInput', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
-        jest.spyOn(console, 'warn').mockImplementation(() => {});
-        jest.spyOn(console, 'error').mockImplementation(() => {});
+        jest.spyOn(console, 'warn').mockImplementation();
+        jest.spyOn(console, 'error').mockImplementation();
         (createNewChatSession as jest.Mock).mockResolvedValue({
             sessionId: '1234567890',
         });
-        (getChatbotResponse as jest.Mock).mockResolvedValue({
-            responseId: 'response-123',
-            response: 'chat response',
-            sourceDocuments: [],
-            feedbackType: '',
-            feedbackComment: '',
-        });
+
         mockUseKnowledgeBaseContext.mockReturnValue({
             sessionId: '',
             setSessionId: mockSetSessionId,
@@ -73,26 +62,46 @@ describe('ChatInput', () => {
             setSelectedClient: jest.fn(),
             startNewChatSession: jest.fn(),
             viewChatHistory: jest.fn(),
+            currentMessages: [],
+        });
+
+        (useChatStream as jest.Mock).mockReturnValue({
+            response: '',
+            status: '',
+            sources: [],
+            isStreaming: false,
+            questionId: null,
+            responseId: null,
+            sendMessage: mockSendMessage,
+            stopStreaming: mockStopStreaming,
+            isStreamingRef: { current: false },
         });
     });
 
-    it('renders the chat input field and button', async () => {
+    it('renders the chat input field and button', () => {
         const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
         );
         expect(getByRole('textbox')).toBeInTheDocument();
-        expect(getByRole('button')).toBeInTheDocument();
+        expect(
+            getByRole('button', { name: /send-button/i })
+        ).toBeInTheDocument();
     });
 
-    it('calls createNewChatSession when there is no session ID', async () => {
+    it('calls createNewChatSession when no sessionId exists', async () => {
         const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
         );
-        const inputField = getByRole('textbox');
-        const sendButton = getByRole('button');
-
-        fireEvent.change(inputField, { target: { value: mockMessage } });
-        fireEvent.click(sendButton);
+        fireEvent.change(getByRole('textbox'), {
+            target: { value: mockMessage },
+        });
+        fireEvent.click(getByRole('button', { name: /send-button/i }));
 
         await waitFor(() => {
             expect(createNewChatSession).toHaveBeenCalledWith(
@@ -101,96 +110,54 @@ describe('ChatInput', () => {
                 mockMessage
             );
             expect(mockSetSessionId).toHaveBeenCalledWith('1234567890');
+            expect(mockSendMessage).toHaveBeenCalledWith(
+                '1234567890',
+                mockMessage
+            );
         });
     });
 
-    it('logs error when fails to create a new session ID', async () => {
-        (createNewChatSession as jest.Mock).mockResolvedValue(undefined);
-        const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
-        );
-        const input = getByRole('textbox');
-        const button = getByRole('button');
-
-        fireEvent.change(input, { target: { value: mockMessage } });
-        fireEvent.click(button);
-
-        await waitFor(() => {
-            expect(createNewChatSession).toHaveBeenCalled();
-            expect(mockBrowserLogError).toHaveBeenCalled();
-        });
-    });
-
-    it('calls getChatbotResponse when there is a sessionId', async () => {
+    it('uses existing sessionId and calls sendMessage directly', async () => {
         mockUseKnowledgeBaseContext.mockReturnValue({
             sessionId: 'existing-session',
             setSessionId: mockSetSessionId,
             selectedClientId: 'client-123',
             setCurrentMessages: mockSetCurrentMessages,
+            currentMessages: [],
             chatHistoryReloadTrigger: 0,
-            setChatHistoryReloadTrigger: jest.fn(),
-            setSelectedClient: jest.fn(),
-            startNewChatSession: jest.fn(),
-            viewChatHistory: jest.fn(),
+            setChatHistoryReloadTrigger: mockSetChatHistoryReloadTrigger,
         });
 
         const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
         );
-        const inputField = getByRole('textbox');
-        const sendButton = getByRole('button');
-
-        fireEvent.change(inputField, { target: { value: mockMessage } });
-        fireEvent.click(sendButton);
+        fireEvent.change(getByRole('textbox'), {
+            target: { value: mockMessage },
+        });
+        fireEvent.click(getByRole('button', { name: /send-button/i }));
 
         await waitFor(() => {
-            expect(getChatbotResponse).toHaveBeenCalledWith(
-                'existing-session',
-                mockMessage,
-                'client-123',
-                expect.any(AbortSignal)
-            );
             expect(createNewChatSession).not.toHaveBeenCalled();
-            const botMessage = {
-                id: 'response-123',
-                role: MessageRole.Bot,
-                content: 'chat response',
-                sourceDocuments: [],
-                feedbackType: '',
-                feedbackComment: '',
-            };
-
-            const setCurrentCalls = mockSetCurrentMessages.mock.calls;
-
-            const lastCallArg = setCurrentCalls[setCurrentCalls.length - 1][0];
-            const updatedMessages = lastCallArg([
-                {
-                    id: 'new_user',
-                    role: MessageRole.User,
-                    content: mockMessage,
-                },
-            ]);
-
-            expect(updatedMessages).toContainEqual(botMessage);
+            expect(mockSendMessage).toHaveBeenCalledWith(
+                'existing-session',
+                mockMessage
+            );
         });
     });
 
-    it('logs error and shows fallback bot message when getChatbotResponse fails', async () => {
-        mockUseKnowledgeBaseContext.mockReturnValue({
-            sessionId: '1234567890',
-            setSessionId: mockSetSessionId,
-            selectedClientId: 'client-123',
-            setCurrentMessages: mockSetCurrentMessages,
-            chatHistoryReloadTrigger: 0,
-            setChatHistoryReloadTrigger: jest.fn(),
-            setSelectedClient: jest.fn(),
-            startNewChatSession: jest.fn(),
-            viewChatHistory: jest.fn(),
-        });
-        (getChatbotResponse as jest.Mock).mockResolvedValue(undefined);
+    it('logs error and does not send message if createNewChatSession fails to return sessionId', async () => {
+        (createNewChatSession as jest.Mock).mockResolvedValue(undefined);
+
         const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
         );
+
         const input = getByRole('textbox');
         const sendButton = getByRole('button', { name: /send-button/i });
 
@@ -198,235 +165,157 @@ describe('ChatInput', () => {
         fireEvent.click(sendButton);
 
         await waitFor(() => {
-            expect(getChatbotResponse).toHaveBeenCalled();
-            expect(mockBrowserLogError).toHaveBeenCalledWith(
-                'Error getting response from chatbot',
-                {
-                    sessionId: '1234567890',
-                }
-            );
-            expect(mockSetCurrentMessages).toHaveBeenCalledWith(
-                expect.any(Function)
-            );
-
-            const updateFn = mockSetCurrentMessages.mock.calls[1][0];
-            const updatedMessages = updateFn([
-                {
-                    id: 'new_user',
-                    role: MessageRole.User,
-                    content: mockMessage,
-                },
-            ]);
-
-            expect(updatedMessages).toEqual([
-                {
-                    id: 'new_user',
-                    role: MessageRole.User,
-                    content: mockMessage,
-                },
-                {
-                    id: BOT_ERROR_MESSAGE_ID,
-                    role: MessageRole.Bot,
-                    content: 'chat.errorMsg',
-                },
-            ]);
-        });
-    });
-
-    it('logs error when fails to send a message', async () => {
-        const testError = new Error('Network failure');
-        (createNewChatSession as jest.Mock).mockRejectedValue(testError);
-
-        const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
-        );
-        const input = getByRole('textbox');
-        const button = getByRole('button');
-
-        fireEvent.change(input, { target: { value: mockMessage } });
-        fireEvent.click(button);
-
-        await waitFor(() => {
-            expect(mockBrowserLogError).toHaveBeenCalledWith(
-                'Error sending message::',
-                {
-                    error: testError,
-                }
-            );
-        });
-    });
-
-    it('sends message when Enter key is pressed', async () => {
-        mockUseKnowledgeBaseContext.mockReturnValue({
-            sessionId: 'existing-session',
-            setSessionId: mockSetSessionId,
-            selectedClientId: 'client-123',
-            setCurrentMessages: mockSetCurrentMessages,
-            currentMessages: [],
-            chatHistoryReloadTrigger: 0,
-            setChatHistoryReloadTrigger: jest.fn(),
-            setSelectedClient: jest.fn(),
-            startNewChatSession: jest.fn(),
-            viewChatHistory: jest.fn(),
-        });
-
-        (getChatbotResponse as jest.Mock).mockResolvedValue({
-            responseId: 'response-123',
-            response: 'chat response',
-            sourceDocuments: [],
-            feedbackType: '',
-            feedbackComment: '',
-        });
-
-        const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
-        );
-        const input = getByRole('textbox');
-
-        fireEvent.change(input, { target: { value: mockMessage } });
-        fireEvent.keyDown(input, { key: 'Enter', code: 'Enter', charCode: 13 });
-
-        await waitFor(() => {
-            expect(getChatbotResponse).toHaveBeenCalledWith(
-                'existing-session',
-                mockMessage,
+            expect(createNewChatSession).toHaveBeenCalledWith(
+                mockOpsUserData.email,
                 'client-123',
-                expect.any(AbortSignal)
+                mockMessage
             );
-
-            expect(input).toHaveValue('');
+            expect(mockBrowserLogError).toHaveBeenCalledWith(
+                'Failed to create new chat session',
+                {
+                    email: mockOpsUserData.email,
+                    clientId: 'client-123',
+                }
+            );
+            expect(mockSendMessage).not.toHaveBeenCalled();
         });
     });
 
-    it('stops the api call when stop button is pressed and retries the api call with same question when retry button is pressed', async () => {
-        mockUseKnowledgeBaseContext.mockReturnValue({
-            sessionId: 'existing-session',
-            setSessionId: mockSetSessionId,
-            selectedClientId: 'client-123',
-            setCurrentMessages: mockSetCurrentMessages,
-            chatHistoryReloadTrigger: 0,
-            setChatHistoryReloadTrigger: jest.fn(),
-            setSelectedClient: jest.fn(),
-            startNewChatSession: jest.fn(),
-            viewChatHistory: jest.fn(),
+    it('calls stopStreaming when stop button is clicked', () => {
+        (useChatStream as jest.Mock).mockReturnValue({
+            response: '',
+            status: '',
+            sources: [],
+            isStreaming: true,
+            questionId: null,
+            responseId: null,
+            sendMessage: jest.fn(),
+            stopStreaming: mockStopStreaming,
+            isStreamingRef: { current: true },
         });
-        (getChatbotResponse as jest.Mock).mockImplementation(
-            async (_sessionId, _message, _clientId, signal: AbortSignal) => {
-                return new Promise((_, reject) => {
-                    signal.addEventListener('abort', () => {
-                        const abortError = new DOMException(
-                            'Aborted',
-                            'AbortError'
-                        );
-                        reject(abortError);
-                    });
-                });
-            }
-        );
 
         const { getByRole } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
-        );
-        const inputField = getByRole('textbox');
-        const sendButton = getByRole('button');
-
-        fireEvent.change(inputField, { target: { value: mockMessage } });
-        fireEvent.click(sendButton);
-
-        expect(getChatbotResponse).toHaveBeenCalledWith(
-            'existing-session',
-            mockMessage,
-            'client-123',
-            expect.any(AbortSignal)
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
         );
         const stopButton = getByRole('button', { name: /stop-button/i });
-        fireEvent.click(stopButton);
 
-        await waitFor(() => {
-            expect(mockBrowserLogTrace).toHaveBeenCalledWith(
-                'Chatbot response request cancelled'
-            );
-        });
+        fireEvent.click(stopButton);
+        expect(mockStopStreaming).toHaveBeenCalledTimes(1);
     });
 
-    it('retries the API call with the same question when retry button is pressed', async () => {
-        (getChatbotResponse as jest.Mock)
-            .mockResolvedValueOnce(undefined)
-            .mockResolvedValueOnce({
-                responseId: 'response-123',
-                response: 'chat response after retry',
-                sourceDocuments: [],
-                feedbackType: '',
-                feedbackComment: '',
-            });
-
+    it('sends message on Enter key press', async () => {
         mockUseKnowledgeBaseContext.mockReturnValue({
-            sessionId: '1234567890',
+            sessionId: 'existing-session',
             setSessionId: mockSetSessionId,
             selectedClientId: 'client-123',
             setCurrentMessages: mockSetCurrentMessages,
             currentMessages: [],
             chatHistoryReloadTrigger: 0,
-            setChatHistoryReloadTrigger: jest.fn(),
-            setSelectedClient: jest.fn(),
-            startNewChatSession: jest.fn(),
-            viewChatHistory: jest.fn(),
+            setChatHistoryReloadTrigger: mockSetChatHistoryReloadTrigger,
         });
 
-        const { getByRole, rerender } = render(
-            <ChatInput opsUserData={mockOpsUserData} />
+        const { getByRole } = render(
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
         );
-        const input = getByRole('textbox');
-        const sendButton = getByRole('button', { name: /send/i });
-
-        fireEvent.change(input, { target: { value: mockMessage } });
-        fireEvent.click(sendButton);
+        fireEvent.change(getByRole('textbox'), {
+            target: { value: mockMessage },
+        });
+        fireEvent.keyDown(getByRole('textbox'), {
+            key: 'Enter',
+            code: 'Enter',
+            charCode: 13,
+        });
 
         await waitFor(() => {
-            expect(getChatbotResponse).toHaveBeenCalledTimes(1);
+            expect(mockSendMessage).toHaveBeenCalledWith(
+                'existing-session',
+                mockMessage
+            );
         });
+    });
 
+    it('retries the last message when retry button is clicked', async () => {
+        const mockErrorMsg = 'chat.errorMsg';
+        const mockSetCurrentMessagesLocal = jest.fn();
+
+        // Set initial context with a bot error message
         mockUseKnowledgeBaseContext.mockReturnValue({
             sessionId: '1234567890',
             setSessionId: mockSetSessionId,
             selectedClientId: 'client-123',
-            setCurrentMessages: mockSetCurrentMessages,
+            setCurrentMessages: mockSetCurrentMessagesLocal,
             currentMessages: [
                 {
-                    id: 'new_user',
+                    id: 'user_msg_1',
                     role: MessageRole.User,
                     content: mockMessage,
                 },
                 {
                     id: BOT_ERROR_MESSAGE_ID,
                     role: MessageRole.Bot,
-                    content: 'chat.errorMsg',
+                    content: mockErrorMsg,
                 },
             ],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: jest.fn(),
-            setSelectedClient: jest.fn(),
-            startNewChatSession: jest.fn(),
-            viewChatHistory: jest.fn(),
         });
 
-        rerender(<ChatInput opsUserData={mockOpsUserData} />);
+        // Render the component
+        const { getByRole } = render(
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
+        );
 
-        const retryButton = getByRole('button', { name: /retry/i });
+        const input = getByRole('textbox');
+        const retryButton = getByRole('button', { name: /retry-button/i });
+
+        // Simulate typing message (this sets lastMessage.current inside handleMessageSend)
+        fireEvent.change(input, { target: { value: mockMessage } });
+        fireEvent.click(getByRole('button', { name: /send-button/i }));
+
+        // click retry
         fireEvent.click(retryButton);
 
         await waitFor(() => {
-            expect(mockSetCurrentMessages).toHaveBeenCalledWith(
-                expect.any(Function)
+            // lastMessage.current should be resent
+            expect(mockSendMessage).toHaveBeenCalledWith(
+                '1234567890',
+                mockMessage
             );
 
-            expect(getChatbotResponse).toHaveBeenCalledWith(
-                '1234567890',
-                mockMessage,
-                'client-123',
-                expect.any(AbortSignal)
+            // The current messages should have been sliced before retry
+            expect(mockSetCurrentMessagesLocal).toHaveBeenCalled();
+        });
+    });
+
+    it('logs error when createNewChatSession fails', async () => {
+        const testError = new Error('Network failure');
+        (createNewChatSession as jest.Mock).mockRejectedValue(testError);
+
+        const { getByRole } = render(
+            <ChatInput
+                opsUserData={mockOpsUserData}
+                setIsCompleted={jest.fn()}
+            />
+        );
+        fireEvent.change(getByRole('textbox'), {
+            target: { value: mockMessage },
+        });
+        fireEvent.click(getByRole('button', { name: /send-button/i }));
+
+        await waitFor(() => {
+            expect(mockBrowserLogError).toHaveBeenCalledWith(
+                'Error sending message::',
+                { error: testError }
             );
-            expect(getChatbotResponse).toHaveBeenCalledTimes(2);
         });
     });
 });

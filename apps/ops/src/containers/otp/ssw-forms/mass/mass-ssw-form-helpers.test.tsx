@@ -204,6 +204,36 @@ describe('Mass SSW form config', () => {
                     paymentMailType: { text: null },
                 });
             });
+
+            it('should generate a correct payload for an dtcc selection', () => {
+                const dtccOption = disbursementOptions.find(
+                    (option) => option.value === PaymentMethod.DTCC
+                );
+                expect(
+                    dtccOption?.generatePayloadFromSelection(bankingDetails)
+                ).toEqual({
+                    thisIsMocked: true,
+                    paymentMethod: { text: PaymentMethod.DTCC },
+                    participantId: {
+                        text: bankingDetails?.participantId ?? '',
+                    },
+                    payee: {
+                        name: { text: bankingDetails?.payeeName ?? null },
+                        addresses: [],
+                        contractNumber: { text: null },
+                    },
+                    bank: [
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            accountNumber: '',
+                            accountType: {
+                                text: '',
+                            },
+                            bankName: '',
+                        },
+                    ],
+                });
+            });
         });
     });
 

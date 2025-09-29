@@ -353,7 +353,6 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         )
                             .split('')
                             .join(' ')}`}
-                        tabIndex={0}
                     />
                 </div>
             </TableCell>

@@ -4,6 +4,7 @@ import { IconType, Label } from '@zinnia/bloom/components';
 import { FieldData } from '@/components/field-data/FieldData';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { ManageChange } from '@/types/carrier-config';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
 
 import styles from './PersonData.module.css';
@@ -28,8 +29,9 @@ const PhoneNumberInternal = (phone: Phone) => {
 };
 
 export const Phones = async ({ phones, title }: PhoneProps) => {
-  const carrierConfig = await getCarrierConfig();
-  const phoneConfig = carrierConfig.policyProfile.phoneNumber;
+  const commonLoggingContext = await buildCommonLogContext();
+  const { data } = await getCarrierConfig(commonLoggingContext);
+  const phoneConfig = data?.policyProfile.phoneNumber;
 
   if (
     !phones ||

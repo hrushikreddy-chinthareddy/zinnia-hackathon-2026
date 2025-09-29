@@ -32,6 +32,8 @@ type SteppedWorkflowContextType = {
   };
   primaryButtonDisabled: boolean;
   setPrimaryButtonDisabled: Dispatch<SetStateAction<boolean>>;
+  primaryButtonLoading: boolean;
+  setPrimaryButtonLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export const SteppedWorkflowContext = createContext<SteppedWorkflowContextType>(

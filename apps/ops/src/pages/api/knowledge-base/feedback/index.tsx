@@ -1,5 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, HttpStatusCode } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -19,7 +19,13 @@ export default withAuthAndLogging(
         loggingContext
     ) => {
         const accessToken = (await getAccessToken(req, res)).accessToken;
-        const { email, messageId, feedbackType, comment = '' } = req.body;
+        const {
+            email,
+            messageId,
+            feedbackType,
+            comment = '',
+            dislikeReason = null,
+        } = req.body;
 
         if (!email || !messageId || !feedbackType) {
             logError(
@@ -27,7 +33,7 @@ export default withAuthAndLogging(
                 loggingContext
             );
             return res
-                .status(400)
+                .status(HttpStatusCode.BadRequest)
                 .json({ error: 'missing email, messageId or feedbackType' });
         }
 
@@ -45,6 +51,7 @@ export default withAuthAndLogging(
                     email,
                     feedbackType,
                     comment,
+                    dislikeReason,
                 },
                 {
                     headers: {
@@ -62,7 +69,9 @@ export default withAuthAndLogging(
                 ...parseErrorInformation(error),
                 ...loggingContext,
             });
-            res.status(error?.status ?? 500).json(error?.data ?? null);
+            res.status(
+                error?.status ?? HttpStatusCode.InternalServerError
+            ).json(error?.data ?? null);
         }
     },
     {

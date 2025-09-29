@@ -12,6 +12,7 @@ import PageLoader, {
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 
@@ -51,19 +52,31 @@ const ContentContainer = ({
         tooltipPlacements,
         variant,
     } = globalValuesData;
-    const { partyRoles, policyNumber, product } = policy;
+    const { policyNumber, product } = policy;
     const { planCode } = product ?? {};
-    const { partyId: ownerID } =
-        partyRoles?.find((pr) => pr.partyRole === PartyRole.OWNER) ?? {};
-    const owner = policy?.parties?.find((party) => party.partyId === ownerID);
     const jointOwnerId = policy?.partyRoles?.find(
         (pr) => pr.partyRole === PartyRole.JOINTOWNER
     )?.partyId;
     const jointOwner = policy?.parties?.find(
         (party) => party.partyId === jointOwnerId
     );
-
     const policyDetails = new PolicyDetails(policy);
+    const { parties } = policyDetails;
+    const getPartiesWithRole = (role: PartyRole) =>
+        parties.getPartiesWithRole(role);
+
+    const getOwner = () => {
+        const owners = getPartiesWithRole(PartyRole.OWNER);
+        const activeOwner = owners.find((o) =>
+            o.partyRoles.some(
+                (pr) =>
+                    pr.partyRole === PartyRole.OWNER && !isEndDated(pr.endDate)
+            )
+        );
+
+        return (activeOwner ?? owners[0])?.party;
+    };
+    const owner = getOwner();
     const {
         partyId: userPartyId,
         sessionId,

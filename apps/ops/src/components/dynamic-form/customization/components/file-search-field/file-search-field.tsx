@@ -15,6 +15,7 @@ import ClickContainer from '@deps/components/click-container/click-container';
 import inputStyles from '@deps/components/search/search-field/search-field.module.css';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ActionTypes } from '@deps/models/case/task';
+import { TaskDocument } from '@deps/models/case/task-instance';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { handleKeyDown } from '@deps/utils/events';
@@ -39,7 +40,10 @@ export const FileSearchField = ({
     } = widgetProps;
     const limit = 25;
     const offset = 0;
-    const [documents, setDocuments] = useState<MetadataSearchResponse[]>([]);
+    const [documents, setDocuments] = useState<MetadataSearchResponse[]>(
+        attachments || []
+    );
+
     const [filteredDocuments, setFilteredDocuments] = useState<
         MetadataSearchResponse[]
     >([]);
@@ -54,6 +58,13 @@ export const FileSearchField = ({
     const extractedCaseId = caseKey
         ? replacePlaceholders(caseKey, formContext?.customData)
         : '';
+
+    useEffect(() => {
+        if (attachments?.length) {
+            setDocuments(attachments);
+            setError(false);
+        }
+    }, [attachments]);
 
     useEffect(() => {
         const fetchApiData = async () => {
@@ -153,12 +164,17 @@ export const FileSearchField = ({
     const handleDocumentSelection = async (
         document: MetadataSearchResponse
     ) => {
+        const displayName =
+            'displayName' in document
+                ? document.displayName
+                : (document as TaskDocument).documentName;
+
         const attachment = {
             documentId: document?.documentId || '',
-            docCategory: document?.documentCategory,
-            documentType: document?.documentType,
-            documentExt: document?.fileType,
-            documentName: document?.displayName || '',
+            docCategory: document?.documentCategory || '',
+            documentType: document?.documentType || '',
+            documentExt: document?.fileType || '',
+            documentName: displayName || '',
         };
 
         const isAlreadySelected = attachments?.some(

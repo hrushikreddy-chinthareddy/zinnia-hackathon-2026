@@ -1,49 +1,38 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { useState } from 'react';
+import { startOfTomorrowLocalIso } from '@xd/utils/dist';
+import { useTranslation } from 'react-i18next';
 
-import {
-    calculateTickInterval,
-    xAxisLabelFormatter,
-} from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
+import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
-import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
-import {
-    defaultDateFormat,
-    useUserRolesFilter,
-} from '@deps/components/dashboard/utils';
-import { FieldSize } from '@deps/components/fields/field';
+import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import SelectComponent from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
-import { tooltipFormatter } from './page-views-tooltip';
 import {
-    generateSeries,
-    PrepareUserViewsCSV,
-    roles,
     startDates,
     TimeframeFilterOptions,
+    toProcessRoleRows,
+    top5ProcessesByVisibleRoles,
+    toGroupedBarSeriesFromRows,
+    PrepareTop5CaseViewsCSV,
+    categoryValueTooltip,
 } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName } from '../utils';
+import { colors, generateCSVFileName, ApiRoles } from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,
 }: {
     title: string;
 }) => {
-    const [role, setRole] = useState('All');
-
-    const rolesToPass = useUserRolesFilter({ role, roles });
-
     const {
         timeframeRadio,
         timerange,
@@ -58,8 +47,12 @@ export const ZinniaLiveCaseViewsByTransaction = ({
     const filter = {
         pageType: ['Cases'],
         dateStart: timerange.from,
-        dateEnd: timerange.to,
-        userRole: rolesToPass,
+        dateEnd: startOfTomorrowLocalIso(timerange.to),
+        userRole: [
+            ApiRoles.Agent,
+            ApiRoles.ZinniaCallCenter,
+            ApiRoles.ZinniaOperations,
+        ],
     };
 
     const {
@@ -72,43 +65,37 @@ export const ZinniaLiveCaseViewsByTransaction = ({
         queryFn: () =>
             getUserViewsCountsQuery(filter, [
                 UserViewsGroupByEnum.PROCESS,
-                UserViewsGroupByEnum.ACTIVITY_DAY,
+                UserViewsGroupByEnum.USER_ROLE,
             ]),
     });
-
-    const series = generateSeries(
-        zinniaLiveCaseViewsByTransactionData?.data,
-        timerange,
-        colors
+    const rows = toProcessRoleRows(
+        zinniaLiveCaseViewsByTransactionData?.data || []
     );
+    const categories = top5ProcessesByVisibleRoles(rows);
 
-    const tickInterval = calculateTickInterval(timerange);
+    const series = toGroupedBarSeriesFromRows(rows, categories, colors);
+
     const chartNotRenderable =
         zinniaLiveCaseViewsByTransactionDataError || !series?.length;
+
+    const { t } = useTranslation();
 
     return (
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h">
             <UsageHeaderLayout
                 title={title}
+                description={String(
+                    t('usage.pageViews.zinniaLiveCaseViews.description') ?? ''
+                )}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
                 csvFileName={generateCSVFileName(
                     'usage.pageViews.zinniaLiveCaseViews.title',
-                    timerange,
-                    role
+                    timerange
                 )}
-                csvFunction={PrepareUserViewsCSV}
+                csvFunction={PrepareTop5CaseViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">
-                <div className="mb-4 md:mb-0 md:w-1/3">
-                    <SelectComponent
-                        label="Role"
-                        options={roles}
-                        size={FieldSize.XS}
-                        name="role-type-dropdown-btn"
-                        onChange={setRole}
-                        value={role}
-                    />
-                </div>
+                <div className="mb-4 md:mb-0 md:w-1/3"></div>
                 <div className="flex items-center gap-4">
                     <TotalCount
                         isDataFetching={
@@ -154,14 +141,14 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                             </Typography>
                         </div>
                     ) : (
-                        <DateTimeLineChart
-                            series={series}
-                            yAxisTitle={'Page Views'}
-                            xAxisTitle={'Date'}
-                            xAxisLabelFormatter={xAxisLabelFormatter}
-                            tickInterval={tickInterval}
-                            tooltipFormatter={tooltipFormatter}
-                            yAxisOpposite={false}
+                        <GroupedColumnsChart
+                            categories={categories}
+                            series={series} // [{ name, data, color }]
+                            xAxisTitle="Case type"
+                            yAxisTitle="Page views"
+                            height={495}
+                            pointWidth={8}
+                            tooltipFormatter={categoryValueTooltip}
                         />
                     )}
                 </div>

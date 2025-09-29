@@ -5,14 +5,16 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { Email } from '@/components/pii/Email';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { ManageChange } from '@/types/carrier-config';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import styles from './PersonData.module.css';
 import { EmailProps } from './types';
 import { Link } from '../link/Link';
 
 export const Emails = async ({ emails, title }: EmailProps) => {
-  const carrierConfig = await getCarrierConfig();
-  const emailConfig = carrierConfig.policyProfile.email;
+  const commonLoggingContext = await buildCommonLogContext();
+  const { data } = await getCarrierConfig(commonLoggingContext);
+  const emailConfig = data?.policyProfile.email;
 
   if (!emails || emails.length === 0) {
     return null;

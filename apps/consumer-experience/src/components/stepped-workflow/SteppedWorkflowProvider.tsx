@@ -45,6 +45,7 @@ export const SteppedWorkflowProvider = ({
   const { planCode, policyNumber } = usePolicyUrlInputs();
   const [currentStepIndex, setCurrentStepIndex] = useState(initialStepIndex);
   const [primaryButtonDisabled, setPrimaryButtonDisabled] = useState(false);
+  const [primaryButtonLoading, setPrimaryButtonLoading] = useState(false);
   let activeStep = steps[currentStepIndex];
 
   if (!activeStep) {
@@ -75,8 +76,10 @@ export const SteppedWorkflowProvider = ({
         steps,
         currentStep: activeStep,
         stepInfo,
-        setPrimaryButtonDisabled,
         primaryButtonDisabled,
+        setPrimaryButtonDisabled,
+        primaryButtonLoading,
+        setPrimaryButtonLoading,
       }}
     >
       {children}

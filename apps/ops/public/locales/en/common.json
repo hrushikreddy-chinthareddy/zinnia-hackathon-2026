@@ -2096,6 +2096,7 @@
                 "mail": "Mailing Address"
             },
             "startNotification": "History",
+            "packets": "Packets",
             "sendTo": "Send to",
             "contactMethod": "Contact Method",
             "scheduledNotification": "Attempt {{followup}} scheduled for {{date}}",
@@ -2188,7 +2189,7 @@
             "pleaseCheck": "Please check one",
             "primaryOwner": "Primary owner",
             "printedName": "Printed name",
-            "renewalPeriodError": "Renewal period is required",
+            "renewalPeriodError": "Total allocation across all funds must equal 100%",
             "selectOption": "Select an option",
             "signPresent": "Signature present",
             "signatureValidation": "Signature Validation",
@@ -6160,6 +6161,10 @@
             "rmdAutopay": "Upcoming RMD Autopay",
             "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
             "cancelAutopay": "Cancel autopay",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "payment"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
             }
@@ -8036,10 +8041,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Zinnia Live Unique Logins by Role"
+                "title": "Zinnia Live Unique Logins",
+                "description": "Shows unique logins for selected user groups only."
             },
             "myPolicyView": {
-                "title": "MyPolicyView Unique Logins"
+                "title": "MyPolicyView Unique Logins",
+                "description": "Shows unique logins for customers only."
             },
             "uniqueUsers": "Unique users",
             "date": "Date",
@@ -8047,10 +8054,12 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Zinnia Live Page Views"
+                "title": "Zinnia Live Page Views",
+                "description": "Shows number of page views for selected user groups only."
             },
             "zinniaLiveCaseViews": {
-                "title": "Zinnia Live Case Views by Transaction"
+                "title": "Zinnia Live Top Case Views",
+                "description": "Shows number of case views for selected user groups only."
             }
         }
     },
@@ -8058,6 +8067,7 @@
         "newClientCase": "+ New client case",
         "clientCasePermissions": "You do not have permission to take this action.",
         "searchBar": {
+            "searchByLabel": "Search By",
             "clientCase": "Client case",
             "agentName": "Agent name",
             "insuredName": "Insured name",
@@ -8123,15 +8133,17 @@
             "coverage": {
                 "title": "Coverage",
                 "faceAmount": "Face amount",
-                "termLength": "Term Length"
+                "termLength": "Level Premium Term Length"
             },
             "premium": {
                 "title": "Premium",
-                "initial": "Initial premium",
-                "target": "Target premium",
-                "mec": "MEC premium",
+                "initial": "Initial annual premium",
+                "initialModal": "Initial modal premium",
+                "target": "Target annual premium",
+                "mec": "MEC annual premium",
                 "initialBase": "Initial base premium",
-                "totalInitial": "Total initial premium"
+                "totalInitial": "Total initial premium",
+                "initialModalPremium": "Initial modal premium"
             },
             "riders": {
                 "title": "Riders",
@@ -8237,7 +8249,36 @@
                 "placeholder": "Your feedback message here...",
                 "positiveFeedbackComment": "Could you clarify what aspects of the feedback you found satisfactory? Your feedback is valuable for improving our service.",
                 "negativeFeedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
-                "validationError": "Please enter your feedback comment"
+                "validationError": "Please enter your feedback comment",
+                "dislikeReasonsHeader": "Please select a reason for disliking the response.",
+                "dislikeReasons": {
+                    "incorrectResponse": "Incorrect response (answer didn’t match question)",
+                    "languageIssue": "Language/style issue (unclear, too complex)/ Incomplete response (answer too short, lacked details)",
+                    "relevantDocumentMissing": "Relevant document missing (bot missed a key reference)",
+                    "infoMissing": "Info missing in documents (guidelines/content gaps)",
+                    "linksLabel": "If you have link(s) to a relevant document, please share here (separated by commas if multiple):"
+                },
+                "opsIntakeFormLink": "Let us create an ops Intake form for you",
+                "opsIntakeForm": {
+                    "heading": "Ops Intake/Feedback form",
+                    "placeholder": "Write something...",
+                    "processName": "Name of Guideline/Step by Step/Process",
+                    "blockOfBusiness": "Block of business affected",
+                    "blockOfBusinessAssistiveText": "Is the request applicable to other blocks of business? If yes, what blocks?",
+                    "processDescription": "Description of the process and transactions impacted",
+                    "reasonForSubmittingRequest": "Describe why are you submitting this request?",
+                    "outcomeExpected": "What is the outcome you are expecting to achieve?",
+                    "smeEmail": "Provide the email of the subject matter expert/contact person on your team, the BA can work with",
+                    "priority": "Priority",
+                    "requestFrequency": "How often is this request done? (daily, weekly, monthly, annually)",
+                    "requestFrequencyAssistiveText": "If you are requesting a manual process to be automated, would like to understand the frequency of that manual process.",
+                    "benefitMetrics": "Any metrics of how this change will benefit Operations",
+                    "benefitMetricsAssistiveText": "Avg process times, Quality audit improvements, or any other metrics that you can think of."
+                },
+                "errors": {
+                    "inValidDomain": "Only Zinnia emails are allowed",
+                    "inValidEmail": "Please enter valid email address"
+                }
             },
             "followUpPlaceholder": "Ask your follow up questions here...",
             "followUpButton": "Ask your follow up questions here"

@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { useAttachments } from '@deps/hooks/useAttachments';
 import { EDSDocumentRequestBody } from '@deps/models/case/document';
 import { ActionTypes } from '@deps/models/case/task';
@@ -79,13 +80,6 @@ function processFile(file: File): Promise<FileInfoType> {
 
 function processFiles(files: FileList) {
     return Promise.all(Array.from(files).map(processFile));
-}
-
-function getFileSubtype(blob: Blob) {
-    if (blob && blob.type && blob.type.includes('/')) {
-        return blob.type.split('/')[1];
-    }
-    return blob.type || '';
 }
 
 export function FilesInfo<

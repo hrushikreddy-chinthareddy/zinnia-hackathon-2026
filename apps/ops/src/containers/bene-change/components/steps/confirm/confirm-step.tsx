@@ -14,6 +14,7 @@ import PageLoader, {
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
@@ -21,13 +22,17 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { addTransaction } from '@deps/queries/api/web-non-financial';
+import {
+    addTransaction,
+    addBeneChangeTransaction,
+} from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import {
     TransactionSuccessfulEvent,
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildReRegRequestBody } from './confirm-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';
@@ -39,6 +44,7 @@ interface ConfirmStepProps {
     clientId: string;
     parentPage: ParentPage;
     leaveTransactionLink: string;
+    isBeneChange?: boolean;
 }
 
 const ConfirmStep = ({
@@ -48,6 +54,7 @@ const ConfirmStep = ({
     clientId,
     leaveTransactionLink,
     parentPage,
+    isBeneChange = false,
 }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.confirm',
@@ -79,6 +86,9 @@ const ConfirmStep = ({
         () => validationResponse?.status === TransactionResponseStatus.Success,
         [validationResponse]
     );
+    const { featureFlags } = useOptimizely();
+    const invokeNewBeneChangeApi =
+        featureFlags[FEATURE_FLAGS.BENE_CHANGE_NEW_API];
 
     const submit = useCallback(async () => {
         let documentResult;
@@ -91,7 +101,7 @@ const ConfirmStep = ({
         ) {
             documentResult = await fetchDocument(
                 formData.businessKey,
-                DocumentType.ReReg,
+                DocumentType.Rereg,
                 clientId.toUpperCase()
             );
             if (!documentResult.success) {
@@ -99,7 +109,7 @@ const ConfirmStep = ({
                     'Beneficiary Change:: No documentNumber from getDocument for',
                     {
                         documentNumber: formData.businessKey,
-                        documentType: DocumentType.ReReg,
+                        documentType: DocumentType.Rereg,
                         clientId,
                     }
                 );
@@ -121,7 +131,10 @@ const ConfirmStep = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = await addTransaction(requestBody);
+        const response =
+            isBeneChange && invokeNewBeneChangeApi
+                ? await addBeneChangeTransaction({ ...requestBody, planCode })
+                : await addTransaction(requestBody);
         if (response.status !== 'ACCEPTED') {
             setSubmitFailed(true);
         } else {

@@ -10,6 +10,9 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
 import { ClientCaseSearchInputs } from '@deps/types/illustrations';
@@ -58,10 +61,6 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
     );
     const [agentLastName, setAgentLastName] = useState(filters.agentLastName);
     const [caseTitle, setCaseTitle] = useState(filters.title);
-    const [limit, setLimit] = useState(filters.limit);
-    const [offset, setOffset] = useState(filters.offset);
-    const [sortBy, setSortBy] = useState(filters.sortBy);
-    const [sortDir, setSortDir] = useState(filters.sortDir);
 
     useEffect(() => {
         setInsuredFirstName(filters.insuredFirstName);
@@ -72,10 +71,6 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
             (lastSearchType) => searchTypeFromFilters(filters) ?? lastSearchType
         );
         setCaseTitle(filters.title);
-        setLimit(filters.limit);
-        setOffset(filters.offset);
-        setSortBy(filters.sortBy);
-        setSortDir(filters.sortDir);
     }, [filters]);
 
     const handleSearch = (e: any) => {
@@ -103,93 +98,35 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
 
     return (
         <form className={clsx(styles.searchForm)}>
-            <div className={clsx(styles.searchParams)}>
-                <Select
-                    id="field-select"
-                    fieldSize={FieldSize.Small}
-                    triggerClassName={clsx(styles.searchType)}
-                    onValueChange={handleSearchTypechange}
-                    value={searchType}
-                    options={[
-                        {
-                            textValue: t('clientCase.searchBar.clientCase'),
-                            value: 'caseTitle',
-                        },
-                        {
-                            textValue: t('clientCase.searchBar.agentName'),
-                            value: 'agentName',
-                        },
-                        {
-                            textValue: t('clientCase.searchBar.insuredName'),
-                            value: 'insuredName',
-                        },
-                    ]}
-                />
-                <div className={clsx(styles.searchInputWithIcon)}>
-                    <Icon
-                        type={IconType.SEARCH}
-                        height={24}
-                        width={24}
-                        className={clsx(styles.searchInputIcon)}
+            <Typography variant={TypographyVariant.FieldLabel}>
+                {t('clientCase.searchBar.searchByLabel')}
+            </Typography>
+            <div className={styles.searchInputs}>
+                <div className={clsx(styles.searchParams)}>
+                    <Select
+                        id="field-select"
+                        fieldSize={FieldSize.Small}
+                        triggerClassName={clsx(styles.searchType)}
+                        contentClassName={styles.searchTypeContent}
+                        onValueChange={handleSearchTypechange}
+                        value={searchType}
+                        options={[
+                            {
+                                textValue: t('clientCase.searchBar.clientCase'),
+                                value: 'caseTitle',
+                            },
+                            {
+                                textValue: t('clientCase.searchBar.agentName'),
+                                value: 'agentName',
+                            },
+                            {
+                                textValue: t(
+                                    'clientCase.searchBar.insuredName'
+                                ),
+                                value: 'insuredName',
+                            },
+                        ]}
                     />
-                    {searchType === 'caseTitle' && (
-                        <FieldData
-                            aria-label={
-                                t(
-                                    'clientCase.searchBar.searchByClientCase'
-                                ) as string
-                            }
-                            fieldSize={FieldSize.Small}
-                            placeholder={
-                                t(
-                                    'clientCase.searchBar.searchByClientCase'
-                                ) as string
-                            }
-                            className={clsx(styles.searchInput)}
-                            value={caseTitle}
-                            onChange={(e) => setCaseTitle(e.target.value)}
-                        />
-                    )}
-                    {searchType === 'insuredName' && (
-                        <FieldData
-                            aria-label={
-                                t('clientCase.searchBar.firstName') as string
-                            }
-                            fieldSize={FieldSize.Small}
-                            placeholder={
-                                t('clientCase.searchBar.firstName') as string
-                            }
-                            className={clsx(
-                                styles.searchInput,
-                                styles.inputOne
-                            )}
-                            value={insuredFirstName}
-                            onChange={(e) =>
-                                setInsuredFirstName(e.target.value)
-                            }
-                        />
-                    )}
-                    {searchType === 'agentName' && (
-                        <FieldData
-                            aria-label={
-                                t('clientCase.searchBar.firstName') as string
-                            }
-                            fieldSize={FieldSize.Small}
-                            placeholder={
-                                t('clientCase.searchBar.firstName') as string
-                            }
-                            className={clsx(
-                                styles.searchInput,
-                                styles.inputOne
-                            )}
-                            value={agentFirstName}
-                            onChange={(e) => setAgentFirstName(e.target.value)}
-                        />
-                    )}
-                </div>
-
-                {(searchType === 'insuredName' ||
-                    searchType === 'agentName') && (
                     <div className={clsx(styles.searchInputWithIcon)}>
                         <Icon
                             type={IconType.SEARCH}
@@ -197,58 +134,142 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
                             width={24}
                             className={clsx(styles.searchInputIcon)}
                         />
-                        {searchType === 'insuredName' && (
+                        {searchType === 'caseTitle' && (
                             <FieldData
                                 aria-label={
-                                    t('clientCase.searchBar.lastName') as string
+                                    t(
+                                        'clientCase.searchBar.searchByClientCase'
+                                    ) as string
                                 }
                                 fieldSize={FieldSize.Small}
                                 placeholder={
-                                    t('clientCase.searchBar.lastName') as string
+                                    t(
+                                        'clientCase.searchBar.searchByClientCase'
+                                    ) as string
+                                }
+                                className={clsx(styles.searchInput)}
+                                value={caseTitle}
+                                onChange={(e) => setCaseTitle(e.target.value)}
+                            />
+                        )}
+                        {searchType === 'insuredName' && (
+                            <FieldData
+                                aria-label={
+                                    t(
+                                        'clientCase.searchBar.firstName'
+                                    ) as string
+                                }
+                                fieldSize={FieldSize.Small}
+                                placeholder={
+                                    t(
+                                        'clientCase.searchBar.firstName'
+                                    ) as string
                                 }
                                 className={clsx(
                                     styles.searchInput,
-                                    styles.inputTwo
+                                    styles.inputOne
                                 )}
-                                value={insuredLastName}
+                                value={insuredFirstName}
                                 onChange={(e) =>
-                                    setInsuredLastName(e.target.value)
+                                    setInsuredFirstName(e.target.value)
                                 }
                             />
                         )}
                         {searchType === 'agentName' && (
                             <FieldData
                                 aria-label={
-                                    t('clientCase.searchBar.lastName') as string
+                                    t(
+                                        'clientCase.searchBar.firstName'
+                                    ) as string
                                 }
                                 fieldSize={FieldSize.Small}
                                 placeholder={
-                                    t('clientCase.searchBar.lastName') as string
+                                    t(
+                                        'clientCase.searchBar.firstName'
+                                    ) as string
                                 }
                                 className={clsx(
                                     styles.searchInput,
-                                    styles.inputTwo
+                                    styles.inputOne
                                 )}
-                                value={agentLastName}
-                                onChange={(e) => {
-                                    setAgentLastName(e.target.value);
-                                }}
+                                value={agentFirstName}
+                                onChange={(e) =>
+                                    setAgentFirstName(e.target.value)
+                                }
                             />
                         )}
                     </div>
-                )}
-            </div>
-            <div className={clsx(styles.searchAction)}>
-                <Button
-                    mode="primary"
-                    data-testid="client-case-search-bar-search-btn"
-                    aria-label={t('ariaLabel.search') as string}
-                    type="submit"
-                    size="small"
-                    onClick={(e) => handleSearch(e)}
-                >
-                    {t('dashboard.search.btnText')}
-                </Button>
+
+                    {(searchType === 'insuredName' ||
+                        searchType === 'agentName') && (
+                        <div className={clsx(styles.searchInputWithIcon)}>
+                            <Icon
+                                type={IconType.SEARCH}
+                                height={24}
+                                width={24}
+                                className={clsx(styles.searchInputIcon)}
+                            />
+                            {searchType === 'insuredName' && (
+                                <FieldData
+                                    aria-label={
+                                        t(
+                                            'clientCase.searchBar.lastName'
+                                        ) as string
+                                    }
+                                    fieldSize={FieldSize.Small}
+                                    placeholder={
+                                        t(
+                                            'clientCase.searchBar.lastName'
+                                        ) as string
+                                    }
+                                    className={clsx(
+                                        styles.searchInput,
+                                        styles.inputTwo
+                                    )}
+                                    value={insuredLastName}
+                                    onChange={(e) =>
+                                        setInsuredLastName(e.target.value)
+                                    }
+                                />
+                            )}
+                            {searchType === 'agentName' && (
+                                <FieldData
+                                    aria-label={
+                                        t(
+                                            'clientCase.searchBar.lastName'
+                                        ) as string
+                                    }
+                                    fieldSize={FieldSize.Small}
+                                    placeholder={
+                                        t(
+                                            'clientCase.searchBar.lastName'
+                                        ) as string
+                                    }
+                                    className={clsx(
+                                        styles.searchInput,
+                                        styles.inputTwo
+                                    )}
+                                    value={agentLastName}
+                                    onChange={(e) => {
+                                        setAgentLastName(e.target.value);
+                                    }}
+                                />
+                            )}
+                        </div>
+                    )}
+                </div>
+                <div className={clsx(styles.searchAction)}>
+                    <Button
+                        mode="primary"
+                        data-testid="client-case-search-bar-search-btn"
+                        aria-label={t('ariaLabel.search') as string}
+                        type="submit"
+                        size="small"
+                        onClick={(e) => handleSearch(e)}
+                    >
+                        {t('dashboard.search.btnText')}
+                    </Button>
+                </div>
             </div>
         </form>
     );

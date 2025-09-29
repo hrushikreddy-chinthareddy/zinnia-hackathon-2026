@@ -1765,6 +1765,103 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'string',
                                     isCustom: true,
                                     defaultValue: 'NONETABLE',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'juvenileSubstandard',
+                                                isEqual: false,
+                                                targetNodeId: 'premium-class',
+                                            },
+                                        ],
+                                    },
+                                },
+                                {
+                                    fieldType: 'dropdown',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Table Rating',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'table-rating',
+                                    outputPath: 'subStandardRating',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '77e9506a-417c-4b6e-8858-e1f56644255e',
+                                    partName:
+                                        'custom-a9e37ed6-bd3b-4abe-8a33-060f514911ec',
+                                    selectOptions: [
+                                        {
+                                            value: 'NONETABLE',
+                                            text: {
+                                                en: 'None',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 2,
+                                        },
+                                        {
+                                            value: 'TABLEA',
+                                            text: {
+                                                en: 'A',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEB',
+                                            text: {
+                                                en: 'B',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLEC',
+                                            text: {
+                                                en: 'C',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                        {
+                                            value: 'TABLED',
+                                            text: {
+                                                en: 'D',
+                                            },
+                                            isCustom: true,
+                                            orderingIndex: 1,
+                                        },
+                                    ],
+                                    validateAs: 'string',
+                                    isCustom: true,
+                                    defaultValue: 'NONETABLE',
+                                    visible: {
+                                        booleanOperator: 'and',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: 'juvenileSubstandard',
+                                                isEqual: true,
+                                                targetNodeId: 'premium-class',
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'money',
@@ -3154,7 +3251,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             value: 'MINIMUM_NON_MEC',
                                             text: {
-                                                en: 'Minimum Non-MEC',
+                                                en: 'Minimum Non-MEC (Max Cash Value)',
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
@@ -3934,6 +4031,7 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'illustrate-1035',
+                                    outputPath: 'illustrate1035',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -3980,49 +4078,6 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     title: {
-                                        en: 'Non-1035 Lump Sum Amount',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'non-1035-lump-sum-amount',
-                                    outputPath: 'non1035LumpSumAmount',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: true,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '7f96885f-59e9-484c-9962-7c84bec5c2be',
-                                    partName:
-                                        'custom-73c4bc3b-2785-4152-bd23-a550f7b334ca',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                    visible: {
-                                        booleanOperator: 'and',
-                                        conditions: [
-                                            {
-                                                type: 'equalityCondition',
-                                                value: 'yes',
-                                                isEqual: true,
-                                                targetNodeId: 'illustrate-1035',
-                                            },
-                                        ],
-                                    },
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
                                         en: 'External 1035 Exchange Amount ',
                                         fr: '',
                                     },
@@ -4032,7 +4087,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -4076,7 +4131,7 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: true,
+                                    optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
@@ -4103,6 +4158,38 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         ],
                                     },
+                                },
+                                {
+                                    fieldType: 'money',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Non-1035 Lump Sum Amount',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'non-1035-lump-sum-amount',
+                                    outputPath: 'non1035LumpSumAmount',
+                                    renderOn: [],
+                                    platforms: [],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '7f96885f-59e9-484c-9962-7c84bec5c2be',
+                                    partName:
+                                        'custom-73c4bc3b-2785-4152-bd23-a550f7b334ca',
+                                    validateAs: 'decimal',
+                                    isCustom: true,
                                 },
                             ],
                             displayAsCard: false,
@@ -5046,6 +5133,30 @@ export const farmersBlueprintIU0101 = {
                                                 fr: '',
                                             },
                                         },
+                                        {
+                                            id: 'c3d143b4-15ae-40dc-8e52-1653fdfde6df',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'mathOperator',
+                                                        value: 0,
+                                                        nodeIds: [
+                                                            'face-amount',
+                                                            'accidental-death-benefit-rider-benefit',
+                                                        ],
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                        mathOperator:
+                                                            'subtract',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: "The Accidental Death Benefit Rider Amount cannot exceed the Farmers Index Universal Life policy's face amount",
+                                                fr: '',
+                                            },
+                                        },
                                     ],
                                 },
                                 {
@@ -5538,6 +5649,8 @@ export const farmersBlueprintIU0101 = {
                                         fr: '',
                                     },
                                     answerNodeId: 'owner-date-of-birth',
+                                    outputPath:
+                                        'riders.ownerWaiverOfDeductionRider.ownerAge',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -6290,7 +6403,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-b252ac5d-d727-495d-b4d4-1a687b466626',
                                     selectOptions: [
                                         {
-                                            value: 'borrow',
+                                            value: 'BORROW',
                                             text: {
                                                 en: 'Borrow',
                                             },
@@ -6298,7 +6411,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'cash',
+                                            value: 'CASH',
                                             text: {
                                                 en: 'Cash',
                                             },
@@ -6308,7 +6421,7 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'string',
                                     referenceLabel: '',
-                                    defaultValue: 'borrow',
+                                    defaultValue: 'BORROW',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [

@@ -1,3 +1,4 @@
+import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
 import {
     AccountType,
     Address,
@@ -72,11 +73,22 @@ export const getPartyFullName = (partyInfo: Party | undefined): string => {
 };
 
 export const getHeaderText = (
-    partyInfo: Party | undefined
+    partyInfo:
+        | (Party & {
+              producerName?: string;
+              producerType?: string;
+          })
+        | undefined
 ): string | JSX.Element => {
-    const { partyType } = partyInfo || {};
+    const { partyType, producerType, producerName } = partyInfo || {};
     switch (partyType) {
         case PartyType.INDIVIDUAL:
+            if (
+                producerType === POM_Models_ProducerType.CORPORATION &&
+                producerName
+            ) {
+                return <PiiWrapper>{toTitleCase(producerName)}</PiiWrapper>;
+            }
             if (!partyInfo?.firstName && !!partyInfo?.fullName) {
                 return (
                     <PiiWrapper>{toTitleCase(partyInfo?.fullName)}</PiiWrapper>

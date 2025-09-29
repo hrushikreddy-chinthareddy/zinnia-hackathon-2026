@@ -24,7 +24,9 @@ import {
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
-    DocumentType as ExcludeDocumentTypes,
+    excludeDocumentTypes,
+    includeDocumentTypesInbound,
+    includeDocumentTypeForInboundSearch,
 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
@@ -105,22 +107,33 @@ const NormalDocs = ({
 
             optionalParams = { documentEndDate, documentStartDate };
         }
-        return {
+
+        const documentClassification =
+            documentType === DocumentTypeView.Policy
+                ? SearchRequest.documentClassification.INBOUND
+                : SearchRequest.documentClassification.OUTBOUND;
+
+        const params: SearchRequest = {
             ...optionalParams,
-            documentClassification:
-                documentType === DocumentTypeView.Policy
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+            documentClassification,
             policyNumber: policy.policyNumber,
             planCode: policy?.product?.planCode,
             parentCarrierCode: policy?.carrierId,
             orderBy: 'documentDate',
             orderByDirection: SearchRequest.orderByDirection.DESC,
-            excludeDocumentTypes: [
-                ExcludeDocumentTypes.CallLogs,
-                ExcludeDocumentTypes.Spif,
-            ],
+            // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
+            excludeDocumentTypes,
         };
+
+        if (
+            documentClassification ===
+                SearchRequest.documentClassification.INBOUND &&
+            includeDocumentTypeForInboundSearch(policy?.carrierId)
+        ) {
+            params.documentType = includeDocumentTypesInbound.join(',');
+        }
+
+        return params;
     }, [documentType, policy, isFirstYearSelected, yearSelection]);
 
     const goToPage = useCallback(

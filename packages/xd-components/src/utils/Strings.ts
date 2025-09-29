@@ -93,3 +93,21 @@ export const indefiniteArticle = (word?: string): string => {
 
   return word[0]?.match(/[aeiou]/i) ? 'an' : 'a';
 };
+
+/**
+ * Creates a query string from a variety of input types.
+ *
+ * @param {string | string[][] | Record<string, string> | URLSearchParams | undefined} obj -
+ *   The input object to convert to a query string
+ * @returns {string} The query string
+ */
+export const toQuerySearchParams = (
+  obj:
+    | string
+    | string[][]
+    | Record<string, string>
+    | URLSearchParams
+    | undefined
+) => {
+  return new URLSearchParams(obj).toString();
+};

@@ -151,6 +151,10 @@ interface IndexUniversalLifeScenario extends BaseScenario {
     annualTimeSeriesData: SingleYearValuesIUL[];
     coverages: IndexedUniversalLifeCoverages;
     initial: {
+        guidelineLevelPremium: number;
+        minimumPremiumAmount: number;
+        modifiedEndowmentPremium: number;
+        targetPremiumAmount: number;
         totalFaceAmount: number;
         totalPremium: number;
         accountValue: number;
