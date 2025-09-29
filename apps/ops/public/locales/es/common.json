@@ -3339,6 +3339,7 @@
             "reducedPaidUpFaceAmount": "Este es el monto reducido del beneficio por fallecimiento que resulta si el propietario elige la opción de pago reducido (RPU)."
         },
         "allFields": {
+            "emptySearch": "No se encontraron coincidencias",
             "policyBasics": "Básicos de {{policyNomenclature}}",
             "effectiveDate": "Fecha de vigencia",
             "carrierId": "ID del transportista",

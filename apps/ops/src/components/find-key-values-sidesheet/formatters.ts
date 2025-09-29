@@ -18,6 +18,7 @@ import {
     NestedData,
     DataField,
     NestedDataTuple,
+    toolTip,
 } from './types';
 
 /**
@@ -281,6 +282,16 @@ export const formatDataField = (
     if (fieldLinkedField === key) {
         dataTuple[link] = fieldLink;
     }
+
+    dataTuple[toolTip] =
+        t(`policy.toolTips.${key}`, {
+            defaultValue: null,
+            policyNomenclature:
+                lineOfBusiness === LineOfBusiness.LIFE
+                    ? t('policy.nomenclature.policy')
+                    : t('policy.nomenclature.contract'),
+        }) ?? undefined;
+
     return dataTuple;
 };
 

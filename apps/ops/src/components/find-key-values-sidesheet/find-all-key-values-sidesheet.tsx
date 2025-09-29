@@ -14,6 +14,7 @@ import {
     Link,
     Popover,
     PopoverPlacement,
+    Label,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
@@ -25,7 +26,7 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
-import styles from './find-key-values-sidesheet.module.css';
+import styles from './find-all-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
 import {
     NestedData,
@@ -38,6 +39,7 @@ import {
     Collapse,
     ExpandCollapse,
     Expand,
+    toolTip,
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -247,6 +249,7 @@ const KeyValueFieldList = ({
                             dataField={[key, String(data)]}
                             searchValue={searchValue}
                             link={(field as MetaData)?.[link]}
+                            toolTip={(field as MetaData)?.[toolTip]}
                         />
                     );
                 }
@@ -350,7 +353,7 @@ const DataField = ({
                     <Highlighter text={fieldLabel} highlights={[searchValue]} />
                     {toolTip && (
                         <Popover
-                            title={toolTip}
+                            title={fieldLabel}
                             trigger={
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
@@ -361,8 +364,7 @@ const DataField = ({
                             placement={PopoverPlacement.TopLeft}
                         >
                             <div className="typography-content-body-sm">
-                                uhm? Now, what is the deal here? lots of text
-                                maybe?
+                                {toolTip}
                             </div>
                         </Popover>
                     )}
@@ -545,40 +547,56 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                     loading={fieldError || isFetching || isError}
                 >
                     <div className={styles.container}>
-                        <div>
+                        <div className={styles.treeControl}>
                             <Button
                                 mode="link"
                                 size="small"
                                 onClick={() =>
                                     setTreeState((treeState) => !treeState)
                                 }
+                                className={styles.treeControlButton}
                             >
                                 <Icon
-                                    type={IconType.CHEVRON_RIGHT}
-                                    small={true}
+                                    type={IconType.CHEVRON_DOUBLE}
+                                    width={18}
+                                    height={18}
+                                    className={styles.treeControlIcon}
                                 />
                                 {treeState === Expand
                                     ? 'Collapse all'
                                     : 'Expand all'}
                             </Button>
                         </div>
-                        {policyBasics && (
+                        {policyBasics ? (
                             <KeyValueBasics
                                 preparedPolicy={preparedPolicy}
                                 policyBasics={policyBasics as NestedData[]}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />
-                        )}
+                        ) : null}
 
-                        {policySections && (
+                        {policySections?.length ? (
                             <KeyValueSections
                                 preparedPolicy={preparedPolicy}
                                 policySections={policySections}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />
-                        )}
+                        ) : null}
+
+                        {!policyBasics && !policySections?.length ? (
+                            <div className={styles.emptySearch}>
+                                <Label>
+                                    <Icon
+                                        type={IconType.CIRCLE_INFO}
+                                        small={true}
+                                        className={styles.infoIcon}
+                                    />
+                                    {t('policy.allFields.emptySearch')}
+                                </Label>
+                            </div>
+                        ) : null}
                     </div>
                 </BlurOverlayLoader>
             </div>

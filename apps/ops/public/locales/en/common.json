@@ -3339,6 +3339,7 @@
             "reducedPaidUpFaceAmount": "This is the reduced death benefit amount that results if the owner elects the reduced paid-up (RPU) option."
         },
         "allFields": {
+            "emptySearch": "No matches found",
             "policyBasics": "{{policyNomenclature, capitalize}} basics",
             "effectiveDate": "Effective date",
             "carrierId": "Carrier ID",
