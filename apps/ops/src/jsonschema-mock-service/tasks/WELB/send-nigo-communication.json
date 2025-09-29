@@ -14,7 +14,7 @@
                 "title": "Post Issue NIGO Review",
                 "formSchema": {
                     "type": "object",
-                    
+
                     "dependencies": {
                         "process": {
                             "if": {
