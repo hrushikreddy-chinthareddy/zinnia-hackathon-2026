@@ -57,6 +57,9 @@
   .item .sectionLabel {
     font: var(--typography-labels-label-md);
   }
+  .item .trigger {
+    margin-top: 0;
+  }
 }
 
 .item.nested {
