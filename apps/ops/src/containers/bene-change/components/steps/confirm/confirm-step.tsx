@@ -101,7 +101,7 @@ const ConfirmStep = ({
         ) {
             documentResult = await fetchDocument(
                 formData.businessKey,
-                DocumentType.Rereg,
+                DocumentType.ReReg,
                 clientId.toUpperCase()
             );
             if (!documentResult.success) {
@@ -109,7 +109,7 @@ const ConfirmStep = ({
                     'Beneficiary Change:: No documentNumber from getDocument for',
                     {
                         documentNumber: formData.businessKey,
-                        documentType: DocumentType.Rereg,
+                        documentType: DocumentType.ReReg,
                         clientId,
                     }
                 );
