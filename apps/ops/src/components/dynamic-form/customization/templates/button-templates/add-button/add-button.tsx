@@ -12,7 +12,7 @@ export default function AddButton<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
->({ uiSchema, registry, ...props }: IconButtonProps) {
+>({ uiSchema, registry, ...props }: Omit<IconButtonProps, 'iconType'>) {
     const { translateString } = registry;
     const { title, defaultItemLabel } = getUiOptions(uiSchema?.items);
 

@@ -13,11 +13,18 @@ import {
     FieldSize as BloomFieldSize,
     Link,
     Popover,
-    PopoverPlacement,
     Label,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
+import {
+    ChangeEvent,
+    FC,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -346,13 +353,22 @@ const DataField = ({
     searchValue: string;
 }) => {
     const [fieldLabel, fieldData] = dataField;
+    const [popoverContainer, setPopoverContainer] =
+        useState<HTMLDivElement | null>(null);
+    const setPopoverContainerRef = useCallback(
+        (node: SetStateAction<HTMLDivElement | null>) => {
+            setPopoverContainer(node);
+        },
+        []
+    );
     return (
         <DotContainer
             dotLeftSide={
-                <div className={styles.fieldLabel}>
+                <div ref={setPopoverContainerRef} className={styles.fieldLabel}>
                     <Highlighter text={fieldLabel} highlights={[searchValue]} />
                     {toolTip && (
                         <Popover
+                            container={popoverContainer}
                             title={fieldLabel}
                             trigger={
                                 <Icon
@@ -362,7 +378,6 @@ const DataField = ({
                                     className={styles.toolTipIcon}
                                 />
                             }
-                            placement={PopoverPlacement.TopLeft}
                         >
                             <div className="typography-content-body-sm">
                                 {toolTip}
