@@ -2189,7 +2189,7 @@
             "pleaseCheck": "Please check one",
             "primaryOwner": "Primary owner",
             "printedName": "Printed name",
-            "renewalPeriodError": "Renewal period is required",
+            "renewalPeriodError": "Total allocation across all funds must equal 100%",
             "selectOption": "Select an option",
             "signPresent": "Signature present",
             "signatureValidation": "Signature Validation",
@@ -8223,7 +8223,7 @@
                 "negativeFeedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
                 "validationError": "Please enter your feedback comment",
                 "dislikeReasonsHeader": "Please select a reason for disliking the response.",
-                "dislikeReasons":{
+                "dislikeReasons": {
                     "incorrectResponse": "Incorrect response (answer didn’t match question)",
                     "languageIssue": "Language/style issue (unclear, too complex)/ Incomplete response (answer too short, lacked details)",
                     "relevantDocumentMissing": "Relevant document missing (bot missed a key reference)",
@@ -8244,8 +8244,8 @@
                     "priority": "Priority",
                     "requestFrequency": "How often is this request done? (daily, weekly, monthly, annually)",
                     "requestFrequencyAssistiveText": "If you are requesting a manual process to be automated, would like to understand the frequency of that manual process.",
-                    "benefitMetrics":"Any metrics of how this change will benefit Operations",
-                    "benefitMetricsAssistiveText":"Avg process times, Quality audit improvements, or any other metrics that you can think of."
+                    "benefitMetrics": "Any metrics of how this change will benefit Operations",
+                    "benefitMetricsAssistiveText": "Avg process times, Quality audit improvements, or any other metrics that you can think of."
                 },
                 "errors": {
                     "inValidDomain": "Only Zinnia emails are allowed",

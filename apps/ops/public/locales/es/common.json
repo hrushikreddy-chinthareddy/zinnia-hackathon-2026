@@ -2192,7 +2192,7 @@
             "pleaseCheck": "Por favor marque uno",
             "primaryOwner": "Propietario principal",
             "printedName": "Nombre impreso",
-            "renewalPeriodError": "Se requiere el periodo de renovación",
+            "renewalPeriodError": "La asignación total entre todos los fondos debe ser igual al 100%",
             "selectOption": "Seleccione una opción",
             "signPresent": "Firma presente",
             "signatureValidation": "Validación de Firma",

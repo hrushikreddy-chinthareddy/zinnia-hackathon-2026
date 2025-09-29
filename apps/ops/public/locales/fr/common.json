@@ -2188,7 +2188,7 @@
             "pleaseCheck": "Veuillez en cocher une",
             "primaryOwner": "Propriétaire principal",
             "printedName": "Nom imprimé",
-            "renewalPeriodError": "Une période de renouvellement est requise",
+            "renewalPeriodError": "L’allocation totale entre tous les fonds doit être égale à 100 %",
             "selectOption": "Choisir une option",
             "signPresent": "Signature présente",
             "signatureValidation": "Validation des signatures",
@@ -8140,7 +8140,7 @@
                 },
                 "errors": {
                     "inValidDomain": "Seuls les e-mails de Zinnia sont autorisés",
-                    "inValidEmail":"Veuillez saisir une adresse e-mail valide"
+                    "inValidEmail": "Veuillez saisir une adresse e-mail valide"
                 }
             },
             "followUpPlaceholder": "Posez vos questions complémentaires ici...",
