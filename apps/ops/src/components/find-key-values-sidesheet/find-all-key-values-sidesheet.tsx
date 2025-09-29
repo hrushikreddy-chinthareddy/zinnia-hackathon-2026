@@ -16,15 +16,7 @@ import {
     Label,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import {
-    ChangeEvent,
-    FC,
-    SetStateAction,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from 'react';
+import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -355,16 +347,11 @@ const DataField = ({
     const [fieldLabel, fieldData] = dataField;
     const [popoverContainer, setPopoverContainer] =
         useState<HTMLDivElement | null>(null);
-    const setPopoverContainerRef = useCallback(
-        (node: SetStateAction<HTMLDivElement | null>) => {
-            setPopoverContainer(node);
-        },
-        []
-    );
+
     return (
         <DotContainer
             dotLeftSide={
-                <div ref={setPopoverContainerRef} className={styles.fieldLabel}>
+                <div ref={setPopoverContainer} className={styles.fieldLabel}>
                     <Highlighter text={fieldLabel} highlights={[searchValue]} />
                     {toolTip && (
                         <Popover
