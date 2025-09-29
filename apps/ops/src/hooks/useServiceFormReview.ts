@@ -18,8 +18,6 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import {
     TaskType,
@@ -212,8 +210,6 @@ export function useServiceFormReview({
         let successfulCaseUpdate;
 
         if (
-            TaskApiVersionMapper[formState.initialForm.taskType] ===
-                ApiVersion.v2 &&
             formState.initialForm.status !== TaskStatus.Completed &&
             !isRenewals
         ) {

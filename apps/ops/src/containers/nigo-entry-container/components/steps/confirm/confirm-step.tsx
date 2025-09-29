@@ -16,8 +16,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { buildFormV2 } from '@deps/containers/otp/withdrawal-forms/utils/withdrawal-form-helpers';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
@@ -57,11 +55,7 @@ const ConfirmStep = ({ document }: ConfirmStepProps) => {
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        if (
-            TaskApiVersionMapper[formState.initialForm.taskType] ===
-                ApiVersion.v2 &&
-            formState.initialForm.status !== TaskStatus.Completed
-        ) {
+        if (formState.initialForm.status !== TaskStatus.Completed) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
