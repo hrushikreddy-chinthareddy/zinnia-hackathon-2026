@@ -359,6 +359,7 @@ const DataField = ({
                                     type={IconType.CIRCLE_INFO}
                                     color="var(--color-base-icon-icon-tooltip)"
                                     small
+                                    className={styles.toolTipIcon}
                                 />
                             }
                             placement={PopoverPlacement.TopLeft}

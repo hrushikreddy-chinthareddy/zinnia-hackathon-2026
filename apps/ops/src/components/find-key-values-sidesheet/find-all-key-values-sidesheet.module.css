@@ -33,8 +33,11 @@
 
 .fieldLabel {
     display: flex;
-    gap: var(--measure-dimension-padding-sm);
     color: var(--color-base-text-text-secondary);
+
+    .toolTipIcon {
+        margin-left: var(--measure-dimension-padding-xs);
+    }
 }
 
 .toolTip {
