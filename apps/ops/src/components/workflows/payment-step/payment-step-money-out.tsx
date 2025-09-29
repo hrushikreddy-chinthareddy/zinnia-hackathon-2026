@@ -17,6 +17,7 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { CarrierCode } from '@deps/constants/policy';
 import AddressDataCard from '@deps/containers/small-data-card/address-data/address-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -40,6 +41,7 @@ const PaymentStepMoneyOut = ({
     const [formError, setFormError] = useState(false);
 
     const { policyNumber, product, systematicPrograms } = policy;
+    const customFarmerCheck = policy.carrierId === CarrierCode.Farmers;
 
     const {
         paymentBankId,
@@ -203,6 +205,16 @@ const PaymentStepMoneyOut = ({
     };
 
     const paymentMethodOptions = useMemo(() => {
+        // TODO: remove this check once https://zinnia.atlassian.net/browse/DEPU-6754 is fixed
+        if (customFarmerCheck) {
+            return [
+                {
+                    ariaLabel: t('workflows.paymentStep.paymentMethod.check'),
+                    label: t('workflows.paymentStep.paymentMethod.check'),
+                    value: PaymentForm.CHECK,
+                },
+            ];
+        }
         return [
             {
                 ariaLabel: t('workflows.paymentStep.paymentMethod.ach'),
