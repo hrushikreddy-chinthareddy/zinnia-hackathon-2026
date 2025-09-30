@@ -22,6 +22,7 @@ import { SourceType } from '@deps/constants/policy';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
+import { useFreelookCancellation } from '@deps/hooks/useFreelookCancellation';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { getCases } from '@deps/queries/api/cases';
@@ -83,6 +84,29 @@ const StartStep = ({
     const router = useRouter();
     const { taskId } = router.query;
     const [task, setTask] = useState<ManagementTask | null>(null);
+    const { data: freelookCancellation } = useFreelookCancellation(
+        policy?.product?.planCode,
+        policy.policyNumber
+    );
+
+    useEffect(() => {
+        if (
+            !freelookCancellation?.isEligibleFreelookCancellation &&
+            title === (t('cancelFreeLook.start.title') as string)
+        ) {
+            router.push(
+                `/policies/${policy?.product?.planCode}/${policyNumber}/policy/policy-details`
+            );
+        }
+    }, [
+        freelookCancellation,
+        policy?.product?.planCode,
+        policy.policyNumber,
+        policyNumber,
+        router,
+        title,
+        t,
+    ]);
 
     useEffect(() => {
         const getTaskData = async () => {

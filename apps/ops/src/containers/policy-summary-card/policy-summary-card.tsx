@@ -136,6 +136,7 @@ import { deathClaimApplicableStatuses } from './policy-summary-card.helpers';
 import { default as styles } from './policy-summary-card.module.css';
 import { QuickViewRoot } from './quick-view-root/quick-view-root';
 import { TermQuickView } from './term-quick-view';
+import { useFreelookCancellation } from '../../hooks/useFreelookCancellation';
 import SideSheetAddress from '../people-data-cards/address-card/side-sheet/side-sheet-address';
 import { sortEmailsByType } from '../people-data-cards/email-card/email-card.helpers';
 import SideSheetEmail from '../people-data-cards/email-card/side-sheet/side-sheet-email';
@@ -376,6 +377,10 @@ export const StatusBanner = ({
         featureFlags
     );
     const showCaseBanner = !!casesTotal && casesTotal > 0;
+    const { data: freelookCancellation } = useFreelookCancellation(
+        policy.planCode,
+        policy.policyNumber
+    );
 
     // TODO - BPB: Policy Features Helper Class
     const reinstatementWithApproval = policy.policy.policyFeatures?.find(
@@ -538,6 +543,7 @@ export const StatusBanner = ({
                 )}
 
             {freeLookEnabled &&
+                freelookCancellation?.isEligibleFreelookCancellation &&
                 policy.freeLookPeriodDetails.isInFreeLookPeriod && (
                     <BannerAlert
                         variant={BannerVariant.Warning}

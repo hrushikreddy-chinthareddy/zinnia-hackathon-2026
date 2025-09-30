@@ -9,6 +9,7 @@ import {
     checkEligibilityFullSurrender,
     checkEligibilityManageRole,
     checkEligibilityManageBankChange,
+    checkEligibilityFreelookCancellation,
 } from '@deps/queries/api/bpm';
 import {
     checkEligibilityAddressChange,
@@ -147,4 +148,11 @@ export const checkManageBankChangeEligibilityQuery = async (
     policyNumber: string | undefined
 ) => {
     return await checkEligibilityManageBankChange(planCode, policyNumber);
+};
+
+export const checkFreelookCancellation = async (
+    planCode: string,
+    policyNumber: string
+) => {
+    return await checkEligibilityFreelookCancellation(planCode, policyNumber);
 };
