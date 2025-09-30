@@ -39,6 +39,7 @@ export enum TaskType {
     Agent_Onboarding_Review = 'AGENT_ONBOARDING_REVIEW',
     ReturnPayment = 'NB_PAYMENT_CANCEL',
     Send_Nigo_Communication = 'SEND_NIGO_COMMUNICATION',
+    Existing_Name_Change_Detail = 'EXISTING_NAME_CHANGE_DETAIL',
     Initiate_Postissue_Transaction = 'INITIATE_POSTISSUE_TRANSACTION',
     TOA_Review = 'NB_TOA_REVIEW',
     Prenote_Review = 'NB_PRENOTE_REVIEW',

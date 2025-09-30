@@ -7575,10 +7575,19 @@
             "submitTask": "Soumettre"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : la révision du changement de nom a été soumise.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "claimsIdentifyUncashedTransactions": {
         "confirmStep": {
             "title": "J'ai compris!",
-            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
+            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
             "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"

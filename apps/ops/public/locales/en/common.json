@@ -7684,6 +7684,15 @@
             "submitTask": "Submit"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Name Change Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "Got It!",

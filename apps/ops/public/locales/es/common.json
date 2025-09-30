@@ -7532,6 +7532,15 @@
             "submitTask": "Enviar"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: La revisión del cambio de nombre ha sido enviada.",
+            "cta": "Ir al Caso",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "¡Entendido!",

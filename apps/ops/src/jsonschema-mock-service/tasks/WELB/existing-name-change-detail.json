@@ -1,7 +1,8 @@
 {
     "formId": "12a36451-02b1-4c7b-a399-8cd40e564203",
     "process": "Policy Update",
-    "taskType": "INITIATE_POSTISSUE_TRANSACTION",
+    "carrier": "WELB",
+    "taskType": "EXISTING_NAME_CHANGE_DETAIL",
     "formSchema": {
         "type": "object"
     },
@@ -148,77 +149,11 @@
                                     }
                                 },
                                 "else": {
-                                    "if": {
-                                        "properties": {
-                                            "process": {
-                                                "enum": [
-                                                    "Withdrawal",
-                                                    "Full Surrender"
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "then": {
-                                        "properties": {
-                                            "dataEntryForm": {
-                                                "type": "string",
-                                                "title": "Open Form for Data Entry",
-                                                "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/withdrawals/new-withdrawal?correlationId={{customData.correlationId}}&taskId={{customData.task.id}}"
-                                            }
-                                        }
-                                    },
-                                    "else": {
-                                        "if": {
-                                            "properties": {
-                                                "process": {
-                                                    "enum": [
-                                                        "Systematic Program Update"
-                                                    ]
-                                                }
-                                            }
-                                        },
-                                        "then": {
-                                            "properties": {
-                                                "dataEntryForm": {
-                                                    "type": "string",
-                                                    "title": "Open Form for Data Entry",
-                                                    "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/policy-details?correlationId={{customData.correlationId}}"
-                                                }
-                                            }
-                                        },
-                                        "else": {
-                                            "if": {
-                                                "properties": {
-                                                    "process": {
-                                                        "const": "New Business"
-                                                    },
-                                                    "processSubType": {
-                                                        "const": "Free Look Cancellation"
-                                                    }
-                                                },
-                                                "required": [
-                                                    "process",
-                                                    "processSubType"
-                                                ]
-                                            },
-                                            "then": {
-                                                "properties": {
-                                                    "dataEntryForm": {
-                                                        "type": "string",
-                                                        "title": "Open Form for Data Entry",
-                                                        "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/policy/freelook/cancel-freelook?correlationId={{customData.correlationId}}"
-                                                    }
-                                                }
-                                            },
-                                            "else": {
-                                                "properties": {
-                                                    "dataEntryForm": {
-                                                        "type": "string",
-                                                        "title": "Open Form for Data Entry",
-                                                        "default": "/policies?isReset=true?correlationId={{customData.correlationId}}"
-                                                    }
-                                                }
-                                            }
+                                    "properties": {
+                                        "dataEntryForm": {
+                                            "type": "string",
+                                            "title": "Open Form for Data Entry",
+                                            "default": "/policies?isReset=true?correlationId={{customData.correlationId}}"
                                         }
                                     }
                                 }

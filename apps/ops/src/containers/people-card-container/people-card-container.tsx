@@ -91,6 +91,11 @@ const mapDataToPeopleCard = ({
         router,
     } = peopleCard;
 
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
+
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
@@ -143,13 +148,17 @@ const mapDataToPeopleCard = ({
             allocation={allocationValue}
             accessibilityText={accessibilityText}
             accessibilityClickText={accessibilityClickText}
-            onClick={() =>
-                !isRereg &&
-                goTo(
-                    `/policies/${planCode}/${policyNumber}/people/${partyId}`,
-                    router
-                )
-            }
+            onClick={() => {
+                if (!isRereg) {
+                    const query = correlationIdFromRoute
+                        ? `?correlationId=${correlationIdFromRoute}`
+                        : '';
+                    goTo(
+                        `/policies/${planCode}/${policyNumber}/people/${partyId}${query}`,
+                        router
+                    );
+                }
+            }}
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
         />

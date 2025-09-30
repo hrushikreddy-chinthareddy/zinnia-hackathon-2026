@@ -94,7 +94,9 @@ describe('getFormErrors', () => {
         expect(errors.supportingDocumentMatchesWithNewName).toBe(
             'people.sideSheet.name.errors.supportingDocumentNotMatchesError'
         );
-        expect(errors.supportingDocumentRequired).toBeUndefined();
+        expect(errors.supportingDocumentRequired).toBe(
+            'people.sideSheet.name.errors.supportingDocumentRequired'
+        );
     });
 
     it('returns signaturePresentOnDocumentForAllOwners error if missing', () => {

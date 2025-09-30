@@ -106,7 +106,9 @@ export const getFormErrors = ({
         errors.supportingDocumentMatchesWithNewName = String(
             t('people.sideSheet.name.errors.supportingDocumentNotMatchesError')
         );
-    } else if (uploadedFiles.length === 0) {
+    }
+
+    if (!uploadedFiles.length) {
         errors.supportingDocumentRequired = String(
             t('people.sideSheet.name.errors.supportingDocumentRequired')
         );
