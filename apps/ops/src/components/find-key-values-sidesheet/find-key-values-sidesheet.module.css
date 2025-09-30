@@ -25,10 +25,6 @@
     gap: var(--measure-dimension-padding-sm);
 }
 
-.toolTip {
-    z-index: 600;
-}
-
 .subSection {
     padding: var(--measure-dimension-padding-xl);
     margin-top: var(--measure-dimension-margin-xs);
