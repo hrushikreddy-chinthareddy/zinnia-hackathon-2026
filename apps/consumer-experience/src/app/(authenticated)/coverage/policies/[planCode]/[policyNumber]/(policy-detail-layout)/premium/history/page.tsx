@@ -72,6 +72,11 @@ export default async function PaymentHistory({ params }: Props) {
 
   const pendingPayments = () => {
     return sortedPendingTransactions?.map((item, index) => {
+      const hasBankDetails =
+        item.bankDetails &&
+        item.bankDetails.accountType &&
+        item.bankDetails.accountNumber;
+
       return (
         <CardInsertHistory
           isPending
@@ -86,26 +91,28 @@ export default async function PaymentHistory({ params }: Props) {
           subtitle={
             <>
               <span>{item.frequency && toSentenceCase(item.frequency)}</span>
-              {item.frequency && item.bankDetails && (
+              {item.frequency && hasBankDetails && (
                 <span className="mx-xs" aria-hidden>
                   |
                 </span>
               )}
-              <span>
-                <AccountType accountType={item.bankDetails?.accountType} />
-                {/*********
+              {hasBankDetails && (
+                <span>
+                  <AccountType accountType={item.bankDetails?.accountType} />
+                  {/*********
                  *  Only the logged in user that matches the same policy party ID as the
                 transaction should see bank details
                 ********/}
-                {item.bankDetails?.partyId === loggedInUserPolicyPartyId && (
-                  <>
-                    {' ending in '}
-                    <AccountNumber
-                      accountNumber={item?.bankDetails?.accountNumber}
-                    />
-                  </>
-                )}
-              </span>
+                  {item.bankDetails?.partyId === loggedInUserPolicyPartyId && (
+                    <>
+                      {' ending in '}
+                      <AccountNumber
+                        accountNumber={item?.bankDetails?.accountNumber}
+                      />
+                    </>
+                  )}
+                </span>
+              )}
             </>
           }
         />
@@ -130,6 +137,11 @@ export default async function PaymentHistory({ params }: Props) {
         );
       }
 
+      const hasBankDetails =
+        item.bankDetails &&
+        item.bankDetails.accountType &&
+        item.bankDetails.accountNumber;
+
       return (
         <CardInsertHistory
           key={index}
@@ -139,27 +151,29 @@ export default async function PaymentHistory({ params }: Props) {
           subtitle={
             <>
               <span>{item.frequency && toSentenceCase(item.frequency)}</span>
-              {item.frequency && item.bankDetails && (
+              {item.frequency && hasBankDetails && (
                 <span className="mx-xs" aria-hidden>
                   |
                 </span>
               )}
 
-              <span>
-                <AccountType accountType={item?.bankDetails?.accountType} />
-                {/*********
+              {hasBankDetails && (
+                <span>
+                  <AccountType accountType={item?.bankDetails?.accountType} />
+                  {/*********
                  *  Only the logged in user that matches the same policy party ID as the
                 transaction should see bank details
                 ********/}
-                {item.bankDetails?.partyId === loggedInUserPolicyPartyId && (
-                  <>
-                    {' ending in '}
-                    <AccountNumber
-                      accountNumber={item?.bankDetails?.accountNumber}
-                    />
-                  </>
-                )}
-              </span>
+                  {item.bankDetails?.partyId === loggedInUserPolicyPartyId && (
+                    <>
+                      {' ending in '}
+                      <AccountNumber
+                        accountNumber={item?.bankDetails?.accountNumber}
+                      />
+                    </>
+                  )}
+                </span>
+              )}
             </>
           }
         />
