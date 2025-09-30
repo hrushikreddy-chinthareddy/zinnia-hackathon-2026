@@ -505,7 +505,7 @@ export const buildRoleChangeRequestBody = (
         addresses = [],
         identifications = [],
         preferredCommunicationType = null,
-        trustDate,
+        trustDate = null,
         entityType,
     } = party;
 
