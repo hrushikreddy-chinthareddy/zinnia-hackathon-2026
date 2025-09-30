@@ -2,7 +2,7 @@ const _riderNamesMap = {
     acceleratedDeathBenefit: 'Accelerated Death Benefit',
     accidentalDeathBenefit: 'Accidental Death Benefit',
     acceleratedDeathBenefitForTerminalIllness:
-        'Accelerated Death Benefit for Terminal Illness',
+        'Accelerated Death Benefit Rider for Terminal Illness',
     acceleratedDeathBenefitForChronicIllness:
         'Chronic Illness Accelerated Death Benefit',
     charitableGiving: 'Charitable Giving',
