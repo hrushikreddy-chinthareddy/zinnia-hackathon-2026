@@ -84,7 +84,7 @@ const RenewalFormProvider = ({
     });
 
     const [contractValue, setContractValue] = useState<number | string>(
-        form?.data?.contractNum ?? ''
+        document?.contractValue ?? ''
     );
     const shouldShowNewExperience =
         featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
