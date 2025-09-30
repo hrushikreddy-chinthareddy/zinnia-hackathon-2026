@@ -236,8 +236,12 @@ export const formatDataField = (
         typeof key === 'string' &&
         data != null &&
         !excludeFields.has(key);
-    const formattedLabel = include && formatAsDataLabel(key, lineOfBusiness, t);
 
+    if (!include) {
+        return null;
+    }
+
+    const formattedLabel = formatAsDataLabel(key, lineOfBusiness, t);
     const formattedData = formatAsDataValue(data, t, key);
 
     if (typeof formattedData === 'object' && formattedData != null) {
