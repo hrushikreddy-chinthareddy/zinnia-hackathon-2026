@@ -1,7 +1,12 @@
 'use client';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import { Label } from '@zinnia/bloom/components';
+import {
+  AssistiveText,
+  AssistiveTextVariant,
+  Label,
+} from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,7 +15,11 @@ import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { useComponentVisibility } from '@/hooks/use-component-visibility';
-import { submitOttp } from '@/queries/premium-queries';
+import {
+  getOneTimePremiumValidation,
+  submitOttp,
+} from '@/queries/premium-queries';
+import { QueryKeys } from '@/queries/query-keys';
 import { ComponentName } from '@/services/display-rules/types';
 
 import { SummaryForm } from './SummaryForm';
@@ -47,24 +56,27 @@ export const PaymentSummary = ({
     return (paymentFee / 100) * paymentAmount.plain;
   }, [paymentAmount.plain, paymentFee]);
 
+  // @TODO: maybe this can be moved to a helper, or a buildOneTimePremiumRequestBody function
+  const ottpRequest = {
+    paymentAmount: state.paymentAmount.plain,
+    effectiveDate: state.effectiveDate,
+    partyId: state.payorBank?.appliesToPartyId,
+    bankId: state.payorBank?.bankId,
+    // To integrate with third party banks, we now send paymentForm
+    // as the accountType and rely on the backend service to convert
+    // this to the correct form based on the payment method being used
+    // this was communicated to us by Shrutika
+    // https://se2llc-global.slack.com/archives/C08TKJG89TQ/p1753963380359029?thread_ts=1753836773.602869&cid=C08TKJG89TQ
+    paymentForm: state.payorBank?.accountType,
+  };
+
   const mutation = useMutation({
     mutationFn: async () => {
-      const ottpRequest = {
-        paymentAmount: state.paymentAmount.plain,
-        effectiveDate: state.effectiveDate,
-        partyId: state.payorBank?.appliesToPartyId,
-        bankId: state.payorBank?.bankId,
-        // To integrate with third party banks, we now send paymentForm
-        // as the accountType and rely on the backend service to convert
-        // this to the correct form based on the payment method being used
-        // this was communicated to us by Shrutika
-        // https://se2llc-global.slack.com/archives/C08TKJG89TQ/p1753963380359029?thread_ts=1753836773.602869&cid=C08TKJG89TQ
-        paymentForm: state.payorBank?.accountType,
-      };
       return await submitOttp(policyNumber, planCode, ottpRequest);
     },
     onSuccess: async () => {
       router.push(currentStepInfo?.nextStepUrl);
+      setPrimaryButtonDisabled(false);
     },
     onError: () => {
       router.push('error');
@@ -74,16 +86,57 @@ export const PaymentSummary = ({
     },
   });
 
+  const {
+    data: validationResponse,
+    isError: validationError,
+    isFetching: validationFetching,
+  } = useQuery({
+    queryKey: [QueryKeys.ONE_TIME_PREMIUM_VALIDATION, state],
+    queryFn: () => {
+      return getOneTimePremiumValidation(policyNumber, planCode, ottpRequest);
+    },
+  });
+
+  if (validationError) {
+    router.push('error');
+  }
+
   const { data: visibility } = useComponentVisibility(planCode, policyNumber);
 
+  if (
+    validationResponse?.status === TransactionFailureResponse.status.SUCCESS
+  ) {
+    setPrimaryButtonDisabled(false);
+  }
+
+  if (
+    validationResponse?.status === TransactionFailureResponse.status.FAILURE
+  ) {
+    setPrimaryButtonDisabled(true);
+  }
+
   const submitPayment = () => {
-    mutation.mutate();
+    if (validationFetching || mutation.isPending) return;
+
+    if (
+      validationResponse?.status === TransactionFailureResponse.status.SUCCESS
+    ) {
+      mutation.mutate();
+    }
   };
 
-  // Show pending state while:
-  // - The mutation is pending
-  // - The mutation is successful, as we want to wait for the redirect in the onSuccess callback to finish unmounting the component
-  if (mutation.isPending || mutation.isSuccess) {
+  // Show pending state:
+  // - The validation/submit calls are loading
+  // - on error, whitewe wait for the redirect to the error page
+  // - on success, while we wait for the redirect to the next step
+  if (
+    validationFetching ||
+    validationError ||
+    mutation.isPending ||
+    mutation.isError ||
+    mutation.isSuccess
+  ) {
+    setPrimaryButtonDisabled(true);
     return <PaymentLoading />;
   }
 
@@ -140,11 +193,31 @@ export const PaymentSummary = ({
   }
 
   return (
-    <form id="submit-form" onSubmit={form.handleSubmit(submitPayment)}>
-      <SummaryForm
-        ottpPaymentData={state}
-        paymentSummaryDetails={paymentSummaryStepDetails}
-      />
-    </form>
+    validationResponse && (
+      <>
+        <form id="submit-form" onSubmit={form.handleSubmit(submitPayment)}>
+          <SummaryForm
+            ottpPaymentData={state}
+            paymentSummaryDetails={paymentSummaryStepDetails}
+          />
+        </form>
+        {validationResponse.status ===
+          TransactionFailureResponse.status.FAILURE && (
+          <div>
+            {validationResponse.validationResult?.map(
+              (result, index) =>
+                result.resolution?.length && (
+                  <AssistiveText
+                    className="mb-md"
+                    key={index}
+                    variant={AssistiveTextVariant.Error}
+                    text={result.resolution}
+                  />
+                )
+            )}
+          </div>
+        )}
+      </>
+    )
   );
 };

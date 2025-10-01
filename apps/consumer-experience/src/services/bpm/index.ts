@@ -1,8 +1,4 @@
 'use server';
-import {
-  OneTimePremiumRequest,
-  PaymentForm,
-} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,16 +9,10 @@ import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { POLICY_ACKNOWLEDGEMENT_DOC_TYPE } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
-import { CommonLogContext } from '@/utils/logging/server-logging';
-import { withLogging } from '@/utils/logging/with-logging';
 
 import { ApiResponse } from '..';
 import { transformEligibility } from './transformers';
-import {
-  bpmApiBaseUrl,
-  isMockErrorEnabled,
-  transactionsAPIUrl,
-} from '../api-config';
+import { bpmApiBaseUrl, isMockErrorEnabled } from '../api-config';
 import { ServerApi } from '../server-http';
 import { BpmErrorResponse, BpmSuccessResponse } from './types';
 
@@ -99,130 +89,6 @@ export const getPolicyLoanEligibility = async (
   return response;
 };
 
-export const getOneTimePremiumEligibility = async (
-  options: PolicyRequestInputs
-) => {
-  const { planCode, policyNumber } = options;
-  const url = `${await transactionsAPIUrl()}/${planCode}/${policyNumber}/onetimepremium/eligibilitycheck`;
-
-  const rawResponse = await ServerApi.post(url, JSON.stringify({}), {
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  const response = await parseAPIResponse(rawResponse);
-
-  // This endpoint returns 400 "not found" when the policy is not eligible withdrawals
-  if (rawResponse.status > 400) {
-    logError(
-      'Error fetching one time premium eligibility',
-      await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-    );
-
-    throw new Error('Error fetching PolicyLoanEligibility');
-  }
-
-  if (rawResponse.status === 400) {
-    logTrace('one time premium ineligible reason', {
-      results: response?.validationResult,
-    });
-  }
-
-  return response;
-};
-
-// Define a custom type that extends OneTimePremiumRequest with flexible paymentForm
-type ExtendedOneTimePremiumRequest = Omit<OneTimePremiumRequest, 'payor'> & {
-  payor: Omit<OneTimePremiumRequest['payor'], 'paymentForm'> & {
-    paymentForm?: PaymentForm | string;
-  };
-};
-
-export const getOneTimePremiumValidation = withLogging(
-  async (
-    options: PolicyRequestInputs,
-    ottpRequestDetails: ExtendedOneTimePremiumRequest,
-    loggingContext: CommonLogContext
-  ) => {
-    const { planCode, policyNumber } = options;
-    const url = `${await transactionsAPIUrl()}/${planCode}/${policyNumber}/onetimepremium/validation`;
-
-    const rawResponse = await ServerApi.post(
-      url,
-      JSON.stringify(ottpRequestDetails),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingContext
-    );
-
-    const response = await parseAPIResponse(rawResponse);
-
-    if (rawResponse.status > 400) {
-      throw new Error('Error fetching OneTimePremiumValidation', {
-        cause: await logApiNotOkDetails({
-          rawResponse,
-          parsedResponse: response,
-        }),
-      });
-    }
-
-    if (rawResponse.status === 400) {
-      logTrace('one time premium ineligible reason', {
-        results: response?.validationResult,
-      });
-    }
-
-    return transformEligibility(response);
-  },
-  { file: FILE_NAME, functionName: 'getOneTimePremiumValidation' }
-);
-
-export const submitOneTimePremiumPayment = withLogging(
-  async (
-    options: PolicyRequestInputs,
-    paymentDetails: ExtendedOneTimePremiumRequest,
-    loggingCtx: CommonLogContext
-  ) => {
-    if (isMockErrorEnabled(ApiEndpoints.ONE_TIME_PREMIUM_PAYMENT)) {
-      throw new Error('Error making one time premium payment.');
-    }
-
-    const { planCode, policyNumber } = options;
-    const url = `${await transactionsAPIUrl()}/${planCode}/${policyNumber}/onetimepremium`;
-
-    const rawResponse = await ServerApi.post(
-      url,
-      JSON.stringify(paymentDetails),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingCtx
-    );
-
-    const response = await parseAPIResponse(rawResponse);
-
-    // TODO: I think this should be only throwing an error if the status is
-    // above a 400
-    if (!rawResponse?.ok) {
-      const moreDetails = await logApiNotOkDetails({
-        rawResponse,
-        parsedResponse: response,
-      });
-
-      throw new Error('Error submitting one time premium.', {
-        cause: {
-          name: 'submitOneTimePremiumPayment Error',
-          ...moreDetails,
-          submissionDetails: paymentDetails,
-        },
-      });
-    }
-
-    return response;
-  },
-  { file: FILE_NAME, functionName: 'submitOneTimePremiumPayment' }
-);
-
 export const getWithdrawalEligibility = async (
   policyInputs: PolicyRequestInputs
 ): Promise<ApiResponse<TransactionEligbility>> => {
@@ -277,35 +143,6 @@ export const getLoanEligibility = async (
         message: 'Something went wrong',
         status: 500,
         name: 'getWithdrawalEligibility Error',
-      },
-    };
-  }
-};
-
-export const getPremiumEligibility = async (
-  policyInputs: PolicyRequestInputs
-): Promise<ApiResponse<TransactionEligbility>> => {
-  logTrace('getPremiumEligibility::start', {
-    planCode: policyInputs.planCode,
-    policyNumber: policyInputs.policyNumber,
-  });
-
-  try {
-    const ottpEligibility = await getOneTimePremiumEligibility(policyInputs);
-
-    return {
-      data: transformEligibility(ottpEligibility),
-      error: null,
-    };
-  } catch (error) {
-    logWarn('getPremiumEligibility::error', { error });
-
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        status: 500,
-        name: 'getPremiumEligibility Error',
       },
     };
   }

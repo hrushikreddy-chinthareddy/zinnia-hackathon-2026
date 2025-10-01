@@ -2,10 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
 
-import {
-  getOneTimePremiumValidation,
-  submitOneTimePremiumPayment,
-} from '@/services/bpm';
+import { submitOneTimePremiumPayment } from '@/services/bpm/one-time-premium-payment';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
@@ -48,33 +45,6 @@ export async function POST(
     // TODO: do we need to pass this?
     // reverseInitiator: false
   };
-
-  const ottpValidation = await getOneTimePremiumValidation(
-    { planCode, policyNumber },
-    ottpRequest,
-    loggingContext
-  );
-
-  // If validation call fails or validation returns as not eligible, return before trying to submit the one time premium
-  if (ottpValidation.error) {
-    return NextResponse.json({
-      data: null,
-      error: {
-        status: 500,
-        message: `Ottp validation failed or is not eligible`,
-        correlationId: loggingContext.correlationId,
-      },
-    });
-  } else if (!ottpValidation.data?.isEligible) {
-    return NextResponse.json({
-      data: null,
-      error: {
-        status: 400,
-        message: ottpValidation.data?.reason,
-        correlationId: loggingContext.correlationId,
-      },
-    });
-  }
 
   try {
     const response = await submitOneTimePremiumPayment(
