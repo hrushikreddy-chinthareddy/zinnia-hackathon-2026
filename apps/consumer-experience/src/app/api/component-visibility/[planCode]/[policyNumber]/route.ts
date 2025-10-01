@@ -22,9 +22,12 @@ export async function GET(
   );
 
   try {
-    const visibility = await getComponentVisibility(
-      params.policyNumber,
-      params.planCode
+    const { data: visibility } = await getComponentVisibility(
+      {
+        policyNumber: params.policyNumber,
+        planCode: params.planCode,
+      },
+      { user: loggingContext.user, correlationId: loggingContext.correlationId }
     );
 
     if (!visibility) {

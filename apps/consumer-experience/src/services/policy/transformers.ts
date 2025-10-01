@@ -51,6 +51,8 @@ import {
   isEndDatedAndEndDateUpcoming,
   banksByPartyId,
 } from '@/utils/data';
+import { logTrace } from '@/utils/logging/log-fns';
+import { CommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 import { LimitedPolicyParty } from './types';
@@ -699,12 +701,27 @@ export const sortPoliciesByIssuedDate = (policies: CarrierPolicyDetails[]) => {
  * This one is particular to a policy party
  */
 export const getPartyRolesFromPolicyPartyId = (
-  policyPartyId: string | undefined,
-  policy: Policy
+  {
+    policyPartyId,
+    policy,
+  }: {
+    policyPartyId: string | undefined;
+    policy: Policy;
+  },
+  loggingCtx?: CommonLogContext
 ) => {
   // Find all partyRoles entries matching the partyId
   const matchingPartyRoles =
     policy.partyRoles?.filter(p => p.partyId === policyPartyId) || [];
+
+  if (matchingPartyRoles.length === 0) {
+    logTrace('no matching party roles found for partyId', {
+      policyPartyId,
+      policyPartyRoles: policy?.partyRoles,
+      ...loggingCtx,
+      function: 'getPartyRolesFromPolicyPartyId',
+    });
+  }
 
   // generate a list of the partyRoles that applies to the user
   return matchingPartyRoles
@@ -713,7 +730,8 @@ export const getPartyRolesFromPolicyPartyId = (
 };
 
 export const transformPolicyParties = (
-  policy: Policy
+  policy: Policy,
+  loggingCtx?: CommonLogContext
 ): LimitedPolicyParty[] | undefined => {
   return policy.parties
     ?.map(party => {
@@ -729,7 +747,10 @@ export const transformPolicyParties = (
         addresses: party.addresses,
         emails: party.emails,
         phones: party.phones,
-        partyRoles: getPartyRolesFromPolicyPartyId(party.partyId, policy),
+        partyRoles: getPartyRolesFromPolicyPartyId(
+          { policyPartyId: party.partyId, policy },
+          loggingCtx
+        ),
         partyType: party.partyType,
         allocationPercentage: party.beneficiaryPercentage,
       };

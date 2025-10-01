@@ -56,7 +56,7 @@ export default async function SelectAmountPage({
         planCode: planCode,
         benefitId: 'Base_Coverage',
       }),
-      getComponentVisibility(policyNumber, planCode),
+      getComponentVisibility({ policyNumber, planCode }, commonLog),
       getPolicyFeatures(
         {
           planCode: params.planCode,
@@ -71,7 +71,7 @@ export default async function SelectAmountPage({
   const data = ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
 
   const visibility =
-    visibilityRes.status === 'fulfilled' ? visibilityRes.value : null;
+    visibilityRes.status === 'fulfilled' ? visibilityRes.value?.data : null;
   const features =
     featuresRes.status === 'fulfilled' ? featuresRes.value.data : null;
 

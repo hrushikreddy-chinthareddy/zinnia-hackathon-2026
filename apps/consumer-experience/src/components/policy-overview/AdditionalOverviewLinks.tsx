@@ -37,7 +37,10 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
 
   const { beneficiaryCount } = data!;
 
-  const visibility = await getComponentVisibility(policyNumber, planCode);
+  const { data: visibility } = await getComponentVisibility(
+    { policyNumber, planCode },
+    loggingContext
+  );
 
   const showBeneficiaries =
     visibility?.[ComponentName.OVERVIEW_BENEFICIARIES]() &&
