@@ -33,19 +33,11 @@ export const AgentSidesheet = ({
     producerName,
   } = agentData;
 
-  let name;
+  let name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
 
-  // if producer type is individual, use first and last name
   // if producer type is corporation, use producer name. We ran into a situation where producerName was '', so we want a fallback to firstname/lastname for that
-  if (producerType === POM_Models_ProducerType.INDIVIDUAL) {
-    name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
-  } else if (
-    producerType === POM_Models_ProducerType.CORPORATION &&
-    producerName
-  ) {
+  if (producerType === POM_Models_ProducerType.CORPORATION && producerName) {
     name = producerName;
-  } else {
-    name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
   }
 
   return (
