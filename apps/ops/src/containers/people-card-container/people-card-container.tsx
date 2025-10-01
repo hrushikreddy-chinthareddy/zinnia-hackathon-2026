@@ -99,12 +99,13 @@ const mapDataToPeopleCard = ({
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            if (producerType === POM_Models_ProducerType.CORPORATION) {
-                name = toTitleCase(safeString(producerName));
-                break;
-            }
-            if (!firstName && !!fullName) {
-                name = toTitleCase(safeString(fullName));
+            if (producerType === POM_Models_ProducerType.INDIVIDUAL) {
+                name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
+            } else if (
+                producerType === POM_Models_ProducerType.CORPORATION &&
+                producerName
+            ) {
+                name = toTitleCase(producerName);
             } else {
                 name = toTitleCase(
                     `${firstName ?? DEFAULT_ERROR_STRING} ${

@@ -90,6 +90,8 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
             return t('chipFilter.partyRole.exchangeCompany');
         case PartyRoleChipToText.OtherIntresedParty:
             return t('chipFilter.partyRole.otherInterestedParty');
+        case PartyRoleChipToText.AdditionalServicingAgent:
+            return t('chipFilter.partyRole.additionalServicingAgent');
         default:
             return text;
     }
@@ -243,7 +245,10 @@ export const combineNameAndRoles = (
 
             switch (partyType) {
                 case PartyType.INDIVIDUAL:
-                    if (producerType === POM_Models_ProducerType.CORPORATION) {
+                    if (
+                        producerType === POM_Models_ProducerType.CORPORATION &&
+                        producerName
+                    ) {
                         nameTag.fullName = producerName;
                         break;
                     } else {
