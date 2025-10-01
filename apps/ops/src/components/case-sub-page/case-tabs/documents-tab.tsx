@@ -69,7 +69,7 @@ export default function DocumentsTab({
         caseDetails?.carrier?.toLocaleLowerCase() || ''
     );
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.id) {
+        if (!caseDetails?.id || !caseDetails?.carrier) {
             return null;
         }
         const documentClassification =
@@ -87,7 +87,8 @@ export default function DocumentsTab({
 
         if (
             documentClassification ===
-            SearchRequest.documentClassification.INBOUND
+                SearchRequest.documentClassification.INBOUND &&
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier)
         ) {
             searchBody.documentType = includeDocumentTypesInbound.join(',');
         }
@@ -96,7 +97,7 @@ export default function DocumentsTab({
     }, [caseDetails, docSource]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.policyNumber) {
+        if (!caseDetails?.policyNumber || !policy?.carrierId) {
             return null;
         }
         const documentClassification =

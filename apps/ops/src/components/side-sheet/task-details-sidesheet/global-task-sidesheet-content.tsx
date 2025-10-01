@@ -236,7 +236,7 @@ export default function GlobalTaskSideSheet({
     const readOnly = task?.status === TaskStatus.Completed || false;
 
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!task?.caseId) {
+        if (!task?.caseId || !task?.carrier) {
             return null;
         }
 
