@@ -89,6 +89,9 @@ const NormalDocs = ({
     const [offset, setOffset] = useState(0);
 
     const searchParams = useMemo<SearchRequest | null>(() => {
+        if (!policy?.carrierId) {
+            return null;
+        }
         let optionalParams = {};
         if (yearSelection !== 'all') {
             const startDate = dayjs()
