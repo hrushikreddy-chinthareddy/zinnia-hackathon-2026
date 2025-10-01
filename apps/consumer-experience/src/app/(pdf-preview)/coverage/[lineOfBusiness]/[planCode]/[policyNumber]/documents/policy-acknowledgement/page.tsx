@@ -60,14 +60,19 @@ export default async function PolicyAcknowledgementDocumentPreview({
         },
         commonLoggingContext
       )
-    : await searchDocumentsV3({
-        documentType: 'POLPG',
-        recipient: 'CLIENT',
-        parentCarrierCode: searchParams.clientCode,
-        policyNumber: params.policyNumber,
-        planCode,
-        documentClassification: SearchRequest.documentClassification.OUTBOUND,
-      });
+    : await searchDocumentsV3(
+        {
+          documentType: 'POLPG',
+          recipient: 'CLIENT',
+          parentCarrierCode: searchParams.clientCode,
+          policyNumber: params.policyNumber,
+          planCode,
+          documentClassification: SearchRequest.documentClassification.OUTBOUND,
+        },
+        undefined,
+        undefined,
+        commonLoggingContext
+      );
   const document = policyDocuments?.data?.documents?.[0];
 
   logInfo(

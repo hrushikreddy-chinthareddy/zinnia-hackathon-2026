@@ -69,13 +69,19 @@ export const DocumentsView = async ({
           },
           loggingContext
         )
-      : searchDocumentsV3({
-          documentClassification: SearchRequest.documentClassification.OUTBOUND,
-          parentCarrierCode: policyData?.carrierId,
-          planCode,
-          policyNumber,
-          recipient: 'CLIENT',
-        }),
+      : searchDocumentsV3(
+          {
+            documentClassification:
+              SearchRequest.documentClassification.OUTBOUND,
+            parentCarrierCode: policyData?.carrierId,
+            planCode,
+            policyNumber,
+            recipient: 'CLIENT',
+          },
+          undefined,
+          undefined,
+          loggingContext
+        ),
 
     shouldUseV2
       ? getTaxDocumentsV2(
@@ -87,12 +93,15 @@ export const DocumentsView = async ({
           },
           loggingContext
         )
-      : getTaxDocumentsV3({
-          clientCode: policyData?.carrierId,
-          contractNumber: policyNumber,
-          numYears: maxTaxYears,
-          planCode,
-        }),
+      : getTaxDocumentsV3(
+          {
+            clientCode: policyData?.carrierId,
+            contractNumber: policyNumber,
+            numYears: maxTaxYears,
+            planCode,
+          },
+          loggingContext
+        ),
   ]);
 
   const correspondenceDocs =
