@@ -7761,6 +7761,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer",
+                "contractRoleRequired": "Le rôle de contact est requis",
+                "nameRequired": "Le nom est requis",
+                "phoneRequired": "Le numéro de téléphone est requis",
+                "relationshipToOwner": "La relation avec le propriétaire est requise",
+                "changeRequireRequired": "Veuillez sélectionner une option",
+                "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
+                "callSummaryRequired": "Le résumé de l'appel est requis"
             }
         },
         "confirmStep": {
@@ -7832,7 +7850,25 @@
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
             "invalidEmail": "E-mail invalide",
-            "invalidFax": "Fax invalide"
+            "invalidFax": "Fax invalide",
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer",
+                "contractRoleRequired": "Le rôle de contact est requis",
+                "nameRequired": "Le nom est requis",
+                "phoneRequired": "Le numéro de téléphone est requis",
+                "relationshipToOwner": "La relation avec le propriétaire est requise",
+                "changeRequireRequired": "Veuillez sélectionner une option",
+                "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
+                "callSummaryRequired": "Le résumé de l'appel est requis"
+            }
         },
         "invalidEmail": "E-mail invalide",
         "invalidFax": "Fax invalide"

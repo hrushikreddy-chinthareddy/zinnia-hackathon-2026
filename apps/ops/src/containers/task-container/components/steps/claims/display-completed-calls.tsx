@@ -1,5 +1,8 @@
+import Content, { ContentVariant } from '@deps/components/content/content';
 import Field, { FieldVariant } from '@deps/components/fields/field';
+import FieldLabel from '@deps/components/fields/field-label';
 import { formatPhone } from '@deps/helpers/string.helpers';
+import { NOOP } from '@deps/types/constants';
 
 import { CallLog, ContactRole, DynamicKey } from './claims.type';
 
@@ -40,7 +43,7 @@ export const DisplayCompletedCalls = ({
                             <div>
                                 <Field
                                     id={`role-${index}`}
-                                    onChange={() => {}}
+                                    onChange={NOOP}
                                     disabled={true}
                                     placeholder={t('contactRole') as string}
                                     variant={FieldVariant.Inactive}
@@ -61,7 +64,7 @@ export const DisplayCompletedCalls = ({
                                 <Field
                                     disabled={true}
                                     id={`name-${index}`}
-                                    onChange={() => {}}
+                                    onChange={NOOP}
                                     variant={FieldVariant.Inactive}
                                     placeholder={t('name') as string}
                                     value={log.fullName}
@@ -73,7 +76,7 @@ export const DisplayCompletedCalls = ({
                                 <Field
                                     disabled={true}
                                     id={`phone-${index}`}
-                                    onChange={() => {}}
+                                    onChange={NOOP}
                                     variant={FieldVariant.Inactive}
                                     placeholder={t('phone') as string}
                                     value={formatPhone(log.phone)}
@@ -85,7 +88,7 @@ export const DisplayCompletedCalls = ({
                                 <Field
                                     disabled={true}
                                     id={`callOutcome-${index}`}
-                                    onChange={() => {}}
+                                    onChange={NOOP}
                                     variant={FieldVariant.Inactive}
                                     placeholder={t('callOutcome') as string}
                                     value={
@@ -98,13 +101,12 @@ export const DisplayCompletedCalls = ({
                                     className="w-full h-10 p-2"
                                 />
                             </div>
-
                             {log.partyRoleCategory === ContactRole.OTHER && (
                                 <div>
                                     <Field
                                         disabled={true}
                                         id={`relationship-${index}`}
-                                        onChange={() => {}}
+                                        onChange={NOOP}
                                         variant={FieldVariant.Inactive}
                                         placeholder={
                                             t('relationshipToOwner') as string
@@ -117,6 +119,20 @@ export const DisplayCompletedCalls = ({
                                     />
                                 </div>
                             )}
+                        </div>
+                        <div className="flex w-full flex-col justify-between flex-row mt-4">
+                            <div>
+                                <FieldLabel
+                                    variant={FieldVariant.Inactive}
+                                    label={t('callSummary') as string}
+                                />
+                                <Content
+                                    variant={ContentVariant.BodySm}
+                                    className="text-gray-600"
+                                    details={log.callSummary}
+                                    pii={true}
+                                />
+                            </div>
                         </div>
                     </div>
                 ))}

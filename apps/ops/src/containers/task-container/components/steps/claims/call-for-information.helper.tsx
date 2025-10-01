@@ -9,6 +9,7 @@ import {
     validateEmail,
     validateFax,
 } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import {
@@ -16,7 +17,6 @@ import {
     CallLog,
     ChangeTypeEnum,
     ContactRole,
-    DynamicKey,
     UpdatedBeneficiaryRecord,
 } from './claims.type';
 
@@ -26,10 +26,12 @@ interface CallForInformationProps {
     contactRole: string;
     name: string;
     phone: Phone;
+    callSummary: string;
     setTask: React.Dispatch<React.SetStateAction<any>>;
     setName: React.Dispatch<React.SetStateAction<string>>;
     setPhone: React.Dispatch<React.SetStateAction<Phone>>;
     setContactRole: React.Dispatch<React.SetStateAction<string>>;
+    setCallSummary: React.Dispatch<React.SetStateAction<string>>;
     relationshipToOwner: string;
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
     dynamicKey: string;
@@ -50,6 +52,7 @@ export function CallForInformationFunctions({
     name,
     setName,
     phone,
+    callSummary,
     setPhone,
     setContactRole,
     relationshipToOwner,
@@ -62,6 +65,7 @@ export function CallForInformationFunctions({
     setFormErrors,
     dynamicKey,
     addressSelected,
+    setCallSummary,
 }: CallForInformationProps) {
     const contactRoleOptions = [
         {
@@ -119,7 +123,8 @@ export function CallForInformationFunctions({
             name,
             phone,
             country,
-            relationshipToOwner
+            relationshipToOwner,
+            callSummary
         );
         setTask(updatedTask);
         setCallEntries((prev) => [
@@ -132,6 +137,7 @@ export function CallForInformationFunctions({
                 contactRole: '',
                 name: '',
                 phone: {} as Phone,
+                callSummary: '',
             },
         ]);
         setBeneficiary((prev: UpdatedBeneficiaryRecord) => ({
@@ -141,6 +147,7 @@ export function CallForInformationFunctions({
         setContactRole('');
         setName('');
         setPhone({} as Phone);
+        setCallSummary('');
     };
     const updateCurrentCallEntry = useCallback(() => {
         if (contactRole && name) {
@@ -153,11 +160,12 @@ export function CallForInformationFunctions({
                         contactRole,
                         name,
                         phone,
+                        callSummary,
                     },
                 ];
             });
         }
-    }, [contactRole, name, phone, setCallEntries]);
+    }, [contactRole, name, phone, setCallEntries, callSummary]);
 
     const shouldRenderChangeRequire = () => {
         switch (contactRole === ContactRole.OTHER) {
@@ -183,7 +191,8 @@ export function CallForInformationFunctions({
         name: string,
         phone: Phone,
         country: keyof typeof countries,
-        relationshipToOwner: string
+        relationshipToOwner: string,
+        callSummary: string
     ) {
         const updatedTask = { ...task };
 
@@ -205,6 +214,7 @@ export function CallForInformationFunctions({
             callLogs[logIndex] = {
                 ...callLogs[logIndex],
                 callSequence: callEntriesLength,
+                callSummary: callSummary,
                 callDone: true,
             };
         } else {
@@ -216,6 +226,7 @@ export function CallForInformationFunctions({
                     phone: { ...phone, countryCode: countries[country].phone },
                     partyRoleCategory: contactRole,
                     relationshipToInsured: relationshipToOwner,
+                    callSummary: callSummary,
                     callDone: true,
                 });
             }
@@ -227,83 +238,113 @@ export function CallForInformationFunctions({
     const validateForm = () => {
         const errors: FormValidationErrors = {};
 
-        if (dynamicKey !== DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
-            if (!contactRole || !phone.dialNumber || !name) {
-                errors['mandatoryField'] =
-                    'Missing contactRole or phone or name or changeType ';
-            }
+        if (!contactRole) {
+            errors['contractRoleRequired'] = t(
+                'errors.contractRoleRequired'
+            ) as string;
+            setFormErrors(errors);
+            return Object.keys(errors).length === 0;
         }
 
-        if (contactRole) {
-            if (
-                !phone.dialNumber ||
-                !name ||
-                beneficiary.changeRequire === null
-            ) {
-                errors['mandatoryField'] = 'Missing phone or name';
-            }
+        if (isNullEmptyOrUndefined(name)) {
+            errors['nameRequired'] = t('errors.nameRequired') as string;
+        } else {
+            errors['nameRequired'] = '';
         }
 
-        if (contactRole === ContactRole.OTHER && !relationshipToOwner) {
-            errors['mandatoryField'] = 'Missing relationshipToOwner';
-        }
-
-        if (beneficiary.changeRequire && !beneficiary.changeType) {
-            errors['mandatoryField'] = 'Missing changeType';
+        if (isNullEmptyOrUndefined(phone.dialNumber)) {
+            errors['phoneRequired'] = t('errors.phoneRequired') as string;
+        } else {
+            errors['phoneRequired'] = '';
         }
 
         if (
-            beneficiary.changeType ===
-            ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE
+            contactRole === ContactRole.OTHER &&
+            isNullEmptyOrUndefined(relationshipToOwner)
         ) {
-            if (
-                beneficiary.notificationPreferences.notificationMethod
-                    .method === ClaimCommunicationTypes.Email &&
-                !beneficiary.notificationPreferences.email?.emailAddress
-            ) {
-                errors['mandatoryField'] = 'Missing emailAddress';
-            }
-            if (
-                beneficiary.notificationPreferences.notificationMethod
-                    .method === ClaimCommunicationTypes.Fax &&
-                !beneficiary.notificationPreferences.fax?.faxNumber
-            ) {
-                errors['mandatoryField'] = 'Missing faxNumber';
-            }
+            errors['relationshipToOwner'] = t(
+                'errors.relationshipToOwner'
+            ) as string;
+        } else {
+            errors['relationshipToOwner'] = '';
+        }
+
+        if (isNullEmptyOrUndefined(callSummary)) {
+            errors['callSummaryRequired'] = t(
+                'errors.callSummaryRequired'
+            ) as string;
+        } else {
+            errors['callSummaryRequired'] = '';
+        }
+
+        if (isNullEmptyOrUndefined(beneficiary.changeRequire)) {
+            errors['changeRequireRequired'] = t(
+                'errors.changeRequireRequired'
+            ) as string;
+        } else {
+            errors['changeRequireRequired'] = '';
+            errors['changeTypeRequired'] = '';
+            errors['submit'] = '';
+        }
+
+        if (beneficiary.changeRequire && !beneficiary.changeType) {
+            errors['changeTypeRequired'] = t(
+                'errors.changeTypeRequired'
+            ) as string;
+        } else {
+            errors['changeTypeRequired'] = '';
+            errors['submit'] = '';
+        }
+
+        if (beneficiary.changeRequire === false) {
+            errors['changeTypeRequired'] = '';
+            errors['submit'] = '';
+        }
+
+        if (
+            beneficiary.changeRequire &&
+            beneficiary.changeType ===
+                ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE
+        ) {
             if (
                 beneficiary.notificationPreferences.notificationMethod
                     .method === ClaimCommunicationTypes.Mail &&
                 !addressSelected
             ) {
-                errors['mandatoryField'] =
-                    'Missing addressLine1 or city or state or zipCode';
+                errors['submit'] = t('errors.addressIsRequired') as string;
             }
+
             if (
                 beneficiary.notificationPreferences.notificationMethod
-                    .method === ClaimCommunicationTypes.Email &&
-                beneficiary.notificationPreferences.email?.emailAddress
+                    .method === ClaimCommunicationTypes.Email
             ) {
                 const emailError = validateEmail(
-                    beneficiary.notificationPreferences.email.emailAddress
+                    beneficiary.notificationPreferences.email?.emailAddress
                 );
                 if (emailError) {
-                    errors['emailValidation'] = emailError;
+                    errors['submit'] = t(emailError) as string;
                 }
             }
+
             if (
                 beneficiary.notificationPreferences.notificationMethod
-                    .method === ClaimCommunicationTypes.Fax &&
-                beneficiary.notificationPreferences.fax?.faxNumber
+                    .method === ClaimCommunicationTypes.Fax
             ) {
                 const faxError = validateFax(
-                    beneficiary.notificationPreferences.fax.faxNumber
+                    beneficiary.notificationPreferences.fax?.faxNumber
                 );
                 if (faxError) {
-                    errors['faxValidation'] = faxError;
+                    errors['submit'] = t(faxError) as string;
                 }
             }
+        } else {
+            errors['submit'] = '';
         }
-        setFormErrors(errors);
+
+        const asArray = Object.entries(errors);
+        const filterCb = asArray.filter(([_, value]) => value !== '');
+        const filteredErrors = Object.fromEntries(filterCb);
+        setFormErrors(filteredErrors);
         return Object.keys(errors).length === 0;
     };
 

@@ -42,10 +42,10 @@ export const ClaimsBeneficiaryCall = ({ taskType }: TaskReviewStepProps) => {
         changeType: null,
         beneDeceased: false,
         beneDeathDate: null,
-        beneDeathSourceOfInfo: null,
     } as UpdatedBeneficiaryRecord);
     const readOnly = task.status === TaskStatus.Completed;
     const { goToNext } = useWorkflow();
+
     return (
         <WorkflowCard
             title={t('title')}
