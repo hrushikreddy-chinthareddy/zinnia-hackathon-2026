@@ -48,15 +48,18 @@ export default async function PolicyAcknowledgementDocumentPreview({
     data?.documents.version === DocumentsVersion.V2;
 
   const policyDocuments = shouldUseV2
-    ? await getDocumentsV2({
-        clientCode: searchParams.clientCode,
-        contractNumber: params.policyNumber,
-        recipient: 'Client',
-        // This code is different than the one we use to set preferences and
-        // check delivery date. This code is specifically for viewing the policy
-        // acknowledgement document
-        documentType: 'POLPG',
-      })
+    ? await getDocumentsV2(
+        {
+          clientCode: searchParams.clientCode,
+          contractNumber: params.policyNumber,
+          recipient: 'Client',
+          // This code is different than the one we use to set preferences and
+          // check delivery date. This code is specifically for viewing the policy
+          // acknowledgement document
+          documentType: 'POLPG',
+        },
+        commonLoggingContext
+      )
     : await searchDocumentsV3({
         documentType: 'POLPG',
         recipient: 'CLIENT',

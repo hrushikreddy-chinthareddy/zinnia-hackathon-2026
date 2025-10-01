@@ -60,12 +60,15 @@ export const DocumentsView = async ({
     carrierConfigData?.documents.version === DocumentsVersion.V2;
   const [correspondenceDocsRes, taxDocsRes] = await Promise.allSettled([
     shouldUseV2
-      ? getDocumentsV2({
-          clientCode: policyData?.carrierId,
-          contractNumber: policyNumber,
-          recipient: 'Client',
-          source: 'Correspondence',
-        })
+      ? getDocumentsV2(
+          {
+            clientCode: policyData?.carrierId,
+            contractNumber: policyNumber,
+            recipient: 'Client',
+            source: 'Correspondence',
+          },
+          loggingContext
+        )
       : searchDocumentsV3({
           documentClassification: SearchRequest.documentClassification.OUTBOUND,
           parentCarrierCode: policyData?.carrierId,
@@ -75,12 +78,15 @@ export const DocumentsView = async ({
         }),
 
     shouldUseV2
-      ? getTaxDocumentsV2({
-          clientCode: policyData?.carrierId,
-          contractNumber: policyNumber,
-          numYears: maxTaxYears,
-          planCode,
-        })
+      ? getTaxDocumentsV2(
+          {
+            clientCode: policyData?.carrierId,
+            contractNumber: policyNumber,
+            numYears: maxTaxYears,
+            planCode,
+          },
+          loggingContext
+        )
       : getTaxDocumentsV3({
           clientCode: policyData?.carrierId,
           contractNumber: policyNumber,
