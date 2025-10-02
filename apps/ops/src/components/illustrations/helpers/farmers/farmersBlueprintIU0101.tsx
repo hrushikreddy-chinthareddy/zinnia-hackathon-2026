@@ -1,6 +1,6 @@
 import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 
-const ILLUSTRATED_RATE = 7.38;
+const ILLUSTRATED_RATE = 7.03;
 
 export const farmersBlueprintIU0101 = {
     sectionBlueprints: [
@@ -4611,7 +4611,7 @@ export const farmersBlueprintIU0101 = {
                                     optional: false,
                                     triggerStepNavigation: false,
                                     layout: {
-                                        size: 3,
+                                        size: 6,
                                         forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
