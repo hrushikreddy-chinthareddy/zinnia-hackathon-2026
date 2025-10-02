@@ -29,6 +29,7 @@ export function calculateMenuPlacement(
     const { bottom, left, right, top } = rect;
     const { scrollY, innerHeight, innerWidth } = viewport;
 
+    // TODO MG: constants for these values
     const menuHeight = dimensions.height ?? 300;
     const menuWidth = dimensions.width ?? 320;
     const scrollThreshold = menuHeight / 4;
