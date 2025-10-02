@@ -3,8 +3,9 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { cookies } from 'next/headers';
 
-import { postResetDeliveryDate } from '@/services/bpm';
+import { postResetDeliveryDate } from '@/services/bpm/delivery-date';
 import { getCookie } from '@/utils/auth';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
 
 export interface AcknowledgeInputs {
@@ -24,21 +25,25 @@ export async function acknowledgePolicyAction(
   }
   const policyNumber = formData.policyNumber || '';
   const planCode = formData.planCode || '';
+  const loggingContext = await buildCommonLogContext();
 
-  try {
-    await postResetDeliveryDate({
+  const { data, error } = await postResetDeliveryDate(
+    {
       planCode,
       policyNumber,
-    });
+    },
+    loggingContext
+  );
 
-    const deliveryDateEligibilityCookie = await getCookie(
-      ACKNOWLEDGEMENT_COOKIE_KEY
-    );
-    const parsedCookie = JSON.parse(deliveryDateEligibilityCookie || '[]');
-    parsedCookie.push(policyNumber);
-
-    cookieStore.set(ACKNOWLEDGEMENT_COOKIE_KEY, JSON.stringify(parsedCookie));
-  } catch (error) {
-    console.error(error);
+  if (!data || !!error) {
+    console.error(error || 'Error resetting delivery date');
   }
+
+  const deliveryDateEligibilityCookie = await getCookie(
+    ACKNOWLEDGEMENT_COOKIE_KEY
+  );
+  const parsedCookie = JSON.parse(deliveryDateEligibilityCookie || '[]');
+  parsedCookie.push(policyNumber);
+
+  cookieStore.set(ACKNOWLEDGEMENT_COOKIE_KEY, JSON.stringify(parsedCookie));
 }

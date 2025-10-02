@@ -199,7 +199,7 @@ export async function middleware(req: NextRequest) {
 
       if (!pathAccessibleWithoutPolicyAcknowledgement(pathname)) {
         const userHasAcknowledgedPolicy = await hasAcknowledgedPolicy(
-          { planCode, policyNumber },
+          { planCode, policyNumber, user: session?.user },
           req,
           resNext
         );
