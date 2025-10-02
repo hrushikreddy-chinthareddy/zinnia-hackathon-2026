@@ -31,7 +31,7 @@ export function calculateMenuPlacement(
 
     const menuHeight = dimensions.height ?? 300;
     const menuWidth = dimensions.width ?? 320;
-    const scrollThreshold = menuHeight / 2;
+    const scrollThreshold = menuHeight / 4;
 
     const isNearTopOfPage = scrollY <= scrollThreshold;
     const availableSpaceBelow = innerHeight - (bottom - scrollY);
