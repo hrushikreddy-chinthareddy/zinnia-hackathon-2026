@@ -198,7 +198,7 @@ export const PolicyIndexTableView = ({
                 ssnUsed: !!value?.ssn,
                 firstNameUsed: !!value?.firstName,
                 lastNameUsed: !!value?.lastName,
-                session_id: user.sid,
+                authSessionId: user.sid,
                 userId: user.partyId,
             }
         );

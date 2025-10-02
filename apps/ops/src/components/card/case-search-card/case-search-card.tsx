@@ -127,7 +127,7 @@ export default function CaseSearchCard({
             SegmentTrackedEventName.CaseClicked,
             {
                 caseId: id,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
             }
         );

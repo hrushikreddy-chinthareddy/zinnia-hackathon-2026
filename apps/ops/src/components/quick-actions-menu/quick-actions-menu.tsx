@@ -161,7 +161,7 @@ export const MenuContextualContent = ({
             {
                 dropdownName: 'Policy Quick Actions',
                 selectedItemName: linkName,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: userPartyId,
             }
         );
@@ -171,7 +171,7 @@ export const MenuContextualContent = ({
                 contractNumber: policy.policyNumber,
                 linkName,
                 linkUrl,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: userPartyId,
                 planCode: policy.planCode,
             }

@@ -286,7 +286,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.FUND_ALLOCATIONS_CHANGE,
                 correlationId: payload.correlationId,

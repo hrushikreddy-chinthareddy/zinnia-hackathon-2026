@@ -121,7 +121,7 @@ export default function StatusFilter({
                                     }`;
                                 } else return acc;
                             }, '') ?? 'All',
-                        session_id: sessionId,
+                        authSessionId: sessionId,
                         userId,
                     }
                 );

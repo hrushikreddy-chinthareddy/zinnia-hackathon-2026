@@ -90,7 +90,7 @@ export default function SidesheetReverseRecreate({
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: 'ReverseRecreate' as TransactionType,
                 transactionId: reversalTransactionId,

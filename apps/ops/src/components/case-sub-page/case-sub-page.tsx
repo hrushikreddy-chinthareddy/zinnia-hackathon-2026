@@ -62,7 +62,7 @@ export default function CaseSubPage({
             SegmentTrackedEventName.CaseDetailsTabClicked,
             {
                 caseId: caseDetails.id,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 tabName: tab,
             }
