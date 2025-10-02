@@ -13,7 +13,7 @@ import {
   getPolicyLoanDetails,
   getPolicyStatusDetails,
 } from '@/services';
-import { getLoanEligibility } from '@/services/bpm';
+import { getPolicyLoanEligibility } from '@/services/bpm/policy-loan';
 import { PolicyLoans, PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
@@ -50,10 +50,13 @@ export default async function Loans({
         },
         loggingContext
       ),
-      getLoanEligibility({
-        planCode,
-        policyNumber,
-      }),
+      getPolicyLoanEligibility(
+        {
+          planCode,
+          policyNumber,
+        },
+        loggingContext
+      ),
       getPolicyStatusDetails(
         {
           planCode,
