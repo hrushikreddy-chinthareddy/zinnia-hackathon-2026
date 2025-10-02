@@ -119,11 +119,11 @@ describe('ManagePeople', () => {
         );
         fireEvent.click(ownerItem);
         expect(segmentAnalyticsTrackEvent).toHaveBeenCalledWith(
-            'Dropdown Clicked',
+            'dropdown_clicked',
             expect.objectContaining({
                 contractNumber: '123',
                 linkName: 'site.navLinks.owner.text',
-                session_id: 'sess',
+                authSessionId: 'sess',
                 userId: 'user123',
             })
         );
