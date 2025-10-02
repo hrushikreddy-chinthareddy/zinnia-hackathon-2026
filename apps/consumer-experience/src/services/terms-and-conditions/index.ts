@@ -1,7 +1,9 @@
-import { logApiNotOkDetails } from '@/utils/api';
 import { getSession } from '@/utils/auth';
-import { logError } from '@/utils/logging/log-fns';
-import { getUserInfoFromSession } from '@/utils/logging/server-logging';
+import {
+  CommonLogContext,
+  getUserInfoFromSession,
+} from '@/utils/logging/server-logging';
+import { withLogging } from '@/utils/logging/with-logging';
 
 import { consumerExperienceAPIBaseUrl } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
@@ -36,65 +38,45 @@ export type AcknowledgeCaseDTO = {
 
 const caseAcknowlegementApiBaseUrl = `${consumerExperienceAPIBaseUrl}/CaseAcknowledgment`;
 
-export const fetchAcknowledgedCases = async ({
-  planCode,
-  policyNumber,
-}: {
-  planCode: string;
-  policyNumber: string;
-}): Promise<CaseAcknowledgmentResponse> => {
-  const res: CaseAcknowledgmentResponse = {
-    data: null,
-    error: null,
-  };
-
-  try {
+export const fetchAcknowledgedCases = withLogging(
+  async (
+    {
+      planCode,
+      policyNumber,
+    }: {
+      planCode: string;
+      policyNumber: string;
+    },
+    loggingCtx: CommonLogContext
+  ): Promise<CaseAcknowledgmentItem[] | null> => {
     const session = await getSession();
     const { partyId } = getUserInfoFromSession(session);
 
     const rawResponse = await EnterpriseTokenApi.get(
-      `${caseAcknowlegementApiBaseUrl}/${planCode}/${policyNumber}/${partyId}`
+      `${caseAcknowlegementApiBaseUrl}/${planCode}/${policyNumber}/${partyId}`,
+      undefined,
+      loggingCtx
     );
 
     const parsedResponse = await rawResponse.json();
 
     if (!rawResponse.ok) {
-      logError(
-        'Error fetching acknowledged cases',
-        JSON.stringify(
-          await logApiNotOkDetails({
-            rawResponse,
-            parsedResponse,
-          })
-        )
-      );
+      throw new Error('Error fetching acknowledged cases');
     }
 
-    res.data = parsedResponse;
-  } catch (error) {
-    res.error = {
-      message: 'Something went wrong',
-      status: 500,
-      name: 'getAcknowledgedCases Error',
-    };
-    console.error('Error fetching acknowledged cases', error);
+    return parsedResponse;
+  },
+  {
+    file: 'services/terms-and-conditions',
+    functionName: 'fetchAcknowledgedCases',
   }
+);
 
-  return res;
-};
-
-export const acknowledgeCase = async ({
-  acknowledgedIds,
-  caseId,
-  planCode,
-  policyNumber,
-}: AcknowledgeCaseDTO): Promise<CaseAcknowledgmentResponse> => {
-  const res: CaseAcknowledgmentResponse = {
-    data: null,
-    error: null,
-  };
-
-  try {
+export const acknowledgeCase = withLogging(
+  async (
+    { acknowledgedIds, caseId, planCode, policyNumber }: AcknowledgeCaseDTO,
+    loggingCtx: CommonLogContext
+  ): Promise<CaseAcknowledgmentItem[] | null> => {
     const session = await getSession();
     const { partyId } = getUserInfoFromSession(session);
 
@@ -112,33 +94,20 @@ export const acknowledgeCase = async ({
       JSON.stringify(body),
       {
         headers: { 'Content-Type': 'application/json' },
-      }
+      },
+      loggingCtx
     );
 
     const parsedResponse = await rawResponse.json();
 
     if (!rawResponse.ok) {
-      logError(
-        'Error fetching case',
-        JSON.stringify(
-          await logApiNotOkDetails({
-            rawResponse,
-            parsedResponse,
-          })
-        )
-      );
-
       throw new Error('Error acknowledging case');
     }
 
-    res.data = parsedResponse;
-  } catch (error) {
-    res.error = {
-      message: 'Something went wrong',
-      status: 500,
-      name: 'acknowledgeCase Error',
-    };
+    return parsedResponse;
+  },
+  {
+    file: 'services/terms-and-conditions',
+    functionName: 'acknowledgeCase',
   }
-
-  return res;
-};
+);
