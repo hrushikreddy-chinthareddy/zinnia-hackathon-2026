@@ -108,7 +108,7 @@ export default function SideSheet({
     const widthValue = typeof width === 'number' ? `${width}px` : width;
 
     const innerTransitionClasses = clsx(
-        `pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[${widthValue}] sm:min-w-[${widthValue}]`,
+        `pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[${widthValue}] xs:max-w-[100%]`,
         {
             'right-0': isRight,
             'left-0': isLeft,
@@ -163,7 +163,7 @@ export default function SideSheet({
                     <div className="pointer-events-none fixed inset-0 overflow-hidden">
                         <div
                             className={innerTransitionClasses}
-                            style={{ transform }}
+                            style={{ width: widthValue, transform }}
                         >
                             <div className="flex h-full flex-col bg-white">
                                 <div className="z-10 px-4 py-3 sm:px-8 sm:py-6 shadow-elevation-light-08">
