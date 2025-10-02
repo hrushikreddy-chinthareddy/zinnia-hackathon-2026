@@ -48,7 +48,6 @@ jest.mock('./optimizely/optimizely', () => ({
 // Mock the dependencies
 jest.mock('@/services/policy');
 jest.mock('@/services/display-rules');
-jest.mock('@/services/bpm');
 jest.mock('@/services/bpm/delivery-date');
 jest.mock('@/route-map');
 jest.mock('@/middleware');
