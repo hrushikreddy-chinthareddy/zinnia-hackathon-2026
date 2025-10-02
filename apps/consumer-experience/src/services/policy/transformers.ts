@@ -443,7 +443,9 @@ export const transformPaymentHistory = (
       : effectiveDate;
 
   const paymentHistoryObject: PaymentHistory = {
-    amount: { requestedAmount, appliedAmount },
+    // paymentAmount is only available for pending transactions
+    // appliedAmount is only available for completed transactions
+    amount: { requestedAmount, appliedAmount, paymentAmount },
     date,
     frequency: null,
     type: transactionType?.toString() as keyof typeof Reason,
@@ -475,9 +477,6 @@ export const transformPaymentHistory = (
     case TransactionType.SUBSEQUENT_PAYMENT:
     case TransactionType.SUBSEQUENT_PREMIUM:
       {
-        if (status === ExtendedTransactionStatus.Pending) {
-          paymentHistoryObject.amount = { paymentAmount };
-        }
         paymentHistoryObject.title = 'Premium autopay';
       }
       break;
@@ -488,7 +487,6 @@ export const transformPaymentHistory = (
       paymentHistoryObject.title = 'Policy anniversary';
       break;
     case TransactionType.INTEREST_CREDIT:
-      paymentHistoryObject.amount = { appliedAmount };
       paymentHistoryObject.title = 'Interest Credit';
       break;
     default:
