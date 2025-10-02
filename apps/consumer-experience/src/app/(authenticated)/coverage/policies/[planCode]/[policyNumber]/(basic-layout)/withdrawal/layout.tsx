@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
 import { WithdrawalsProvider } from '@/components/providers/withdrawals/WithdrawalsProvider';
-import { getWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
+import { getOneTimeWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -21,7 +21,7 @@ export default async function WithdrawalLayout({
   const showPartialWithdrawalOneTime =
     flags?.[FEATURE_FLAGS.TRANSACTION_PARTIAL_WITHDRAWAL_ONETIME] &&
     carrierConfig?.account?.partialOneTimeWithdrawal?.enabled;
-  const { data } = await getWithdrawalEligibility(
+  const { data, error } = await getOneTimeWithdrawalEligibility(
     {
       planCode: params.planCode,
       policyNumber: params.policyNumber,
@@ -29,7 +29,7 @@ export default async function WithdrawalLayout({
     loggingCtx
   );
 
-  if (!data?.data?.isEligible || !showPartialWithdrawalOneTime) {
+  if (!data?.isEligible || !!error || !showPartialWithdrawalOneTime) {
     redirect(`/coverage/policies/${params.planCode}/${params.policyNumber}/`);
   }
 

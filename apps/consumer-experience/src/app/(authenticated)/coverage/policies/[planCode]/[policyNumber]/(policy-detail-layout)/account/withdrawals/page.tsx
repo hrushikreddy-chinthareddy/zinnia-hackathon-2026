@@ -15,7 +15,7 @@ import {
   getPolicyStatusDetails,
   getPolicyWithdrawalDetails,
 } from '@/services';
-import { getWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
+import { getOneTimeWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -69,7 +69,7 @@ export default async function Withdrawals({
         },
         loggingContext
       ),
-      getWithdrawalEligibility(
+      getOneTimeWithdrawalEligibility(
         {
           planCode,
           policyNumber,
@@ -92,7 +92,7 @@ export default async function Withdrawals({
 
   const withdrawalEligibilityData =
     withdrawalEligibility?.status === 'fulfilled'
-      ? withdrawalEligibility.value?.data?.data?.isEligible
+      ? withdrawalEligibility.value?.data?.isEligible
       : null;
 
   const policyStatusData =
