@@ -14,6 +14,10 @@ import { useForm } from 'react-hook-form';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import {
+  TRANSACTION_ERROR_QUERY_PARAM,
+  TransactionErrorType,
+} from '@/components/stepped-workflow/types';
 import { useComponentVisibility } from '@/hooks/use-component-visibility';
 import {
   getOneTimePremiumValidation,
@@ -74,9 +78,14 @@ export const PaymentSummary = ({
     mutationFn: async () => {
       return await submitOttp(policyNumber, planCode, ottpRequest);
     },
-    onSuccess: async () => {
-      router.push(currentStepInfo?.nextStepUrl);
-      setPrimaryButtonDisabled(false);
+    onSuccess: data => {
+      if (data.caseId) {
+        router.push(currentStepInfo?.nextStepUrl);
+      } else {
+        router.push(
+          `error?${TRANSACTION_ERROR_QUERY_PARAM}=${TransactionErrorType.SUBMISSION_FAILED}`
+        );
+      }
     },
     onError: () => {
       router.push('error');
@@ -127,7 +136,7 @@ export const PaymentSummary = ({
 
   // Show pending state:
   // - The validation/submit calls are loading
-  // - on error, whitewe wait for the redirect to the error page
+  // - on error, while we wait for the redirect to the error page
   // - on success, while we wait for the redirect to the next step
   if (
     validationFetching ||
