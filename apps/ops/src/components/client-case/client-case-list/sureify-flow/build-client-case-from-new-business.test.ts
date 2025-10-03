@@ -93,7 +93,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                         personalInformation: {
                             firstName: 'John',
                             lastName: 'Doe',
-                            dateOfBirth: '1980-06-10T05:00:00.000Z',
+                            dateOfBirth: '1980-06-10',
                         } as PersonalInformation,
                     },
                 ] as party[],
@@ -112,7 +112,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                         personalInformation: {
                             firstName: 'John',
                             lastName: 'Doe',
-                            dateOfBirth: '1980-06-10T05:00:00.000Z',
+                            dateOfBirth: '1980-06-10',
                         } as PersonalInformation,
                     },
                     {
@@ -134,7 +134,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                         personalInformation: {
                             firstName: 'John',
                             lastName: 'Doe',
-                            dateOfBirth: '1980-06-10T05:00:00.000Z',
+                            dateOfBirth: '1980-06-10',
                         } as PersonalInformation,
                     },
                     {
@@ -167,7 +167,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                         personalInformation: {
                             firstName: 'John',
                             lastName: 'Doe',
-                            dateOfBirth: '1980-06-10T05:00:00.000Z',
+                            dateOfBirth: '1980-06-10',
                         } as PersonalInformation,
                     },
                     {
@@ -204,7 +204,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                         personalInformation: {
                             firstName: 'John',
                             lastName: 'Doe',
-                            dateOfBirth: '1980-06-10T05:00:00.000Z',
+                            dateOfBirth: '1980-06-10',
                         } as PersonalInformation,
                     },
                     {
@@ -264,7 +264,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                         personalInformation: {
                             firstName: 'John',
                             lastName: 'Doe',
-                            dateOfBirth: '1980-06-10T05:00:00.000Z',
+                            dateOfBirth: '1980-06-10',
                         } as PersonalInformation,
                     },
                     {
@@ -313,7 +313,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                 firstName: 'John',
                 lastName: 'Doe',
                 sexAtBirth: '',
-                dateOfBirth: new Date('1980-06-10T05:00:00.000Z'),
+                dateOfBirth: new Date('1980-06-10T00:00:00.000'),
                 state: 'CA',
             },
             agentDetails: {
