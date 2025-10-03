@@ -54,7 +54,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
             />
             <h3 className={styles.sectionLabel}>{sectionLabel}</h3>
           </AccordionTrigger>
-          {tags?.length && (
+          {!!tags?.length && (
             <div className={styles.tags}>
               {tags.map((tag, i) => (
                 <Tag key={`tag_${i}`} text={tag}>
