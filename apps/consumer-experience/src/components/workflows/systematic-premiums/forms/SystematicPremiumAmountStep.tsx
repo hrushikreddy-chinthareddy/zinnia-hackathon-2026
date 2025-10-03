@@ -79,7 +79,7 @@ export const SystematicPremiumAmountStep = () => {
       id="submit-form"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <div className="mb-xl field-container">
+      <div className="field-container">
         <Controller
           control={form.control}
           name="paymentAmount"
