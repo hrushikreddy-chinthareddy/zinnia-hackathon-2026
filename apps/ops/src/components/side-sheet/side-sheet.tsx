@@ -134,7 +134,8 @@ export default function SideSheet({
         'after:absolute after:-right-px after:top-0 after:bottom-0 after:w-4',
         'after:bg-gradient-to-l after:from-white after:to-transparent',
         'after:pointer-events-none after:z-10',
-        'sm:before:hidden sm:after:hidden'
+        'sm:before:hidden sm:after:hidden',
+        'xs:before:hidden xs:after:hidden'
     );
 
     return (
