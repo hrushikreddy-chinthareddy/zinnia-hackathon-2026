@@ -12,6 +12,8 @@ import {
     FieldTypes,
     FieldSize as BloomFieldSize,
     Link,
+    Popover,
+    Label,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
@@ -23,7 +25,7 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
-import styles from './find-key-values-sidesheet.module.css';
+import styles from './find-all-key-values-sidesheet.module.css';
 import { preparePolicy } from './transformations';
 import {
     NestedData,
@@ -36,6 +38,7 @@ import {
     Collapse,
     ExpandCollapse,
     Expand,
+    toolTip,
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -245,6 +248,7 @@ const KeyValueFieldList = ({
                             dataField={[key, String(data)]}
                             searchValue={searchValue}
                             link={(field as MetaData)?.[link]}
+                            toolTip={(field as MetaData)?.[toolTip]}
                         />
                     );
                 }
@@ -302,7 +306,6 @@ const KeyValueNestedSubSections = ({
                             .map((field, j) => {
                                 const [label, data] = field as DataTuple;
                                 const fieldLink = (field as MetaData)[link];
-                                // FIXME: disallow Symbol in field label
                                 return typeof label === 'string' ? (
                                     <DataField
                                         key={`field_${j}`}
@@ -332,37 +335,41 @@ const KeyValueNestedSubSections = ({
 const DataField = ({
     dataField,
     link,
+    toolTip,
     searchValue,
 }: {
     dataField: [string, string];
     link?: string;
+    toolTip?: string;
     searchValue: string;
 }) => {
     const [fieldLabel, fieldData] = dataField;
+    const [popoverContainer, setPopoverContainer] =
+        useState<HTMLDivElement | null>(null);
+
     return (
         <DotContainer
             dotLeftSide={
-                <div>
+                <div ref={setPopoverContainer} className={styles.fieldLabel}>
                     <Highlighter text={fieldLabel} highlights={[searchValue]} />
-                    {/* FIXME: add tooltip
-                    {item.tooltip && (
+                    {toolTip && (
                         <Popover
-                            placement={
-                                PopoverPlacement.TopRight
-                            }
-                            title={item.tooltip}
-                            body={
-                                item.tooltipBody
+                            container={popoverContainer}
+                            title={fieldLabel}
+                            trigger={
+                                <Icon
+                                    type={IconType.CIRCLE_INFO}
+                                    color="var(--color-base-icon-icon-tooltip)"
+                                    small
+                                    className={styles.toolTipIcon}
+                                />
                             }
                         >
-                            <CircleInfoIcon
-                                height={'16px'}
-                                width={'16px'}
-                                className="text-primary"
-                            />
+                            <div className="typography-content-body-sm">
+                                {toolTip}
+                            </div>
                         </Popover>
                     )}
-                    */}
                 </div>
             }
             dotLeftSideClassName="typography-content-body-sm"
@@ -542,17 +549,20 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                     loading={fieldError || isFetching || isError}
                 >
                     <div className={styles.container}>
-                        <div>
+                        <div className={styles.treeControl}>
                             <Button
                                 mode="link"
                                 size="small"
                                 onClick={() =>
                                     setTreeState((treeState) => !treeState)
                                 }
+                                className={styles.treeControlButton}
                             >
                                 <Icon
-                                    type={IconType.CHEVRON_RIGHT}
-                                    small={true}
+                                    type={IconType.CHEVRON_DOUBLE}
+                                    width={18}
+                                    height={18}
+                                    className={styles.treeControlIcon}
                                 />
                                 {treeState === Expand
                                     ? 'Collapse all'
@@ -568,13 +578,26 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                             />
                         )}
 
-                        {policySections && (
+                        {!!policySections?.length && (
                             <KeyValueSections
                                 preparedPolicy={preparedPolicy}
                                 policySections={policySections}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />
+                        )}
+
+                        {!policyBasics && !policySections?.length && (
+                            <div className={styles.emptySearch}>
+                                <Label>
+                                    <Icon
+                                        type={IconType.CIRCLE_INFO}
+                                        small={true}
+                                        className={styles.infoIcon}
+                                    />
+                                    {t('policy.allFields.emptySearch')}
+                                </Label>
+                            </div>
                         )}
                     </div>
                 </BlurOverlayLoader>

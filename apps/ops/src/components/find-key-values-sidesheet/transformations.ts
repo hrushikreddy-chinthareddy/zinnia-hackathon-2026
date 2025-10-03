@@ -301,7 +301,6 @@ const fillInRequiredPartyDetails = ({
         return undefined;
     }
 
-    //TODO: move out of this function
     const planCode = policy.product?.planCode;
     const policyNumber = policy.policyNumber;
     const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;

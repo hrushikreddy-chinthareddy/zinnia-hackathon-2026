@@ -1,0 +1,70 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.keyValuesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-2xl);
+}
+
+.datePicker {
+    width: 295px;
+}
+
+.treeControl {
+    margin-bottom: var(--measure-dimension-margin-xs);
+
+    .treeControlButton {
+        font: var(--typography-content-body-sm);
+    }
+    .treeControlIcon {
+        transform: rotate(-90deg);
+        padding: 0 var(--measure-dimension-padding-xs);
+    }
+}
+
+.itemsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.fieldLabel {
+    display: flex;
+    color: var(--color-base-text-text-secondary);
+
+    .toolTipIcon {
+        margin-left: var(--measure-dimension-padding-xs);
+    }
+}
+
+.toolTip {
+    z-index: 600;
+}
+
+.subSection {
+    padding: var(--measure-dimension-padding-xl);
+    gap: var(--measure-dimension-margin-xs);
+    border: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    border-radius: var(--measure-dimension-radius-sm);
+
+    &:not(:last-child) {
+        margin-bottom: var(--measure-dimension-margin-xs);
+    }
+}
+
+.emptySearch {
+    background-color: var(--color-base-surface-surface-secondary);
+    border: var(--measure-dimension-stroke-sm) dashed;
+    border-color: var(--color-base-border-border-light);
+    border-radius: var(--measure-dimension-radius-sm);
+    padding: var(--measure-dimension-padding-xl);
+    text-align: center;
+    .infoIcon {
+        vertical-align: text-top;
+        padding-right: var(--measure-dimension-padding-sm);
+    }
+}

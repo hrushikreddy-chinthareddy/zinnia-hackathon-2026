@@ -3291,6 +3291,32 @@
         "commonPhrases": {
             "endingIn": "se terminant par"
         },
+        "toolTips": {
+            "emptySearch": "Aucun résultat trouvé",
+            "preTaxEquityAndFiscalResponsibilityActBasis": "Ceci est le coût de base antérieur à l’adoption de la Loi sur l’équité fiscale et la responsabilité.",
+            "preTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi sur l’équité fiscale et la responsabilité en 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi technique et sur les recettes diverses en 1988.",
+            "netAmountAtRisk": "Ce facteur aide la compagnie d’assurance à comprendre combien d’argent est en risque si l’assuré du {{policyNomenclature}} décédait aujourd’hui. Ceci est utilisé à des fins financières et comptables.",
+            "modifiedEndowmentContractAuthorization": "Cela décrit quel processus d’autorisation, le cas échéant, est requis pour les transactions qui pourraient convertir le {{policyNomenclature}} en MEC, c’est-à-dire un contrat de dotation modifié.",
+            "projectedLapseIndicator": "Si vrai, cela signifie que le {{policyNomenclature}} devrait expirer au cours de l’année de {{policyNomenclature}} suivante en fonction de sa valeur de compte actuelle, des primes versées, du coût d’assurance (COI) et d’autres frais de police.",
+            "loanInterestMethod": "Cela vous indique comment l’intérêt du prêt est appliqué. Arriérés signifie que l’intérêt est facturé à la fin de l’année du {{policyNomenclature}}. Cela signifie qu’un paiement effectué en milieu d’année peut réduire le montant d’intérêt journalier et donc l’intérêt dû à la fin de l’année. Anticipé signifie que l’assureur facture l’intérêt annuel du prêt à l’avance le jour où le prêt commence. Ainsi, si le prêt est contracté en milieu d’année de la police, l’intérêt pour la moitié restante de l’année est facturé au début du prêt. Si le remboursement du prêt a lieu dans l’année de la police, il n’y a généralement pas de remboursement de l’intérêt payé d’avance.",
+            "annualWithdrawalLimitNoCoverageDecrease": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d’autres termes, ils peuvent retirer ce montant et conserver intact leur capital décès.",
+            "marketValueAdjustmentIndicator": "Si vrai, cela indique si un ajustement de la valeur de marché s’applique à ce contrat ou investissement.",
+            "remainingRequiredMinimumDistributionAmount": "Cela montre combien du montant RMD reste à prendre pour l’année en cours.",
+            "sevenPayTestBasis": "Ceci est le montant que le propriétaire a payé en primes (moins les retraits) pendant la période active du test de prime de 7 paiements.",
+            "deathBenefitOption": "Certaines polices offrent l’option d’augmenter la couverture au fil du temps. Le capital décès fixe reste le même pendant la durée du {{policyNomenclature}}. Un capital décès croissant augmente à mesure que la valeur de compte de la police augmente.",
+            "cumulativeGrossDeathBenefitAmount": "Ceci est ce que le {{policyNomenclature}} verse lorsque l’assuré décède. C’est généralement le même que le capital décès de base (aussi appelé montant nominal) mais il peut inclure des ajouts (comme des primes remboursées) dans certains cas.",
+            "netDeathBenefit": "Ceci est approximativement le montant que recevront les bénéficiaires lors d’une demande de décès. Le montant reflète le capital décès brut total moins les prêts en cours. Il n’inclut pas les frais d’intérêt qui ne peuvent être calculés qu’au moment du traitement de la demande de décès. Considérez-le comme un montant utile mais approximatif.",
+            "minimumCoverageAmount": "Ceci est le montant minimum auquel un propriétaire peut réduire son capital décès. Moins de couverture peut entraîner des primes plus basses et des conséquences fiscales négatives. Si la réduction crée un écart suffisamment important entre le capital décès et les primes versées, la police peut échouer aux tests réglementaires et perdre ses avantages fiscaux. Tout changement réinitialise la période de sept ans du test de 7 paiements.",
+            "maximumCoverageAmount": "Ceci est le montant maximum auquel un propriétaire peut augmenter son capital décès. Les demandes d’augmentation doivent passer par le processus de souscription pour approbation. Tout changement réinitialise la période de sept ans du test de 7 paiements.",
+            "minimumCoverageDecreaseAmount": "Ceci se réfère à la réduction minimale de couverture qu’un propriétaire est autorisé à effectuer par année de {{policyNomenclature}}.",
+            "maximumCoverageDecreaseAmount": "Ceci se réfère à la plus grande réduction de couverture qu’un propriétaire peut effectuer par année de {{policyNomenclature}}.",
+            "minimumCoverageIncreaseAmount": "Ceci se réfère au plus petit incrément par lequel un propriétaire peut augmenter sa couverture en une seule année de {{policyNomenclature}}.",
+            "maximumCoverageIncreaseAmount": "Ceci se réfère au plus grand incrément par lequel un propriétaire peut augmenter sa couverture en une seule année de {{policyNomenclature}}.",
+            "grossDeathBenefitAmount": "Ceci est le montant de cette couche de couverture ou avenant qui sera ajouté au capital décès.",
+            "featureIndicator": "Si vrai, cela signifie qu’une fonctionnalité donnée est incluse dans le contrat.",
+            "reducedPaidUpFaceAmount": "Ceci est le montant réduit du capital décès qui résulte si le propriétaire choisit l’option payée réduite (RPU)."
+        },
         "allFields": {
             "policyBasics": "Bases de {{policyNomenclature}}",
             "effectiveDate": "Date d'effet",
