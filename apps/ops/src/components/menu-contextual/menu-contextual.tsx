@@ -57,7 +57,7 @@ export const MenuContextual = ({
         >
             <DropdownMenu.Trigger
                 asChild={triggerAsChild}
-                className="default-focus group block rounded"
+                className="group block rounded"
                 ref={triggerRef}
                 onClick={() => setOpen(true)}
                 onKeyUp={(e) => (e.key === 'Enter' ? setOpen(true) : undefined)}
