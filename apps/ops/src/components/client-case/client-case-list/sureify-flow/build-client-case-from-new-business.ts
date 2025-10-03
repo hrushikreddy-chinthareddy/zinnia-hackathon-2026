@@ -106,15 +106,11 @@ export const buildInsuredDetailsFromNewbusiness = (
         );
     }
 
-    // this is to convert the date to a local date
-    const [y, m, d] = dateOfBirth!.split('-').map(Number);
-    const localMidnight = new Date(y, m - 1, d);
-
     return {
         firstName,
         lastName,
         sexAtBirth: toTitleCase(sexAtBirth),
-        dateOfBirth: localMidnight,
+        dateOfBirth: new Date(`${dateOfBirth}T00:00:00.000Z`),
         state: issueState,
         // all this properties used on client case payload are not included in newBussiness
         // nicotineUser

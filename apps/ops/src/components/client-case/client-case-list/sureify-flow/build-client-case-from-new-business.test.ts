@@ -313,7 +313,7 @@ describe('buildClientCaseFromNewBusiness', () => {
                 firstName: 'John',
                 lastName: 'Doe',
                 sexAtBirth: '',
-                dateOfBirth: new Date('1980-06-10T00:00:00.000'),
+                dateOfBirth: new Date('1980-06-10T00:00:00.000Z'),
                 state: 'CA',
             },
             agentDetails: {
