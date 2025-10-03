@@ -1,4 +1,8 @@
-import { FeatureType, Reason } from '@xd/api-types/dist/generated-types/sor';
+import {
+  FeatureType,
+  ProductType,
+  Reason,
+} from '@xd/api-types/dist/generated-types/sor';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -8,6 +12,7 @@ import {
 } from '@/components/policy-overview/utils';
 import { SystematicPremiumsProvider } from '@/components/providers/systematic-premiums/SystematicPremiumsProvider';
 // import { getSystematicPremiumEligibility } from '@/services/bpm/systematic-premium';
+import { getPolicyDetails } from '@/services';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { getPolicyFeatures } from '@/services/policy/features';
 import { getAllSystematicPrograms } from '@/services/policy/systematic-programs';
@@ -34,22 +39,30 @@ export default async function SystematicPremiumLayout({
   const loggingCtx = await buildCommonLogContext();
 
   // TODO: Can i force cache this somehow?
-  const [systematicProgramsRes, policyFeaturesRes] = await Promise.allSettled([
-    getAllSystematicPrograms(
-      {
-        planCode: params.planCode,
-        policyNumber: params.policyNumber,
-      },
-      loggingCtx
-    ),
-    getPolicyFeatures(
-      {
-        planCode: params.planCode,
-        policyNumber: params.policyNumber,
-      },
-      loggingCtx
-    ),
-  ]);
+  const [systematicProgramsRes, policyFeaturesRes, policyDetailsRes] =
+    await Promise.allSettled([
+      getAllSystematicPrograms(
+        {
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+        },
+        loggingCtx
+      ),
+      getPolicyFeatures(
+        {
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+        },
+        loggingCtx
+      ),
+      getPolicyDetails(
+        {
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+        },
+        loggingCtx
+      ),
+    ]);
 
   const systematicPrograms =
     systematicProgramsRes.status === 'fulfilled'
@@ -58,6 +71,10 @@ export default async function SystematicPremiumLayout({
   const policyFeaturesData =
     policyFeaturesRes.status === 'fulfilled'
       ? policyFeaturesRes.value.data?.data
+      : undefined;
+  const policyDetailsData =
+    policyDetailsRes.status === 'fulfilled'
+      ? policyDetailsRes.value.data
       : undefined;
 
   const policyBillingFeature = policyFeaturesData?.find(
@@ -91,6 +108,7 @@ export default async function SystematicPremiumLayout({
           : undefined
       }
       currentBillingFeature={policyBillingFeature}
+      isTerm={policyDetailsData?.product?.productType === ProductType.TERM}
     >
       <div>{children}</div>
     </SystematicPremiumsProvider>

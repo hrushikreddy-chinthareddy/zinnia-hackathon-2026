@@ -22,9 +22,12 @@ export type SPPaymentFrequency = Frequency;
 export const systematicPremiumAmountStepSchema = z.object({
   nextPaymentDate: z.string().min(1, 'Next payment date is required'),
   paymentFrequency: z.nativeEnum(Frequency).optional(),
-  // TODO: this validation only really works if we have data returning from the API OR user can
-  // input their own value
-  paymentAmount: z.number().nullish(),
+  paymentAmount: z.coerce
+    .number()
+    .min(1)
+    .refine(amount => amount >= 1, {
+      message: 'Amount must be greater than 0',
+    }),
 });
 
 export type SPAmountStepSchema = z.infer<
