@@ -69,9 +69,6 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.LAPSE) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          {visibility?.[ComponentName.OVERVIEW_COVERAGE]() && (
-            <Coverage planCode={planCode} policyNumber={policyNumber} />
-          )}
           <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
           <CallForAssistance customInstruction="for help with reinstatement." />
         </Suspense>
