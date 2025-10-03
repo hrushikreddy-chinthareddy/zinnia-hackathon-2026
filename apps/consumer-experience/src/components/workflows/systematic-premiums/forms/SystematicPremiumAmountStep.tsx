@@ -79,18 +79,6 @@ export const SystematicPremiumAmountStep = () => {
       id="submit-form"
       onSubmit={form.handleSubmit(onSubmit)}
     >
-      <div
-        id="systematic-premium-amt-form"
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          verticalAlign: 'middle',
-          gap: 'var(--measure-dimension-gap-sm)',
-        }}
-      >
-        <p className="typography-labels-field-label">Payment frequency</p>
-      </div>
-
       <div className="mb-xl field-container">
         <Controller
           control={form.control}
@@ -143,6 +131,18 @@ export const SystematicPremiumAmountStep = () => {
             />
           )}
         />
+      </div>
+
+      <div
+        id="systematic-premium-amt-form"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          verticalAlign: 'middle',
+          gap: 'var(--measure-dimension-gap-sm)',
+        }}
+      >
+        <p className="typography-labels-field-label">Payment frequency</p>
       </div>
 
       <Controller
