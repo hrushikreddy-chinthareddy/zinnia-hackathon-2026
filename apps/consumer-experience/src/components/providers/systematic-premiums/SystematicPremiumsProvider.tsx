@@ -16,6 +16,7 @@ import { SystematicPremiumsContext } from './useSystematicPremiums';
 interface SystematicPremiumsProviderProps extends PropsWithChildren {
   currentSystematicPremium?: SystematicProgram;
   currentBillingFeature?: PolicyFeature;
+  isTerm?: boolean;
 }
 
 function SystematicPremiumsReducer(
@@ -31,6 +32,7 @@ function SystematicPremiumsReducer(
 const SystematicPremiumsProvider = ({
   currentSystematicPremium,
   currentBillingFeature,
+  isTerm,
   children,
 }: SystematicPremiumsProviderProps) => {
   const [state, dispatch] = useReducer<
@@ -43,7 +45,9 @@ const SystematicPremiumsProvider = ({
         currentSystematicPremium?.nextProgramDate ||
         dayjs().format(ZAHARA_DATE_FORMAT),
       // TODO: what should the default for this be???
-      paymentAmount: currentBillingFeature?.paymentAmount,
+      paymentAmount: isTerm
+        ? currentBillingFeature?.paymentAmount || 0
+        : currentSystematicPremium?.amount || 0, //If Term, this is current billing feature. If non-term, this should be currentSystematicPremium
       // TODO: eventually remove the bpm enum to zod enum mapping?
       paymentFrequency: currentBillingFeature?.frequency,
     },

@@ -12,6 +12,7 @@ import {
 } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 
+import { convertAggregationAccountTypeToPaymentForm } from '@/app/api/bpm/[planCode]/[policyNumber]/onetimepremium/utils';
 import { SystematicPremiumsState } from '@/components/providers/systematic-premiums/types';
 import { WithdrawalsState } from '@/components/providers/withdrawals/types';
 import { TransactionEligbility } from '@/types/transactions';
@@ -121,7 +122,9 @@ export const systematicPremiumsStateToPolicyRequestInput = (
       amountType: AmountType.AMOUNT,
       arrangementType: ArrangementType.PAYMENT,
       frequency: state?.systematicPremiumAmountStep?.paymentFrequency,
-      paymentForm: state?.selectBankStep?.accountType as PaymentForm,
+      paymentForm: convertAggregationAccountTypeToPaymentForm(
+        state.selectBankStep.accountType
+      ),
       startDate:
         state?.currentSystematicPremium?.startDate || nextProgramDateFormatted,
       endDate: state?.currentSystematicPremium?.endDate,
@@ -140,7 +143,9 @@ export const systematicPremiumsStateToPolicyRequestInput = (
           partyId: state.selectBankStep.appliesToPartyId,
           //TODO: this will not work for everly until the paymentMethods
           // API is updated to return the correct paymentForm
-          paymentForm: state.selectBankStep.accountType as PaymentForm,
+          paymentForm: convertAggregationAccountTypeToPaymentForm(
+            state.selectBankStep.accountType
+          ),
         },
       ],
     },

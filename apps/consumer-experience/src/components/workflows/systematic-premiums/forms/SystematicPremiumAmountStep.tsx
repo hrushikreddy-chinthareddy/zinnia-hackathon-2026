@@ -5,7 +5,11 @@ import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@xd/utils/dist';
 import {
   AssistiveText,
   AssistiveTextVariant,
+  FieldStatus,
+  Icon,
+  IconType,
   Label,
+  Popover,
   Radio,
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
@@ -13,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { FieldDate } from '@/components/field/date/FieldDate';
+import { FieldValue } from '@/components/field/value/FieldValue';
 import {
   SPAmountStepSchema,
   systematicPremiumAmountStepSchema,
@@ -23,6 +28,8 @@ import { useSteppedWorkflowContext } from '@/components/stepped-workflow/Stepped
 
 import { default as styles } from '../SystematicPremiums.module.css';
 import { paymentFrequencyDisplay } from '../utils';
+
+const PREMIUM_PAYMENT_AMOUNT = 'Premium payment';
 
 const getRadioOptions = () => {
   return Object.keys(Frequency)
@@ -72,6 +79,60 @@ export const SystematicPremiumAmountStep = () => {
       id="submit-form"
       onSubmit={form.handleSubmit(onSubmit)}
     >
+      <div className="field-container">
+        <Controller
+          control={form.control}
+          name="paymentAmount"
+          rules={{
+            required: 'Please enter a valid payment amount',
+            min: {
+              value: 1,
+              message: 'Please enter an amount greater than zero',
+            },
+          }}
+          render={({ field }) => (
+            <FieldValue
+              {...field}
+              fieldStatus={
+                form.formState.errors.paymentAmount
+                  ? FieldStatus.ERROR
+                  : FieldStatus.DEFAULT
+              }
+              errorMessage={form.formState.errors.paymentAmount?.message}
+              label={
+                <Label
+                  interactiveElements={[
+                    <Popover
+                      key={PREMIUM_PAYMENT_AMOUNT}
+                      title={PREMIUM_PAYMENT_AMOUNT}
+                      trigger={
+                        <Icon
+                          type={IconType.CIRCLE_INFO}
+                          color="var(--color-base-icon-icon-tooltip, #ff7500)"
+                          small
+                        />
+                      }
+                    >
+                      <p>
+                        Enter the amount you would like to pay into your policy.
+                        Keep in mind there are limits (set by federal laws) to
+                        the amount you can pay without impacting your coverage
+                        or losing tax advantages.
+                      </p>
+                    </Popover>,
+                  ]}
+                >
+                  {PREMIUM_PAYMENT_AMOUNT}
+                </Label>
+              }
+              placeholder=""
+              name="paymentAmount"
+              inputMode="numeric"
+            />
+          )}
+        />
+      </div>
+
       <div
         id="systematic-premium-amt-form"
         style={{
