@@ -110,8 +110,7 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
         isFetching,
     } = useQuery({
         queryKey: ['commissionsStatements', searchBody, limit, offset],
-        queryFn: () =>
-            getDocumentSearchResultsQuery(searchBody, limit, offset, true),
+        queryFn: () => getDocumentSearchResultsQuery(searchBody, limit, offset),
         enabled:
             !!searchBody.masterAgentNumber && !!searchBody.parentCarrierCode,
         placeholderData: (previousData) => previousData,

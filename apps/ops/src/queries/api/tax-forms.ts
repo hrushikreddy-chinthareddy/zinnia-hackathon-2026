@@ -17,15 +17,12 @@ const baseUrlV3 = baseAppUrl + '/api/document/v3/';
 
 export const searchTaxForms = async (
     requestBody: SearchTaxFormRequestBody,
-    useV3: boolean,
     signal?: AbortSignal
 ): Promise<ApiResponse<SearchTaxFormResponseBody>> => {
     try {
-        let url = `${
-            useV3 ? baseUrlV3 + 'tax-forms' : baseUrl + 'taxForms'
-        }?contractNumber=${requestBody.contractNumber}&clientCode=${
-            requestBody.clientCode
-        }`;
+        let url = `${baseUrlV3 + 'tax-forms'}?contractNumber=${
+            requestBody.contractNumber
+        }&clientCode=${requestBody.clientCode}`;
 
         if (requestBody?.numYears) {
             url += `&numYears=${requestBody.numYears}`;
@@ -34,9 +31,7 @@ export const searchTaxForms = async (
             url += `&taxYear=${requestBody.taxYear}`;
         }
         // BPB - planCode is only supported on V3
-        if (useV3 && requestBody?.planCode) {
-            url += `&planCode=${requestBody.planCode}`;
-        }
+        url += `&planCode=${requestBody.planCode}`;
 
         const options: AxiosRequestConfig = {
             signal,

@@ -14,10 +14,6 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
 import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
 import {
@@ -27,8 +23,6 @@ import {
 } from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -61,13 +55,6 @@ export default function DocumentsTab({
     const limit = 25;
     const [caseOffset, setCaseOffset] = useState(0);
     const [policyOffset, setPolicyOffset] = useState(0);
-    const { featureFlagVariables } = useOptimizely();
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        caseDetails?.carrier?.toLocaleLowerCase() || ''
-    );
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.id || !caseDetails?.carrier) {
             return null;
@@ -157,19 +144,12 @@ export default function DocumentsTab({
         } = {},
         isLoading: loadingCaseDocuments,
     } = useQuery({
-        queryKey: [
-            'documentSearch',
-            caseDocumentSearchBody,
-            limit,
-            caseOffset,
-            useV3,
-        ],
+        queryKey: ['documentSearch', caseDocumentSearchBody, limit, caseOffset],
         queryFn: () =>
             getDocumentSearchResultsQuery(
                 caseDocumentSearchBody,
                 limit,
-                caseOffset,
-                useV3
+                caseOffset
             ),
     });
 
@@ -186,14 +166,12 @@ export default function DocumentsTab({
             policyDocumentSearchBody,
             limit,
             policyOffset,
-            useV3,
         ],
         queryFn: () =>
             getDocumentSearchResultsQuery(
                 policyDocumentSearchBody,
                 limit,
-                policyOffset,
-                useV3
+                policyOffset
             ),
         enabled: !!policyDocumentSearchBody?.policyNumber,
     });

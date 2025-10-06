@@ -17,10 +17,7 @@ import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
@@ -36,8 +33,6 @@ import {
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
@@ -78,13 +73,6 @@ const NormalDocs = ({
     isFirstYearSelected: boolean;
 }) => {
     const { t } = useTranslation();
-    const { featureFlagVariables } = useOptimizely();
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        policy?.carrierId?.toLocaleLowerCase() || ''
-    );
     const limit = 25;
     const [offset, setOffset] = useState(0);
 
@@ -158,9 +146,9 @@ const NormalDocs = ({
         } = {},
         isLoading,
     } = useQuery({
-        queryKey: ['documentSearch', searchParams, limit, offset, useV3],
+        queryKey: ['documentSearch', searchParams, limit, offset],
         queryFn: () =>
-            getDocumentSearchResultsQuery(searchParams, limit, offset, useV3),
+            getDocumentSearchResultsQuery(searchParams, limit, offset),
         enabled: !!policy?.policyNumber,
     });
 
@@ -238,15 +226,7 @@ const TaxDocs = ({
             } else {
                 taxQueryParams.taxYear = Number(yearSelection);
             }
-
-            const useV3 = isFeatureFlagVariableActive(
-                featureFlagVariables,
-                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-                OptimizelyVariableKey.Clients,
-                policy?.carrierId?.toLocaleLowerCase() || ''
-            );
-
-            const response = await searchTaxForms(taxQueryParams, useV3);
+            const response = await searchTaxForms(taxQueryParams);
             setDocs(response?.data?.items ?? null);
             setTotal(response?.data?.count ?? 0);
             setLoading(false);
