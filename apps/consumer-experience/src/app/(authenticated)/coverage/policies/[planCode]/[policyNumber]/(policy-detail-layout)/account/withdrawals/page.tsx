@@ -227,7 +227,11 @@ export default async function Withdrawals({
                   </FieldData>
                   {/* ANNUAL WITHDRAWALS REMAINING */}
                   <FieldData
-                    caption={`${!isNullEmptyOrUndefined(data.annualWithdrawalsTaken) && <span>{data.annualWithdrawalsTaken} taken</span>}`}
+                    caption={
+                      !isNullEmptyOrUndefined(data.annualWithdrawalsTaken) && (
+                        <span>{data.annualWithdrawalsTaken} taken</span>
+                      )
+                    }
                     Label={
                       <Label
                         interactiveElements={[
