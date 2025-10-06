@@ -151,10 +151,7 @@
                                     "if": {
                                         "properties": {
                                             "process": {
-                                                "enum": [
-                                                    "Withdrawal",
-                                                    "Full Surrender"
-                                                ]
+                                                "const": "Full Surrender"
                                             }
                                         }
                                     },
@@ -190,7 +187,7 @@
                                             "if": {
                                                 "properties": {
                                                     "process": {
-                                                        "const": "New Business"
+                                                        "const": "Withdrawal"
                                                     },
                                                     "processSubType": {
                                                         "const": "Free Look Cancellation"
