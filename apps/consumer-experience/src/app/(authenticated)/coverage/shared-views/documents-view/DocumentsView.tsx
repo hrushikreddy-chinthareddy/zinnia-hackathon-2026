@@ -78,6 +78,7 @@ export const DocumentsView = async ({
             policyNumber,
             recipient: 'CLIENT',
           },
+          //TODO: instead of passing undefined for limit and offset, pass an object containing them
           undefined,
           undefined,
           loggingContext

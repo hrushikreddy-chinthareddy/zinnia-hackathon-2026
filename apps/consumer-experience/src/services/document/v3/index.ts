@@ -75,6 +75,7 @@ export const getDocumentDownloadV3 = withLogging(
 export const searchDocumentsV3 = withLogging(
   async (
     searchBody: SearchRequestV3,
+    //TODO: move limit and offset into an object
     limit: number = 500, // 500 docs means we can still do front-end pagination for now
     offset: number = 0,
     loggingContext: CommonLogContext
