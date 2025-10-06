@@ -314,6 +314,9 @@
             "beneficiary": {
                 "text": "Administrar beneficiarios",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "userMenu": {
+                "text": "Menú de Usuario"
             }
         },
         "loader": "Cargando..."

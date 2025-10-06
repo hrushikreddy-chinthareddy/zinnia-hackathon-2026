@@ -325,6 +325,9 @@
             "bénéficiaire": {
                 "text": "Gérer les bénéficiaires",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "userMenu": {
+                "text": "Menu utilisateur"
             }
         },
         "loader": "Chargement..."
