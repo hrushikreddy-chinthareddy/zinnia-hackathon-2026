@@ -1,0 +1,61 @@
+{
+    "process": "Quality Audit",
+    "carrier": "FNWL",
+    "taskType": "QUALITY_REWORK_AUDIT_REVIEW",
+    "taskName": "Quality Rework Audit Review",
+    "caseId": "CA0000429003",
+    "taskDetails": "",
+    "status": "",
+    "data": {
+        "workId": "Work003",
+        "details": {
+            "applicationType": "Incoming Transfer",
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "New Business Application",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                }
+            ]
+        },
+        "reworkRequired": false,
+        "auditDetails": [
+            {
+                "category": "Rate lock",
+                "subCategory": "Mannual review incorrect",
+                "auditData": [
+                    {
+                        "note": "note1",
+                        "attachments": [
+                            {
+                                "documentId": "67c1b9655c3f6536d7f2ac69",
+                                "documentType": "CASE CREATION FILE",
+                                "documentName": "Case Creation Document 1"
+                            }
+                        ]
+                    }
+                ],
+                "processorName": "Process 1",
+                "reworkDetails": [
+                    {
+                        "note": "Note 2",
+                        "attachments": [
+                            {
+                                "documentId": "67c1b9655c3f6536d7f2ac69",
+                                "documentType": "CASE CREATION FILE",
+                                "documentName": "Case Creation Document 2"
+                            }
+                        ],
+                        "reworkCompleted": false,
+                        "reworkDateTime": "2025-08-28:18:00"
+                    }
+                ]
+            }
+        ]
+    },
+    "assigneeFirstName": "Vijayalaxmi",
+    "assigneeLastName": "Sambhane",
+    "assignee": "Vijayalaxmi.Sambhane@zinnia.com",
+    "assigneePartyId": "fa49a69c3939412d87b315cb39459497"
+}
