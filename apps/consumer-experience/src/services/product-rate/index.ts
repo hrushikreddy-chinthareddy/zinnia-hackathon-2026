@@ -162,6 +162,7 @@ export const carrierProductHasConfiguredItem = async (
     function: 'carrierProductHasConfiguredItem',
     configuredItemCode,
     benefitList,
+    loggingContext: log,
   });
   return benefitList?.includes(configuredItemCode);
 };
