@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
 import ClientCaseSearchBar from '@deps/components/client-case/client-case-list/search-bar/client-case-search-bar';
 import { ClientCaseTable } from '@deps/components/client-case/client-case-list/table/client-case-table';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Typography, {
@@ -65,6 +66,7 @@ export default function Illustrations({
     const [bannerText, setBannerText] = useState('');
     const { isAllowWriteClientCase, partyReferenceData } =
         usePermissionsContext();
+    const { sendNewClientCaseClicked } = useIllustrationAnalytics();
 
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases?.length ?? 0 > 0;
@@ -135,6 +137,7 @@ export default function Illustrations({
                                 query: createClientCaseSearchParams.toString(),
                             }}
                             passHref
+                            onClick={sendNewClientCaseClicked}
                         >
                             <Button
                                 mode="link"

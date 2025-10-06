@@ -17,6 +17,7 @@ import { useRouter } from 'next/router';
 import { TFunction } from 'next-i18next';
 import { useTranslation } from 'react-i18next';
 
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -34,7 +35,7 @@ import TableHeaderSortWrapper from './table-header-sort-wrapper.tsx/table-header
 const generateTableContent = (
     clientCases: IllustrationsClientCase[],
     t: TFunction,
-    onRowClick: (clientCaseId: string) => void
+    onRowClick: (url: string, clientCaseId: string) => void
 ) => {
     if (clientCases.length > 0) {
         return clientCases.map((caseData) => {
@@ -81,7 +82,8 @@ const generateTableContent = (
                         <Link
                             onClick={() =>
                                 onRowClick(
-                                    `client-cases/${caseData.id}/illustrate`
+                                    `client-cases/${caseData.id}/illustrate`,
+                                    caseData.id
                                 )
                             }
                             href={`client-cases/${caseData.id}/illustrate`}
@@ -169,8 +171,10 @@ export const ClientCaseTable = () => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { results } = useIllustrationsClientCase();
     const router = useRouter();
+    const { sendClientCaseClicked } = useIllustrationAnalytics();
 
-    const goToClientCase = (href: string) => {
+    const goToClientCase = (href: string, clientCaseId: string) => {
+        sendClientCaseClicked(clientCaseId, href);
         router.push(href);
     };
 

@@ -48,6 +48,8 @@ export enum SegmentTrackedEventName {
     TransactionContinueClicked = 'Transaction Continue Clicked',
     TransactionCancelClicked = 'Transaction Cancel Clicked',
     TransactionSubmitted = 'transaction_submitted',
+    ClientCaseClicked = 'Client Case Clicked',
+    NewClientCaseClicked = 'New Client Case Clicked',
 }
 
 export interface BaseSegmentEventProperties {
@@ -66,12 +68,29 @@ export type SearchSubmittedEvent = BaseSegmentEventProperties & {
     documentNumber?: boolean;
 };
 
+export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProperties & {
+    firstNameUsed: boolean;
+    lastNameUsed: boolean;
+    agentFirstName: boolean;
+    agentLastName: boolean;
+    timeStamp: Date;
+    caseTitle: boolean;
+    searchText?: string;
+};
+
+export type ClientCaseClickedEvent = BaseSegmentEventProperties & {
+    clientCaseID: string;
+    linkUrl: string;
+    timeStamp: Date;
+};
+
 export type DropdownClickedEvent = BaseSegmentEventProperties & {
     dropdownName: string;
 } & (
         | { searchText: string }
         | { selectedItemName: string }
         | { searchText: string; selectedItemName: string }
+        | { timestamp: Date }
     );
 
 export type PolicyClickedEvent = BaseSegmentEventProperties & {
