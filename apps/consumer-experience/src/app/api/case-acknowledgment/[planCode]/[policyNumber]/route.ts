@@ -19,7 +19,10 @@ export async function GET(
       planCode,
       policyNumber,
     },
-    commonLogContext
+    {
+      user: commonLogContext.user,
+      correlationId: commonLogContext.correlationId,
+    }
   );
 
   return NextResponse.json(response);
