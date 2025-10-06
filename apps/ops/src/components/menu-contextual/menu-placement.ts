@@ -55,7 +55,7 @@ export function calculateMenuPlacement(
 
     return {
         side:
-            Math.floor((top + bottom) / 4) > Math.floor(innerHeight / 2)
+            Math.floor((top + bottom) / 4) > Math.floor(innerHeight / 4)
                 ? 'top'
                 : 'bottom',
         align:
