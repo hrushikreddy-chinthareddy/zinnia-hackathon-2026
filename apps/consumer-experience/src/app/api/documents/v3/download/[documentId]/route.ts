@@ -48,7 +48,10 @@ export const GET = async (
     params.documentId,
     documentClassification as string,
     parentCarrierCode as string,
-    commonLogContext
+    {
+      user: commonLogContext.user,
+      correlationId: commonLogContext.correlationId,
+    }
   );
 
   if (!download?.data?.binaryData) {

@@ -55,7 +55,10 @@ export const GET = async (
       fChar,
       formId: params.documentId,
     },
-    commonLogContext
+    {
+      user: commonLogContext.user,
+      correlationId: commonLogContext.correlationId,
+    }
   );
 
   if (!download?.data?.binaryData) {
