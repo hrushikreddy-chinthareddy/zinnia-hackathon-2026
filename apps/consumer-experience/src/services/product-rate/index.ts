@@ -1,6 +1,6 @@
 // DOCUMENTATION ABOUT THIS API https://zinnia.atlassian.net/wiki/spaces/LPS/pages/3818750009/Product-Rate+Service
 
-import { parseAPIResponse } from '@/utils/api';
+import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
@@ -58,7 +58,12 @@ export const getListOfConfiguredItemsForProductBenefit = withLogging(
     if (!rawResponse?.ok) {
       throw new Error(
         `Error fetching list of configured item codes for ${carrierId} ${planCode}`,
-        { cause: response.status }
+        {
+          cause: await logApiNotOkDetails({
+            rawResponse,
+            parsedResponse: response,
+          }),
+        }
       );
     }
 
@@ -112,7 +117,12 @@ export const getProductBenefitConfiguredSettingsDetails = withLogging(
     const response = await parseAPIResponse(rawResponse);
 
     if (!rawResponse?.ok) {
-      throw new Error('Error fetching product benefit configured settings');
+      throw new Error('Error fetching product benefit configured settings', {
+        cause: await logApiNotOkDetails({
+          rawResponse,
+          parsedResponse: response,
+        }),
+      });
     }
 
     return response;
@@ -123,38 +133,31 @@ export const getProductBenefitConfiguredSettingsDetails = withLogging(
   }
 );
 
-export const carrierProductHasConfiguredItem = withLogging(
-  async (
-    {
-      configuredItemCode,
-      carrierId,
-      planCode,
-      benefitId,
-    }: {
-      configuredItemCode: ConfiguredSettingId;
-      carrierId: string;
-      planCode: string;
-      benefitId: string;
-    },
-    log: CommonLogContext
-  ) => {
-    const { data: benefitList } =
-      await getListOfConfiguredItemsForProductBenefit(
-        {
-          carrierId: carrierId,
-          planCode: planCode,
-          benefitId: benefitId,
-        },
-        log
-      );
-
-    return benefitList?.includes(configuredItemCode);
-  },
+export const carrierProductHasConfiguredItem = async (
   {
-    file: FILE_NAME,
-    functionName: 'carrierProductHasConfiguredItem',
-  }
-);
+    configuredItemCode,
+    carrierId,
+    planCode,
+    benefitId,
+  }: {
+    configuredItemCode: ConfiguredSettingId;
+    carrierId: string;
+    planCode: string;
+    benefitId: string;
+  },
+  log: CommonLogContext
+) => {
+  const { data: benefitList } = await getListOfConfiguredItemsForProductBenefit(
+    {
+      carrierId: carrierId,
+      planCode: planCode,
+      benefitId: benefitId,
+    },
+    log
+  );
+
+  return benefitList?.includes(configuredItemCode);
+};
 
 // TODO: is this fee only for one time payments? or how else to name this?
 export const getCarrierProductOneTimePaymentFee = withLogging(
@@ -177,7 +180,7 @@ export const getCarrierProductOneTimePaymentFee = withLogging(
     // First we need to see if the carrier has the configured item since only
     // some products have certain configured codes, if a product doesn't
     // have the configured item we know it doesn't have a fee
-    const { data: hasFeelValSetting } = await carrierProductHasConfiguredItem(
+    const hasFeelValSetting = await carrierProductHasConfiguredItem(
       {
         configuredItemCode,
         carrierId,
