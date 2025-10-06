@@ -8169,6 +8169,7 @@
             "dtcc": "DTCC",
             "creditcard": "Credit Card",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Check",
             "exchange": "Exchange",
             "wire": "Wire",

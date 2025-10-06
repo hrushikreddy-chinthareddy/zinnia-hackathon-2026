@@ -8025,6 +8025,7 @@
             "dtcc": "DTCC",
             "creditcard": "Carte de crédit",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Chèque",
             "exchange": "Échange",
             "wire": "Virement bancaire",

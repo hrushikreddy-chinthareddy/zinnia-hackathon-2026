@@ -76,7 +76,7 @@ export const paymentFrequencies: Record<string, string> = {
 export const paymentMethods: Record<string, string> = {
     DTCC: 'clientCase.illustrationDetails.dtcc',
     CREDITCARD: 'clientCase.illustrationDetails.creditcard',
-    ACH: 'clientCase.illustrationDetails.ach',
+    ACH: 'clientCase.illustrationDetails.eft', // UI updated due to ZDR-3675
     CHECK: 'clientCase.illustrationDetails.check',
     EXCHANGE: 'clientCase.illustrationDetails.exchange',
     WIRE: 'clientCase.illustrationDetails.wire',

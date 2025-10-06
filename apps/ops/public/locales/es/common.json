@@ -8009,6 +8009,7 @@
             "dtcc": "DTCC",
             "creditcard": "Tarjeta de crédito",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Cheque",
             "exchange": "Intercambio",
             "wire": "Transferencia bancaria",
