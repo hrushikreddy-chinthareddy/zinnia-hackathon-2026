@@ -256,7 +256,13 @@ export const getFunds = withLogging(
     });
 
     if (!combinedData || combinedData.length === 0) {
-      throw new Error('Failed to combine fund data');
+      throw new Error('Failed to combine fund data. Inputs:', {
+        cause: {
+          fundDetails,
+          productsDetails,
+          policyFunds,
+        },
+      });
     }
 
     return combinedData;
