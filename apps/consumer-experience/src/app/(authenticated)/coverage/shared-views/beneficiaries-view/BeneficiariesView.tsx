@@ -94,7 +94,7 @@ const Header = ({
       <div className={styles.allocationHeaderText}>
         <Icon type={IconType.USER_GROUP} />
         <figcaption className="typography-labels-label-md">{title}</figcaption>
-        <LabelPopover title="Primary allocation">
+        <LabelPopover title={title}>
           <p>{description}</p>
         </LabelPopover>
       </div>
