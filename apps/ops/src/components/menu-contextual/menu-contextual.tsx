@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { ReactNode, useCallback, useRef, useState } from 'react';
 
 import { calculateMenuPlacement } from './menu-placement';
-
+console.log('elizabeth test vercel');
 export interface MenuContextualProps {
     children: ReactNode;
     trigger: ReactNode;
