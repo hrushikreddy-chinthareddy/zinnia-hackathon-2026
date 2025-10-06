@@ -327,7 +327,7 @@
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
             "userMenu": {
-                "text": "Menu utilisateur"
+                "text": "Menu Utilisateur"
             }
         },
         "loader": "Chargement..."
