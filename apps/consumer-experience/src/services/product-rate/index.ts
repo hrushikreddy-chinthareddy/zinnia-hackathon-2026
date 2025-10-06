@@ -1,6 +1,7 @@
 // DOCUMENTATION ABOUT THIS API https://zinnia.atlassian.net/wiki/spaces/LPS/pages/3818750009/Product-Rate+Service
 
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
+import { logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
@@ -156,6 +157,12 @@ export const carrierProductHasConfiguredItem = async (
     log
   );
 
+  logTrace(`Benefit list includes configured item: `, {
+    file: FILE_NAME,
+    function: 'carrierProductHasConfiguredItem',
+    configuredItemCode,
+    benefitList,
+  });
   return benefitList?.includes(configuredItemCode);
 };
 
