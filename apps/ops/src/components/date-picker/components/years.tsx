@@ -35,7 +35,7 @@ export const Years = ({
     const { focusedIndex, setItemRef, handleKeyDown } = useKeyboardNavigation(
         years.length,
         columns,
-        handleCloseYears,
+        (index) => handleCloseYears(years[index]),
         onEscape
     );
 
