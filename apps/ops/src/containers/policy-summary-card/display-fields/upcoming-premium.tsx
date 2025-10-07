@@ -80,29 +80,8 @@ const TransactionLink: React.FC<BasePolicyComponentArgs> = ({
         sideSheet.handleOpen(true);
     };
 
-    if (!isUserPermissionedToTransact) {
-        return (
-            <TempNavInactive
-                tooltipBody={t(
-                    'colDefs:policySummary.permissionDeniedTooltip',
-                    {
-                        carrier: policy.carrierName,
-                    }
-                )}
-            >
-                {t('colDefs:policySummary.makePayment')}
-            </TempNavInactive>
-        );
-    } else if (!bankDetails?.accountNumber) {
-        return (
-            <NavElement
-                size={NavElementSize.Small}
-                type={NavElementType.Link}
-                href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/premiums/new-premium`}
-            >
-                {t('colDefs:policySummary.makePayment')}
-            </NavElement>
-        );
+    if (!isUserPermissionedToTransact || !bankDetails?.accountNumber) {
+        return null;
     }
 
     return (
