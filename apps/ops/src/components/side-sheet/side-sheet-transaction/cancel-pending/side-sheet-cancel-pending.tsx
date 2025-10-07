@@ -64,7 +64,7 @@ export default function SidesheetCancelPending({
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: ExtendedTransactionType.CancelTransaction,
                 correlationId,

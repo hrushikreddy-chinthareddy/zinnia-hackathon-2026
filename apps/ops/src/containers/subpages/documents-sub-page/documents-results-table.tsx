@@ -78,7 +78,7 @@ const DownloadItem = ({
         segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(
             SegmentTrackedEventName.CaseDocumentClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: 'Download',
                 documentId: docId,

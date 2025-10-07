@@ -126,7 +126,7 @@ const SelectSearch = ({
             {
                 dropdownName: 'Key Value Search',
                 searchText: searchValue as string,
-                session_id: sessionId as string,
+                authSessionId: sessionId as string,
                 userId: userPartyId as string,
             }
         );

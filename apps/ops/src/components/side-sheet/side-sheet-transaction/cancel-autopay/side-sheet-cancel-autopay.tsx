@@ -244,7 +244,7 @@ const SideSheetCancelAutopay = ({
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.SYSTEMATIC_PROGRAM_UPDATE,
                 correlationId: updateBody.correlationId,

@@ -1,7 +1,7 @@
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import {
-    BaseSegmentEventProperties,
+    BaseSegmentEventProps,
     ClientCaseClickedEvent,
     DropdownClickedEvent,
     IllustrationsSearchSubmittedEvent,
@@ -21,11 +21,12 @@ interface SendSearchProps {
 }
 
 export const useIllustrationAnalytics = () => {
-    const { partyId, sessionId } = usePermissionsContext();
+    const { partyId: userId, sessionId: authSessionId } =
+        usePermissionsContext();
 
     const baseSegmentEventProps = {
-        userId: partyId,
-        session_id: sessionId,
+        userId,
+        authSessionId,
     };
 
     const sendClientCaseDropdownClicked = (value: SearchType) => {
@@ -94,7 +95,7 @@ export const useIllustrationAnalytics = () => {
     };
 
     const sendNewClientCaseClicked = () => {
-        segmentAnalyticsTrackEvent<BaseSegmentEventProperties>(
+        segmentAnalyticsTrackEvent<BaseSegmentEventProps>(
             SegmentTrackedEventName.NewClientCaseClicked,
             {
                 ...baseSegmentEventProps,

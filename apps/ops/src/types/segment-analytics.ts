@@ -35,29 +35,43 @@ export enum SegmentPageName {
     CommissionsStatements = 'Commissions Statements',
     Usage = 'Usage',
 }
-
+/*
+    Per Analytics Team: event names should not be customized to use case;
+    instead, they should reflect the user action, such as "button clicked".
+    The rest of the data should be included as event properties.
+    taskId / caseId / policyId + planCode should be included if they are available
+*/
 export enum SegmentTrackedEventName {
-    SearchSubmitted = 'Search Submitted',
-    DropdownClicked = 'Dropdown Clicked',
-    PolicyClicked = 'Policy Clicked',
-    CaseClicked = 'Case Clicked',
-    FilterApplied = 'Filter Applied',
-    CaseDetailsTabClicked = 'Case Details Tab Clicked',
-    CaseStageAccordionClicked = 'Case Stage Accordion Clicked',
-    CaseDocumentClicked = 'Case Document Clicked',
-    TransactionContinueClicked = 'Transaction Continue Clicked',
-    TransactionCancelClicked = 'Transaction Cancel Clicked',
-    TransactionSubmitted = 'transaction_submitted',
-    ClientCaseClicked = 'Client Case Clicked',
-    NewClientCaseClicked = 'New Client Case Clicked',
+    ButtonClicked = 'button_clicked',
+    DropdownClicked = 'dropdown_clicked',
+    PolicyClicked = 'Policy Clicked', // FIXME: remove
+    CaseClicked = 'Case Clicked', // FIXME: remove
+    SearchSubmitted = 'search_submitted',
+    FilterApplied = 'filter_applied',
+    CaseDetailsTabClicked = 'Case Details Tab Clicked', // FIXME: remove
+    CaseStageAccordionClicked = 'Case Stage Accordion Clicked', // FIXME: remove
+    CaseDocumentClicked = 'Case Document Clicked', // FIXME: remove
+    TransactionContinueClicked = 'Transaction Continue Clicked', // FIXME: remove
+    TransactionCancelClicked = 'Transaction Cancel Clicked', // FIXME: remove
+    TransactionSubmitted = 'transaction_submitted', // FIXME: remove
+    ClientCaseClicked = 'Client Case Clicked', // FIXME: remove
+    NewClientCaseClicked = 'New Client Case Clicked', //FIXME: remove
 }
 
-export interface BaseSegmentEventProperties {
-    session_id: string;
-    userId: string;
+export interface BaseSegmentEventProps {
+    authSessionId: string;
+    policyId?: string;
+    caseId?: string;
+    planCode?: string;
+    taskId?: string;
+    userId?: string; // FIXME: remove; this is added by by Segment automatically
+    correlationId?: string;
 }
+export type ButtonClickedEventProps = BaseSegmentEventProps & {
+    buttonText: string;
+};
 
-export type SearchSubmittedEvent = BaseSegmentEventProperties & {
+export type SearchSubmittedEvent = BaseSegmentEventProps & {
     policyNumber?: string;
     ssnUsed: boolean;
     firstNameUsed: boolean;
@@ -68,7 +82,7 @@ export type SearchSubmittedEvent = BaseSegmentEventProperties & {
     documentNumber?: boolean;
 };
 
-export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProperties & {
+export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProps & {
     firstNameUsed: boolean;
     lastNameUsed: boolean;
     agentFirstName: boolean;
@@ -78,13 +92,13 @@ export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProperties & {
     searchText?: string;
 };
 
-export type ClientCaseClickedEvent = BaseSegmentEventProperties & {
+export type ClientCaseClickedEvent = BaseSegmentEventProps & {
     clientCaseID: string;
     linkUrl: string;
     timeStamp: Date;
 };
 
-export type DropdownClickedEvent = BaseSegmentEventProperties & {
+export type DropdownClickedEvent = BaseSegmentEventProps & {
     dropdownName: string;
 } & (
         | { searchText: string }
@@ -93,36 +107,37 @@ export type DropdownClickedEvent = BaseSegmentEventProperties & {
         | { timestamp: Date }
     );
 
-export type PolicyClickedEvent = BaseSegmentEventProperties & {
+export type PolicyClickedEvent = BaseSegmentEventProps & {
     contractNumber?: string;
     linkName: string;
     linkUrl: string;
     planCode?: string;
 };
 
-export type CaseClickedEvent = BaseSegmentEventProperties & {
+export type CaseClickedEvent = BaseSegmentEventProps & {
     caseId: string;
 };
 
-export type CaseTabClickedEvent = BaseSegmentEventProperties & {
+export type CaseTabClickedEvent = BaseSegmentEventProps & {
     caseId: string;
     tabName: string;
 };
 
-export type CaseStageAccordionClickedEvent = BaseSegmentEventProperties & {
+export type CaseStageAccordionClickedEvent = BaseSegmentEventProps & {
     caseId: string;
     isOpen: boolean;
     stageId: string;
     stageName: string;
 };
 
-export type CaseDocumentClickedEvent = BaseSegmentEventProperties & {
+export type CaseDocumentClickedEvent = BaseSegmentEventProps & {
     documentId: string;
     type: string;
 };
 
-export type FilterClickedEvent = BaseSegmentEventProperties & {
-    selectedItemName: string;
+export type FilterAppliedEventProps = BaseSegmentEventProps & {
+    filterValue: string;
+    filterTarget: string;
 };
 
 export enum ExtendedTransactionType {
@@ -130,7 +145,7 @@ export enum ExtendedTransactionType {
 }
 
 // TODO MG: this is the same as TransactionTrackEventProps
-type BaseTransactionClickedEvent = BaseSegmentEventProperties & {
+type BaseTransactionClickedEvent = BaseSegmentEventProps & {
     step?: TransactionStep;
     type?:
         | TransactionType
@@ -297,7 +312,7 @@ export enum TransactionSubmittedEventType {
     REMOVE_THIRD_PARTY = 'remove_third_party',
 }
 
-export type TransactionSuccessfulEvent = BaseSegmentEventProperties & {
+export type TransactionSuccessfulEvent = BaseSegmentEventProps & {
     amount?: number; // contextual
     area: TransactionArea;
     autopay_frequency?: string; // contextual

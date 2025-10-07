@@ -19,6 +19,11 @@ import dayjs, { Dayjs } from 'dayjs';
 import { ChangeEvent, FC, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import {
+    buttonClickedTrackEvent,
+    filterAppliedTrackEvent,
+} from '@deps/helpers/analytics/segment-analytics';
 import {
     getPolicyQueryKey,
     getPolicyQuery,
@@ -407,6 +412,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     const queryClient = useQueryClient();
     const [enableQuery, setEnableQuery] = useState(false);
     const { t } = useTranslation();
+    const { sessionId: authSessionId } = usePermissionsContext();
 
     // TODO: abstract to custom hook
     const {
@@ -463,16 +469,6 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
-    /*
-    // When user searches, filter down the key values
-    const filteredKeys = useMemo(() => {
-        return filterOnSearchHandler(keyValues, {
-            searchValue: debouncedSearchValue,
-        });
-    }, [keyValues, debouncedSearchValue]);
-
-    */
-
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(
         () => (policy ? preparePolicy(policy, t, debouncedSearchValue) : null),
@@ -493,15 +489,34 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     // If the search value changes to non-empty, expand the tree
     // (the tree will be cropped to matching search results)
     useEffect(() => {
-        debouncedSearchValue && setTreeState(Expand);
-    }, [debouncedSearchValue]);
+        if (!debouncedSearchValue) return;
+        filterAppliedTrackEvent({
+            filterValue: debouncedSearchValue,
+            filterTarget: 'Find Key Values',
+            authSessionId: authSessionId,
+            policyId: policyNumber,
+            planCode: planCode,
+        });
+        setTreeState(Expand);
+    }, [debouncedSearchValue, authSessionId, planCode, policyNumber]);
 
     if (!preparedPolicy) return null; //FIXME: add loading state
 
     return (
         <SideSheet
             trigger={
-                <Button mode="secondary" size="small">
+                <Button
+                    mode="secondary"
+                    size="small"
+                    onClick={() =>
+                        buttonClickedTrackEvent({
+                            buttonText: 'Find key values',
+                            authSessionId,
+                            policyId: policyNumber,
+                            planCode,
+                        })
+                    }
+                >
                     <Icon type={IconType.DOCUMENT_TEXT} />
                     {t('label.findKeyValuesTitle')}
                 </Button>

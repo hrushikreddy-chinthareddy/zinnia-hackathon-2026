@@ -372,7 +372,7 @@ const CaseManagementDashboard = ({
                     firstNameUsed: !!value?.ownerFirstName,
                     lastNameUsed: !!value?.ownerLastName,
                     policyNumber: value?.policyNumber,
-                    session_id: user.sid,
+                    authSessionId: user.sid,
                     userId: user.partyId,
                 }
             );

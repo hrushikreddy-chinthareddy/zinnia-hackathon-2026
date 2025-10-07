@@ -77,7 +77,7 @@ export const buildNonFinancialTransactionsSubmittedEvent = ({
         ...deriveDocContextFromQuery(query),
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
@@ -105,7 +105,7 @@ export const buildOneTimeFinancialTransactionSubmittedEvent = ({
         carrier: getCarrierFromPolicy(policy) ?? '',
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
@@ -124,7 +124,7 @@ export const buildFullSurrenderSubmittedEvent = ({
         ...deriveDocContextFromQuery(query),
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
@@ -215,7 +215,7 @@ export const buildSystematicProgramSubmittedEvent = ({
         carrier: getCarrierFromPolicy(policy) ?? '',
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
