@@ -1,4 +1,3 @@
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { SystematicProgram, Reason } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
@@ -12,7 +11,6 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import BankingDetails from '@deps/components/side-sheet/banking-details/banking-details';
 import { TranslationFiles } from '@deps/config/translations';
@@ -21,7 +19,6 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
-import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -62,12 +59,6 @@ const TransactionLink: React.FC<BasePolicyComponentArgs> = ({
         () => policyDataToGlobalValues(policy, t),
         [policy, t]
     );
-    const { isPermissioned: isUserPermissionedToTransact } =
-        useTransactionPermissionCheck(
-            TransactionPermission.WritePolicy,
-            policy.policyNumber,
-            policy.planCode
-        );
 
     const openBankingSidesheet = () => {
         sideSheet.changeSideSheetContent(
@@ -80,7 +71,7 @@ const TransactionLink: React.FC<BasePolicyComponentArgs> = ({
         sideSheet.handleOpen(true);
     };
 
-    if (!isUserPermissionedToTransact || !bankDetails?.accountNumber) {
+    if (!bankDetails?.accountNumber) {
         return null;
     }
 
