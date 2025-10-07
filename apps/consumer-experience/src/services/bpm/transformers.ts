@@ -13,8 +13,8 @@ import {
 import dayjs from 'dayjs';
 
 import { convertAggregationAccountTypeToPaymentForm } from '@/app/api/bpm/[planCode]/[policyNumber]/onetimepremium/utils';
-import { SystematicPremiumsState } from '@/components/providers/systematic-premiums/types';
-import { WithdrawalsState } from '@/components/providers/withdrawals/types';
+import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
+import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
 import { TransactionEligbility } from '@/types/transactions';
 import { eligibilityStatus } from '@/utils/data';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';

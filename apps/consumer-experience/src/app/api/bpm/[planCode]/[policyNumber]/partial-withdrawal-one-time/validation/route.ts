@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { WithdrawalsState } from '@/components/providers/withdrawals/types';
+import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
 import {
   getOneTimeWithdrawalValidation,
   WithdrawalValidationResponse,

@@ -1,5 +1,5 @@
-import { MFAStep } from '@/components/workflows/withdrawals/forms/MFAStep';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { MFAStep } from '@/components/stepped-workflow/workflows/withdrawals/forms/MFAStep';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const VerifyIdentityPage = ({ params }: PolicyRequestInputsParams) => {

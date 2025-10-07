@@ -1,5 +1,5 @@
-import { TaxWithholdings } from '@/components/workflows/withdrawals/forms/TaxWithholdings';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { TaxWithholdings } from '@/components/stepped-workflow/workflows/withdrawals/forms/TaxWithholdings';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { getPolicyProfileData } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';

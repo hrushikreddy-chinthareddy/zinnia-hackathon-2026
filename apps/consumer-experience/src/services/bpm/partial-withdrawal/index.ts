@@ -8,7 +8,7 @@ import {
 import dayjs from 'dayjs';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
-import { WithdrawalsState } from '@/components/providers/withdrawals/types';
+import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
 import { ApiResponse } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';

@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
-import { WithdrawalsProvider } from '@/components/providers/withdrawals/WithdrawalsProvider';
+import { WithdrawalsProvider } from '@/components/stepped-workflow/workflows/withdrawals/provider/WithdrawalsProvider';
 import { getOneTimeWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';

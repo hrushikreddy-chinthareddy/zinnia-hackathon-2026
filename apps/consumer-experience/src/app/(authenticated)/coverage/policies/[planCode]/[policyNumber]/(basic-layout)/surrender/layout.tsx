@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
-import { SurrenderProvider } from '@/components/providers/surrender/SurrenderProvider';
+import { SurrenderProvider } from '@/components/stepped-workflow/workflows/surrender/provider/SurrenderProvider';
 import { getPolicySurrenderEligibility } from '@/services/bpm/fullsurrender';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';

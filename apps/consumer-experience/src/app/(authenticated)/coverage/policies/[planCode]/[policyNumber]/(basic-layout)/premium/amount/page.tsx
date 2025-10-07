@@ -1,7 +1,7 @@
 import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
-import { SelectAmount } from '@/components/one-time-premium-payment/SelectAmount';
-import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
+import { SelectAmount } from '@/components/stepped-workflow/workflows/one-time-premium/forms/SelectAmount';
+import { OneTimePremium } from '@/components/stepped-workflow/workflows/one-time-premium/OneTimePremium';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';

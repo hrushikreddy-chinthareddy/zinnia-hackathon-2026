@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
 
-import { SelectBankWrapper } from '@/components/workflows/systematic-premiums/forms/SelectBankWrapper';
-import { SystematicPremiums } from '@/components/workflows/systematic-premiums/SystematicPremiums';
+import { SelectBankWrapper } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SelectBankWrapper';
+import { SystematicPremiums } from '@/components/stepped-workflow/workflows/systematic-premiums/SystematicPremiums';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { getPaymentMethods } from '@/services/payment-methods';
 import { PolicyRequestInputsParams } from '@/types/policy';
