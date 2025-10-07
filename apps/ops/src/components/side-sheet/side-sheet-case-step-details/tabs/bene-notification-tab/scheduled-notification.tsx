@@ -9,6 +9,7 @@ import {
     DeliveryMethods,
     FollowupId,
     INotification,
+    NotificationStatus,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, {
@@ -47,6 +48,8 @@ export const ScheduledNotification = ({
             : t('caseOverview.notifications.scheduledTooltip', {
                   followup: FollowupId.fifth - notification.followupId,
               });
+    const hideNotificationInfo =
+        notification.followupStatus === NotificationStatus.Escheatment;
 
     return (
         <div className="flex w-full flex-col p-5 rounded bg-white border-1 border-gray-200 gap-2 order-2">
@@ -56,43 +59,51 @@ export const ScheduledNotification = ({
                 tooltipPlacement={PopoverPlacement.TopRight}
                 variant={BadgeVariant.Warning}
             />
-            <Title
-                className="my-2 flex items-center gap-2"
-                variant={TitleVariant.SubTitle}
-            >
-                {contentText}
-            </Title>
-            {!shouldHideButton && (
+            {!hideNotificationInfo && (
                 <>
-                    <Typography variant={TypographyVariant.Label}>
-                        {t('caseOverview.notifications.contactMethod')}
-                    </Typography>
-                    <div className="flex items-center justify-between">
-                        <div className="flex gap-2">
-                            {notification.email &&
-                                getPreferredDeliveryIcon(DeliveryMethods.Email)}
-                            {notification.address &&
-                                getPreferredDeliveryIcon(DeliveryMethods.Mail)}
-                            {notification.faxNumber &&
-                                getPreferredDeliveryIcon(
-                                    DeliveryMethods.Faxnumber
-                                )}
-                        </div>
-                        <Button
-                            size="small"
-                            mode="secondary"
-                            data-testid="update-contact-method-btn"
-                            onClick={() =>
-                                router.push(
-                                    `/claims/update-notification-method?policyNumber=${policyNumber}&carrier=${carrier}&recordId=${identifier}`
-                                )
-                            }
-                        >
-                            {t(
-                                'updateNotificationMethodForBeneficiary.updateNotificationMethodStep.title'
-                            )}
-                        </Button>
-                    </div>
+                    <Title
+                        className="my-2 flex items-center gap-2"
+                        variant={TitleVariant.SubTitle}
+                    >
+                        {contentText}
+                    </Title>
+                    {!shouldHideButton && (
+                        <>
+                            <Typography variant={TypographyVariant.Label}>
+                                {t('caseOverview.notifications.contactMethod')}
+                            </Typography>
+                            <div className="flex items-center justify-between">
+                                <div className="flex gap-2">
+                                    {notification.email &&
+                                        getPreferredDeliveryIcon(
+                                            DeliveryMethods.Email
+                                        )}
+                                    {notification.address &&
+                                        getPreferredDeliveryIcon(
+                                            DeliveryMethods.Mail
+                                        )}
+                                    {notification.faxNumber &&
+                                        getPreferredDeliveryIcon(
+                                            DeliveryMethods.Faxnumber
+                                        )}
+                                </div>
+                                <Button
+                                    size="small"
+                                    mode="secondary"
+                                    data-testid="update-contact-method-btn"
+                                    onClick={() =>
+                                        router.push(
+                                            `/claims/update-notification-method?policyNumber=${policyNumber}&carrier=${carrier}&recordId=${identifier}`
+                                        )
+                                    }
+                                >
+                                    {t(
+                                        'updateNotificationMethodForBeneficiary.updateNotificationMethodStep.title'
+                                    )}
+                                </Button>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
         </div>

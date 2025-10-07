@@ -1,8 +1,9 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 
-import { Link } from '@/components/link/Link';
-import styles from '@/components/one-time-premium-payment/OneTimePremiumPayment.module.css';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
+import { Link } from '@/components/link/Link';
+
+import styles from './Styles.module.css';
 
 export const TransactionInvalid = ({
   goToUrl,

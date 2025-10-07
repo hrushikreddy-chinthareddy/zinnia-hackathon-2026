@@ -115,6 +115,16 @@ export default function BeneficiaryListingItem({
         'cursor-pointer': !isBeneInfoOnFile,
     });
 
+    const handleShowBeneficiary = () => {
+        setShowBeneficiary(!showBeneficiary);
+        setIsNonEditable(true);
+    };
+
+    const handleEditBeneficiary = () => {
+        setIsNonEditable(false);
+        setShowBeneficiary(true);
+    };
+
     return (
         <div
             className={
@@ -138,13 +148,10 @@ export default function BeneficiaryListingItem({
                                 : '(--)%'}
                         </span>
                     </div>
-                    {isNonEditable && (
+                    {!showBeneficiary && (
                         <IconButton
                             aria-describedby={`bene-listing-item-edit-${index}`}
-                            onClick={() => {
-                                setIsNonEditable(!isNonEditable);
-                                setShowBeneficiary(true);
-                            }}
+                            onClick={handleEditBeneficiary}
                             disabled={isCurrentRemoved}
                         >
                             <EditIcon height={16} width={16} />
@@ -173,13 +180,7 @@ export default function BeneficiaryListingItem({
                         </label>
                     </div>
                     <div className={isCurrentRemoved ? 'invisible' : ''}>
-                        <div
-                            onClick={() => {
-                                setShowBeneficiary(!showBeneficiary);
-                                setIsNonEditable(!isNonEditable);
-                            }}
-                            className="ml-6"
-                        >
+                        <div onClick={handleShowBeneficiary} className="ml-6">
                             <ChevronDown
                                 height={24}
                                 width={24}

@@ -311,7 +311,6 @@ const KeyValueNestedSubSections = ({
                             .map((field, j) => {
                                 const [label, data] = field as DataTuple;
                                 const fieldLink = (field as MetaData)[link];
-                                // FIXME: disallow Symbol in field label
                                 return typeof label === 'string' ? (
                                     <DataField
                                         key={`field_${j}`}
@@ -585,25 +584,25 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                                     : 'Expand all'}
                             </Button>
                         </div>
-                        {policyBasics ? (
+                        {policyBasics && (
                             <KeyValueBasics
                                 preparedPolicy={preparedPolicy}
                                 policyBasics={policyBasics as NestedData[]}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />
-                        ) : null}
+                        )}
 
-                        {policySections?.length ? (
+                        {!!policySections?.length && (
                             <KeyValueSections
                                 preparedPolicy={preparedPolicy}
                                 policySections={policySections}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />
-                        ) : null}
+                        )}
 
-                        {!policyBasics && !policySections?.length ? (
+                        {!policyBasics && !policySections?.length && (
                             <div className={styles.emptySearch}>
                                 <Label>
                                     <Icon
@@ -614,7 +613,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                                     {t('policy.allFields.emptySearch')}
                                 </Label>
                             </div>
-                        ) : null}
+                        )}
                     </div>
                 </BlurOverlayLoader>
             </div>

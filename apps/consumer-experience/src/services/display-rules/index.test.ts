@@ -1,8 +1,11 @@
 import { PartyRole, ProductType } from '@xd/api-types/dist/generated-types/sor';
 
 import { RouteKey } from '@/route-map';
-import { logTrace } from '@/utils/logging/log-fns';
-import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { UserInfo } from '@/types/logging';
+import {
+  buildCommonLogContext,
+  CommonLogContext,
+} from '@/utils/logging/server-logging';
 import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
 
 import { ComponentName } from './types';
@@ -45,12 +48,18 @@ describe('display-rules', () => {
       },
     };
 
+    const mockLog = {
+      user: {} as UserInfo,
+      correlationId: 'mock-correlation',
+    } as CommonLogContext;
+
     it('should return all components visible for non-payor with non-term policy', () => {
       (isPayorOnly as jest.Mock).mockReturnValue(false);
 
-      const result = evaluateComponentVisibilityRules(mockPolicy, [
-        PartyRole.OWNER,
-      ]);
+      const result = evaluateComponentVisibilityRules(
+        { policy: mockPolicy, partyRoles: [PartyRole.OWNER] },
+        mockLog
+      );
 
       // Check a few key components
       expect(result[ComponentName.OVERVIEW_PROFILE]()).toBe(true);
@@ -63,9 +72,10 @@ describe('display-rules', () => {
     it('should restrict components for payor-only role', () => {
       (isPayorOnly as jest.Mock).mockReturnValue(true);
 
-      const result = evaluateComponentVisibilityRules(mockPolicy, [
-        PartyRole.PAYOR,
-      ]);
+      const result = evaluateComponentVisibilityRules(
+        { policy: mockPolicy, partyRoles: [PartyRole.PAYOR] },
+        mockLog
+      );
 
       expect(result[ComponentName.OVERVIEW_PROFILE]()).toBe(true);
       expect(result[ComponentName.OVERVIEW_PAYMENT_HISTORY]()).toBe(true);
@@ -78,9 +88,13 @@ describe('display-rules', () => {
     it('should hide account value for term policies', () => {
       (isPayorOnly as jest.Mock).mockReturnValue(false);
 
-      const result = evaluateComponentVisibilityRules(termPolicy, [
-        PartyRole.OWNER,
-      ]);
+      const result = evaluateComponentVisibilityRules(
+        {
+          policy: termPolicy,
+          partyRoles: [PartyRole.OWNER],
+        },
+        mockLog
+      );
 
       expect(result[ComponentName.OVERVIEW_ACCOUNT_VALUE]()).toBe(false);
       expect(result[ComponentName.OTTP_PAYMENT_SUMMARY_ACCOUNT_VALUE]()).toBe(
@@ -92,9 +106,12 @@ describe('display-rules', () => {
       (isPayorOnly as jest.Mock).mockReturnValue(true);
 
       const result = evaluateComponentVisibilityRules(
-        termPolicy,
-        [PartyRole.PAYOR],
-        true
+        {
+          policy: termPolicy,
+          partyRoles: [PartyRole.PAYOR],
+          skip: true,
+        },
+        mockLog
       );
 
       expect(result[ComponentName.OVERVIEW_COVERAGE]()).toBe(true);
@@ -153,9 +170,18 @@ describe('display-rules', () => {
   describe('getComponentVisibility', () => {
     const mockPolicyNumber = '12345';
     const mockPlanCode = 'ABC123';
-    const mockLoggingContext = { requestId: 'test-id' };
+    const mockPolicyInputs = {
+      planCode: mockPlanCode,
+      policyNumber: mockPolicyNumber,
+    };
+    // const mockLoggingContext = { requestId: 'test-id' };
     const mockPolicy = { product: { productType: ProductType.UNIVERSALLIFE } };
     const mockPartyRoles = [PartyRole.OWNER];
+    const mockLoggingContext = {
+      user: { sessionId: '', partyId: '', userId: '', email: '' } as UserInfo,
+      correlationId: 'mock-correlation',
+      requestId: 'mock-requestId',
+    };
 
     beforeEach(() => {
       (buildCommonLogContext as jest.Mock).mockResolvedValue(
@@ -171,19 +197,11 @@ describe('display-rules', () => {
         },
       });
 
-      const result = await getComponentVisibility(
-        mockPolicyNumber,
-        mockPlanCode
-      );
-
-      expect(logTrace).toHaveBeenCalledWith(
-        'display-rules::start',
-        expect.any(Object)
-      );
-      expect(getLoggedInUserPolicyAndPartyData).toHaveBeenCalledWith(
-        { planCode: mockPlanCode, policyNumber: mockPolicyNumber },
+      const { data: result } = await getComponentVisibility(
+        mockPolicyInputs,
         mockLoggingContext
       );
+
       expect(result).toBeTruthy();
       expect(typeof result![ComponentName.OVERVIEW_PROFILE]).toBe('function');
     });
@@ -199,9 +217,9 @@ describe('display-rules', () => {
         },
       });
 
-      const result = await getComponentVisibility(
-        mockPolicyNumber,
-        mockPlanCode
+      const { data: result } = await getComponentVisibility(
+        mockPolicyInputs,
+        mockLoggingContext
       );
 
       expect(result).toBeTruthy();

@@ -4,7 +4,7 @@ import {
 } from '@xd/api-types/dist/generated-types/bpm';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { SystematicPremiumsState } from '@/components/providers/systematic-premiums/types';
+import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
 import { ApiResponse } from '@/services';
 import {
   getSystematicProgramValidation,

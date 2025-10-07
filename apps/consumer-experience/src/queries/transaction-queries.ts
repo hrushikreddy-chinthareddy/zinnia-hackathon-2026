@@ -1,7 +1,7 @@
 import { SystematicProgramUpdateRequest } from '@xd/api-types/dist/generated-types/bpm';
 
-import { SystematicPremiumsState } from '@/components/providers/systematic-premiums/types';
-import { WithdrawalsState } from '@/components/providers/withdrawals/types';
+import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
+import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
 import { ApiResponse } from '@/services';
 import {
   PwotWithdrawalBPMResponse,

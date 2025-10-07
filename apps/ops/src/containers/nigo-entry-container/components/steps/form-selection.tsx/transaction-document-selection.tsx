@@ -8,7 +8,7 @@ import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
 import { FieldSize } from '@deps/components/fields/field';
 import SendDocument from '@deps/components/otp-send-document/components/document';
 import { Loader } from '@deps/components/page-loader';
-import SelectSimple from '@deps/components/select/select';
+import Select from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -142,29 +142,31 @@ function TransactionDocumentSelection({
 
     return (
         <>
-            <SelectSimple
+            <Select
                 className="max-w-xs"
                 label={t(`formSelection.transactionType`) as string}
                 options={transactionTypes}
                 onChange={(val: string) => onTransactionTypeChange(val)}
                 size={FieldSize.Small}
                 value={formDetails.transactionType?.selected || ''}
-                data-testid="transactionType"
+                name="transactionType"
                 labelTooltip={t(`formSelection.transactionType`) as string}
                 labelTooltipBody={t(`formSelection.transactionType`) as string}
+                disabled={!transactionTypes.length}
             />
-            <SelectSimple
+            <Select
                 className="my-4 max-w-xs"
                 label={t(`formSelection.transactionSubType`) as string}
                 options={transactionSubTypeOptions}
                 onChange={(val: string) => onTransactionSubTypeChange(val)}
                 size={FieldSize.Small}
                 value={formDetails.transactionSubType?.selected || ''}
-                data-testid="transactionSubType"
+                name="transactionSubType"
                 labelTooltip={t(`formSelection.transactionSubType`) as string}
                 labelTooltipBody={
                     t(`formSelection.transactionSubType`) as string
                 }
+                disabled={!transactionSubTypeOptions.length}
             />
             {loader ? (
                 <Loader />

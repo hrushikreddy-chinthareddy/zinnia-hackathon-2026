@@ -1,5 +1,5 @@
-import { SummaryPage } from '@/components/workflows/withdrawals/forms/SummaryPage';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { SummaryPage } from '@/components/stepped-workflow/workflows/withdrawals/forms/SummaryPage';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const BankPage = ({ params }: PolicyRequestInputsParams) => {

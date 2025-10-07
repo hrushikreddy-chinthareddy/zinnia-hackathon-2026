@@ -30,7 +30,11 @@ const MenuContextualItem = ({
     const handleSelect = () => {
         onClick && onClick();
 
-        !openInNewTab && router.push(href);
+        if (openInNewTab) {
+            window.open(href, '_blank');
+        } else {
+            router.push(href);
+        }
     };
 
     return (

@@ -27,7 +27,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import { formatDateDescriptionList } from '@deps/helpers/string.helpers';
+import { formatUTCDate } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationAgentDetails,
@@ -614,7 +614,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 handleDateChange(newDate);
                             }}
                             {...(clientCaseData.insuredDetails?.dateOfBirth && {
-                                defaultDate: formatDateDescriptionList(
+                                defaultDate: formatUTCDate(
                                     new Date(
                                         clientCaseData.insuredDetails.dateOfBirth
                                     )

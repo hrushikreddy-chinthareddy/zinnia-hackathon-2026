@@ -27,6 +27,7 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Policyupdate_Partydetails_Review,
     TaskType.Quality_Audit_Review,
     TaskType.Initiate_Postissue_Transaction,
+    TaskType.Existing_Name_Change_Detail,
     TaskType.Quality_Audit_Rework,
     TaskType.Quality_Rework_Audit_Review,
     TaskType.Claims_Bene_Review,

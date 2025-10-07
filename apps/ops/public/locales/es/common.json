@@ -3991,7 +3991,7 @@
                 "financials": "Finanzas",
                 "funds": "Fondos",
                 "gains": "Ganancias",
-                "goToThisPolicysPage": "Ir a la página de {{page}} para esta póliza de seguro.",
+                "goToThisPolicysPage": "Ir a la página de detalles de las {{page}}.",
                 "ineligible": "Inelegible",
                 "issueState": "Estado del problema",
                 "lastDeposit": "Último depósito",
@@ -5093,7 +5093,8 @@
             "additionalWritingAgent": "Agente redactor adicional",
             "exchangeCompany": "Empresa de intercambio",
             "jointAnnuitant": "Rentista conjunto",
-            "otherInterestedParty": "Otra parte interesada"
+            "otherInterestedParty": "Otra parte interesada",
+            "additionalServicingAgent": "Agente de servicio adicional"
         }
     },
     "pageHeader": {
@@ -7558,6 +7559,15 @@
             "submitTask": "Enviar"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: La revisión del cambio de nombre ha sido enviada.",
+            "cta": "Ir al Caso",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "¡Entendido!",
@@ -7735,6 +7745,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Seleccione una dirección para continuar",
+                "emailIsRequired": "Se requiere correo electrónico",
+                "inValidDomain": "Sólo se permiten correos electrónicos de Zinnia",
+                "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida",
+                "faxIsRequired": "Se requiere el número de fax",
+                "inValidFax": "Por favor, introduzca un número de fax válido",
+                "firstName": "El nombre es obligatorio",
+                "lastName": "El apellido es obligatorio",
+                "address": "Verifique y seleccione la dirección para continuar",
+                "contractRoleRequired": "Se requiere rol de contacto",
+                "nameRequired": "Se requiere nombre",
+                "phoneRequired": "Se requiere número de teléfono",
+                "relationshipToOwner": "Se requiere relación con el propietario",
+                "changeRequireRequired": "Por favor seleccione una opción",
+                "changeTypeRequired": "Por favor seleccione un nuevo tipo de información",
+                "callSummaryRequired": "Se requiere resumen de llamada"
             }
         },
         "confirmStep": {
@@ -7804,6 +7832,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Seleccione una dirección para continuar",
+                "emailIsRequired": "Se requiere correo electrónico",
+                "inValidDomain": "Sólo se permiten correos electrónicos de Zinnia",
+                "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida",
+                "faxIsRequired": "Se requiere el número de fax",
+                "inValidFax": "Por favor, introduzca un número de fax válido",
+                "firstName": "El nombre es obligatorio",
+                "lastName": "El apellido es obligatorio",
+                "address": "Verifique y seleccione la dirección para continuar",
+                "contractRoleRequired": "Se requiere rol de contacto",
+                "nameRequired": "Se requiere nombre",
+                "phoneRequired": "Se requiere número de teléfono",
+                "relationshipToOwner": "Se requiere relación con el propietario",
+                "changeRequireRequired": "Por favor seleccione una opción",
+                "changeTypeRequired": "Por favor seleccione un nuevo tipo de información",
+                "callSummaryRequired": "Se requiere resumen de llamada"
             }
         }
     },
@@ -7963,6 +8009,7 @@
             "dtcc": "DTCC",
             "creditcard": "Tarjeta de crédito",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Cheque",
             "exchange": "Intercambio",
             "wire": "Transferencia bancaria",
@@ -7997,7 +8044,7 @@
                 "included": "Incluido",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
-                "acceleratedDeathBenefitForTerminalIllness": "Beneficio de muerte acelerado por enfermedad terminal",
+                "acceleratedDeathBenefitForTerminalIllness": "Cláusula adicional de beneficio por muerte acelerada en caso de enfermedad terminal",
                 "acceleratedDeathBenefitForChronicIllness": "Beneficio de muerte acelerado por enfermedades crónicas",
                 "charitableGiving": "Donaciones caritativas",
                 "childrensTerm": "Seguro a plazo infantil",

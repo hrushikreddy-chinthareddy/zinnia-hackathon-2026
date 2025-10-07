@@ -1,5 +1,5 @@
-import { WithdrawalMethod } from '@/components/workflows/withdrawals/forms/WithdrawalMethod';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { WithdrawalMethod } from '@/components/stepped-workflow/workflows/withdrawals/forms/WithdrawalMethod';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const FundsPage = ({ params }: PolicyRequestInputsParams) => {

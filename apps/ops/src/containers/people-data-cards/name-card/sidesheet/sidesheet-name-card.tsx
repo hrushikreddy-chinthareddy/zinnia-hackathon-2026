@@ -8,6 +8,7 @@ import {
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -102,9 +103,14 @@ export const SidesheetNameCard = ({
         keyPrefix: 'people.sideSheet.name',
     });
     const { t: defaultT } = useTranslation();
+    const router = useRouter();
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
     const { sessionId, partyId: userId } = usePermissionsContext();
     const INITIAL_BODY: NonFinancialTransactionBody = {
-        correlationId: uuidV4(),
+        correlationId: correlationIdFromRoute || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: false,
     };
@@ -363,7 +369,7 @@ export const SidesheetNameCard = ({
         }
 
         const nameChangePayload = {
-            correlationId: INITIAL_BODY.correlationId,
+            correlationId: caseId ? INITIAL_BODY.correlationId : uuidV4(),
             effectiveDate: INITIAL_BODY.effectiveDate,
             partyName: {
                 firstName,
@@ -445,6 +451,7 @@ export const SidesheetNameCard = ({
                                         ? FieldVariant.Error
                                         : FieldVariant.Default
                                 }
+                                required={true}
                             />
                         </div>
                     </>
@@ -473,6 +480,7 @@ export const SidesheetNameCard = ({
                                         ? FieldVariant.Error
                                         : FieldVariant.Default
                                 }
+                                required={true}
                             />
                         </div>
                     </>
@@ -521,6 +529,7 @@ export const SidesheetNameCard = ({
                                                 ? FieldVariant.Error
                                                 : FieldVariant.Default
                                         }
+                                        required={true}
                                     />
                                 </div>
                                 <div className="basis-1/4">
@@ -566,6 +575,7 @@ export const SidesheetNameCard = ({
                                                 ? FieldVariant.Error
                                                 : FieldVariant.Default
                                         }
+                                        required={true}
                                     />
                                 </div>
                                 <div className="basis-1/4">
@@ -644,6 +654,7 @@ export const SidesheetNameCard = ({
                         setCaseDocumentOptions={setCaseDocumentOptions}
                         setCurrentErrors={setCurrentErrors}
                         setViewState={setViewState}
+                        required={true}
                     />
 
                     {getContent()}
@@ -652,6 +663,7 @@ export const SidesheetNameCard = ({
                         value={uploadedFiles}
                         onChange={handleFilesChange}
                         error={uploadError}
+                        required={true}
                     />
                     <AssistiveText
                         variant={AssistiveTextVariant.Error}

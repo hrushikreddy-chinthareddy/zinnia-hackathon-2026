@@ -113,6 +113,10 @@ export interface FullSurrenderEligibilityRequest {
     charges: null;
 }
 
+export interface FreelookEligibilityRequest {
+    effectiveDate: string;
+}
+
 export interface ValidationResult {
     attribute: string | null;
     error: string;
@@ -785,5 +789,36 @@ export const checkEligibilityManageBankChange = async (
         );
 
         return error?.response?.data || error?.data;
+    }
+};
+
+export const checkEligibilityFreelookCancellation = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined
+): Promise<TransactionResponse> => {
+    try {
+        browserLogInfo('FreelookCancellation::Initiating eligibility check', {
+            payload: { planCode, policyNumber },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/eligibilitycheck`,
+            function: 'checkEligibilityFreelookCancellation',
+        });
+        const { data } = await client.post<
+            FreelookEligibilityRequest,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/eligibilitycheck`,
+            {
+                effectiveDate: dayjs().format('YYYY-MM-DD'),
+            }
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError('FreelookCancellation::Eligibility check failed', {
+            ...parseErrorInformation(error),
+            payload: { planCode, policyNumber },
+            url: `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/eligibilitycheck`,
+            function: 'checkEligibilityFreelookCancellation',
+        });
+        return error?.data;
     }
 };

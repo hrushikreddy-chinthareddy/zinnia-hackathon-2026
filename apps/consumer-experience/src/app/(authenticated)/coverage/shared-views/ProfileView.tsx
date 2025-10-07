@@ -138,7 +138,11 @@ export const ProfileView = async ({
 
   const parties = async () => {
     const { parties } = profileData;
-    const visibility = await getComponentVisibility(policyNumber, planCode);
+    const loggingCtx = await buildCommonLogContext();
+    const { data: visibility } = await getComponentVisibility(
+      { policyNumber, planCode },
+      loggingCtx
+    );
     const hasPayorView =
       visibility?.[ComponentName.PROFILE_PAYOR_PARTY_ROLES]();
 

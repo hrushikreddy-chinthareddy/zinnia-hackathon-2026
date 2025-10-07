@@ -76,7 +76,6 @@ export const getAttemptCount = (
             count++;
         } else if (i === currentIndex && !n.send && !n.receive) {
             count++;
-        } else {
         }
     }
     return count;

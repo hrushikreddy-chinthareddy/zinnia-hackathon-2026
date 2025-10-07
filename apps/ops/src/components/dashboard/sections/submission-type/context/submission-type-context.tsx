@@ -24,6 +24,7 @@ import {
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
 interface SubmissionTypeContextTypes {
     timeframeRadio: TimeframeFilterOptions | undefined;
@@ -144,9 +145,19 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         select: (response) => {
             const { data } = response;
             const updatedData = combineSubmissionTypes(data || []);
+            const transformedData = updatedData.map((item) => {
+                // Check if we're grouping by carrier (submissionVs state)
+                if (submissionVs === CaseCountGroupByEnum.CARRIER) {
+                    return {
+                        ...item,
+                        name: getCarrierNameByClientId(item.name) || item.name,
+                    };
+                }
+                return item;
+            });
             return {
                 ...response,
-                data: updatedData,
+                data: transformedData,
             };
         },
     });

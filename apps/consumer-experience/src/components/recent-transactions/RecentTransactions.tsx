@@ -25,25 +25,38 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
             <h2 className="typography-labels-label-sm">Completed</h2>
           </CardListHistory.Header>
           <CardListHistory.ListItems isPending>
-            {transactions.completedTransactions.map((item, index) => (
-              <CardInsertHistory
-                key={'completed-' + index}
-                date={item.date}
-                amount={
-                  <span>{formatUSDollars(item.amount?.appliedAmount)}</span>
-                }
-                title={item.title}
-                subtitle={
-                  <span>
-                    <AccountType accountType={item?.bankDetails?.accountType} />
-                    {' ending in '}
-                    <AccountNumber
-                      accountNumber={item?.bankDetails?.accountNumber}
-                    />
-                  </span>
-                }
-              />
-            ))}
+            {transactions.completedTransactions.map((item, index) => {
+              const hasBankDetails =
+                item.bankDetails &&
+                item.bankDetails.accountNumber &&
+                item.bankDetails.accountType;
+
+              return (
+                <CardInsertHistory
+                  key={'completed-' + index}
+                  date={item.date}
+                  amount={
+                    <span>{formatUSDollars(item.amount?.appliedAmount)}</span>
+                  }
+                  title={item.title}
+                  subtitle={
+                    <>
+                      {hasBankDetails && (
+                        <span>
+                          <AccountType
+                            accountType={item?.bankDetails?.accountType}
+                          />
+                          {' ending in '}
+                          <AccountNumber
+                            accountNumber={item?.bankDetails?.accountNumber}
+                          />
+                        </span>
+                      )}
+                    </>
+                  }
+                />
+              );
+            })}
           </CardListHistory.ListItems>
         </CardListHistory>
       )}
@@ -53,26 +66,38 @@ export const RecentTransactions: FC<RecentTransactionProps> = ({
             <h2 className="typography-labels-label-sm">Pending</h2>
           </CardListHistory.Header>
           <CardListHistory.ListItems isPending>
-            {transactions.pendingTransactions.map((item, index) => (
-              <CardInsertHistory
-                key={'pending-' + index}
-                date={item.date}
-                amount={
-                  <span>{formatUSDollars(item.amount?.paymentAmount)}</span>
-                }
-                title={item.title}
-                isPending
-                subtitle={
-                  <span>
-                    <AccountType accountType={item?.bankDetails?.accountType} />
-                    {' ending in '}
-                    <AccountNumber
-                      accountNumber={item?.bankDetails?.accountNumber}
-                    />
-                  </span>
-                }
-              />
-            ))}
+            {transactions.pendingTransactions.map((item, index) => {
+              const hasBankDetails =
+                item.bankDetails &&
+                item.bankDetails.accountNumber &&
+                item.bankDetails.accountType;
+              return (
+                <CardInsertHistory
+                  key={'pending-' + index}
+                  date={item.date}
+                  amount={
+                    <span>{formatUSDollars(item.amount?.paymentAmount)}</span>
+                  }
+                  title={item.title}
+                  isPending
+                  subtitle={
+                    <>
+                      {hasBankDetails && (
+                        <span>
+                          <AccountType
+                            accountType={item?.bankDetails?.accountType}
+                          />
+                          {' ending in '}
+                          <AccountNumber
+                            accountNumber={item?.bankDetails?.accountNumber}
+                          />
+                        </span>
+                      )}
+                    </>
+                  }
+                />
+              );
+            })}
           </CardListHistory.ListItems>
         </CardListHistory>
       )}

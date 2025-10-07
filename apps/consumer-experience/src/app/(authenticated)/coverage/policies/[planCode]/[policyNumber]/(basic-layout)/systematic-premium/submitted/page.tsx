@@ -1,5 +1,5 @@
-import { SubmissionPage } from '@/components/workflows/systematic-premiums/forms/SubmissionPage';
-import { SystematicPremiums } from '@/components/workflows/systematic-premiums/SystematicPremiums';
+import { SubmissionPage } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SubmissionPage';
+import { SystematicPremiums } from '@/components/stepped-workflow/workflows/systematic-premiums/SystematicPremiums';
 
 const SubmissionStep = () => {
   return (

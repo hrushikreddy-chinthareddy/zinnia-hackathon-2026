@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getRouteKeyFromUrl, RouteKey } from '@/route-map';
-import { checkResetDeliveryDateEligibility } from '@/services/bpm';
+import { checkResetDeliveryDateEligibility } from '@/services/bpm/delivery-date';
 import { getRoutePermissions } from '@/services/display-rules';
 import { getPolicyDetails } from '@/services/policy';
+import { User } from '@/types/auth';
 
 import { getCarrierSubdomainById, isValidCarrierSubdomain } from './carriers';
 import { logTrace } from './logging/log-fns';
@@ -102,7 +104,11 @@ export const pathAccessibleWithoutPolicyAcknowledgement = (
 };
 
 export const hasAcknowledgedPolicy = async (
-  { planCode, policyNumber }: { planCode: string; policyNumber: string },
+  {
+    planCode,
+    policyNumber,
+    user,
+  }: { planCode: string; policyNumber: string; user: User },
   req: NextRequest,
   resNext: NextResponse
 ) => {
@@ -115,6 +121,8 @@ export const hasAcknowledgedPolicy = async (
     policyNumber,
     file,
     function: 'hasAcknowledgedPolicy',
+    user,
+    correlationId: uuidv4(),
   };
   // we check to see if the policy number is in the cookie,
   // this means they have already acknowledged the policy
@@ -128,17 +136,20 @@ export const hasAcknowledgedPolicy = async (
   // to get to an interior page (not the index page). Includes the case
   // where you have a single policy and this is the first time you've
   // visited the site
-  const { data: eligiblityData } = await checkResetDeliveryDateEligibility({
-    planCode,
-    policyNumber,
-  });
+  const { data: eligiblityData } = await checkResetDeliveryDateEligibility(
+    {
+      planCode,
+      policyNumber,
+    },
+    logDetails
+  );
 
   // If you REQUIRE policy acknowledgement, you will be redirected to the index page
   // We can assume that once theyve ackowledged the policy, the cookie will be set
   // in policy acknowledgement action and they won't make it here, but if the policy
   // is not in the cookie, then the eligibility check will have returned false
   // and user will get to the else here
-  if (eligiblityData.isEligible) {
+  if (eligiblityData?.isEligible) {
     logTrace(
       'Policy requires acknowledgement before viewing inner policy pages',
       {

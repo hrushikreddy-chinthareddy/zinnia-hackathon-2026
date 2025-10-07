@@ -5,6 +5,12 @@ import {
   transformPolicyForFundDetails,
 } from './transformers';
 
+jest.mock('next/headers', () => ({
+  headers: jest.fn(() => ({
+    get: jest.fn(),
+  })),
+}));
+
 describe('transformPolicyForFundDetails', () => {
   it('should handle if funds are missing allocations but have fund values', () => {
     const policy: Policy = {
@@ -158,27 +164,42 @@ describe('getPartyRolesFromPolicyPartyId', () => {
   };
 
   test('should return all party roles for a specific party ID', () => {
-    const result = getPartyRolesFromPolicyPartyId('PARTY001', mockPolicy);
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'PARTY001',
+      policy: mockPolicy,
+    });
     expect(result).toEqual([PartyRole.OWNER, PartyRole.INSURED]);
   });
 
   test('should return a single party role when party has only one role', () => {
-    const result = getPartyRolesFromPolicyPartyId('PARTY002', mockPolicy);
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'PARTY002',
+      policy: mockPolicy,
+    });
     expect(result).toEqual([PartyRole.PAYOR]);
   });
 
   test('should return an empty array when party ID does not exist in policy', () => {
-    const result = getPartyRolesFromPolicyPartyId('NONEXISTENT', mockPolicy);
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'NONEXISTENT',
+      policy: mockPolicy,
+    });
     expect(result).toEqual([]);
   });
 
   test('should filter out undefined party roles', () => {
-    const result = getPartyRolesFromPolicyPartyId('PARTY004', mockPolicy);
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'PARTY004',
+      policy: mockPolicy,
+    });
     expect(result).toEqual([]);
   });
 
   test('should handle party entries without partyRole property', () => {
-    const result = getPartyRolesFromPolicyPartyId('PARTY005', mockPolicy);
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'PARTY005',
+      policy: mockPolicy,
+    });
     expect(result).toEqual([]);
   });
 
@@ -187,10 +208,10 @@ describe('getPartyRolesFromPolicyPartyId', () => {
       policyNumber: 'POL456',
       // No partyRoles property
     };
-    const result = getPartyRolesFromPolicyPartyId(
-      'PARTY001',
-      policyWithoutPartyRoles
-    );
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'PARTY001',
+      policy: policyWithoutPartyRoles,
+    });
     expect(result).toEqual([]);
   });
 
@@ -199,18 +220,18 @@ describe('getPartyRolesFromPolicyPartyId', () => {
       policyNumber: 'POL789',
       partyRoles: [],
     };
-    const result = getPartyRolesFromPolicyPartyId(
-      'PARTY001',
-      policyWithEmptyPartyRoles
-    );
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: 'PARTY001',
+      policy: policyWithEmptyPartyRoles,
+    });
     expect(result).toEqual([]);
   });
 
   test('should handle undefined policyPartyId', () => {
-    const result = getPartyRolesFromPolicyPartyId(
-      undefined as unknown as string,
-      mockPolicy
-    );
+    const result = getPartyRolesFromPolicyPartyId({
+      policyPartyId: undefined as unknown as string,
+      policy: mockPolicy,
+    });
     expect(result).toEqual([]);
   });
 });

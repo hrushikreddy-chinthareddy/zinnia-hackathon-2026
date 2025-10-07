@@ -1,5 +1,5 @@
-import { IntroPage } from '@/components/workflows/withdrawals/forms/IntroPage';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { IntroPage } from '@/components/stepped-workflow/workflows/withdrawals/forms/IntroPage';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const InformationPage = ({ params }: PolicyRequestInputsParams) => {

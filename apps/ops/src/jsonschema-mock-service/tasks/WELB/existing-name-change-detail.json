@@ -1,0 +1,243 @@
+{
+    "formId": "12a36451-02b1-4c7b-a399-8cd40e564203",
+    "process": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "EXISTING_NAME_CHANGE_DETAIL",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Post-Issue Transaction Data Entry Processing",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Click on the link below to access the submission form. Once the form opens, fill in all the required fields accurately. Review the entered information to ensure everything is correct. Review the entered information to ensure everything is correct. Click Submit to complete the transaction. You will receive a confirmation message upon successful submission"
+                        },
+                        "process": {
+                            "type": "string",
+                            "title": "process"
+                        },
+                        "processSubType": {
+                            "type": "string"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "All sections are complete and ready for data entry.",
+                                "All sections are not complete."
+                            ],
+                            "title": "Is the Paper application form complete?",
+                            "default": true
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "title": "What is the issue with the form?",
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "process": {
+                            "if": {
+                                "properties": {
+                                    "issueResolved": {
+                                        "const": true
+                                    }
+                                }
+                            },
+                            "then": {
+                                "if": {
+                                    "properties": {
+                                        "process": {
+                                            "const": "Policy Update"
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "properties": {
+                                        "dataEntryForm": {
+                                            "type": "string",
+                                            "title": "Open Form for Data Entry",
+                                            "default": "/policies/{{customData.planCode}}/{{customData.policyNumber}}/people?correlationId={{customData.correlationId}}"
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "dataEntryForm": {
+                                            "type": "string",
+                                            "title": "Open Form for Data Entry",
+                                            "default": "/policies?isReset=true?correlationId={{customData.correlationId}}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "process": {
+                        "ui:widget": "hidden",
+                        "ui:dataPath": ["process"]
+                    },
+                    "processSubType": {
+                        "ui:widget": "hidden",
+                        "ui:dataPath": ["processSubType"]
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
+                    },
+                    "dataEntryForm": {
+                        "ui:options": {
+                            "label": false,
+                            "type": "link",
+                            "omitValue": true
+                        },
+                        "ui:widget": "HyperLinkWidget"
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
+                    }
+                }
+            }
+        ]
+    }
+}

@@ -3993,7 +3993,7 @@
                 "financials": "Financials",
                 "funds": "Funds",
                 "gains": "Gains",
-                "goToThisPolicysPage": "Go to the {{page}} page for this insurance policy.",
+                "goToThisPolicysPage": "Go to the {{page}} details page.",
                 "ineligible": "Ineligible",
                 "issueState": "Issue state",
                 "lastDeposit": "Last deposit",
@@ -5136,7 +5136,8 @@
             "additionalWritingAgent": "Additional Writing Agent",
             "exchangeCompany": "Exchange Company",
             "jointAnnuitant": "Joint Annuitant",
-            "otherInterestedParty": "Other Interested Party"
+            "otherInterestedParty": "Other Interested Party",
+            "additionalServicingAgent": "Additional Servicing Agent"
         }
     },
     "pageHeader": {
@@ -7710,6 +7711,15 @@
             "submitTask": "Submit"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Name Change Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "Got It!",
@@ -7835,7 +7845,7 @@
     "beneCall": {
         "callForInformation": {
             "title": "Call for Information",
-            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "subTitle": "As part of the existing follow-up continuation, contact the necessary parties(beneficiary/agent/others) to confirm and document all critical details related to this death claim.",
             "submit": "Submit",
             "cancel": "Cancel",
             "noChangesRequired": "No changes were required",
@@ -7867,7 +7877,27 @@
                 "beneficiaryDeceased": "Beneficiary Deceased"
             },
             "invalidEmail": "Invalid email",
-            "invalidFax": "Invalid fax"
+            "invalidFax": "Invalid fax",
+            "contractNumber": "Contract Number",
+            "callSummary": "Call Summary",
+            "errors": {
+                "addressIsRequired": "Select an address to continue",
+                "emailIsRequired": "Email is required",
+                "inValidDomain": "Only Zinnia emails are allowed",
+                "inValidEmail": "Please enter valid email address",
+                "faxIsRequired": "Fax number is required",
+                "inValidFax": "Please enter valid fax number",
+                "firstName": "First name is required",
+                "lastName": "Last name is required",
+                "address": "Verify & select the address to continue",
+                "contractRoleRequired": "Contact role is required",
+                "nameRequired": "Name is required",
+                "phoneRequired": "Phone number is required",
+                "relationshipToOwner": "Relationship to Owner is required",
+                "changeRequireRequired": "Please select option",
+                "changeTypeRequired": "Please select new information type",
+                "callSummaryRequired": "Call summary is required"
+            }
         },
         "confirmStep": {
             "title": "Got It!",
@@ -7927,7 +7957,7 @@
         },
         "callForInformation": {
             "title": "Call for Information",
-            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "subTitle": "As part of the existing follow-up continuation, contact the necessary parties(beneficiary/agent/others) to confirm and document all critical details related to this death claim.",
             "submit": "Submit",
             "cancel": "Cancel",
             "noChangesRequired": "No changes were required",
@@ -7960,7 +7990,27 @@
                 "beneficiaryDeceased": "Beneficiary Deceased"
             },
             "invalidEmail": "Invalid email",
-            "invalidFax": "Invalid fax"
+            "invalidFax": "Invalid fax",
+            "contractNumber": "Contract Number",
+            "callSummary": "Call Summary",
+            "errors": {
+                "addressIsRequired": "Select an address to continue",
+                "emailIsRequired": "Email is required",
+                "inValidDomain": "Only Zinnia emails are allowed",
+                "inValidEmail": "Please enter valid email address",
+                "faxIsRequired": "Fax number is required",
+                "inValidFax": "Please enter valid fax number",
+                "firstName": "First name is required",
+                "lastName": "Last name is required",
+                "address": "Verify & select the address to continue",
+                "contractRoleRequired": "Contact role is required",
+                "nameRequired": "Name is required",
+                "phoneRequired": "Phone number is required",
+                "relationshipToOwner": "Relationship to Owner is required",
+                "changeRequireRequired": "Please select option",
+                "changeTypeRequired": "Please select new information type",
+                "callSummaryRequired": "Call summary is required"
+            }
         }
     },
     "claimsDay150": {
@@ -8119,6 +8169,7 @@
             "dtcc": "DTCC",
             "creditcard": "Credit Card",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Check",
             "exchange": "Exchange",
             "wire": "Wire",
@@ -8153,7 +8204,7 @@
                 "included": "Included",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
-                "acceleratedDeathBenefitForTerminalIllness": "Accelerated Death Benefit for Terminal Illness",
+                "acceleratedDeathBenefitForTerminalIllness": "Accelerated Death Benefit Rider for Terminal Illness",
                 "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit",
                 "charitableGiving": "Charitable Giving",
                 "childrensTerm": "Children's Term Insurance",

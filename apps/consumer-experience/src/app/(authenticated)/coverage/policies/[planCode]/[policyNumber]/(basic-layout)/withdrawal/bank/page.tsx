@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
-import { SelectBank } from '@/components/workflows/withdrawals/forms/SelectBank';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { SelectBank } from '@/components/stepped-workflow/workflows/withdrawals/forms/SelectBank';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { getPaymentDetails, getPolicyProfileData } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';

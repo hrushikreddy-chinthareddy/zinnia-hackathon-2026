@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -18,10 +19,6 @@ import { useIllustrationsClientCase } from '@deps/contexts/illustrations/Illustr
 import { ClientCaseSearchInputs } from '@deps/types/illustrations';
 
 import styles from './client-case-search-bar.module.css';
-
-// interface ClientCaseSearchBarProps {
-//     onSubmit: (value: string) => void;
-// }
 
 type SearchType = 'caseTitle' | 'agentName' | 'insuredName';
 
@@ -44,6 +41,8 @@ function searchTypeFromFilters(
 }
 
 const ClientCaseSearchBar: React.FC<{}> = () => {
+    const { sendClientCaseDropdownClicked, sendSearchSubmitted } =
+        useIllustrationAnalytics();
     const { t } = useTranslation(TranslationFiles.COMMON);
 
     const { filters, setFilters } = useIllustrationsClientCase();
@@ -75,6 +74,14 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
 
     const handleSearch = (e: any) => {
         e.preventDefault();
+        sendSearchSubmitted({
+            agentFirstName,
+            agentLastName,
+            insuredFirstName,
+            insuredLastName,
+            caseTitle,
+            searchType,
+        });
 
         setFilters({
             insuredFirstName,
@@ -87,6 +94,7 @@ const ClientCaseSearchBar: React.FC<{}> = () => {
 
     const handleSearchTypechange = (value: SearchType) => {
         setSearchType(value);
+        sendClientCaseDropdownClicked(value);
         setFilters({
             insuredFirstName: value === 'insuredName' ? insuredFirstName : '',
             insuredLastName: value === 'insuredName' ? insuredLastName : '',

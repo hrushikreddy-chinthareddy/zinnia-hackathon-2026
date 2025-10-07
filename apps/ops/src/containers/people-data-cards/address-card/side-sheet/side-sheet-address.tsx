@@ -10,6 +10,7 @@ import {
 } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -105,6 +106,12 @@ const SideSheetAddress = ({
         keyPrefix: 'people.sideSheet.address',
     });
     const { t: defaultT } = useTranslation();
+    const router = useRouter();
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
+
     const { partyId: userId, sessionId } = usePermissionsContext();
     const INITIAL_ADDRESS: Address = {
         addressType: AddressType.RESIDENCE,
@@ -112,7 +119,7 @@ const SideSheetAddress = ({
     };
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
-        correlationId: uuidV4(),
+        correlationId: correlationIdFromRoute || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         preferredAddressIndicator: isCurrentMailingAddress
             ? PreferredAddressIndicator.Yes
@@ -244,6 +251,7 @@ const SideSheetAddress = ({
                 body: {
                     ...body,
                     address,
+                    correlationId: body.caseId ? body.correlationId : uuidV4(),
                 },
                 partyId,
                 planCode,
@@ -255,6 +263,7 @@ const SideSheetAddress = ({
                 body: {
                     ...body,
                     address,
+                    correlationId: body.caseId ? body.correlationId : uuidV4(),
                 },
                 itemId: updateAddress?.addressId,
                 partyId,

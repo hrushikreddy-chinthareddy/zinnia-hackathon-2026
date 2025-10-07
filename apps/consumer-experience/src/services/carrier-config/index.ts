@@ -35,6 +35,9 @@ export const getCarrierConfig = withLogging(
           manageChanges: ManageChange.INTERNAL,
         },
       },
+      riders: {
+        showUnbornChildRider: false,
+      },
       account: {
         surrender: {
           enabled: false,
@@ -111,6 +114,9 @@ export const getCarrierConfig = withLogging(
           ...defaultConfig,
           documents: {
             version: DocumentsVersion.V2,
+          },
+          riders: {
+            showUnbornChildRider: true,
           },
         };
 

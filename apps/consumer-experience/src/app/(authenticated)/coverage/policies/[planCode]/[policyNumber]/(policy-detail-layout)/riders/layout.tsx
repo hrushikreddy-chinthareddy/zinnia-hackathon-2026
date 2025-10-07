@@ -1,7 +1,7 @@
-import { PropsWithChildren, Suspense } from "react";
+import { PropsWithChildren, Suspense } from 'react';
 
-import Loading from "@/app/loading";
-import { CallForAssistance } from "@/components/call-for-assistance/CallForAssistance";
+import Loading from '@/app/loading';
+import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 
 export default function RiderLayout({ children }: PropsWithChildren) {
   return (
@@ -14,13 +14,10 @@ export default function RiderLayout({ children }: PropsWithChildren) {
         you need them. You can learn more about what your riders cover in your
         policy documents.
       </p>
-      <Suspense fallback={<Loading />}>
-        {children}
-      </Suspense>
+      <Suspense fallback={<Loading />}>{children}</Suspense>
       <CallForAssistance
-        callToAction="Online claims are coming soon. For now,"
+        callToAction="For questions about riders or to make a claim,"
         contactPrompt="call"
-        customInstruction="to make a rider claim."
       />
     </div>
   );

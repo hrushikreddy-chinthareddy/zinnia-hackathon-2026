@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-import { getPremiumEligibility } from '@/services/bpm';
+import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
@@ -17,10 +17,13 @@ export async function GET(
   });
 
   try {
-    const response = await getPremiumEligibility({
-      planCode: params.planCode,
-      policyNumber: params.policyNumber,
-    });
+    const response = await getOneTimePremiumEligibility(
+      {
+        planCode: params.planCode,
+        policyNumber: params.policyNumber,
+      },
+      loggingContext
+    );
 
     logTrace('bpm::onetimepremium::eligibility::GET::complete', {
       ...loggingContext,

@@ -43,6 +43,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
             triggerAsChild
             trigger={
                 <div
+                    tabIndex={0}
                     className={clsx(
                         styles.contextTrigger,
                         'typography-content-body color-base-text-text-secondary'

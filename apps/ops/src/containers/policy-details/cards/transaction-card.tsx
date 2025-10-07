@@ -33,10 +33,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
 
     return (
         <ClickContainer
-            ariaLabel={t(
-                'policy.detailCards.policyDetails.goToThisPolicysPage',
-                { page: cardTitle }
-            )}
+            ariaLabel={t('goToThisPolicysPage', { page: cardTitle })}
             classes="w-[226px] border-2 p-px !z-[1]"
             role="link"
             onClick={() => goto(href)}

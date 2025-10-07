@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
-import { SelectBankWrapper } from '@/components/workflows/surrender/forms/SelectBankWrapper';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { SelectBankWrapper } from '@/components/stepped-workflow/workflows/surrender/forms/SelectBankWrapper';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { getPolicyProfileData } from '@/services';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { getPaymentMethods } from '@/services/payment-methods';

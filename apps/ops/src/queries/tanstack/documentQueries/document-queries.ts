@@ -11,6 +11,7 @@ import { DocumentApiRequestInputs } from '@deps/queries/api/documents';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
 import { b64ToBlob } from '@deps/utils/blob';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 const buildV2SearchArgs = ({
     searchBody,
@@ -106,6 +107,12 @@ export const getDocumentSearchResultsQuery = async (
     if (!searchBody) {
         throw 'No search body provided';
     }
+    browserLogInfo('getDocumentSearchResultsQuery::searchBody', {
+        searchBody,
+        limit,
+        offset,
+        useV3,
+    });
     if (useV3) {
         const { data, error } = await searchDocumentsV3({
             limit,

@@ -18,9 +18,12 @@ import {
     CreateIllustrationPayload,
     CreateIllustrationPayloadParsingError,
     createIllustrationPayloadSchema,
+    Gender,
     IllustrationFaceAmountAndPremiumBasis,
     IllustrationFlatExtraTypes,
     IllustrationPartyTypeCode,
+    illustrationPayloadInsuredPartySchema,
+    illustrationPayloadNonInsuredPartySchema,
     InsuredRoleCodes,
     NonInsuredRoleCodes,
     SubStandardRating,
@@ -349,6 +352,29 @@ function createIllustrationPayload(
         issueAge: values.insured.issueAge,
     };
 
+    const parties: Infer<
+        | typeof illustrationPayloadInsuredPartySchema
+        | typeof illustrationPayloadNonInsuredPartySchema
+    >[] = [
+        {
+            partyId: insuredId,
+            partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+            gender: values.insured.gender as Gender,
+            dateOfBirth: values.insured.dateOfBirth,
+            firstName: values.insured.firstName || '',
+            middleName: values.insured.middleName || '',
+            lastName: values.insured.lastName || '',
+            roleCode: FARMERS_HARDCODED_DATA.insuredRoleCode,
+        },
+        {
+            partyId: uuid(),
+            partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+            firstName: values.agent.firstName,
+            lastName: values.agent.lastName,
+            roleCode: NonInsuredRoleCodes.AGENT,
+        },
+    ];
+
     if (values.riders?.accidentalDeathBenefitRider?.values?.length) {
         riders.push({
             coverageId: values.riders.accidentalDeathBenefitRider?.values[0],
@@ -406,16 +432,23 @@ function createIllustrationPayload(
     }
 
     if (values.riders?.ownerWaiverOfDeductionRider?.values?.length) {
+        const ownerWaiverOfDeductionRiderPartyId = uuid();
         riders.push({
             coverageId: values.riders.ownerWaiverOfDeductionRider?.values[0],
             participants: [
                 {
-                    participantId: uuid(),
+                    participantId: ownerWaiverOfDeductionRiderPartyId,
                     issueAge: calculateAgeNumber(
                         values.riders.ownerWaiverOfDeductionRider?.ownerAge
                     ),
                 },
             ],
+        });
+
+        parties.push({
+            partyId: ownerWaiverOfDeductionRiderPartyId,
+            partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+            roleCode: NonInsuredRoleCodes.OWNER,
         });
     }
 
@@ -558,27 +591,7 @@ function createIllustrationPayload(
             },
             ...riders,
         ],
-        parties: [
-            {
-                partyId: insuredId,
-                partyTypeCode:
-                    FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
-                gender: values.insured.gender,
-                dateOfBirth: values.insured.dateOfBirth,
-                firstName: values.insured.firstName || '',
-                middleName: values.insured.middleName || '',
-                lastName: values.insured.lastName || '',
-                roleCode: FARMERS_HARDCODED_DATA.insuredRoleCode,
-            },
-            {
-                partyId: uuid(),
-                partyTypeCode:
-                    FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
-                firstName: values.agent.firstName,
-                lastName: values.agent.lastName,
-                roleCode: NonInsuredRoleCodes.AGENT,
-            },
-        ],
+        parties: parties,
         options: {
             revisedIllustration: FARMERS_HARDCODED_DATA.revisedIllustration,
             solveFor: values.solveFor,

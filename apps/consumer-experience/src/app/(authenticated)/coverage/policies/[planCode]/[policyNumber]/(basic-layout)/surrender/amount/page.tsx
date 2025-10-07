@@ -1,6 +1,6 @@
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
-import { Date } from '@/components/workflows/surrender/forms/Date';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { Date } from '@/components/stepped-workflow/workflows/surrender/forms/Date';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { getPolicySurrenderDetails } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -20,6 +20,7 @@ export default async function ConfirmPage({
     loggingContext
   );
 
+  // TODO: is this the right error handling? it's blocking surrenderValue === 0
   if (!!error || !data?.surrenderValue) {
     return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
   }

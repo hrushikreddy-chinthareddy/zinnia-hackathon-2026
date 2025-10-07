@@ -46,7 +46,10 @@ export default async function Page({
     loggingContext
   );
 
-  const visibility = await getComponentVisibility(policyNumber, planCode);
+  const { data: visibility } = await getComponentVisibility(
+    { policyNumber, planCode },
+    loggingContext
+  );
 
   if (error) {
     return (

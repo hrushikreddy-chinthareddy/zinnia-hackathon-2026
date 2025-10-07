@@ -2,9 +2,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { getRouteKeyFromUrl, RouteKey } from '@/route-map';
-import { checkResetDeliveryDateEligibility } from '@/services/bpm';
+import { checkResetDeliveryDateEligibility } from '@/services/bpm/delivery-date';
 import { getRoutePermissions } from '@/services/display-rules';
 import { getPolicyDetails } from '@/services/policy';
+import { User } from '@/types/auth';
 
 import { getCarrierSubdomainById, isValidCarrierSubdomain } from './carriers';
 import { logTrace } from './logging/log-fns';
@@ -24,7 +25,7 @@ jest.mock('@/services/feature-flags', () => ({
 }));
 
 jest.mock('../../constants', () => ({
-  COOKIE_DOMAIN: '.mocked-test-domain.com'
+  COOKIE_DOMAIN: '.mocked-test-domain.com',
 }));
 
 jest.mock('./optimizely/optimizely', () => ({
@@ -47,7 +48,7 @@ jest.mock('./optimizely/optimizely', () => ({
 // Mock the dependencies
 jest.mock('@/services/policy');
 jest.mock('@/services/display-rules');
-jest.mock('@/services/bpm');
+jest.mock('@/services/bpm/delivery-date');
 jest.mock('@/route-map');
 jest.mock('@/middleware');
 jest.mock('./carriers');
@@ -377,7 +378,7 @@ describe('hasAcknowledgedPolicy', () => {
 
     // Act
     const result = await hasAcknowledgedPolicy(
-      { planCode, policyNumber },
+      { planCode, policyNumber, user: {} as User },
       mockRequest,
       mockResponse
     );
@@ -409,7 +410,7 @@ describe('hasAcknowledgedPolicy', () => {
 
     // Act
     const result = await hasAcknowledgedPolicy(
-      { planCode, policyNumber },
+      { planCode, policyNumber, user: {} as User },
       mockRequest,
       mockResponse
     );
@@ -419,10 +420,13 @@ describe('hasAcknowledgedPolicy', () => {
     expect(mockRequest.cookies.get).toHaveBeenCalledWith(
       ACKNOWLEDGEMENT_COOKIE_KEY
     );
-    expect(mockCheckResetDeliveryDateEligibility).toHaveBeenCalledWith({
-      planCode,
-      policyNumber,
-    });
+    expect(mockCheckResetDeliveryDateEligibility).toHaveBeenCalledWith(
+      {
+        planCode,
+        policyNumber,
+      },
+      expect.anything()
+    );
     expect(mockLogTrace).toHaveBeenCalled();
     expect(mockResponse.cookies.set).not.toHaveBeenCalled();
   });
@@ -445,7 +449,7 @@ describe('hasAcknowledgedPolicy', () => {
 
     // Act
     const result = await hasAcknowledgedPolicy(
-      { planCode, policyNumber },
+      { planCode, policyNumber, user: {} as User },
       mockRequest,
       mockResponse
     );
@@ -455,10 +459,13 @@ describe('hasAcknowledgedPolicy', () => {
     expect(mockRequest.cookies.get).toHaveBeenCalledWith(
       ACKNOWLEDGEMENT_COOKIE_KEY
     );
-    expect(mockCheckResetDeliveryDateEligibility).toHaveBeenCalledWith({
-      planCode,
-      policyNumber,
-    });
+    expect(mockCheckResetDeliveryDateEligibility).toHaveBeenCalledWith(
+      {
+        planCode,
+        policyNumber,
+      },
+      expect.anything()
+    );
     expect(mockResponse.cookies.set).toHaveBeenCalledWith(
       ACKNOWLEDGEMENT_COOKIE_KEY,
       JSON.stringify([policyNumber]),
@@ -482,7 +489,7 @@ describe('hasAcknowledgedPolicy', () => {
 
     // Act
     const result = await hasAcknowledgedPolicy(
-      { planCode, policyNumber },
+      { planCode, policyNumber, user: {} as User },
       mockRequest,
       mockResponse
     );
@@ -492,10 +499,13 @@ describe('hasAcknowledgedPolicy', () => {
     expect(mockRequest.cookies.get).toHaveBeenCalledWith(
       ACKNOWLEDGEMENT_COOKIE_KEY
     );
-    expect(mockCheckResetDeliveryDateEligibility).toHaveBeenCalledWith({
-      planCode,
-      policyNumber,
-    });
+    expect(mockCheckResetDeliveryDateEligibility).toHaveBeenCalledWith(
+      {
+        planCode,
+        policyNumber,
+      },
+      expect.anything()
+    );
     expect(mockResponse.cookies.set).toHaveBeenCalledWith(
       ACKNOWLEDGEMENT_COOKIE_KEY,
       JSON.stringify([policyNumber]),
@@ -522,7 +532,7 @@ describe('hasAcknowledgedPolicy', () => {
 
     // Act
     const result = await hasAcknowledgedPolicy(
-      { planCode, policyNumber },
+      { planCode, policyNumber, user: {} as User },
       mockRequest,
       mockResponse
     );

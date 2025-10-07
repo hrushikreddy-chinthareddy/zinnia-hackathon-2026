@@ -1,9 +1,10 @@
-import { SystematicPremiumAmountStep } from '@/components/workflows/systematic-premiums/forms/SystematicPremiumAmountStep';
-import { SystematicPremiumAmountStepTerm } from '@/components/workflows/systematic-premiums/forms/SystematicPremiumAmountStepTerm';
-import { SystematicPremiums } from '@/components/workflows/systematic-premiums/SystematicPremiums';
+import { SystematicPremiumAmountStep } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SystematicPremiumAmountStep';
+import { SystematicPremiumAmountStepTerm } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SystematicPremiumAmountStepTerm';
+import { SystematicPremiums } from '@/components/stepped-workflow/workflows/systematic-premiums/SystematicPremiums';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { PolicyRequestInputs } from '@/types/policy';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export default async function AmountPage({
   params,
@@ -11,7 +12,11 @@ export default async function AmountPage({
   params: PolicyRequestInputs;
 }) {
   const { planCode, policyNumber } = params;
-  const visibility = await getComponentVisibility(policyNumber, planCode);
+  const loggingCtx = await buildCommonLogContext();
+  const { data: visibility } = await getComponentVisibility(
+    { policyNumber, planCode },
+    loggingCtx
+  );
 
   return (
     <SystematicPremiums currentStepOverride={0}>

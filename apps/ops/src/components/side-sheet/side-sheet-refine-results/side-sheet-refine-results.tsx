@@ -527,7 +527,7 @@ export default function SideSheetRefineResults({
                                 `${REFINE_RESULTS_BASE_KEY}selectCarrier`
                             ) as string
                         }
-                        disabled={carrierFilterItems.length === 1}
+                        disabled={carrierFilterItems.length <= 1}
                         name="carrier-dropdown-btn"
                     />
                     <MultiselectField

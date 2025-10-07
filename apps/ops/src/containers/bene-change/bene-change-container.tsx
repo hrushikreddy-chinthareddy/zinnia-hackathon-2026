@@ -7,6 +7,7 @@ import { useMemo, useEffect, useCallback } from 'react';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { TranslationFiles } from '@deps/config/translations';
 import TabGroupContainer from '@deps/containers/bene-change/components/tab-group-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SOR_MAP, SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
@@ -14,6 +15,7 @@ import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { validateTransaction } from '@deps/queries/api/web-non-financial';
 import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useBeneChange } from './bene-change-provider';
 import PeopleSubPage from '../people-sub-page';
@@ -26,8 +28,6 @@ import DocSelectionStep from './components/steps/doc-selection/doc-selection-ste
 import OwnersInfoStep from './components/steps/owner-info/owners-info-step';
 import SignatureStep from './components/steps/signature/signature-step';
 import SummaryStep from './components/steps/summary/summary-step';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface BeneChangeContainerProps {
     policy: Policy;

@@ -3937,7 +3937,7 @@
                 "financials": "Données financières",
                 "funds": "Fonds",
                 "gains": "Gains",
-                "goToThisPolicysPage": "Accédez à la page des {{page}} de cette police d'assurance.",
+                "goToThisPolicysPage": "Accédez à la page des détails des {{page}}.",
                 "ineligible": "Inéligible",
                 "issueState": "État du problème",
                 "lastDeposit": "Dernier dépôt",
@@ -5060,7 +5060,8 @@
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
             "exchangeCompany": "Société d'échange",
             "jointAnnuitant": "Corentier",
-            "otherInterestedParty": "autre partie intéressée"
+            "otherInterestedParty": "autre partie intéressée",
+            "additionalServicingAgent": "Agent de service supplémentaire"
         }
     },
     "pageHeader": {
@@ -7601,10 +7602,19 @@
             "submitTask": "Soumettre"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : la révision du changement de nom a été soumise.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "claimsIdentifyUncashedTransactions": {
         "confirmStep": {
             "title": "J'ai compris!",
-            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
+            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
             "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"
@@ -7778,6 +7788,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer",
+                "contractRoleRequired": "Le rôle de contact est requis",
+                "nameRequired": "Le nom est requis",
+                "phoneRequired": "Le numéro de téléphone est requis",
+                "relationshipToOwner": "La relation avec le propriétaire est requise",
+                "changeRequireRequired": "Veuillez sélectionner une option",
+                "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
+                "callSummaryRequired": "Le résumé de l'appel est requis"
             }
         },
         "confirmStep": {
@@ -7849,7 +7877,25 @@
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
             "invalidEmail": "E-mail invalide",
-            "invalidFax": "Fax invalide"
+            "invalidFax": "Fax invalide",
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer",
+                "contractRoleRequired": "Le rôle de contact est requis",
+                "nameRequired": "Le nom est requis",
+                "phoneRequired": "Le numéro de téléphone est requis",
+                "relationshipToOwner": "La relation avec le propriétaire est requise",
+                "changeRequireRequired": "Veuillez sélectionner une option",
+                "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
+                "callSummaryRequired": "Le résumé de l'appel est requis"
+            }
         },
         "invalidEmail": "E-mail invalide",
         "invalidFax": "Fax invalide"
@@ -7979,6 +8025,7 @@
             "dtcc": "DTCC",
             "creditcard": "Carte de crédit",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Chèque",
             "exchange": "Échange",
             "wire": "Virement bancaire",
@@ -8013,7 +8060,7 @@
                 "included": "Compris",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
-                "acceleratedDeathBenefitForTerminalIllness": "Prestation de décès accéléré pour les maladies en phase terminale",
+                "acceleratedDeathBenefitForTerminalIllness": "Avenant de prestation de décès anticipé en cas de maladie terminal",
                 "acceleratedDeathBenefitForChronicIllness": "Prestation de décès accéléré pour la maladie chronique",
                 "charitableGiving": "Dons de bienfaisance",
                 "childrensTerm": "Assurance à terme pour enfants",

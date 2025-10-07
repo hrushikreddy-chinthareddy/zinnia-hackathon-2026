@@ -6,6 +6,7 @@ import { CallForAssistance } from '@/components/call-for-assistance/CallForAssis
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Rider } from '@/components/rider/Rider';
 import { getRiders } from '@/services';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
@@ -20,6 +21,7 @@ export default async function Riders({
   params: PolicyRequestInputs;
 }) {
   const loggingContext = await buildCommonLogContext();
+  const { data: ridersConfig } = await getCarrierConfig(loggingContext);
   const { data, error } = await getRiders(
     {
       planCode: params.planCode,
@@ -50,7 +52,13 @@ export default async function Riders({
           <div>
             <h2 className="pb-2xl border-b mt-lg">My Riders</h2>
             {electedRiders?.map(rider => (
-              <Rider key={rider.riderCode} {...rider} />
+              <Rider
+                key={rider.riderCode}
+                {...rider}
+                showUnbornChildRider={
+                  !!ridersConfig?.riders?.showUnbornChildRider
+                }
+              />
             ))}
           </div>
         )}
@@ -64,7 +72,13 @@ export default async function Riders({
               </p>
             </div>
             {additionalRiders?.map(rider => (
-              <Rider key={rider.riderCode} {...rider} />
+              <Rider
+                key={rider.riderCode}
+                {...rider}
+                showUnbornChildRider={
+                  !!ridersConfig?.riders?.showUnbornChildRider
+                }
+              />
             ))}
           </div>
         )}
@@ -79,15 +93,17 @@ export default async function Riders({
                 {...rider}
                 // Hide popover for any additional features that have an effective date
                 hidePopover={!!rider.effectiveDate}
+                showUnbornChildRider={
+                  !!ridersConfig?.riders?.showUnbornChildRider
+                }
               />
             );
           })}
         </div>
       )}
       <CallForAssistance
-        callToAction="Online claims are coming soon. For now,"
+        callToAction="For questions about riders or to make a claim,"
         contactPrompt="call"
-        customInstruction="to make a rider claim."
       />
     </div>
   );

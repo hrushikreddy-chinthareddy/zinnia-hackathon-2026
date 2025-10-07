@@ -1,7 +1,7 @@
 import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
-import { SelectAmount } from '@/components/one-time-premium-payment/SelectAmount';
-import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
+import { SelectAmount } from '@/components/stepped-workflow/workflows/one-time-premium/forms/SelectAmount';
+import { OneTimePremium } from '@/components/stepped-workflow/workflows/one-time-premium/OneTimePremium';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
@@ -56,7 +56,7 @@ export default async function SelectAmountPage({
         planCode: planCode,
         benefitId: 'Base_Coverage',
       }),
-      getComponentVisibility(policyNumber, planCode),
+      getComponentVisibility({ policyNumber, planCode }, commonLog),
       getPolicyFeatures(
         {
           planCode: params.planCode,
@@ -71,7 +71,7 @@ export default async function SelectAmountPage({
   const data = ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
 
   const visibility =
-    visibilityRes.status === 'fulfilled' ? visibilityRes.value : null;
+    visibilityRes.status === 'fulfilled' ? visibilityRes.value?.data : null;
   const features =
     featuresRes.status === 'fulfilled' ? featuresRes.value.data : null;
 

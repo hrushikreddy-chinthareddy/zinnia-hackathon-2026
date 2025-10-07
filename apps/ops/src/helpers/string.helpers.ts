@@ -241,6 +241,17 @@ export const formatDateDescriptionList = (date: Date): string => {
     }).format(date);
 };
 
+export const formatUTCDate = (date: Date): string => {
+    if (isNaN(date.getTime())) return DEFAULT_ERROR_STRING;
+
+    return new Intl.DateTimeFormat('en-US', {
+        timeZone: 'UTC',
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+    }).format(date);
+};
+
 export const formatDateForAriaLabel = (date: Date) => {
     const formatter = new Intl.DateTimeFormat('en-US', {
         year: 'numeric',

@@ -23,6 +23,7 @@ import {
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { useFreelookCancellation } from '@deps/hooks/useFreelookCancellation';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -350,11 +351,16 @@ export const MenuContextualContent = ({
         },
         enabled: !isDemo(), //TODO: Remove this check when demo endpoint is available
     });
+    const { data: freelookCancellation } = useFreelookCancellation(
+        policy?.product?.planCode,
+        policy.policyNumber
+    );
 
     const transactionItems: JSX.Element[] = [];
 
     if (
         freeLookEnabled &&
+        freelookCancellation?.isEligibleFreelookCancellation &&
         policy.freeLookPeriodDetails.isInFreeLookPeriod &&
         isUserPermissionedToDoTransaction
     ) {
@@ -362,6 +368,7 @@ export const MenuContextualContent = ({
             <MenuContextualItem
                 key="free-look"
                 content={t('transactions.freeLookCancel')}
+                disabled={!freelookCancellation?.isEligibleFreelookCancellation}
                 href={`/policies/${policy.planCode}/${policy.policyNumber}/policy/freelook/cancel-freelook/`}
                 onClick={() => {
                     trackClick(

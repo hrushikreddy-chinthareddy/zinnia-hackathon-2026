@@ -7,12 +7,18 @@ import {
 
 import { RouteKey } from '@/route-map';
 import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
-import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import {
+  buildCommonLogContext,
+  CommonLogContext,
+} from '@/utils/logging/server-logging';
+import { withLogging } from '@/utils/logging/with-logging';
 import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
 
 import { ComponentName } from './types';
 import { getLoggedInUserPolicyAndPartyData } from '../policy';
 import { getLoggedInUserPolicyAndPartyDataErrors } from '../policy/types';
+
+const fileName = 'apps/consumer-experience/src/services/display-rules/index.ts';
 
 /**
  * Core function to evaluate component visibility rules
@@ -21,9 +27,16 @@ import { getLoggedInUserPolicyAndPartyDataErrors } from '../policy/types';
  * Not UX/UI related requirements such as "only show this if there are X number of items in the array".
  */
 export const evaluateComponentVisibilityRules = (
-  policy: Policy,
-  partyRoles: PartyRole[],
-  skip?: boolean //An alternate skip option to override every option and force it to show
+  {
+    policy,
+    partyRoles,
+    skip,
+  }: {
+    policy: Policy;
+    partyRoles: PartyRole[];
+    skip?: boolean; //An alternate skip option to override every option and force it to show
+  },
+  loggingCtx: CommonLogContext
 ): Record<ComponentName, () => boolean> => {
   const isPayorNotOwner = isPayorOnly(partyRoles);
   // This means that we are defaulting to the owner view for any
@@ -36,7 +49,7 @@ export const evaluateComponentVisibilityRules = (
     policy.policyStatus === PolicyStatus.CANCELEDFREELOOK;
   const isTerm = policy.product?.productType === ProductType.TERM;
 
-  return {
+  const visibility = {
     [ComponentName.OVERVIEW_PROFILE]: () => true,
     [ComponentName.OVERVIEW_PAYMENT_HISTORY]: () => isPayorNotOwner || !!skip,
     [ComponentName.OVERVIEW_PREMIUM_LINK]: () => true,
@@ -59,6 +72,13 @@ export const evaluateComponentVisibilityRules = (
       isTerm || !!skip,
     [ComponentName.OTPP_EDITABLE_PAYMENT_AMOUNT]: () => !isTerm || !!skip,
   };
+
+  logTrace('evaluateComponentVisibilityRules results', {
+    visibility,
+    ...loggingCtx,
+  });
+
+  return visibility;
 };
 
 export const evaluateRouteRules = (
@@ -109,44 +129,37 @@ export const evaluateRouteRules = (
 /**
  * Get component visibility based on the policy and party roles
  */
-export const getComponentVisibility = async (
-  policyNumber: string,
-  planCode: string
-): Promise<Record<ComponentName, () => boolean> | null> => {
-  try {
-    const loggingContext = await buildCommonLogContext();
-
-    logTrace('display-rules::start', {
-      ...loggingContext,
-      planCode,
-      policyNumber,
-    });
-
+export const getComponentVisibility = withLogging(
+  async (
+    { policyNumber, planCode }: { policyNumber: string; planCode: string },
+    loggingCtx: CommonLogContext
+  ): Promise<Record<ComponentName, () => boolean> | null> => {
     const { data, error } = await getLoggedInUserPolicyAndPartyData(
       { planCode, policyNumber },
-      loggingContext
+      loggingCtx
     );
 
     // Evaluate all rules at once
     const visibility = evaluateComponentVisibilityRules(
-      data?.policy ?? {},
-      data?.partyRoles || [],
-      error?.cause === getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND
-      // ^^^ Why are we doing this? Party Ref API had a situation where it wasnt returning a reference to a policy I had access to.
-      // This short circuits the check and just returns true for everything in visibility
-      // TODO: This might be a bad idea in the future if we have more separate components that cant all be displayed at once.
-      // In that scenario, we might want to make it so that the check is done for each component separately.
-      // https://se2llc-global.slack.com/archives/C08DTEEK0SZ/p1753979626786329
+      {
+        policy: data?.policy ?? {},
+        partyRoles: data?.partyRoles || [],
+        skip:
+          error?.cause ===
+          getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND,
+        // ^^^ Why are we doing this? Party Ref API had a situation where it wasnt returning a reference to a policy I had access to.
+        // This short circuits the check and just returns true for everything in visibility
+        // TODO: This might be a bad idea in the future if we have more separate components that cant all be displayed at once.
+        // In that scenario, we might want to make it so that the check is done for each component separately.
+        // https://se2llc-global.slack.com/archives/C08DTEEK0SZ/p1753979626786329
+      },
+      loggingCtx
     );
+
     return visibility;
-  } catch (error) {
-    logError(
-      '::getComponentVisibility::Error evaluating component visibility:',
-      error
-    );
-    return null;
-  }
-};
+  },
+  { file: fileName, functionName: 'getComponentVisibility' }
+);
 
 /**
  *

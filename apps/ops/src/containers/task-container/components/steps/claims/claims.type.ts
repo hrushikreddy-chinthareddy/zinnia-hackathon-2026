@@ -11,7 +11,6 @@ export interface UpdatedBeneficiaryRecord {
     changeType: ChangeTypeEnum | null;
     beneDeceased: boolean;
     beneDeathDate: string | null;
-    beneDeathSourceOfInfo: string | null;
     notificationPreferences: NotificationMethod;
 }
 export enum ChangeTypeEnum {
@@ -70,6 +69,7 @@ export interface CallLog {
     phone: PhoneBase;
     callSequence: number;
     callDone: boolean;
+    callSummary: string;
 }
 
 export interface CallEntry {
@@ -77,6 +77,7 @@ export interface CallEntry {
     contactRole: string;
     name: string;
     phone: Phone;
+    callSummary: string;
 }
 
 export enum ContactRole {

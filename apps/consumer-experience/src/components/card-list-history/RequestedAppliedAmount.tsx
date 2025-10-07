@@ -16,10 +16,9 @@ export const RequestedAppliedAmount = ({
   return (
     <div>
       {formatUSDollars(requestedAmount)}
-      {requestedAmount && (
+      {!!appliedAmount && (
         <p className={`typography-content-body-sm ${styles.requested}`}>
-          Added to account value:
-          {appliedAmount && <span> {formatUSDollars(appliedAmount)}</span>}
+          Added to account value: {formatUSDollars(appliedAmount)}
         </p>
       )}
     </div>

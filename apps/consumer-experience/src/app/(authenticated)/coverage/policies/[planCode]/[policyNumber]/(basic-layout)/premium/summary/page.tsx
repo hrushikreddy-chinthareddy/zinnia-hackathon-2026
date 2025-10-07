@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
-import { PaymentSummary } from '@/components/one-time-premium-payment/payment-summary/PaymentSummary';
-import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
+import { PaymentSummary } from '@/components/stepped-workflow/workflows/one-time-premium/forms/payment-summary/PaymentSummary';
+import { OneTimePremium } from '@/components/stepped-workflow/workflows/one-time-premium/OneTimePremium';
 import { getPolicyAccountValue } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';

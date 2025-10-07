@@ -9,7 +9,9 @@ import {
     documentBaseUrl,
 } from '@deps/queries/api/documents';
 import { client } from '@deps/queries/api-utils/client';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 export const getDocumentsV2 = async ({
     periods,
@@ -35,6 +37,13 @@ export const getDocumentsV2 = async ({
             queryString.toString()
         );
 
+        browserLogInfo('getDocumentsV2::Fetching documents', {
+            queryParams,
+            periods,
+            limit,
+            offset,
+        });
+
         if (cachedResult) return cachedResult;
 
         const data = await client.get<any, AxiosResponse>(
@@ -45,9 +54,15 @@ export const getDocumentsV2 = async ({
 
         return data;
     } catch (error: any) {
-        console.error(
-            'An error occurred while getting document results',
-            error
+        browserLogError(
+            'getDocumentsV2:: Error occurred while getting document results',
+            {
+                ...parseErrorInformation(error),
+                queryParams,
+                periods,
+                limit,
+                offset,
+            }
         );
         return error.response || error;
     }

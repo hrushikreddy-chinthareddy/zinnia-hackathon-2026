@@ -54,6 +54,8 @@ export enum SegmentTrackedEventName {
     TransactionContinueClicked = 'Transaction Continue Clicked', // FIXME: remove
     TransactionCancelClicked = 'Transaction Cancel Clicked', // FIXME: remove
     TransactionSubmitted = 'transaction_submitted', // FIXME: remove
+    ClientCaseClicked = 'Client Case Clicked', // FIXME: remove
+    NewClientCaseClicked = 'New Client Case Clicked', //FIXME: remove
 }
 
 export interface BaseSegmentEventProps {
@@ -80,12 +82,29 @@ export type SearchSubmittedEvent = BaseSegmentEventProps & {
     documentNumber?: boolean;
 };
 
+export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProps & {
+    firstNameUsed: boolean;
+    lastNameUsed: boolean;
+    agentFirstName: boolean;
+    agentLastName: boolean;
+    timeStamp: Date;
+    caseTitle: boolean;
+    searchText?: string;
+};
+
+export type ClientCaseClickedEvent = BaseSegmentEventProps & {
+    clientCaseID: string;
+    linkUrl: string;
+    timeStamp: Date;
+};
+
 export type DropdownClickedEvent = BaseSegmentEventProps & {
     dropdownName: string;
 } & (
         | { searchText: string }
         | { selectedItemName: string }
         | { searchText: string; selectedItemName: string }
+        | { timestamp: Date }
     );
 
 export type PolicyClickedEvent = BaseSegmentEventProps & {
