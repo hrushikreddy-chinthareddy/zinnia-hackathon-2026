@@ -8208,7 +8208,9 @@
                 "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit",
                 "charitableGiving": "Charitable Giving",
                 "childrensTerm": "Children's Term Insurance",
+                "guaranteedInsurabilityBenefit": "Guaranteed Insurability Benefit",
                 "overloanProtection": "Overloan Protection",
+                "ownerWaiverOfDeduction": "Owner Waiver of Deduction",
                 "waiverOfDeduction": "Waiver of Deduction",
                 "waiverOfPremium": "Waiver of Premium"
             },

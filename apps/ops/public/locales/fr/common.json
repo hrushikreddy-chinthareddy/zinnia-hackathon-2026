@@ -8064,7 +8064,9 @@
                 "acceleratedDeathBenefitForChronicIllness": "Prestation de décès accéléré pour la maladie chronique",
                 "charitableGiving": "Dons de bienfaisance",
                 "childrensTerm": "Assurance à terme pour enfants",
+                "guaranteedInsurabilityBenefit": "prestation d'assurabilité garantie",
                 "overloanProtection": "Overloan Protection",
+                "ownerWaiverOfDeduction": "Renonciation à la déduction du propriétaire",
                 "waiverOfDeduction": "Déduction",
                 "waiverOfPremium": "Renonciation à la prime"
             },

@@ -11,6 +11,7 @@ const _riderNamesMap = {
     waiverOfDeduction: 'Waiver of Deduction',
     waiverOfPremium: 'Waiver of Premium',
     guaranteedInsurabilityBenefit: 'Guaranteed Insurability Benefit',
+    ownerWaiverOfDeduction: 'Owner Waiver of Deduction',
 } as const;
 
 export const riderNamesMap = _riderNamesMap as typeof _riderNamesMap &
