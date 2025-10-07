@@ -218,7 +218,7 @@ const farmersEntitiesSchema = t.object(
             t.undefined
         )
     ),
-    t.optionalProperty('preventMec', t.string),
+    t.optionalProperty('preventMec', t.boolean),
     t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
     t.optionalProperty(
         'scheduleDeathBenefitOption',
