@@ -59,8 +59,8 @@ export const SystematicPremiumAmountStep = () => {
     resolver: zodResolver(systematicPremiumAmountStepSchema),
     defaultValues: {
       paymentAmount:
-        state.systematicPremiumAmountStep.paymentAmount || undefined,
-      paymentFrequency: state.systematicPremiumAmountStep.paymentFrequency,
+        state?.systematicPremiumAmountStep?.paymentAmount || undefined,
+      paymentFrequency: state?.systematicPremiumAmountStep?.paymentFrequency,
     },
   });
 
