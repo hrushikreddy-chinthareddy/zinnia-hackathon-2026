@@ -29,6 +29,7 @@ export type SearchRequest = SearchRequestBody & {
         periodQuarters: ('Q1' | 'Q2' | 'Q3' | 'Q4')[];
     }[];
     masterAgentNumber?: string;
+    excludeDocumentTypes?: string[]; // this will go away when v2 doc search is deprecated
 };
 // The v3 request is the same as the v2 request
 export interface TaxDocumentApiRequestInputs {
