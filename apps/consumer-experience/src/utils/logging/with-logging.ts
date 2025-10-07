@@ -58,11 +58,13 @@ export function withLogging<T extends unknown[], R>(
         message: string;
         name: string;
         cause: Record<string, unknown>;
+        correlationId: string;
         status?: unknown;
       } = {
         message: getErrorMessage(err),
         name: `ServerFunction::${additionalLoggingContext.functionName} Error`,
         cause,
+        correlationId: context.correlationId,
       };
 
       if (cause?.status) {
