@@ -26,7 +26,7 @@ import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import FileAttachmentComponent from './file-attachment.component';
@@ -232,6 +232,10 @@ function FileUploadComponent({
                             formContext?.customData?.carrier ?? '',
                         correlationId: formContext?.correlationId || '',
                     };
+                    browserLogInfo('FileWidget: Uploading document:', {
+                        ...metaData,
+                        fileName: name,
+                    });
                     try {
                         const response = await uploadDocumentV2(
                             metaData,
@@ -259,6 +263,7 @@ function FileUploadComponent({
                             'FileWidget: Error uploading document:',
                             {
                                 ...parseErrorInformation(error),
+                                fileName: name,
                             }
                         );
                         failedUploads.push(name); // Add the file name to the failed uploads list

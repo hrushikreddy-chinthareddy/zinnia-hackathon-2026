@@ -20,18 +20,13 @@ export const getTransactionsByCorrelationId = async (
 ): Promise<TransactionData[] | null> => {
     let url = `${baseUrl}/transaction/${correlationId}/entities?`;
 
-    if (Object.keys(optionalParams).length > 0) {
-        url =
-            url +
-            Object.keys(optionalParams)
-                .map(
-                    (key) =>
-                        `${key}=${
-                            optionalParams[key as keyof typeof optionalParams]
-                        }`
-                )
-                .join('&');
-    }
+    url += createQueryString(optionalParams);
+
+    browserLogInfo('transactions::getTransactionsByCorrelationId', {
+        correlationId,
+        optionalParams,
+        url,
+    });
 
     try {
         const { data } = await client.get<
@@ -44,6 +39,8 @@ export const getTransactionsByCorrelationId = async (
         browserLogError('transactions::getTransactionsByCorrelationId::error', {
             ...parseErrorInformation(e),
             correlationId,
+            optionalParams,
+            url,
         });
         return null;
     }
@@ -71,3 +68,10 @@ export const getTransactionsByRecordId = async (
         return null;
     }
 };
+function createQueryString(optionalParams: {
+    entityType?: string;
+    createdTs?: string;
+    updatedTs?: string;
+}) {
+    throw new Error('Function not implemented.');
+}
