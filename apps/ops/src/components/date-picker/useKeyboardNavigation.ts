@@ -5,9 +5,10 @@ export const useKeyboardNavigation = (
     columns: number,
     onSelect: (index: number) => void,
     onEscape?: () => void,
-    isDisabled?: (index: number) => boolean
+    isDisabled?: (index: number) => boolean,
+    defaultFocusedIndex?: number
 ) => {
-    const [focusedIndex, setFocusedIndex] = useState(0);
+    const [focusedIndex, setFocusedIndex] = useState(defaultFocusedIndex ?? -1);
 
     useEffect(() => {
         if (isDisabled && isDisabled(focusedIndex)) {
