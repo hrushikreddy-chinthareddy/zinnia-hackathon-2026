@@ -1,5 +1,7 @@
+'use client';
+
 import clsx from 'clsx';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
 
 import styles from './CorrelationId.module.css';
 interface CorrelationIdProps {
@@ -7,24 +9,16 @@ interface CorrelationIdProps {
 }
 
 export const CorrelationId: FC<CorrelationIdProps> = ({ id }) => {
+  // Trigger mouseflow event when component mounts
+  useEffect(() => {
+    if (id) {
+      window._mfq.push(['tag', `correlationId shown: ${id}`]);
+    }
+  }, [id]);
+
   return (
-    <>
-      <p
-        className={clsx(
-          styles.corroDetails,
-          'typography-content-caption-selected text-center'
-        )}
-      >
-        Correlation ID:
-      </p>
-      <p
-        className={clsx(
-          styles.corroDetails,
-          'typography-content-captiontext-center'
-        )}
-      >
-        {id}
-      </p>
-    </>
+    <p className={clsx(styles.corroDetails, 'typography-content-caption')}>
+      {id}
+    </p>
   );
 };
