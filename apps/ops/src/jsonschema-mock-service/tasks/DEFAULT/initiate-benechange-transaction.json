@@ -674,35 +674,6 @@
                                         "title": "Action",
                                         "enum": ["ADD", "UPDATE", "DELETE"]
                                     },
-                                    "relationshipToParty": {
-                                        "type": "string",
-                                        "title": "Relationship to party",
-                                        "enum": [
-                                            "TRUSTEE",
-                                            "TRUSTEEOFMINOR",
-                                            "TRUSTEEOFINCOMPETENT",
-                                            "POWEROFATTORNEY",
-                                            "CONTROLLINGPERSONOFENTITY",
-                                            "BROTHER",
-                                            "CHILD",
-                                            "DAUGHTER",
-                                            "DOMESTICPARTNER",
-                                            "EXECUTORS",
-                                            "FATHER",
-                                            "FIANCE",
-                                            "GRANDCHILD",
-                                            "LIFEPARTNER",
-                                            "MOTHER",
-                                            "SISTER",
-                                            "SON",
-                                            "SPOUSE",
-                                            "STEPFATHER",
-                                            "STEPMOTHER",
-                                            "SELF",
-                                            "LEGALGUARDIAN",
-                                            "OTHER"
-                                        ]
-                                    },
                                     "isPerStirpes": {
                                         "type": "string",
                                         "title": "Per Stirpes",
@@ -1089,6 +1060,35 @@
                                                     "Primary Beneficiary",
                                                     "Contingent Beneficiary"
                                                 ]
+                                            },
+                                            "relationshipToParty": {
+                                                "type": "string",
+                                                "title": "Relationship to party",
+                                                "enum": [
+                                                    "TRUSTEE",
+                                                    "TRUSTEEOFMINOR",
+                                                    "TRUSTEEOFINCOMPETENT",
+                                                    "POWEROFATTORNEY",
+                                                    "CONTROLLINGPERSONOFENTITY",
+                                                    "BROTHER",
+                                                    "CHILD",
+                                                    "DAUGHTER",
+                                                    "DOMESTICPARTNER",
+                                                    "EXECUTORS",
+                                                    "FATHER",
+                                                    "FIANCE",
+                                                    "GRANDCHILD",
+                                                    "LIFEPARTNER",
+                                                    "MOTHER",
+                                                    "SISTER",
+                                                    "SON",
+                                                    "SPOUSE",
+                                                    "STEPFATHER",
+                                                    "STEPMOTHER",
+                                                    "SELF",
+                                                    "LEGALGUARDIAN",
+                                                    "OTHER"
+                                                ]
                                             }
                                         }
                                     }
@@ -1165,7 +1165,6 @@
                                 "partyRole",
                                 "action",
                                 "party",
-                                "relationshipToParty",
                                 "isPerStirpes",
                                 "isIrrevocable"
                             ],
@@ -1194,40 +1193,6 @@
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
                                 }
-                            },
-                            "relationshipToParty": {
-                                "ui:options": {
-                                    "enumNames": [
-                                        "Trustee",
-                                        "Trustee of Minor",
-                                        "Trustee of Incompetent",
-                                        "Power of Attorney",
-                                        "Controlling Person of Entity",
-                                        "Brother",
-                                        "Child",
-                                        "Daughter",
-                                        "Domestic Partner",
-                                        "Executors",
-                                        "Father",
-                                        "Fiance",
-                                        "Grandchild",
-                                        "Life Partner",
-                                        "Mother",
-                                        "Sister",
-                                        "Son",
-                                        "Spouse",
-                                        "Stepfather",
-                                        "Stepmother",
-                                        "Self",
-                                        "Legal Guardian",
-                                        "Other"
-                                    ]
-                                },
-                                "ui:dataPath": [
-                                    "actionData",
-                                    "partyRole",
-                                    "relationshipToParty"
-                                ]
                             },
                             "party": {
                                 "ui:order": [
@@ -1543,6 +1508,35 @@
                                         "enumNames": [
                                             "Primary Beneficiary",
                                             "Contingent Beneficiary"
+                                        ]
+                                    }
+                                },
+                                "relationshipToParty": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Trustee",
+                                            "Trustee of Minor",
+                                            "Trustee of Incompetent",
+                                            "Power of Attorney",
+                                            "Controlling Person of Entity",
+                                            "Brother",
+                                            "Child",
+                                            "Daughter",
+                                            "Domestic Partner",
+                                            "Executors",
+                                            "Father",
+                                            "Fiance",
+                                            "Grandchild",
+                                            "Life Partner",
+                                            "Mother",
+                                            "Sister",
+                                            "Son",
+                                            "Spouse",
+                                            "Stepfather",
+                                            "Stepmother",
+                                            "Self",
+                                            "Legal Guardian",
+                                            "Other"
                                         ]
                                     }
                                 }
