@@ -51,7 +51,10 @@ export function withLogging<T extends unknown[], R>(
         }
       );
 
-      return { data: result, error: null } as ApiResponse<R>;
+      return {
+        data: result,
+        error: null,
+      } as ApiResponse<R>;
     } catch (err) {
       const cause = getErrorCause(err);
       const error: {
