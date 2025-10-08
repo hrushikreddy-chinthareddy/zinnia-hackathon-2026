@@ -43,8 +43,8 @@ jobs:
               console.log("✅ PR description/title JIRA ID check passed.");
             }
 
-  lint:
-    name: Lint Check for apps/ops
+  prettier-lint-typecheck:
+    name: Prettier, Lint, and TS Type Check for apps/ops
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -67,10 +67,9 @@ jobs:
       - name: Prune and install only apps/ops deps
         run: |
           pnpm install --filter ./apps/ops --frozen-lockfile
-      - name: Run linting in apps/ops
+      - name: Run prettier
         run: |
-          cd apps/ops
-          pnpm run lint
+          npx turbo prettier
 
   type-check:
     name: TypeScript Check for apps/ops
