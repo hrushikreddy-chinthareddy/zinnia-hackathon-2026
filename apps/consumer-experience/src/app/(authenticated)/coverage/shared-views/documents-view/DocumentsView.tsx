@@ -134,6 +134,7 @@ export const DocumentsView = async ({
       <NoDataAvailable
         message={`Something went wrong. Please try again later.`}
         iconType={IconType.DOCUMENT_DUPLICATE}
+        correlationId={policyError?.correlationId}
       />
     );
   }

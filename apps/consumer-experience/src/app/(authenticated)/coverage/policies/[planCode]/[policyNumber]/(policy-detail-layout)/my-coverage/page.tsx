@@ -43,7 +43,7 @@ export default async function Coverage({
   if (error || data === null) {
     return (
       <>
-        <NoDataAvailable />
+        <NoDataAvailable correlationId={error?.correlationId} />
       </>
     );
   }

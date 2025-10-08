@@ -102,7 +102,12 @@ export default async function Withdrawals({
   const { data, error } = summaryData;
   const withdrawalsData = async () => {
     if (error || !data) {
-      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+      return (
+        <NoDataAvailable
+          message={DEFAULT_UNAVAILABLE_STRING}
+          correlationId={error?.correlationId}
+        />
+      );
     }
 
     return (

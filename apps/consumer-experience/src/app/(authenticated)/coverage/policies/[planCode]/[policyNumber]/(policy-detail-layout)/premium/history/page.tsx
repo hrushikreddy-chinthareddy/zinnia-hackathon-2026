@@ -59,6 +59,7 @@ export default async function PaymentHistory({ params }: Props) {
         <NoDataAvailable
           iconType={IconType.PAYMENT}
           message="No payment history available"
+          correlationId={error?.correlationId}
         />
       </div>
     );
