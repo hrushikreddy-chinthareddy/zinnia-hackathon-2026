@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { ReactComponent as ArrowLeftMediumIcon } from '@deps/styles/elements/icons/icons_outlined/arrow-left-medium.svg';
 import { ReactComponent as ArrowRightMediumIcon } from '@deps/styles/elements/icons/icons_outlined/arrow-right-medium.svg';
@@ -32,19 +32,12 @@ export const Years = ({
     const years = Array.from({ length: 12 }, (_, i) => yearsStart + i);
     const columns = isRange ? 6 : 4;
 
-    const { focusedIndex, setItemRef, handleKeyDown, setFocusedIndex } =
-        useKeyboardNavigation(
-            years.length,
-            columns,
-            (index) => handleCloseYears(years[index]),
-            onEscape
-        );
-
-    useEffect(() => {
-        if (yearsOpen) {
-            setFocusedIndex(0);
-        }
-    }, [yearsOpen, setFocusedIndex]);
+    const { focusedIndex, setItemRef, handleKeyDown } = useKeyboardNavigation(
+        years.length,
+        columns,
+        (index) => handleCloseYears(years[index]),
+        onEscape
+    );
 
     if (!yearsOpen) return null;
 

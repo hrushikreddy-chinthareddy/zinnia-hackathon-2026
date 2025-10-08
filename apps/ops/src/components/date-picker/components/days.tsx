@@ -135,8 +135,7 @@ export const Days = ({
             handleDateSelect(dayData.year, dayData.month, dayData.day);
         },
         onEscape,
-        isIndexDisabled,
-        0
+        isIndexDisabled
     );
 
     if (!daysOpen) return null;

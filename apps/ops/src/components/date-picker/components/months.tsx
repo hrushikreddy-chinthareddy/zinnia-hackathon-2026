@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 import { ReactComponent as ArrowLeftMediumIcon } from '@deps/styles/elements/icons/icons_outlined/arrow-left-medium.svg';
 import { ReactComponent as ArrowRightMediumIcon } from '@deps/styles/elements/icons/icons_outlined/arrow-right-medium.svg';
@@ -33,7 +33,6 @@ export const Months = ({
 }: MonthsProps) => {
     const months = dayjs.monthsShort();
     const columns = isRange ? 6 : 4;
-    const ref = useRef<HTMLButtonElement>(null);
 
     const { focusedIndex, setItemRef, handleKeyDown } = useKeyboardNavigation(
         months.length,
@@ -41,12 +40,6 @@ export const Months = ({
         (index) => handleCloseMonths(index),
         onEscape
     );
-
-    useEffect(() => {
-        if (ref.current && monthsOpen) {
-            ref.current.focus();
-        }
-    }, [ref, monthsOpen]);
 
     if (!monthsOpen) return null;
 
@@ -67,7 +60,6 @@ export const Months = ({
                 </button>
                 <button
                     className={containerClasses}
-                    ref={ref}
                     onClick={createClickHandler(() => handleOpenYears())}
                     onKeyDown={createKeyDownHandler(() => handleOpenYears())}
                     aria-label={`Year ${year}, click to select year`}
