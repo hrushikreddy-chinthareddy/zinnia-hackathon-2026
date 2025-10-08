@@ -9,6 +9,7 @@ const meta: Meta = {
   args: {
     errorTitle: 'Oh no something went wrong',
     errorMessage: 'press close and we can both forget it ever happened',
+    correlationId: '13456-78910-112345',
   },
   decorators: [
     Story => (
@@ -35,5 +36,6 @@ export const ServerError: Story = {
     isServerError: true,
     errorTitle: '500 Server Error',
     errorMessage: 'press close and we can both forget it ever happened',
+    correlationId: '13456-78910-112345',
   },
-}
+};
