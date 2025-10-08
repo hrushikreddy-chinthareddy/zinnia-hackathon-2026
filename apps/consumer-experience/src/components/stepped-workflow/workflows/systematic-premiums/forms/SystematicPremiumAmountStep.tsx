@@ -58,9 +58,9 @@ export const SystematicPremiumAmountStep = () => {
   const form = useForm<SPAmountStepSchema>({
     resolver: zodResolver(systematicPremiumAmountStepSchema),
     defaultValues: {
+      ...state.systematicPremiumAmountStep,
       paymentAmount:
         state?.systematicPremiumAmountStep?.paymentAmount || undefined,
-      paymentFrequency: state?.systematicPremiumAmountStep?.paymentFrequency,
     },
   });
 
