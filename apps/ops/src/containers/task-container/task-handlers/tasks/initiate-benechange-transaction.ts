@@ -123,15 +123,18 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                 );
 
                 return {
-                    relationshipToParty: role?.relationshipToParty ?? 'OTHER',
                     isPerStirpes: bene.isPerStirpes ?? 'No',
                     isIrrevocable: bene.isIrrevocable ?? false,
                     action: 'UPDATE',
                     partyRole: {
-                        beneficiaryRole:
+                        partyRoleId: role?.partyRoleId ?? '',
+                        partyRole:
                             roleType === PartyRoleType.PRIMARYBENEFICIARY
                                 ? PartyRoleLabel.PRIMARYBENEFICIARY
                                 : PartyRoleLabel.CONTINGENTBENEFICIARY,
+                        partyId: bene.partyId ?? '',
+                        relationshipToParty:
+                            role?.relationshipToParty ?? 'OTHER',
                     },
                     party: {
                         partyType: bene.partyType,

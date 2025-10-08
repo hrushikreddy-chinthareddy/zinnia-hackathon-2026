@@ -1082,7 +1082,7 @@
                                     "partyRole": {
                                         "type": "object",
                                         "properties": {
-                                            "beneficiaryRole": {
+                                            "partyRole": {
                                                 "type": "string",
                                                 "title": "Party role",
                                                 "enum": [
@@ -1092,12 +1092,10 @@
                                             }
                                         }
                                     }
-                                },
-                                "required": ["relationshipToParty"]
+                                }
                             },
                             "default": [
                                 {
-                                    "relationshipToParty": "SPOUSE",
                                     "isIrrevocable": false,
                                     "isPerStirpes": "No",
                                     "party": {
@@ -1134,7 +1132,8 @@
                                         ]
                                     },
                                     "partyRole": {
-                                        "beneficiaryRole": "Primary Beneficiary"
+                                        "partyRole": "Primary Beneficiary",
+                                        "relationshipToParty": "OTHER"
                                     }
                                 }
                             ]
@@ -1172,7 +1171,7 @@
                             ],
                             "ui:options": {
                                 "label": false,
-                                "title": "{{partyRole.beneficiaryRole}}",
+                                "title": "{{partyRole.partyRole}}",
                                 "defaultItemLabel": "New Beneficiary",
                                 "nobackground": true,
                                 "expandable": false
@@ -1223,7 +1222,12 @@
                                         "Legal Guardian",
                                         "Other"
                                     ]
-                                }
+                                },
+                                "ui:dataPath": [
+                                    "actionData",
+                                    "partyRole",
+                                    "relationshipToParty"
+                                ]
                             },
                             "party": {
                                 "ui:order": [
@@ -1534,7 +1538,7 @@
                                 "ui:options": {
                                     "label": false
                                 },
-                                "beneficiaryRole": {
+                                "partyRole": {
                                     "ui:options": {
                                         "enumNames": [
                                             "Primary Beneficiary",
@@ -1572,9 +1576,8 @@
                                                 "title": "Type"
                                             },
                                             "isSignedPresent": {
-                                                "type": "string",
                                                 "title": "Signed present",
-                                                "enum": ["Yes", "No"]
+                                                "type": "boolean"
                                             },
                                             "signDesignation": {
                                                 "type": "string",
@@ -1600,19 +1603,19 @@
                                     },
                                     "default": [
                                         {
-                                            "isSignedPresent": "No",
+                                            "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": "",
                                             "signType": "Owner"
                                         },
                                         {
-                                            "isSignedPresent": "No",
+                                            "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": "",
                                             "signType": "Joint Owner"
                                         },
                                         {
-                                            "isSignedPresent": "No",
+                                            "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": "",
                                             "signType": "Irrevocable Beneficiary"
@@ -1665,8 +1668,12 @@
                                     }
                                 },
                                 "isSignedPresent": {
+                                    "ui:widget": "select",
                                     "ui:options": {
-                                        "enumNames": ["Yes", "No"]
+                                        "enumOptions": [
+                                            { "label": "Yes", "value": true },
+                                            { "label": "No", "value": false }
+                                        ]
                                     }
                                 },
                                 "signDesignation": {

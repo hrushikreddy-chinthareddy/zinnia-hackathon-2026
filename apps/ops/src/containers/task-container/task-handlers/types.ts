@@ -51,7 +51,8 @@ export interface BeneficiaryTaskPayload {
 export interface PartyRole {
     partyRole: string;
     partyId: string;
-    relationshipToParty?: string;
+    relationshipToParty: string;
+    partyRoleId?: string;
 }
 
 export interface Party {

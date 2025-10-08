@@ -111,7 +111,6 @@
                 "isIrrevocable": true,
                 "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
-                "relationshipToParty": "SPOUSE",
                 "party": {
                     "partyId": "Party_PB_Primary_Bene_1",
                     "partyType": "INDIVIDUAL",
@@ -187,9 +186,10 @@
                     ]
                 },
                 "partyRole": {
+                    "partyRoleId": 34,
+                    "partyRole": "Primary Beneficiary",
                     "partyId": "Party_PB_Primary_Bene_1",
-                    "beneficiaryRole": "Primary Beneficiary",
-                    "partyRoleId": 34
+                    "relationshipToParty": "SPOUSE"
                 }
             },
             {
@@ -198,7 +198,6 @@
                 "isIrrevocable": false,
                 "isPerStirpes": "No",
                 "isRestrictedBeneficiary": false,
-                "relationshipToParty": "TRUSTEEOFINCOMPETENT",
                 "party": {
                     "partyId": "",
                     "partyType": "TRUST",
@@ -253,9 +252,8 @@
                     ]
                 },
                 "partyRole": {
-                    "partyId": "",
-                    "beneficiaryRole": "Contingent Beneficiary",
-                    "partyRoleId": 32
+                    "partyRole": "Contingent Beneficiary",
+                    "relationshipToParty": "TRUSTEEOFINCOMPETENT"
                 }
             }
         ],
@@ -263,27 +261,21 @@
             "isIrrevocableBene": false,
             "signatures": [
                 {
-                    "isSignedPresent": "No",
+                    "isSignedPresent": false,
                     "signDate": null,
                     "signDesignation": "",
-                    "signGurantee": "",
-                    "signPrintName": "",
                     "signType": "Owner"
                 },
                 {
-                    "isSignedPresent": "No",
+                    "isSignedPresent": false,
                     "signDate": null,
                     "signDesignation": "",
-                    "signGurantee": "",
-                    "signPrintName": "",
                     "signType": "Joint Owner"
                 },
                 {
-                    "isSignedPresent": "No",
+                    "isSignedPresent": false,
                     "signDate": null,
                     "signDesignation": "",
-                    "signGurantee": "",
-                    "signPrintName": "",
                     "signType": "Irrevocable Beneficiary"
                 }
             ]

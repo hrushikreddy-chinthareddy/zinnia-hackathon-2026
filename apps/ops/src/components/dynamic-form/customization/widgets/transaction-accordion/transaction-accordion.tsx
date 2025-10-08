@@ -83,7 +83,8 @@ const TransactionAccordion = ({
                 ],
             },
             partyRole: {
-                beneficiaryRole: BeneficiaryRole.PRIMARYBENEFICIARY,
+                partyRole: BeneficiaryRole.PRIMARYBENEFICIARY,
+                relationshipToParty: 'OTHER',
             },
         };
 
@@ -97,7 +98,7 @@ const TransactionAccordion = ({
         if (tabTitle == TabTitle.OwnerDetails) {
             title = item.partyRole;
         } else if (tabTitle == TabTitle.BeneficiaryDetails) {
-            title = item.partyRole.beneficiaryRole;
+            title = item.partyRole.partyRole;
         } else if (tabTitle == TabTitle.Signature) {
             title = item.signType;
         }
