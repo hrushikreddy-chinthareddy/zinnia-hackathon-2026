@@ -10,6 +10,7 @@ import {
   SideSheetLocation,
 } from '@zinnia/bloom/components';
 import { Nav, NavGroup } from '../Nav/Nav';
+import { SkipLink } from '../SkipLink/SkipLink';
 import styles from './Layout.module.css';
 import zinniaLogo from '../../styles/icons/zinnia-logo.svg';
 import clsx from 'clsx';
@@ -68,6 +69,7 @@ export const Layout: FC<LayoutType> = ({
 
   return (
     <div className={styles.container}>
+      <SkipLink />
       {/* visible only below 1024px */}
       <SideSheet
         overrideOpen={open}
@@ -122,7 +124,9 @@ export const Layout: FC<LayoutType> = ({
       />
       {/*  */}
 
-      <main className={clsx(styles.layoutMain, className)}>{children}</main>
+      <main className={clsx(styles.layoutMain, className)} id="main">
+        {children}
+      </main>
     </div>
   );
 };

@@ -51,7 +51,7 @@ const trackClick = (
         contractNumber: policyNumber,
         linkName,
         linkUrl,
-        session_id: sessionId,
+        authSessionId: sessionId,
         userId: userPartyId,
         planCode,
     });

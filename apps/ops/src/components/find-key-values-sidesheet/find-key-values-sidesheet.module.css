@@ -20,6 +20,11 @@
     gap: 8px;
 }
 
+.fieldLabel {
+    display: flex;
+    gap: var(--measure-dimension-padding-sm);
+}
+
 .subSection {
     padding: var(--measure-dimension-padding-xl);
     margin-top: var(--measure-dimension-margin-xs);

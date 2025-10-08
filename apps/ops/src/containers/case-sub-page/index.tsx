@@ -36,7 +36,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     const { query } = router;
 
     const { data: caseDetailsModel } = useQuery({
-        queryKey: ['caseDetails', caseDetails?.id],
+        queryKey: ['caseDetails', caseDetails?.id, featureFlags],
         queryFn: () => getCaseDetailsQuery(caseDetails?.id, featureFlags),
         initialData: caseDetails,
         refetchInterval:
@@ -71,9 +71,16 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
             (isCallLogsTab && !hasCallLogsAccess)
         ) {
             router.push(`${baseAppUrl}/cases/${caseDetails?.id}/progress`);
+            setTabVal(CaseDetailsTabValues.progress);
         }
-        setTabVal(CaseDetailsTabValues.progress);
-    }, [hasCallLogsAccess, hasNotesAccess, router]);
+    }, [
+        hasCallLogsAccess,
+        hasNotesAccess,
+        router,
+        caseDetails?.id,
+        policy?.policyNumber,
+        query?.tab,
+    ]);
 
     const statusDetails = getStatusDetails({
         singleCase: caseDetailsModel,

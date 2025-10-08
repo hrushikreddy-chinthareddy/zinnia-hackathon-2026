@@ -311,7 +311,7 @@ export default function getGlcoOftConfig(t: TFunction) {
         }
         if (programSubType === ProgramSubType.TotalFreeWithdrawal) {
             return {
-                selectedOption: ProgramType.PenaltyFreeAmount,
+                selectedOption: ProgramType.TotalFreeAmt,
                 amount: '',
             };
         }

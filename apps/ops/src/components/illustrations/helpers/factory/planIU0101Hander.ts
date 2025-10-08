@@ -3,6 +3,7 @@ import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 import { Result, t, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
+import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
@@ -17,9 +18,12 @@ import {
     CreateIllustrationPayload,
     CreateIllustrationPayloadParsingError,
     createIllustrationPayloadSchema,
+    Gender,
     IllustrationFaceAmountAndPremiumBasis,
     IllustrationFlatExtraTypes,
     IllustrationPartyTypeCode,
+    illustrationPayloadInsuredPartySchema,
+    illustrationPayloadNonInsuredPartySchema,
     InsuredRoleCodes,
     NonInsuredRoleCodes,
     SubStandardRating,
@@ -64,10 +68,7 @@ const ridersSchema = t.object(
                 'values',
                 t.union(t.array(t.string), t.undefined)
             ),
-            t.optionalProperty(
-                'ownerAge',
-                t.union(t.array(t.number), t.undefined)
-            )
+            t.optionalProperty('ownerAge', t.union(t.string, t.undefined))
         )
     ),
     t.optionalProperty(
@@ -120,10 +121,7 @@ const ridersSchema = t.object(
                 'values',
                 t.union(t.array(t.string), t.undefined)
             ),
-            t.optionalProperty(
-                'faceAmount',
-                t.union(t.array(t.string), t.undefined)
-            )
+            t.optionalProperty('faceAmount', t.union(t.number, t.undefined))
         )
     ),
     t.optionalProperty(
@@ -220,7 +218,7 @@ const farmersEntitiesSchema = t.object(
             t.undefined
         )
     ),
-    t.optionalProperty('preventMec', t.string),
+    t.optionalProperty('preventMec', t.boolean),
     t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
     t.optionalProperty(
         'scheduleDeathBenefitOption',
@@ -283,8 +281,7 @@ const farmersEntitiesSchema = t.object(
         'internal1035ExchangeAmount',
         t.union(t.number, t.undefined)
     ),
-    t.optionalProperty('exchangeBasis1035', t.union(t.number, t.undefined)),
-    t.optionalProperty('mec1035', t.union(t.string, t.undefined)),
+
     t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
     distributionAmountTableSchema,
 
@@ -292,7 +289,9 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty(
         'nonNicotineConversionAtAge18',
         t.union(t.array(t.string), t.undefined)
-    )
+    ),
+    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -353,6 +352,29 @@ function createIllustrationPayload(
         issueAge: values.insured.issueAge,
     };
 
+    const parties: Infer<
+        | typeof illustrationPayloadInsuredPartySchema
+        | typeof illustrationPayloadNonInsuredPartySchema
+    >[] = [
+        {
+            partyId: insuredId,
+            partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+            gender: values.insured.gender as Gender,
+            dateOfBirth: values.insured.dateOfBirth,
+            firstName: values.insured.firstName || '',
+            middleName: values.insured.middleName || '',
+            lastName: values.insured.lastName || '',
+            roleCode: FARMERS_HARDCODED_DATA.insuredRoleCode,
+        },
+        {
+            partyId: uuid(),
+            partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+            firstName: values.agent.firstName,
+            lastName: values.agent.lastName,
+            roleCode: NonInsuredRoleCodes.AGENT,
+        },
+    ];
+
     if (values.riders?.accidentalDeathBenefitRider?.values?.length) {
         riders.push({
             coverageId: values.riders.accidentalDeathBenefitRider?.values[0],
@@ -410,15 +432,23 @@ function createIllustrationPayload(
     }
 
     if (values.riders?.ownerWaiverOfDeductionRider?.values?.length) {
+        const ownerWaiverOfDeductionRiderPartyId = uuid();
         riders.push({
             coverageId: values.riders.ownerWaiverOfDeductionRider?.values[0],
             participants: [
                 {
-                    participantId: uuid(),
-                    issueAge:
-                        values.riders.ownerWaiverOfDeductionRider?.ownerAge,
+                    participantId: ownerWaiverOfDeductionRiderPartyId,
+                    issueAge: calculateAgeNumber(
+                        values.riders.ownerWaiverOfDeductionRider?.ownerAge
+                    ),
                 },
             ],
+        });
+
+        parties.push({
+            partyId: ownerWaiverOfDeductionRiderPartyId,
+            partyTypeCode: FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
+            roleCode: NonInsuredRoleCodes.OWNER,
         });
     }
 
@@ -522,6 +552,19 @@ function createIllustrationPayload(
 
     const underWritingClass = getUnderWritingClass(values.premiumClass);
 
+    const exchanges = {
+        internal: {
+            amount: values.internal1035ExchangeAmount,
+            basis: values.internal1035ExchangeAmount,
+            isModifiedEndowmentContract: false,
+        },
+        external: {
+            amount: values.external1035ExchangeAmount,
+            basis: values.external1035ExchangeAmount,
+            isModifiedEndowmentContract: false,
+        },
+    };
+
     const output = {
         calculationType: values.illustrationType,
         source: FARMERS_HARDCODED_DATA.source,
@@ -548,27 +591,7 @@ function createIllustrationPayload(
             },
             ...riders,
         ],
-        parties: [
-            {
-                partyId: insuredId,
-                partyTypeCode:
-                    FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
-                gender: values.insured.gender,
-                dateOfBirth: values.insured.dateOfBirth,
-                firstName: values.insured.firstName || '',
-                middleName: values.insured.middleName || '',
-                lastName: values.insured.lastName || '',
-                roleCode: FARMERS_HARDCODED_DATA.insuredRoleCode,
-            },
-            {
-                partyId: uuid(),
-                partyTypeCode:
-                    FARMERS_HARDCODED_DATA.individualPartyTypeRoleCode,
-                firstName: values.agent.firstName,
-                lastName: values.agent.lastName,
-                roleCode: NonInsuredRoleCodes.AGENT,
-            },
-        ],
+        parties: parties,
         options: {
             revisedIllustration: FARMERS_HARDCODED_DATA.revisedIllustration,
             solveFor: values.solveFor,
@@ -700,19 +723,13 @@ function createIllustrationPayload(
                     },
                 }),
             }),
-            exchanges: {
-                internalAmount: values.internal1035ExchangeAmount,
-                externalAmount: values.external1035ExchangeAmount,
-                basis: values.exchangeBasis1035,
-                isMec: values.mec1035,
-                carryOverLoan: 1,
-            },
             ...(values.nonNicotineConversionAtAge18 && {
                 juvenileReclassification:
                     values.nonNicotineConversionAtAge18[0] ===
                     'non-NicotineConversionAtAge18',
             }),
         },
+        ...(values.illustrate1035 === 'yes' && { exchanges }),
         fundAllocations: [
             {
                 allocationPercent: values.longTermFixedAccountAllocation,
@@ -739,6 +756,7 @@ function createIllustrationPayload(
                 distributions: {
                     frequency: FARMERS_HARDCODED_DATA.distributionFrequency,
                     sequence: distributionSequence,
+                    loanInterestOption: values.loanInterestOption,
                 },
             }),
     };

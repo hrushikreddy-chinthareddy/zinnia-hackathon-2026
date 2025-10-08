@@ -125,4 +125,30 @@ describe('##ScheduledNotification', () => {
             screen.queryByText('caseOverview.notifications.contactMethod')
         ).not.toBeInTheDocument();
     });
+
+    it('#hides title, button and contact method UI when "hideNotificationInfo" is true', () => {
+        render(
+            <ScheduledNotification
+                notification={{
+                    ...baseNotification,
+                    followupId: 5,
+                    followupStatus: NotificationStatus.Escheatment,
+                }}
+                shouldHideButton={true}
+                policyNumber="551006123"
+                carrier="FLIC"
+                identifier="2a66c678-f166-4a1d-a3f3-c97d92f9b444"
+                attemptCount={5}
+            />
+        );
+        expect(
+            screen.getByText('caseOverview.notifications.contactNotEstablished')
+        ).toBeInTheDocument();
+        expect(
+            screen.queryByTestId('update-contact-method-btn')
+        ).not.toBeInTheDocument();
+        expect(
+            screen.queryByText('caseOverview.notifications.contactMethod')
+        ).not.toBeInTheDocument();
+    });
 });

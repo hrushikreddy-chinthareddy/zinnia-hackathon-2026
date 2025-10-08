@@ -31,6 +31,7 @@ export enum NotificationStatus {
     Generating = 'GENERATING',
     NIGO = 'NIGO',
     Exception = 'TERMINATE',
+    Escheatment = 'ESCHEATMENT',
 }
 
 export interface FollowUpLetter {

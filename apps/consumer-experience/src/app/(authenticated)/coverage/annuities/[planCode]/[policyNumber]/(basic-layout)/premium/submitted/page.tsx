@@ -1,5 +1,5 @@
-import { PaymentSubmitted } from '@/components/one-time-premium-payment/PaymentSubmitted';
-import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
+import { PaymentSubmitted } from '@/components/stepped-workflow/workflows/one-time-premium/forms/PaymentSubmitted';
+import { OneTimePremium } from '@/components/stepped-workflow/workflows/one-time-premium/OneTimePremium';
 import { PolicyRequestInputs } from '@/types/policy';
 
 export default async function SubmittedPayment({

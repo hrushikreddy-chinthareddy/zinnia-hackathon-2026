@@ -1,5 +1,5 @@
-import { SubmissionPage } from '@/components/workflows/surrender/forms/SubmissionPage';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { SubmissionPage } from '@/components/stepped-workflow/workflows/surrender/forms/SubmissionPage';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const SubmissionStep = ({ params }: PolicyRequestInputsParams) => {

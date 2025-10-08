@@ -32,6 +32,7 @@ export interface CaseDocumentSelectProps {
     setCaseDocumentOptions: SetStateCaseDocumentOptions;
     setCurrentErrors: SetStateCaseId;
     setViewState: SetStateViewState;
+    required?: boolean;
 }
 
 export interface CaseDocumentOption {
@@ -142,6 +143,7 @@ const CaseDocumentSelect = ({
     setCaseDocumentOptions,
     setCurrentErrors,
     setViewState,
+    required = false,
 }: CaseDocumentSelectProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -172,11 +174,17 @@ const CaseDocumentSelect = ({
 
     return (
         <div className="flex flex-col gap-2">
-            <Label
-                label={t('transactions.caseDocumentSelect.label')}
-                sentenceCase={false}
-                variant={LabelVariant.LabelLg}
-            />
+            <div className="flex items-center gap-1">
+                <Label
+                    label={t('transactions.caseDocumentSelect.label')}
+                    sentenceCase={false}
+                    variant={LabelVariant.LabelLg}
+                />
+                {required && (
+                    <span className="text-semantic-error">&nbsp;*</span>
+                )}
+            </div>
+
             <div className="flex flex-col gap-2">
                 {caseDocumentOptions.map((caseDocumentOption) => (
                     <CardCaseDocument

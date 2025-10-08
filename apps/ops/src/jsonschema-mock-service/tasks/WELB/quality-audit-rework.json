@@ -400,9 +400,12 @@
                                         "hideError": true
                                     },
                                     "reworkDateTime": {
+                                        "ui:inline": true,
                                         "ui:options": {
                                             "inline": true,
-                                            "label": false
+                                            "label": false,
+                                            "dataType": "dateTime",
+                                            "disabled": true
                                         }
                                     },
                                     "attachments": {
@@ -459,9 +462,12 @@
                                         }
                                     },
                                     "reworkDateTime": {
+                                        "ui:inline": true,
                                         "ui:options": {
                                             "inline": true,
-                                            "label": false
+                                            "label": false,
+                                            "dataType": "dateTime",
+                                            "disabled": true
                                         }
                                     },
                                     "note": {

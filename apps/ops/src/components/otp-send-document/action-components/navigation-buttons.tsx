@@ -39,7 +39,7 @@ const SendDocumentNavigationButtons = ({
             segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
                 SegmentTrackedEventName.TransactionContinueClicked,
                 {
-                    session_id: sessionId,
+                    authSessionId: sessionId,
                     userId: partyId,
                     ...trackEventProps,
                 }
@@ -54,7 +54,7 @@ const SendDocumentNavigationButtons = ({
             segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(
                 SegmentTrackedEventName.TransactionCancelClicked,
                 {
-                    session_id: sessionId,
+                    authSessionId: sessionId,
                     userId: partyId,
                     ...trackEventProps,
                 }

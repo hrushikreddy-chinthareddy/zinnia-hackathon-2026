@@ -462,7 +462,7 @@ const TaskQueueTableRow = ({
     };
 
     const handleLinkClick = (
-        event: React.MouseEvent<HTMLAnchorElement> | undefined
+        event: React.MouseEvent<HTMLElement> | undefined
     ) => {
         if (event) {
             event.preventDefault();
@@ -489,7 +489,12 @@ const TaskQueueTableRow = ({
                     {''}
                 </Link>
             </TableCell>
-            <TableCell>
+            <TableCell
+                onClick={handleLinkClick}
+                onKeyDown={handleLinkKeyDown}
+                role="button"
+                className="cursor-pointer"
+            >
                 <Content
                     contentClassName="relative z-10"
                     triggerClassName="text-left"

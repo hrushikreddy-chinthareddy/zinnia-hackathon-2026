@@ -28,8 +28,14 @@ export function useRidersLabelMap() {
             'clientCase.illustrationDetails.riders.charitableGiving'
         ),
         childrensTerm: t('clientCase.illustrationDetails.riders.childrensTerm'),
+        guaranteedInsurabilityBenefit: t(
+            'clientCase.illustrationDetails.riders.guaranteedInsurabilityBenefit'
+        ),
         overloanProtection: t(
             'clientCase.illustrationDetails.riders.overloanProtection'
+        ),
+        ownerWaiverOfDeduction: t(
+            'clientCase.illustrationDetails.riders.ownerWaiverOfDeduction'
         ),
         waiverOfDeduction: t(
             'clientCase.illustrationDetails.riders.waiverOfDeduction'

@@ -2189,7 +2189,7 @@
             "pleaseCheck": "Please check one",
             "primaryOwner": "Primary owner",
             "printedName": "Printed name",
-            "renewalPeriodError": "Renewal period is required",
+            "renewalPeriodError": "Total allocation across all funds must equal 100%",
             "selectOption": "Select an option",
             "signPresent": "Signature present",
             "signatureValidation": "Signature Validation",
@@ -3313,7 +3313,33 @@
         "commonPhrases": {
             "endingIn": "ending in"
         },
+        "toolTips": {
+            "preTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis that predates the passing of the Tax Equity and Fiscal Responsibility Act.",
+            "preTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Tax Equity and Fiscal Responsibility Act passed in 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988.",
+            "netAmountAtRisk": "This factor helps the insurance company understand how much money is at risk if the insured on the {{policyNomenclature}} died today. This is used for finance and accounting purposes.",
+            "modifiedEndowmentContractAuthorization": "This outlines what, if any, authorization process is required for transactions that may convert the {{policyNomenclature}} to a MEC, which stands for modified endowment contract.",
+            "projectedLapseIndicator": "If true, this means the {{policyNomenclature}} is expected to lapse within the next {{policyNomenclature}} year based on its current account value, premium payments, cost of insurance (COI), and other policy charges.",
+            "loanInterestMethod": "This tells you how the loan's interest is applied. Arrears means the interest is charged at the end of the {{policyNomenclature}} year. This means a payment that occurs mid-year can reduce the daily interest amount and thus, the interest owed at the end of the year. Advance means the insurance carrier charges annual interest for the loan up front on the day the loan starts. So if the loan is taken halfway through the policy year, interest for the remaining half the year is charged when the loan starts. If loan repayment occurs within a policy year, there's typically no refund for the interest paid in advance.",
+            "annualWithdrawalLimitNoCoverageDecrease": "Owners can withdraw this amount without impacting their coverage. In other words, they can withdraw this amount and still keep their death benefit intact.",
+            "marketValueAdjustmentIndicator": "If true, this indicates whether a market value adjustment applies to this contract or investment.",
+            "remainingRequiredMinimumDistributionAmount": "This shows how much of the RMD amount is left to be taken for the current year.",
+            "sevenPayTestBasis": "This is how much the owner has paid in premiums (minus any withdrawals) during the active 7-pay premium test window.",
+            "deathBenefitOption": "Some policies come with an option to increase coverage over time. Level death benefit stays the same for the life of the {{policyNomenclature}}. An increasing death benefit goes up as the policy's account value increases.",
+            "cumulativeGrossDeathBenefitAmount": "This is what the {{policyNomenclature}} pays out when the insured dies. It's usually the same as the base death benefit (also known as the face amount) but it can include additions (like returned premiums) in some cases.",
+            "netDeathBenefit": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount. ",
+            "minimumCoverageAmount": "This is the lowest amount that an owner can reduce their death benefit to. Less coverage may lead to lower premiums—and negative tax consequences. If the decrease creates a large enough gap between the death benefit and the premiums paid in, the policy may fail guidelines tests and cease to offer tax advantages.  All changes reset the seven year period for the 7-pay test.",
+            "maximumCoverageAmount": "This is the highest amount that an owner can increase their death benefit to. Increase requests must go through the underwriting process for approval. All changes reset the seven year period for the 7-pay test.",
+            "minimumCoverageDecreaseAmount": "This refers to the smallest reduction in coverage that an owner is allowed to make per {{policyNomenclature}} year.",
+            "maximumCoverageDecreaseAmount": "This refers to the largest reuction in coverage an owner can make per {{policyNomenclature}} year.",
+            "minimumCoverageIncreaseAmount": "This refers to the smallest increment by which an owner can increase their coverage in a single {{policyNomenclature}} year.",
+            "maximumCoverageIncreaseAmount": "This refers to the largest increment by which an owner can increase their coverage in a single {{policyNomenclature}} year.",
+            "grossDeathBenefitAmount": "This is the amount from this coverage layer or rider that will be added to the death benefit.",
+            "featureIndicator": "If true, that means a given feature is included in the contract.",
+            "reducedPaidUpFaceAmount": "This is the reduced death benefit amount that results if the owner elects the reduced paid-up (RPU) option."
+        },
         "allFields": {
+            "emptySearch": "No matches found",
             "policyBasics": "{{policyNomenclature, capitalize}} basics",
             "effectiveDate": "Effective date",
             "carrierId": "Carrier ID",
@@ -3967,7 +3993,7 @@
                 "financials": "Financials",
                 "funds": "Funds",
                 "gains": "Gains",
-                "goToThisPolicysPage": "Go to the {{page}} page for this insurance policy.",
+                "goToThisPolicysPage": "Go to the {{page}} details page.",
                 "ineligible": "Ineligible",
                 "issueState": "Issue state",
                 "lastDeposit": "Last deposit",
@@ -5110,7 +5136,8 @@
             "additionalWritingAgent": "Additional Writing Agent",
             "exchangeCompany": "Exchange Company",
             "jointAnnuitant": "Joint Annuitant",
-            "otherInterestedParty": "Other Interested Party"
+            "otherInterestedParty": "Other Interested Party",
+            "additionalServicingAgent": "Additional Servicing Agent"
         }
     },
     "pageHeader": {
@@ -6136,6 +6163,10 @@
             "rmdAutopay": "Upcoming RMD Autopay",
             "cancelWithdrawalAutopayTitle": "Cancel Systematic {{type}}",
             "cancelAutopay": "Cancel autopay",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "payment"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
             }
@@ -7681,6 +7712,15 @@
             "submitTask": "Submit"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Name Change Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "Got It!",
@@ -7815,7 +7855,7 @@
     "beneCall": {
         "callForInformation": {
             "title": "Call for Information",
-            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "subTitle": "As part of the existing follow-up continuation, contact the necessary parties(beneficiary/agent/others) to confirm and document all critical details related to this death claim.",
             "submit": "Submit",
             "cancel": "Cancel",
             "noChangesRequired": "No changes were required",
@@ -7847,7 +7887,27 @@
                 "beneficiaryDeceased": "Beneficiary Deceased"
             },
             "invalidEmail": "Invalid email",
-            "invalidFax": "Invalid fax"
+            "invalidFax": "Invalid fax",
+            "contractNumber": "Contract Number",
+            "callSummary": "Call Summary",
+            "errors": {
+                "addressIsRequired": "Select an address to continue",
+                "emailIsRequired": "Email is required",
+                "inValidDomain": "Only Zinnia emails are allowed",
+                "inValidEmail": "Please enter valid email address",
+                "faxIsRequired": "Fax number is required",
+                "inValidFax": "Please enter valid fax number",
+                "firstName": "First name is required",
+                "lastName": "Last name is required",
+                "address": "Verify & select the address to continue",
+                "contractRoleRequired": "Contact role is required",
+                "nameRequired": "Name is required",
+                "phoneRequired": "Phone number is required",
+                "relationshipToOwner": "Relationship to Owner is required",
+                "changeRequireRequired": "Please select option",
+                "changeTypeRequired": "Please select new information type",
+                "callSummaryRequired": "Call summary is required"
+            }
         },
         "confirmStep": {
             "title": "Got It!",
@@ -7907,7 +7967,7 @@
         },
         "callForInformation": {
             "title": "Call for Information",
-            "subTitle": "Call necessary people to verify critical information about this death claim.",
+            "subTitle": "As part of the existing follow-up continuation, contact the necessary parties(beneficiary/agent/others) to confirm and document all critical details related to this death claim.",
             "submit": "Submit",
             "cancel": "Cancel",
             "noChangesRequired": "No changes were required",
@@ -7940,7 +8000,27 @@
                 "beneficiaryDeceased": "Beneficiary Deceased"
             },
             "invalidEmail": "Invalid email",
-            "invalidFax": "Invalid fax"
+            "invalidFax": "Invalid fax",
+            "contractNumber": "Contract Number",
+            "callSummary": "Call Summary",
+            "errors": {
+                "addressIsRequired": "Select an address to continue",
+                "emailIsRequired": "Email is required",
+                "inValidDomain": "Only Zinnia emails are allowed",
+                "inValidEmail": "Please enter valid email address",
+                "faxIsRequired": "Fax number is required",
+                "inValidFax": "Please enter valid fax number",
+                "firstName": "First name is required",
+                "lastName": "Last name is required",
+                "address": "Verify & select the address to continue",
+                "contractRoleRequired": "Contact role is required",
+                "nameRequired": "Name is required",
+                "phoneRequired": "Phone number is required",
+                "relationshipToOwner": "Relationship to Owner is required",
+                "changeRequireRequired": "Please select option",
+                "changeTypeRequired": "Please select new information type",
+                "callSummaryRequired": "Call summary is required"
+            }
         }
     },
     "claimsDay150": {
@@ -8022,10 +8102,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Zinnia Live Unique Logins by Role"
+                "title": "Zinnia Live Unique Logins",
+                "description": "Shows unique logins for selected user groups only."
             },
             "myPolicyView": {
-                "title": "MyPolicyView Unique Logins"
+                "title": "MyPolicyView Unique Logins",
+                "description": "Shows unique logins for customers only."
             },
             "uniqueUsers": "Unique users",
             "date": "Date",
@@ -8033,10 +8115,12 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Zinnia Live Page Views"
+                "title": "Zinnia Live Page Views",
+                "description": "Shows number of page views for selected user groups only."
             },
             "zinniaLiveCaseViews": {
-                "title": "Zinnia Live Case Views by Transaction"
+                "title": "Zinnia Live Top Case Views",
+                "description": "Shows number of case views for selected user groups only."
             }
         }
     },
@@ -8095,6 +8179,7 @@
             "dtcc": "DTCC",
             "creditcard": "Credit Card",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Check",
             "exchange": "Exchange",
             "wire": "Wire",
@@ -8110,7 +8195,7 @@
             "coverage": {
                 "title": "Coverage",
                 "faceAmount": "Face amount",
-                "termLength": "Term Length"
+                "termLength": "Level Premium Term Length"
             },
             "premium": {
                 "title": "Premium",
@@ -8129,11 +8214,13 @@
                 "included": "Included",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
-                "acceleratedDeathBenefitForTerminalIllness": "Accelerated Death Benefit for Terminal Illness",
+                "acceleratedDeathBenefitForTerminalIllness": "Accelerated Death Benefit Rider for Terminal Illness",
                 "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit",
                 "charitableGiving": "Charitable Giving",
                 "childrensTerm": "Children's Term Insurance",
+                "guaranteedInsurabilityBenefit": "Guaranteed Insurability Benefit",
                 "overloanProtection": "Overloan Protection",
+                "ownerWaiverOfDeduction": "Owner Waiver of Deduction",
                 "waiverOfDeduction": "Waiver of Deduction",
                 "waiverOfPremium": "Waiver of Premium"
             },
@@ -8226,7 +8313,36 @@
                 "placeholder": "Your feedback message here...",
                 "positiveFeedbackComment": "Could you clarify what aspects of the feedback you found satisfactory? Your feedback is valuable for improving our service.",
                 "negativeFeedbackComment": "Could you clarify what aspects of the feedback you found unsatisfactory? Your feedback is valuable for improving our service.",
-                "validationError": "Please enter your feedback comment"
+                "validationError": "Please enter your feedback comment",
+                "dislikeReasonsHeader": "Please select a reason for disliking the response.",
+                "dislikeReasons": {
+                    "incorrectResponse": "Incorrect response (answer didn’t match question)",
+                    "languageIssue": "Language/style issue (unclear, too complex)/ Incomplete response (answer too short, lacked details)",
+                    "relevantDocumentMissing": "Relevant document missing (bot missed a key reference)",
+                    "infoMissing": "Info missing in documents (guidelines/content gaps)",
+                    "linksLabel": "If you have link(s) to a relevant document, please share here (separated by commas if multiple):"
+                },
+                "opsIntakeFormLink": "Let us create an ops Intake form for you",
+                "opsIntakeForm": {
+                    "heading": "Ops Intake/Feedback form",
+                    "placeholder": "Write something...",
+                    "processName": "Name of Guideline/Step by Step/Process",
+                    "blockOfBusiness": "Block of business affected",
+                    "blockOfBusinessAssistiveText": "Is the request applicable to other blocks of business? If yes, what blocks?",
+                    "processDescription": "Description of the process and transactions impacted",
+                    "reasonForSubmittingRequest": "Describe why are you submitting this request?",
+                    "outcomeExpected": "What is the outcome you are expecting to achieve?",
+                    "smeEmail": "Provide the email of the subject matter expert/contact person on your team, the BA can work with",
+                    "priority": "Priority",
+                    "requestFrequency": "How often is this request done? (daily, weekly, monthly, annually)",
+                    "requestFrequencyAssistiveText": "If you are requesting a manual process to be automated, would like to understand the frequency of that manual process.",
+                    "benefitMetrics": "Any metrics of how this change will benefit Operations",
+                    "benefitMetricsAssistiveText": "Avg process times, Quality audit improvements, or any other metrics that you can think of."
+                },
+                "errors": {
+                    "inValidDomain": "Only Zinnia emails are allowed",
+                    "inValidEmail": "Please enter valid email address"
+                }
             },
             "followUpPlaceholder": "Ask your follow up questions here...",
             "followUpButton": "Ask your follow up questions here"

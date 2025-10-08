@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { UserActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
+import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import Highcharts from 'highcharts';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
@@ -67,7 +68,7 @@ export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
         userStatus: ['active'],
         systemSource: ['MyPolicyView'],
         dateStart: timerange.from,
-        dateEnd: timerange.to || undefined,
+        dateEnd: startOfTomorrowLocalIso(timerange.to) || undefined,
     };
 
     const {
@@ -92,6 +93,9 @@ export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
         <div className="flex w-1/2 flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h justify-between">
             <UsageHeaderLayout
                 title={title}
+                description={String(
+                    t('usage.logins.myPolicyView.description') ?? ''
+                )}
                 data={myPolicyViewLoginsData?.data ?? []}
                 csvFileName={generateCSVFileName(
                     'MyPolicyView Unique Logins',

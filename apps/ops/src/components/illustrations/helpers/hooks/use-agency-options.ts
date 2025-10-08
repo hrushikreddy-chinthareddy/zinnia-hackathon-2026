@@ -17,10 +17,11 @@ import {
 } from '@deps/types/producers';
 
 import { useHierarchyListQuery } from './pom';
+import { AliasWithSellingCode } from './user-identity';
 
 export const useAgencyOptions = (
     agentOption: AgentOption | undefined,
-    aliasesWithSellingCodes: AliasModel[] | undefined
+    aliasesWithSellingCodes: AliasWithSellingCode[] | undefined
 ) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
@@ -30,6 +31,7 @@ export const useAgencyOptions = (
         sellingCode: alias.externalPartyIds?.find(
             (id) => id.key === 'SELLING_CODE'
         )?.value as string,
+        carrierShortName: alias.carrier,
         fullName:
             alias?.fullName || (alias?.firstName && alias?.lastName)
                 ? `${alias?.firstName} ${alias?.lastName}`
@@ -41,24 +43,17 @@ export const useAgencyOptions = (
             return [];
         }
 
-        const { firstName, lastName } = agentOption;
+        const { firstName, lastName, carrierShortName } = agentOption;
 
         return agentOption.sellingCodes.map((sellingCode) => ({
             sellingCode,
+            carrierShortName,
             fullName:
                 firstName && lastName
                     ? `${firstName} ${lastName}`
                     : firstName || lastName,
         }));
     }, [agentOption]);
-
-    const authUserSellingCodes = authUserAliases?.map(
-        ({ sellingCode }) => sellingCode
-    );
-
-    const clientCaseAgentSellingCodes = clientCaseAgentAliases
-        .map(({ sellingCode }) => sellingCode || '')
-        .filter((sellingCode) => !!sellingCode);
 
     const hierarchyCombiner = useCallback(
         (results: UseQueryResult<GetHierarchyResponse | null>[]) =>
@@ -69,12 +64,12 @@ export const useAgencyOptions = (
     );
 
     const { data: authUserHierarchies } = useHierarchyListQuery(
-        authUserSellingCodes ?? [],
+        authUserAliases,
         hierarchyCombiner
     );
 
     const { data: clientCaseAgentHierarchies } = useHierarchyListQuery(
-        clientCaseAgentSellingCodes,
+        clientCaseAgentAliases,
         hierarchyCombiner
     );
 

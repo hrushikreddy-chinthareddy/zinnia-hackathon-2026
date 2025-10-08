@@ -20,6 +20,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { convertToUserTimezone } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     formatSSN,
@@ -260,6 +261,8 @@ export const formatValueByDataType = (dataType: string, value: any) => {
         }
         case DataFormattingTypes.Date:
             return formatDate(value);
+        case DataFormattingTypes.DateTime:
+            return convertToUserTimezone(value);
         case DataFormattingTypes.Phone: {
             const phoneValue =
                 typeof value === 'string' && value.startsWith('{')

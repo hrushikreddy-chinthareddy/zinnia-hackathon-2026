@@ -29,8 +29,6 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { CaseType } from '@deps/models/case/case';
 import { DocumentData, PolicyDocument } from '@deps/models/case/document';
-import { ApiVersion } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskSource, OwnerInformation } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -304,11 +302,7 @@ function FormEntryStep({
                 setSubmitFailed(false);
             }
         } else {
-            if (
-                TaskApiVersionMapper[formState.initialForm.taskType] ===
-                    ApiVersion.v2 &&
-                formState.initialForm.status !== TaskStatus.Completed
-            ) {
+            if (formState.initialForm.status !== TaskStatus.Completed) {
                 const successfulCaseUpdate = await updateTask(
                     formState.initialForm.caseId,
                     formState.initialForm.taskId,

@@ -12,12 +12,14 @@ type FileUploadProps = {
     value: File[];
     onChange: (files: File[]) => void;
     error?: string | null;
+    required?: boolean;
 };
 
 const FileUpload: React.FC<FileUploadProps> = ({
     value = [],
     onChange,
     error: externalError,
+    required = false,
 }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [error, setError] = React.useState<string | null>(null);
@@ -71,9 +73,14 @@ const FileUpload: React.FC<FileUploadProps> = ({
 
     return (
         <div>
-            <Typography variant={TypographyVariant.FieldLabel}>
-                Attach the supporting document(s)
-            </Typography>
+            <div className="flex items-center gap-1">
+                <Typography variant={TypographyVariant.FieldLabel}>
+                    Attach the supporting document/(s)
+                </Typography>
+                {required && (
+                    <span className="text-semantic-error">&nbsp;*</span>
+                )}
+            </div>
             <div
                 onDrop={handleDrop}
                 onDragOver={(e) => e.preventDefault()}

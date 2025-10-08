@@ -24,11 +24,13 @@ const highlightText = ({
 
     return parts?.map((part, index) => {
         return highlights.includes(part.toLowerCase()) ? (
-            <span key={index} className="bg-semantic-highlight">
+            <span key={index} className="bg-semantic-highlight whitespace-pre">
                 {renderTextFunction(part)}
             </span>
         ) : (
-            <span key={index}>{renderTextFunction(part)}</span>
+            <span key={index} className="whitespace-pre">
+                {renderTextFunction(part)}
+            </span>
         );
     });
 };

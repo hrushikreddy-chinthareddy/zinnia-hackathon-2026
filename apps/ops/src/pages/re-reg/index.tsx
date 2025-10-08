@@ -182,7 +182,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const document = documentNumber
                     ? await getDocumentV2SSR(
                           documentNumber,
-                          DocumentType.ReReg,
+                          DocumentType.Rereg,
                           clientId.toUpperCase(),
                           accessToken as string,
                           loggingContext
@@ -227,7 +227,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 logError('re-reg/:id::getServerSidePropsReRegPage', {
                     ...parseErrorInformation(error),
                     ...loggingContext,
-                    docType: DocumentType.ReReg,
+                    docType: DocumentType.Rereg,
                 });
                 return {
                     props: {},

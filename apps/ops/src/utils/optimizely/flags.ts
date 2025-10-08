@@ -169,4 +169,5 @@ export enum FEATURE_FLAGS {
     BANK_CHANGE_TRANSACTION = 'bank_change_transaction',
     BANK_CHANGE_DELETE_TRANSACTION = 'bank_change_delete_transaction',
     FKV_SHOW_ALL = 'fkv-show-all',
+    BENE_CHANGE_NEW_API = 'bene_change_new_api',
 }

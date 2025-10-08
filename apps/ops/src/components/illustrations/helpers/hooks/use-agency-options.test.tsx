@@ -141,6 +141,7 @@ describe('useAgencyOptions', () => {
     const agentCommon = {
         firstName: 'John',
         lastName: 'Doe',
+        carrierShortName: 'FNWL',
         sellingCodes: [],
     } satisfies AgentOption;
 

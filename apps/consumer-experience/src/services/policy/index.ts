@@ -1268,7 +1268,7 @@ export const getPolicyParties = withLogging(
       });
     }
 
-    return transformPolicyParties(policyResponse.data);
+    return transformPolicyParties(policyResponse.data, loggingCtx);
   },
   { file: FILE_NAME, functionName: 'getPolicyParties' }
 );
@@ -1294,7 +1294,8 @@ export const getLoggedInUserPolicyAndPartyData = withLogging(
 
     if (!partyRefData) {
       throw new Error(
-        getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_REFERENCE_DATA_FOUND
+        getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_REFERENCE_DATA_FOUND,
+        { cause: { partyId, planCode, policyNumber } }
       );
     }
 
@@ -1309,17 +1310,23 @@ export const getLoggedInUserPolicyAndPartyData = withLogging(
       getPolicyPartyIdByPolicyNumber(partyRefData, policyNumber) || '';
 
     if (!policyData) {
-      throw new Error(getLoggedInUserPolicyAndPartyDataErrors.NO_POLICY_FOUND);
+      throw new Error(getLoggedInUserPolicyAndPartyDataErrors.NO_POLICY_FOUND, {
+        cause: { partyId, planCode, policyNumber },
+      });
     }
     if (!policyPartyId) {
       throw new Error(
-        getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND
+        getLoggedInUserPolicyAndPartyDataErrors.NO_PARTY_ID_FOUND,
+        { cause: { partyId, planCode, policyNumber } }
       );
     }
 
     // TODO: this overrides the partyRoles from above right now, we need to reevaluate
     // if this should. There were instances where alias does not return on the partyRef data
-    partyRoles = getPartyRolesFromPolicyPartyId(policyPartyId, policyData);
+    partyRoles = getPartyRolesFromPolicyPartyId(
+      { policyPartyId, policy: policyData },
+      loggingCtx
+    );
 
     return {
       partyRoles,

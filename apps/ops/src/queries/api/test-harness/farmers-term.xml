@@ -92,7 +92,7 @@
               </OLifEExtension>
             </Coverage>
             <Coverage id="Rider_ABRTRM">
-              <PlanName>Accelerated Death Benefit for Terminal Illness</PlanName>
+              <PlanName>Accelerated Death Benefit Rider for Terminal Illness</PlanName>
               <ProductCode>R1ABRT</ProductCode>
               <LifeCovStatus tc="1">Active</LifeCovStatus>
               <IndicatorCode tc="2">Rider</IndicatorCode>

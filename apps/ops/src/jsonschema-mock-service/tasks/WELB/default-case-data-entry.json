@@ -96,13 +96,6 @@
                                     }
                                 }
                             }
-                        },
-                        "attachments": {
-                            "title": "Attach Document",
-                            "type": "array",
-                            "items": {
-                                "format": "data-url"
-                            }
                         }
                     }
                 },
@@ -210,14 +203,6 @@
                                 },
                                 "ui:hideError": true
                             }
-                        }
-                    },
-                    "attachments": {
-                        "ui:widget": "FileWidget",
-                        "ui:options": {
-                            "label": false,
-                            "addable": false,
-                            "removable": true
                         }
                     }
                 }
@@ -380,6 +365,13 @@
                                 }
                             },
                             "required": ["additionalDetails"]
+                        },
+                        "attachments": {
+                            "title": "Attach Document",
+                            "type": "array",
+                            "items": {
+                                "format": "data-url"
+                            }
                         }
                     },
                     "allOf": [
@@ -724,6 +716,14 @@
                                 "ui:hideError": true
                             },
                             "ui:order": ["*", "comment"]
+                        }
+                    },
+                    "attachments": {
+                        "ui:widget": "FileWidget",
+                        "ui:options": {
+                            "label": false,
+                            "addable": false,
+                            "removable": true
                         }
                     }
                 }

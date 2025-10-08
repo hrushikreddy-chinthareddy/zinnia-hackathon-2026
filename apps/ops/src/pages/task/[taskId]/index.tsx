@@ -100,6 +100,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext
                 );
             if (!hasPermissionToReadCaseManagement) {
+                logError('Task:: access denied', {
+                    ...loggingContext,
+                    taskId,
+                });
                 return {
                     redirect: {
                         destination: '/403',
@@ -121,7 +125,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
 
                 if (!task) {
-                    logError('Task::Error getting task by id', loggingContext);
+                    logError('Task::Error getting task by id', {
+                        ...loggingContext,
+                        taskId,
+                    });
                     return {
                         redirect: {
                             destination: `task/:id/error?errorCode=${ERROR_CODES.SUITABILITY_REVIEW_TASK_INITIALIZATION}`,

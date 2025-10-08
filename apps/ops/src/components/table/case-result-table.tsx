@@ -181,7 +181,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             SegmentTrackedEventName.CaseClicked,
             {
                 caseId: singleCase.id,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
             }
         );
@@ -353,7 +353,6 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         )
                             .split('')
                             .join(' ')}`}
-                        tabIndex={0}
                     />
                 </div>
             </TableCell>

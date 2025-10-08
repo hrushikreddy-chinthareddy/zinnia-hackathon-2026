@@ -22,6 +22,7 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
   const [value, setValue] = useState(
     type === AccordionType.NESTED ? '' : expandedValue
   );
+  const subtype = type === AccordionType.NESTED ? styles.nested : '';
 
   // Side effect here is the easiest way to trigger a state change
   // *only* when the treeState prop changes
@@ -37,11 +38,12 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
       value={value}
       onValueChange={setValue}
     >
-      <AccordionItem value={expandedValue} className={styles.item}>
+      <AccordionItem
+        value={expandedValue}
+        className={`${styles.item} ${subtype}`}
+      >
         <AccordionHeader>
-          <AccordionTrigger
-            className={`${styles.trigger} ${type === AccordionType.NESTED ? styles.nested : ''}`}
-          >
+          <AccordionTrigger className={`${styles.trigger} ${subtype}`}>
             <Icon
               type={
                 type === AccordionType.NESTED
@@ -50,17 +52,19 @@ export const Accordion: FC<PropsWithChildren<AccordionProps>> = ({
               }
               className={styles.chevron}
             />
-            <h3 className="typography-labels-label-lg">{sectionLabel}</h3>
+            <h3 className={styles.sectionLabel}>{sectionLabel}</h3>
           </AccordionTrigger>
-          <div className={styles.tags}>
-            {tags?.map((tag, i) => (
-              <Tag key={`tag_${i}`} text={tag}>
-                {tag}
-              </Tag>
-            ))}
-          </div>
+          {!!tags?.length && (
+            <div className={styles.tags}>
+              {tags.map((tag, i) => (
+                <Tag key={`tag_${i}`} text={tag}>
+                  {tag}
+                </Tag>
+              ))}
+            </div>
+          )}
         </AccordionHeader>
-        <AccordionContent className={styles.content}>
+        <AccordionContent className={`${styles.content} ${subtype}`}>
           {children}
         </AccordionContent>
       </AccordionItem>

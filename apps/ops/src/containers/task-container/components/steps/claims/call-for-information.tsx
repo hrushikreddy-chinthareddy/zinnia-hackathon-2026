@@ -1,4 +1,9 @@
 import { Phone } from '@xd/api-types/dist/generated-types/sor';
+import {
+    Label,
+    AssistiveText,
+    AssistiveTextVariant,
+} from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import { TFunction } from 'i18next';
 import { useState, useEffect } from 'react';
@@ -8,7 +13,13 @@ import Button, {
     ButtonType,
     ButtonVariant,
 } from '@deps/components/button/button';
+import Content, { ContentVariant } from '@deps/components/content/content';
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import Field, {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
 import SelectComponent from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
@@ -16,9 +27,12 @@ import PhoneNumber from '@deps/containers/address-change-container/components/co
 import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatPhone } from '@deps/helpers/string.helpers';
+import { CaseIdentifier } from '@deps/models/case/case';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { NOOP } from '@deps/types/constants';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import BeneficiaryNotificationChange from './beneficiary-notification-change';
@@ -39,6 +53,7 @@ function CallForInformation({
     onContinueReady,
     correlationId,
     setSubmitFailed,
+    formErrors,
     setFormErrors,
     beneficiary,
     setBeneficiary,
@@ -63,6 +78,7 @@ function CallForInformation({
             contactRole: '',
             name: '',
             phone: {} as Phone,
+            callSummary: '',
         },
     ]);
 
@@ -79,6 +95,7 @@ function CallForInformation({
     const [country, setCountry] = useState<keyof typeof countries>('US');
     const [relationshipToOwner, setRelationshipToOwner] = useState('');
     const [addressSelected, setAddressSelected] = useState(false);
+    const [callSummary, setCallSummary] = useState('');
 
     const { goToNext } = useWorkflow();
 
@@ -110,6 +127,8 @@ function CallForInformation({
         beneficiary,
         setFormErrors,
         addressSelected,
+        callSummary,
+        setCallSummary,
     });
 
     useEffect(() => {
@@ -141,7 +160,8 @@ function CallForInformation({
                 name,
                 phone,
                 country,
-                relationshipToOwner
+                relationshipToOwner,
+                callSummary
             );
             if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
                 updatedTask.data.details[
@@ -166,6 +186,7 @@ function CallForInformation({
         setTask,
         phone,
         relationshipToOwner,
+        callSummary,
         correlationId,
         setSubmitFailed,
         goToNext,
@@ -232,10 +253,24 @@ function CallForInformation({
     useEffect(() => {
         validateForm();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [contactRole, phone, name, beneficiary, addressSelected]);
+    }, [contactRole, phone, name, beneficiary, addressSelected, callSummary]);
+    const contractNumber =
+        getCaseIdentifierValue(
+            task.identifiers,
+            CaseIdentifier.contractNumber
+        ) || '';
 
     return (
         <div>
+            <div className="my-2 mb-4 flex flex-row items-center space-x-3">
+                <Label>{t('contractNumber')}:</Label>
+                <Content
+                    variant={ContentVariant.BodySm}
+                    details={contractNumber}
+                    pii={true}
+                />
+            </div>
+
             <DisplayCompletedCalls
                 task={task}
                 t={t}
@@ -257,11 +292,18 @@ function CallForInformation({
                                 setRelationshipToOwner('');
                             }
                         }}
+                        required={true}
+                        message={formErrors.contractRoleRequired}
+                        variant={
+                            formErrors.contractRoleRequired
+                                ? FieldVariant.Error
+                                : FieldVariant.Default
+                        }
                     />
                 )}
             </div>
 
-            <div className="grid grid-cols-4 gap-4 mt-5">
+            <div className="grid grid-cols-4 gap-4 mt-4">
                 {contactRole !== ContactRole.OTHER &&
                     filteredCallLogs.length > 0 && (
                         <>
@@ -292,16 +334,24 @@ function CallForInformation({
                                     label: log.fullName,
                                     textValue: log.fullName,
                                 }))}
+                                required={true}
+                                message={formErrors.nameRequired}
+                                variant={
+                                    formErrors.nameRequired
+                                        ? FieldVariant.Error
+                                        : FieldVariant.Default
+                                }
                             />
                             <div>
                                 <TextField
                                     id="phone"
-                                    onChange={() => {}}
+                                    onChange={NOOP}
                                     placeholder={t('phone') as string}
                                     disabled={true}
                                     value={formatPhone(phone)}
                                     label={t('phone') as string}
                                     className="w-full"
+                                    required={true}
                                 />
                             </div>
                         </>
@@ -310,16 +360,22 @@ function CallForInformation({
                 {contactRole === ContactRole.OTHER && (
                     <>
                         <div>
-                            <TextField
-                                id="name"
-                                onChange={setName}
-                                placeholder={t('name') as string}
-                                value={name}
+                            <Field
                                 label={t('name') as string}
-                                className="w-full"
+                                message={formErrors?.nameRequired}
+                                onChange={(e) => setName(e.target.value.trim())}
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={name}
+                                variant={
+                                    formErrors?.nameRequired
+                                        ? FieldVariant.Error
+                                        : FieldVariant.Default
+                                }
+                                required
                             />
                         </div>
-                        <div className="mt-1">
+                        <div>
                             <PhoneNumber
                                 title={false}
                                 label={t('phone') as string}
@@ -328,21 +384,60 @@ function CallForInformation({
                                 setCountry={setCountry}
                                 setPhone={setPhone}
                             />
+                            {formErrors?.phoneRequired && (
+                                <div className="mt-4">
+                                    <AssistiveText
+                                        text={formErrors?.phoneRequired}
+                                        variant={AssistiveTextVariant.Error}
+                                    />
+                                </div>
+                            )}
                         </div>
-
                         <div className="col-span-1 ml-10">
-                            <TextField
-                                id="relationshipToOwner"
-                                onChange={setRelationshipToOwner}
-                                placeholder={t('relationshipToOwner') as string}
-                                value={relationshipToOwner}
+                            <Field
                                 label={t('relationshipToOwner') as string}
-                                className="w-full"
+                                message={
+                                    formErrors?.relationshipToOwnerRequired
+                                }
+                                onChange={(e) =>
+                                    setRelationshipToOwner(
+                                        e.target.value.trim()
+                                    )
+                                }
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={relationshipToOwner}
+                                variant={
+                                    formErrors?.relationshipToOwnerRequired
+                                        ? FieldVariant.Error
+                                        : FieldVariant.Default
+                                }
+                                required
                             />
                         </div>
                     </>
                 )}
 
+                {!readOnly && contactRole && (
+                    <div className="col-span-3 gap-4">
+                        <Field
+                            label={t('callSummary') as string}
+                            message={formErrors?.callSummaryRequired}
+                            onChange={(e) =>
+                                setCallSummary(e.target.value.trim())
+                            }
+                            size={FieldSize.Small}
+                            type={FieldType.BaseActive}
+                            value={callSummary}
+                            variant={
+                                formErrors?.callSummaryRequired
+                                    ? FieldVariant.Error
+                                    : FieldVariant.Default
+                            }
+                            required
+                        />
+                    </div>
+                )}
                 {(shouldRenderChangeRequire() || readOnly) && (
                     <div className="col-span-4 mt-4">
                         <Radio
@@ -355,13 +450,13 @@ function CallForInformation({
                                 },
                             ]}
                             readonly={readOnly}
+                            disabled={readOnly}
                             value={
-                                task.taskType === 'DAY_150_REVIEW' &&
                                 task.status === TaskStatus.Completed
                                     ? task.data.details.benefinalcontactattempt
-                                          .subTaskBeneCallChangeRequire
+                                          ?.subTaskBeneCallChangeRequire
                                         ? beneficiary.changeRequire?.toString()
-                                        : null
+                                        : beneficiary.changeRequire?.toString()
                                     : beneficiary.changeRequire?.toString()
                             }
                             onChange={(event) =>
@@ -371,28 +466,41 @@ function CallForInformation({
                                         event.target.value === 'true',
                                 })
                             }
+                            required={true}
                         />
+                        {formErrors?.changeRequireRequired && (
+                            <div className="mt-4">
+                                <AssistiveText
+                                    text={formErrors?.changeRequireRequired}
+                                    variant={AssistiveTextVariant.Error}
+                                />
+                            </div>
+                        )}
                     </div>
                 )}
 
-                {beneficiary.changeRequire === false && contactRole && name && (
-                    <div className="col-span-1 mt-4">
-                        <Button
-                            variant={ButtonVariant.Default}
-                            type={ButtonType.Secondary}
-                            size={ButtonSize.Small}
-                            onClick={addNewCallEntry}
-                        >
-                            {t('addAnotherCall')}
-                        </Button>
-                    </div>
-                )}
+                {beneficiary.changeRequire === false &&
+                    contactRole &&
+                    name &&
+                    callSummary && (
+                        <div className="col-span-1 mt-4">
+                            <Button
+                                variant={ButtonVariant.Default}
+                                type={ButtonType.Secondary}
+                                size={ButtonSize.Small}
+                                onClick={addNewCallEntry}
+                            >
+                                {t('addAnotherCall')}
+                            </Button>
+                        </div>
+                    )}
 
                 {(beneficiary.changeRequire &&
                     contactRole &&
                     name &&
-                    phone.dialNumber) ||
-                readOnly ? (
+                    phone.dialNumber &&
+                    callSummary) ||
+                (readOnly && beneficiary.changeRequire) ? (
                     <>
                         <div className="mt-4 col-span-4">
                             <SelectComponent
@@ -429,6 +537,13 @@ function CallForInformation({
                                     }
                                 }}
                                 options={changeTypeOptions}
+                                required={true}
+                                message={formErrors.changeTypeRequired}
+                                variant={
+                                    formErrors.changeTypeRequired
+                                        ? FieldVariant.Error
+                                        : FieldVariant.Default
+                                }
                             />
                         </div>
 
@@ -451,6 +566,14 @@ function CallForInformation({
                                 setBeneficiary={setBeneficiary}
                                 task={task}
                                 setAddressSelected={setAddressSelected}
+                            />
+                        )}
+
+                        {formErrors?.submit && (
+                            <AssistiveText
+                                text={formErrors?.submit}
+                                variant={AssistiveTextVariant.Error}
+                                className="mt-2"
                             />
                         )}
                     </>

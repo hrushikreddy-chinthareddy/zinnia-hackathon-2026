@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { SurrenderState } from '@/components/providers/surrender/types';
+import { SurrenderState } from '@/components/stepped-workflow/workflows/surrender/provider/types';
 import { ApiResponse } from '@/services';
 import {
   FullSurrenderBPMResponse,

@@ -9,15 +9,16 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import AdditionalOverviewLinks from '@/components/policy-overview/AdditionalOverviewLinks';
 import { Coverage } from '@/components/policy-overview/Coverage';
-import { CanceledFreelook } from '@/components/policy-overview/non-active-statuses/CanceledFreelook';
+import { CancelledFreelook } from '@/components/policy-overview/non-active-statuses/cancelled-freelook/CancelledFreelook';
 import { LapsedPolicy } from '@/components/policy-overview/non-active-statuses/LapsedPolicy';
-import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/SurrenderedPolicy';
+import { SurrenderedPolicy } from '@/components/policy-overview/non-active-statuses/surrendered/SurrenderedPolicy';
 import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { LargeSkeleCard } from '@/components/skeleton-loader/policy-page/policy-page-skeletons';
 import { getPolicyForHeaderDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
+import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -28,11 +29,13 @@ export const metadata: Metadata = {
 
 export default async function Page({
   params,
+  searchParams,
 }: {
   params: {
     planCode: string;
     policyNumber: string;
   };
+  searchParams: { type: DocumentCategory };
 }) {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
@@ -44,7 +47,10 @@ export default async function Page({
     loggingContext
   );
 
-  const visibility = await getComponentVisibility(policyNumber, planCode);
+  const { data: visibility } = await getComponentVisibility(
+    { policyNumber, planCode },
+    loggingContext
+  );
 
   if (error) {
     return (
@@ -63,9 +69,6 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.LAPSE) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          {visibility?.[ComponentName.OVERVIEW_COVERAGE]() && (
-            <Coverage planCode={planCode} policyNumber={policyNumber} />
-          )}
           <LapsedPolicy planCode={planCode} policyNumber={policyNumber} />
           <CallForAssistance customInstruction="for help with reinstatement." />
         </Suspense>
@@ -75,8 +78,11 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.SURRENDERED) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <SurrenderedPolicy />
-          <CallForAssistance customInstruction="with surrender questions." />
+          <SurrenderedPolicy
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
         </Suspense>
       );
     }
@@ -84,8 +90,12 @@ export default async function Page({
     if (data?.policyStatus === PolicyStatus.CANCELEDFREELOOK) {
       return (
         <Suspense fallback={<LargeSkeleCard />}>
-          <CanceledFreelook />
-          <CallForAssistance customInstruction="with policy questions." />
+          <CancelledFreelook
+            lineOfBusiness={LineOfBusiness.LIFE}
+            planCode={planCode}
+            policyNumber={policyNumber}
+            activeDocumentsTab={searchParams.type || DocumentCategory.DOCUMENTS}
+          />
         </Suspense>
       );
     }

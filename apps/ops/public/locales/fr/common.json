@@ -2188,7 +2188,7 @@
             "pleaseCheck": "Veuillez en cocher une",
             "primaryOwner": "Propriétaire principal",
             "printedName": "Nom imprimé",
-            "renewalPeriodError": "Une période de renouvellement est requise",
+            "renewalPeriodError": "L’allocation totale entre tous les fonds doit être égale à 100 %",
             "selectOption": "Choisir une option",
             "signPresent": "Signature présente",
             "signatureValidation": "Validation des signatures",
@@ -3291,6 +3291,32 @@
         "commonPhrases": {
             "endingIn": "se terminant par"
         },
+        "toolTips": {
+            "emptySearch": "Aucun résultat trouvé",
+            "preTaxEquityAndFiscalResponsibilityActBasis": "Ceci est le coût de base antérieur à l’adoption de la Loi sur l’équité fiscale et la responsabilité.",
+            "preTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi sur l’équité fiscale et la responsabilité en 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi technique et sur les recettes diverses en 1988.",
+            "netAmountAtRisk": "Ce facteur aide la compagnie d’assurance à comprendre combien d’argent est en risque si l’assuré du {{policyNomenclature}} décédait aujourd’hui. Ceci est utilisé à des fins financières et comptables.",
+            "modifiedEndowmentContractAuthorization": "Cela décrit quel processus d’autorisation, le cas échéant, est requis pour les transactions qui pourraient convertir le {{policyNomenclature}} en MEC, c’est-à-dire un contrat de dotation modifié.",
+            "projectedLapseIndicator": "Si vrai, cela signifie que le {{policyNomenclature}} devrait expirer au cours de l’année de {{policyNomenclature}} suivante en fonction de sa valeur de compte actuelle, des primes versées, du coût d’assurance (COI) et d’autres frais de police.",
+            "loanInterestMethod": "Cela vous indique comment l’intérêt du prêt est appliqué. Arriérés signifie que l’intérêt est facturé à la fin de l’année du {{policyNomenclature}}. Cela signifie qu’un paiement effectué en milieu d’année peut réduire le montant d’intérêt journalier et donc l’intérêt dû à la fin de l’année. Anticipé signifie que l’assureur facture l’intérêt annuel du prêt à l’avance le jour où le prêt commence. Ainsi, si le prêt est contracté en milieu d’année de la police, l’intérêt pour la moitié restante de l’année est facturé au début du prêt. Si le remboursement du prêt a lieu dans l’année de la police, il n’y a généralement pas de remboursement de l’intérêt payé d’avance.",
+            "annualWithdrawalLimitNoCoverageDecrease": "Les propriétaires peuvent retirer ce montant sans affecter leur couverture. En d’autres termes, ils peuvent retirer ce montant et conserver intact leur capital décès.",
+            "marketValueAdjustmentIndicator": "Si vrai, cela indique si un ajustement de la valeur de marché s’applique à ce contrat ou investissement.",
+            "remainingRequiredMinimumDistributionAmount": "Cela montre combien du montant RMD reste à prendre pour l’année en cours.",
+            "sevenPayTestBasis": "Ceci est le montant que le propriétaire a payé en primes (moins les retraits) pendant la période active du test de prime de 7 paiements.",
+            "deathBenefitOption": "Certaines polices offrent l’option d’augmenter la couverture au fil du temps. Le capital décès fixe reste le même pendant la durée du {{policyNomenclature}}. Un capital décès croissant augmente à mesure que la valeur de compte de la police augmente.",
+            "cumulativeGrossDeathBenefitAmount": "Ceci est ce que le {{policyNomenclature}} verse lorsque l’assuré décède. C’est généralement le même que le capital décès de base (aussi appelé montant nominal) mais il peut inclure des ajouts (comme des primes remboursées) dans certains cas.",
+            "netDeathBenefit": "Ceci est approximativement le montant que recevront les bénéficiaires lors d’une demande de décès. Le montant reflète le capital décès brut total moins les prêts en cours. Il n’inclut pas les frais d’intérêt qui ne peuvent être calculés qu’au moment du traitement de la demande de décès. Considérez-le comme un montant utile mais approximatif.",
+            "minimumCoverageAmount": "Ceci est le montant minimum auquel un propriétaire peut réduire son capital décès. Moins de couverture peut entraîner des primes plus basses et des conséquences fiscales négatives. Si la réduction crée un écart suffisamment important entre le capital décès et les primes versées, la police peut échouer aux tests réglementaires et perdre ses avantages fiscaux. Tout changement réinitialise la période de sept ans du test de 7 paiements.",
+            "maximumCoverageAmount": "Ceci est le montant maximum auquel un propriétaire peut augmenter son capital décès. Les demandes d’augmentation doivent passer par le processus de souscription pour approbation. Tout changement réinitialise la période de sept ans du test de 7 paiements.",
+            "minimumCoverageDecreaseAmount": "Ceci se réfère à la réduction minimale de couverture qu’un propriétaire est autorisé à effectuer par année de {{policyNomenclature}}.",
+            "maximumCoverageDecreaseAmount": "Ceci se réfère à la plus grande réduction de couverture qu’un propriétaire peut effectuer par année de {{policyNomenclature}}.",
+            "minimumCoverageIncreaseAmount": "Ceci se réfère au plus petit incrément par lequel un propriétaire peut augmenter sa couverture en une seule année de {{policyNomenclature}}.",
+            "maximumCoverageIncreaseAmount": "Ceci se réfère au plus grand incrément par lequel un propriétaire peut augmenter sa couverture en une seule année de {{policyNomenclature}}.",
+            "grossDeathBenefitAmount": "Ceci est le montant de cette couche de couverture ou avenant qui sera ajouté au capital décès.",
+            "featureIndicator": "Si vrai, cela signifie qu’une fonctionnalité donnée est incluse dans le contrat.",
+            "reducedPaidUpFaceAmount": "Ceci est le montant réduit du capital décès qui résulte si le propriétaire choisit l’option payée réduite (RPU)."
+        },
         "allFields": {
             "policyBasics": "Bases de {{policyNomenclature}}",
             "effectiveDate": "Date d'effet",
@@ -3911,7 +3937,7 @@
                 "financials": "Données financières",
                 "funds": "Fonds",
                 "gains": "Gains",
-                "goToThisPolicysPage": "Accédez à la page des {{page}} de cette police d'assurance.",
+                "goToThisPolicysPage": "Accédez à la page des détails des {{page}}.",
                 "ineligible": "Inéligible",
                 "issueState": "État du problème",
                 "lastDeposit": "Dernier dépôt",
@@ -5034,7 +5060,8 @@
             "additionalWritingAgent": "Agent d'écriture supplémentaire",
             "exchangeCompany": "Société d'échange",
             "jointAnnuitant": "Corentier",
-            "otherInterestedParty": "autre partie intéressée"
+            "otherInterestedParty": "autre partie intéressée",
+            "additionalServicingAgent": "Agent de service supplémentaire"
         }
     },
     "pageHeader": {
@@ -6052,6 +6079,10 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "paiement"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
             }
@@ -7571,10 +7602,19 @@
             "submitTask": "Soumettre"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : la révision du changement de nom a été soumise.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "claimsIdentifyUncashedTransactions": {
         "confirmStep": {
             "title": "J'ai compris!",
-            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
+            "subTitle": "Tâche : identifier la transaction non encaissée soumise.",
             "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"
@@ -7748,6 +7788,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer",
+                "contractRoleRequired": "Le rôle de contact est requis",
+                "nameRequired": "Le nom est requis",
+                "phoneRequired": "Le numéro de téléphone est requis",
+                "relationshipToOwner": "La relation avec le propriétaire est requise",
+                "changeRequireRequired": "Veuillez sélectionner une option",
+                "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
+                "callSummaryRequired": "Le résumé de l'appel est requis"
             }
         },
         "confirmStep": {
@@ -7819,7 +7877,25 @@
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
             "invalidEmail": "E-mail invalide",
-            "invalidFax": "Fax invalide"
+            "invalidFax": "Fax invalide",
+            "errors": {
+                "addressIsRequired": "Sélectionnez une adresse pour continuer",
+                "emailIsRequired": "L'e-mail est obligatoire",
+                "inValidDomain": "Seuls les e-mails Zinnia sont autorisés",
+                "inValidEmail": "Veuillez saisir une adresse e-mail valide",
+                "faxIsRequired": "Le numéro de fax est requis",
+                "inValidFax": "Veuillez saisir un numéro de fax valide",
+                "firstName": "Le prénom est obligatoire",
+                "lastName": "Le nom de famille est obligatoire",
+                "address": "Vérifiez et sélectionnez l'adresse pour continuer",
+                "contractRoleRequired": "Le rôle de contact est requis",
+                "nameRequired": "Le nom est requis",
+                "phoneRequired": "Le numéro de téléphone est requis",
+                "relationshipToOwner": "La relation avec le propriétaire est requise",
+                "changeRequireRequired": "Veuillez sélectionner une option",
+                "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
+                "callSummaryRequired": "Le résumé de l'appel est requis"
+            }
         },
         "invalidEmail": "E-mail invalide",
         "invalidFax": "Fax invalide"
@@ -7949,6 +8025,7 @@
             "dtcc": "DTCC",
             "creditcard": "Carte de crédit",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Chèque",
             "exchange": "Échange",
             "wire": "Virement bancaire",
@@ -7983,11 +8060,13 @@
                 "included": "Compris",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
-                "acceleratedDeathBenefitForTerminalIllness": "Prestation de décès accéléré pour les maladies en phase terminale",
+                "acceleratedDeathBenefitForTerminalIllness": "Avenant de prestation de décès anticipé en cas de maladie terminal",
                 "acceleratedDeathBenefitForChronicIllness": "Prestation de décès accéléré pour la maladie chronique",
                 "charitableGiving": "Dons de bienfaisance",
                 "childrensTerm": "Assurance à terme pour enfants",
+                "guaranteedInsurabilityBenefit": "prestation d'assurabilité garantie",
                 "overloanProtection": "Overloan Protection",
+                "ownerWaiverOfDeduction": "Renonciation à la déduction du propriétaire",
                 "waiverOfDeduction": "Déduction",
                 "waiverOfPremium": "Renonciation à la prime"
             },
@@ -8068,10 +8147,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Connexions uniques à Zinnia Live par rôle"
+                "title": "Connexions uniques à Zinnia Live",
+                "description": "Affiche les connexions uniques pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "myPolicyView": {
-                "title": "MyPolicyView Connexions uniques"
+                "title": "MyPolicyView Connexions uniques",
+                "description": "Affiche les identifiants de connexion uniques pour les clients uniquement."
             },
             "uniqueUsers": "Utilisateurs uniques",
             "date": "Date",
@@ -8079,10 +8160,12 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Vues de la page Zinnia Live"
+                "title": "Vues de la page Zinnia Live",
+                "description": "Affiche le nombre de pages vues pour les groupes d'utilisateurs sélectionnés uniquement."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vues de cas Zinnia Live par transaction"
+                "title": "Top des cas de Zinnia Live",
+                "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
             }
         }
     },
@@ -8107,7 +8190,36 @@
                 "placeholder": "Votre message de commentaires ici...",
                 "positiveFeedbackComment": "Pourriez-vous préciser quels aspects de votre retour vous ont semblé satisfaisants ? Votre avis est précieux pour améliorer notre service.",
                 "negativeFeedbackComment": "Pourriez-vous préciser quels aspects de votre retour vous ont semblé insatisfaisants ? Votre avis est précieux pour améliorer notre service.",
-                "validationError": "Veuillez saisir votre commentaire"
+                "validationError": "Veuillez saisir votre commentaire",
+                "dislikeReasonsHeader": "Veuillez sélectionner une raison pour ne pas apprécier la réponse.",
+                "dislikeReasons": {
+                    "incorrectResponse": "Réponse incorrecte (la réponse ne correspond pas à la question)",
+                    "languageIssue": "Problème de langue/style (peu clair, trop complexe) / Réponse incomplète (réponse trop courte, manque de détails)",
+                    "relevantDocumentMissing": "Document pertinent manquant (le bot a omis une référence clé)",
+                    "infoMissing": "Informations manquantes dans les documents (lacunes dans les directives/contenu)",
+                    "linksLabel": "Si vous avez des liens vers un document pertinent, veuillez les partager ici (séparés par des virgules si plusieurs) :"
+                },
+                "opsIntakeFormLink": "Nous pouvons créer un formulaire d’Ops Intake pour vous",
+                "opsIntakeForm": {
+                    "heading": "Formulaire Ops Intake / Retour d’expérience",
+                    "placeholder": "Écrivez quelque chose...",
+                    "processName": "Nom de la directive / étapes / processus",
+                    "blockOfBusiness": "Bloc d’activité concerné",
+                    "blockOfBusinessAssistiveText": "La demande est-elle applicable à d’autres blocs d’activité ? Si oui, lesquels ?",
+                    "processDescription": "Description du processus et des transactions affectées",
+                    "reasonForSubmittingRequest": "Expliquez pourquoi vous soumettez cette demande",
+                    "outcomeExpected": "Quel résultat attendez-vous d’obtenir ?",
+                    "smeEmail": "Indiquez l’adresse e-mail de l’expert métier/contact de votre équipe avec lequel le BA peut collaborer.",
+                    "priority": "Priorité",
+                    "requestFrequency": "À quelle fréquence cette demande est-elle effectuée ? (quotidienne, hebdomadaire, mensuelle, annuelle)",
+                    "requestFrequencyAssistiveText": "Si vous demandez l’automatisation d’un processus manuel, nous aimerions connaître la fréquence de ce processus manuel.",
+                    "benefitMetrics": "Toutes les mesures sur la manière dont ce changement bénéficiera aux opérations",
+                    "benefitMetricsAssistiveText": "Temps moyen des processus, améliorations des audits de qualité ou toute autre mesure pertinente que vous pouvez identifier."
+                },
+                "errors": {
+                    "inValidDomain": "Seuls les e-mails de Zinnia sont autorisés",
+                    "inValidEmail": "Veuillez saisir une adresse e-mail valide"
+                }
             },
             "followUpPlaceholder": "Posez vos questions complémentaires ici...",
             "followUpButton": "Posez vos questions complémentaires ici"

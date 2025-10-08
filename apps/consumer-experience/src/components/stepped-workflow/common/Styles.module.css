@@ -42,3 +42,11 @@
     font: var(--typography-content-body-sm-bold);
   }
 }
+
+.errorMessageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--measure-dimension-gap-2xl);
+}

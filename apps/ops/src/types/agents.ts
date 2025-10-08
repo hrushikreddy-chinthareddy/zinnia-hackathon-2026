@@ -154,6 +154,7 @@ export interface PomAgentData {
     nationalProducerNumber: string | undefined;
     partyId: string | undefined;
     producerType: ProducerType;
+    producerName: string | undefined;
     socialSecurityNumber: string | undefined;
 }
 export type AlternateIds = {

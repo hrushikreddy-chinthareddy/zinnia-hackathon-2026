@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
-import { SelectBankWrapper } from '@/components/workflows/surrender/forms/SelectBankWrapper';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { SelectBankWrapper } from '@/components/stepped-workflow/workflows/surrender/forms/SelectBankWrapper';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { getPolicyProfileData } from '@/services';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { getPaymentMethods } from '@/services/payment-methods';
@@ -12,7 +12,7 @@ import { buildCommonLogContext } from '@/utils/logging/server-logging';
 const BankPage = async ({ params }: PolicyRequestInputsParams) => {
   const { planCode, policyNumber } = params;
   const loggingContext = await buildCommonLogContext();
-  const { payment } = await getCarrierConfig();
+  const { data } = await getCarrierConfig(loggingContext);
 
   const { data: initialPaymentMethods } = await getPaymentMethods(
     {
@@ -39,7 +39,7 @@ const BankPage = async ({ params }: PolicyRequestInputsParams) => {
         planCode={planCode}
         initialPaymentMethods={initialPaymentMethods || []}
         lineOfBusiness={LineOfBusiness.LIFE}
-        paymentProvider={payment.provider}
+        paymentProvider={data?.payment.provider}
         activeAddresses={addresses}
       />
     </Surrender>

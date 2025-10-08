@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { OttpProvider } from '@/components/providers/one-time-premium-payment/OttpProvider';
+import { OttpProvider } from '@/components/stepped-workflow/workflows/one-time-premium/provider/OttpProvider';
 import { PolicyRequestInputs } from '@/types/policy';
 
 export default async function PremiumPaymentPage({

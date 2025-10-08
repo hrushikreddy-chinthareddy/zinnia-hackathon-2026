@@ -20,11 +20,16 @@ import {
 } from '@deps/contexts/OptimizelyContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
-import { DocumentType as ExcludeDocumentTypes } from '@deps/models/case/document';
+import {
+    includeDocumentTypeForInboundSearch,
+    excludeDocumentTypes,
+    includeDocumentTypesInbound,
+} from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
 const getKnownCaseDocIds = (caseDetails: Case): string[] => {
@@ -35,6 +40,7 @@ const getKnownCaseDocIds = (caseDetails: Case): string[] => {
     );
     documentNumberId?.value && knownDocIds.add(documentNumberId?.value);
 
+    // TODO MG: ticket for this TODO if needed
     // TODO - get children cases and do the same thing once children/secondary cases are implemented
 
     return Array.from(knownDocIds);
@@ -63,45 +69,64 @@ export default function DocumentsTab({
         caseDetails?.carrier?.toLocaleLowerCase() || ''
     );
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.id) {
+        if (!caseDetails?.id || !caseDetails?.carrier) {
             return null;
         }
+        const documentClassification =
+            docSource === (DocumentTypeView.Policy as string)
+                ? SearchRequest.documentClassification.INBOUND
+                : SearchRequest.documentClassification.OUTBOUND;
 
-        return {
+        const searchBody: SearchRequest = {
             parentCarrierCode: caseDetails.carrier,
-            documentClassification:
-                docSource === (DocumentTypeView.Policy as string)
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+            documentClassification,
             zinniaLiveCaseId: caseDetails.id,
-            excludeDocumentTypes: [
-                ExcludeDocumentTypes.CallLogs,
-                ExcludeDocumentTypes.Spif,
-            ],
+            // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
+            excludeDocumentTypes,
         };
+
+        if (
+            documentClassification ===
+                SearchRequest.documentClassification.INBOUND &&
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier)
+        ) {
+            searchBody.documentType = includeDocumentTypesInbound.join(',');
+        }
+
+        return searchBody;
     }, [caseDetails, docSource]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.policyNumber) {
+        if (!caseDetails?.policyNumber || !policy?.carrierId) {
             return null;
         }
+        const documentClassification =
+            // TODO MG: This is duped above - add to more shareable util function
+            docSource === (DocumentTypeView.Policy as string)
+                ? SearchRequest.documentClassification.INBOUND
+                : SearchRequest.documentClassification.OUTBOUND;
 
-        return {
+        const body: SearchRequest = {
             parentCarrierCode: caseDetails.carrier,
-            documentClassification:
-                docSource === (DocumentTypeView.Policy as string)
-                    ? SearchRequest.documentClassification.INBOUND
-                    : SearchRequest.documentClassification.OUTBOUND,
+            documentClassification,
             policyNumber: caseDetails.policyNumber,
             planCode:
                 caseDetails?.planCode ||
                 caseDetails?.additionalData?.planCode ||
                 policy?.planCode,
-            excludeDocumentTypes: [
-                ExcludeDocumentTypes.CallLogs,
-                ExcludeDocumentTypes.Spif,
-            ],
+            // TODO MG: ticket to fix spec/types
+            // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
+            excludeDocumentTypes,
         };
+
+        if (
+            documentClassification ===
+                SearchRequest.documentClassification.INBOUND &&
+            includeDocumentTypeForInboundSearch(policy?.carrierId)
+        ) {
+            body.documentType = includeDocumentTypesInbound.join(',');
+        }
+        return body;
     }, [caseDetails, policy, docSource]);
 
     const handleDocSourceChange = (value: string) => {

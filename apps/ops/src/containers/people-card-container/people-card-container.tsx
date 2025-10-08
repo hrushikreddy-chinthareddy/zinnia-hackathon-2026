@@ -1,3 +1,4 @@
+import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
 import { PartyType } from '@zinnia/api-types/types/sor';
 import { useContext } from 'react';
 
@@ -76,6 +77,8 @@ const mapDataToPeopleCard = ({
         beneficiaryPercentage,
         partyId,
         agentPercentage,
+        producerType,
+        producerName,
     } = party;
     const {
         selectedTagList,
@@ -88,11 +91,21 @@ const mapDataToPeopleCard = ({
         router,
     } = peopleCard;
 
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
+
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            if (!firstName && !!fullName) {
-                name = toTitleCase(safeString(fullName));
+            if (producerType === POM_Models_ProducerType.INDIVIDUAL) {
+                name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
+            } else if (
+                producerType === POM_Models_ProducerType.CORPORATION &&
+                producerName
+            ) {
+                name = toTitleCase(producerName);
             } else {
                 name = toTitleCase(
                     `${firstName ?? DEFAULT_ERROR_STRING} ${
@@ -136,13 +149,17 @@ const mapDataToPeopleCard = ({
             allocation={allocationValue}
             accessibilityText={accessibilityText}
             accessibilityClickText={accessibilityClickText}
-            onClick={() =>
-                !isRereg &&
-                goTo(
-                    `/policies/${planCode}/${policyNumber}/people/${partyId}`,
-                    router
-                )
-            }
+            onClick={() => {
+                if (!isRereg) {
+                    const query = correlationIdFromRoute
+                        ? `?correlationId=${correlationIdFromRoute}`
+                        : '';
+                    goTo(
+                        `/policies/${planCode}/${policyNumber}/people/${partyId}${query}`,
+                        router
+                    );
+                }
+            }}
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
         />

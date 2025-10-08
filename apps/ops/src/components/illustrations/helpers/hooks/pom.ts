@@ -4,7 +4,7 @@ import {
     useQuery,
     UseQueryResult,
 } from '@tanstack/react-query';
-import { first, groupBy, sortBy, uniq } from 'lodash';
+import { first, groupBy, sortBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -176,25 +176,35 @@ export const POM_QUERY_PREFIXES = {
 // Hierarchy
 //
 
-const buildHierarchyQueryOptions = (sellingCode: string | undefined) =>
+export const buildHierarchyQueryOptions = ({
+    sellingCode,
+    carrierShortName,
+}: {
+    sellingCode?: string;
+    carrierShortName?: string;
+}) =>
     queryOptions({
         queryKey: [
             ...POM_QUERY_PREFIXES.GET_HIERARCHY_BY_SELLING_CODE,
-            sellingCode,
+            { sellingCode, carrierShortName },
         ],
-        queryFn: () => getUserHierarchyBySellingCode(sellingCode!),
-        enabled: !!sellingCode,
+        queryFn: () =>
+            getUserHierarchyBySellingCode(sellingCode!, {
+                carrierShortName: carrierShortName!,
+            }),
+        enabled: !!(sellingCode && carrierShortName),
         staleTime: 60 * 1_000 * 5,
     });
 
 export const useHierarchyListQuery = <MT>(
-    sellingCodes: string[],
+    params: { sellingCode: string; carrierShortName: string }[] | undefined,
     combine: (results: UseQueryResult<GetHierarchyResponse | null>[]) => MT
 ) =>
     useQueries({
-        queries: uniq(sellingCodes).map((sellingCode) =>
-            buildHierarchyQueryOptions(sellingCode)
-        ),
+        queries:
+            params?.map(({ sellingCode, carrierShortName }) =>
+                buildHierarchyQueryOptions({ sellingCode, carrierShortName })
+            ) ?? [],
         combine: useCallback(
             (results: UseQueryResult<GetHierarchyResponse | null>[]) =>
                 wrapCombinedQueryResultsData(results, combine),
@@ -208,27 +218,46 @@ export const useHierarchyListQuery = <MT>(
 
 const buildDownlineQueryOptions = (
     sellingCode: string | undefined,
-    partialFullName: string | undefined
+    {
+        carrierShortName,
+        partialFullName,
+    }: {
+        carrierShortName: string | undefined;
+        partialFullName: string | undefined;
+    }
 ) =>
     queryOptions({
         queryKey: [
             ...POM_QUERY_PREFIXES.GET_DOWNLINE_BY_SELLING_CODE,
-            { sellingCode, partialFullName },
+            { sellingCode, carrierShortName, partialFullName },
         ],
         queryFn: () =>
-            getUserDownlineBySellingCode(sellingCode!, partialFullName),
-        enabled: !!(sellingCode && partialFullName != null),
+            getUserDownlineBySellingCode(sellingCode!, {
+                carrierShortName: carrierShortName!,
+                partialFullName,
+            }),
+        enabled: !!(sellingCode && carrierShortName),
         staleTime: 60 * 1_000 * 5,
     });
 
 export const useDownlineListQuery = <MT>(
-    sellingCodes: string[],
-    partialFullName = '',
-    combine: (results: UseQueryResult<GetDownlineResponse[][] | null>[]) => MT
+    params: { sellingCode: string; carrierShortName: string }[],
+    {
+        partialFullName = '',
+        combine,
+    }: {
+        partialFullName?: string;
+        combine: (
+            results: UseQueryResult<GetDownlineResponse[][] | null>[]
+        ) => MT;
+    }
 ) =>
     useQueries({
-        queries: uniq(sellingCodes).map((sellingCode) =>
-            buildDownlineQueryOptions(sellingCode, partialFullName)
+        queries: params.map(({ sellingCode, carrierShortName }) =>
+            buildDownlineQueryOptions(sellingCode, {
+                carrierShortName,
+                partialFullName,
+            })
         ),
         combine: useCallback(
             (results: UseQueryResult<GetDownlineResponse[][] | null>[]) =>
@@ -241,35 +270,44 @@ export const useDownlineListQuery = <MT>(
 // Producers
 //
 
-const buildGetProducersQueryOptions = (
-    carrierCode: string | undefined,
-    partialFullName: string
-) => {
-    const upperCarriercode = carrierCode?.toUpperCase();
+const buildGetProducersQueryOptions = ({
+    carrierShortName,
+    partialFullName,
+}: {
+    carrierShortName?: string;
+    partialFullName: string;
+}) => {
+    const upperCarrierShortName = carrierShortName?.toUpperCase();
 
     return queryOptions({
         queryKey: [
             ...POM_QUERY_PREFIXES.GET_PRODUCERS_BY_NAME_AND_CARRIER,
-            { partialFullName, upperCarriercode },
+            upperCarrierShortName,
+            { partialFullName },
         ],
         queryFn: () =>
             getProducersByNameAndCarrierCodeQuery(
                 partialFullName!,
-                upperCarriercode!
+                upperCarrierShortName!
             ),
-        enabled: !!(partialFullName && carrierCode),
+        enabled: !!(partialFullName && carrierShortName),
         staleTime: 60 * 1_000 * 5,
     });
 };
 
 export const useGetProducersListQuery = <MT>(
-    carrierCodes: string[],
-    partialFullName: string,
-    combine: (results: UseQueryResult<ProducersResponse>[]) => MT
+    carrierShortNames: string[],
+    {
+        partialFullName,
+        combine,
+    }: {
+        partialFullName: string;
+        combine: (results: UseQueryResult<ProducersResponse>[]) => MT;
+    }
 ) =>
     useQueries({
-        queries: uniq(carrierCodes).map((carrierCode) =>
-            buildGetProducersQueryOptions(carrierCode, partialFullName)
+        queries: carrierShortNames.map((carrierShortName) =>
+            buildGetProducersQueryOptions({ carrierShortName, partialFullName })
         ),
         combine: useCallback(
             (results: UseQueryResult<ProducersResponse>[]) =>
@@ -282,15 +320,27 @@ export const useGetProducersListQuery = <MT>(
 // Producer by Id
 //
 
-const buildGetProducerByIdQueryOptions = (lookupId: string | undefined) =>
-    queryOptions({
-        queryKey: [...POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID, lookupId],
-        queryFn: () => getProducersByIdQuery(lookupId!),
-        enabled: !!lookupId,
-    });
+const buildGetProducerByIdQueryOptions = (
+    lookupId: string | undefined,
+    carrierShortName: string | undefined
+) => {
+    const upperCarrierShortName = carrierShortName?.toUpperCase();
 
-export const useGetProducerById = (lookupId: string | undefined) =>
-    useQuery(buildGetProducerByIdQueryOptions(lookupId));
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
+            upperCarrierShortName,
+            lookupId,
+        ],
+        queryFn: () => getProducersByIdQuery(lookupId!, upperCarrierShortName!),
+        enabled: !!(lookupId && carrierShortName),
+    });
+};
+
+export const useGetProducerById = (
+    lookupId: string | undefined,
+    carrierShortName: string | undefined
+) => useQuery(buildGetProducerByIdQueryOptions(lookupId, carrierShortName));
 
 //
 // Helpers
@@ -355,6 +405,8 @@ export const useAuthenticatedAgentAgencies = () => {
                     return rootAgencyHierarchies.map((rootAgencyHierarchy) => ({
                         agencies: [rootAgencyHierarchy],
                         agentSellingCode: rootAgencyHierarchy?.sellingCode,
+                        carrierShortName:
+                            rootAgencyHierarchy.carrier.carrierShortName,
                     }));
                 }
 
@@ -365,7 +417,9 @@ export const useAuthenticatedAgentAgencies = () => {
                                 agencies: getNearestAgenciesFromUpline(
                                     hierarchy.upline ?? []
                                 ),
-                                agentSellingCode: hierarchy!.sellingCode,
+                                agentSellingCode: hierarchy.sellingCode,
+                                carrierShortName:
+                                    hierarchy.carrier.carrierShortName,
                             }
                     )
                     .filter((item) => item!.agencies.length);
@@ -376,6 +430,7 @@ export const useAuthenticatedAgentAgencies = () => {
         {
             agencies: UplineItem[];
             agentSellingCode: string;
+            carrierShortName: string;
         }[]
     >;
 };

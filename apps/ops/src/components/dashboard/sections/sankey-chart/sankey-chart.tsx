@@ -22,6 +22,7 @@ import {
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import { SankeyCellText } from './sankey-cell-text';
 
@@ -530,7 +531,6 @@ const SankeyChart = ({
         if (!l1StatGrouping) {
             return null;
         }
-
         return (
             <g
                 key={`level-1-${index}`}
@@ -576,7 +576,11 @@ const SankeyChart = ({
                         count={l1StatGrouping.count}
                         title={
                             l1SelectValue === CaseCountGroupByEnum.CARRIER
-                                ? getLabelSubString(l1StatGrouping.name)
+                                ? getLabelSubString(
+                                      getCarrierNameByClientId(
+                                          l1StatGrouping.name
+                                      )
+                                  )
                                 : dashboardChartTitleFormat(
                                       l1StatGrouping.name,
                                       false
@@ -671,10 +675,14 @@ const SankeyChart = ({
                         )})`}
                         fill={getL2TextColor(l2StatGrouping)}
                         count={getL2ObjectCount(l2StatGrouping)}
-                        title={dashboardChartTitleFormat(
-                            l2StatGrouping.name,
-                            false
-                        )}
+                        title={
+                            l2SelectValue === CaseCountGroupByEnum.CARRIER
+                                ? getCarrierNameByClientId(l2StatGrouping.name)
+                                : dashboardChartTitleFormat(
+                                      l2StatGrouping.name,
+                                      false
+                                  )
+                        }
                     />
                 </g>
                 {/* </a> */}

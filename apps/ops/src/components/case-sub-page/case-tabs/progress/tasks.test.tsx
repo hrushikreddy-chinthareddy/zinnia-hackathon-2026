@@ -4,10 +4,9 @@ import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 
 import { Statuses } from '@deps/models/case/case';
-import { TaskType } from '@deps/models/case/task';
 
 import { TaskView } from './progress-tab-types';
-import { SupportedTaskMap, Task, default as Tasks } from './tasks';
+import { Task, default as Tasks } from './tasks';
 // Mock all the dependencies
 const mockT = jest.fn((key, options) => {
     if (key === 'caseOverview.tabs.openSince') {
@@ -108,15 +107,6 @@ jest.mock('@deps/contexts/OptimizelyContext', () => ({
 jest.mock('@deps/helpers/string.helpers', () => ({
     convertKebabedDateString: (date: string) => `formatted-${date}`,
 }));
-
-describe('SupportedTaskMap', () => {
-    it('should contain all supported task types', () => {
-        expect(SupportedTaskMap).toContain(TaskType.SuitabilityReview);
-        expect(SupportedTaskMap).toContain(TaskType.Agent_Nigo);
-        expect(SupportedTaskMap).toContain(TaskType.Claims_Bene_Review);
-        expect(SupportedTaskMap.length).toBeGreaterThan(0);
-    });
-});
 
 describe('Task Component', () => {
     beforeEach(() => {

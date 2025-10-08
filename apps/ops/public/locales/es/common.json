@@ -2192,7 +2192,7 @@
             "pleaseCheck": "Por favor marque uno",
             "primaryOwner": "Propietario principal",
             "printedName": "Nombre impreso",
-            "renewalPeriodError": "Se requiere el periodo de renovación",
+            "renewalPeriodError": "La asignación total entre todos los fondos debe ser igual al 100%",
             "selectOption": "Seleccione una opción",
             "signPresent": "Firma presente",
             "signatureValidation": "Validación de Firma",
@@ -3313,7 +3313,33 @@
         "commonPhrases": {
             "endingIn": "terminando en"
         },
+        "toolTips": {
+            "preTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base que antecede a la promulgación de la Ley de Equidad Fiscal y Responsabilidad.",
+            "preTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de que se promulgó la Ley de Equidad Fiscal y Responsabilidad en 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de que se promulgó la Ley Técnica y de Ingresos Misceláneos en 1988.",
+            "netAmountAtRisk": "Este factor ayuda a la compañía de seguros a entender cuánto dinero está en riesgo si el asegurado en el {{policyNomenclature}} falleciera hoy. Se utiliza para fines financieros y contables.",
+            "modifiedEndowmentContractAuthorization": "Esto describe qué proceso de autorización, si lo hay, se requiere para transacciones que puedan convertir el {{policyNomenclature}} en un MEC, que significa contrato de dotación modificado.",
+            "projectedLapseIndicator": "Si es verdadero, significa que se espera que el {{policyNomenclature}} caduque dentro del próximo año de {{policyNomenclature}} basado en su valor de cuenta actual, pagos de primas, costo del seguro (COI) y otros cargos de la póliza.",
+            "loanInterestMethod": "Esto le indica cómo se aplica el interés del préstamo. Atrasado significa que el interés se cobra al final del año del {{policyNomenclature}}. Esto significa que un pago a mitad de año puede reducir el monto de interés diario y, por lo tanto, el interés adeudado al final del año. Anticipado significa que la aseguradora cobra el interés anual del préstamo por adelantado el día que se inicia el préstamo. Así que si el préstamo se toma a mitad del año de la póliza, se cobra el interés por la mitad restante del año al inicio del préstamo. Si el reembolso del préstamo ocurre dentro del año de la póliza, normalmente no hay reembolso del interés pagado por adelantado.",
+            "annualWithdrawalLimitNoCoverageDecrease": "Los propietarios pueden retirar esta cantidad sin afectar su cobertura. En otras palabras, pueden retirar esta cantidad y mantener intacto su beneficio por fallecimiento.",
+            "marketValueAdjustmentIndicator": "Si es verdadero, indica si se aplica un ajuste por valor de mercado a este contrato o inversión.",
+            "remainingRequiredMinimumDistributionAmount": "Esto muestra cuánto de la cantidad RMD queda por tomar para el año en curso.",
+            "sevenPayTestBasis": "Esto es cuánto ha pagado el propietario en primas (menos cualquier retiro) durante la ventana activa de la prueba de prima de 7 pagos.",
+            "deathBenefitOption": "Algunas pólizas incluyen la opción de aumentar la cobertura con el tiempo. El beneficio por fallecimiento nivelado se mantiene igual durante la vida del {{policyNomenclature}}. Un beneficio por fallecimiento creciente aumenta a medida que aumenta el valor en cuenta de la póliza.",
+            "cumulativeGrossDeathBenefitAmount": "Esto es lo que paga el {{policyNomenclature}} cuando fallece el asegurado. Generalmente es igual al beneficio por fallecimiento base (también conocido como el monto nominal) pero puede incluir adiciones (como primas devueltas) en algunos casos.",
+            "netDeathBenefit": "Esto es aproximadamente cuánto recibirán los beneficiarios de un reclamo por fallecimiento. La cantidad refleja el beneficio por fallecimiento bruto total menos los préstamos pendientes. No incluye cargos por intereses que solo pueden calcularse en el momento en que se procesa un reclamo por fallecimiento. Considérelo una cantidad útil pero inexacta.",
+            "minimumCoverageAmount": "Esta es la cantidad mínima a la que un propietario puede reducir su beneficio por fallecimiento. Menor cobertura puede conllevar primas más bajas y consecuencias fiscales negativas. Si la disminución crea una brecha lo suficientemente grande entre el beneficio por fallecimiento y las primas pagadas, la póliza puede no cumplir las pruebas normativas y perder ventajas fiscales. Todos los cambios reinician el período de siete años para la prueba de 7 pagos.",
+            "maximumCoverageAmount": "Esta es la cantidad máxima a la que un propietario puede aumentar su beneficio por fallecimiento. Las solicitudes de aumento deben pasar por el proceso de suscripción para su aprobación. Todos los cambios reinician el período de siete años para la prueba de 7 pagos.",
+            "minimumCoverageDecreaseAmount": "Esto se refiere a la reducción mínima en cobertura que un propietario puede hacer por año de {{policyNomenclature}}.",
+            "maximumCoverageDecreaseAmount": "Esto se refiere a la mayor reducción en cobertura que un propietario puede hacer por año de {{policyNomenclature}}.",
+            "minimumCoverageIncreaseAmount": "Esto se refiere al incremento mínimo por el cual un propietario puede aumentar su cobertura en un solo año de {{policyNomenclature}}.",
+            "maximumCoverageIncreaseAmount": "Esto se refiere al incremento máximo por el cual un propietario puede aumentar su cobertura en un solo año de {{policyNomenclature}}.",
+            "grossDeathBenefitAmount": "Este es el monto de esta capa de cobertura o anexo que se añadirá al beneficio por fallecimiento.",
+            "featureIndicator": "Si es verdadero, significa que una característica determinada está incluida en el contrato.",
+            "reducedPaidUpFaceAmount": "Este es el monto reducido del beneficio por fallecimiento que resulta si el propietario elige la opción de pago reducido (RPU)."
+        },
         "allFields": {
+            "emptySearch": "No se encontraron coincidencias",
             "policyBasics": "Básicos de {{policyNomenclature}}",
             "effectiveDate": "Fecha de vigencia",
             "carrierId": "ID del transportista",
@@ -3965,7 +3991,7 @@
                 "financials": "Finanzas",
                 "funds": "Fondos",
                 "gains": "Ganancias",
-                "goToThisPolicysPage": "Ir a la página de {{page}} para esta póliza de seguro.",
+                "goToThisPolicysPage": "Ir a la página de detalles de las {{page}}.",
                 "ineligible": "Inelegible",
                 "issueState": "Estado del problema",
                 "lastDeposit": "Último depósito",
@@ -5067,7 +5093,8 @@
             "additionalWritingAgent": "Agente redactor adicional",
             "exchangeCompany": "Empresa de intercambio",
             "jointAnnuitant": "Rentista conjunto",
-            "otherInterestedParty": "Otra parte interesada"
+            "otherInterestedParty": "Otra parte interesada",
+            "additionalServicingAgent": "Agente de servicio adicional"
         }
     },
     "pageHeader": {
@@ -6086,6 +6113,10 @@
             "rmdAutopay": "Pago automático de RMD próximo",
             "cancelWithdrawalAutopayTitle": "Cancelar sistemáticamente {{type}}",
             "cancelAutopay": "Cancelar pago automático",
+            "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
+            "paymentType": {
+                "payment": "pago"
+            },
             "transactions": {
                 "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
             }
@@ -7528,6 +7559,15 @@
             "submitTask": "Enviar"
         }
     },
+    "existingNameChangeDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: La revisión del cambio de nombre ha sido enviada.",
+            "cta": "Ir al Caso",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "nbPrenoteReview": {
         "confirmStep": {
             "title": "¡Entendido!",
@@ -7705,6 +7745,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Seleccione una dirección para continuar",
+                "emailIsRequired": "Se requiere correo electrónico",
+                "inValidDomain": "Sólo se permiten correos electrónicos de Zinnia",
+                "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida",
+                "faxIsRequired": "Se requiere el número de fax",
+                "inValidFax": "Por favor, introduzca un número de fax válido",
+                "firstName": "El nombre es obligatorio",
+                "lastName": "El apellido es obligatorio",
+                "address": "Verifique y seleccione la dirección para continuar",
+                "contractRoleRequired": "Se requiere rol de contacto",
+                "nameRequired": "Se requiere nombre",
+                "phoneRequired": "Se requiere número de teléfono",
+                "relationshipToOwner": "Se requiere relación con el propietario",
+                "changeRequireRequired": "Por favor seleccione una opción",
+                "changeTypeRequired": "Por favor seleccione un nuevo tipo de información",
+                "callSummaryRequired": "Se requiere resumen de llamada"
             }
         },
         "confirmStep": {
@@ -7774,6 +7832,24 @@
             "changeTypes": {
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
+            },
+            "errors": {
+                "addressIsRequired": "Seleccione una dirección para continuar",
+                "emailIsRequired": "Se requiere correo electrónico",
+                "inValidDomain": "Sólo se permiten correos electrónicos de Zinnia",
+                "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida",
+                "faxIsRequired": "Se requiere el número de fax",
+                "inValidFax": "Por favor, introduzca un número de fax válido",
+                "firstName": "El nombre es obligatorio",
+                "lastName": "El apellido es obligatorio",
+                "address": "Verifique y seleccione la dirección para continuar",
+                "contractRoleRequired": "Se requiere rol de contacto",
+                "nameRequired": "Se requiere nombre",
+                "phoneRequired": "Se requiere número de teléfono",
+                "relationshipToOwner": "Se requiere relación con el propietario",
+                "changeRequireRequired": "Por favor seleccione una opción",
+                "changeTypeRequired": "Por favor seleccione un nuevo tipo de información",
+                "callSummaryRequired": "Se requiere resumen de llamada"
             }
         }
     },
@@ -7827,10 +7903,12 @@
         },
         "logins": {
             "zinniaLive": {
-                "title": "Inicios de sesión únicos de Zinnia Live por rol"
+                "title": "Inicios de sesión únicos de Zinnia Live",
+                "description": "Muestra inicios de sesión únicos únicamente para grupos de usuarios seleccionados."
             },
             "myPolicyView": {
-                "title": "Inicios de sesión únicos de MyPolicyView"
+                "title": "Inicios de sesión únicos de MyPolicyView",
+                "description": "Muestra inicios de sesión únicos solo para clientes."
             },
             "uniqueUsers": "Usuarios únicos",
             "date": "Fecha",
@@ -7838,10 +7916,12 @@
         },
         "pageViews": {
             "zinniaLivePageViews": {
-                "title": "Visitas de página en vivo de Zinnia"
+                "title": "Visitas de página en vivo de Zinnia",
+                "description": "Muestra el número de páginas vistas solo para grupos de usuarios seleccionados."
             },
             "zinniaLiveCaseViews": {
-                "title": "Vistas de casos de Zinnia Live por transacción"
+                "title": "Los casos más vistos de Zinnia Live",
+                "description": "Muestra el número de visualizaciones de casos únicamente para grupos de usuarios seleccionados."
             }
         }
     },
@@ -7929,6 +8009,7 @@
             "dtcc": "DTCC",
             "creditcard": "Tarjeta de crédito",
             "ach": "ACH",
+            "eft": "EFT",
             "check": "Cheque",
             "exchange": "Intercambio",
             "wire": "Transferencia bancaria",
@@ -7963,11 +8044,13 @@
                 "included": "Incluido",
                 "acceleratedDeathBenefit": "Accelerated Death Benefit",
                 "accidentalDeathBenefit": "Accidental Death Benefit",
-                "acceleratedDeathBenefitForTerminalIllness": "Beneficio de muerte acelerado por enfermedad terminal",
+                "acceleratedDeathBenefitForTerminalIllness": "Cláusula adicional de beneficio por muerte acelerada en caso de enfermedad terminal",
                 "acceleratedDeathBenefitForChronicIllness": "Beneficio de muerte acelerado por enfermedades crónicas",
                 "charitableGiving": "Donaciones caritativas",
                 "childrensTerm": "Seguro a plazo infantil",
+                "guaranteedInsurabilityBenefit": "Beneficio de asegurabilidad garantizado",
                 "overloanProtection": "Protección contra sobrepréstamo",
+                "ownerWaiverOfDeduction": "Renuncia de deducción por parte del propietario",
                 "waiverOfDeduction": "Renuncia a la deducción",
                 "waiverOfPremium": "Exención de prima"
             },
@@ -8060,7 +8143,36 @@
                 "placeholder": "Escribe tu mensaje de comentarios aquí...",
                 "positiveFeedbackComment": "¿Podría aclarar qué aspectos de sus comentarios fueron satisfactorios? Su opinión es valiosa para mejorar nuestro servicio.",
                 "negativeFeedbackComment": "¿Podría aclarar qué aspectos de sus comentarios no fueron satisfactorios? Su opinión es valiosa para mejorar nuestro servicio.",
-                "validationError": "Por favor, ingrese su comentario"
+                "validationError": "Por favor, ingrese su comentario",
+                "dislikeReasonsHeader": "Por favor, seleccione un motivo por el cual no le gusta la respuesta.",
+                "dislikeReasons": {
+                    "incorrectResponse": "Respuesta incorrecta (la respuesta no coincide con la pregunta)",
+                    "languageIssue": "Problema de idioma/estilo (poco claro, demasiado complejo) / Respuesta incompleta (respuesta demasiado corta, careció de detalles)",
+                    "relevantDocumentMissing": "Documento relevante faltante (el bot omitió una referencia clave)",
+                    "infoMissing": "Información faltante en los documentos (vacíos en las directrices/contenido)",
+                    "linksLabel": "Si tiene enlace(s) a un documento relevante, por favor compártalos aquí (separados por comas si hay varios):"
+                },
+                "opsIntakeFormLink": "Permítanos crear un formulario de Ops Intake para usted",
+                "opsIntakeForm": {
+                    "heading": "Formulario de Ops Intake / Retroalimentación",
+                    "placeholder": "Escriba algo...",
+                    "processName": "Nombre de la directriz/pasos/proceso",
+                    "blockOfBusiness": "Bloque de negocio afectado",
+                    "blockOfBusinessAssistiveText": "¿La solicitud es aplicable a otros bloques de negocio? Si es así, ¿a cuáles?",
+                    "processDescription": "Descripción del proceso y transacciones afectadas",
+                    "reasonForSubmittingRequest": "Describa por qué está enviando esta solicitud",
+                    "outcomeExpected": "¿Cuál es el resultado que espera lograr?",
+                    "smeEmail": "Proporcione el correo electrónico del experto en la materia o del contacto de su equipo con quien puede trabajar el BA.",
+                    "priority": "Prioridad",
+                    "requestFrequency": "¿Con qué frecuencia se realiza esta solicitud? (diaria, semanal, mensual, anual)",
+                    "requestFrequencyAssistiveText": "Si está solicitando que un proceso manual sea automatizado, nos gustaría entender la frecuencia de ese proceso manual.",
+                    "benefitMetrics": "Cualquier métrica sobre cómo este cambio beneficiará a Operaciones",
+                    "benefitMetricsAssistiveText": "Tiempos promedio del proceso, mejoras en auditorías de calidad u otras métricas que pueda considerar."
+                },
+                "errors": {
+                    "inValidDomain": "Solo se permiten correos electrónicos de Zinnia",
+                    "inValidEmail": "Por favor, ingrese una dirección de correo electrónico válida"
+                }
             },
             "followUpPlaceholder": "Haga sus preguntas de seguimiento aquí...",
             "followUpButton": "Haga sus preguntas de seguimiento aquí"

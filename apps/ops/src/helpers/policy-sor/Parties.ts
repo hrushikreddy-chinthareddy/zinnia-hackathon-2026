@@ -244,7 +244,11 @@ export class Parties {
     }
 
     public getPartiesWithRole(role: PartyRole): PolicyParty[] {
-        return this.partiesByRole.get(role) || [];
+        const parties = this.partiesByRole.get(role) || [];
+        // PolicyParty.partyRoles already filters out end-dated roles
+        return parties.filter((p) =>
+            p.partyRoles?.some((pr) => pr.partyRole === role)
+        );
     }
 
     public get owner(): PolicyParty | undefined {

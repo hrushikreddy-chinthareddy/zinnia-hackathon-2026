@@ -83,7 +83,7 @@ export enum IllustrationPartyTypeCode {
     TRUST = 'TRUST',
 }
 
-enum Gender {
+export enum Gender {
     MALE = 'MALE',
     FEMALE = 'FEMALE',
     UNISEX = 'UNISEX',
@@ -266,7 +266,7 @@ const illustrationPayloadFlatExtraSchema = t.object(
 );
 
 const illustrationPayloadParticipantSchema = t.object(
-    t.property('issueAge', t.number),
+    t.property('issueAge', t.union(t.number, t.undefined)),
     t.property('participantId', t.string),
     t.optionalProperty('underwritingClass', t.enum(UnderwritingClass)),
     t.optionalProperty('subStandardRating', t.enum(SubStandardRating)),
@@ -314,7 +314,7 @@ const illustrationPayloadBasePartySchema = t.object(
     )
 );
 
-const illustrationPayloadInsuredPartySchema = t.intersection(
+export const illustrationPayloadInsuredPartySchema = t.intersection(
     illustrationPayloadBasePartySchema,
     t.object(
         t.property('gender', t.enum(Gender)),
@@ -323,11 +323,12 @@ const illustrationPayloadInsuredPartySchema = t.intersection(
     )
 );
 
-const illustrationPayloadNonInsuredPartySchema = t.intersection(
+export const illustrationPayloadNonInsuredPartySchema = t.intersection(
     illustrationPayloadBasePartySchema,
     t.object(
-        t.optionalProperty('gender', t.enum(Gender)),
-        t.property('lastName', t.string),
+        t.optionalProperty('gender', t.union(t.enum(Gender), t.undefined)),
+        t.optionalProperty('lastName', t.union(t.string, t.undefined)),
+        t.optionalProperty('firstName', t.union(t.string, t.undefined)),
         t.property('roleCode', t.enum(NonInsuredRoleCodes))
     )
 );

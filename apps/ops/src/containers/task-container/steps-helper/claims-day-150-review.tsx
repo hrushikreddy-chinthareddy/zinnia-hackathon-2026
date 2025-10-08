@@ -25,7 +25,6 @@ export const getDay150ReviewSteps = ({
             changeType: null,
             beneDeceased: false,
             beneDeathDate: null,
-            beneDeathSourceOfInfo: null,
         }
     );
 

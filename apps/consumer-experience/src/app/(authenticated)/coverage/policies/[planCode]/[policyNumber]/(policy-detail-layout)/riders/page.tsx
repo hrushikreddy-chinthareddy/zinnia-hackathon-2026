@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { Rider } from '@/components/rider/Rider';
 import { getRiders } from '@/services';
+import { getCarrierConfig } from '@/services/carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
 import { PolicyRider } from '@/types/riders';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -20,6 +21,8 @@ export default async function Riders({
   params: PolicyRequestInputs;
 }) {
   const loggingContext = await buildCommonLogContext();
+  const { data: ridersConfig } = await getCarrierConfig(loggingContext);
+
   const { data, error } = await getRiders(
     {
       planCode: params.planCode,
@@ -44,15 +47,21 @@ export default async function Riders({
 
   return (
     <>
-      <RidersSection riders={electedRiders} title="My Riders" />
+      <RidersSection
+        riders={electedRiders}
+        title="My Riders"
+        showUnbornChildRider={!!ridersConfig?.riders?.showUnbornChildRider}
+      />
       <RidersSection
         riders={additionalRiders}
         title="Additional Riders"
         details="Looks like there are additional riders for your policy, but they're not covering you yet."
+        showUnbornChildRider={!!ridersConfig?.riders?.showUnbornChildRider}
       />
       <RidersSection
         riders={data.additionalBenefits ?? undefined}
         title="Additional Benefits"
+        showUnbornChildRider={!!ridersConfig?.riders?.showUnbornChildRider}
       />
     </>
   );
@@ -62,10 +71,12 @@ const RidersSection = ({
   riders,
   details,
   title,
+  showUnbornChildRider = false,
 }: {
   riders?: PolicyRider[];
   title: string;
   details?: string;
+  showUnbornChildRider: boolean;
 }) => {
   if (!riders?.length) {
     return null;
@@ -75,7 +86,13 @@ const RidersSection = ({
       <h2 className="pb-2xl border-b mt-lg">{title}</h2>
       {details && <p>{details}</p>}
       {riders.map((rider: PolicyRider) => {
-        return <Rider key={rider.riderCode} {...rider} />;
+        return (
+          <Rider
+            key={rider.riderCode}
+            {...rider}
+            showUnbornChildRider={showUnbornChildRider}
+          />
+        );
       })}
     </div>
   );

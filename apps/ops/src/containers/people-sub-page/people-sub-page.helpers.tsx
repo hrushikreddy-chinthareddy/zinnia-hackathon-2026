@@ -1,3 +1,4 @@
+import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
 import {
     PartyRole,
     PartyType,
@@ -89,6 +90,8 @@ export const convertToChipText = (text: string | undefined, t: TFunction) => {
             return t('chipFilter.partyRole.exchangeCompany');
         case PartyRoleChipToText.OtherIntresedParty:
             return t('chipFilter.partyRole.otherInterestedParty');
+        case PartyRoleChipToText.AdditionalServicingAgent:
+            return t('chipFilter.partyRole.additionalServicingAgent');
         default:
             return text;
     }
@@ -176,6 +179,8 @@ export interface NameTag extends Party {
     tags: TagKey[];
     partyRoles: string[];
     partyRoleIds: any[];
+    producerName?: string;
+    producerType?: string;
 }
 
 export const combineNameAndRoles = (
@@ -213,7 +218,10 @@ export const combineNameAndRoles = (
             organizationCode,
             beneficiaryPercentage,
             partyId,
-        } = policyParty;
+            producerName,
+            producerType,
+        }: Party & { producerName?: string; producerType?: string } =
+            policyParty;
 
         const existingNameTag = nameTags.find((nt) => {
             return nt.partyId === partyId;
@@ -237,9 +245,17 @@ export const combineNameAndRoles = (
 
             switch (partyType) {
                 case PartyType.INDIVIDUAL:
-                    nameTag.firstName = firstName;
-                    nameTag.lastName = lastName;
-                    break;
+                    if (
+                        producerType === POM_Models_ProducerType.CORPORATION &&
+                        producerName
+                    ) {
+                        nameTag.fullName = producerName;
+                        break;
+                    } else {
+                        nameTag.firstName = firstName;
+                        nameTag.lastName = lastName;
+                        break;
+                    }
                 case PartyType.TRUST:
                     nameTag.fullName = fullName;
                     break;

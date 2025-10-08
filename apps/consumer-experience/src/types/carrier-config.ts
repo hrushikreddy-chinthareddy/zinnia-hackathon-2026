@@ -66,4 +66,7 @@ export interface CarrierConfig {
   freeLookCancel: {
     enabled: boolean;
   };
+  riders: {
+    showUnbornChildRider: boolean;
+  };
 }

@@ -10,6 +10,7 @@ import { ComponentProps, useCallback, useEffect } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { createClientCaseFromSureify } from '@deps/components/client-case/client-case-list/sureify-flow/create-client-case-from-sureify';
+import { canUserCreateClientCase } from '@deps/components/client-case/client-case-list/sureify-flow/validate-user-permission';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -32,7 +33,7 @@ import {
 import { toLowerCaseSearchParams } from '@deps/utils/url';
 import nextI18nextConfig from 'next-i18next.config';
 
-import IllustrationsPage from './index';
+import IllustrationsPage, { ErrorOrigin } from './index';
 
 type additionalDataProps = {
     user: UserProfile;
@@ -100,7 +101,10 @@ export default function NewClientCase(
     useEffect(() => {
         const params = toLowerCaseSearchParams(searchParams);
 
-        if (params.has('eappid') && props.fetchingErrorOrigin) {
+        if (
+            (params.has('eappid') && props.fetchingErrorOrigin) ||
+            props.fetchingErrorOrigin === ErrorOrigin.Internal
+        ) {
             return;
         }
         const createClientCaseForm = t(
@@ -116,6 +120,7 @@ export default function NewClientCase(
             />
         );
         sideSheet.handleOpen(true, 500);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [searchParams]);
     // We cannot add SideSheet as a dependency because updating the content also changes this reference
 
@@ -184,6 +189,17 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             const eAppId = normalizedQuery?.eappid;
             const hasSingleEappId = eAppId && typeof eAppId === 'string';
+
+            if (!(await canUserCreateClientCase(context, loggingContext))) {
+                return {
+                    props: {
+                        ...commonProps,
+                        fetchingErrorMessage:
+                            'User does not have the right permissions to create a client case',
+                        fetchingErrorOrigin: 'internal-error',
+                    },
+                };
+            }
 
             if (hasSingleEappId) {
                 const accessToken = await getAuthToken(context, loggingContext);

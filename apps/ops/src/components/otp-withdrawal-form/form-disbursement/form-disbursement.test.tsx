@@ -96,6 +96,16 @@ describe('Form Disbursment Updated Component', () => {
                     )?.fields || null,
                 generatePayloadFromSelection: generateExpressCheckPayload,
             },
+            {
+                label: 'caseWithdrawal.request.distributionMethod.dtcc',
+                value: PaymentMethod.DTCC,
+                getDefaultPayload: jest.fn(),
+                fields:
+                    flicCOnfiguration.disbursementOptions.find(
+                        (option) => option.value === PaymentMethod.DTCC
+                    )?.fields || null,
+                generatePayloadFromSelection: generateExpressCheckPayload,
+            },
         ];
 
         it('should render the title', () => {
@@ -473,6 +483,11 @@ describe('Form Disbursment Updated Component', () => {
                 'caseWithdrawal.request.distributionMethod.overnightCheck'
             );
             expect(expressCheckOptionElement).toBeInTheDocument();
+
+            const dtccOptionElement = screen.getByText(
+                'caseWithdrawal.request.distributionMethod.dtcc'
+            );
+            expect(dtccOptionElement).toBeInTheDocument();
             // bank details should not load
             const isVoidCheckAttachedElement =
                 screen.queryByText(`isVoidCheckAttached`);
@@ -652,6 +667,82 @@ describe('Form Disbursment Updated Component', () => {
                 `button-group-label-test-id-caseWithdrawal.request.distributionMethod.overnightCheck`
             );
             fireEvent.click(expressCheckOptionElement);
+
+            expect(setMockData).toHaveBeenCalled();
+            expect(generateExpressCheckPayload).toHaveBeenCalledWith(undefined);
+        });
+
+        it('should render payload correctly on DTCC option selection', () => {
+            const formDisbursement = {
+                paymentMethod: { text: PaymentMethod.DTCC },
+                paymentMailType: { text: null },
+                bank: [
+                    {
+                        accountNumber: '',
+                        accountType: {
+                            text: AccountType.Checking,
+                        },
+                        bankContactPerson: '',
+                        bankFurtherCreditAccount: '',
+                        bankFurtherCreditName: '',
+                        bankInfoCompleteInd: '',
+                        bankLocation: '',
+                        bankName: '',
+                        bankPhone: '',
+                        nameOnBankAccount: '',
+                        routingNumber: '',
+                        maskedAccountNumber: null,
+                        isDirectDeposit: {
+                            text: true,
+                        },
+                    },
+                ],
+                paymentToBrokerageAccount: false,
+                brokerage: {
+                    companyName: '',
+                    accountNumber: '',
+                    acordAttached: null,
+                    address: DEFAULT_ADDRESS,
+                },
+                payeeType: '',
+                voidCheck: null,
+                doesCheckMeetSecRequiremnt: null,
+                participantId: {
+                    text: null,
+                },
+                payee: {
+                    name: { text: null },
+                    addresses: [DEFAULT_ADDRESS],
+                    contractNumber: { text: null },
+                    taxId: { text: '' },
+                },
+                upsAccount: null,
+                emailDeliveryNotification: { text: false },
+                isDifferentPayeeOrAddress: { text: false },
+                isWireApprovalPresent: { text: false },
+            };
+            let setMethodArgs;
+            const setMockData = jest.fn((cb) => {
+                setMethodArgs = cb(formDisbursement);
+                return setMethodArgs;
+            });
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        currentFormState: CaseStatus.Pending,
+                        formDisbursement,
+                        setFormDisbursement: setMockData,
+                    }}
+                >
+                    <FormDisbursement options={disbursementOptions} />
+                </FormDataContext.Provider>
+            );
+
+            const dtccOptionElement = screen.getByTestId(
+                `button-group-label-test-id-caseWithdrawal.request.distributionMethod.dtcc`
+            );
+            fireEvent.click(dtccOptionElement);
 
             expect(setMockData).toHaveBeenCalled();
             expect(generateExpressCheckPayload).toHaveBeenCalledWith(undefined);

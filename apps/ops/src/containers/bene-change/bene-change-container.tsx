@@ -7,6 +7,7 @@ import { useMemo, useEffect, useCallback } from 'react';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { TranslationFiles } from '@deps/config/translations';
 import TabGroupContainer from '@deps/containers/bene-change/components/tab-group-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SOR_MAP, SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
@@ -14,6 +15,7 @@ import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { validateTransaction } from '@deps/queries/api/web-non-financial';
 import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useBeneChange } from './bene-change-provider';
 import PeopleSubPage from '../people-sub-page';
@@ -87,6 +89,9 @@ const BeneChangeContainer = ({
                 : skipToken,
         enabled: !!planCode && !!policyNumber,
     });
+    const { featureFlags } = useOptimizely();
+    const invokeNewBeneChangeApi =
+        featureFlags[FEATURE_FLAGS.BENE_CHANGE_NEW_API];
 
     useEffect(() => {
         if (!data) return;
@@ -110,7 +115,7 @@ const BeneChangeContainer = ({
         ) {
             documentResult = await fetchDocument(
                 formData.businessKey,
-                DocumentType.ReReg,
+                DocumentType.Rereg,
                 ''
             );
 
@@ -141,10 +146,15 @@ const BeneChangeContainer = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = await validateTransaction({
-            ...requestBody,
-            planCode,
-        });
+        const response = invokeNewBeneChangeApi
+            ? await validateTransaction(
+                  {
+                      ...requestBody,
+                      planCode,
+                  },
+                  invokeNewBeneChangeApi
+              )
+            : await validateTransaction(requestBody, invokeNewBeneChangeApi);
         return response;
     }, [
         document,

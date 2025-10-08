@@ -18,6 +18,7 @@ import {
     NestedData,
     DataField,
     NestedDataTuple,
+    toolTip,
 } from './types';
 
 /**
@@ -235,8 +236,12 @@ export const formatDataField = (
         typeof key === 'string' &&
         data != null &&
         !excludeFields.has(key);
-    const formattedLabel = include && formatAsDataLabel(key, lineOfBusiness, t);
 
+    if (!include) {
+        return null;
+    }
+
+    const formattedLabel = formatAsDataLabel(key, lineOfBusiness, t);
     const formattedData = formatAsDataValue(data, t, key);
 
     if (typeof formattedData === 'object' && formattedData != null) {
@@ -281,6 +286,16 @@ export const formatDataField = (
     if (fieldLinkedField === key) {
         dataTuple[link] = fieldLink;
     }
+
+    dataTuple[toolTip] =
+        t(`policy.toolTips.${key}`, {
+            defaultValue: null,
+            policyNomenclature:
+                lineOfBusiness === LineOfBusiness.LIFE
+                    ? t('policy.nomenclature.policy')
+                    : t('policy.nomenclature.contract'),
+        }) ?? undefined;
+
     return dataTuple;
 };
 

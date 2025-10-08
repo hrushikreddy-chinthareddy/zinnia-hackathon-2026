@@ -19,11 +19,13 @@ export type MetaData = {
     [tags]?: string[];
     [link]?: string;
     [linkedField]?: string;
+    [toolTip]?: string;
 };
 export const label = Symbol('label');
 export const tags = Symbol('tags');
 export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
+export const toolTip = Symbol('toolTip');
 
 export type PolicySection = [
     string,

@@ -21,8 +21,6 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DocumentData } from '@deps/models/case/document';
-import { ApiVersion } from '@deps/models/case/enums';
-import { TaskApiVersionMapper } from '@deps/models/case/helpers';
 import {
     AvailableFormsTransaction,
     SendDocumentFormParts,
@@ -104,11 +102,7 @@ function FormSelectionStep({
     const submit = useCallback(async () => {
         setIsLoading(true);
 
-        if (
-            TaskApiVersionMapper[formState.initialForm.taskType] ===
-                ApiVersion.v2 &&
-            formState.initialForm.status !== TaskStatus.Completed
-        ) {
+        if (formState.initialForm.status !== TaskStatus.Completed) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,

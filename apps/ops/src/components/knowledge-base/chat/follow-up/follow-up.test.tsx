@@ -1,9 +1,7 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 
-import {
-    getFollowupMessages,
-    sendFollowupMessage,
-} from '@deps/queries/api/knowledge-base';
+import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
+import { getFollowupMessages } from '@deps/queries/api/knowledge-base';
 
 import FollowUp from './follow-up';
 
@@ -35,13 +33,16 @@ jest.mock('@deps/utils/browser-logging', () => {
 
 jest.mock('@deps/queries/api/knowledge-base', () => ({
     getFollowupMessages: jest.fn(),
-    sendFollowupMessage: jest.fn(),
 }));
 
 jest.mock('@deps/contexts/KnowledgeBaseContext', () => ({
     useKnowledgeBaseContext: () => ({
         selectedClientId: 'session-123',
     }),
+}));
+
+jest.mock('@deps/hooks/knowledge-base/useChatStream', () => ({
+    useChatStream: jest.fn(),
 }));
 
 jest.mock('react-i18next', () => ({
@@ -71,11 +72,33 @@ jest.mock(
 );
 
 describe('FollowUp', () => {
+    let mockFollowUpId: string | null;
+    let mockChatbotResponse: string | null;
+    let sendFollowUpMock: jest.Mock;
+
     beforeEach(() => {
         jest.clearAllMocks();
         jest.spyOn(console, 'warn').mockImplementation();
         jest.spyOn(console, 'error').mockImplementation();
         window.HTMLElement.prototype.scrollIntoView = jest.fn();
+        mockFollowUpId = null;
+        mockChatbotResponse = null;
+
+        sendFollowUpMock = jest.fn(
+            async (_questionId, _content, _parentFollowUpId) => {
+                mockFollowUpId = 'followup-1';
+                mockChatbotResponse = 'Answer 1';
+            }
+        );
+
+        (useChatStream as jest.Mock).mockReturnValue({
+            response: mockChatbotResponse,
+            status: '',
+            sources: [],
+            isStreaming: false,
+            followUpId: mockFollowUpId,
+            sendFollowUp: sendFollowUpMock,
+        });
     });
 
     it('it renders the response on opening follow up modal', async () => {
@@ -131,52 +154,33 @@ describe('FollowUp', () => {
     });
 
     it('sends follow up message and gets answer', async () => {
-        (sendFollowupMessage as jest.Mock).mockResolvedValue({
-            followUpId: 'followup-1',
-            originalMessageId: 'message-1',
-            followUpQuestion: 'question 1',
-            followUpAnswer: 'Answer 1',
-            sourceDocuments: [],
-        });
         (getFollowupMessages as jest.Mock).mockResolvedValue(true);
 
-        const { getByRole, getAllByTestId } = render(
-            <FollowUp {...defaultProps} />
-        );
+        const { findByRole } = render(<FollowUp {...defaultProps} />);
 
-        await waitFor(() => {
-            expect(getFollowupMessages).toHaveBeenCalled();
+        const textbox = await findByRole('textbox'); // waits for textarea to appear
+        const sendButton = await findByRole('button', {
+            name: /send-followup/i,
         });
-        const textbox = getByRole('textbox');
-        const sendButton = getByRole('button', { name: /send-followup/i });
+
         fireEvent.change(textbox, { target: { value: 'test follow up' } });
         fireEvent.click(sendButton);
 
         await waitFor(() => {
-            expect(sendFollowupMessage).toHaveBeenCalledWith(
+            expect(sendFollowUpMock).toHaveBeenCalledWith(
                 defaultProps.questionId,
                 'test follow up',
-                'session-123',
                 null
             );
-            const responses = getAllByTestId('chat-response');
-            expect(
-                responses.some((r) => r.textContent?.includes('Answer 1'))
-            ).toBe(true);
         });
     });
 
-    it('sends a message when enter key is pressed', async () => {
+    it('sends follow up message when enter key is pressed', async () => {
         (getFollowupMessages as jest.Mock).mockResolvedValue(true);
 
-        const { getByRole, getAllByTestId } = render(
-            <FollowUp {...defaultProps} />
-        );
+        const { findByRole } = render(<FollowUp {...defaultProps} />);
 
-        await waitFor(() => {
-            expect(getFollowupMessages).toHaveBeenCalled();
-        });
-        const textbox = getByRole('textbox');
+        const textbox = await findByRole('textbox'); // waits for textarea to appear
         fireEvent.change(textbox, { target: { value: 'test follow up' } });
         fireEvent.keyDown(textbox, {
             key: 'Enter',
@@ -185,61 +189,43 @@ describe('FollowUp', () => {
         });
 
         await waitFor(() => {
-            expect(sendFollowupMessage).toHaveBeenCalledWith(
+            expect(sendFollowUpMock).toHaveBeenCalledWith(
                 defaultProps.questionId,
                 'test follow up',
-                'session-123',
                 null
             );
-            const responses = getAllByTestId('chat-response');
-            expect(
-                responses.some((r) => r.textContent?.includes('Answer 1'))
-            ).toBe(true);
         });
     });
 
-    it('logs an error and adds a bot_error message if sendFollowupMessage returns falsy', async () => {
-        (getFollowupMessages as jest.Mock).mockResolvedValue(true);
-        (sendFollowupMessage as jest.Mock).mockResolvedValue(undefined);
-
-        const { getByRole } = render(<FollowUp {...defaultProps} />);
-
-        await waitFor(() => {
-            expect(getFollowupMessages).toHaveBeenCalled();
+    it('logs an error when sendFollowUp (hook) throws', async () => {
+        const sendFollowUpMock = jest
+            .fn()
+            .mockRejectedValue(new Error('Network failure'));
+        (useChatStream as jest.Mock).mockReturnValue({
+            response: '',
+            status: '',
+            sources: [],
+            isStreaming: false,
+            followUpId: null,
+            sendFollowUp: sendFollowUpMock,
         });
 
-        const textbox = getByRole('textbox');
-        const sendButton = getByRole('button', { name: /send-followup/i });
+        const { findByRole } = render(<FollowUp {...defaultProps} />);
+
+        const textbox = await findByRole('textbox');
+        const sendButton = await findByRole('button', {
+            name: /send-followup/i,
+        });
 
         fireEvent.change(textbox, { target: { value: 'my follow up' } });
         fireEvent.click(sendButton);
 
         await waitFor(() => {
-            expect(mockBrowserLogError).toHaveBeenCalledWith(
-                'Error getting response from chatbot',
-                { questionId: 'question-123' }
+            expect(sendFollowUpMock).toHaveBeenCalledWith(
+                defaultProps.questionId,
+                'my follow up',
+                null
             );
-        });
-    });
-
-    it('logs error when sendFollowUpMessage throws an error ', async () => {
-        (getFollowupMessages as jest.Mock).mockResolvedValue(true);
-        (sendFollowupMessage as jest.Mock).mockRejectedValue(
-            new Error('Network failure')
-        );
-        const { getByRole } = render(<FollowUp {...defaultProps} />);
-
-        await waitFor(() => {
-            expect(getFollowupMessages).toHaveBeenCalled();
-        });
-
-        const textbox = getByRole('textbox');
-        const sendButton = getByRole('button', { name: /send-followup/i });
-
-        fireEvent.change(textbox, { target: { value: 'my follow up' } });
-        fireEvent.click(sendButton);
-
-        await waitFor(() => {
             expect(mockBrowserLogError).toHaveBeenCalled();
         });
     });

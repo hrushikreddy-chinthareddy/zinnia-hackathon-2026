@@ -1,0 +1,25 @@
+{
+    "process": "Quality Audit",
+    "carrier": "FNWL",
+    "taskType": "QUALITY_AUDIT_REVIEW",
+    "taskName": "Quality Audit Review",
+    "caseId": "CA0000429003",
+    "taskDetails": "",
+    "status": "NEW",
+    "data": {
+        "txnCaseId": "CA0000449024",
+        "details": {
+            "applicationType": "Incoming Transfer",
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "New Business Application",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                }
+            ]
+        },
+
+        "workId": "Work001"
+    }
+}

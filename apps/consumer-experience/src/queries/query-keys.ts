@@ -16,5 +16,6 @@ export enum QueryKeys {
   SYSTEMATIC_PREMIUMS = 'systematicPremiums',
   SYSTEMATIC_PREMIUMS_VALIDATION = 'systematicPremiumsValidation',
   COMPONENT_VISIBILITY = 'componentVisibility',
+  ONE_TIME_PREMIUM_VALIDATION = 'oneTimePremiumValidation',
   FULL_SURRENDER_VALIDATION = 'fullSurrenderValidation',
 }

@@ -2,7 +2,7 @@ const _riderNamesMap = {
     acceleratedDeathBenefit: 'Accelerated Death Benefit',
     accidentalDeathBenefit: 'Accidental Death Benefit',
     acceleratedDeathBenefitForTerminalIllness:
-        'Accelerated Death Benefit for Terminal Illness',
+        'Accelerated Death Benefit Rider for Terminal Illness',
     acceleratedDeathBenefitForChronicIllness:
         'Chronic Illness Accelerated Death Benefit',
     charitableGiving: 'Charitable Giving',
@@ -10,6 +10,8 @@ const _riderNamesMap = {
     overloanProtection: 'Overloan Protection',
     waiverOfDeduction: 'Waiver of Deduction',
     waiverOfPremium: 'Waiver of Premium',
+    guaranteedInsurabilityBenefit: 'Guaranteed Insurability Benefit',
+    ownerWaiverOfDeduction: 'Owner Waiver of Deduction',
 } as const;
 
 export const riderNamesMap = _riderNamesMap as typeof _riderNamesMap &

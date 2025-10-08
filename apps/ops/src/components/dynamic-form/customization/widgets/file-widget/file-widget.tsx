@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { useAttachments } from '@deps/hooks/useAttachments';
 import { EDSDocumentRequestBody } from '@deps/models/case/document';
 import { ActionTypes } from '@deps/models/case/task';
@@ -25,7 +26,7 @@ import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import FileAttachmentComponent from './file-attachment.component';
@@ -79,13 +80,6 @@ function processFile(file: File): Promise<FileInfoType> {
 
 function processFiles(files: FileList) {
     return Promise.all(Array.from(files).map(processFile));
-}
-
-function getFileSubtype(blob: Blob) {
-    if (blob && blob.type && blob.type.includes('/')) {
-        return blob.type.split('/')[1];
-    }
-    return blob.type || '';
 }
 
 export function FilesInfo<
@@ -238,6 +232,10 @@ function FileUploadComponent({
                             formContext?.customData?.carrier ?? '',
                         correlationId: formContext?.correlationId || '',
                     };
+                    browserLogInfo('FileWidget: Uploading document:', {
+                        ...metaData,
+                        fileName: name,
+                    });
                     try {
                         const response = await uploadDocumentV2(
                             metaData,
@@ -265,6 +263,7 @@ function FileUploadComponent({
                             'FileWidget: Error uploading document:',
                             {
                                 ...parseErrorInformation(error),
+                                fileName: name,
                             }
                         );
                         failedUploads.push(name); // Add the file name to the failed uploads list

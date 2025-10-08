@@ -1,5 +1,4 @@
 import { ApiGetProducerResponse } from '@xd/pom/src/types/get.types';
-import { uniq } from 'lodash';
 
 import {
     getDownlineBySellingCode,
@@ -14,55 +13,30 @@ import {
 } from '@deps/types/producers';
 
 export const getUserHierarchyBySellingCode = async (
-    sellingCode: string
+    sellingCode: string,
+    { carrierShortName }: { carrierShortName: string }
 ): Promise<GetHierarchyResponse | null> => {
-    const { data } = await getHierarchyBySellingCode(sellingCode);
+    const { data } = await getHierarchyBySellingCode(sellingCode, {
+        carrierShortName,
+    });
     return data;
 };
 
 export const getUserDownlineBySellingCode = async (
     sellingCode: string,
-    partialFullName = ''
+    {
+        carrierShortName,
+        partialFullName = '',
+    }: {
+        carrierShortName: string;
+        partialFullName?: string;
+    }
 ): Promise<GetDownlineResponse[][] | null> => {
-    const { data } = await getDownlineBySellingCode(
-        sellingCode,
-        partialFullName
-    );
+    const { data } = await getDownlineBySellingCode(sellingCode, {
+        partialFullName,
+        carrierShortName,
+    });
     return data;
-};
-
-export const getUsersDownlineList = async (
-    sellingCodeArray: string[],
-    agentName: string
-) => {
-    const filteredSellingCodes = sellingCodeArray.filter(
-        (sellingCode) => !!sellingCode
-    );
-    const downlinePromises = filteredSellingCodes.map((sellingCode) =>
-        getUserDownlineBySellingCode(sellingCode, agentName)
-    );
-    const hieararchyResponses = (await Promise.all(downlinePromises)).filter(
-        (hierarchy) => !!hierarchy
-    );
-
-    return hieararchyResponses;
-};
-
-export const getUserHierarchyListBySellingCode = async (
-    agentSellingCodes: string[]
-) => {
-    const filteredAgentSellingCodes = uniq(
-        agentSellingCodes.filter((sellingCode) => !!sellingCode)
-    );
-
-    const hierarchyPromises = filteredAgentSellingCodes.map((sellingCode) =>
-        getUserHierarchyBySellingCode(sellingCode)
-    );
-    const hieararchyResponses = (await Promise.all(hierarchyPromises)).filter(
-        (hierarchy) => !!hierarchy
-    );
-
-    return hieararchyResponses;
 };
 
 export const getProducersByNameAndCarrierCodeQuery = async (
@@ -80,9 +54,10 @@ export const getProducersByNameAndCarrierCodeQuery = async (
 };
 
 export const getProducersByIdQuery = async (
-    id: string
+    id: string,
+    carrierShortName: string
 ): Promise<ApiGetProducerResponse | null> => {
-    const response = await getProducerById(id);
+    const response = await getProducerById(id, carrierShortName);
     if (response.error?.status) {
         throw response.error;
     }

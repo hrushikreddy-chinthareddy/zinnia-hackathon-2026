@@ -20,14 +20,10 @@ import {
     initialAdditionalFilters,
 } from '@deps/contexts/CaseManagementFilters';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { ReferenceDataQuery, getReferenceData } from '@deps/queries/api/cases';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
-import {
-    FilterClickedEvent,
-    SegmentTrackedEventName,
-} from '@deps/types/segment-analytics';
 import {
     getCarrierListItem,
     getCarrierNameByClientId,
@@ -488,14 +484,12 @@ export default function SideSheetRefineResults({
             {} as { [key: string]: any }
         );
 
-        segmentAnalyticsTrackEvent<FilterClickedEvent>(
-            SegmentTrackedEventName.FilterApplied,
-            {
-                selectedItemName: JSON.stringify(selectedFilters),
-                session_id: sessionId,
-                userId: partyId,
-            }
-        );
+        filterAppliedTrackEvent({
+            filterValue: JSON.stringify(selectedFilters),
+            filterTarget: 'Case Search',
+            authSessionId: sessionId,
+            userId: partyId,
+        });
     }, [
         setCaseManagementFilters,
         closeSideSheet,
@@ -533,7 +527,7 @@ export default function SideSheetRefineResults({
                                 `${REFINE_RESULTS_BASE_KEY}selectCarrier`
                             ) as string
                         }
-                        disabled={carrierFilterItems.length === 1}
+                        disabled={carrierFilterItems.length <= 1}
                         name="carrier-dropdown-btn"
                     />
                     <MultiselectField

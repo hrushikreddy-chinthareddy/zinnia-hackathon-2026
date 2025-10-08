@@ -72,11 +72,7 @@ export const ClaimBeneStatus = ({
                 'Missing contactRole or phone or name or changeType';
         }
 
-        if (
-            !beneficiary.beneDeceased &&
-            !beneficiary.beneDeathSourceOfInfo &&
-            isBeneDeceased === BENE_STATUS.YES
-        ) {
+        if (!beneficiary.beneDeceased && isBeneDeceased === BENE_STATUS.YES) {
             errors['beneDeceased'] =
                 'Missing contactRole or phone or name or changeType';
         }

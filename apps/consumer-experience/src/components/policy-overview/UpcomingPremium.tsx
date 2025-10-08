@@ -1,3 +1,5 @@
+import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
+import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
 import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
 import clsx from 'clsx';
@@ -9,10 +11,8 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
-
-dayjs.extend(isSameOrAfter);
-
-import { getPremiumEligibility } from '@/services/bpm';
+import { stepsInfo } from '@/components/stepped-workflow/workflows/one-time-premium/steps';
+import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { getUpcomingPremium } from '@/services/policy';
 import { getPolicyFeatures } from '@/services/policy/features';
@@ -27,10 +27,8 @@ import {
   determineAutopayDisplayAndEligibility,
   upcomingPaymentDetails,
 } from './utils';
-import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
-import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
-import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
+dayjs.extend(isSameOrAfter);
 
 export const UpcomingPremium = async ({
   planCode,
@@ -60,10 +58,13 @@ export const UpcomingPremium = async ({
       },
       loggingContext
     ),
-    getPremiumEligibility({
-      planCode,
-      policyNumber,
-    }),
+    getOneTimePremiumEligibility(
+      {
+        planCode,
+        policyNumber,
+      },
+      loggingContext
+    ),
     getPolicyFeatures(
       {
         planCode,
@@ -203,10 +204,7 @@ export const UpcomingPremium = async ({
             <Link
               passHref={true}
               isInternal
-              href={
-                getStepInfo({ step: defaultStep, policyNumber, planCode })
-                  .stepUrl
-              }
+              href={`premium/${Object.values(stepsInfo)?.[0]?.url ?? ''}`}
               className={clsx(
                 ottpPaymentDisabled && styles.disabledTransaction
               )}

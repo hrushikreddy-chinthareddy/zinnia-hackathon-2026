@@ -33,7 +33,7 @@
                         "sectionHeader": {
                             "type": "object",
                             "title": "",
-                            "description": "Call necessary people to verify critical information about this death claim."
+                            "description": "As part of the existing follow-up continuation, contact the necessary parties(beneficiary/agent/others) to confirm and document all critical details related to this death claim."
                         },
                         "details": {
                             "type": "object",
@@ -44,6 +44,11 @@
                                     "type": "object",
                                     "title": "",
                                     "properties": {
+                                        "contractNumber": {
+                                            "type": "string",
+                                            "title": "Contract Number",
+                                            "default": "{{contractNumber}}"
+                                        },
                                         "callLogs": {
                                             "type": "array",
                                             "items": {

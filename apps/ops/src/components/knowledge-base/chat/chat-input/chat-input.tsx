@@ -1,36 +1,35 @@
 import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
-import { Loader } from '@zinnia/bloom/components';
-import { useRef, useState } from 'react';
+import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
+import Button from '@deps/components/button/button';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
-import {
-    createNewChatSession,
-    getChatbotResponse,
-} from '@deps/queries/api/knowledge-base';
+import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
+import { createNewChatSession } from '@deps/queries/api/knowledge-base';
+import { ReactComponent as SendButton } from '@deps/styles/elements/icons/knowledge-base/send.svg';
+import { ReactComponent as StopButton } from '@deps/styles/elements/icons/knowledge-base/stop.svg';
 import {
     BOT_ERROR_MESSAGE_ID,
-    ChatbotMessage,
     KeyboardEvents,
     MessageRole,
     UserMessage,
 } from '@deps/types/knowledge-base';
-import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 import styles from './chat-input.module.css';
 
 type ChatInputProps = {
     opsUserData: MeResponse;
+    setIsCompleted: (isCompleted: boolean) => void;
 };
 
-const ABORT_ERROR = 'AbortError';
-
-const ChatInput = ({ opsUserData }: ChatInputProps) => {
+const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
@@ -45,22 +44,61 @@ const ChatInput = ({ opsUserData }: ChatInputProps) => {
     const [message, setMessage] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
 
-    const abortControllerRef = useRef<AbortController | null>(null);
     const lastMessage = useRef<string | null>(null);
+    const botMsgIdRef = useRef<string | null>(null);
+
+    const {
+        response,
+        status,
+        sources,
+        isStreaming,
+        questionId,
+        responseId,
+        sendMessage,
+        stopStreaming,
+        isStreamingRef,
+    } = useChatStream(selectedClientId);
+
+    useEffect(() => {
+        if (!botMsgIdRef.current) return;
+        if (sources.length >= 1) setLoading(false);
+        setCurrentMessages((prev) =>
+            prev.map((m) =>
+                m.id === botMsgIdRef.current
+                    ? {
+                          ...m,
+                          content:
+                              (response && response.length > 0
+                                  ? response
+                                  : status) || '',
+                          sourceDocuments: sources || [],
+                          ...(questionId && { questionId }),
+                          ...(responseId && {
+                              id: responseId ?? botMsgIdRef.current,
+                          }),
+                      }
+                    : m
+            )
+        );
+    }, [response, setCurrentMessages, status, sources, questionId, responseId]);
+
+    useEffect(() => {
+        setIsCompleted(!isStreamingRef.current);
+    }, [isStreaming, setIsCompleted]);
 
     const handleMessageSend = async (message: string) => {
         if (!message.trim()) return;
+        if (isStreaming || loading) return;
         let currentSessionId = sessionId;
+        setLoading(true);
         try {
-            abortControllerRef.current = new AbortController();
-            setLoading(true);
             setMessage('');
             const userMessage: UserMessage = {
                 id: uuidv4(),
                 role: MessageRole.User,
                 content: message,
             };
-            setCurrentMessages((prev: any) => [...prev, userMessage]);
+            setCurrentMessages((prev) => [...prev, userMessage]);
             lastMessage.current = message;
             let newSession = false;
             if (!sessionId) {
@@ -81,79 +119,51 @@ const ChatInput = ({ opsUserData }: ChatInputProps) => {
                 setSessionId(newChatSession.sessionId);
                 newSession = true;
             }
-            const chatbotResponse = await getChatbotResponse(
-                currentSessionId,
-                message,
-                selectedClientId,
-                abortControllerRef.current.signal
-            );
-            if (chatbotResponse) {
-                const chatbotMessage: ChatbotMessage = {
-                    id: chatbotResponse.responseId,
-                    questionId: chatbotResponse.questionId,
+
+            await sendMessage(currentSessionId, message);
+            const botMsgId = uuidv4();
+            botMsgIdRef.current = botMsgId;
+            setCurrentMessages((prev) => [
+                ...prev,
+                {
+                    id: botMsgId,
                     role: MessageRole.Bot,
-                    content: chatbotResponse.response,
-                    sourceDocuments: chatbotResponse.sourceDocuments,
-                    feedbackType: chatbotResponse.feedbackType,
-                    feedbackComment: chatbotResponse.feedbackComment,
-                };
-                setCurrentMessages((prev: any) => {
-                    const prevMessages = [...prev];
-                    prevMessages[prevMessages.length - 1] = {
-                        ...prevMessages[prevMessages.length - 1],
-                        id: chatbotResponse.questionId,
-                    };
-                    return [...prevMessages, chatbotMessage];
-                });
-                if (newSession) {
-                    setChatHistoryReloadTrigger((prev: any) => prev + 1);
-                }
-            } else {
-                browserLogError('Error getting response from chatbot', {
-                    sessionId: currentSessionId,
-                });
-                setCurrentMessages((prev: any) => [
-                    ...prev,
-                    {
-                        id: BOT_ERROR_MESSAGE_ID,
-                        role: MessageRole.Bot,
-                        content: t('chat.errorMsg'),
-                    },
-                ]);
+                    content: '',
+                },
+            ]);
+
+            if (newSession) {
+                setChatHistoryReloadTrigger((prev) => prev + 1);
             }
         } catch (error: any) {
-            if (error.name === ABORT_ERROR) {
-                browserLogTrace('Chatbot response request cancelled');
-                return;
-            }
             browserLogError('Error sending message::', { error });
-            return;
+
+            setCurrentMessages((prev) => [
+                ...prev,
+                {
+                    id: BOT_ERROR_MESSAGE_ID,
+                    role: MessageRole.Bot,
+                    content: t('chat.errorMsg'),
+                },
+            ]);
         } finally {
             setLoading(false);
-            abortControllerRef.current = null;
         }
     };
 
     const handleStopResponse = () => {
-        if (abortControllerRef.current) {
-            abortControllerRef.current.abort();
-            setLoading(false);
-        }
+        stopStreaming();
+        setLoading(false);
     };
 
     const retryLastMessage = () => {
         if (!lastMessage.current) return;
-        setCurrentMessages((prev: any) => prev.slice(0, prev.length - 2));
+        setCurrentMessages((prev) => prev.slice(0, prev.length - 2));
         handleMessageSend(lastMessage.current);
     };
 
     return (
         <>
-            {loading && (
-                <div className="text-center my-4 mx-auto">
-                    <Loader />
-                </div>
-            )}
             <div className="w-full">
                 <div className={`${styles.textboxContainer}`}>
                     <textarea
@@ -165,36 +175,65 @@ const ChatInput = ({ opsUserData }: ChatInputProps) => {
                                 handleMessageSend(message);
                             }
                         }}
-                        disabled={loading}
+                        disabled={isStreaming || loading}
                         placeholder={t('chat.inputPlaceholder') || ''}
                     ></textarea>
 
                     <div className="flex gap-2">
-                        {loading ? (
-                            <button
-                                aria-label="stop-button"
-                                type="button"
-                                onClick={() => handleStopResponse()}
+                        {isStreaming ? (
+                            <Tooltip
+                                placement={TooltipPlacement.CenterRight}
+                                triggerClassName="!w-auto"
+                                tooltipClassName="!w-auto !p-0 !px-2"
+                                trigger={
+                                    <Button
+                                        aria-label="stop-button"
+                                        className="!bg-transparent !border-none !pl-2 !p-0"
+                                        onClick={() => handleStopResponse()}
+                                    >
+                                        <StopButton
+                                            className={`!w-[30px] text-gray-700`}
+                                        />
+                                    </Button>
+                                }
                             >
                                 {t('chat.stop')}
-                            </button>
+                            </Tooltip>
                         ) : (
-                            <button
-                                aria-label="send-button"
-                                type="button"
-                                onClick={() => handleMessageSend(message)}
+                            <Tooltip
+                                placement={TooltipPlacement.CenterRight}
+                                triggerClassName="!w-auto"
+                                tooltipClassName="!w-auto !p-0 !px-2"
+                                trigger={
+                                    <Button
+                                        aria-label="send-button"
+                                        className="!bg-transparent !border-none !pl-2 !p-0"
+                                        onClick={() =>
+                                            handleMessageSend(message)
+                                        }
+                                    >
+                                        <SendButton
+                                            className={`!w-[30px] transition-all duration-300 ${
+                                                isStreaming ||
+                                                loading ||
+                                                !message.trim()
+                                                    ? 'text-gray-400'
+                                                    : 'text-gray-700'
+                                            }`}
+                                        />
+                                    </Button>
+                                }
                             >
                                 {t('chat.send')}
-                            </button>
+                            </Tooltip>
                         )}
                         {currentMessages?.find(
-                            (message: any) =>
-                                message.id === BOT_ERROR_MESSAGE_ID
+                            (message) => message.content === t('chat.errorMsg')
                         ) && (
                             <button
                                 aria-label="retry-button"
                                 type="button"
-                                onClick={() => retryLastMessage()}
+                                onClick={retryLastMessage}
                             >
                                 {t('chat.retry')}
                             </button>

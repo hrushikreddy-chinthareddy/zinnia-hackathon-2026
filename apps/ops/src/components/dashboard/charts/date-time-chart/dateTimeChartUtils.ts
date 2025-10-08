@@ -45,7 +45,7 @@ export const groupDataByWeek = (
     data: GroupByDataArgs[] | GroupByDataArgsLevel1[]
 ): DashboardResponseData[] => {
     const weeklyCounts = new Map<string, { key: string; count: number }>(); // Map to store weekly counts
-
+    if (!data || !data.length) return [];
     data.forEach((item) => {
         const date = dayjs(item.name); // Convert the name ('2023-04-01') to a Day.js object
         const weekStart = date.startOf('isoWeek'); // Get the start of the week for that day

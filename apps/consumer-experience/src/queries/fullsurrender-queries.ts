@@ -1,4 +1,4 @@
-import { SurrenderState } from '@/components/providers/surrender/types';
+import { SurrenderState } from '@/components/stepped-workflow/workflows/surrender/provider/types';
 import {
   FullSurrenderBPMResponse,
   FullSurrenderSubmissionResponse,

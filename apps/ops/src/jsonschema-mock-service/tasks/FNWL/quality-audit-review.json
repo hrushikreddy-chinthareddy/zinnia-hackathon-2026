@@ -1,0 +1,372 @@
+{
+    "formId": "66acc90e-2dd9-42db-b3d1-5591163ce948",
+    "process": "Quality Audit",
+    "carrier": "FNWL",
+    "taskType": "QUALITY_AUDIT_REVIEW",
+    "taskName": "Quality Audit Review",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Quality Audit",
+                "formSchema": {
+                    "type": "object",
+                    "definitions": {
+                        "processorDetails": {
+                            "enum": [{ "name": "DEFAULT", "partyId": "" }]
+                        }
+                    },
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review the case and supporting information and determine what requires rework. Select the category and provide comments if the case requires rework."
+                        },
+
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "documents": {
+                                    "title": "Supporting Information",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title"
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Document ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            },
+                                            "docCategory": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "reworkRequired": {
+                            "type": "boolean",
+                            "title": "Does the case require rework?",
+                            "enumNames": [
+                                "Yes, subsequent rework is required.",
+                                "No, quality audit is passed."
+                            ],
+                            "enum": [true, false]
+                        }
+                    },
+                    "required": ["reworkRequired"],
+                    "if": {
+                        "properties": {
+                            "reworkRequired": { "const": true }
+                        },
+                        "required": ["reworkRequired"]
+                    },
+                    "then": {
+                        "properties": {
+                            "auditDetails": {
+                                "type": "array",
+                                "title": "Which process requires rework?",
+                                "minItems": 1,
+                                "items": {
+                                    "type": "object",
+                                    "required": ["category", "subCategory"],
+                                    "properties": {
+                                        "category": {
+                                            "type": "string",
+                                            "title": "Category",
+                                            "enum": [
+                                                "Agent",
+                                                "Correspondence",
+                                                "Cost Basis",
+                                                "Date",
+                                                "Follow-up handled incorrectly",
+                                                "NIGO in Error",
+                                                "NIGO resolution incorrect",
+                                                "Owner / Joint Owner",
+                                                "Payment",
+                                                "Primary / Contingent Beneficiary",
+                                                "Primary Insured",
+                                                "Product / Rider / Feature",
+                                                "Request not processed",
+                                                "Signature",
+                                                "Timeliness",
+                                                "Other"
+                                            ]
+                                        },
+                                        "subCategory": {
+                                            "type": "string",
+                                            "title": "Sub-category",
+                                            "enum": [
+                                                "Address coded incorrectly / not coded",
+                                                "Agent's signature / signature date missing",
+                                                "Agent's / Owner's signature date is not acceptable (Stale dated / Future dated)",
+                                                "All required paperwork received and IGO",
+                                                "Commission option",
+                                                "Cost Basis amount applied incorrectly / not coded",
+                                                "Cost Basis letter not generated",
+                                                "Delay due to task pended incorrectly / all Nigo's not caught ",
+                                                "Email id coded incorrectly / not coded",
+                                                "Exchange/ replacement incompletely coded / not coded",
+                                                "Face amount is not updated correctly",
+                                                "Follow-up process not followed / followed incorrectly",
+                                                "Gender coded incorrectly / not coded",
+                                                "Incorrect Agent coded",
+                                                "Issue Date incorrect",
+                                                "Issue state",
+                                                "Level Term Period is not selected correctly",
+                                                "Name coded incorrectly",
+                                                "Nigo process not followed",
+                                                "No action taken",
+                                                "Owner's signature / signature date missing",
+                                                "Percentage of share is not 100%",
+                                                "Phone number coded incorrectly / not coded",
+                                                "Policy Date incorrect",
+                                                "Policy pages not generated",
+                                                "Pre notification letter",
+                                                "Premium amount applied incorrectly / not applied",
+                                                "Premium mode is not selected correctly",
+                                                "Product selected is not correct",
+                                                "Relationship not selected / selected incorrectly",
+                                                "Request is not handled within SLA ",
+                                                "Riders",
+                                                "Source of funds",
+                                                "Special Instruction not followed",
+                                                "Split-Incorrect / Not Coded",
+                                                "SSN coded incorrectly / not coded",
+                                                "Suffix coded incorrectly / not coded",
+                                                "Suitability",
+                                                "Suppress Confirmation not marked / marked",
+                                                "Task matching",
+                                                "Tax year incorrectly coded",
+                                                "Third Party Designee - Address is not updated correctly.",
+                                                "Third Party Designee - Name is not updated correctly.",
+                                                "Transfer paperwork has incorrect information / missing / incompete",
+                                                "Verify agent is IGO",
+                                                "Other"
+                                            ]
+                                        },
+                                        "auditData": {
+                                            "minItems": 1,
+                                            "type": "array",
+                                            "title": "Audit Data",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "title": "Audit ID"
+                                                    },
+                                                    "note": {
+                                                        "title": "Notes",
+                                                        "type": "string",
+                                                        "minLength": 1
+                                                    },
+                                                    "attachments": {
+                                                        "type": "array",
+                                                        "title": "Link or upload document",
+                                                        "items": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "documentId": {
+                                                                    "title": "Document Id",
+                                                                    "type": "string"
+                                                                },
+                                                                "documentName": {
+                                                                    "title": "Document Name",
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": ["id", "note"]
+                                            }
+                                        }
+                                    },
+                                    "if": {
+                                        "properties": {
+                                            "category": {
+                                                "minLength": 1
+                                            },
+                                            "subCategory": {
+                                                "minLength": 1
+                                            }
+                                        },
+                                        "required": ["category", "subCategory"]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "processorDetails": {
+                                                "title": "Processor name",
+                                                "$ref": "#/definitions/processorDetails",
+                                                "minLength": 1
+                                            },
+                                            "errorSystem": {
+                                                "type": "string",
+                                                "title": "Source Application Error"
+                                            },
+                                            "negligibleError": {
+                                                "type": "boolean",
+                                                "default": false,
+                                                "title": "Log Negligible error"
+                                            }
+                                        },
+
+                                        "required": [
+                                            "processorDetails",
+                                            "auditData"
+                                        ]
+                                    }
+                                }
+                            }
+                        },
+                        "required": ["auditDetails"]
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "sectionHeader",
+                        "details",
+                        "reworkRequired",
+                        "auditDetails"
+                    ],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "documents": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "label": false,
+                                "addable": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true,
+                                    "noMargin": true
+                                },
+                                "carrier": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "reworkRequired": {
+                        "ui:widget": "radio"
+                    },
+                    "auditDetails": {
+                        "ui:options": {
+                            "orderable": false
+                        },
+                        "items": {
+                            "ui:order": [
+                                "category",
+                                "subCategory",
+                                "processorDetails",
+                                "errorSystem",
+                                "negligibleError",
+                                "auditData"
+                            ],
+                            "ui:options": {
+                                "title": "another process",
+                                "label": false,
+                                "minItems": 1,
+                                "hideError": true
+                            },
+                            "category": {
+                                "ui:widget": "select",
+                                "ui:placeholder": "Select"
+                            },
+                            "subCategory": {
+                                "ui:widget": "select",
+                                "ui:placeholder": "Select"
+                            },
+                            "processorDetails": {
+                                "ui:widget": "select",
+                                "ui:placeholder": "Select",
+                                "ui:options": {
+                                    "enumNames": ["DEFAULT"]
+                                }
+                            },
+                            "auditData": {
+                                "ui:options": {
+                                    "orderable": false,
+                                    "label": false,
+                                    "addable": false
+                                },
+                                "items": {
+                                    "ui:options": {
+                                        "title": "another auditData",
+                                        "label": false,
+                                        "minItems": 1,
+                                        "hideError": true,
+                                        "nobackground": true,
+                                        "noMargin": true
+                                    },
+                                    "note": {
+                                        "hideError": true
+                                    },
+                                    "id": {
+                                        "ui:field": "UUIDField",
+                                        "ui:hidden": true
+                                    },
+                                    "attachments": {
+                                        "inline": true,
+                                        "ui:widget": "AttachmentWidget",
+                                        "ui:options": {
+                                            "label": true,
+                                            "hideError": true
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
