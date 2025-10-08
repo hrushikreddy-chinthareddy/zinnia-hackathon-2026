@@ -98,6 +98,7 @@ export const SummaryPage = () => {
   const {
     data: validationResponse,
     isError: validationError,
+    error,
     isFetching: isValidationFetching,
   } = useQuery({
     queryKey: [
@@ -115,7 +116,7 @@ export const SummaryPage = () => {
   });
 
   if (validationError) {
-    router.push('error');
+    router.push(`error?correlationId=${error.correlationId}`);
   }
 
   if (isValidationFetching) {

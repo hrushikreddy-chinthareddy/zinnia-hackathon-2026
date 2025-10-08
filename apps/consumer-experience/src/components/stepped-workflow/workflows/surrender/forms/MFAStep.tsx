@@ -36,8 +36,8 @@ export const MFAStep = () => {
         router.push('error');
       }
     },
-    onError: () => {
-      router.push('error');
+    onError: err => {
+      router.push(`error?correlationId=${err.correlationId}`);
     },
   });
 
