@@ -1,655 +1,29 @@
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import localData from 'dayjs/plugin/localeData';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { ReactComponent as ArrowLeftMediumIcon } from '@deps/styles/elements/icons/icons_outlined/arrow-left-medium.svg';
-import { ReactComponent as ArrowRightMediumIcon } from '@deps/styles/elements/icons/icons_outlined/arrow-right-medium.svg';
+import { Days } from './components/days';
+import { Months } from './components/months';
+import { Quarters } from './components/quarters';
+import { RangeDays } from './components/range-days';
+import { Years } from './components/years';
+import {
+    DatePickerProps,
+    DatePickerTypes,
+    DateQuarter,
+    DateRange,
+    getQuarter,
+    Quarter,
+} from './types';
+
+export * from './types';
 
 dayjs.extend(localData);
-
-export type DateRange = {
-    start: Date | null;
-    end: Date | null;
-};
-
-export type DateQuarter = {
-    year: number | null;
-    quarter: Quarter | null;
-};
-
-export enum DatePickerTypes {
-    Quarterly = 'Quarterly',
-    Annually = 'Annually',
-}
-
-export enum Quarter {
-    Q1 = 'Q1',
-    Q2 = 'Q2',
-    Q3 = 'Q3',
-    Q4 = 'Q4',
-}
-
-export const quarters = [
-    { label: Quarter.Q1, value: Quarter.Q1, month: 1 },
-    { label: Quarter.Q2, value: Quarter.Q2, month: 4 },
-    { label: Quarter.Q3, value: Quarter.Q3, month: 7 },
-    { label: Quarter.Q4, value: Quarter.Q4, month: 10 },
-];
-
-export type DatePickerProps = {
-    open: boolean;
-    date: Date | DateRange | DateQuarter | null;
-    handleDateSelect: (_year: number, _month: number, _day: number) => void;
-    handleCustomSelection?: (_year: number, _quarter?: Quarter) => void;
-    isFutureDateDisabled?: boolean;
-    isPastDateDisabled?: boolean;
-    isDateAllowed?: (dayjsDate: Dayjs) => boolean;
-    datePickerType?: DatePickerTypes;
-    showMonths?: boolean;
-};
-
-interface YearsProps {
-    handleCloseYears: (year: number) => void;
-    isRange: boolean | null;
-    year: number;
-    yearsOpen: boolean;
-}
-
-interface MonthsProps {
-    handleCloseMonths: (month: number) => void;
-    handleOpenYears: () => void;
-    isRange: boolean | null;
-    monthsOpen: boolean;
-    setYear: Dispatch<SetStateAction<number>>;
-    year: number;
-}
-
-interface CommonDayProps {
-    daysOpen: boolean;
-    getDisabledClasses: (_month: number, _day: number) => string;
-    handleDateSelect: (_year: number, _month: number, _day: number) => void;
-    handleMonthChange: (_month: number, delta: number) => void;
-    handleOpenMonths: () => void;
-
-    month: number;
-    year: number;
-}
-interface DaysProps extends CommonDayProps {
-    getSelectedClasses: (_month: number, _day: number) => string;
-}
 
 enum DatePickerDirection {
     start = 'start',
     end = 'end',
 }
-
-type QuartersProps = {
-    setYear: Dispatch<SetStateAction<number>>;
-    handleQuarterSelection: (_year: number, _quarter: Quarter) => void;
-    handleYearSelection: (_year: number) => void;
-    quartersOpen: boolean;
-    getDisabledQuarterClasses: (
-        _year: number,
-        _quarter?: number,
-        pickerDirection?: DatePickerDirection
-    ) => string;
-    getSelectedQuarterClasses: (_month: number, _quarter: Quarter) => string;
-    year: number;
-    datePickerType: DatePickerTypes;
-};
-
-interface RangeDaysProps extends CommonDayProps {
-    getSelectedRangeClasses: (_month: number, _day: number) => string;
-}
-
-// Primary classes are used for everything other than the short day names; secondary text is used for the short day names
-const primaryTextClasses =
-    'font-primary font-semibold text-md leading-[21px] text-gray-900 whitespace-nowrap';
-const secondaryTextClasses =
-    'font-secondary font-normal text-sm leading-4.5 text-gray-300 whitespace-nowrap';
-
-// Used for the individual year, month, and day items on the panel
-const hoverClasses = 'hover:border-accent1 hover:border-2';
-const activeClasses =
-    'active:border-primary active:border-2 active:bg-primary-lightest';
-const containerClasses = `${hoverClasses} ${activeClasses} cursor-pointer border-2 border-transparent rounded-lg p-2`;
-
-export const getQuarter = (date: dayjs.Dayjs): number => {
-    return Math.floor((date.month() + 3) / 3);
-};
-
-const Years = ({ handleCloseYears, isRange, year, yearsOpen }: YearsProps) => {
-    const [yearsStart, setYearsStart] = useState(
-        Math.floor(year / 10) * 10 - 1
-    );
-    const years = Array.from({ length: 12 }, (_, i) => yearsStart + i);
-
-    if (!yearsOpen) return null;
-
-    return (
-        <div className="flex flex-col gap-4 p-4">
-            <div className="align-center flex flex-row justify-between text-gray-900">
-                <div
-                    className={containerClasses}
-                    onClick={() => setYearsStart((prev) => prev - 10)}
-                >
-                    <ArrowLeftMediumIcon width={21} height={21} />
-                </div>
-                <div className={`${containerClasses} !pointer-events-none`}>
-                    <p className={primaryTextClasses}>
-                        {yearsStart} - {yearsStart + 11}
-                    </p>
-                </div>
-                <div
-                    className={containerClasses}
-                    onClick={() => setYearsStart((prev) => prev + 10)}
-                >
-                    <ArrowRightMediumIcon width={21} height={21} />
-                </div>
-            </div>
-            <div
-                className={`grid gap-6 ${
-                    isRange ? 'grid-cols-6' : 'grid-cols-4'
-                }`}
-            >
-                {years.map((yearItem, index) => (
-                    <div
-                        key={index}
-                        className={`${containerClasses} flex items-center justify-center `}
-                        onClick={() => handleCloseYears(yearItem)}
-                    >
-                        <p className={primaryTextClasses}>{yearItem}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const Months = ({
-    handleCloseMonths,
-    handleOpenYears,
-    isRange,
-    monthsOpen,
-    setYear,
-    year,
-}: MonthsProps) => {
-    const months = dayjs.monthsShort();
-
-    if (!monthsOpen) return null;
-
-    return (
-        <div className="flex flex-col gap-4 p-4">
-            <div className="flex flex-row justify-between text-gray-900">
-                <div
-                    className={containerClasses}
-                    onClick={() => setYear((prev) => prev - 1)}
-                >
-                    <ArrowLeftMediumIcon width={21} height={21} />
-                </div>
-                <div
-                    className={containerClasses}
-                    onClick={() => handleOpenYears()}
-                >
-                    <p className={`${primaryTextClasses} cursor-pointer`}>
-                        {year}
-                    </p>
-                </div>
-                <div
-                    className={containerClasses}
-                    onClick={() => setYear((prev) => prev + 1)}
-                >
-                    <ArrowRightMediumIcon width={21} height={21} />
-                </div>
-            </div>
-            <div
-                className={`grid gap-6 ${
-                    isRange ? 'grid-cols-6' : 'grid-cols-4'
-                }`}
-            >
-                {months.map((monthItem, index) => (
-                    <div
-                        key={index}
-                        className={`${containerClasses} flex items-center justify-center`}
-                        onClick={() => handleCloseMonths(index)}
-                    >
-                        <p className={primaryTextClasses}>{monthItem}</p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const Days = ({
-    daysOpen,
-    getDisabledClasses,
-    getSelectedClasses,
-    handleDateSelect,
-    handleMonthChange,
-    handleOpenMonths,
-    month,
-    year,
-}: DaysProps) => {
-    // Used for the short day names at the top of the calendar
-    const weekdays = dayjs.weekdaysShort();
-
-    // Used to determine what weekday the month begins on
-    const firstDayOfCurrentMonth = dayjs()
-        .year(year)
-        .month(month)
-        .date(1)
-        .day();
-
-    // Used to determine how many days from the current month to display
-    const currentMonth = dayjs().year(year).month(month).month();
-    const daysInCurrentMonth = dayjs().year(year).month(month).daysInMonth();
-    const daysOfCurrentMonth = Array.from(
-        { length: daysInCurrentMonth },
-        (_, i) => i + 1
-    );
-
-    // Used to determine how many days from the previous month to display
-    const previousMonth = dayjs()
-        .year(year)
-        .month(currentMonth)
-        .subtract(1, 'month')
-        .month();
-    const daysInPreviousMonth = dayjs()
-        .year(year)
-        .month(month)
-        .subtract(1, 'month')
-        .daysInMonth();
-    const daysOfPreviousMonth = Array.from(
-        { length: firstDayOfCurrentMonth },
-        (_, i) => daysInPreviousMonth - i
-    ).sort();
-
-    // Used to determine how many days from the next month to display
-    const nextMonth = dayjs()
-        .year(year)
-        .month(currentMonth)
-        .add(1, 'month')
-        .month();
-    const daysInNextMonth =
-        (daysOfPreviousMonth.length + daysInCurrentMonth) % 7 === 0
-            ? 0
-            : 7 - ((daysOfPreviousMonth.length + daysInCurrentMonth) % 7);
-    const daysOfNextMonth = Array.from(
-        { length: daysInNextMonth },
-        (_, i) => i + 1
-    );
-
-    if (!daysOpen) return null;
-
-    return (
-        <div className="flex flex-col gap-4 p-4">
-            <div className="flex flex-row justify-between text-gray-900">
-                <div
-                    className={containerClasses}
-                    onClick={() => handleMonthChange(month, -1)}
-                >
-                    <ArrowLeftMediumIcon width={21} height={21} />
-                </div>
-                <div
-                    className={containerClasses}
-                    onClick={() => handleOpenMonths()}
-                >
-                    <p className={`${primaryTextClasses} cursor-pointer`}>{`${
-                        dayjs.months()[month]
-                    } ${year}`}</p>
-                </div>
-                <div
-                    className={containerClasses}
-                    onClick={() => handleMonthChange(month, 1)}
-                >
-                    <ArrowRightMediumIcon width={21} height={21} />
-                </div>
-            </div>
-            <div className="grid grid-cols-7">
-                {weekdays.map((dayItem, index) => (
-                    <div
-                        key={index}
-                        className="flex items-center justify-center"
-                    >
-                        <p className={secondaryTextClasses}>{dayItem}</p>
-                    </div>
-                ))}
-                {daysOfPreviousMonth.map((dayItem, index) => (
-                    <div
-                        key={index}
-                        className={`${containerClasses} ${getSelectedClasses(
-                            previousMonth,
-                            dayItem
-                        )} ${getDisabledClasses(
-                            previousMonth,
-                            dayItem
-                        )} flex items-center justify-center`}
-                        onClick={() =>
-                            handleDateSelect(year, previousMonth, dayItem)
-                        }
-                    >
-                        <p
-                            className={`${primaryTextClasses} ${getDisabledClasses(
-                                previousMonth,
-                                dayItem
-                            )}`}
-                        >
-                            {dayItem}
-                        </p>
-                    </div>
-                ))}
-                {daysOfCurrentMonth.map((dayItem, index) => (
-                    <div
-                        key={index}
-                        className={`${containerClasses} ${getSelectedClasses(
-                            month,
-                            dayItem
-                        )} ${getDisabledClasses(
-                            month,
-                            dayItem
-                        )} flex items-center justify-center`}
-                        onClick={() => handleDateSelect(year, month, dayItem)}
-                    >
-                        <p
-                            className={`${primaryTextClasses} ${getDisabledClasses(
-                                month,
-                                dayItem
-                            )}`}
-                        >
-                            {dayItem}
-                        </p>
-                    </div>
-                ))}
-                {daysOfNextMonth.map((dayItem, index) => (
-                    <div
-                        key={index}
-                        className={`${containerClasses} ${getSelectedClasses(
-                            nextMonth,
-                            dayItem
-                        )} ${getDisabledClasses(
-                            nextMonth,
-                            dayItem
-                        )} flex items-center justify-center`}
-                        onClick={() =>
-                            handleDateSelect(year, nextMonth, dayItem)
-                        }
-                    >
-                        <p
-                            className={`${primaryTextClasses} ${getDisabledClasses(
-                                nextMonth,
-                                dayItem
-                            )}`}
-                        >
-                            {dayItem}
-                        </p>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
-
-const Quarters = ({
-    quartersOpen,
-    getDisabledQuarterClasses,
-    getSelectedQuarterClasses,
-    handleQuarterSelection,
-    handleYearSelection,
-    year,
-    setYear,
-    datePickerType,
-}: QuartersProps) => {
-    // Used to determine what weekday the month begins on
-    const disableQuarters =
-        datePickerType === DatePickerTypes.Annually
-            ? '!cursor-auto !pointer-events-none !text-gray-300'
-            : '';
-    if (!quartersOpen) return null;
-
-    return (
-        <div className="flex flex-col gap-4 p-4">
-            <div className="flex flex-row justify-between text-gray-900">
-                <div
-                    className={`${containerClasses} ${getDisabledQuarterClasses(
-                        year,
-                        undefined,
-                        DatePickerDirection.start
-                    )}`}
-                    onClick={() => setYear((prev) => prev - 1)}
-                >
-                    <ArrowLeftMediumIcon width={21} height={21} />
-                </div>
-                <div
-                    className={containerClasses}
-                    onClick={() => handleYearSelection(year)}
-                >
-                    <p
-                        className={`${primaryTextClasses} cursor-pointer`}
-                    >{`${year}`}</p>
-                </div>
-                <div
-                    className={`${containerClasses} ${getDisabledQuarterClasses(
-                        year,
-                        undefined,
-                        DatePickerDirection.end
-                    )}`}
-                    onClick={() => setYear((prev) => prev + 1)}
-                >
-                    <ArrowRightMediumIcon width={21} height={21} />
-                </div>
-            </div>
-            <div className="grid grid-cols-4">
-                {quarters.map((quarterItem, index) => {
-                    return (
-                        <div
-                            key={index}
-                            className={`${containerClasses} ${getSelectedQuarterClasses(
-                                year,
-                                quarterItem?.value
-                            )} ${getDisabledQuarterClasses(
-                                year,
-                                quarterItem.month + 1,
-                                DatePickerDirection.start
-                            )} ${disableQuarters}  flex items-center justify-center`}
-                            onClick={() =>
-                                handleQuarterSelection(year, quarterItem?.value)
-                            }
-                        >
-                            <p
-                                className={`${primaryTextClasses} ${getDisabledQuarterClasses(
-                                    year,
-                                    quarterItem.month + 1,
-                                    DatePickerDirection.start
-                                )} ${disableQuarters} `}
-                            >
-                                {quarterItem.label}
-                            </p>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
-    );
-};
-
-const RangeDays = ({
-    daysOpen,
-    getDisabledClasses,
-    getSelectedRangeClasses,
-    handleDateSelect,
-    handleMonthChange,
-    handleOpenMonths,
-    month,
-    year,
-}: RangeDaysProps) => {
-    // Used for the short day names at the top of the calendar
-    const weekdays = dayjs.weekdaysShort();
-
-    // Used to determine what weekday the month begins on
-    const firstDayOfFirstMonth = dayjs().year(year).month(month).date(1).day();
-    const firstDayOfSecondMonth = dayjs()
-        .year(year)
-        .month(month + 1)
-        .date(1)
-        .day();
-
-    // Used to determine how many days from the current month to display
-    const daysInFirstMonth = dayjs().year(year).month(month).daysInMonth();
-    const daysOfFirstMonth = Array.from(
-        { length: daysInFirstMonth },
-        (_, i) => i + 1
-    );
-    const firstMonthStartBuffer = Array.from(
-        { length: firstDayOfFirstMonth },
-        (_, i) => i + 1
-    );
-
-    const daysInSecondMonth = dayjs()
-        .year(year)
-        .month(month + 1)
-        .daysInMonth();
-    const daysOfSecondMonth = Array.from(
-        { length: daysInSecondMonth },
-        (_, i) => i + 1
-    );
-    const secondMonthStartBuffer = Array.from(
-        { length: firstDayOfSecondMonth },
-        (_, i) => i + 1
-    );
-
-    const secondMonth = month + 1 === 12 ? 0 : month + 1;
-    const secondYear = month + 1 === 12 ? year + 1 : year;
-
-    if (!daysOpen) return null;
-
-    return (
-        <div className="flex flex-row">
-            <div className="flex flex-col gap-4 p-4 pr-2">
-                <div className="flex flex-row justify-between text-gray-900">
-                    <div
-                        className={containerClasses}
-                        onClick={() => handleMonthChange(month, -1)}
-                    >
-                        <ArrowLeftMediumIcon width={21} height={21} />
-                    </div>
-                    <div
-                        className={containerClasses}
-                        onClick={() => handleOpenMonths()}
-                    >
-                        <p
-                            className={`${primaryTextClasses} cursor-pointer`}
-                        >{`${dayjs.months()[month]} ${year}`}</p>
-                    </div>
-                    <div className={`${containerClasses} invisible`}>
-                        <ArrowRightMediumIcon width={21} height={21} />
-                    </div>
-                </div>
-                <div className="grid grid-cols-7">
-                    {weekdays.map((dayItem, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center justify-center"
-                        >
-                            <p className={secondaryTextClasses}>{dayItem}</p>
-                        </div>
-                    ))}
-                    {firstMonthStartBuffer.map((index) => (
-                        <div
-                            key={index}
-                            className="flex items-center justify-center"
-                        />
-                    ))}
-                    {daysOfFirstMonth.map((dayItem, index) => (
-                        <div
-                            key={index}
-                            className={`${containerClasses} ${getSelectedRangeClasses(
-                                month,
-                                dayItem
-                            )} ${getDisabledClasses(
-                                month,
-                                dayItem
-                            )} flex items-center justify-center`}
-                            onClick={() =>
-                                handleDateSelect(year, month, dayItem)
-                            }
-                        >
-                            <p
-                                className={`${primaryTextClasses} ${getDisabledClasses(
-                                    month,
-                                    dayItem
-                                )}`}
-                            >
-                                {dayItem}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className="flex flex-col gap-4 p-4 pl-2">
-                <div className="flex flex-row justify-between text-gray-900">
-                    <div className={`${containerClasses} invisible`}>
-                        <ArrowLeftMediumIcon width={21} height={21} />
-                    </div>
-                    <div
-                        className={containerClasses}
-                        onClick={() => handleOpenMonths()}
-                    >
-                        <p
-                            className={`${primaryTextClasses} cursor-pointer`}
-                        >{`${dayjs.months()[secondMonth]} ${secondYear}`}</p>
-                    </div>
-                    <div
-                        className={containerClasses}
-                        onClick={() => handleMonthChange(month, 1)}
-                    >
-                        <ArrowRightMediumIcon width={21} height={21} />
-                    </div>
-                </div>
-                <div className="grid grid-cols-7">
-                    {weekdays.map((dayItem, index) => (
-                        <div
-                            key={index}
-                            className="flex items-center justify-center"
-                        >
-                            <p className={secondaryTextClasses}>{dayItem}</p>
-                        </div>
-                    ))}
-                    {secondMonthStartBuffer.map((index) => (
-                        <div
-                            key={index}
-                            className="flex items-center justify-center"
-                        />
-                    ))}
-                    {daysOfSecondMonth.map((dayItem, index) => (
-                        <div
-                            key={index}
-                            className={`${containerClasses} ${getSelectedRangeClasses(
-                                month + 1,
-                                dayItem
-                            )} ${getDisabledClasses(
-                                month + 1,
-                                dayItem
-                            )} flex items-center justify-center`}
-                            onClick={() =>
-                                handleDateSelect(year, month + 1, dayItem)
-                            }
-                        >
-                            <p
-                                className={`${primaryTextClasses} ${getDisabledClasses(
-                                    month + 1,
-                                    dayItem
-                                )}`}
-                            >
-                                {dayItem}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
-};
 
 export default function DatePicker({
     open,
@@ -661,6 +35,8 @@ export default function DatePicker({
     datePickerType,
     handleCustomSelection,
     showMonths = true,
+    onTab,
+    onEscape,
 }: DatePickerProps) {
     const isRange = date && 'start' in date && 'end' in date;
     const [currentDate] = useState(() => {
@@ -710,6 +86,35 @@ export default function DatePicker({
         setMonth(month);
         setMonthsOpen(false);
         setDaysOpen(true);
+    };
+
+    // Escape key handlers for keyboard navigation
+    const handleEscapeFromYears = () => {
+        setYearsOpen(false);
+        setMonthsOpen(true);
+    };
+
+    const handleEscapeFromMonths = () => {
+        setMonthsOpen(false);
+        setDaysOpen(true);
+    };
+
+    const handleEscapeFromDays = () => {
+        // If showMonths is true, navigate to months view
+        // Otherwise, close the entire picker
+        if (showMonths) {
+            setDaysOpen(false);
+            setMonthsOpen(true);
+        } else if (onEscape) {
+            onEscape();
+        }
+    };
+
+    const handleEscapeFromQuarters = () => {
+        // Close the entire picker when escaping from quarters view
+        if (onEscape) {
+            onEscape();
+        }
     };
 
     // When the user navigates to the previous or next month, we must check if the year has also changed before setting the month and year state
@@ -877,6 +282,7 @@ export default function DatePicker({
                 isRange={isRange}
                 year={year}
                 yearsOpen={yearsOpen}
+                onEscape={handleEscapeFromYears}
             />
             {showMonths && (
                 <Months
@@ -886,6 +292,7 @@ export default function DatePicker({
                     monthsOpen={monthsOpen}
                     setYear={setYear}
                     year={year}
+                    onEscape={handleEscapeFromMonths}
                 />
             )}
             {!isRange &&
@@ -903,6 +310,7 @@ export default function DatePicker({
                     setYear={setYear}
                     year={year}
                     datePickerType={datePickerType}
+                    onEscape={handleEscapeFromQuarters}
                 />
             ) : isRange ? (
                 <RangeDays
@@ -914,6 +322,7 @@ export default function DatePicker({
                     handleOpenMonths={handleOpenMonths}
                     month={month}
                     year={year}
+                    onEscape={handleEscapeFromDays}
                 />
             ) : (
                 <Days
@@ -925,6 +334,8 @@ export default function DatePicker({
                     handleOpenMonths={handleOpenMonths}
                     month={month}
                     year={year}
+                    onEscape={handleEscapeFromDays}
+                    onTab={onTab}
                 />
             )}
         </div>
