@@ -11,8 +11,8 @@ interface CorrelationIdProps {
 export const CorrelationId: FC<CorrelationIdProps> = ({ id }) => {
   // Trigger mouseflow event when component mounts
   useEffect(() => {
-    if (id) {
-      window._mfq.push(['tag', `correlationId shown: ${id}`]);
+    if (id && typeof window !== 'undefined') {
+      window._mfq?.push(['tag', `correlationId shown: ${id}`]);
     }
   }, [id]);
 
