@@ -42,6 +42,10 @@ export enum SegmentPageName {
     taskId / caseId / policyId + planCode should be included if they are available
 */
 export enum SegmentTrackedEventName {
+    NewClientCaseCreated = 'New Client Case Created',
+    ClientCaseEdited = 'Client Case Edited',
+    ClientCaseTitleInput = 'New Client Case Title Input',
+    ClientCaseAgencySelection = 'Client Case Agency Selection',
     ButtonClicked = 'button_clicked',
     DropdownClicked = 'dropdown_clicked',
     PolicyClicked = 'Policy Clicked', // FIXME: remove
@@ -85,9 +89,9 @@ export type SearchSubmittedEvent = BaseSegmentEventProps & {
 export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProps & {
     firstNameUsed: boolean;
     lastNameUsed: boolean;
+    clientCaseID: string;
     agentFirstName: boolean;
     agentLastName: boolean;
-    timeStamp: Date;
     caseTitle: boolean;
     searchText?: string;
 };
@@ -95,7 +99,20 @@ export type IllustrationsSearchSubmittedEvent = BaseSegmentEventProps & {
 export type ClientCaseClickedEvent = BaseSegmentEventProps & {
     clientCaseID: string;
     linkUrl: string;
-    timeStamp: Date;
+};
+
+export type ClientCaseTitleInputEvent = BaseSegmentEventProps & {
+    titleInput: boolean;
+};
+
+export type SelectAgencyEvent = BaseSegmentEventProps & {
+    agencySelected: boolean;
+};
+
+export type AgentSearchEvent = BaseSegmentEventProps & {
+    agentFirstName: boolean;
+    agentLastName: boolean;
+    agentSelected: boolean;
 };
 
 export type DropdownClickedEvent = BaseSegmentEventProps & {
