@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from 'react';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 
 import styles from './transaction-accordion.module.css';
-import { Action, BeneficiaryRole, PanelHeights, TabTitle } from './types';
+import { Action, PanelHeights, TabTitle } from './types';
 
 const TransactionAccordion = ({
     schema,
@@ -46,14 +46,15 @@ const TransactionAccordion = ({
     const handleAddItem = () => {
         const newItem = {
             action: Action.ADD,
-            isIrrevocable: 'No',
-            isPerStirpes: 'No',
+            isIrrevocable: false,
+            isPerStirpes: false,
             party: {
                 partyType: 'INDIVIDUAL',
                 firstName: '',
                 lastName: '',
                 gender: 'MALE',
                 preferredCommunicationType: 'EMAIL',
+                supportingDocumentAttached: false,
                 emails: [
                     {
                         emailAddress: '',
@@ -83,7 +84,7 @@ const TransactionAccordion = ({
                 ],
             },
             partyRole: {
-                partyRole: BeneficiaryRole.PRIMARYBENEFICIARY,
+                partyRole: 'PRIMARYBENEFICIARY',
                 relationshipToParty: 'OTHER',
             },
         };
@@ -98,9 +99,17 @@ const TransactionAccordion = ({
         if (tabTitle == TabTitle.OwnerDetails) {
             title = item.partyRole;
         } else if (tabTitle == TabTitle.BeneficiaryDetails) {
-            title = item.partyRole.partyRole;
+            title =
+                item.partyRole.partyRole === 'PRIMARYBENEFICIARY'
+                    ? 'Primary Beneficiary'
+                    : 'Contingent Beneficiary';
         } else if (tabTitle == TabTitle.Signature) {
-            title = item.signType;
+            title =
+                item.signType === 'OWNER'
+                    ? 'Owner'
+                    : item.signType === 'JOINT_OWNER'
+                    ? 'Joint Owner'
+                    : 'Irrevocable Beneficiary';
         }
         return title;
     };
@@ -134,8 +143,7 @@ const TransactionAccordion = ({
                 const isMarkedForRemoval = item?.action === Action.DELETE;
                 const isBeneAddition = item?.action === Action.ADD;
                 const hideIrrevocableSignType =
-                    item.signType === BeneficiaryRole.IRREVOCABLEBENEFICIARY &&
-                    !isIrrevocableBene;
+                    item.signType === 'IRREVOCABLE' && !isIrrevocableBene;
 
                 return (
                     <div key={`accordion-item-${index}`}>

@@ -675,9 +675,10 @@
                                         "enum": ["ADD", "UPDATE", "DELETE"]
                                     },
                                     "isPerStirpes": {
-                                        "type": "string",
+                                        "type": "boolean",
                                         "title": "Per Stirpes",
-                                        "enum": ["Yes", "No"]
+                                        "enum": [true, false],
+                                        "enumNames": ["Yes", "No"]
                                     },
                                     "isIrrevocable": {
                                         "type": "boolean",
@@ -997,9 +998,13 @@
                                                             "title": "Trust date"
                                                         },
                                                         "supportingDocumentAttached": {
-                                                            "type": "string",
                                                             "title": "Is the uploaded supporting document(s) valid and relevant?",
+                                                            "type": "boolean",
                                                             "enum": [
+                                                                true,
+                                                                false
+                                                            ],
+                                                            "enumNames": [
                                                                 "Yes",
                                                                 "No"
                                                             ]
@@ -1057,8 +1062,8 @@
                                                 "type": "string",
                                                 "title": "Party role",
                                                 "enum": [
-                                                    "Primary Beneficiary",
-                                                    "Contingent Beneficiary"
+                                                    "PRIMARYBENEFICIARY",
+                                                    "CONTINGENTBENEFICIARY"
                                                 ]
                                             },
                                             "relationshipToParty": {
@@ -1097,7 +1102,7 @@
                             "default": [
                                 {
                                     "isIrrevocable": false,
-                                    "isPerStirpes": "No",
+                                    "isPerStirpes": false,
                                     "party": {
                                         "partyType": "INDIVIDUAL",
                                         "gender": "MALE",
@@ -1132,7 +1137,7 @@
                                         ]
                                     },
                                     "partyRole": {
-                                        "partyRole": "Primary Beneficiary",
+                                        "partyRole": "PRIMARYBENEFICIARY",
                                         "relationshipToParty": "OTHER"
                                     }
                                 }
@@ -1183,7 +1188,7 @@
                                 }
                             },
                             "isPerStirpes": {
-                                "ui:widget": "radio",
+                                "ui:widget": "RadioWidget",
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
                                 }
@@ -1600,19 +1605,19 @@
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": "",
-                                            "signType": "Owner"
+                                            "signType": "OWNER"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": "",
-                                            "signType": "Joint Owner"
+                                            "signType": "JOINT_OWNER"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": "",
-                                            "signType": "Irrevocable Beneficiary"
+                                            "signType": "IRREVOCABLE"
                                         }
                                     ]
                                 }

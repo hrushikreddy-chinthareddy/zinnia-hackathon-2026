@@ -109,7 +109,7 @@
                 "action": "UPDATE",
                 "actionType": "BENE_CHANGE",
                 "isIrrevocable": true,
-                "isPerStirpes": "No",
+                "isPerStirpes": false,
                 "isRestrictedBeneficiary": false,
                 "party": {
                     "partyId": "Party_PB_Primary_Bene_1",
@@ -128,7 +128,7 @@
                     "suffix": "",
                     "trustType": "",
                     "trustDate": "",
-                    "supportingDocumentAttached": "No",
+                    "supportingDocumentAttached": false,
                     "addresses": [
                         {
                             "addressId": "Party_PB_Primary_Bene_1_Address_0",
@@ -187,7 +187,7 @@
                 },
                 "partyRole": {
                     "partyRoleId": 34,
-                    "partyRole": "Primary Beneficiary",
+                    "partyRole": "PRIMARYBENEFICIARY",
                     "partyId": "Party_PB_Primary_Bene_1",
                     "relationshipToParty": "SPOUSE"
                 }
@@ -196,7 +196,7 @@
                 "action": "ADD",
                 "actionType": "BENE_CHANGE",
                 "isIrrevocable": false,
-                "isPerStirpes": "No",
+                "isPerStirpes": false,
                 "isRestrictedBeneficiary": false,
                 "party": {
                     "partyId": "",
@@ -214,7 +214,7 @@
                     "prefix": "",
                     "suffix": "",
                     "trustDate": "2025-09-04",
-                    "supportingDocumentAttached": "Yes",
+                    "supportingDocumentAttached": true,
                     "trustType": "CORPORATETRUST",
                     "addresses": [
                         {
@@ -252,7 +252,7 @@
                     ]
                 },
                 "partyRole": {
-                    "partyRole": "Contingent Beneficiary",
+                    "partyRole": "CONTINGENTBENEFICIARY",
                     "relationshipToParty": "TRUSTEEOFINCOMPETENT"
                 }
             }
@@ -264,19 +264,19 @@
                     "isSignedPresent": false,
                     "signDate": null,
                     "signDesignation": "",
-                    "signType": "Owner"
+                    "signType": "OWNER"
                 },
                 {
                     "isSignedPresent": false,
                     "signDate": null,
                     "signDesignation": "",
-                    "signType": "Joint Owner"
+                    "signType": "JOINT_OWNER"
                 },
                 {
                     "isSignedPresent": false,
                     "signDate": null,
                     "signDesignation": "",
-                    "signType": "Irrevocable Beneficiary"
+                    "signType": "IRREVOCABLE"
                 }
             ]
         }

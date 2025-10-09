@@ -123,15 +123,15 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                 );
 
                 return {
-                    isPerStirpes: bene.isPerStirpes ?? 'No',
+                    isPerStirpes: bene.isPerStirpes ?? false,
                     isIrrevocable: bene.isIrrevocable ?? false,
                     action: 'UPDATE',
                     partyRole: {
                         partyRoleId: role?.partyRoleId ?? '',
                         partyRole:
                             roleType === PartyRoleType.PRIMARYBENEFICIARY
-                                ? PartyRoleLabel.PRIMARYBENEFICIARY
-                                : PartyRoleLabel.CONTINGENTBENEFICIARY,
+                                ? PartyRoleType.PRIMARYBENEFICIARY
+                                : PartyRoleType.CONTINGENTBENEFICIARY,
                         partyId: bene.partyId ?? '',
                         relationshipToParty:
                             role?.relationshipToParty ?? 'OTHER',
@@ -148,7 +148,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         trustType: bene.trustType ?? '',
                         trustDate: bene.trustDate ?? '',
                         supportingDocumentAttached:
-                            bene.supportingDocumentAttached ?? 'No',
+                            bene.supportingDocumentAttached ?? false,
                         entityType: bene.entityType ?? 'UNKNOWN',
                         gender: bene.gender ?? '',
                         dateOfBirth: bene.dateOfBirth ?? '',
