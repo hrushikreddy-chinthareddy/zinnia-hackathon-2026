@@ -41,6 +41,7 @@ export const AccountValue = async ({
     loggingContext
   );
 
+  //TODO: Do we want an error display here?
   if (error || !data) {
     return null;
   }

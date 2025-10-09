@@ -51,7 +51,7 @@ export default async function FundsPage({
   );
 
   if (!data || error) {
-    return <NoDataAvailable correlationId={error.correlationId} />;
+    return <NoDataAvailable correlationId={error?.correlationId} />;
   }
 
   return (

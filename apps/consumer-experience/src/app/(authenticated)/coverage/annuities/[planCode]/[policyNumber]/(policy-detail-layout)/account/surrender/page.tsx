@@ -42,7 +42,7 @@ export default async function SurrenderPolicy({
       return (
         <NoDataAvailable
           message={DEFAULT_UNAVAILABLE_STRING}
-          correlationId={error.correlationId}
+          correlationId={error?.correlationId}
         />
       );
     }

@@ -64,6 +64,7 @@ export default async function NotificationsPage({ params }: Props) {
     }
   }
 
+  //TODO: Do we need an error state?
   if (error) {
     logError('Error fetching notifications', error);
     initialNotifications = undefined;
