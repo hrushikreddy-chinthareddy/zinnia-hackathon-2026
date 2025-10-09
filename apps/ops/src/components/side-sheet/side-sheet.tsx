@@ -27,6 +27,7 @@ export interface SideSheetProps {
     closeOnEscape?: boolean;
     closeOnOutsideClick?: boolean;
     width?: number | string;
+    label?: string;
 }
 
 const transformStyle = (
@@ -64,6 +65,7 @@ export default function SideSheet({
     closeOnEscape = true,
     closeOnOutsideClick = true,
     width = 500,
+    label,
 }: SideSheetProps) {
     const [isDelayedMount, setIsDelayedMount] = useState(false);
     const { t } = useTranslation();
@@ -103,8 +105,10 @@ export default function SideSheet({
         ? handleClose
         : undefined;
 
+    const widthValue = typeof width === 'number' ? `${width}px` : width;
+
     const innerTransitionClasses = clsx(
-        `pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[500px] !min-w-[500px]`,
+        `pointer-events-auto fixed top-0 h-full w-screen transform bg-gradient-to-r from-accent1 to-accent2 pt-2 transition duration-300 ease-in-out sm:w-[${widthValue}] xs:max-w-[100%]`,
         {
             'right-0': isRight,
             'left-0': isLeft,
@@ -119,14 +123,27 @@ export default function SideSheet({
         isDelayedMount,
         width
     );
-    const widthStyle = typeof width === 'number' ? `${width}px` : width;
-    // TODO: the side-sheet needs to accept and accessible name for the modal
+
+    const fadeOverlayStyles = clsx(
+        'relative',
+        // Left fade
+        'before:absolute before:-left-px before:top-0 before:bottom-0 before:w-4',
+        'before:bg-gradient-to-r before:from-white before:to-transparent',
+        'before:pointer-events-none before:z-10',
+        // Right fade
+        'after:absolute after:-right-px after:top-0 after:bottom-0 after:w-4',
+        'after:bg-gradient-to-l after:from-white after:to-transparent',
+        'after:pointer-events-none after:z-10',
+        'sm:before:hidden sm:after:hidden',
+        'xs:before:hidden xs:after:hidden'
+    );
+
     return (
         <div
             className="absolute z-20"
             role="dialog"
             aria-modal="true"
-            aria-label={t('ariaLabel.sideSheet') as string}
+            aria-label={label || (t('ariaLabel.sideSheet') as string)}
         >
             <Transition show={open}>
                 <FocusLock returnFocus={true}>
@@ -147,12 +164,12 @@ export default function SideSheet({
                     <div className="pointer-events-none fixed inset-0 overflow-hidden">
                         <div
                             className={innerTransitionClasses}
-                            style={{ width: widthStyle, transform }}
+                            style={{ width: widthValue, transform }}
                         >
                             <div className="flex h-full flex-col bg-white">
-                                <div className="z-10 px-8 py-6 shadow-elevation-light-08">
+                                <div className="z-10 px-4 py-3 sm:px-8 sm:py-6 shadow-elevation-light-08">
                                     <div className="flex flex-row-reverse items-center justify-between">
-                                        <div className="min-w-content ml-4 flex h-7 shrink-0 transition-all duration-300 ease-in-out">
+                                        <div className="min-w-content ml-4 flex h-7 shrink-0 transition-all duration-300 ease-in-out z-10">
                                             <IconButton
                                                 onClick={handleClose}
                                                 aria-label={
@@ -168,33 +185,40 @@ export default function SideSheet({
                                                 />
                                             </IconButton>
                                         </div>
-                                        <div className="grow-1 flex min-w-0">
-                                            {headerElement ? (
-                                                headerElement
-                                            ) : (
-                                                <PopoverOnTruncate
-                                                    title={`${header}${
-                                                        displayItemCount
-                                                            ? ' items.length'
-                                                            : ''
-                                                    }`}
-                                                >
-                                                    <div className="text-left">
-                                                        <Typography
-                                                            variant={
-                                                                TypographyVariant.H2
-                                                            }
-                                                            className="text-gray-900"
-                                                        >
-                                                            {`${header}${
-                                                                displayItemCount
-                                                                    ? ' items.length'
-                                                                    : ''
-                                                            }`}
-                                                        </Typography>
-                                                    </div>
-                                                </PopoverOnTruncate>
+                                        <div
+                                            className={clsx(
+                                                'grow-1 flex min-w-0',
+                                                fadeOverlayStyles
                                             )}
+                                        >
+                                            <div className="overflow-auto sm:overflow-[unset]">
+                                                {headerElement ? (
+                                                    headerElement
+                                                ) : (
+                                                    <PopoverOnTruncate
+                                                        title={`${header}${
+                                                            displayItemCount
+                                                                ? ' items.length'
+                                                                : ''
+                                                        }`}
+                                                    >
+                                                        <div className="text-left">
+                                                            <Typography
+                                                                variant={
+                                                                    TypographyVariant.H2
+                                                                }
+                                                                className="text-gray-900"
+                                                            >
+                                                                {`${header}${
+                                                                    displayItemCount
+                                                                        ? ' items.length'
+                                                                        : ''
+                                                                }`}
+                                                            </Typography>
+                                                        </div>
+                                                    </PopoverOnTruncate>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

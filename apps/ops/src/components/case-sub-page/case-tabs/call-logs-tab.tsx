@@ -176,18 +176,20 @@ const CallLogCard = ({
 
 interface CallLogsTabProps {
     policyNumber?: string;
+    carrier?: string;
     queryLimit: number;
 }
 
 export default function CallLogsTab({
     policyNumber,
+    carrier,
     queryLimit = 10,
 }: CallLogsTabProps) {
     const { t } = useTranslation();
 
     const { data: callLogsData, isLoading: callLogsLoading } = useQuery({
-        queryKey: ['callLogs', policyNumber, queryLimit],
-        queryFn: () => getCallLogsQuery(policyNumber, queryLimit),
+        queryKey: ['callLogs', policyNumber, carrier, queryLimit],
+        queryFn: () => getCallLogsQuery(policyNumber, carrier, queryLimit),
         enabled: !!policyNumber,
     });
 

@@ -624,7 +624,7 @@ function createIllustrationPayload(
                     ],
                 },
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -672,7 +672,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -713,7 +713,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {

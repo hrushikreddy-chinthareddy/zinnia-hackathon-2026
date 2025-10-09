@@ -56,13 +56,18 @@ export const getCasesQuery = async (
     return response;
 };
 
-export const getCallLogsQuery = async (policyNumber?: string, limit = 10) => {
+export const getCallLogsQuery = async (
+    policyNumber?: string,
+    carrier?: string,
+    limit = 10
+) => {
     if (!policyNumber) {
         throw 'No policy number provided';
     }
 
     const results = await getCaseCallLogs({
         contract: policyNumber,
+        carrier: carrier || '',
         offset: 0,
         limit,
     });
