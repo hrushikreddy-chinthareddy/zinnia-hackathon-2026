@@ -472,3 +472,9 @@ export const formatPercentage = (value: number | undefined) => {
     if (!value) return '';
     return `${value}%`;
 };
+
+// Creates a query string from an object.
+export const createQueryString = (obj: Record<string, unknown>) =>
+    Object.entries(obj)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
