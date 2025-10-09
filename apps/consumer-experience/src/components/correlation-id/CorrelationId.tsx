@@ -16,6 +16,10 @@ export const CorrelationId: FC<CorrelationIdProps> = ({ id }) => {
     }
   }, [id]);
 
+  if (!id) {
+    return null;
+  }
+
   return (
     <p className={clsx(styles.corroDetails, 'typography-content-caption')}>
       {id}
