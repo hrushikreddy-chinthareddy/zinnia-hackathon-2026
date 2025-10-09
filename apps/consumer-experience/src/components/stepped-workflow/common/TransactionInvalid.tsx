@@ -3,7 +3,7 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 import { Link } from '@/components/link/Link';
-import styles from '@/components/one-time-premium-payment/OneTimePremiumPayment.module.css';
+import styles from '@/components/stepped-workflow/workflows/one-time-premium/forms/OneTimePremiumPayment.module.css';
 
 export const TransactionInvalid = ({
   goToUrl,
