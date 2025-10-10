@@ -77,7 +77,12 @@ export const SummaryForm = () => {
   // - The mutation is pending
   // - The validation is fetching
   // - The mutation is successful, as we want to wait for the redirect in the onSuccess callback to finish unmounting the component
-  if (isValidationFetching || mutation.isPending || mutation.isSuccess) {
+  if (
+    isValidationFetching ||
+    mutation.isPending ||
+    mutation.isSuccess ||
+    mutation.isError
+  ) {
     setPrimaryButtonDisabled(true);
     return <PaymentLoading />;
   }
