@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
 import { useClientCaseId } from '@deps/components/illustrations/helpers/hooks/use-client-case-id';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
@@ -16,6 +17,7 @@ import { Modal } from '@deps/components/modal/modal';
 import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationStatuses } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 interface IllustrationMenuProps {
     isSelectForApplicationVisible?: boolean;
@@ -33,6 +35,8 @@ const IllustrationMenu = ({
 
     const { archiveIllustrationMutation, unarchiveIllustrationMutation } =
         useIllustrationActions();
+    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
+    const { product } = selectedIllustration ?? {};
 
     const handleArchiveIllustration = () => {
         if (
@@ -46,6 +50,13 @@ const IllustrationMenu = ({
             clientCaseId: clientCaseId?.toString() || '',
             illustrationId: selectedIllustration?.illustration.id || '',
         });
+
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.archiveIllustration
+            );
+        }
 
         setOpenArchiveConfirmation(false);
     };
@@ -62,8 +73,18 @@ const IllustrationMenu = ({
             clientCaseId: clientCaseId?.toString() || '',
             illustrationId: selectedIllustration?.illustration.id || '',
         });
+
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.unarchiveIllustration
+            );
+        }
     };
     const handleSelectForApplication = useSelectIllustrationForApplication();
+    const handleSelectForApplicationAnalytics = () => {
+        handleSelectForApplication();
+    };
 
     if (openArchiveConfirmation) {
         return (
@@ -133,7 +154,7 @@ const IllustrationMenu = ({
                         IllustrationStatuses.ACTIVE && (
                         <MenuContextualItem
                             disabled={isLoadingSelectForApplication}
-                            onClick={handleSelectForApplication}
+                            onClick={handleSelectForApplicationAnalytics}
                             content={t(
                                 'clientCase.illustrationDetails.selectForApplication'
                             )}

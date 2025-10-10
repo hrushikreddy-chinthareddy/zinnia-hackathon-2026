@@ -62,6 +62,18 @@ export enum SegmentTrackedEventName {
     NewClientCaseClicked = 'New Client Case Clicked', //FIXME: remove
 }
 
+export enum IllustrationsSegmentTrackedEventName {
+    newIllustrationClicked = 'New Illustration Clicked',
+    calculateIllustration = 'Calculate Illustration',
+    duplicateIllustration = 'Duplicate Illustration',
+    editIllustration = 'Edit Illustration',
+    getIllustrationPDF = 'get Illustration PDF',
+    selectIllustrationForApplication = 'Select Illustration For Application',
+    addProductToIllustrate = 'Add Product To Illustrate',
+    archiveIllustration = 'Archive Illustration',
+    unarchiveIllustration = 'Unarchive Illustration',
+}
+
 export interface BaseSegmentEventProps {
     authSessionId: string;
     policyId?: string;
@@ -133,6 +145,16 @@ export type PolicyClickedEvent = BaseSegmentEventProps & {
 
 export type CaseClickedEvent = BaseSegmentEventProps & {
     caseId: string;
+};
+
+export type IllustrationsClickedEvent = BaseSegmentEventProps & {
+    productName: string;
+    productType: string;
+    carrier: string;
+};
+
+export type IllustrationAddProductClickedEvent = BaseSegmentEventProps & {
+    carrier: string;
 };
 
 export type CaseTabClickedEvent = BaseSegmentEventProps & {
