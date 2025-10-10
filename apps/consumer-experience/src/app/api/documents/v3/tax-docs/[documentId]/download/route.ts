@@ -6,6 +6,7 @@ import { getTaxDocumentDownloadV3 } from '@/services/document/v3';
 import { getSession } from '@/utils/auth';
 import { logWarn } from '@/utils/logging/log-fns';
 import {
+  buildNextReqLoggingContext,
   getUserInfoFromSession,
   logCompliance,
 } from '@/utils/logging/server-logging';
@@ -27,6 +28,8 @@ export const GET = async (
   const planCode = searchParams.get('planCode') as string;
   const contractNumber = searchParams.get('policyNumber') as string;
 
+  const commonLogContext = await buildNextReqLoggingContext(request);
+
   const loggingContext = {
     clientCode,
     documentNumber: params.documentId,
@@ -44,13 +47,19 @@ export const GET = async (
     ...loggingContext,
   });
 
-  const download = await getTaxDocumentDownloadV3({
-    contractNumber,
-    carrierId: clientCode as string,
-    taxYear,
-    fChar,
-    formId: params.documentId,
-  });
+  const download = await getTaxDocumentDownloadV3(
+    {
+      contractNumber,
+      carrierId: clientCode as string,
+      taxYear,
+      fChar,
+      formId: params.documentId,
+    },
+    {
+      user: commonLogContext.user,
+      correlationId: commonLogContext.correlationId,
+    }
+  );
 
   if (!download?.data?.binaryData) {
     logWarn('Could not download document', {
