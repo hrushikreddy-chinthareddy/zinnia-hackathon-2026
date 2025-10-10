@@ -52,20 +52,23 @@ export default async function SelectAmountPage({
         },
         commonLog
       ),
-      getCarrierProductOneTimePaymentFee({
-        configuredItemCode:
-          ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
-        carrierId: policyDetails.carrierId || '',
-        planCode: planCode,
-        benefitId: 'Base_Coverage',
-      }),
+      getCarrierProductOneTimePaymentFee(
+        {
+          configuredItemCode:
+            ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
+          carrierId: policyDetails.carrierId || '',
+          planCode: planCode,
+          benefitId: 'Base_Coverage',
+        },
+        commonLog
+      ),
     ]);
 
     const policyStatusDetails =
       policyStatusRes.status === 'fulfilled'
         ? policyStatusRes.value.data
         : null;
-    const data =
+    const fee =
       ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
 
     return (
@@ -75,7 +78,7 @@ export default async function SelectAmountPage({
         policyNumber={policyNumber}
       >
         <SelectAmount
-          paymentFee={data?.fee || 0}
+          paymentFee={fee || 0}
           minimumPaymentDue={
             policyStatusDetails?.policyStatus === PolicyStatus.PENDINGLAPSE &&
             policyStatusDetails?.minimumPaymentDue
