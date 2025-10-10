@@ -96,6 +96,10 @@ export const hasBeneficiaryChanged = (
         (id: any) => id.identificationType === IdentificationType.SSN
     );
 
+    const entityChanged =
+        partyType === PartyType.ORGANIZATION &&
+        existingParty?.entityType !== (partyInfo as Party)?.entityType;
+
     const identificationChanged =
         existingIdentification?.identificationValue !== item?.party?.info?.ssn;
 
@@ -136,6 +140,7 @@ export const hasBeneficiaryChanged = (
         phoneChanged ||
         emailChanged ||
         designationChanged ||
-        relationshipChanged
+        relationshipChanged ||
+        entityChanged
     );
 };
