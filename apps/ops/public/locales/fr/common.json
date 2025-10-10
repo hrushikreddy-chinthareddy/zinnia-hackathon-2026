@@ -8044,7 +8044,7 @@
             "coverage": {
                 "title": "Couverture",
                 "faceAmount": "Montant nominal",
-                "termLength": "Durée"
+                "termLength": "Durée de la prime de niveau"
             },
             "premium": {
                 "title": "Prime",
