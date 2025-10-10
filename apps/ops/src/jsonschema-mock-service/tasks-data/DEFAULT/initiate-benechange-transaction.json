@@ -31,7 +31,6 @@
             ]
         },
         "contractInfo": {
-            "product": null,
             "parties": [
                 {
                     "partyType": "TRUST",
@@ -41,8 +40,13 @@
                     "lastName": "WILSON",
                     "fullName": "Robyn S Wilson",
                     "dateOfBirth": "1978-11-05",
-                    "trustType": "",
-                    "prefix": "",
+                    "trustType": null,
+                    "prefix": null,
+                    "identifications": [
+                        {
+                            "identificationValue": ""
+                        }
+                    ],
                     "phones": [
                         {
                             "areaCode": "515",
@@ -67,7 +71,7 @@
                     "addresses": [
                         {
                             "addressLine1": "701 N COLLEGE AVE",
-                            "addressLine2": "",
+                            "addressLine2": null,
                             "addressLine3": "",
                             "addressType": "Residential Address",
                             "city": "FAYETTEVILLE",
@@ -100,7 +104,12 @@
                     "middleName": "",
                     "lastName": "WILL",
                     "fullName": "Roby Will",
-                    "dateOfBirth": "1978-11-05"
+                    "dateOfBirth": "1978-11-05",
+                    "identifications": [
+                        {
+                            "identificationValue": ""
+                        }
+                    ]
                 }
             ]
         },
@@ -124,9 +133,9 @@
                     "gender": "MALE",
                     "middleName": "",
                     "lastName": "S",
-                    "prefix": "",
+                    "prefix": null,
                     "suffix": "",
-                    "trustType": "",
+                    "trustType": null,
                     "trustDate": "",
                     "supportingDocumentAttached": false,
                     "addresses": [
@@ -211,7 +220,7 @@
                     "gender": "MALE",
                     "middleName": "",
                     "lastName": "S",
-                    "prefix": "",
+                    "prefix": null,
                     "suffix": "",
                     "trustDate": "2025-09-04",
                     "supportingDocumentAttached": true,
@@ -259,24 +268,31 @@
         ],
         "signatureData": {
             "isIrrevocableBene": false,
+            "isSpousePresent": null,
             "signatures": [
                 {
                     "isSignedPresent": false,
                     "signDate": null,
-                    "signDesignation": "",
-                    "signType": "OWNER"
+                    "signDesignation": null,
+                    "signType": "OWNER",
+                    "signGurantee": null,
+                    "signPrintName": null
                 },
                 {
                     "isSignedPresent": false,
                     "signDate": null,
-                    "signDesignation": "",
-                    "signType": "JOINT_OWNER"
+                    "signDesignation": null,
+                    "signType": "JOINT_OWNER",
+                    "signGurantee": null,
+                    "signPrintName": null
                 },
                 {
                     "isSignedPresent": false,
                     "signDate": null,
-                    "signDesignation": "",
-                    "signType": "IRREVOCABLE"
+                    "signDesignation": null,
+                    "signType": "IRREVOCABLE",
+                    "signGurantee": null,
+                    "signPrintName": null
                 }
             ]
         }

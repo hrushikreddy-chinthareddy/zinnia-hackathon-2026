@@ -46,23 +46,25 @@ const TransactionAccordion = ({
     const handleAddItem = () => {
         const newItem = {
             action: Action.ADD,
+            actionType: 'BENE_CHANGE',
             isIrrevocable: false,
             isPerStirpes: false,
             party: {
                 partyType: 'INDIVIDUAL',
                 firstName: '',
                 lastName: '',
+                middleName: null,
                 gender: 'MALE',
                 preferredCommunicationType: 'EMAIL',
                 supportingDocumentAttached: false,
                 emails: [
                     {
-                        emailAddress: '',
+                        emailAddress: null,
                     },
                 ],
                 phones: [
                     {
-                        dialNumber: '',
+                        dialNumber: null,
                         phoneType: 'HOME',
                     },
                 ],
@@ -70,16 +72,17 @@ const TransactionAccordion = ({
                     {
                         addressType: 'RESIDENCE',
                         addressLine1: '',
-                        addressLine2: '',
+                        addressLine2: null,
                         city: '',
                         state: '',
                         zipCode: '',
-                        zipCodeExtension: '',
+                        zipCodeExtension: null,
                     },
                 ],
                 identifications: [
                     {
-                        identificationValue: '',
+                        identificationValue: null,
+                        IdentificationType: 'SSN',
                     },
                 ],
             },

@@ -55,7 +55,20 @@ export interface PartyRole {
     partyRoleId?: string;
 }
 
+export interface Identification {
+    identificationType: string;
+    identificationValue: string;
+    endDate: string | null;
+    identificationDescription: string | null;
+    identificationId: string;
+    identificationKey: string | null;
+    issueCountry: string | null;
+    issueState: string | null;
+    startDate: string | null;
+}
+
 export interface Party {
+    partyRoleId?: string | null;
     partyId?: string;
     partyType?: string;
     firstName?: string;
@@ -66,6 +79,7 @@ export interface Party {
     addresses: ExtendedAddress[];
     phones: ExtendedPhone[];
     emails: ExtendedEmail[];
+    identifications: Identification[];
 }
 
 export interface PolicyResponse {
