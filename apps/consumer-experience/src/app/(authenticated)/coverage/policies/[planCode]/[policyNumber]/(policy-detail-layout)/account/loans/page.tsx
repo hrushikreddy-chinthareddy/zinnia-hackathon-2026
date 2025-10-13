@@ -84,7 +84,12 @@ export default async function Loans({
 
   const loansData = () => {
     if (error || !data) {
-      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+      return (
+        <NoDataAvailable
+          message={DEFAULT_UNAVAILABLE_STRING}
+          correlationId={error?.correlationId}
+        />
+      );
     }
 
     return (

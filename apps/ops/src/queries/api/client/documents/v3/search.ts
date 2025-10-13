@@ -6,6 +6,8 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
 import { SearchDocumentResponse } from '@deps/types/documents-v3';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 // Search for documents using the documents v3 api
 export const searchDocumentsV3 = async ({
@@ -18,6 +20,11 @@ export const searchDocumentsV3 = async ({
     searchBody: SearchRequest;
 }): Promise<ApiResponse<SearchDocumentResponse>> => {
     try {
+        browserLogInfo('searchDocumentsV3:: fetching documents', {
+            limit,
+            offset,
+            searchBody,
+        });
         const request = client.post<
             SearchRequest,
             AxiosResponse<SearchDocumentResponse>
@@ -39,6 +46,15 @@ export const searchDocumentsV3 = async ({
             };
         }
     } catch (e) {
+        browserLogError(
+            'searchDocumentsV3:: Error occurred while searching for documents',
+            {
+                ...parseErrorInformation(e),
+                limit,
+                offset,
+                searchBody,
+            }
+        );
         return {
             data: null,
             error: {

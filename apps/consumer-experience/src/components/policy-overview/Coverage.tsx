@@ -36,6 +36,7 @@ export const Coverage = async ({
     loggingContext
   );
 
+  //TODO: Do we need an error state?
   if (error) {
     return null;
   }

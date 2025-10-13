@@ -18,6 +18,7 @@ import {
     OptimizelyVariableKey,
     useOptimizely,
 } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Case } from '@deps/models/case/case';
 import {
@@ -54,6 +55,7 @@ export default function DocumentsTab({
     policy: PolicyDetails | null;
 }) {
     const { t } = useTranslation();
+    const { isZinniaInternalProcessor } = usePermissionsContext();
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
     const [docSource, setDocSource] = useState(
         DocumentTypeView.Policy as string
@@ -68,6 +70,7 @@ export default function DocumentsTab({
         OptimizelyVariableKey.Clients,
         caseDetails?.carrier?.toLocaleLowerCase() || ''
     );
+
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.id || !caseDetails?.carrier) {
             return null;
@@ -88,16 +91,17 @@ export default function DocumentsTab({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(caseDetails?.carrier)
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
+            !isZinniaInternalProcessor // IMH-85894
         ) {
             searchBody.documentType = includeDocumentTypesInbound.join(',');
         }
 
         return searchBody;
-    }, [caseDetails, docSource]);
+    }, [caseDetails, docSource, isZinniaInternalProcessor]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.policyNumber || !policy?.carrierId) {
+        if (!caseDetails?.policyNumber || !caseDetails?.carrier) {
             return null;
         }
         const documentClassification =
@@ -122,12 +126,14 @@ export default function DocumentsTab({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(policy?.carrierId)
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
+            !isZinniaInternalProcessor // IMH-85894
         ) {
             body.documentType = includeDocumentTypesInbound.join(',');
         }
+
         return body;
-    }, [caseDetails, policy, docSource]);
+    }, [caseDetails, policy, docSource, isZinniaInternalProcessor]);
 
     const handleDocSourceChange = (value: string) => {
         setCaseOffset(0);

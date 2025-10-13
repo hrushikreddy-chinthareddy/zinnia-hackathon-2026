@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
 import { POM_QUERY_PREFIXES } from '@deps/components/illustrations/helpers/hooks/pom';
 import { useAgencyOptions } from '@deps/components/illustrations/helpers/hooks/use-agency-options';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import {
     getMainIdentyfiers,
     useAllAliasesWithSellingCode,
@@ -106,6 +107,12 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { writeClientCaseCarriers, partyReferenceData } =
         usePermissionsContext();
+    const {
+        sendClientCaseTitleInput,
+        sendAgencySelection,
+        sendNewClientCaseCreated,
+        sendClientCaseEdited,
+    } = useIllustrationAnalytics();
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
 
     const aliasesWithSellingCodes =
@@ -287,8 +294,22 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const displayAgencyDropdown =
         agencyOptions && selectedAgencyOption && agencyOptions.length > 1;
 
+    const sendAnalytics = () => {
+        const { title } = clientCaseData;
+        const { title: initialTitle } = mergedCase;
+        sendAgencySelection(agencyOptions ?? []);
+        sendClientCaseTitleInput(title !== initialTitle);
+        if (isEdit) {
+            sendClientCaseEdited();
+        } else {
+            sendNewClientCaseCreated();
+        }
+    };
+
     const onSubmitForm = async () => {
         setIsSubmiting(true);
+        sendAnalytics();
+
         try {
             await onSubmit?.(clientCaseData);
         } finally {

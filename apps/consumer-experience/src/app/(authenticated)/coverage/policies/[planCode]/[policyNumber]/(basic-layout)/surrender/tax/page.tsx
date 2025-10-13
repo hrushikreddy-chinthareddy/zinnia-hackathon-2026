@@ -1,5 +1,5 @@
-import { TaxWithholdings } from '@/components/workflows/surrender/forms/TaxWithholdings';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { TaxWithholdings } from '@/components/stepped-workflow/workflows/surrender/forms/TaxWithholdings';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { getPolicyProfileData } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';

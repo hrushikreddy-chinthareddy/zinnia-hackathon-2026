@@ -107,7 +107,7 @@ export default function IllustrationDetailsHeader({
                         <span>
                             <IllustrationMenu
                                 isSelectForApplicationVisible={!!eAppId}
-                            ></IllustrationMenu>
+                            />
                         </span>
                     </div>
                 </div>

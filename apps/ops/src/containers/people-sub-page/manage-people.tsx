@@ -166,7 +166,7 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
                 contractNumber: policy.policyNumber,
                 linkName,
                 linkUrl,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: userPartyId,
             }
         );

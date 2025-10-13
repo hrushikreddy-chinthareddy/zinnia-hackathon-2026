@@ -171,7 +171,7 @@ const Stage = React.forwardRef(
                 SegmentTrackedEventName.CaseStageAccordionClicked,
                 {
                     caseId: stage.parentCase.caseRaw.id,
-                    session_id: sessionId,
+                    authSessionId: sessionId,
                     userId: partyId,
                     isOpen: state,
                     stageId: stage.id,

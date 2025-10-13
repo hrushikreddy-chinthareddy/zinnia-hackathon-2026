@@ -4455,7 +4455,7 @@ export const farmersBlueprintIU0101 = {
                                         'custom-e957ce1d-3747-4701-9821-8936018d597d',
                                     selectOptions: [
                                         {
-                                            value: 'yes',
+                                            value: true,
                                             text: {
                                                 en: 'Yes',
                                             },
@@ -4463,7 +4463,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'no',
+                                            value: false,
                                             text: {
                                                 en: 'No',
                                             },
@@ -4471,8 +4471,8 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                     ],
-                                    validateAs: 'string',
-                                    defaultValue: 'yes',
+                                    validateAs: 'boolean',
+                                    defaultValue: true,
                                 },
                                 {
                                     fieldType: 'custom',

@@ -328,6 +328,9 @@
             "beneficiary": {
                 "text": "Manage beneficiaries",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "userMenu": {
+                "text": "User Menu"
             }
         },
         "loader": "Loading..."
@@ -8185,7 +8188,7 @@
             "coverage": {
                 "title": "Coverage",
                 "faceAmount": "Face amount",
-                "termLength": "Level Premium Term Length"
+                "termLength": "Level Premium Term Period"
             },
             "premium": {
                 "title": "Premium",
@@ -8208,7 +8211,9 @@
                 "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit",
                 "charitableGiving": "Charitable Giving",
                 "childrensTerm": "Children's Term Insurance",
+                "guaranteedInsurabilityBenefit": "Guaranteed Insurability Benefit",
                 "overloanProtection": "Overloan Protection",
+                "ownerWaiverOfDeduction": "Owner Waiver of Deduction",
                 "waiverOfDeduction": "Waiver of Deduction",
                 "waiverOfPremium": "Waiver of Premium"
             },

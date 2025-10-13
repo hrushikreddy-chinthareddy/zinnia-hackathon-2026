@@ -62,7 +62,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.LOAN_REPAYMENT_ONE_TIME,
                 correlationId: paymentBody.correlationId,

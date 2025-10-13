@@ -39,6 +39,7 @@ import {
     OptimizelyVariableKey,
     useOptimizely,
 } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
@@ -219,6 +220,7 @@ export default function GlobalTaskSideSheet({
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
+    const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
 
@@ -246,9 +248,10 @@ export default function GlobalTaskSideSheet({
                 SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: task.caseId,
             excludeDocumentTypes,
-            ...(includeDocumentTypeForInboundSearch(task.carrier) && {
-                documentType: includeDocumentTypesInbound.join(','),
-            }),
+            ...(includeDocumentTypeForInboundSearch(task.carrier) &&
+                !isZinniaInternalProcessor && {
+                    documentType: includeDocumentTypesInbound.join(','),
+                }),
         };
     }, [task]);
 
@@ -326,12 +329,12 @@ export default function GlobalTaskSideSheet({
                     setErrorClaimingTask(false);
                     setClaimingTaskErrorMessage('');
                     browserLogInfo(
-                        'task-queue:handleClaimTask::Successfully claimed task',
+                        'global-task:handleClaimTask::Successfully claimed task',
                         { taskId: taskId }
                     );
                 } else {
                     browserLogInfo(
-                        'task-queue:handleClaimTask::An error occurred while claiming the task',
+                        'global-task:handleClaimTask::An error occurred while claiming the task',
                         {
                             taskId: taskId,
                             status: isAPIErrorInformation(response)
@@ -346,7 +349,7 @@ export default function GlobalTaskSideSheet({
                 }
             } catch (e) {
                 browserLogError(
-                    'task-queue:handleClaimTask::Error claiming task',
+                    'global-task:handleClaimTask::Error claiming task',
                     {
                         ...parseErrorInformation(e),
                         taskId: task.id,
@@ -384,7 +387,7 @@ export default function GlobalTaskSideSheet({
                 const taskData = await getTaskInstance({ taskId });
                 if (!taskData) {
                     browserLogError(
-                        'handleStartTask::Task data could not be retrieved.',
+                        'global-task:handleStartTask::Task data could not be retrieved.',
                         {
                             taskId,
                             fileName: 'global-task-sidesheet-content',
@@ -410,11 +413,14 @@ export default function GlobalTaskSideSheet({
                 }
             }
         } catch (error) {
-            browserLogError('handleStartTask::Error handling start task', {
-                ...parseErrorInformation(error),
-                taskId,
-                fileName: 'global-task-sidesheet-content',
-            });
+            browserLogError(
+                'global-task:handleStartTask::Error handling start task',
+                {
+                    ...parseErrorInformation(error),
+                    taskId,
+                    fileName: 'global-task-sidesheet-content',
+                }
+            );
         } finally {
             setStartLoader(false);
         }

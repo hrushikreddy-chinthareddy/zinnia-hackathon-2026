@@ -218,7 +218,7 @@ const farmersEntitiesSchema = t.object(
             t.undefined
         )
     ),
-    t.optionalProperty('preventMec', t.string),
+    t.optionalProperty('preventMec', t.boolean),
     t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
     t.optionalProperty(
         'scheduleDeathBenefitOption',
@@ -624,7 +624,7 @@ function createIllustrationPayload(
                     ],
                 },
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -672,7 +672,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -713,7 +713,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {

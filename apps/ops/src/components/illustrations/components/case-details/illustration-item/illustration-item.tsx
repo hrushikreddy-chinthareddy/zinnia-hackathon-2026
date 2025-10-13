@@ -47,7 +47,7 @@ const IllustrationItem = ({
                         isSelectForApplicationVisible={
                             isSelectableForApplication
                         }
-                    ></IllustrationMenu>
+                    />
                 </span>
             </Link>
 

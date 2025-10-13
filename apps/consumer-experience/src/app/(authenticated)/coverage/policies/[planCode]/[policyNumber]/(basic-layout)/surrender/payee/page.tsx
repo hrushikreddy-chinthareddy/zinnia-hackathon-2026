@@ -1,7 +1,7 @@
 import { PartyRole } from '@xd/api-types/dist/generated-types/sor';
 
-import { PayeeStep } from '@/components/workflows/surrender/forms/PayeeStep';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { PayeeStep } from '@/components/stepped-workflow/workflows/surrender/forms/PayeeStep';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { getPolicyProfileData } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';

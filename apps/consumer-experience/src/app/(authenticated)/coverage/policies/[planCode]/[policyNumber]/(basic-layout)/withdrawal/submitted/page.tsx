@@ -1,5 +1,5 @@
-import { SubmissionPage } from '@/components/workflows/withdrawals/forms/SubmissionPage';
-import { Withdrawals } from '@/components/workflows/withdrawals/Withdrawals';
+import { SubmissionPage } from '@/components/stepped-workflow/workflows/withdrawals/forms/SubmissionPage';
+import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const SubmissionStep = ({ params }: PolicyRequestInputsParams) => {

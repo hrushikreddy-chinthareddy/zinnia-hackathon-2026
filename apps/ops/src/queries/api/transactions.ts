@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
+import { createQueryString } from '@deps/helpers/string.helpers';
 import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
@@ -20,18 +21,13 @@ export const getTransactionsByCorrelationId = async (
 ): Promise<TransactionData[] | null> => {
     let url = `${baseUrl}/transaction/${correlationId}/entities?`;
 
-    if (Object.keys(optionalParams).length > 0) {
-        url =
-            url +
-            Object.keys(optionalParams)
-                .map(
-                    (key) =>
-                        `${key}=${
-                            optionalParams[key as keyof typeof optionalParams]
-                        }`
-                )
-                .join('&');
-    }
+    url += createQueryString(optionalParams);
+
+    browserLogInfo('transactions::getTransactionsByCorrelationId', {
+        correlationId,
+        optionalParams,
+        url,
+    });
 
     try {
         const { data } = await client.get<
@@ -44,6 +40,8 @@ export const getTransactionsByCorrelationId = async (
         browserLogError('transactions::getTransactionsByCorrelationId::error', {
             ...parseErrorInformation(e),
             correlationId,
+            optionalParams,
+            url,
         });
         return null;
     }

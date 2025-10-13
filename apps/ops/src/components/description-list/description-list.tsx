@@ -191,13 +191,6 @@ const DescriptionList = ({
                     <span className={popoverClasses} aria-hidden="true">
                         {amountAndDate}
                     </span>
-                    <NavElement
-                        size={NavElementSize.Small}
-                        type={NavElementType.Link}
-                        href={`/policies/${textSections[4]}/premiums`}
-                    >
-                        {t('policySummary.makePayment')}
-                    </NavElement>
                 </>
             );
         } else {

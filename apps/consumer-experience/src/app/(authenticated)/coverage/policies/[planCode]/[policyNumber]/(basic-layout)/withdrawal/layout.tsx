@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
-import { WithdrawalsProvider } from '@/components/providers/withdrawals/WithdrawalsProvider';
+import { WithdrawalsProvider } from '@/components/stepped-workflow/workflows/withdrawals/provider/WithdrawalsProvider';
 import { getOneTimeWithdrawalEligibility } from '@/services/bpm/partial-withdrawal';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -29,6 +29,7 @@ export default async function WithdrawalLayout({
     loggingCtx
   );
 
+  //TODO: Do we need an error component or redirect?
   if (!data?.isEligible || !!error || !showPartialWithdrawalOneTime) {
     redirect(`/coverage/policies/${params.planCode}/${params.policyNumber}/`);
   }

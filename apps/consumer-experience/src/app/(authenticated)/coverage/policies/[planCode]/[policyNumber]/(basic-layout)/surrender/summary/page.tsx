@@ -1,5 +1,5 @@
-import { SummaryPage } from '@/components/workflows/surrender/forms/SummaryPage';
-import Surrender from '@/components/workflows/surrender/Surrender';
+import { SummaryPage } from '@/components/stepped-workflow/workflows/surrender/forms/SummaryPage';
+import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const BankPage = ({ params }: PolicyRequestInputsParams) => {

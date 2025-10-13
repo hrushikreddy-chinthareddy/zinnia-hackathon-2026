@@ -11,6 +11,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
+import { stepsInfo } from '@/components/stepped-workflow/workflows/one-time-premium/steps';
 import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { getUpcomingPremium } from '@/services/policy';
@@ -26,7 +27,6 @@ import {
   determineAutopayDisplayAndEligibility,
   upcomingPaymentDetails,
 } from './utils';
-import { defaultStep, getStepInfo } from '../one-time-premium-payment/steps';
 
 dayjs.extend(isSameOrAfter);
 
@@ -123,6 +123,7 @@ export const UpcomingPremium = async ({
         <NoDataAvailable
           iconType={IconType.AUTOPAY}
           message="There is currently no premium payments data available."
+          correlationId={error.correlationId}
         />
       </div>
     );
@@ -204,10 +205,7 @@ export const UpcomingPremium = async ({
             <Link
               passHref={true}
               isInternal
-              href={
-                getStepInfo({ step: defaultStep, policyNumber, planCode })
-                  .stepUrl
-              }
+              href={`premium/${Object.values(stepsInfo)?.[0]?.url ?? ''}`}
               className={clsx(
                 ottpPaymentDisabled && styles.disabledTransaction
               )}

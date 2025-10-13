@@ -61,7 +61,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.FUND_TRANSFER,
                 correlationId: body.correlationId,

@@ -1,28 +1,38 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 import {
   acknowledgeCase,
   AcknowledgeCaseDTO,
   fetchAcknowledgedCases,
 } from '@/services/terms-and-conditions';
+import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
 
 export async function GET(
-  _request: Request,
+  _request: NextRequest,
   { params }: { params: { planCode: string; policyNumber: string } }
 ) {
   const { planCode, policyNumber } = params;
+  const commonLogContext = await buildNextReqLoggingContext(_request);
 
-  const response = await fetchAcknowledgedCases({
-    planCode,
-    policyNumber,
-  });
+  const response = await fetchAcknowledgedCases(
+    {
+      planCode,
+      policyNumber,
+    },
+    {
+      user: commonLogContext.user,
+      correlationId: commonLogContext.correlationId,
+    }
+  );
 
   return NextResponse.json(response);
 }
 
-export async function POST(_request: Request) {
+export async function POST(_request: NextRequest) {
+  const commonLogContext = await buildNextReqLoggingContext(_request);
+
   const body: AcknowledgeCaseDTO = await _request.json();
-  const response = await acknowledgeCase(body);
+  const response = await acknowledgeCase(body, commonLogContext);
 
   return NextResponse.json(response);
 }

@@ -1,7 +1,10 @@
 import { UserProfile } from '@deps/models/user-profile';
 import {
+    ButtonClickedEventProps,
+    FilterAppliedEventProps,
     SegmentPageName,
     SegmentPageProps,
+    SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
 
 const segmentAnalyticsIdentifyUserAndPage = (
@@ -65,4 +68,27 @@ function segmentAnalyticsTrackEvent<T>(eventName: string, eventProps?: T) {
     window.analytics.track(eventName, { ...eventProps });
 }
 
-export { segmentAnalyticsIdentifyUserAndPage, segmentAnalyticsTrackEvent };
+function buttonClickedTrackEvent<T extends ButtonClickedEventProps>(
+    eventProps: T
+) {
+    segmentAnalyticsTrackEvent(
+        SegmentTrackedEventName.ButtonClicked,
+        eventProps
+    );
+}
+
+function filterAppliedTrackEvent<T extends FilterAppliedEventProps>(
+    eventProps: T
+) {
+    segmentAnalyticsTrackEvent(
+        SegmentTrackedEventName.FilterApplied,
+        eventProps
+    );
+}
+
+export {
+    segmentAnalyticsIdentifyUserAndPage,
+    segmentAnalyticsTrackEvent,
+    buttonClickedTrackEvent,
+    filterAppliedTrackEvent,
+};

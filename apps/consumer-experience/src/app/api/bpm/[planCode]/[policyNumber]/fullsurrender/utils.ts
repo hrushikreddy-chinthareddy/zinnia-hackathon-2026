@@ -8,7 +8,7 @@ import {
 } from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 
-import { SurrenderState } from '@/components/providers/surrender/types';
+import { SurrenderState } from '@/components/stepped-workflow/workflows/surrender/provider/types';
 import { FullSurrenderBPMRequest } from '@/services/bpm/fullsurrender';
 
 export const buildFullSurrenderRequestBody = (

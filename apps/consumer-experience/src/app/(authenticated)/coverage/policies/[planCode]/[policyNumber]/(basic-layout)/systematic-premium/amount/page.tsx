@@ -1,6 +1,6 @@
-import { SystematicPremiumAmountStep } from '@/components/workflows/systematic-premiums/forms/SystematicPremiumAmountStep';
-import { SystematicPremiumAmountStepTerm } from '@/components/workflows/systematic-premiums/forms/SystematicPremiumAmountStepTerm';
-import { SystematicPremiums } from '@/components/workflows/systematic-premiums/SystematicPremiums';
+import { SystematicPremiumAmountStep } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SystematicPremiumAmountStep';
+import { SystematicPremiumAmountStepTerm } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SystematicPremiumAmountStepTerm';
+import { SystematicPremiums } from '@/components/stepped-workflow/workflows/systematic-premiums/SystematicPremiums';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { PolicyRequestInputs } from '@/types/policy';

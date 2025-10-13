@@ -325,6 +325,9 @@
             "bénéficiaire": {
                 "text": "Gérer les bénéficiaires",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "userMenu": {
+                "text": "Menu Utilisateur"
             }
         },
         "loader": "Chargement..."
@@ -8041,7 +8044,7 @@
             "coverage": {
                 "title": "Couverture",
                 "faceAmount": "Montant nominal",
-                "termLength": "Durée"
+                "termLength": "Durée de la prime de niveau"
             },
             "premium": {
                 "title": "Prime",
@@ -8064,7 +8067,9 @@
                 "acceleratedDeathBenefitForChronicIllness": "Prestation de décès accéléré pour la maladie chronique",
                 "charitableGiving": "Dons de bienfaisance",
                 "childrensTerm": "Assurance à terme pour enfants",
+                "guaranteedInsurabilityBenefit": "prestation d'assurabilité garantie",
                 "overloanProtection": "Overloan Protection",
+                "ownerWaiverOfDeduction": "Renonciation à la déduction du propriétaire",
                 "waiverOfDeduction": "Déduction",
                 "waiverOfPremium": "Renonciation à la prime"
             },

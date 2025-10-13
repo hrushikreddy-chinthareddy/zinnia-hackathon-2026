@@ -1,7 +1,7 @@
 import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
-import { SelectAmount } from '@/components/one-time-premium-payment/SelectAmount';
-import { OneTimePremium } from '@/components/workflows/one-time-premium/OneTimePremium';
+import { SelectAmount } from '@/components/stepped-workflow/workflows/one-time-premium/forms/SelectAmount';
+import { OneTimePremium } from '@/components/stepped-workflow/workflows/one-time-premium/OneTimePremium';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
@@ -49,13 +49,16 @@ export default async function SelectAmountPage({
         },
         commonLog
       ),
-      getCarrierProductOneTimePaymentFee({
-        configuredItemCode:
-          ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
-        carrierId: policyDetails?.carrierId || '',
-        planCode: planCode,
-        benefitId: 'Base_Coverage',
-      }),
+      getCarrierProductOneTimePaymentFee(
+        {
+          configuredItemCode:
+            ConfiguredSettingId.ONE_TIME_PREMIUM_PAYMENT_GUAR_FEE,
+          carrierId: policyDetails?.carrierId || '',
+          planCode: planCode,
+          benefitId: 'Base_Coverage',
+        },
+        commonLog
+      ),
       getComponentVisibility({ policyNumber, planCode }, commonLog),
       getPolicyFeatures(
         {
@@ -68,7 +71,7 @@ export default async function SelectAmountPage({
 
   const policyStatusDetails =
     policyStatusRes.status === 'fulfilled' ? policyStatusRes.value.data : null;
-  const data = ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
+  const fee = ottpFeeRes.status === 'fulfilled' ? ottpFeeRes.value.data : null;
 
   const visibility =
     visibilityRes.status === 'fulfilled' ? visibilityRes.value?.data : null;
@@ -94,7 +97,7 @@ export default async function SelectAmountPage({
       policyNumber={policyNumber}
     >
       <SelectAmount
-        paymentFee={data?.fee || 0}
+        paymentFee={fee || 0}
         paymentAmount={amount}
         isAmountEditable={isAmountEditable}
         minimumPaymentDue={

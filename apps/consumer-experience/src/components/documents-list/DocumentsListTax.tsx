@@ -32,6 +32,7 @@ export default function DocumentsListTax({
       <NoDataAvailable
         message="No tax documents available."
         iconType={IconType.DOCUMENT_DUPLICATE}
+        correlationId={undefined}
       />
     );
   }

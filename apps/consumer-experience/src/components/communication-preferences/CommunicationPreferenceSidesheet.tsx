@@ -127,6 +127,7 @@ export const CommunicationPreferenceSidesheet = ({
           }
           errorTitle={apiErrorResponse?.name || "Sorry, that didn't work"}
           errorMessage={apiErrorResponse?.message}
+          correlationId={apiErrorResponse?.correlationId}
           closeCallback={handleCancel}
         />
       )}

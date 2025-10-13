@@ -158,6 +158,7 @@ export const AddBankSidesheet: FC<AddBankSidesheet> = ({
           isServerError={isServerError}
           errorMessage={errorMessage}
           closeCallback={onClose}
+          correlationId={correlationId}
         />
       )}
       {step === FormSteps.SUCCESS && (

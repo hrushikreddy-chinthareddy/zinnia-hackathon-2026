@@ -3,7 +3,12 @@ import { AxiosResponse } from 'axios';
 import { ApiProps } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
-import { browserLogWarn } from '@deps/utils/browser-logging';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogWarn,
+} from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { replacePlaceholders } from './value-placement.helpers';
 const baseUrl = baseAppUrl + '/api/';
@@ -67,6 +72,14 @@ export const csrApiHelper = async (
     strigify = false
 ) => {
     const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
+    browserLogInfo('csrApiHelper:: fetching data', {
+        apiUrl,
+        apiMethod,
+        apiPayload,
+        responseData,
+        response,
+        strigify,
+    });
 
     if (apiMethod === 'post') {
         try {
@@ -111,6 +124,18 @@ export const csrApiHelper = async (
 
             return filteredApiData;
         } catch (error) {
+            browserLogError(
+                'csrApiHelper::Error occurred while fetching post api data',
+                {
+                    ...parseErrorInformation(error),
+                    apiUrl,
+                    apiMethod,
+                    apiPayload,
+                    responseData,
+                    response,
+                    strigify,
+                }
+            );
             return error;
         }
     }
@@ -141,6 +166,18 @@ export const csrApiHelper = async (
             }
             return filteredApiData;
         } catch (error) {
+            browserLogError(
+                'csrApiHelper:: Error occurred while fetching get api data',
+                {
+                    ...parseErrorInformation(error),
+                    apiUrl,
+                    apiMethod,
+                    apiPayload,
+                    responseData,
+                    response,
+                    strigify,
+                }
+            );
             return error;
         }
     }

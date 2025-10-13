@@ -90,6 +90,8 @@ export const getFundDetails = withLogging(
  * @param carrierId
  * @returns a list of fund details
  */
+
+//This does not need `withLogging` because it is not exported
 const collectAllFundDetails = async (
   funds: (PolicyFund | Fund)[],
   carrierId: string | undefined,
@@ -247,14 +249,20 @@ export const getFunds = withLogging(
       loggingCtx
     );
 
-    const { data: combinedData, error: combineError } = combineFundData({
+    const combinedData = combineFundData({
       fundDetails,
       productsDetails,
       policyFunds,
     });
 
-    if (combineError || !combinedData) {
-      throw new Error(combineError?.message || 'Failed to combine fund data');
+    if (!combinedData || combinedData.length === 0) {
+      throw new Error('Failed to combine fund data. Inputs:', {
+        cause: {
+          fundDetails,
+          productsDetails,
+          policyFunds,
+        },
+      });
     }
 
     return combinedData;

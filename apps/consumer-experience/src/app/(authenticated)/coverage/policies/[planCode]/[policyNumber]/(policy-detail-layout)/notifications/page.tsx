@@ -51,16 +51,20 @@ export default async function NotificationsPage({ params }: Props) {
   ) {
     initialNotifications = cases.data;
     const { data: acknowledgedCases, error: acknowledgedCasesError } =
-      await fetchAcknowledgedCases({
-        planCode: params.planCode,
-        policyNumber: params.policyNumber,
-      });
+      await fetchAcknowledgedCases(
+        {
+          planCode: params.planCode,
+          policyNumber: params.policyNumber,
+        },
+        loggingCtx
+      );
 
     if (!acknowledgedCasesError && !!acknowledgedCases?.length) {
       initialAcknowledgedNotifications = acknowledgedCases;
     }
   }
 
+  //TODO: Do we need an error state?
   if (error) {
     logError('Error fetching notifications', error);
     initialNotifications = undefined;

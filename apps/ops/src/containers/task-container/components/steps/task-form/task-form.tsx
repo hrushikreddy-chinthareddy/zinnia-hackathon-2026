@@ -27,7 +27,7 @@ import {
 import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
-import { browserLogWarn } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import {
     buildTaskPayload,
@@ -154,7 +154,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         },
                     }));
                 } catch (e) {
-                    console.log(e);
+                    browserLogError('task-form::fetching transactions', {
+                        error: e,
+                        payload: {
+                            correlationId,
+                            taskType: task.taskType,
+                            carrier: task.carrier,
+                            processType: task.process,
+                            taskId: task.id,
+                        },
+                    });
                     return;
                 }
             }
@@ -183,7 +192,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         };
                     });
                 } catch (e) {
-                    console.log(e);
+                    browserLogError('task-form::fetching transactions', {
+                        error: e,
+                        payload: {
+                            correlationId,
+                            taskType: task.taskType,
+                            carrier: task.carrier,
+                            processType: task.process,
+                            taskId: task.id,
+                        },
+                    });
                 }
             }
         }

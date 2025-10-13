@@ -10,7 +10,7 @@ import {
   AutopayStatus,
   determineAutopayDisplayAndEligibility,
 } from '@/components/policy-overview/utils';
-import { SystematicPremiumsProvider } from '@/components/providers/systematic-premiums/SystematicPremiumsProvider';
+import { SystematicPremiumsProvider } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/SystematicPremiumsProvider';
 // import { getSystematicPremiumEligibility } from '@/services/bpm/systematic-premium';
 import { getPolicyDetails } from '@/services';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
