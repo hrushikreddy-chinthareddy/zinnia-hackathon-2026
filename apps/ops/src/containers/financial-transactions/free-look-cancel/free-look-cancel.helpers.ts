@@ -10,12 +10,15 @@ import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.h
 
 export const buildFreeLookCancelRequestBody = (
     withdrawal: Withdrawal,
-    wireCheckPaymentsEnabled: boolean
+    wireCheckPaymentsEnabled: boolean,
+    correlationId?: string
 ): FreeLookCancellationRequest => {
+    const requestCorrelationId = correlationId || uuidV4();
+
     if (wireCheckPaymentsEnabled) {
         return {
             caseId: withdrawal.caseId || '',
-            correlationId: uuidV4(),
+            correlationId: requestCorrelationId,
             effectiveDate: getUtcDate(withdrawal.effectiveDate),
             parties: [
                 {
@@ -40,7 +43,7 @@ export const buildFreeLookCancelRequestBody = (
 
     return {
         caseId: withdrawal.caseId || '',
-        correlationId: uuidV4(),
+        correlationId: requestCorrelationId,
         effectiveDate: getUtcDate(withdrawal.effectiveDate),
         parties: [
             {
