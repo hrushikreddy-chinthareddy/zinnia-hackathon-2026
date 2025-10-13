@@ -30,6 +30,10 @@ const TransactionAccordion = ({
 
     const handleItemChange = (index: number, updatedItem: any) => {
         const updatedList = [...value];
+        if (updatedItem.party.partyType === 'TRUST') {
+            updatedItem.party.supportingDocumentAttached =
+                updatedItem.party.supportingDocumentAttached ?? false;
+        }
         updatedList[index] = updatedItem;
         onChange(updatedList);
     };

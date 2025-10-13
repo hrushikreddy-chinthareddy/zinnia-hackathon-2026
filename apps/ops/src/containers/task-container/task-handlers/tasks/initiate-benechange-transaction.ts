@@ -78,6 +78,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
         suffix: null,
         trustType: null,
         addresses: getAddresses(party?.addresses ?? []),
+        identifications: party.identifications ?? [],
         emails:
             party.emails.length > 0
                 ? party.emails.map((email: any) => ({
@@ -90,8 +91,36 @@ const formatParties = (policyResponse: PolicyResponse) => {
                           emailType: null,
                       },
                   ],
-        identifications: party.identifications ?? [],
-        ...{ phones: party?.phones ?? [] },
+        phones:
+            party.phones.length > 0
+                ? party.phones.map((phone: any) => ({
+                      areaCode: phone?.areaCode ?? null,
+                      bestTime: phone?.bestTime ?? null,
+                      countryCode: phone?.countryCode ?? 'US',
+                      dialNumber: phone?.dialNumber ?? null,
+                      endDate: phone?.endDate ?? null,
+                      extension: phone?.extension ?? null,
+                      isPreferred: phone?.isPreferred ?? false,
+                      phoneId: phone?.phoneId ?? null,
+                      phoneType: phone?.phoneType ?? 'HOME',
+                      startDate: phone?.startDate ?? null,
+                      timezone: phone?.timezone ?? null,
+                  }))
+                : [
+                      {
+                          areaCode: null,
+                          bestTime: null,
+                          countryCode: 'US',
+                          dialNumber: null,
+                          endDate: null,
+                          extension: null,
+                          isPreferred: false,
+                          phoneId: null,
+                          phoneType: 'HOME',
+                          startDate: null,
+                          timezone: null,
+                      },
+                  ],
     });
 
     const rolesToFormat = [
@@ -161,8 +190,6 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         suffix: bene.suffix ?? null,
                         trustType: bene.trustType ?? null,
                         trustDate: bene.trustDate ?? null,
-                        supportingDocumentAttached:
-                            bene.supportingDocumentAttached ?? false,
                         entityType: bene.entityType ?? 'UNKNOWN',
                         gender: bene.gender ?? '',
                         dateOfBirth: bene.dateOfBirth ?? null,

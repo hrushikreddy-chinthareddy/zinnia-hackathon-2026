@@ -80,6 +80,7 @@ export interface Party {
     phones: ExtendedPhone[];
     emails: ExtendedEmail[];
     identifications: Identification[];
+    supportingDocumentAttached: boolean;
 }
 
 export interface PolicyResponse {

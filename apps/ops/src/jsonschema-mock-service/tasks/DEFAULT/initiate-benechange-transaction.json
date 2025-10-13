@@ -1108,7 +1108,7 @@
                                                             ],
                                                             "default": null
                                                         },
-                                                        "attachments": {
+                                                        "documents": {
                                                             "type": "array",
                                                             "title": "Link or upload the supporting document(s)",
                                                             "items": {
@@ -1347,7 +1347,7 @@
                                     "lastName",
                                     "suffix",
                                     "trustType",
-                                    "attachments",
+                                    "documents",
                                     "trustDate",
                                     "supportingDocumentAttached",
                                     "entityType",
@@ -1421,7 +1421,7 @@
                                         }
                                     }
                                 },
-                                "attachments": {
+                                "documents": {
                                     "inline": true,
                                     "ui:widget": "AttachmentWidget",
                                     "ui:options": {
