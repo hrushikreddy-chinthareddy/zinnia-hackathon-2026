@@ -667,7 +667,10 @@ export default function DatePicker({
         if (date === null) return dayjs().toDate();
         if (isRange && date.start instanceof Date)
             return dayjs(date.start).toDate();
+        if (isRange && typeof date.start === 'string')
+            return dayjs(date.start).toDate();
         if (date instanceof Date) return dayjs(date).toDate();
+        if (typeof date === 'string') return dayjs(date).toDate();
 
         return dayjs().toDate();
     });

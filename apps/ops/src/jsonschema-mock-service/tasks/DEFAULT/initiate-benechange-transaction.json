@@ -1323,6 +1323,9 @@
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
+                                        },
+                                        "identificationValue": {
+                                            "ui:widget": "SSNWidget"
                                         }
                                     }
                                 },
@@ -1420,6 +1423,12 @@
                                                     "WY"
                                                 ]
                                             }
+                                        },
+                                        "zipCode": {
+                                            "ui:widget": "ZipWidget"
+                                        },
+                                        "zipCodeExtension": {
+                                            "ui:widget": "Zip4Widget"
                                         }
                                     }
                                 },
@@ -1450,6 +1459,9 @@
                                                     "Default"
                                                 ]
                                             }
+                                        },
+                                        "dialNumber": {
+                                            "ui:widget": "PhoneWidget"
                                         }
                                     }
                                 },
@@ -1469,6 +1481,10 @@
                                         }
                                     }
                                 },
+                                "dateOfBirth": {
+                                    "ui:widget": "NewDateWidget"
+                                },
+
                                 "prefix": {
                                     "ui:widget": "SelectWidget",
                                     "ui:allowEmptyValue": true,
@@ -1690,7 +1706,9 @@
                                         ]
                                     }
                                 },
-                                "signDate": {}
+                                "signDate": {
+                                    "ui:widget": "NewDateWidget"
+                                }
                             }
                         }
                     }
