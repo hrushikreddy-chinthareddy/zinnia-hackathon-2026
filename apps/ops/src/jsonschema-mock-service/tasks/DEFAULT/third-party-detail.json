@@ -1,0 +1,580 @@
+{
+    "formId": "9569c24d-250e-45bd-ab0f-c85f04a192a9",
+    "process": "Policy Update",
+    "taskType": "THIRD_PARTY_DETAIL",
+    "processSubType": "Third Party Designee Change",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Form Review",
+                "tabTitle": "Start",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                         "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": " As part of the Third Party Designee Change process, the paper form requires digitization through data entry to ensure accurate capture of information for case processing."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Document Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "title": "Is the paper application form complete?",
+                            "enumNames": ["The paper application is complete","The paper application is incomplete"],
+                            "enum": [true, false]
+                        }
+                    },
+                    "required": ["issueResolved"]
+                },
+                "uiSchema": {
+                    "ui:hideError": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "ui:order": [
+                        "sectionHeader",
+                        "details",
+                        "issueResolved",
+                        "signatureDate"
+                    ],
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issueResolved"]
+                    },
+                    "signatureDate": {
+                        "ui:hideError": true,
+                        "ui:dataPath": ["signatureDate"]
+                    },
+
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
+                    }
+                }
+            },
+            {
+                "title": "Third Party Designee Form",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agentData": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": ["ADD", "UPDATE", "DELETE"]
+                                    },
+                                    "agent": {
+                                        "type": "object",
+                                        "properties": {
+                                            "agentType": {
+                                                "type": "string",
+                                                "title": "Agent type",
+                                                "enum": [
+                                                    "Writing Agent",
+                                                    "Servicing Agent"
+                                                ]
+                                            },
+                                            "allocationPercentage": {
+                                                "type": "number",
+                                                "title": "Allocation Percentage",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            },
+                                            "externalId": {
+                                                "type": "string",
+                                                "title": "External ID"
+                                            }
+                                        },
+                                        "dependencies": {
+                                            "if": {
+                                                "properties": {
+                                                    "action": {
+                                                        "enum": [
+                                                            "UPDATE",
+                                                            "DELETE"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "agentName": {
+                                                        "type": "string",
+                                                        "title": "Agent Name"
+                                                    }
+                                                },
+                                                "required": ["agentName"]
+                                            }
+                                        },
+                                        "required": [
+                                            "agentType",
+                                            "allocationPercentage",
+                                            "externalId"
+                                        ]
+                                    }
+                                },
+                                "required": ["agent"]
+                            }
+                        },
+                        "required": ["agentData"]
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "agentData": {
+                        "ui:widget": "TransactionAccordion",
+                        "ui:dataPath": ["agentData"],
+                        "ui:hideError": true,
+                        "ui:options": {
+                            "label": false,
+                            "addable": true,
+                            "defaultItemLabel": "New Agent",
+                            "showDeleteBtn": true,
+                            "showAddBtn": true,
+                            "tabTitle": "Agent Details"
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": true,
+                                "title": "{{agent.agentType}}",
+                                "defaultItemLabel": "New Agent",
+                                "nobackground": true,
+                                "expandable": true,
+                                "removable": true
+                            },
+                            "action": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": ["Add", "Update", "Delete"]
+                                }
+                            },
+                            "agent": {
+                                "ui:order": [
+                                    "agentName",
+                                    "externalId",
+                                    "agentType",
+                                    "allocationPercentage"
+                                ],
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "agentName": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "externalId": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "agentType": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Writing Agent",
+                                            "Servicing Agent"
+                                        ]
+                                    }
+                                },
+                                "allocationPercentage": {
+                                    "ui:widget": "updown"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Summary",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agentData": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": ["ADD", "UPDATE", "DELETE"]
+                                    },
+                                    "agent": {
+                                        "type": "object",
+                                        "properties": {
+                                            "agentType": {
+                                                "type": "string",
+                                                "title": "Agent type",
+                                                "enum": [
+                                                    "Writing Agent",
+                                                    "Servicing Agent"
+                                                ]
+                                            },
+                                            "allocationPercentage": {
+                                                "type": "number",
+                                                "title": "Allocation Percentage",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            },
+                                            "externalId": {
+                                                "type": "string",
+                                                "title": "External ID"
+                                            }
+                                        },
+                                        "dependencies": {
+                                            "if": {
+                                                "properties": {
+                                                    "action": {
+                                                        "enum": [
+                                                            "UPDATE",
+                                                            "DELETE"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "agentName": {
+                                                        "type": "string",
+                                                        "title": "Agent Name"
+                                                    }
+                                                },
+                                                "required": ["agentName"]
+                                            }
+                                        },
+                                        "required": [
+                                            "agentType",
+                                            "allocationPercentage",
+                                            "externalId"
+                                        ]
+                                    }
+                                },
+                                "required": ["agent"]
+                            }
+                        },
+                        "required": ["agentData"]
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "agentData": {
+                        "ui:widget": "TransactionAccordion",
+                        "ui:dataPath": ["agentData"],
+                        "ui:hideError": true,
+                        "ui:options": {
+                            "label": false,
+                            "addable": true,
+                            "defaultItemLabel": "New Agent",
+                            "showDeleteBtn": true,
+                            "showAddBtn": true,
+                            "tabTitle": "Agent Details"
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": true,
+                                "title": "{{agent.agentType}}",
+                                "defaultItemLabel": "New Agent",
+                                "nobackground": true,
+                                "expandable": true,
+                                "removable": true
+                            },
+                            "action": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": ["Add", "Update", "Delete"]
+                                }
+                            },
+                            "agent": {
+                                "ui:order": [
+                                    "agentName",
+                                    "externalId",
+                                    "agentType",
+                                    "allocationPercentage"
+                                ],
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "agentName": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "externalId": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "agentType": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Writing Agent",
+                                            "Servicing Agent"
+                                        ]
+                                    }
+                                },
+                                "allocationPercentage": {
+                                    "ui:widget": "updown"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Confirm",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "agentData": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": ["ADD", "UPDATE", "DELETE"]
+                                    },
+                                    "agent": {
+                                        "type": "object",
+                                        "properties": {
+                                            "agentType": {
+                                                "type": "string",
+                                                "title": "Agent type",
+                                                "enum": [
+                                                    "Writing Agent",
+                                                    "Servicing Agent"
+                                                ]
+                                            },
+                                            "allocationPercentage": {
+                                                "type": "number",
+                                                "title": "Allocation Percentage",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            },
+                                            "externalId": {
+                                                "type": "string",
+                                                "title": "External ID"
+                                            }
+                                        },
+                                        "dependencies": {
+                                            "if": {
+                                                "properties": {
+                                                    "action": {
+                                                        "enum": [
+                                                            "UPDATE",
+                                                            "DELETE"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "agentName": {
+                                                        "type": "string",
+                                                        "title": "Agent Name"
+                                                    }
+                                                },
+                                                "required": ["agentName"]
+                                            }
+                                        },
+                                        "required": [
+                                            "agentType",
+                                            "allocationPercentage",
+                                            "externalId"
+                                        ]
+                                    }
+                                },
+                                "required": ["agent"]
+                            }
+                        },
+                        "required": ["agentData"]
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "agentData": {
+                        "ui:widget": "TransactionAccordion",
+                        "ui:dataPath": ["agentData"],
+                        "ui:hideError": true,
+                        "ui:options": {
+                            "label": false,
+                            "addable": true,
+                            "defaultItemLabel": "New Agent",
+                            "showDeleteBtn": true,
+                            "showAddBtn": true,
+                            "tabTitle": "Agent Details"
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": true,
+                                "title": "{{agent.agentType}}",
+                                "defaultItemLabel": "New Agent",
+                                "nobackground": true,
+                                "expandable": true,
+                                "removable": true
+                            },
+                            "action": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": ["Add", "Update", "Delete"]
+                                }
+                            },
+                            "agent": {
+                                "ui:order": [
+                                    "agentName",
+                                    "externalId",
+                                    "agentType",
+                                    "allocationPercentage"
+                                ],
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "agentName": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "externalId": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "agentType": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Writing Agent",
+                                            "Servicing Agent"
+                                        ]
+                                    }
+                                },
+                                "allocationPercentage": {
+                                    "ui:widget": "updown"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}
