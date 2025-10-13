@@ -752,7 +752,12 @@
                                     "action": {
                                         "type": "string",
                                         "title": "Action",
-                                        "enum": ["ADD", "UPDATE", "DELETE"]
+                                        "enum": [
+                                            "ADD",
+                                            "UPDATE",
+                                            "DELETE",
+                                            "NONE"
+                                        ]
                                     },
                                     "isPerStirpes": {
                                         "type": "boolean",
@@ -1323,7 +1328,12 @@
                                 "ui:widget": "hidden",
                                 "ui:options": {
                                     "inline": true,
-                                    "enumNames": ["Add", "Update", "Delete"]
+                                    "enumNames": [
+                                        "Add",
+                                        "Update",
+                                        "Delete",
+                                        "None"
+                                    ]
                                 }
                             },
                             "isPerStirpes": {

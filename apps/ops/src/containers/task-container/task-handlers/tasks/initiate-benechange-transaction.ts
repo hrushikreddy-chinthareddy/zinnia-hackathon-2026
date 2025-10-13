@@ -164,7 +164,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                 return {
                     isPerStirpes: bene.isPerStirpes ?? false,
                     isIrrevocable: bene.isIrrevocable ?? false,
-                    action: 'UPDATE',
+                    action: bene.action ?? 'NONE',
                     actionType: 'BENE_CHANGE',
                     isRestrictedBeneficiary:
                         bene.isRestrictedBeneficiary ?? false,
