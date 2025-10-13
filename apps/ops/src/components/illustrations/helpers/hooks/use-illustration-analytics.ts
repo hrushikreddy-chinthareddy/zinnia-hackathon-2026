@@ -4,7 +4,12 @@ import { AgentOption } from '@deps/components/client-case/client-case-create/age
 import { AgencyOption } from '@deps/components/client-case/client-case-create/create-client-case-form/create-client-case-form.helpers';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Product, ProductTypeLabel } from '@deps/types/product';
 import {
+    IllustrationAddProductClickedEvent,
+    IllustrationsClickedEvent,
+    IllustrationsSegmentTrackedEventName,
     AgentSearchEvent,
     BaseSegmentEventProps,
     ClientCaseClickedEvent,
@@ -37,6 +42,36 @@ export const useIllustrationAnalytics = () => {
             authSessionId: sessionId,
         }),
         [partyId, sessionId]
+    );
+
+    const sendIllustrationsClickedEvent = useCallback(
+        (product: Product, eventName: string) => {
+            const productName =
+                ProductTypeLabel.get(product.productType) ??
+                DEFAULT_ERROR_STRING;
+
+            segmentAnalyticsTrackEvent<IllustrationsClickedEvent>(eventName, {
+                productName,
+                productType: product.productType,
+                carrier: product.carrier,
+                ...baseSegmentEventProps,
+            });
+        },
+        [baseSegmentEventProps]
+    );
+
+    const sendAddProductToIllustrateEvent = useCallback(
+        (carrier: string) => {
+            console.log('🚀 ~ useIllustrationAnalytics ~ carrier:', carrier);
+            segmentAnalyticsTrackEvent<IllustrationAddProductClickedEvent>(
+                IllustrationsSegmentTrackedEventName.addProductToIllustrate,
+                {
+                    carrier,
+                    ...baseSegmentEventProps,
+                }
+            );
+        },
+        [baseSegmentEventProps]
     );
 
     const sendClientCaseDropdownClicked = useCallback(
@@ -214,6 +249,8 @@ export const useIllustrationAnalytics = () => {
         sendAgentSearch,
         sendAgencySelection,
         sendClientCaseEdited,
+        sendIllustrationsClickedEvent,
+        sendAddProductToIllustrateEvent,
         // actions
         setSearchText,
     };

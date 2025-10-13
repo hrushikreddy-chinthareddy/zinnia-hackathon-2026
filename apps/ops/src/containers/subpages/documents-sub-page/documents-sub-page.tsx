@@ -21,6 +21,7 @@ import {
     OptimizelyVariableKey,
     useOptimizely,
 } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
@@ -79,6 +80,7 @@ const NormalDocs = ({
 }) => {
     const { t } = useTranslation();
     const { featureFlagVariables } = useOptimizely();
+    const { isZinniaInternalProcessor } = usePermissionsContext();
     const useV3 = isFeatureFlagVariableActive(
         featureFlagVariables,
         FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
@@ -131,13 +133,20 @@ const NormalDocs = ({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(policy?.carrierId)
+            includeDocumentTypeForInboundSearch(policy?.carrierId) &&
+            !isZinniaInternalProcessor // IMH-85894
         ) {
             params.documentType = includeDocumentTypesInbound.join(',');
         }
 
         return params;
-    }, [documentType, policy, isFirstYearSelected, yearSelection]);
+    }, [
+        documentType,
+        policy,
+        isFirstYearSelected,
+        yearSelection,
+        isZinniaInternalProcessor,
+    ]);
 
     const goToPage = useCallback(
         (pageNumber: number) => {

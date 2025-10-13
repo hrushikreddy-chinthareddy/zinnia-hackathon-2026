@@ -30,7 +30,6 @@
   }
 
   .banner {
-    background-image: url('../../app/styles/everly/assets/everly-hero-background-mobile.png');
     background-repeat: no-repeat;
     height: 93px;
     background-size: cover;
@@ -74,7 +73,7 @@
     &.wellabe {
       background-color: #efc416;
       background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-mobile.png');
-
+      background-repeat: no-repeat;
       @media (width >=500px) {
         height: 150px;
         background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-tablet.png');
@@ -83,6 +82,18 @@
       @media (width >=1024px) {
         height: auto;
         background-image: url('../../app/styles/wellabe/assets/wellabe-hero-background-desktop.png');
+      }
+    }
+
+    &.mypolicyview {
+      background-image: url('../../app/styles/mypolicyview/mpv-hero-background-mobile.jpg');
+
+      @media (width >=500px) {
+        background-image: url('../../app/styles/mypolicyview/mpv-hero-background-tablet.png');
+      }
+
+      @media (width >=1024px) {
+        background-image: url('../../app/styles/mypolicyview/mpv-hero-background-desktop.png');
       }
     }
   }
