@@ -59,6 +59,7 @@ export interface PermissionsContextProps {
     hasNotesAccess: boolean;
     hasTestHarnessAccess: boolean;
     isZinniaInternalViewer: boolean;
+    isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
 }
 
@@ -224,6 +225,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     object: FgaRoles.ZINNIA_INTERNAL_VIEWER,
                 },
                 {
+                    // IMH-85894
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.Party,
+                    object: FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
+                },
+                {
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
                     object: FgaRoles.WELB_SALES_MATERIALS,
@@ -277,6 +284,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.ZINNIA_INTERNAL_VIEWER,
                 FgaRelation.Party
             );
+            const isZinniaInternalProcessor = !!checkRelation(
+                data,
+                FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
+                FgaRelation.Party
+            );
 
             const hasWelbSalesMaterials = !!checkRelation(
                 data,
@@ -305,6 +317,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasNotesAccess,
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
+                isZinniaInternalProcessor,
                 hasWelbSalesMaterials,
                 hasCreateClientAccess,
             };
@@ -362,6 +375,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
                 hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
+                isZinniaInternalProcessor:
+                    !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
             }}
         >

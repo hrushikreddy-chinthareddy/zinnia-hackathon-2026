@@ -3,8 +3,10 @@ import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import { useClientCaseId } from '../../helpers/hooks/use-client-case-id';
+import { useIllustrationAnalytics } from '../../helpers/hooks/use-illustration-analytics';
 import { useIllustrationActions } from '../../helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '../../providers/SelectedIllustrationProvider';
 
@@ -19,13 +21,22 @@ export default function IllustrationSelectForApplicationFooter({
 
     const clientCaseId = useClientCaseId();
     const sideSheet = useSideSheetContext();
-    const { setIsLoadingSelectForApplication } = useSelectedIllustration();
+    const { setIsLoadingSelectForApplication, selectedIllustration } =
+        useSelectedIllustration();
+    const { product } = selectedIllustration ?? {};
     const {
         selectIllustrationMutation: { mutate, isIdle, isPending },
     } = useIllustrationActions();
+    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
 
     const handleSubmit = () => {
         setIsLoadingSelectForApplication(true);
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.selectIllustrationForApplication
+            );
+        }
         mutate(
             { clientCaseId, illustrationId },
             {

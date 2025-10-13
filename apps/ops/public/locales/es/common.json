@@ -8028,7 +8028,7 @@
             "coverage": {
                 "title": "Cobertura",
                 "faceAmount": "Valor nominal",
-                "termLength": "Tiempo de término"
+                "termLength": "Período de vigencia de la prima nivelada"
             },
             "premium": {
                 "title": "Prima",

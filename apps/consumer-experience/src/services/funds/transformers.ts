@@ -8,7 +8,6 @@ import { PolicyFund } from '@/types/policy';
 import { getNextOccurrenceOfDay } from '@/utils/dates';
 import { findPropertyValue } from '@/utils/objects';
 
-import { ApiResponse } from '..';
 import { FundDetails, Fund } from './types';
 
 const FundAccountTypesForPolicyDetailsData: (
@@ -25,23 +24,14 @@ interface CombineFundArgs {
 /**
  * Takes the fund details from the policy and product rules endpoint, then combines them with the fund details endpoint to
  * return a more complete fund object that includes info like interestRate, sweepDate, etc
- * @param param0
- * @returns
  */
 export const combineFundData = ({
   fundDetails,
   productsDetails,
   policyFunds,
-}: CombineFundArgs): ApiResponse<Fund[]> => {
+}: CombineFundArgs): Fund[] => {
   if (!productsDetails?.funds || !policyFunds || !fundDetails.length) {
-    return {
-      data: null,
-      error: {
-        message: 'Something went wrong',
-        status: 500,
-        name: 'combineFunds Error',
-      },
-    };
+    return [];
   }
 
   // Merges the product details, the policy funds, and the fund info arrays and combine the data in both.
@@ -103,10 +93,7 @@ export const combineFundData = ({
     });
   });
 
-  return {
-    data: Array.from(map.values()),
-    error: null,
-  };
+  return Array.from(map.values());
 };
 
 export const transformFundsTotalValue = (

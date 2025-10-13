@@ -15,6 +15,7 @@ export enum FgaRoles {
   CALL_LOGS_ZL = 'entity:zinnia_live_call_logs',
   TEST_HARNESS_ACCESS = 'entity:zinnia_live_test_harness',
   ZINNIA_INTERNAL_VIEWER = 'role:zinnia_internal_viewer',
+  ZINNIA_INTERNAL_PROCESSOR = 'role:zinnia_internal_processor',
   ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE = 'entity:zinnia_live_illustrations_client_case_sidesheet',
 }
 
@@ -215,4 +216,3 @@ export function checkIfUserHasUsageAccess(
       tuple.allowed
   );
 }
-

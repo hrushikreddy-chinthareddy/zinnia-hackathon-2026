@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
@@ -93,6 +94,7 @@ const IllustrationProductList = ({
     const [isProcessingProducts, setIsProcessingProducts] = useState(true);
 
     const router = useRouter();
+    const { sendAddProductToIllustrateEvent } = useIllustrationAnalytics();
 
     const { illustrationId } = router.query;
 
@@ -198,6 +200,14 @@ const IllustrationProductList = ({
         (product) => product.planCode === carrierProductId
     );
 
+    const handleAddProducts = () => {
+        if (!showEmptyProducts) {
+            const carrier = products[0].carrier;
+            sendAddProductToIllustrateEvent(carrier);
+        }
+        setShowEmptyProducts(!showEmptyProducts);
+    };
+
     // Show loader while processing products
     if (isProcessingProducts) {
         return (
@@ -285,9 +295,9 @@ const IllustrationProductList = ({
                         type="button"
                         size="small"
                         className={clsx(styles.displayProducts)}
-                        onClick={() => setShowEmptyProducts(!showEmptyProducts)}
+                        onClick={handleAddProducts}
                     >
-                        <Icon type={IconType.ADD}></Icon>
+                        <Icon type={IconType.ADD} />
                         <span>{t('clientCase.productList.seeProducts')}</span>
                         <Icon
                             type={IconType.CHEVRON}
@@ -296,7 +306,7 @@ const IllustrationProductList = ({
                                 styles.chevron,
                                 showEmptyProducts && styles.arrowDown
                             )}
-                        ></Icon>
+                        />
                     </Button>
                 )}
             {showEmptyProducts && (

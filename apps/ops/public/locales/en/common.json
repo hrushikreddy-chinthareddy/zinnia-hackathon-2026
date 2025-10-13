@@ -8198,7 +8198,7 @@
             "coverage": {
                 "title": "Coverage",
                 "faceAmount": "Face amount",
-                "termLength": "Level Premium Term Length"
+                "termLength": "Level Premium Term Period"
             },
             "premium": {
                 "title": "Premium",

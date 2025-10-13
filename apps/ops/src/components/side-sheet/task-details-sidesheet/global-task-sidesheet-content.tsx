@@ -39,6 +39,7 @@ import {
     OptimizelyVariableKey,
     useOptimizely,
 } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime } from '@deps/helpers/string.helpers';
@@ -219,6 +220,7 @@ export default function GlobalTaskSideSheet({
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
     const [timer] = useState(performance.now());
+    const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
 
@@ -246,9 +248,10 @@ export default function GlobalTaskSideSheet({
                 SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: task.caseId,
             excludeDocumentTypes,
-            ...(includeDocumentTypeForInboundSearch(task.carrier) && {
-                documentType: includeDocumentTypesInbound.join(','),
-            }),
+            ...(includeDocumentTypeForInboundSearch(task.carrier) &&
+                !isZinniaInternalProcessor && {
+                    documentType: includeDocumentTypesInbound.join(','),
+                }),
         };
     }, [task]);
 
