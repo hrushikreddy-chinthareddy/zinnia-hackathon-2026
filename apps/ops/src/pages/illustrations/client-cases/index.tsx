@@ -11,6 +11,7 @@ import { ClientCaseTable } from '@deps/components/client-case/client-case-list/t
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { PageHead } from '@deps/components/page-title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -56,7 +57,7 @@ const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
 const INTERNAL_ERROR_LABEL = 'We were unable to create this client case.';
 const EXTERNAL_ERROR_LABEL =
     'We were unable to create the required client case due to external issues';
-//This should be  just a red    ict page or maybe a redirect with urk params read and user/permision validation
+
 export default function Illustrations({
     fetchingErrorMessage,
     fetchingErrorOrigin,
@@ -112,6 +113,7 @@ export default function Illustrations({
 
     return (
         <>
+            <PageHead titleKey="clientCases" />
             <IllustrationsClientCaseProvider>
                 {bannerText !== '' && (
                     <BannerAlert
