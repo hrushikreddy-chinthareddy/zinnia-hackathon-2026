@@ -48,6 +48,7 @@ export default async function Profile({ params }: Props) {
         <NoDataAvailable
           iconType={IconType.CIRCLE_USER}
           message="There is currently no profile data available."
+          correlationId={error?.correlationId}
         />
       </div>
     );

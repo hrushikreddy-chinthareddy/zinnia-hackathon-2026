@@ -69,7 +69,7 @@ const Header = ({
   type: 'Primary' | 'Contingent';
 }) => {
   if (!type) {
-    return <NoDataAvailable />;
+    return <NoDataAvailable correlationId={undefined} />;
   }
   const TooltipCopy: Record<
     BeneficiaryType,

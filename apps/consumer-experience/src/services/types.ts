@@ -1,5 +1,6 @@
 export interface ApiResponseError extends Error {
   status: number;
+  correlationId?: string;
 }
 
 export type ApiResponse<T> =

@@ -58,6 +58,7 @@ export default async function Page({
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
             message="There is currently no contract data available."
+            correlationId={error.correlationId}
           />
         </div>
       </>

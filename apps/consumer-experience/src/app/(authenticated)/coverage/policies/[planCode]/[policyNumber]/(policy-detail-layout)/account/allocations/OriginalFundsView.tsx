@@ -39,7 +39,7 @@ export const OriginalFundsView = async ({
 
   const allocationData = () => {
     if (error || !data) {
-      return <NoDataAvailable />;
+      return <NoDataAvailable correlationId={error?.correlationId} />;
     }
 
     return data?.map(allocation => {
