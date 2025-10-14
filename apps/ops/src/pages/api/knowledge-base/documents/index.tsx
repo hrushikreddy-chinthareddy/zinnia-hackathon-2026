@@ -8,7 +8,7 @@ import {
     logError,
     logInfo,
     parseErrorInformation,
-    withAuthAndLogging
+    withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -38,9 +38,9 @@ export default withAuthAndLogging(
         const params =
             docDisplayType === DocumentsDisplayType.All
                 ? {
-                    page: parseInt((page as string) || '0', 0),
-                    size: parseInt((size as string) || '10', 10),
-                }
+                      page: parseInt((page as string) || '0', 0),
+                      size: parseInt((size as string) || '10', 10),
+                  }
                 : undefined;
 
         try {

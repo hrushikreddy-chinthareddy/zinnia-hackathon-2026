@@ -7,7 +7,7 @@ import {
     logError,
     logInfo,
     parseErrorInformation,
-    withAuthAndLogging
+    withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
