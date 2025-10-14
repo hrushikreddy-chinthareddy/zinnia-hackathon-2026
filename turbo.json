@@ -105,12 +105,8 @@
       "cache": false,
       "persistent": true
     },
-    "pre-commit": {
-    },
+    "pre-commit": {},
     "pre-push": {},
-    "consumer-experience#pre-commit": {
-      "dependsOn": ["^build", "lint", "prettier"]
-    },
     "consumer-experience#dev": {
       "dependsOn": ["^build"]
     },

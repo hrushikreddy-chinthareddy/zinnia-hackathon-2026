@@ -189,7 +189,7 @@
         "lint:test": "eslint 'src/**/*.{js,ts,jsx,tsx}' --max-warnings=0 --no-ignore",
         "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
         "orval": "orval",
-        "pre-commit": "",
+        "pre-commit": "pnpm run lint-staged",
         "pre-push": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm --silent prettier && pnpm lint && pnpm typecheck && pnpm test",
         "prettier": "prettier --check --cache --loglevel=warn ./src",
         "prettier:fix": "prettier --write --cache ./src",
