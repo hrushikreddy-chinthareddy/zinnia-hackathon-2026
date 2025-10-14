@@ -7965,6 +7965,8 @@
     "clientCase": {
         "newClientCase": "+  Nuevo client case",
         "clientCasePermissions": "No tienes permiso para realizar esta acción.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Buscar Por",
             "clientCase": "Client case",
@@ -8128,6 +8130,9 @@
                 "agentHasNoAgencies": "Este agente no pertenece a niguna agencia.",
                 "current": "Usuario actual"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Cotización rápida"
         }
     },
     "zinniaAiAssistant": {

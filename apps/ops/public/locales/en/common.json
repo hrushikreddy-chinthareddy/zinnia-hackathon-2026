@@ -8125,6 +8125,8 @@
     "clientCase": {
         "newClientCase": "+ New client case",
         "clientCasePermissions": "You do not have permission to take this action.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Search By",
             "clientCase": "Client case",
@@ -8288,6 +8290,28 @@
                 "agentHasNoAgencies": "This agent doesn't belong to any agencies.",
                 "current": "Current user"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Quick Quote",
+            "subtitle": "Fill the information below to create a quick quote.",
+            "details": "Details",
+            "productType": "Product type",
+            "age": "Age",
+            "sexAtBirth": "Sex at birth",
+            "nicotineUse": "Nicotine use",
+            "state": "State",
+            "faceAmount": "Face amount",
+            "nicotineYes": "Y",
+            "nicotineNo": "N",
+            "maleButton": "M",
+            "femaleButton": "F",
+            "riders": "Riders",
+            "accidentalDeath": "Accidental Death Benefit Rider",
+            "childrensTerm": "Children's Term Insurance Rider",
+            "waiverOfPremium": "Waiver of Premium",
+            "premiumfreeRiders": "Premium-free Riders",
+            "acceleratedDeathBenefit": "Accelerated Death Benefit Rider for Terminal Illness",
+            "charitableGiving": "Charitable Giving Rider"
         }
     },
     "zinniaAiAssistant": {

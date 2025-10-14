@@ -7981,6 +7981,8 @@
     "clientCase": {
         "newClientCase": "+ Nouveau client case",
         "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Rechercher Par",
             "clientCase": "Client case",
@@ -8144,6 +8146,9 @@
                 "agentHasNoAgencies": "Cet agent n'appartient à aucune agence.",
                 "current": "Utilisateur actuel"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Cotisation rapide"
         }
     },
     "usage": {
