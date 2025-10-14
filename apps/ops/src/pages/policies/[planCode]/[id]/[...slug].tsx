@@ -23,11 +23,8 @@ import PersonSubPage from '@deps/containers/person-sub-page';
 import PolicyDetailsContainer from '@deps/containers/policy-details/policy-details';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
-
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
-
 import { FilterTransactions } from '@deps/containers/subpages/activity-sub-page/filter-transactions';
-
 import DocumentsSubPage from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import FundsSubPage from '@deps/containers/subpages/funds-sub-page';
 import WithdrawalsSubPage from '@deps/containers/withdrawals-sub-page/withdrawals-sub-page';
@@ -233,9 +230,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                     featureFlags.revised_history_table &&
                     slug[1] === 'transactions'
                 ) {
-                    subPageContent = <FilterTransactions />
+                    subPageContent = <FilterTransactions />;
                 } else {
-                    subPageContent = <ActivitySubPage />
+                    subPageContent = <ActivitySubPage />;
+                }
                 break;
             case 'documents':
                 subPageContent = <DocumentsSubPage policy={policy} />;
