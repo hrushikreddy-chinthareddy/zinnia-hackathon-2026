@@ -1375,6 +1375,9 @@
                                 "ui:options": {
                                     "label": false
                                 },
+                                "beneficiaryPercentage": {
+                                    "ui:widget": "PercentageWidget"
+                                },
                                 "partyType": {
                                     "ui:widget": "radio",
                                     "ui:options": {

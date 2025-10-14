@@ -9,6 +9,7 @@ import AttachmentWidget from './file-widget/attachment-widget';
 import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
 import NotesWidget from './notes-widget/notes-widget';
+import PercentageWidget from './percentage-widget/percentage-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
 import TextWidget from './text-widget/text-widget';
@@ -33,6 +34,7 @@ export function generateWidgets(): RegistryWidgetsType {
         AttachmentWidget,
         ArithmeticOperationWidget,
         TransactionAccordion,
+        PercentageWidget,
     };
 }
 
