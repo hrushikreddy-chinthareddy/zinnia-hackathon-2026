@@ -9,18 +9,58 @@
     "taskName": "Third Party Data Entry",
     "status": "NEW",
     "data": {
+        "process": "Policy Update",
+        "policyNumber": "ADA2501506",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
-        "taskName": "Transaction",
+        "taskName": "Third Party Data Entry",
         "processSubType": "Third Party Designee Change",
         "planCode": "WBFDAV03",
+        "policyStatus": "ACTIVE",
         "details": {
             "documents": [
                 {
                     "documentId": "67c1b9655c3f6536d7f2ac69",
-                    "documentName": "Post issue Application",
+                    "documentName": "Third Party Designee Form",
                     "documentExt": "pdf"
                 }
             ]
+        },
+        "thirdPartyDesignee": {
+            "policyNumber": "FNWL645505687",
+            "policyOwner": "test owner",
+            "policyJointOwner": "test joint owner",
+            "insured": "test insured",
+            "matchDetails": "Yes",
+            "designeeType": "Individual",
+            "prefix": "Mr.",
+            "firstName": "first",
+            "middleName": "",
+            "lastName": "last",
+            "suffix": "I",
+            "communicationPreference": "Address",
+            "signature": [
+                {
+                    "signType": "Owner",
+                    "isSignedPresent": "Yes",
+                    "signDesignation": "Trustee"
+                },
+                {
+                    "signType": "Third party designee",
+                    "isSignedPresent": "Yes",
+                    "signDesignation": "Trustee"
+                }
+            ]
+        },
+        "summary": {
+            "matchDetails": "Yes",
+            "designeeType": "Trust"
+        },
+        "missingInformation": {
+            "Supporting document is incomplete": "No",
+            "Third party information is not provided or unclear": [],
+            "Incorrect form provided": "No",
+            "Signature missing": "No",
+            "Incomplete form provided": "No"
         }
     },
     "mappedExceptions": [],

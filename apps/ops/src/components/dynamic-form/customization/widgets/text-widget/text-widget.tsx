@@ -21,13 +21,17 @@ export const TextWidget = function (props: WidgetProps) {
         hideError,
     } = props;
 
-    const { inline, prefix, inlinetext, dataType, type } =
+    const { inline, prefix, inlinetext, dataType, type, labelStyle } =
         getUiOptions(uiSchema);
     if (inline) {
         return (
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
                 <div
-                    className={clsx('text-gray-500', cardStyle[type as string])}
+                    className={clsx(
+                        'text-gray-500',
+                        style[type as string],
+                        labelStyle && '!text-black'
+                    )}
                 >
                     {label}
                 </div>

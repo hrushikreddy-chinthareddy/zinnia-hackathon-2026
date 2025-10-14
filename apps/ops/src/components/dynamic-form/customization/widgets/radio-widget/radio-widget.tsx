@@ -8,7 +8,10 @@ import {
 import { IconType } from '@zinnia/bloom/components';
 import { useMemo } from 'react';
 
-import Radio, { RadioItem } from '@deps/components/radio/radio';
+import Radio, {
+    RadioItem,
+    RadioOrientation,
+} from '@deps/components/radio/radio';
 import {
     csrApiHelper,
     parseJsonValue,
@@ -73,7 +76,7 @@ function RadioWidget<
         formContext,
         readonly,
     } = widgetProps;
-    const { enumOptions, enumDisabled } = options;
+    const { enumOptions, enumDisabled, inline } = options;
     const { customOptions, props, properties, cardType, icon, sectionTitle } =
         getUiOptions<T, S, F>(uiSchema);
 
@@ -201,6 +204,11 @@ function RadioWidget<
                 defaultValue={value}
                 onChange={handleOnChange}
                 className="items-center justify-between text-sm"
+                orientation={
+                    inline
+                        ? RadioOrientation.Horizontal
+                        : RadioOrientation.Vertical
+                }
             />
         </div>
     );
