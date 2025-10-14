@@ -61,6 +61,9 @@ export const PersonSubPage = ({
             ) || []
         );
     }, [partyRoles, selectedPolicyParty?.partyId]);
+    const hasTPD = selectedPolicyPartyRoles.some(
+        (policy) => policy.partyRole === PartyRole.THIRDPARTYDESIGNEE
+    );
 
     // to do - this is the new implementation of the Parties Class - update in all locations, rather than just the Identification Card
     const newSelectedPolicyParty = policyDetails.getPartyById(partyId);
@@ -272,17 +275,18 @@ export const PersonSubPage = ({
                 />
 
                 <hr className="h-0.5 border-none bg-gray-200" />
-                <BankCard
-                    editable={editable}
-                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
-                    party={selectedPolicyParty}
-                    // TODO CB - set these ase vars to be reused above
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                    isEligible={
-                        manageBankChangeEligibility?.isEligibleBankChange
-                    }
-                />
+                {!hasTPD && (
+                    <BankCard
+                        editable={editable}
+                        isUserPermissionedToEditCards={isUserAllowedToEditCards}
+                        party={selectedPolicyParty}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                        isEligible={
+                            manageBankChangeEligibility?.isEligibleBankChange
+                        }
+                    />
+                )}
 
                 {isInsured && (
                     <>
