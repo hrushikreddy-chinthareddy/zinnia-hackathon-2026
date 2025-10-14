@@ -1325,6 +1325,42 @@ export enum SortOrder {
     Desc = 'DESC',
 }
 
+export enum DairyNoteType {
+    ADMINISTRATIVE = 'Administrative',
+    BANKRUPTCY = 'Bankruptcy',
+    CONTRACTINQUIRY = 'Contract Inquiry',
+    CARRIERAPPOINTMENTCOMPLETED = 'Carrier Appointment Completed',
+    CARRIERAPPOINTMENTREQUESTED = 'Carrier Appointment Requested',
+    CARRIERAPPOINTMENTTERMINATED = 'Carrier Appointment Terminated',
+    CARRIERAPPROVALRECEIVED = 'Carrier Approval Received',
+    CARRIEROFFERRECEIVED = 'Carrier Offer Received',
+    CARRIERQUOTEREQUESTED = 'Carrier Quote Requested',
+    CONTRACTEXECUTED = 'Contract Executed',
+    CONTRACTTERMINATED = 'Contract Terminated',
+    DELIVERY = 'Delivery',
+    FORMALAPPLICATIONRECIVED = 'Formal Application Received',
+    GARNISHMENTS = 'Garnishments',
+    HOMEOFFICEEMPLOYEE = 'Home Office Employee',
+    ILLUSTRATIONREQUESTED = 'Illustration Requested',
+    INCOMINGREPLACEMENT = 'Incoming Replacement',
+    INFORMALINQUIRYRECEIVED = 'Informal Inquiry Received',
+    LEGAL = 'Legal',
+    LICENSEEXPIRED = 'License Expired',
+    LICENSETERMINATED = 'License Terminated',
+    NEWBUSINESS = 'New Business',
+    NEWLICENSERECEIVED = 'New License Received',
+    ORIGINALDEPOSITDATE = 'Original Deposit Date',
+    OUTGOINGREPLACEMENT = 'Outgoing Replacement',
+    POLICYADMIN = 'Policy Admin',
+    POLICYISSUED = 'Policy Issued',
+    RECRUITCANDIDATE = 'Recruit Candidate',
+    REFERREDTOUNDERWRITING = 'Referred To Underwriting',
+    REQUIREMENT = 'Requirement',
+    SEMINAR = 'Seminar',
+    SPECIALMARKETCODE = 'Special Market Code',
+    UNDERWRITING = 'Underwriting',
+}
+
 export interface FormNigos {
     nigos: NigoMessages[];
 }

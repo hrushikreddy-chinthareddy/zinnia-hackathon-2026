@@ -144,7 +144,7 @@ const TabGroupContent = ({
 
 const TabGroupContainer = ({ steps, policy }: TabGroupContainerProps) => {
     return (
-        <DiaryNotesProvider caseDetails={policy as any}>
+        <DiaryNotesProvider caseDetails={policy as any} isLC={true}>
             <WorkflowProvider>
                 <TabGroupContent
                     steps={steps}
