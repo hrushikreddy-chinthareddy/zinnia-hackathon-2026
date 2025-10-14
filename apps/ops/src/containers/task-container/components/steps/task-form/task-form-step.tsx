@@ -108,7 +108,9 @@ const TaskFormStep = ({
     return (
         <WorkflowCard
             className="!gap-0"
-            title={(taskMetadata?.title as string) ?? (t('title') as string)}
+            title={
+                (task.taskName || taskMetadata?.title) ?? (t('title') as string)
+            }
             subtitle={taskMetadata?.description as string}
             footerContent={
                 <TransactionNavigationButtons
@@ -132,7 +134,7 @@ const TaskFormStep = ({
                 />
             }
         >
-            <div className="relative">
+            <div className="relative pt-6">
                 {loading && (
                     <div className="fixed inset-0 z-50 grid place-content-center bg-white/50">
                         <PageLoader />
