@@ -16,9 +16,10 @@
     "build-storybook": "turbo run build-storybook",
     "link-package": "node ./scripts/link-package.mjs",
     "unlink-package": "node ./scripts/unlink-packages.mjs",
-    "pre-commit": "turbo run pre-commit --filter=\"[HEAD^1]\"",
+    "pre-commit": "pnpm --silent verify-branch-name && turbo run pre-commit --filter=\"[HEAD^1]\"",
     "pre-push": "bash ./scripts/pre-push.sh",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "verify-branch-name": "./scripts/branch-naming-policy.sh"
   },
   "devDependencies": {
     "@zinnia/typescript-config": "workspace:*",

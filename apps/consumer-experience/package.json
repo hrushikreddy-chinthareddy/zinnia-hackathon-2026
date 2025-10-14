@@ -17,8 +17,8 @@
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic",
-    "pre-commit": "pnpm run lint-staged",
-    "pre-push": "pnpm run test"
+    "pre-commit": "",
+    "pre-push": "pnpm run lint-staged && pnpm run test"
   },
   "dependencies": {
     "@datadog/browser-rum": "^5.17.1",
