@@ -69,6 +69,7 @@ jobs:
           pnpm install --filter ./apps/ops --frozen-lockfile
       - name: Run prettier
         run: |
+          export NODE_OPTIONS="--max-old-space-size=4096"
           npx turbo prettier
 
   type-check:
