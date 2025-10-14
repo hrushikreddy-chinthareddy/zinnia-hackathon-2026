@@ -28,6 +28,8 @@ export enum DocumentType {
     StatementOfUnderstanding = 'Statement of Understanding',
     Systematic = 'Systematic',
     Output = 'Output',
+    LOAOutput = 'LOA Output',
+    PolicyPageOutput = 'Policy Page Output',
 }
 
 // FIXME: move out of models (and into env vars or external config)
@@ -55,6 +57,8 @@ export const includeDocumentTypesInbound = [
     DocumentType.Rereg,
     DocumentType.StatementOfUnderstanding,
     DocumentType.Systematic,
+    DocumentType.LOAOutput,
+    DocumentType.PolicyPageOutput,
 ];
 
 // The document type filtering (include list) only exists for the following carrier codes:
