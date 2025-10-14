@@ -172,7 +172,7 @@ const ConditionalDiaryNotesProvider = ({
     children,
 }: ConditionalDiaryNotesProviderProps) => {
     return condition ? (
-        <DiaryNotesProvider caseDetails={caseDetails}>
+        <DiaryNotesProvider caseDetails={caseDetails} isLC={true}>
             {children}
         </DiaryNotesProvider>
     ) : (

@@ -151,7 +151,7 @@ export const BankList: FC<BankListProps> = ({
       {data && !!data.length && (
         <>
           <p className="mb-lg">
-            Need help updating banking details? Give us a call at{' '}
+            Need help changing your autopay bank? Give us a call at{' '}
             <CarrierPhoneNumber />.
           </p>
           <OpenTransactionCaseDetails

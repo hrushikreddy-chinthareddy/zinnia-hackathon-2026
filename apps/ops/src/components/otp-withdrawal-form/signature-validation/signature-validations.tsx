@@ -169,7 +169,7 @@ export default function SignatureValidations({
     return (
         <CardContainer
             classNames="w-full"
-            containerClassNames="border-b-2 border-gray-100"
+            containerClassNames=" border-gray-100"
         >
             <Typography variant={TypographyVariant.H3} className="mb-4">
                 {t(headerTranslationKey)}

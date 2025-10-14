@@ -284,6 +284,7 @@ export default function getGdmnConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -311,17 +312,44 @@ export default function getGdmnConfig(t: TFunction) {
                 );
             }
         }
+
         const ownerSignature = formSignature?.signatures?.find(
             (sigInfo) =>
                 sigInfo?.signType?.text ===
                 SignatureValidationTypeWithdrawal.Owner
         );
 
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        const ownerESignature = formESignatureData?.eSignatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
+        );
+
+        if (
+            ownerSignature?.isSigned !== false &&
+            !ownerSignature?.isSigned &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
             errors[
                 `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
+
+        if (
+            ownerSignature?.isDesignationPresent === null &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+            ] = t('formValidation.signatureDesignationMustBeSelected');
+        }
+
+        if (formESignatureData?.isFormESignaturePresent) {
+            if (!ownerESignature?.isSigned) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
+            }
         }
 
         return errors;

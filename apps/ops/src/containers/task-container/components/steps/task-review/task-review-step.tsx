@@ -83,7 +83,7 @@ export const TaskReviewStep = ({
 
     return (
         <WorkflowCard
-            title={t('title')}
+            title={task.taskName || t('title')}
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons

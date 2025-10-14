@@ -291,7 +291,11 @@ export default function WithdrawalCase({
     return (
         <>
             <PageHead titleKey="createCaseWithdrawal" />
-            <DiaryNotesProvider caseDetails={caseDetailsData}>
+            <DiaryNotesProvider
+                caseDetails={caseDetailsData}
+                planCode={planCode}
+                isLC={isLC}
+            >
                 <OtpLayout
                     contractNumber={document.contract}
                     clientId={clientId as string}

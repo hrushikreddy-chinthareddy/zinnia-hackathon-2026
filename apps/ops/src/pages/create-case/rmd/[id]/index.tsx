@@ -274,7 +274,11 @@ export default function RmdCase({
     return (
         <>
             <PageHead titleKey="createCaseRmd" />
-            <DiaryNotesProvider caseDetails={caseDetailsData}>
+            <DiaryNotesProvider
+                caseDetails={caseDetailsData}
+                planCode={planCode}
+                isLC={isLC}
+            >
                 <OtpLayout
                     contractNumber={document.contract}
                     clientId={clientId as string}

@@ -5,16 +5,16 @@ import { SeriesOptionsType } from 'highcharts';
 import { useMemo } from 'react';
 
 import { StackedColumnChart } from '@deps/components/dashboard/charts/bar-charts/stacked-column-chart';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { Legend } from '@deps/components/dashboard/legend/legend';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import {
     PrepareTransactionsByRoleCSV,
@@ -126,17 +126,11 @@ export const Activity = () => {
                     loading={zinniaSubmittedTransactionByRoleDataFetching}
                 >
                     {chartNotRenderable ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {zinniaSubmittedTransactionByRoleDataError
-                                    ? 'Something went wrong fetching submitted transaction by role, please try again by refreshing the page'
-                                    : 'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        zinniaSubmittedTransactionByRoleDataError ? (
+                            <ErrorMessage />
+                        ) : (
+                            <NoDataMessage />
+                        )
                     ) : (
                         <>
                             <StackedColumnChart

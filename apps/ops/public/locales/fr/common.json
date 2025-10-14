@@ -61,6 +61,7 @@
             "cancelFreeLook": "Annuler Free Look",
             "caseManagement": "Gestion des Dossiers",
             "caseOverview": "Aperçu du Dossier",
+            "clientCases": "illustrations",
             "coverage": "Couverture",
             "createCase": "Créer une nouvelle demande OTP",
             "createCaseCreate": "Démarrer une nouvelle demande OTP",
@@ -77,6 +78,7 @@
             "formData": "Données du formulaire",
             "funds": "Fonds",
             "fundTransfer": "Transfert de fonds",
+            "illustrate": "Cas Client",
             "history": "Histoire",
             "loanAutopay": "Paiement automatique du prêt",
             "loanPayment": "Paiement de prêts",
@@ -2356,7 +2358,8 @@
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Option de revenu viager conjoint",
                     "singleLifetimeIncomeOption": "Option de revenu viager unique",
-                    "interestEarned": "Intérêt gagné"
+                    "interestEarned": "Intérêt gagné",
+                    "variableAnnuity": "GLWB variable"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Veuillez spécifier le fonds pour configurer SSW avec le pourcentage d'A.V.",
@@ -2840,6 +2843,8 @@
                 "nameIsRequired": "Le nom est requis",
                 "signatureDesignationMustBeSelected": "La désignation de signature doit être sélectionnée",
                 "signaturePresentOptionMustBeSelected": "L'option de présence de signature doit être sélectionnée",
+                "signatureValidOptionMustBeSelected": "L'option Signature valide doit être sélectionnée.",
+                "signatureCommentMustBePresent": "Le commentaire de signature doit être présent",
                 "accountNumberDoesNotMatch": "Le numéro de compte ne correspond pas",
                 "routingNumberDoesNotMatch": "Le numéro de routage ne correspond pas",
                 "signatureValidatedOptionMustBeSelected": "L’option de signature validée doit être sélectionnée",
@@ -7976,6 +7981,8 @@
     "clientCase": {
         "newClientCase": "+ Nouveau client case",
         "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Rechercher Par",
             "clientCase": "Client case",
@@ -8139,6 +8146,9 @@
                 "agentHasNoAgencies": "Cet agent n'appartient à aucune agence.",
                 "current": "Utilisateur actuel"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Cotisation rapide"
         }
     },
     "usage": {

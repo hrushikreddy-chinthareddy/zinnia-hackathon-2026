@@ -61,6 +61,7 @@
             "cancelFreeLook": "Free Look Cancel",
             "caseManagement": "Case Management",
             "caseOverview": "Case Overview",
+            "clientCases": "Illustrations",
             "coverage": "Coverage",
             "createCase": "Create New OTP Request",
             "createCaseCreate": "Start New OTP Request",
@@ -77,6 +78,7 @@
             "funds": "Funds",
             "fundTransfer": "Fund Transfer",
             "history": "History",
+            "illustrate": "Client Case",
             "loanAutopay": "Loan Autopay",
             "loanPayment": "Loan Payment",
             "loans": "Loans",
@@ -2362,7 +2364,8 @@
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Joint Lifetime Income Option",
                     "singleLifetimeIncomeOption": "Single Lifetime Income Option",
-                    "interestEarned": "Interest earned"
+                    "interestEarned": "Interest earned",
+                    "variableAnnuity": "Variable GLWB"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Please specify the fund to setup SSW with Percent of A.V",
@@ -2837,7 +2840,7 @@
                 "type": "Type",
                 "date": "Sign date",
                 "signPresent": "Sign present",
-                "auditTrial": "Audit trial",
+                "auditTrial": "Audit trail",
                 "accordForm": "Acord Form"
             },
             "employerTpaAuthorization": {
@@ -2855,6 +2858,8 @@
                 "nameIsRequired": "Name is required",
                 "signatureDesignationMustBeSelected": "Signature designation must be selected",
                 "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+                "signatureValidOptionMustBeSelected": "Signature valid option must be selected",
+                "signatureCommentMustBePresent": "Signature comment must be present",
                 "accountNumberDoesNotMatch": "Account number does not match",
                 "routingNumberDoesNotMatch": "Routing number does not match",
                 "signatureValidatedOptionMustBeSelected": "Signature validated option must be selected",
@@ -8120,6 +8125,8 @@
     "clientCase": {
         "newClientCase": "+ New client case",
         "clientCasePermissions": "You do not have permission to take this action.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Search By",
             "clientCase": "Client case",
@@ -8283,6 +8290,28 @@
                 "agentHasNoAgencies": "This agent doesn't belong to any agencies.",
                 "current": "Current user"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Quick Quote",
+            "subtitle": "Fill the information below to create a quick quote.",
+            "details": "Details",
+            "productType": "Product type",
+            "age": "Age",
+            "sexAtBirth": "Sex at birth",
+            "nicotineUse": "Nicotine use",
+            "state": "State",
+            "faceAmount": "Face amount",
+            "nicotineYes": "Y",
+            "nicotineNo": "N",
+            "maleButton": "M",
+            "femaleButton": "F",
+            "riders": "Riders",
+            "accidentalDeath": "Accidental Death Benefit Rider",
+            "childrensTerm": "Children's Term Insurance Rider",
+            "waiverOfPremium": "Waiver of Premium",
+            "premiumfreeRiders": "Premium-free Riders",
+            "acceleratedDeathBenefit": "Accelerated Death Benefit Rider for Terminal Illness",
+            "charitableGiving": "Charitable Giving Rider"
         }
     },
     "zinniaAiAssistant": {

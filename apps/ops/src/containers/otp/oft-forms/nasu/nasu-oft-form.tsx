@@ -104,6 +104,15 @@ export default function NasuOftWithdrawalForm() {
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             )}
+            <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
+            />
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -116,16 +125,6 @@ export default function NasuOftWithdrawalForm() {
                     t('distributionMethod.cedingCompanyDistribution') as string
                 }
                 defaultValue={defaultValues.disbursementOption}
-            />
-
-            <ESignatureValidation
-                isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={
-                    formESignatureData || ({} as FormEsignatureData)
-                }
-                setFormESignatureData={setFormESignatureData}
-                fieldConfig={eSignatureFieldConfig}
-                formErrors={formErrors}
             />
         </>
     );

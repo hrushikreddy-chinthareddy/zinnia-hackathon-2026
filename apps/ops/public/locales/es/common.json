@@ -61,6 +61,7 @@
             "cancelFreeLook": "Cancelar Vista Gratis",
             "caseManagement": "Gestión de Casos",
             "caseOverview": "Resumen del Caso",
+            "clientCases": "Ilustraciones",
             "coverage": "Cobertura",
             "createCase": "Crear Nueva Solicitud OTP",
             "createCaseCreate": "Iniciar Nueva Solicitud OTP",
@@ -77,6 +78,7 @@
             "funds": "Fondos",
             "fundTransfer": "Transferencia de Fondos",
             "history": "Historial",
+            "illustrate": "Caso de Cliente",
             "loanAutopay": "Pago Automático de Préstamo",
             "loanPayment": "Pago de Préstamo",
             "loans": "Préstamos",
@@ -2365,7 +2367,8 @@
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Opción de Ingreso Vitalicio Conjunto",
                     "singleLifetimeIncomeOption": "Opción de Ingreso Vitalicio Individual",
-                    "interestEarned": "Intereses ganados"
+                    "interestEarned": "Intereses ganados",
+                    "variableAnnuity": "GLWB variable"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Especifique el fondo para configurar SSW con el porcentaje de A.V",
@@ -2856,6 +2859,8 @@
                 "nameIsRequired": "Se requiere el nombre",
                 "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente",
                 "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                "signatureValidOptionMustBeSelected": "Debe seleccionarse la opción Firma válida",
+                "signatureCommentMustBePresent": "El comentario de la firma debe estar presente",
                 "accountNumberDoesNotMatch": "El número de cuenta no coincide",
                 "routingNumberDoesNotMatch": "El número de ruta no coincide",
                 "signatureValidatedOptionMustBeSelected": "Se debe seleccionar la opción de firma validada",
@@ -7960,6 +7965,8 @@
     "clientCase": {
         "newClientCase": "+  Nuevo client case",
         "clientCasePermissions": "No tienes permiso para realizar esta acción.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Buscar Por",
             "clientCase": "Client case",
@@ -8123,6 +8130,9 @@
                 "agentHasNoAgencies": "Este agente no pertenece a niguna agencia.",
                 "current": "Usuario actual"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Cotización rápida"
         }
     },
     "zinniaAiAssistant": {
