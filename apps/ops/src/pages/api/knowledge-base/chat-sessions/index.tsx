@@ -4,10 +4,10 @@ import { AxiosResponse } from 'axios';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import {
-    logCompliance,
     logError,
+    logInfo,
     parseErrorInformation,
-    withAuthAndLogging,
+    withAuthAndLogging
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -32,7 +32,7 @@ export default withAuthAndLogging(
         const url = `${apiServerBaseUrl}/api/v1/chat/sessions/list`;
 
         try {
-            logCompliance(
+            logInfo(
                 `Fetching chat sessions for clientId: ${clientId}`,
                 loggingContext
             );

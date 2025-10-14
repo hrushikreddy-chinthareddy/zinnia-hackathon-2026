@@ -4,10 +4,10 @@ import { AxiosResponse } from 'axios';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import {
-    logCompliance,
     logError,
+    logInfo,
     parseErrorInformation,
-    withAuthAndLogging,
+    withAuthAndLogging
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -41,7 +41,7 @@ export default withAuthAndLogging(
         };
 
         try {
-            logCompliance(
+            logInfo(
                 `Searching documents for client ${clientId}`,
                 loggingContext
             );

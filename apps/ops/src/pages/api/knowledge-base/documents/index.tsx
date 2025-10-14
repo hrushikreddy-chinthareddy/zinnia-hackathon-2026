@@ -5,10 +5,10 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { DocumentsDisplayType } from '@deps/types/knowledge-base';
 import {
-    logCompliance,
     logError,
+    logInfo,
     parseErrorInformation,
-    withAuthAndLogging,
+    withAuthAndLogging
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -38,13 +38,13 @@ export default withAuthAndLogging(
         const params =
             docDisplayType === DocumentsDisplayType.All
                 ? {
-                      page: parseInt((page as string) || '0', 0),
-                      size: parseInt((size as string) || '10', 10),
-                  }
+                    page: parseInt((page as string) || '0', 0),
+                    size: parseInt((size as string) || '10', 10),
+                }
                 : undefined;
 
         try {
-            logCompliance(
+            logInfo(
                 `Fetching documents for client ${clientId}`,
                 loggingContext
             );
