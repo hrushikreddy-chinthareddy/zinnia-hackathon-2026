@@ -271,7 +271,11 @@ export default function OftCase({
     return (
         <>
             <PageHead titleKey="createCaseOft" />
-            <DiaryNotesProvider caseDetails={caseDetailsData}>
+            <DiaryNotesProvider
+                caseDetails={caseDetailsData}
+                planCode={planCode}
+                isLC={isLC}
+            >
                 <OtpLayout
                     contractNumber={document.contract}
                     clientId={clientId as string}

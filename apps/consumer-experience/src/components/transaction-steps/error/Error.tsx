@@ -4,17 +4,20 @@ import { FC, ReactNode } from 'react';
 import { Button } from '@/components/button/Button';
 
 import styles from '../transaction-steps.module.css';
+import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 interface ErrorProps {
   errorTitle: string;
   errorMessage: ReactNode;
   isServerError?: boolean;
   closeCallback: () => void;
+  correlationId?: string;
 }
 export const Error: FC<ErrorProps> = ({
   errorTitle,
   errorMessage,
   isServerError,
   closeCallback,
+  correlationId,
 }) => {
   return (
     <div className={styles.wrapper}>
@@ -31,6 +34,7 @@ export const Error: FC<ErrorProps> = ({
       <Button expand onClick={closeCallback} className={styles.close}>
         Close
       </Button>
+      {correlationId && <CorrelationId id={correlationId} />}
     </div>
   );
 };

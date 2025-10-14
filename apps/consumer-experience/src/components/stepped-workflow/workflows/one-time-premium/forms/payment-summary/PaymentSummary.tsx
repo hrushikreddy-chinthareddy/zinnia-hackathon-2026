@@ -14,10 +14,6 @@ import { useForm } from 'react-hook-form';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
-import {
-  TRANSACTION_ERROR_QUERY_PARAM,
-  TransactionErrorType,
-} from '@/components/stepped-workflow/types';
 import { useComponentVisibility } from '@/hooks/use-component-visibility';
 import {
   getOneTimePremiumValidation,
@@ -25,6 +21,7 @@ import {
 } from '@/queries/premium-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { ComponentName } from '@/services/display-rules/types';
+import { generateTransactionErrorUrl } from '@/services/errors/errors';
 
 import { SummaryForm } from './SummaryForm';
 import { useOttp } from '../../provider/OttpContext';
@@ -79,16 +76,14 @@ export const PaymentSummary = ({
       return await submitOttp(policyNumber, planCode, ottpRequest);
     },
     onSuccess: data => {
-      if (data.caseId) {
+      if ('caseId' in data) {
         router.push(currentStepInfo?.nextStepUrl);
-      } else {
-        router.push(
-          `error?${TRANSACTION_ERROR_QUERY_PARAM}=${TransactionErrorType.SUBMISSION_FAILED}`
-        );
       }
     },
-    onError: () => {
-      router.push('error');
+    onError: err => {
+      const errorUrl = generateTransactionErrorUrl(err);
+
+      router.push(errorUrl);
     },
     onMutate: () => {
       setPrimaryButtonDisabled(true);
@@ -98,6 +93,7 @@ export const PaymentSummary = ({
   const {
     data: validationResponse,
     isError: validationError,
+    error,
     isFetching: validationFetching,
   } = useQuery({
     queryKey: [QueryKeys.ONE_TIME_PREMIUM_VALIDATION, state],
@@ -107,7 +103,7 @@ export const PaymentSummary = ({
   });
 
   if (validationError) {
-    router.push('error');
+    router.push(`error?correlationId=${error.correlationId}`);
   }
 
   const { data: visibility } = useComponentVisibility(planCode, policyNumber);

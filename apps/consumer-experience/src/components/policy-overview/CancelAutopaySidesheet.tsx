@@ -53,6 +53,7 @@ export const CancelAutopaySidesheet = ({
   disabled = false,
 }: CancelAutopaySidesheetProps) => {
   const [viewState, setViewState] = useState<ViewState>(FormSteps.CONFIRM);
+  const [correlationId, setCorrelationId] = useState<string>();
   const [open, setOpen] = useState<boolean>(false);
 
   const { data: systematicProgramData, isLoading: partyIdIsLoading } = useQuery(
@@ -160,12 +161,15 @@ export const CancelAutopaySidesheet = ({
     },
     onMutate: () => {
       setViewState(FormSteps.LOADING);
+      setCorrelationId('');
     },
     onSuccess: () => {
       setViewState(FormSteps.SUCCESS);
+      setCorrelationId('');
     },
-    onError: () => {
+    onError: error => {
       setViewState(FormSteps.ERROR);
+      setCorrelationId(error.correlationId);
     },
   });
 
@@ -219,6 +223,7 @@ export const CancelAutopaySidesheet = ({
         errorTitle="We're sorry"
         errorMessage="Something went wrong. Please try again later."
         closeCallback={handleClose}
+        correlationId={correlationId}
       />
     ),
     [FormSteps.LOADING]: <Loading />,

@@ -59,11 +59,13 @@ export default function useGdmnOftConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         // fbo details required
         if (

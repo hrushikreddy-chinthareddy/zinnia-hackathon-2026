@@ -52,6 +52,7 @@ export default async function AccountValuePage({
     loggingContext
   );
 
+  //TODO: Do we need an error screen?
   if (accountValueError || !accountValueData) {
     return null;
   }

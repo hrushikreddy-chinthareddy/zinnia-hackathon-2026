@@ -335,6 +335,7 @@ export default function getRslnConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if (
@@ -368,10 +369,87 @@ export default function getRslnConfig(t: TFunction) {
                 SignatureValidationTypeWithdrawal.Owner
         );
 
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        const jointOwnerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.JointOwner
+        );
+
+        const ownerESignature = formESignatureData?.eSignatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
+        );
+
+        if (
+            ownerSignature?.isSigned !== false &&
+            !ownerSignature?.isSigned &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
             errors[
                 `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
+
+        // No choice made for signature valid
+        if (
+            ownerSignature &&
+            ownerSignature?.isSigned &&
+            !ownerSignature?.isSignatureValid &&
+            ownerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSigned &&
+            !jointOwnerSignature?.isSignatureValid &&
+            jointOwnerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        // No signature comment added
+        if (
+            ownerSignature &&
+            ownerSignature?.isSignatureValid &&
+            !ownerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSignatureValid &&
+            !jointOwnerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            ownerSignature?.isDesignationPresent === null &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+            ] = t('formValidation.signatureDesignationMustBeSelected');
+        }
+
+        if (formESignatureData?.isFormESignaturePresent) {
+            if (!ownerESignature?.isSigned) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
+            }
         }
 
         return errors;
@@ -844,7 +922,8 @@ export default function getRslnConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'owner-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
@@ -879,7 +958,8 @@ export default function getRslnConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'joint-sign-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,

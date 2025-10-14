@@ -2,15 +2,18 @@ import { IconType, Icon } from '@zinnia/bloom/components';
 import { PropsWithChildren } from 'react';
 
 import styles from './NoDataAvailable.module.css';
+import { CorrelationId } from '../correlation-id/CorrelationId';
 
 interface Props extends PropsWithChildren {
   message?: string;
   iconType?: IconType;
+  correlationId: string | undefined;
 }
 
 const NoDataAvailable = ({
   message = 'No data available.',
   iconType,
+  correlationId,
   children,
 }: Props) => {
   return (
@@ -32,6 +35,7 @@ const NoDataAvailable = ({
             <p className="typography-content-body">
               Looks like there is nothing here.
             </p>
+            <CorrelationId id={correlationId} />
           </>
         )}
         {children}

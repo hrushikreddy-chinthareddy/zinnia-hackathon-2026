@@ -128,7 +128,7 @@ export const SelectBank = ({
     return (
       <>
         <div className={noDataStyles.noBankDetails}>
-          <NoDataAvailable iconType={IconType.BANK}>
+          <NoDataAvailable iconType={IconType.BANK} correlationId={undefined}>
             <p className="typography-content-body">
               Looks like you haven't added any banking information yet.
             </p>
