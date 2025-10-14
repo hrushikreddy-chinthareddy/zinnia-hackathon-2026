@@ -2857,6 +2857,8 @@
                 "nameIsRequired": "Name is required",
                 "signatureDesignationMustBeSelected": "Signature designation must be selected",
                 "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+                "signatureValidOptionMustBeSelected": "Signature valid option must be selected",
+                "signatureCommentMustBePresent": "Signature comment must be present",
                 "accountNumberDoesNotMatch": "Account number does not match",
                 "routingNumberDoesNotMatch": "Routing number does not match",
                 "signatureValidatedOptionMustBeSelected": "Signature validated option must be selected",

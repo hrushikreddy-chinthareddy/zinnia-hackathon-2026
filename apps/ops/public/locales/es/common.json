@@ -2858,6 +2858,8 @@
                 "nameIsRequired": "Se requiere el nombre",
                 "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente",
                 "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                "signatureValidOptionMustBeSelected": "Debe seleccionarse la opción Firma válida",
+                "signatureCommentMustBePresent": "El comentario de la firma debe estar presente",
                 "accountNumberDoesNotMatch": "El número de cuenta no coincide",
                 "routingNumberDoesNotMatch": "El número de ruta no coincide",
                 "signatureValidatedOptionMustBeSelected": "Se debe seleccionar la opción de firma validada",
