@@ -2364,7 +2364,8 @@
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Joint Lifetime Income Option",
                     "singleLifetimeIncomeOption": "Single Lifetime Income Option",
-                    "interestEarned": "Interest earned"
+                    "interestEarned": "Interest earned",
+                    "variableAnnuity": "Variable GLWB"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Please specify the fund to setup SSW with Percent of A.V",

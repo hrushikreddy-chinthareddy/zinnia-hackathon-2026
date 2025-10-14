@@ -2367,7 +2367,8 @@
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Opción de Ingreso Vitalicio Conjunto",
                     "singleLifetimeIncomeOption": "Opción de Ingreso Vitalicio Individual",
-                    "interestEarned": "Intereses ganados"
+                    "interestEarned": "Intereses ganados",
+                    "variableAnnuity": "GLWB variable"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Especifique el fondo para configurar SSW con el porcentaje de A.V",

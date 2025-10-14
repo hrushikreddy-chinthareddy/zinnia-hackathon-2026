@@ -329,6 +329,12 @@ export default function useFlicSSWConfig(t: TFunction) {
             generateSSWPayloadFromSelection: (val: SSWProgram) =>
                 generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
+        {
+            label: t('sswProgram.sswOptions.variableAnnuity'),
+            value: SSWType.VariableAnnuity,
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.VariableAnnuity),
+        },
     ];
 
     const fundWithdrawnMethodOptions = (sswType: string) => [

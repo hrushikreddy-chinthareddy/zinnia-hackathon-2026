@@ -393,6 +393,7 @@ export enum SSWType {
     GMWB = 'GMWB',
     SingleLifetimeIncomeOption = 'SingleLifetime',
     JointLifetimeIncomeOption = 'JointLifetime',
+    VariableAnnuity = 'Variable Annuity',
 }
 
 export interface RMD {
