@@ -256,13 +256,17 @@ export const TransactionStatusTabGroup = () => {
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { statusFilter } = historyFilters;
 
-    const transactionStatuses = Object.values(TransactionStatus).map(
-        (status) => (
-            <TabTrigger key={`${status}-trigger`} value={status}>
-                {t(`${status}`)}
-            </TabTrigger>
-        )
-    );
+    const transactionStatuses = Object.values([
+        TransactionStatus.COMPLETED,
+        TransactionStatus.PENDING,
+        TransactionStatus.CANCELED,
+        TransactionStatus.FAILED,
+        TransactionStatus.REVERSED,
+    ]).map((status) => (
+        <TabTrigger key={`${status}-trigger`} value={status}>
+            {t(`${status}`)}
+        </TabTrigger>
+    ));
     return (
         <TabGroup
             defaultValue={statusFilter}
@@ -283,7 +287,7 @@ export const TransactionTypeSelect = () => {
     });
 
     const typeOptions = Object.values(TransactionFilters).map((type) => ({
-        value: t(`${type}`) || type,
+        value: type,
         label: t(`${type}`) || type,
     }));
 
@@ -302,6 +306,7 @@ export const TransactionTypeSelect = () => {
                     filter as TransactionFilters
                 );
             }}
+            defaultValue={TransactionFilters.All}
             options={typeOptions}
             size={FieldSize.Small}
             type={FieldType.BaseActive}

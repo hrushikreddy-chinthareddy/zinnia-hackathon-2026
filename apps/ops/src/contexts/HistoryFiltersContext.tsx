@@ -75,6 +75,9 @@ interface HistoryFiltersProps {
 
 export const initialFilter: HistoryFilters = {
     statusFilter: TransactionStatus.COMPLETED,
+    eventFilter: {
+        [EventFilterKeys.Transactions]: TransactionFilters.All,
+    },
 };
 
 export const HistoryFiltersContext = createContext<HistoryFiltersProps>({
