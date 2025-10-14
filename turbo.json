@@ -97,6 +97,7 @@
     },
     "lint": {},
     "prettier": {},
+    "check-types": {},
     "prettier:fix": {},
     "consumer-experience#lint": {
       "dependsOn": ["^lint"]

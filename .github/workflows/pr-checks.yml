@@ -65,44 +65,13 @@ jobs:
           rm -rf node_modules apps/ops/node_modules
           pnpm install --frozen-lockfile
       - name: Prune and install only apps/ops deps
-        run: |
-          pnpm install --filter ./apps/ops --frozen-lockfile
+        run: pnpm install --filter ./apps/ops --frozen-lockfile
       - name: Run prettier
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096"
           npx turbo prettier
-
-  type-check:
-    name: TypeScript Check for apps/ops
-    runs-on: ubuntu-latest
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
-      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        with:
-          run_install: false
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-          registry-url: 'https://npm.pkg.github.com/'
-          scope: '@zinnia'
-          cache: 'pnpm'
-      - name: Configure npm auth
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-      - name: Clean and install all monorepo deps
-        run: |
-          rm -rf node_modules apps/ops/node_modules
-          pnpm install --frozen-lockfile
-      - name: Build dependent workspace packages
-        run: pnpm --filter '!./apps/ops' run build
-      - name: Run type check in apps/ops
-        run: |
-          cd apps/ops
-          pnpm run typecheck
+      - name: Run type checks
+        run: npx turbo check-types
 
   test:
     name: Test apps/ops
@@ -112,11 +81,9 @@ jobs:
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
     steps:
       - uses: actions/checkout@v4
-
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
-
       - uses: actions/setup-node@v4
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -125,9 +92,7 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@zinnia'
           cache: 'pnpm'
-
       - name: install packages for compiling canvas-node
         run: sudo apt-get update && sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
       - run: pnpm install --filter ops
-
-      - run: pnpm run test:ops
+      - run: npx turbo test
