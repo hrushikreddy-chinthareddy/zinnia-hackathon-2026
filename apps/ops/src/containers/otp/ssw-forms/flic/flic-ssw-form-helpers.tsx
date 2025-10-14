@@ -150,7 +150,7 @@ export default function useFlicSSWConfig(t: TFunction) {
             formDisbursement,
         });
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(
+        const funds = formDistribution?.funds?.filter(
             (fund) => !!fund.amount.text
         );
 
