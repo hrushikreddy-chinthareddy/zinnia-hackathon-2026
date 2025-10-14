@@ -33,4 +33,5 @@ export interface PaymentStepProps extends TransactionClickProps {
     state: PaymentState;
     subtitle?: string;
     validateTransaction?: () => Promise<TransactionResponse>;
+    transactionName?: string;
 }
