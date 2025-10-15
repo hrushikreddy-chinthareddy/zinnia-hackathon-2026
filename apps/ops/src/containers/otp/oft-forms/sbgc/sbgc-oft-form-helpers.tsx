@@ -166,22 +166,19 @@ export default function useSbgcOftConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
-        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
-            formESignatureData,
         });
-
+        // fbo details required
         if (
             formDisbursement?.paymentMethod.text &&
             !formDisbursement?.payee?.fboDetails?.text
         ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
-
         return errors;
     };
 

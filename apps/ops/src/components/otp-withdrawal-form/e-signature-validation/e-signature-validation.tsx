@@ -66,7 +66,7 @@ const ESignatureValidation = ({
                 containerClassNames="border-b-2 border-gray-100"
                 classNames="w-full"
             >
-                <div className="flex flex-wrap gap-8 max-md:flex-col">
+                <div className="mt-5 flex flex-wrap gap-8 max-md:flex-col">
                     <CheckboxText
                         label={t('title')}
                         checked={formESignatureData.isFormESignaturePresent}

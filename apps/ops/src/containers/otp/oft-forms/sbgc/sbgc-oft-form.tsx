@@ -132,15 +132,6 @@ export default function SbgcOftWithdrawalForm({
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             )}
-            <ESignatureValidation
-                isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={
-                    formESignatureData || ({} as FormEsignatureData)
-                }
-                setFormESignatureData={setFormESignatureData}
-                fieldConfig={eSignatureFieldConfig}
-                formErrors={formErrors}
-            />
             <CedingCompanyDistribution
                 qualificationOptions={qualTypeOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -158,6 +149,15 @@ export default function SbgcOftWithdrawalForm({
                     t('distributionMethod.cedingCompanyDistribution') as string
                 }
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );

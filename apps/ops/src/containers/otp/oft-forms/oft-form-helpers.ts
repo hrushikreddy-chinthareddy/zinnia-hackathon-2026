@@ -130,11 +130,7 @@ export const getQualTypeOptions = (t: TFunction) => [
 
 export const commonOftFormValidation = (
     t: TFunction,
-    {
-        formSignature,
-        formDisbursement,
-        formESignatureData,
-    }: Partial<FormParts> = {}
+    { formSignature, formDisbursement }: Partial<FormParts> = {}
 ): FormValidationErrors => {
     const errors = {} as FormValidationErrors;
 
@@ -162,6 +158,17 @@ export const commonOftFormValidation = (
             );
         }
     }
+    const ownerSignature = formSignature?.signatures?.find(
+        (sigInfo) =>
+            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+    );
+
+    // No choice made for signature
+    if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        errors[
+            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+        ] = t('formValidation.signaturePresentOptionMustBeSelected');
+    }
 
     if (
         formDisbursement?.bank[0].accountType?.text === '' &&
@@ -172,43 +179,6 @@ export const commonOftFormValidation = (
         errors[BankingFields.AccountType] = t(
             'formValidation.accountTypeMustBeSelected'
         );
-    }
-
-    const ownerSignature = formSignature?.signatures?.find(
-        (sigInfo) =>
-            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
-    );
-
-    const ownerESignature = formESignatureData?.eSignatures?.find(
-        (sigInfo) =>
-            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
-    );
-
-    if (
-        ownerSignature?.isSigned !== false &&
-        !ownerSignature?.isSigned &&
-        !formESignatureData?.isFormESignaturePresent
-    ) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-        ] = t('formValidation.signaturePresentOptionMustBeSelected');
-    }
-
-    if (
-        ownerSignature?.isDesignationPresent === null &&
-        !formESignatureData?.isFormESignaturePresent
-    ) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-        ] = t('formValidation.signatureDesignationMustBeSelected');
-    }
-
-    if (formESignatureData?.isFormESignaturePresent) {
-        if (!ownerESignature?.isSigned) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
     }
 
     return errors;
