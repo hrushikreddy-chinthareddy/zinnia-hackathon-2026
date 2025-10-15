@@ -22,7 +22,7 @@ export const ThemelessLogin = () => {
               <p className="typography-titles-subtitle-alt">
                 Part of{' '}
                 <a
-                  href="https:zinnia.com/platforms/zinnia-now/"
+                  href="https://zinnia.com/platforms/zinnia-now/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -30,7 +30,7 @@ export const ThemelessLogin = () => {
                 </a>{' '}
                 &{' '}
                 <a
-                  href="https:zinnia.com/platforms/zinnia-launch/"
+                  href="https://zinnia.com/platforms/zinnia-launch/"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

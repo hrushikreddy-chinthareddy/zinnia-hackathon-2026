@@ -2506,6 +2506,30 @@ export const farmersTermBlueprintTL0101 = {
                                                 fr: '',
                                             },
                                         },
+                                        {
+                                            id: 'b07c7535-102a-4ae5-bf54-955c2eebf03d',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'mathOperator',
+                                                        value: 0,
+                                                        nodeIds: [
+                                                            'face-amount',
+                                                            'accidental-death-benefit-rider-benefit',
+                                                        ],
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                        mathOperator:
+                                                            'subtract',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: "The Accidental Death Benefit Rider Amount cannot exceed the Farmers Term Life policy's face amount.",
+                                                fr: '',
+                                            },
+                                        },
                                     ],
                                 },
                                 {

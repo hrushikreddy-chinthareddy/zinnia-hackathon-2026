@@ -54,6 +54,16 @@ describe('getRslnRmdConfig', () => {
                 upsAccount: null,
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: null,
+                        BANK_LETTERHEAD: null,
+                        DIRECT_DEPOSIT_FORM: null,
+                        STARTER_CHECK: null,
+                        NO_BANK_PROOF: null,
+                    },
+                },
             },
         });
         expect(errors).toHaveProperty(
@@ -84,6 +94,16 @@ describe('getRslnRmdConfig', () => {
                 upsAccount: null,
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: null,
+                        BANK_LETTERHEAD: null,
+                        DIRECT_DEPOSIT_FORM: null,
+                        STARTER_CHECK: null,
+                        NO_BANK_PROOF: null,
+                    },
+                },
             },
         });
         expect(errors).toHaveProperty(

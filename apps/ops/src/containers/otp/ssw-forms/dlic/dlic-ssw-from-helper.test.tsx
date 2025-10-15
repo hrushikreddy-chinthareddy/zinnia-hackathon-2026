@@ -125,7 +125,7 @@ describe('getDlicConfig', () => {
                 selectIfPayeeIsDifferent: false,
                 fboDetails: '',
                 consentAvailable: null,
-            });
+            } as any);
             expect(payload).toMatchObject({
                 mockedDisbursement: true,
                 paymentMethod: { text: PaymentMethod.EFT },
@@ -174,7 +174,7 @@ describe('getDlicConfig', () => {
                 isDirectDepositValid: null,
                 fboDetails: '',
                 consentAvailable: null,
-            });
+            } as any);
             expect(payload).toMatchObject({
                 mockedDisbursement: true,
                 paymentMethod: { text: 'Check' },
