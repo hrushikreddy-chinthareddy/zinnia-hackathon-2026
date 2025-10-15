@@ -10,16 +10,13 @@ import AttachmentWidget from './file-widget/attachment-widget';
 import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
 import NotesWidget from './notes-widget/notes-widget';
-import PhoneWidget from './phone-number/phone-number';
+import NumbersWidget from './numbers/numbers';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
-import SSNWidget from './ssn-widget/ssn-widget';
 import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
 import TextareaWidget from './textarea-widget/textarea-widget';
 import TransactionAccordion from './transaction-accordion/transaction-accordion';
-import ZipWidget from './zipcode-widget/zip';
-import Zip4Widget from './zipcode-widget/zip4';
 
 export function generateWidgets(): RegistryWidgetsType {
     return {
@@ -38,10 +35,7 @@ export function generateWidgets(): RegistryWidgetsType {
         AttachmentWidget,
         ArithmeticOperationWidget,
         TransactionAccordion,
-        PhoneWidget,
-        SSNWidget,
-        ZipWidget,
-        Zip4Widget,
+        NumbersWidget,
         NewDateWidget,
     };
 }

@@ -12,27 +12,39 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 
-export type ZipWidgetProps<
+export type NumbersWidgetProps<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
 > = WidgetProps<T, S, F>;
 
-function ZipWidget<
+function NumbersWidget<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
->(props: ZipWidgetProps<T, S, F>) {
-    const { value, onChange, disabled, readonly, rawErrors = [] } = props;
+>(props: NumbersWidgetProps<T, S, F>) {
+    const {
+        value,
+        onChange,
+        disabled,
+        readonly,
+        rawErrors = [],
+        uiSchema,
+    } = props;
+    const { pattern, format } = uiSchema || {};
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value;
-        // Allow optional + at start, then digits
-        if (/^\+?\d*$/.test(val)) {
+
+        if (pattern || /^\+?\d*$/.test(val)) {
             onChange(val);
         }
     };
-    const numberFormat = { format: '#####' };
+    const numberFormat = format
+        ? {
+              format: format as string,
+          }
+        : undefined;
 
     return (
         <div className="max-w-sm flex w-full flex-col pl-1">
@@ -53,4 +65,4 @@ function ZipWidget<
     );
 }
 
-export default ZipWidget;
+export default NumbersWidget;

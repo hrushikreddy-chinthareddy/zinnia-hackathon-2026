@@ -1325,7 +1325,9 @@
                                             "nobackground": true
                                         },
                                         "identificationValue": {
-                                            "ui:widget": "SSNWidget"
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]$",
+                                            "format": "###########"
                                         }
                                     }
                                 },
@@ -1425,10 +1427,14 @@
                                             }
                                         },
                                         "zipCode": {
-                                            "ui:widget": "ZipWidget"
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{5}$",
+                                            "format": "#####"
                                         },
                                         "zipCodeExtension": {
-                                            "ui:widget": "Zip4Widget"
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{4}$",
+                                            "format": "####"
                                         }
                                     }
                                 },
@@ -1461,7 +1467,8 @@
                                             }
                                         },
                                         "dialNumber": {
-                                            "ui:widget": "PhoneWidget"
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "+### (###) ###-####"
                                         }
                                     }
                                 },
