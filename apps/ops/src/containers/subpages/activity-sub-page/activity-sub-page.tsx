@@ -92,6 +92,7 @@ export default function ActivitySubPage() {
                     <TabContent value={PolicyActivityTabValues['call-logs']}>
                         <CallLogsTab
                             policyNumber={policy.policyNumber}
+                            carrier={policy.carrierId}
                             queryLimit={10}
                         />
                     </TabContent>

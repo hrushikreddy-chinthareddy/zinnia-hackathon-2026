@@ -5,15 +5,15 @@ import { useTranslation } from 'react-i18next';
 
 import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import {
     startDates,
@@ -129,17 +129,11 @@ export const ZinniaLiveCaseViewsByTransaction = ({
             >
                 <div className="w-full flex-grow">
                     {chartNotRenderable ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {chartNotRenderable
-                                    ? 'Something went wrong fetching the zinnia live unique logins, please try again by refreshing the page'
-                                    : 'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        zinniaLiveCaseViewsByTransactionDataError ? (
+                            <ErrorMessage />
+                        ) : (
+                            <NoDataMessage />
+                        )
                     ) : (
                         <GroupedColumnsChart
                             categories={categories}

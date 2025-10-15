@@ -48,7 +48,7 @@ export const ClaimsBeneficiaryCall = ({ taskType }: TaskReviewStepProps) => {
 
     return (
         <WorkflowCard
-            title={t('title')}
+            title={task.taskName || t('title')}
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons

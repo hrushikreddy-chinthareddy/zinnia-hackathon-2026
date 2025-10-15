@@ -885,6 +885,17 @@ export const getTrustTypeLabel = (
     return option?.label ?? defaultLabel;
 };
 
+export const getEntityTypeLabel = (
+    value: EntityTypeValue,
+    t: TFunction,
+    defaultLabel: string = 'Other'
+): string => {
+    const option = entityTypeOptions(t).find(
+        (option) => option.value === value
+    );
+    return option?.label ?? defaultLabel;
+};
+
 export const ANYTIME = 'Anytime';
 export const DEFAULT_COUNTRY_CODE = '1';
 export const NEW = 'new';

@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
@@ -23,6 +24,7 @@ import {
     IllustrationStatuses,
 } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
@@ -56,6 +58,7 @@ export default function IllustrationDetailsToolbar({
 
     const handleSelectForApplication = useSelectIllustrationForApplication();
     const { onNewSubmit } = useSubmit();
+    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
 
     const { data: isPdfReportAvailable, isError } = useQuery({
         queryKey: ['illustrationProcessingStatus', illustrationId],
@@ -79,6 +82,12 @@ export default function IllustrationDetailsToolbar({
     });
 
     const handleDownloadPdf = async () => {
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.getIllustrationPDF
+            );
+        }
         try {
             const response = await fetch(
                 `/api/illustration-pdf/${illustrationId}`,
@@ -111,6 +120,37 @@ export default function IllustrationDetailsToolbar({
         }
     };
 
+    const handleUnarchiveIllustration = () => {
+        if (isLoadingSelectForApplication || !illustrationId || !clientCase.id)
+            return;
+
+        unarchiveIllustrationMutation.mutateAsync({
+            clientCaseId: clientCase.id,
+            illustrationId,
+        });
+
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.unarchiveIllustration
+            );
+        }
+    };
+
+    const handleDuplicate = () => {
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.duplicateIllustration
+            );
+        }
+        onNewSubmit();
+    };
+
+    const handleSelectForApplicationAnalytics = () => {
+        handleSelectForApplication();
+    };
+
     useEffect(() => {
         if (isError) {
             setIsPdfGenerationErrorVisible(true);
@@ -120,16 +160,6 @@ export default function IllustrationDetailsToolbar({
             return () => clearTimeout(timer);
         }
     }, [isError]);
-
-    const handleUnarchiveIllustration = () => {
-        if (isLoadingSelectForApplication || !illustrationId || !clientCase.id)
-            return;
-
-        unarchiveIllustrationMutation.mutateAsync({
-            clientCaseId: clientCase.id,
-            illustrationId,
-        });
-    };
 
     return (
         <>
@@ -148,7 +178,7 @@ export default function IllustrationDetailsToolbar({
                 <ToolbarButton
                     icon={IconType.DOCUMENT_DUPLICATE}
                     className={styles.linkButton}
-                    onClick={onNewSubmit}
+                    onClick={handleDuplicate}
                 >
                     {t('clientCase.illustrationDetails.duplicate')}
                 </ToolbarButton>
@@ -194,7 +224,7 @@ export default function IllustrationDetailsToolbar({
                             <Button
                                 mode="primary"
                                 size="small"
-                                onClick={handleSelectForApplication}
+                                onClick={handleSelectForApplicationAnalytics}
                             >
                                 {t(
                                     'clientCase.illustrationDetails.selectForApplication'

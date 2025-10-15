@@ -86,7 +86,7 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
         const sswProgramStartDate =
             formProgram?.programFrequency?.beginDate?.text || null;
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(
+        const funds = formDistribution?.funds?.filter(
             (fund) => !!fund.amount.text
         );
 

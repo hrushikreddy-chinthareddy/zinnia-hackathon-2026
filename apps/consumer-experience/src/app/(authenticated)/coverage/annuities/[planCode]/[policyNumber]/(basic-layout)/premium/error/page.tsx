@@ -1,10 +1,23 @@
-import { TransactionError } from '@/components/stepped-workflow/common/TransactionError';
-import { PolicyRequestInputsParams } from '@/types/policy';
+import { FC } from 'react';
 
-const ErrorPage = ({ params }: PolicyRequestInputsParams) => {
-  const goToUrl = `/coverage/policies/${params.planCode}/${params.policyNumber}/`;
+import { TransactionError } from '@/components/stepped-workflow/common/TransactionError';
+import { PolicyRequestInputs } from '@/types/policy';
+
+interface ErrorPageProps {
+  params: PolicyRequestInputs;
+  searchParams: { correlationId?: string };
+}
+
+const ErrorPage: FC<ErrorPageProps> = ({ params, searchParams }) => {
+  const { planCode, policyNumber } = params;
+
+  const goToUrl = `/coverage/policies/${planCode}/${policyNumber}/`;
   return (
-    <TransactionError transactionType="one-time-premium" goToUrl={goToUrl} />
+    <TransactionError
+      transactionType="one-time-premium"
+      goToUrl={goToUrl}
+      correlationId={searchParams?.correlationId}
+    />
   );
 };
 

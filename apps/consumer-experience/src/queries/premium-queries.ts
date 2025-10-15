@@ -1,4 +1,7 @@
-import { TransactionAcceptedResponse } from '@xd/api-types/dist/generated-types/bpm';
+import {
+  TransactionAcceptedResponse,
+  TransactionFailureResponse,
+} from '@xd/api-types/dist/generated-types/bpm';
 
 import { ApiResponse } from '@/services';
 import { OneTimePremiumBPMResponse } from '@/services/bpm/one-time-premium-payment';
@@ -14,7 +17,9 @@ export const submitOttp = async (
     bankId?: string;
   }
 ) => {
-  const response: ApiResponse<TransactionAcceptedResponse> = await (
+  const response: ApiResponse<
+    TransactionAcceptedResponse | TransactionFailureResponse
+  > = await (
     await ClientApi.post(
       `/api/bpm/${planCode}/${policyNumber}/onetimepremium`,
       JSON.stringify(body),
@@ -24,9 +29,10 @@ export const submitOttp = async (
     )
   ).json();
 
-  if (response.error || !response) {
+  if (response.error || !response || 'errors' in response.data) {
     throw response.error;
   }
+
   return response.data;
 };
 

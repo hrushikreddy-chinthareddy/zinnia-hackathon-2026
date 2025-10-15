@@ -10,7 +10,7 @@ const MockMessage = () => {
   if (isMockAllowed()) {
     return (
       <div className="mt-lg">
-        <NoDataAvailable iconType={IconType.DATABASE}>
+        <NoDataAvailable iconType={IconType.DATABASE} correlationId={undefined}>
           <p>
             <strong
               style={{ color: 'var(--color-status-icon-status-error-icon)' }}

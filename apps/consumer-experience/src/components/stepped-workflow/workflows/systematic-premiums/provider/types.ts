@@ -23,8 +23,10 @@ export const systematicPremiumAmountStepSchema = z.object({
   nextPaymentDate: z.string().min(1, 'Next payment date is required'),
   paymentFrequency: z.nativeEnum(Frequency).optional(),
   paymentAmount: z.coerce
-    .number()
-    .min(1)
+    .number({
+      invalid_type_error: 'Amount must be greater than 0',
+    })
+    .min(1, 'Amount must be greater than 0')
     .refine(amount => amount >= 1, {
       message: 'Amount must be greater than 0',
     }),

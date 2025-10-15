@@ -468,7 +468,7 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
             return `, ${riders}`;
         };
 
-        return `${createDate}, ${numberFormatify(
+        return `${createDate}, Face Amount ${numberFormatify(
             assumed.initial.totalFaceAmount
         )}, ${formInputs.fixedCostPeriod} yr${getRidersText()}`;
     }

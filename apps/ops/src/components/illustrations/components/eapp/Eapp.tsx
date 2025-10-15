@@ -40,6 +40,8 @@ export function Eapp(props: EappProps): ReactElement | null {
                         <Sidebar
                             isEdit={props.isEdit}
                             illustrationId={props.illustrationId}
+                            productType={props.planType}
+                            carrier={props.carrier}
                         />
                     </div>
                 </div>

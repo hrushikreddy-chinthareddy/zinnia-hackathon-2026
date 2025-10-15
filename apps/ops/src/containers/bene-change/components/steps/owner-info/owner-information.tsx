@@ -323,7 +323,7 @@ export default function OwnerInformation({
         party: Party,
         phoneIndex: number
     ) => {
-        const phones = party.phones;
+        const phones = party?.phones;
         phones[phoneIndex] = phone;
         const updatedParty = { ...party, phones };
         setPartyInformation(updatedParty);

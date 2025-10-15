@@ -4,8 +4,8 @@ import { AxiosResponse } from 'axios';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import {
-    logCompliance,
     logError,
+    logInfo,
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
@@ -34,7 +34,7 @@ export default withAuthAndLogging(
         const url = `${apiServerBaseUrl}/api/v1/chat/search`;
 
         try {
-            logCompliance(
+            logInfo(
                 `Searching chat sessions for client: ${clientId}`,
                 loggingContext
             );

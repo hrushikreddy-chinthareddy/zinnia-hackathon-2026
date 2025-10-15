@@ -51,18 +51,23 @@ export function withLogging<T extends unknown[], R>(
         }
       );
 
-      return { data: result, error: null } as ApiResponse<R>;
+      return {
+        data: result,
+        error: null,
+      } as ApiResponse<R>;
     } catch (err) {
       const cause = getErrorCause(err);
       const error: {
         message: string;
         name: string;
         cause: Record<string, unknown>;
+        correlationId: string;
         status?: unknown;
       } = {
         message: getErrorMessage(err),
         name: `ServerFunction::${additionalLoggingContext.functionName} Error`,
         cause,
+        correlationId: context.correlationId,
       };
 
       if (cause?.status) {

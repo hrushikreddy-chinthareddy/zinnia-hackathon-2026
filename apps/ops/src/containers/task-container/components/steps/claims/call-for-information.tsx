@@ -363,7 +363,7 @@ function CallForInformation({
                             <Field
                                 label={t('name') as string}
                                 message={formErrors?.nameRequired}
-                                onChange={(e) => setName(e.target.value.trim())}
+                                onChange={(e) => setName(e.target.value)}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={name}
@@ -400,9 +400,7 @@ function CallForInformation({
                                     formErrors?.relationshipToOwnerRequired
                                 }
                                 onChange={(e) =>
-                                    setRelationshipToOwner(
-                                        e.target.value.trim()
-                                    )
+                                    setRelationshipToOwner(e.target.value)
                                 }
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
@@ -423,9 +421,7 @@ function CallForInformation({
                         <Field
                             label={t('callSummary') as string}
                             message={formErrors?.callSummaryRequired}
-                            onChange={(e) =>
-                                setCallSummary(e.target.value.trim())
-                            }
+                            onChange={(e) => setCallSummary(e.target.value)}
                             size={FieldSize.Small}
                             type={FieldType.BaseActive}
                             value={callSummary}

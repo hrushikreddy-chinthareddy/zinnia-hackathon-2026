@@ -143,6 +143,7 @@ export default async function Beneficiaries({
           <NoDataAvailable
             iconType={IconType.CIRCLE_USER}
             message="There is currently no beneficiary data available."
+            correlationId={error?.correlationId}
           />
         </div>
       </div>

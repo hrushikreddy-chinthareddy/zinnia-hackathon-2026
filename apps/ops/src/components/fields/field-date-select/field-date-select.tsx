@@ -75,6 +75,7 @@ export default function FieldDateSelect({
             },
         } as unknown as ChangeEvent<HTMLInputElement>);
         handleClose();
+        focusOnField();
     };
     const handleDateSelect = (_year: number, _month: number, _day: number) => {
         onChange({
@@ -83,10 +84,45 @@ export default function FieldDateSelect({
                     dayjs().year(_year).month(_month).date(_day).toDate()
                 ).format(DATE_PICKER_FORMAT),
             },
-        } as ChangeEvent<HTMLInputElement>);
+        } as unknown as ChangeEvent<HTMLInputElement>);
         handleClose();
+        focusOnField();
     };
     const handleClose = () => setOpen(false);
+    const handleTab = () => {
+        setOpen(false);
+
+        setTimeout(() => {
+            const focusableElements = document.querySelectorAll(
+                'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+            );
+            const currentElement = containerRef.current?.querySelector('input');
+
+            if (currentElement && focusableElements.length > 0) {
+                const currentIndex =
+                    Array.from(focusableElements).indexOf(currentElement);
+                const nextIndex = currentIndex + 1;
+
+                if (nextIndex < focusableElements.length) {
+                    (focusableElements[nextIndex] as HTMLElement).focus();
+                }
+            }
+        }, 0);
+    };
+
+    const focusOnField = () => {
+        setTimeout(() => {
+            const inputElement = containerRef.current?.querySelector('input');
+            if (inputElement) {
+                (inputElement as HTMLElement).focus();
+            }
+        }, 0);
+    };
+
+    const handleEscape = () => {
+        setOpen(false);
+        focusOnField();
+    };
     const containerRef = useRef<HTMLDivElement>(null);
 
     useOutsideClick(containerRef, open, handleClose);
@@ -96,6 +132,13 @@ export default function FieldDateSelect({
             data-testid={FieldDateSelectTest.Container}
             className={clsx('relative', rest.className)}
             ref={containerRef}
+            onKeyDown={(e) => {
+                if (e.key === 'Escape') {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleEscape();
+                }
+            }}
         >
             <Field
                 value={value}
@@ -103,14 +146,32 @@ export default function FieldDateSelect({
                 formatOptions={formatOptions}
                 label={label}
                 endIcon={
-                    <CalendarIcon
-                        width={22}
-                        height={22}
-                        className={`my-auto ${
-                            rest.disabled ? 'text-secondary' : ''
+                    <button
+                        type="button"
+                        className={`my-auto p-1 rounded focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+                            rest.disabled
+                                ? 'text-secondary cursor-not-allowed'
+                                : 'cursor-pointer hover:bg-gray-100'
                         }`}
                         onClick={() => setOpen(!open)}
-                    />
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                setOpen(!open);
+                            }
+                        }}
+                        disabled={rest.disabled}
+                        aria-label="Open date picker"
+                        tabIndex={0}
+                    >
+                        <CalendarIcon
+                            width={22}
+                            height={22}
+                            className={`${
+                                rest.disabled ? 'text-secondary' : ''
+                            }`}
+                        />
+                    </button>
                 }
                 type={FieldType.BaseActive}
                 {...rest}
@@ -131,6 +192,8 @@ export default function FieldDateSelect({
                     handleCustomSelection={handleCustomSelection}
                     datePickerType={datePickerType}
                     showMonths={showMonths}
+                    onTab={handleTab}
+                    onEscape={handleEscape}
                 />
             </div>
         </div>

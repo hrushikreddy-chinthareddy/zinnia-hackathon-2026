@@ -246,7 +246,7 @@ export function CallForInformationFunctions({
             return Object.keys(errors).length === 0;
         }
 
-        if (isNullEmptyOrUndefined(name)) {
+        if (isNullEmptyOrUndefined(name.trim())) {
             errors['nameRequired'] = t('errors.nameRequired') as string;
         } else {
             errors['nameRequired'] = '';
@@ -260,16 +260,16 @@ export function CallForInformationFunctions({
 
         if (
             contactRole === ContactRole.OTHER &&
-            isNullEmptyOrUndefined(relationshipToOwner)
+            isNullEmptyOrUndefined(relationshipToOwner.trim())
         ) {
-            errors['relationshipToOwner'] = t(
+            errors['relationshipToOwnerRequired'] = t(
                 'errors.relationshipToOwner'
             ) as string;
         } else {
-            errors['relationshipToOwner'] = '';
+            errors['relationshipToOwnerRequired'] = '';
         }
 
-        if (isNullEmptyOrUndefined(callSummary)) {
+        if (isNullEmptyOrUndefined(callSummary.trim())) {
             errors['callSummaryRequired'] = t(
                 'errors.callSummaryRequired'
             ) as string;

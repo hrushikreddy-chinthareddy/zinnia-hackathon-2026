@@ -624,7 +624,7 @@ function createIllustrationPayload(
                     ],
                 },
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -672,7 +672,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -713,7 +713,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -936,24 +936,12 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
             return riders;
         };
 
-        const getDeathBenefits = () => {
-            const deathBenefitsMount =
-                assumed.annualTimeSeriesData[0].deathBenefitsMount;
-
-            if (deathBenefitsMount) {
-                return `Death Benefits ${numberFormatify(deathBenefitsMount)}`;
-            }
-
-            return '';
-        };
-
         return [
             creationDate,
-            `Initial Premium  ${numberFormatify(
-                assumed.initial.minimumPremiumAmount
+            `Initial Annual Premium  ${numberFormatify(
+                assumed.initial.totalPremium
             )}`,
-            numberFormatify(assumed.initial.totalFaceAmount),
-            getDeathBenefits(),
+            `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
             ...getRidersTextList(),
         ]
             .filter((x) => x)

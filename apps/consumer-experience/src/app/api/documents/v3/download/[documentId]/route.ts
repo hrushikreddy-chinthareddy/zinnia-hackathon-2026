@@ -6,6 +6,7 @@ import { getDocumentDownloadV3 } from '@/services/document/v3';
 import { getSession } from '@/utils/auth';
 import { logWarn } from '@/utils/logging/log-fns';
 import {
+  buildNextReqLoggingContext,
   getUserInfoFromSession,
   logCompliance,
 } from '@/utils/logging/server-logging';
@@ -26,6 +27,7 @@ export const GET = async (
   ) as string;
   const policyNumber = searchParams.get('policyNumber') as string;
   const planCode = searchParams.get('planCode') as string;
+  const commonLogContext = await buildNextReqLoggingContext(request);
 
   const loggingContext = {
     parentCarrierCode,
@@ -45,7 +47,11 @@ export const GET = async (
   const download = await getDocumentDownloadV3(
     params.documentId,
     documentClassification as string,
-    parentCarrierCode as string
+    parentCarrierCode as string,
+    {
+      user: commonLogContext.user,
+      correlationId: commonLogContext.correlationId,
+    }
   );
 
   if (!download?.data?.binaryData) {

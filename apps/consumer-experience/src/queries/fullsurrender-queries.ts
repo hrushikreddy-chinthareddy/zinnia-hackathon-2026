@@ -44,7 +44,7 @@ export const submitFullSurrender = async ({
     )
   ).json();
 
-  if (response.error || !response) {
+  if (response.error || !response || 'errors' in response.data) {
     throw response.error;
   }
 

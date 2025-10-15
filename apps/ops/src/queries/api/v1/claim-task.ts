@@ -25,18 +25,20 @@ export type ClaimNextTask = {
 };
 
 export const claimNextTask = async () => {
+    const url = `${baseAppUrl}/api/case/v1/tasks/assignments`;
+
+    browserLogInfo('v1/claim-task:claimNextTask::Claiming task', {
+        file: 'queries/api/v1/claimTask',
+        function: 'claimNextTask',
+        url,
+    });
+
     try {
-        const url = `${baseAppUrl}/api/case/v1/tasks/assignments`;
         const data = await client.post(url);
-        browserLogInfo('claimNextTask::Task is claimed successfully', {
-            file: 'queries/api/v1/claimTask',
-            function: 'claimNextTask',
-            url,
-        });
         return data;
     } catch (error: any) {
         browserLogError(
-            'claimNextTask::Something went wrong while claiming task',
+            'v1/claim-task:claimNextTask::Something went wrong while claiming task',
             {
                 ...parseErrorInformation(error),
                 file: 'queries/api/v1/claimTask',

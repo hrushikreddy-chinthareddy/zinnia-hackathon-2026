@@ -6,21 +6,27 @@ import {
     Policy,
 } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
-import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { Action, BooleanValue, NewTrustType } from '@deps/constants/policy';
+import {
+    Action,
+    BooleanValue,
+    EntityTypeValue,
+    NewTrustType,
+} from '@deps/constants/policy';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
-import { getTrustTypeLabel } from '@deps/containers/role-change/role-change-helper';
+import {
+    getTrustTypeLabel,
+    getEntityTypeLabel,
+} from '@deps/containers/role-change/role-change-helper';
 import { ExtendedParty } from '@deps/contexts/BeneChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
@@ -30,7 +36,6 @@ import {
     toTitleCase,
     isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {
     DEFAULT_BENE_ADDRESS,
@@ -266,6 +271,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                     isIrrevocable: existingIsIrrevocable,
                     isPerStirpes: existingIsPerStirpes,
                     trustType: existingTrustType,
+                    entityType: existingEntityType,
                 } = (existingParty as ExtendedParty) ?? {};
 
                 const currentAddresses: any[] = getAddresses({ addresses });
@@ -289,6 +295,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                     dateOfBirth,
                     trustType,
                     trustDate,
+                    entityType,
                 } = item.party.info;
 
                 const updatedAddress = item?.party?.addresses?.[0]
@@ -314,7 +321,17 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                         action
                     ) ||
                     (partyTypeInfo === PartyType.TRUST &&
-                        shouldDisplayField(trustDate, trustDate, item.action));
+                        shouldDisplayField(
+                            trustDate,
+                            trustDate,
+                            item.action
+                        )) ||
+                    (partyTypeInfo === PartyType.ORGANIZATION &&
+                        shouldDisplayField(
+                            existingEntityType,
+                            entityType,
+                            item.action
+                        ));
 
                 const allocationFieldsChanged =
                     shouldDisplayField(
@@ -366,6 +383,12 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                 const contactFieldsChanged =
                     addressChanged || phoneChanged || emailChanged;
 
+                const isPartyIndividual =
+                    selectedPartyType === PartyType.INDIVIDUAL;
+                const isPartyTrust = selectedPartyType === PartyType.TRUST;
+                const isPartyOrganization =
+                    selectedPartyType === PartyType.ORGANIZATION;
+
                 return (
                     <div
                         className="my-4 w-full rounded-sm border-2 border-gray-100 p-8"
@@ -399,7 +422,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                 </Typography>
 
                                 <div className="my-4 flex">
-                                    {selectedPartyType === PartyType.TRUST &&
+                                    {isPartyTrust &&
                                         renderFieldDynamically(
                                             t2('trustType'),
                                             getTrustTypeLabel(
@@ -415,30 +438,49 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                             ),
                                             action
                                         )}
-                                    {renderFieldDynamically(
-                                        t('identification.gender'),
-                                        getGender(existingGender as string),
-                                        getGender(gender),
-                                        action
-                                    )}
+                                    {isPartyOrganization &&
+                                        renderFieldDynamically(
+                                            t2('entityType'),
+                                            getEntityTypeLabel(
+                                                existingEntityType as unknown as EntityTypeValue,
+                                                t2,
+                                                ''
+                                            ),
+                                            getEntityTypeLabel(
+                                                entityType ??
+                                                    EntityTypeValue.Other,
+                                                t2,
+                                                ''
+                                            ),
+                                            action
+                                        )}
+                                    {isPartyIndividual &&
+                                        renderFieldDynamically(
+                                            t('identification.gender'),
+                                            getGender(existingGender as string),
+                                            getGender(gender),
+                                            action
+                                        )}
                                     {renderFieldDynamically(
                                         t('identification.ssn'),
                                         ssnIdentification?.identificationValue,
                                         ssn,
                                         action
                                     )}
-                                    {renderFieldDynamically(
-                                        t('identification.dateOfBirth'),
-                                        existingDateOfBirth as string,
-                                        dateOfBirth,
-                                        item.action
-                                    )}
-                                    {renderFieldDynamically(
-                                        t('identification.trustDate'),
-                                        trustDate as string,
-                                        item?.party?.info?.trustDate,
-                                        item.action
-                                    )}
+                                    {isPartyIndividual &&
+                                        renderFieldDynamically(
+                                            t('identification.dateOfBirth'),
+                                            existingDateOfBirth as string,
+                                            dateOfBirth,
+                                            item.action
+                                        )}
+                                    {isPartyTrust &&
+                                        renderFieldDynamically(
+                                            t('identification.trustDate'),
+                                            trustDate as string,
+                                            item?.party?.info?.trustDate,
+                                            item.action
+                                        )}
                                 </div>
                                 <div className="w-[800px] border border-b-2 border-gray-100"></div>
                             </div>

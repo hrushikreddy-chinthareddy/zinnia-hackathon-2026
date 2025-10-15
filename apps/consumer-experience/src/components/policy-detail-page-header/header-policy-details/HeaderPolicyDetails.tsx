@@ -55,6 +55,7 @@ export const HeaderPolicyDetails = async ({
     }
   };
 
+  //TODO: Do we need some sort of error state?
   if (!policyData || policyError) {
     return null;
   }
