@@ -25,25 +25,24 @@ export default function NewDateWidget<
     const { value, onChange, disabled, uiSchema, readonly } = props;
 
     const normalizeInput = (input: string): string | null => {
-        // If already valid YYYY-MM-DD, use as is
         if (dayjs(input, NUMERIC_DATE_FORMAT, true).isValid()) {
             return input;
         }
-        // Check for DD-MM-YYYY
+
         if (/^\d{2}-\d{2}-\d{4}$/.test(input)) {
             const parsed = dayjs(input, 'MM-DD-YYYY', true);
             if (parsed.isValid()) {
                 return parsed.format(NUMERIC_DATE_FORMAT);
             }
         }
-        // Try parsing as MMDDYYYY (user types 10261995)
+
         if (/^\d{8}$/.test(input)) {
             const parsed = dayjs(input, 'MM-DD-YYYY', true);
             if (parsed.isValid()) {
                 return parsed.format(NUMERIC_DATE_FORMAT);
             }
         }
-        // Try parsing with dayjs for other common formats
+
         const parsed = dayjs(input);
         if (parsed.isValid()) {
             return parsed.format(NUMERIC_DATE_FORMAT);
@@ -56,7 +55,6 @@ export default function NewDateWidget<
         const inputValue = event.target.value;
         const normalized = normalizeInput(inputValue);
 
-        // Only call onChange if value is valid and different
         if (normalized && normalized !== value) {
             onChange(normalized);
         }
