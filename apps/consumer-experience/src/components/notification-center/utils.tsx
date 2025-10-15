@@ -4,7 +4,6 @@ import { CaseStatus, StageStatus } from '@/types/case';
 
 import { NotificationCenterNotification } from './types';
 
-
 export const transformNotifications = (
   acc: {
     completedNotifications: NotificationCenterNotification[];
@@ -43,7 +42,8 @@ export const parseNotifications = (
   let stepsToAcknowledge;
 
   const completed =
-    caseItem.caseStatus === CaseStatus.COMPLETED || caseItem.caseStatus === CaseStatus.CANCELED;
+    caseItem.caseStatus === CaseStatus.COMPLETED ||
+    caseItem.caseStatus === CaseStatus.CANCELED;
 
   if (caseItem.caseStatus === CaseStatus.EXCEPTION) {
     stepsToAcknowledge = [];

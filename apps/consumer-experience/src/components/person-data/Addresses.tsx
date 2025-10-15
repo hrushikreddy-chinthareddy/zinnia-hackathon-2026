@@ -13,7 +13,7 @@ import { AddEditAddressSidesheet } from '@/components/add-edit-address/AddEditAd
 import {
   AddressFormFields,
   AddressObj,
-  FormActionType
+  FormActionType,
 } from '@/components/add-edit-address/types';
 import { FieldData } from '@/components/field-data/FieldData';
 import { AddressProps } from '@/components/person-data/types';
@@ -91,7 +91,7 @@ const AddressGroup = ({
             >
               {
                 displayAddressType[
-                address.addressType || AddressChange.addressType.RESIDENCE
+                  address.addressType || AddressChange.addressType.RESIDENCE
                 ]
               }
             </Label>

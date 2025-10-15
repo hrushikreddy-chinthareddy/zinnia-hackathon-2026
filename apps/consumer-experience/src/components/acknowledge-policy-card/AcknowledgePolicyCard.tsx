@@ -24,7 +24,10 @@ import {
 } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 
-import { AcknowledgeInputs, acknowledgePolicyAction } from './acknowledge-policy-action';
+import {
+  AcknowledgeInputs,
+  acknowledgePolicyAction,
+} from './acknowledge-policy-action';
 import styles from './AcknowledgePolicyCard.module.css';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';
 import { FullName } from '../pii/FullName';

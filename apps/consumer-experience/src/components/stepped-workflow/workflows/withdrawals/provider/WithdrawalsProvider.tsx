@@ -12,7 +12,6 @@ import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
 
-
 import {
   Action,
   taxWithholdingAmountTypeEnum,
@@ -21,7 +20,7 @@ import {
 } from './types';
 import { WithdrawalsContext } from './useWithdrawals';
 
-interface WithdrawalsProviderProps extends PropsWithChildren { }
+interface WithdrawalsProviderProps extends PropsWithChildren {}
 
 function WithdrawalsReducer(
   state: WithdrawalsState,
@@ -29,8 +28,8 @@ function WithdrawalsReducer(
 ): WithdrawalsState {
   return {
     ...state,
-    ...action.payload
-  }
+    ...action.payload,
+  };
 }
 
 const WithdrawalsProvider = ({ children }: WithdrawalsProviderProps) => {
