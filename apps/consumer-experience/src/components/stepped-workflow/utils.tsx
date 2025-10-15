@@ -31,7 +31,7 @@ const getPrevUrl = <T extends StepInfo>({
 };
 
 export const getStepInfo = <T extends StepInfo>(props: StepProps<T>) => {
-  const {step, baseUrl }  = props;
+  const { step, baseUrl } = props;
   const currentStep = step;
 
   return {

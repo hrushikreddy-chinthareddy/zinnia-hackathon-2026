@@ -16,7 +16,7 @@
 
 /* overriding bloom styles for radio buttons */
 .authenticationOptions {
-  >div {
+  > div {
     flex-direction: row;
     gap: 0;
 

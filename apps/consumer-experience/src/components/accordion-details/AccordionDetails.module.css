@@ -24,7 +24,8 @@
 }
 
 .content {
-  padding: 0 var(--measure-dimension-padding-2xl) var(--measure-dimension-padding-2xl);
+  padding: 0 var(--measure-dimension-padding-2xl)
+    var(--measure-dimension-padding-2xl);
 }
 
 .trigger {
