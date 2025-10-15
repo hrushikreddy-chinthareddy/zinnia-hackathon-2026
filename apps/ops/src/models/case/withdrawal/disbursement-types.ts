@@ -5,6 +5,7 @@ import {
     BankDetailsInputMethod,
     BankingFields,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
+import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
 import { SignatureValidationField } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation';
 import { RadioItem } from '@deps/components/radio/radio';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -77,7 +78,8 @@ export interface PaymentMethodOption extends Omit<RadioItem, 'subelement'> {
     consentAvailableConfig?: SignatureValidationField[];
     getDefaultPayload: (val: FormDisbursement) => DisbursementParts;
     generatePayloadFromSelection: (
-        val: DisbursementParts
+        val: DisbursementParts,
+        bankingInFile?: BankingDetails[] | null | []
     ) => FormDisbursementType;
 }
 
@@ -155,6 +157,7 @@ export const DEFAULT_DISBURSEMENT_UPDATE: DisbursementParts = {
     fboDetails: '',
     consentAvailable: null,
     firstTimeExpressCheck: null,
+    ChooseBankingType: '',
 };
 
 export const DEFAULT_BANK_DETAILS: BankDetails = {
@@ -217,4 +220,5 @@ export interface DisbursementParts {
     isDirectDeposit?: boolean;
     fboDetails: string;
     consentAvailable: boolean | null;
+    ChooseBankingType: string;
 }

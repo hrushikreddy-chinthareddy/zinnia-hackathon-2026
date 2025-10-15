@@ -66,6 +66,34 @@ describe('consent Component', () => {
         isWireApprovalPresent: {
             text: false,
         },
+        bankVerification: {
+            selectedBankingType: '',
+            validationsMap: {
+                VOIDED_CHECK: {
+                    fraudRedFlagsCheck: null,
+                    isBlankVoidedCheck: null,
+                    hasHandwrittenVOID: null,
+                    securityFeaturesPresent: null,
+                    ownerNameMatch: null,
+                    ownerAddressMatch: null,
+                },
+                BANK_LETTERHEAD: {
+                    isValidBankLetterhead: null,
+                    hasBankAddress: null,
+                    hasBankOfficialSignature: null,
+                    containsHandwrittenBankDetails: null,
+                },
+                DIRECT_DEPOSIT_FORM: {
+                    noAdditionalValidationRequired: null,
+                },
+                STARTER_CHECK: {
+                    noAdditionalValidationRequired: null,
+                },
+                NO_BANK_PROOF: {
+                    noAdditionalValidationRequired: null,
+                },
+            },
+        },
     };
     it('should render the component with initial signature and name values when provided with valid props', () => {
         const signatureFields = [
