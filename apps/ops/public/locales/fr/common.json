@@ -8329,5 +8329,14 @@
         "Environment": "Environment",
         "variableSearchPlaceholder": "Rechercher des variables de fonctionnalité...",
         "flagQueueSearchPlaceholder": "Rechercher des variables de fonctionnalité..."
+    },
+     "thirdPartyDetail":{
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Le formulaire de changement/correction de nom a été soumis avec succès.",
+            "cta": "Aller à l’Audit de Qualité",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

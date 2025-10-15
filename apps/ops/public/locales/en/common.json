@@ -8447,5 +8447,14 @@
         "environment": "Environment",
         "variableSearchPlaceholder": "Search feature variables...",
         "flagQueueSearchPlaceholder": "Search feature flags..."
+    },
+    "thirdPartyDetail":{
+        "confirmStep" : {
+            "title": "Got It!",
+            "subTitle": "Name change/correction form was submitted successfully.",
+            "cta": "Go to case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

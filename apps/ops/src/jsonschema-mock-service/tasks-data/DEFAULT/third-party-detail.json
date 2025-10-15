@@ -56,11 +56,15 @@
             "designeeType": "Trust"
         },
         "missingInformation": {
-            "Supporting document is incomplete": "No",
-            "Third party information is not provided or unclear": [],
-            "Incorrect form provided": "No",
-            "Signature missing": "No",
-            "Incomplete form provided": "No"
+            "details": {
+                "documents": [
+                    {
+                        "documentId": "67c1b9655c3f6536d7f2ac69",
+                        "documentName": "Third Party Designee Form",
+                        "documentExt": "pdf"
+                    }
+                ]
+            }
         }
     },
     "mappedExceptions": [],
