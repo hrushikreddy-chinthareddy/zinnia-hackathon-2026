@@ -51,15 +51,11 @@ export default function useSbgcConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
-        formESignatureData,
-    }: // bankDetails,
-    Partial<FormParts> = {}): FormValidationErrors => {
+    }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
-            formESignatureData,
-            // bankDetails,
         });
 
         return errors;

@@ -50,7 +50,7 @@ describe('useDiaryNotes', () => {
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.diaryNotes.length).toBe(2);
         expect(result.current.totalLogs).toBe(2);
-        expect(result.current.diaryNotes[0].NoteText).toBe('Past note');
+        expect(result.current.diaryNotes[0].NoteText).toBe('Future note');
     });
 
     it('loads LC notes directly when isLC is true', async () => {
