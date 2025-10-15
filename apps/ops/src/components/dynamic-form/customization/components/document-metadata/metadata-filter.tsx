@@ -63,7 +63,7 @@ const DocumentMetadataFilter = memo(
                 }))
                 .filter((option) => {
                     const key = option.value;
-                    if (seen.has(key)) return false;
+                    if (!key || seen.has(key)) return false;
                     seen.add(key);
                     return true;
                 });

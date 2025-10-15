@@ -164,13 +164,11 @@ export default function getRSLNOftConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
-        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
-            formESignatureData,
         });
 
         // fbo details required

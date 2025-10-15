@@ -2856,7 +2856,7 @@
                 "type": "Type",
                 "date": "Sign date",
                 "signPresent": "Sign present",
-                "auditTrial": "Audit trail",
+                "auditTrial": "Audit trial",
                 "accordForm": "Acord Form"
             },
             "employerTpaAuthorization": {

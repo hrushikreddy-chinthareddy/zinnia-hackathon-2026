@@ -137,15 +137,6 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
             />
-            <ESignatureValidation
-                isFormStateReadOnly={isFormStateReadOnly}
-                formESignatureData={
-                    formESignatureData || ({} as FormEsignatureData)
-                }
-                setFormESignatureData={setFormESignatureData}
-                fieldConfig={eSignatureFieldConfig}
-                formErrors={formErrors}
-            />
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -159,6 +150,15 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
                     t('distributionMethod.cedingCompanyDistribution') as string
                 }
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <ESignatureValidation
+                isFormStateReadOnly={isFormStateReadOnly}
+                formESignatureData={
+                    formESignatureData || ({} as FormEsignatureData)
+                }
+                setFormESignatureData={setFormESignatureData}
+                fieldConfig={eSignatureFieldConfig}
+                formErrors={formErrors}
             />
         </>
     );
