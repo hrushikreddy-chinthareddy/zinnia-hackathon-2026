@@ -256,7 +256,7 @@ export const TransactionStatusTabGroup = ({
     transactions,
     children,
 }: {
-    transactions: Transaction[] | undefined;
+    transactions: Transaction[];
     children: React.ReactNode;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -294,7 +294,7 @@ export const TransactionStatusTabGroup = ({
         TransactionStatus.REVERSED,
     ]).map((status) => (
         <TabTrigger key={`${status}-trigger`} value={status}>
-            {`${t(`${status}`)} ${`(${totals[status]})`}`}
+            {`${t(`${status}`)} ${`(${totals?.[status] || 0})`}`}
         </TabTrigger>
     ));
     return (

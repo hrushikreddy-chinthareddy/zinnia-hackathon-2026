@@ -27,6 +27,14 @@ import {
 import styles from './transaction-wrapper.module.css';
 import { TransactionsTable } from './transactions-table';
 
+const initialFilterTransactions = {
+    [TransactionStatus.COMPLETED]: [],
+    [TransactionStatus.PENDING]: [],
+    [TransactionStatus.CANCELED]: [],
+    [TransactionStatus.FAILED]: [],
+    [TransactionStatus.REVERSED]: [],
+};
+
 export const TransactionsWrapper = () => {
     const { t } = useTranslation();
     const { policy } = useContext(PolicyData);

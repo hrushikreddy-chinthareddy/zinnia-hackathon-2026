@@ -33,6 +33,8 @@ export const getTransactionsQuery = async ({
     const { ...filters } = historyFilters;
     const transactionTypes = getEvents(filters.eventFilter);
 
+    console.log({ filters });
+
     const results = await getPolicyTransactions({
         transactionTypes: transactionTypes,
         id: policyNumber,
