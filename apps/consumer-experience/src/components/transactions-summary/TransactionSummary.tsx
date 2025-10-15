@@ -4,7 +4,10 @@ import { FC } from 'react';
 import { getTransactionSummaryById } from '@/services/transactions';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
+import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
 import styles from './TransactionsSummary.module.css';
+import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
+import { TransactionSummaryDetails } from './sections/TransactionSummaryDetails';
 import { HeaderPolicyDetails } from '../policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
 
 interface TransactionsSummaryProps {
@@ -27,6 +30,10 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
     commonLoggingContext
   );
 
+  if (!data || error) {
+    return <NoDataAvailable correlationId={error?.correlationId} />;
+  }
+
   return (
     <div className={styles.container}>
       <HeaderPolicyDetails
@@ -34,7 +41,11 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         policyNumber={policyNumber}
         lineOfBusiness={lineOfBusiness}
       />
-      <div className={styles.summaryContainer}></div>
+      <div className={styles.summaryContainer}>
+        <TransactionSummarySubmissionDetails transactionSummary={data} />
+        <hr />
+        <TransactionSummaryDetails transactionSummary={data} />
+      </div>
     </div>
   );
 };
