@@ -154,6 +154,7 @@ function FormEntryStep({
             formTpaAuthorization,
             formSurrenderingCompany,
             formAdditionalWaivers,
+            formESignatureData,
         } = formState;
         const errors = formValidator({
             formData,
@@ -173,6 +174,7 @@ function FormEntryStep({
             formTpaAuthorization,
             formSurrenderingCompany,
             formAdditionalWaivers,
+            formESignatureData,
         });
         setFormErrors({ ...errors });
         return Object.keys(errors).length === 0;

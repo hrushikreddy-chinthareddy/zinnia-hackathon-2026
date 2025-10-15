@@ -6,6 +6,7 @@ import {
     FormEsignatureData,
     getDefaultESignatureData,
 } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -71,7 +72,7 @@ const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
     }
 
     if (
-        [Carrier.SBGC, Carrier.FLIC].includes(form.data.clientCode as Carrier)
+        [Carrier.SBGC, Carrier.FLIC].includes(form?.data.clientCode as Carrier)
     ) {
         const filterdFunds =
             form.data.formRequest.formDistribution?.funds?.filter(
@@ -83,7 +84,7 @@ const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
         return FundWithdrawnMethod.Default;
     }
 
-    return [ProgramSubType.Dollar, ProgramSubType.Percentage].includes(
+    return [ProgramSubType.Dollar, ProgramSubType.Percentage]?.includes(
         formProgram?.programSubType?.text as ProgramSubType
     )
         ? FundWithdrawnMethod.SpecifyFunds
@@ -213,6 +214,13 @@ export const FormProvider = ({
     );
     const [policySystematicPrograms, _] = useState(systematicPrograms || []);
 
+    const [bankDetails, setBankDetails] = useState<BankingDetails>({
+        paymentMethod: '',
+        isBankSelected: false,
+        bankingInFile: null,
+        selectedBanking: '',
+    });
+
     // Update contract issue state when issue state changes
     useEffect(() => {
         setContractIssueState(issueState);
@@ -234,6 +242,8 @@ export const FormProvider = ({
             setFormIrsData(updatedFormIrsData);
         }
     }, []);
+
+    console.log(formErrors, '<=== formErrors');
 
     return (
         <FormDataContext.Provider
@@ -278,6 +288,8 @@ export const FormProvider = ({
                 formPeriodicPension,
                 policySystematicPrograms,
                 isLC,
+                bankDetails,
+                setBankDetails,
                 setFormPeriodicPension,
                 setFormSubtype,
                 setCurrentFormState,

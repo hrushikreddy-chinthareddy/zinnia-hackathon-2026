@@ -245,6 +245,35 @@ export interface FormDisbursement {
         text: boolean | null;
     };
     disbursmentConsent?: DisbursmentConsentInfo;
+    ChooseBankingType?: string;
+    bankVerification: {
+        selectedBankingType: string;
+        validationsMap: {
+            VOIDED_CHECK: {
+                fraudRedFlagsCheck: boolean | null;
+                isBlankVoidedCheck: boolean | null;
+                hasHandwrittenVOID: boolean | null;
+                securityFeaturesPresent: boolean | null;
+                ownerNameMatch: boolean | null;
+                ownerAddressMatch: boolean | null;
+            } | null;
+            BANK_LETTERHEAD: {
+                isValidBankLetterhead: boolean | null;
+                hasBankAddress: boolean | null;
+                hasBankOfficialSignature: boolean | null;
+                containsHandwrittenBankDetails: boolean | null;
+            } | null;
+            DIRECT_DEPOSIT_FORM: {
+                noAdditionalValidationRequired: boolean | null;
+            } | null;
+            STARTER_CHECK: {
+                noAdditionalValidationRequired: boolean | null;
+            } | null;
+            NO_BANK_PROOF: {
+                noAdditionalValidationRequired: boolean | null;
+            } | null;
+        };
+    };
 }
 export interface FormDistribution {
     moneyType: {

@@ -1,3 +1,6 @@
+import { TFunction } from 'next-i18next';
+
+import { stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import {
     AccountType,
     Carrier,
@@ -56,6 +59,7 @@ export enum BankingFields {
     IsDirectDepositValid = 'isDirectDepositValid',
     IsDirectDeposit = 'isDirectDeposit',
     FboDetails = 'fboDetails',
+    ChooseBankingType = 'ChooseBankingType',
 }
 
 // The values that can be impacted by user inputs, in their default forms.
@@ -87,6 +91,16 @@ export const getDefaultFormDisbursementValues = (): FormDisbursement => {
                 },
             },
         ],
+        bankVerification: {
+            selectedBankingType: '',
+            validationsMap: {
+                VOIDED_CHECK: null,
+                BANK_LETTERHEAD: null,
+                DIRECT_DEPOSIT_FORM: null,
+                STARTER_CHECK: null,
+                NO_BANK_PROOF: null,
+            },
+        },
         paymentToBrokerageAccount: false,
         brokerage: null,
         payeeType: '',
@@ -184,3 +198,113 @@ export const SUPPLEMENTARY_FIELDS_FILTERS: string[] = [
     BankingFields.ContractNumber,
     BankingFields.Address,
 ];
+
+export const getBankTypeOptions = (t: TFunction) => [
+    {
+        label: t('voidedCheck'),
+        value: 'VOIDED_CHECK',
+    },
+    {
+        label: t('bankLetterhead'),
+        value: 'BANK_LETTERHEAD',
+    },
+    {
+        label: t('directDepositForm'),
+        value: 'DIRECT_DEPOSIT_FORM',
+    },
+    {
+        label: t('starterCheck'),
+        value: 'STARTER_CHECK',
+    },
+    {
+        label: t('nobankProof'),
+        value: 'NO_BANK_PROOF',
+    },
+];
+
+export const getVoidCheckOptions = (t: TFunction) => [
+    {
+        label: t('fraudRedFlagsCheck'),
+        fieldName: 'fraudRedFlagsCheck',
+    },
+    {
+        label: t('isBlankVoidedCheck'),
+        fieldName: 'isBlankVoidedCheck',
+    },
+    {
+        label: t('hasHandwrittenVOID'),
+        fieldName: 'hasHandwrittenVOID',
+    },
+    {
+        label: t('securityFeaturesPresent'),
+        fieldName: 'securityFeaturesPresent',
+    },
+    {
+        label: t('ownerNameMatch'),
+        fieldName: 'ownerNameMatch',
+    },
+    {
+        label: t('ownerAddressMatch'),
+        fieldName: 'ownerAddressMatch',
+    },
+];
+
+export const getBankLetterheadOptions = (t: TFunction) => [
+    {
+        label: t('isValidBankLetterhead'),
+        fieldName: 'isValidBankLetterhead',
+    },
+    {
+        label: t('hasBankAddress'),
+        fieldName: 'hasBankAddress',
+    },
+    {
+        label: t('hasBankOfficialSignature'),
+        fieldName: 'hasBankOfficialSignature',
+    },
+    {
+        label: t('containsHandwrittenBankDetails'),
+        fieldName: 'containsHandwrittenBankDetails',
+    },
+];
+
+export const getBankTypeOptionsMap = (t: TFunction, bankingType: any) => {
+    const VOIDED_CHECK = getVoidCheckOptions(t);
+    const BANK_LETTERHEAD = getBankLetterheadOptions(t);
+
+    return bankingType === 'VOIDED_CHECK'
+        ? VOIDED_CHECK
+        : bankingType === 'BANK_LETTERHEAD'
+        ? BANK_LETTERHEAD
+        : null;
+};
+
+export const typeKeyMap: Record<string, string> = {
+    VOIDED_CHECK: 'VOIDED_CHECK',
+    BANK_LETTERHEAD: 'BANK_LETTERHEAD',
+    DIRECT_DEPOSIT_FORM: 'DIRECT_DEPOSIT_FORM',
+    STARTER_CHECK: 'STARTER_CHECK',
+    NO_BANK_PROOF: 'NO_BANK_PROOF',
+};
+
+export const radioOptions = (t: TFunction) => [
+    { label: t('yes'), value: stringifyTrueFalseNull(true) },
+    { label: t('no'), value: stringifyTrueFalseNull(false) },
+];
+
+export const OTHER_BANK_OPTION = 'new';
+
+export function updateBankingDetails(
+    existingBank: any,
+    bankStructure: any
+): any {
+    const bankInfo = bankStructure.bank[0];
+    bankStructure.paymentMethod.text = existingBank.PaymentMethod;
+    bankInfo.accountNumber = existingBank.AccountNumber;
+    bankInfo.accountType.text = existingBank.AccountType;
+    bankInfo.bankName = existingBank.BankName;
+    bankInfo.isDirectDeposit.text = existingBank.PaymentMethod === 'EFT';
+    bankInfo.bankRoutingNumber = existingBank.RoutingNumber;
+
+    return bankInfo;
+}

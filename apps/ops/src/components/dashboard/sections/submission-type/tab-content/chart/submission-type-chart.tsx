@@ -5,6 +5,10 @@ import { FC, useContext } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
 import { getPieChartData } from '@deps/components/dashboard/charts/distribution-charts/distribution-pie-chart-small-api-based';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { Legend } from '@deps/components/dashboard/legend/legend';
@@ -19,12 +23,8 @@ import CaseStatBlock from '@deps/components/dashboard/stat-blocks/case-stat-bloc
 import { generateCarouselDataLengths } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader from '@deps/components/page-loader/page-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
 
 import styles from './submission-type-chart.module.css';
@@ -181,34 +181,10 @@ export const SubmissionTypeChart: FC = () => {
                                 <PageLoader />
                             </div>
                         ) : graphStatsError || pieChartStatsError ? (
-                            <div className="grid place-content-center h-full w-full min-h-[400px]">
-                                <Typography
-                                    variant={TypographyVariant.BodyBold}
-                                    className="mt-4 flex flex-row gap-2"
-                                >
-                                    <ChartBarsIcon
-                                        height={'24px'}
-                                        width={'24px'}
-                                    />
-                                    {
-                                        'Something went wrong fetching the application types, please try again by refreshing the page'
-                                    }
-                                </Typography>
-                            </div>
+                            <ErrorMessage />
                         ) : pieChartStats?.data?.length === 0 ||
                           graphStats?.data?.length === 0 ? (
-                            <div className="grid place-content-center h-full w-full min-h-[400px]">
-                                <Typography
-                                    variant={TypographyVariant.BodyBold}
-                                    className="mt-4 flex flex-row gap-2"
-                                >
-                                    <ChartBarsIcon
-                                        height={'24px'}
-                                        width={'24px'}
-                                    />
-                                    {'There is no data for this selection'}
-                                </Typography>
-                            </div>
+                            <NoDataMessage />
                         ) : (
                             <Carousel
                                 slideStyle="my-8 pt-6"

@@ -156,6 +156,34 @@ describe('Form Disbursment Updated Component', () => {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: {
+                            fraudRedFlagsCheck: null,
+                            isBlankVoidedCheck: null,
+                            hasHandwrittenVOID: null,
+                            securityFeaturesPresent: null,
+                            ownerNameMatch: null,
+                            ownerAddressMatch: null,
+                        },
+                        BANK_LETTERHEAD: {
+                            isValidBankLetterhead: null,
+                            hasBankAddress: null,
+                            hasBankOfficialSignature: null,
+                            containsHandwrittenBankDetails: null,
+                        },
+                        DIRECT_DEPOSIT_FORM: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        STARTER_CHECK: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        NO_BANK_PROOF: {
+                            noAdditionalValidationRequired: null,
+                        },
+                    },
+                },
             };
             let setMethodArgs;
             const setMockData = jest.fn((cb) => {
@@ -337,6 +365,34 @@ describe('Form Disbursment Updated Component', () => {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: {
+                            fraudRedFlagsCheck: null,
+                            isBlankVoidedCheck: null,
+                            hasHandwrittenVOID: null,
+                            securityFeaturesPresent: null,
+                            ownerNameMatch: null,
+                            ownerAddressMatch: null,
+                        },
+                        BANK_LETTERHEAD: {
+                            isValidBankLetterhead: null,
+                            hasBankAddress: null,
+                            hasBankOfficialSignature: null,
+                            containsHandwrittenBankDetails: null,
+                        },
+                        DIRECT_DEPOSIT_FORM: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        STARTER_CHECK: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        NO_BANK_PROOF: {
+                            noAdditionalValidationRequired: null,
+                        },
+                    },
+                },
             };
             let setMethodArgs;
             const setMockData = jest.fn((cb) => {
@@ -567,6 +623,34 @@ describe('Form Disbursment Updated Component', () => {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: {
+                            fraudRedFlagsCheck: null,
+                            isBlankVoidedCheck: null,
+                            hasHandwrittenVOID: null,
+                            securityFeaturesPresent: null,
+                            ownerNameMatch: null,
+                            ownerAddressMatch: null,
+                        },
+                        BANK_LETTERHEAD: {
+                            isValidBankLetterhead: null,
+                            hasBankAddress: null,
+                            hasBankOfficialSignature: null,
+                            containsHandwrittenBankDetails: null,
+                        },
+                        DIRECT_DEPOSIT_FORM: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        STARTER_CHECK: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        NO_BANK_PROOF: {
+                            noAdditionalValidationRequired: null,
+                        },
+                    },
+                },
             };
             let setMethodArgs;
             const setMockData = jest.fn((cb) => {
@@ -644,6 +728,34 @@ describe('Form Disbursment Updated Component', () => {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: {
+                            fraudRedFlagsCheck: null,
+                            isBlankVoidedCheck: null,
+                            hasHandwrittenVOID: null,
+                            securityFeaturesPresent: null,
+                            ownerNameMatch: null,
+                            ownerAddressMatch: null,
+                        },
+                        BANK_LETTERHEAD: {
+                            isValidBankLetterhead: null,
+                            hasBankAddress: null,
+                            hasBankOfficialSignature: null,
+                            containsHandwrittenBankDetails: null,
+                        },
+                        DIRECT_DEPOSIT_FORM: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        STARTER_CHECK: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        NO_BANK_PROOF: {
+                            noAdditionalValidationRequired: null,
+                        },
+                    },
+                },
             };
             let setMethodArgs;
             const setMockData = jest.fn((cb) => {
@@ -720,6 +832,34 @@ describe('Form Disbursment Updated Component', () => {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: {
+                            fraudRedFlagsCheck: null,
+                            isBlankVoidedCheck: null,
+                            hasHandwrittenVOID: null,
+                            securityFeaturesPresent: null,
+                            ownerNameMatch: null,
+                            ownerAddressMatch: null,
+                        },
+                        BANK_LETTERHEAD: {
+                            isValidBankLetterhead: null,
+                            hasBankAddress: null,
+                            hasBankOfficialSignature: null,
+                            containsHandwrittenBankDetails: null,
+                        },
+                        DIRECT_DEPOSIT_FORM: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        STARTER_CHECK: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        NO_BANK_PROOF: {
+                            noAdditionalValidationRequired: null,
+                        },
+                    },
+                },
             };
             let setMethodArgs;
             const setMockData = jest.fn((cb) => {
