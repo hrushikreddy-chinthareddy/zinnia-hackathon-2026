@@ -231,14 +231,22 @@ In order to execute GitHub workflows locally via Act, you will need
 Act can be pre-configured, or it you can just supply everything it needs via command line args: 
 
 ```bash
-act
-  pull_request  # GitHub event name, and should match your "on" descriptor in the workflow
-  -e .github/workflows/mock_events/pull_request.json  # path to mock event file that supplies metadata for your GH event
-  -P ubuntu-latest=catthehacker/ubuntu:act-latest  # use the "micro" Ubuntu image, same as our actual GH actions
-  --reuse  # reuse the same Docker image from the previous run, instead of building it from scratch
-  -j prettier-lint-typecheck  # specify the action execute; this can be omitted to run all actions responding to the event
-  -s GITHUB_TOKEN=<your_gh_token>  # your GH token
+act \
+  pull_request \
+  -e .github/workflows/mock_events/pull_request.json \
+  -P ubuntu-latest=catthehacker/ubuntu:act-latest \
+  --reuse \
+  -j prettier-typecheck-lint \
+  -s GITHUB_TOKEN=<your_gh_token_here>
 ```
+
+* **act** Act executable
+* **pull_request** GitHub event name, and should match your "on" descriptor in the workflow
+* **-e .github/workflows/mock_events/pull_request.json**  Path to mock event file that supplies metadata for your GH event
+* **-P ubuntu-latest=catthehacker/ubuntu:act-latest**  Use the "micro" Ubuntu image, same as our actual GH actions
+* **--reuse** Reuse the same Docker image from the previous run, instead of building it from scratch
+* **-j prettier-lint-typecheck** Specify the action execute; this can be omitted to run all actions responding to the event
+* **-s GITHUB_TOKEN=<your_gh_token>** Your GH token
 
 This first time Act runs your workflow, it will need to build the Docker image, which takes a long time. It will skip this step as long as you use the `--reuse` arg in the command line, and all subsequent runs should be pretty fast.
 
