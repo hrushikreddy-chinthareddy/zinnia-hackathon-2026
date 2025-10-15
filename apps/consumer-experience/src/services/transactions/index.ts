@@ -2,16 +2,19 @@ import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 
 import mock from './mock.json';
+import { WithdrawalTransaction } from './types';
 
 export const getTransactionSummaryById = withLogging(
   async (
     {
-      _transactionId,
+      transactionId,
     }: {
-      _transactionId: string;
+      transactionId: string;
     },
     _loggingCtx: CommonLogContext
-  ) => {
+  ): Promise<WithdrawalTransaction> => {
+    console.log('getTransactionSummaryById', transactionId);
+
     return mock;
 
     // const url = `${apiServerBaseUrl}/transactions/v1/transaction/entities/${transactionId}`;
