@@ -1,10 +1,11 @@
 .clickableCardContainer:not(:has(ul)) {
-  >div {
+  > div {
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
 
   &.disabled {
-    border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-subtle, #ccc);
+    border: var(--measure-dimension-stroke-sm) solid
+      var(--color-base-border-border-subtle, #ccc);
     box-shadow: none;
   }
 }
@@ -23,7 +24,7 @@
 /* When there is a list before the main card, only top card should
 ave top radius and last card should have bottom radius */
 .clickableCardContainer:has(ul) {
-  >div {
+  > div {
     border-top-left-radius: var(--measure-dimension-radius-sm, 0.25rem);
     border-top-right-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
@@ -54,7 +55,8 @@ ave top radius and last card should have bottom radius */
     content: '';
     position: absolute;
     inset: -2px;
-    border: var(--measure-dimension-stroke-sm) solid var(--color-states-hover-border-hover-border, #ff4f00);
+    border: var(--measure-dimension-stroke-sm) solid
+      var(--color-states-hover-border-hover-border, #ff4f00);
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
   }
 }
