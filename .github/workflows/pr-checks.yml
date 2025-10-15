@@ -86,7 +86,7 @@ jobs:
           npx turbo lint
 
   test:
-    name: Test apps/ops
+    name: Test All Apps
     runs-on: ubuntu-latest
     env:
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
@@ -106,5 +106,5 @@ jobs:
           cache: 'pnpm'
       - name: install packages for compiling canvas-node
         run: sudo apt-get update && sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-      - run: pnpm install --filter ops
+      - run: pnpm install
       - run: npx turbo test
