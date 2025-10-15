@@ -332,7 +332,7 @@ const TabGroupContainer = ({
     const caseDetails = { policyNumber, carrierId: clientCode };
 
     return (
-        <DiaryNotesProvider caseDetails={caseDetails as any}>
+        <DiaryNotesProvider caseDetails={caseDetails as any} isLC={true}>
             <WorkflowProvider>
                 <TabGroupContent
                     steps={steps}

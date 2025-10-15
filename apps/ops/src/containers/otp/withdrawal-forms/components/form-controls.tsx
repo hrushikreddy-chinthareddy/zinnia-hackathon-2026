@@ -111,6 +111,7 @@ export function FormControls({
             formAdditionalWaivers,
             formESignatureData,
             formComment,
+            // bankDetails,
         } = formState;
         const errors = formValidator({
             formData,
@@ -132,6 +133,7 @@ export function FormControls({
             formSurrenderingCompany,
             formAdditionalWaivers,
             formComment,
+            // bankDetails,
         });
 
         setFormErrors({ ...errors });
@@ -166,6 +168,7 @@ export function FormControls({
         event.preventDefault();
         setIsLoading(true);
         setTaskApiError('');
+
         if (validateForm() && areDiaryNotesViewed) {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,

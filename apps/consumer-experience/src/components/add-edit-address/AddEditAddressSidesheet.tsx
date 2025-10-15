@@ -21,10 +21,12 @@ import { formatAddressLines, generateChanges } from './utils';
 import { Error } from '../transaction-steps/error/Error';
 import { Loading } from '../transaction-steps/loading/Loading';
 import { Success } from '../transaction-steps/success/Success';
+import { AddEditAddress } from './form-steps/add/AddEditAddress';
 import {
-  AddEditAddress,
-} from './form-steps/add/AddEditAddress';
-import { AddEditAddressSidesheetProps, AddressFormFields, FormActionType } from './types';
+  AddEditAddressSidesheetProps,
+  AddressFormFields,
+  FormActionType,
+} from './types';
 import { Confirm } from '../transaction-steps/confirm/Confirm';
 
 export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
@@ -43,6 +45,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState<FormSteps>();
   const [errorTitle, setErrorTitle] = useState('An error occurred');
+  const [correlationErrorId, setCorrelationErrorId] = useState<string>();
   const [errorMessage, setErrorMessage] = useState<ReactNode>(
     'Some generic messaging that will get updated based on the api response'
   );
@@ -125,20 +128,20 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     const request =
       actionType === FormActionType.EDIT
         ? putUpdateAddress({
-          planCode: params.planCode,
-          policyNumber: params.policyNumber,
-          partyId,
-          addressId,
-          addressChangeRequest,
-          correlationId,
-        })
+            planCode: params.planCode,
+            policyNumber: params.policyNumber,
+            partyId,
+            addressId,
+            addressChangeRequest,
+            correlationId,
+          })
         : postAddAddress({
-          planCode: params.planCode,
-          policyNumber: params.policyNumber,
-          partyId,
-          addressChangeRequest,
-          correlationId,
-        });
+            planCode: params.planCode,
+            policyNumber: params.policyNumber,
+            partyId,
+            addressChangeRequest,
+            correlationId,
+          });
 
     // TODO: Create a generic request method. It still takes in the same things, with the addition of a type.
     // I'm not sure how much we can genericize these actions since they call different endpoints,
@@ -152,6 +155,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       setErrorTitle(error.name);
       setErrorMessage(error.message);
       setStep(FormSteps.ERROR);
+      setCorrelationErrorId(error.correlationId);
       return;
     }
 
@@ -253,6 +257,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
           isServerError={isServerError}
           errorMessage={errorMessage}
           closeCallback={errorCloseCallback}
+          correlationId={correlationErrorId}
         />
       )}
       {step === FormSteps.SUCCESS && (

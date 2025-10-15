@@ -54,6 +54,7 @@ export default async function Page({
           <NoDataAvailable
             iconType={IconType.SHIELD_EXCLAMATION}
             message="There are currently no policies associated with your account."
+            correlationId={error?.correlationId}
           />
         </div>
       </>

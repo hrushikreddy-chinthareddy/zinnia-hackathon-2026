@@ -191,11 +191,13 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
         formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
 
         // fbo details required

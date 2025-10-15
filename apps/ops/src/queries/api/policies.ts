@@ -510,20 +510,27 @@ type PolicyNotesQuery = {
     limit?: number;
     offset?: number;
     policyNumber: string;
+    planCode: string;
+    isLC?: boolean;
 };
 export const getPolicyNotesInfo = async ({
     policyNumber,
     clientCode,
     offset = 0,
     limit = 10,
+    planCode,
+    isLC,
 }: PolicyNotesQuery): Promise<PolicyNotesInfoResponse | null> => {
     try {
+        const fastEndPoint = `${baseUrl}/${planCode}/${policyNumber}/notes`;
+        const lcEndPoint = `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`;
+        const endpoint = isLC ? lcEndPoint : fastEndPoint;
+
         const { data } = await client.get<
             PolicyNotesInfoResponse,
             AxiosResponse<PolicyNotesInfoResponse>
-        >(
-            `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`
-        );
+        >(endpoint);
+
         return data;
     } catch (e) {
         console.error('getPolicyNotesInfo::error getting notesInfo', e);

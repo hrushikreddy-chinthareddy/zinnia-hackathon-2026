@@ -61,6 +61,7 @@
             "cancelFreeLook": "Annuler Free Look",
             "caseManagement": "Gestion des Dossiers",
             "caseOverview": "Aperçu du Dossier",
+            "clientCases": "illustrations",
             "coverage": "Couverture",
             "createCase": "Créer une nouvelle demande OTP",
             "createCaseCreate": "Démarrer une nouvelle demande OTP",
@@ -77,6 +78,7 @@
             "formData": "Données du formulaire",
             "funds": "Fonds",
             "fundTransfer": "Transfert de fonds",
+            "illustrate": "Cas Client",
             "history": "Histoire",
             "loanAutopay": "Paiement automatique du prêt",
             "loanPayment": "Paiement de prêts",
@@ -2356,7 +2358,8 @@
                     "gmwb": "GMWB",
                     "jointLifetimeIncomeOption": "Option de revenu viager conjoint",
                     "singleLifetimeIncomeOption": "Option de revenu viager unique",
-                    "interestEarned": "Intérêt gagné"
+                    "interestEarned": "Intérêt gagné",
+                    "variableAnnuity": "GLWB variable"
                 },
                 "warnings": {
                     "specifyFundsRequired": "Veuillez spécifier le fonds pour configurer SSW avec le pourcentage d'A.V.",
@@ -2532,6 +2535,20 @@
                 "notValid": "Pas valide"
             },
             "distributionMethod": {
+                "chooseBankingType": "Choisir le type de banque",
+                "voidedCheck": "Chèque annulé",
+                "bankLetterhead": "En-tête de banque",
+                "directDepositForm": "Formulaire de dépôt direct",
+                "starterCheck": "Chèque de départ",
+                "nobankProof": "Pas de preuve bancaire",
+                "fraudRedFlagsCheck": "Le chèque annulé présente-t-il des signes de fraude ? (Chèque modifié, Correcteur, Le nom et l'adresse ne sont pas à la bonne place ? Un autocollant est utilisé pour couvrir le nom et l'adresse)",
+                "isBlankVoidedCheck": "Un chèque vierge ou annulé (pas un chèque précédemment émis) est-il présent ?",
+                "hasHandwrittenVOID": "Le chèque annulé comprend-il une mention manuscrite \"ANNULÉ\" ?",
+                "securityFeaturesPresent": "Le chèque annulé comprend-il des caractéristiques de sécurité ? (Logo MP, Cadenas)",
+                "ownerNameMatch": "Le nom sur le chèque annulé correspond-il au(x) propriétaire(s) ? Si le propriétaire est une fiducie, inclut-il le nom de la fiducie ou la désignation TTEE ?",
+                "ownerAddressMatch": "L'adresse sur le chèque annulé correspond-elle à l'adresse enregistrée ou à d'anciennes adresses ?",
+                "isValidBankLetterhead": "Les informations bancaires figurent-elles sur un en-tête de banque valide ?",
+                "hasBankAddress": "L'en-tête de la banque inclut-il l'adresse du client ou d'anciennes adresses ?",
                 "payeeName": "Le nom du bénéficiaire",
                 "confirmTerminate": "Êtes-vous sûr de vouloir terminer",
                 "type": "Type",
@@ -2840,8 +2857,10 @@
                 "nameIsRequired": "Le nom est requis",
                 "signatureDesignationMustBeSelected": "La désignation de signature doit être sélectionnée",
                 "signaturePresentOptionMustBeSelected": "L'option de présence de signature doit être sélectionnée",
+                "signatureValidOptionMustBeSelected": "L'option Signature valide doit être sélectionnée.",
+                "signatureCommentMustBePresent": "Le commentaire de signature doit être présent",
                 "accountNumberDoesNotMatch": "Le numéro de compte ne correspond pas",
-                "routingNumberDoesNotMatch": "Le numéro de routage ne correspond pas",
+                "routingNumberDoesNotMatch": "Le numéro d'acheminement bancaire ne correspond pas",
                 "signatureValidatedOptionMustBeSelected": "L’option de signature validée doit être sélectionnée",
                 "signatureCommentMustBeSelected": "Le commentaire doit être fourni pour une signature validée",
                 "signDateMustBeSelected": "La date de signature doit être présente pour les signatures présentes",
@@ -7976,6 +7995,8 @@
     "clientCase": {
         "newClientCase": "+ Nouveau client case",
         "clientCasePermissions": "Vous n'avez pas l'autorisation d'effectuer cette action.",
+        "quickQuote": "Quick Quote",
+        "quickQuotePermissions": "You do not have permission to take this action.",
         "searchBar": {
             "searchByLabel": "Rechercher Par",
             "clientCase": "Client case",
@@ -8139,6 +8160,9 @@
                 "agentHasNoAgencies": "Cet agent n'appartient à aucune agence.",
                 "current": "Utilisateur actuel"
             }
+        },
+        "quickQuoteForm": {
+            "title": "Cotisation rapide"
         }
     },
     "usage": {

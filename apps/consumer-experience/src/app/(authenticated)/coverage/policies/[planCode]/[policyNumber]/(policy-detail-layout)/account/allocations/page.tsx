@@ -10,9 +10,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logTrace } from '@/utils/logging/log-fns';
-import {
-  buildCommonLogContext,
-} from '@/utils/logging/server-logging';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import { IULFundsView } from './IULFundsView';
 import { ULFundsView } from './ULFundsView';
@@ -58,7 +56,7 @@ export default async function FundsPage({
   );
 
   if (!data || error) {
-    return <NoDataAvailable />;
+    return <NoDataAvailable correlationId={error?.correlationId} />;
   }
 
   return (

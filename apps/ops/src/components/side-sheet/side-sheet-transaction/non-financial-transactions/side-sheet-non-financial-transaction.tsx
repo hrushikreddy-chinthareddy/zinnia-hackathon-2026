@@ -376,10 +376,10 @@ const getPhoneChanges = (
         return null;
     }
 
-    const newPhone = party.phones.find(
+    const newPhone = party.phones?.find(
         (a) => a.phoneId === transaction.partyPolicyNewReferenceId
     );
-    const oldPhone = party.phones.find(
+    const oldPhone = party.phones?.find(
         (a) => a.phoneId === transaction.partyPolicyChangeReferenceId
     );
 

@@ -937,11 +937,11 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         };
 
         const getDeathBenefits = () => {
-            const deathBenefitsMount =
-                assumed.annualTimeSeriesData[0].deathBenefitsMount;
+            const deathBenefitAmount =
+                assumed?.annualTimeSeriesData?.[0]?.deathBenefitAmount;
 
-            if (deathBenefitsMount) {
-                return `Death Benefits ${numberFormatify(deathBenefitsMount)}`;
+            if (deathBenefitAmount) {
+                return `Death Benefits ${numberFormatify(deathBenefitAmount)}`;
             }
 
             return '';
@@ -949,8 +949,8 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
 
         return [
             creationDate,
-            `Initial Premium  ${numberFormatify(
-                assumed.initial.minimumPremiumAmount
+            `Initial Annual Premium  ${numberFormatify(
+                assumed.initial.totalPremium
             )}`,
             numberFormatify(assumed.initial.totalFaceAmount),
             getDeathBenefits(),

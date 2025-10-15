@@ -247,22 +247,27 @@ export const submitSystematicProgram = withLogging(
     // This means the call successfully created a case OR that
     // there was some error submitting the transaction, but that
     // the call itself did successfully submit
-    if ('caseId' in response || rawResponse.status === 400) {
-      if (rawResponse.status === 400) {
-        logTrace('systematic premium submission status failure', {
-          status: rawResponse.status,
-          bpmResponse: response,
-        });
-      }
-
+    if ('caseId' in response) {
       return response;
     }
+
+    if (rawResponse.status === 400) {
+      logTrace('systematic premium submission status failure', {
+        status: rawResponse.status,
+        bpmResponse: response,
+      });
+    }
+
+    const apiNotOkDetails = await logApiNotOkDetails({
+      rawResponse,
+      parsedResponse: response,
+    });
 
     throw new Error('Error submitting systematic program', {
       // TODO: verify no PII, but i think this is okay
       cause: {
         requestBody,
-        ...logApiNotOkDetails({ rawResponse, parsedResponse: response }),
+        ...apiNotOkDetails,
       },
     });
   },
@@ -292,19 +297,18 @@ export const editSystematicProgram = withLogging(
     const response: SystematicProgramTransactionResponse =
       await parseAPIResponse(rawResponse);
 
-    // This means the call successfully created a case OR that
-    // there was some error submitting the transaction, but that
-    // the call itself did successfully submit
-    if ('caseId' in response || rawResponse.status === 400) {
-      if (rawResponse.status === 400) {
-        logTrace('systematic premium submission status failure', {
-          status: rawResponse.status,
-          bpmResponse: response,
-        });
-      }
-
+    // This means the call successfully created a case
+    if ('caseId' in response) {
       return response;
     }
+
+    if (rawResponse.status === 400) {
+      logTrace('systematic premium submission status failure', {
+        status: rawResponse.status,
+        bpmResponse: response,
+      });
+    }
+
     throw new Error('Error editing Systematic Program', {
       cause: {
         requestBody: body,

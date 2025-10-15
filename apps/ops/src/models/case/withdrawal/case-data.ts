@@ -195,6 +195,8 @@ export const CaseDetails: DigitalFormWithdrawal = {
                 ],
             },
             formDisbursement: {
+                ChooseBankingType: '',
+
                 paymentMethod: {
                     // ONLY USED FOR WIRE/EFT CHECK IS paymentMAIL TYPE (null otherwise)
                     text: 'Wire' as PaymentMethod, //-- UI Direct, [Wire, EFT], List Bill, List Bill/Forward  NA: null
@@ -256,6 +258,34 @@ export const CaseDetails: DigitalFormWithdrawal = {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                bankVerification: {
+                    selectedBankingType: '',
+                    validationsMap: {
+                        VOIDED_CHECK: {
+                            fraudRedFlagsCheck: null,
+                            isBlankVoidedCheck: null,
+                            hasHandwrittenVOID: null,
+                            securityFeaturesPresent: null,
+                            ownerNameMatch: null,
+                            ownerAddressMatch: null,
+                        },
+                        BANK_LETTERHEAD: {
+                            isValidBankLetterhead: null,
+                            hasBankAddress: null,
+                            hasBankOfficialSignature: null,
+                            containsHandwrittenBankDetails: null,
+                        },
+                        DIRECT_DEPOSIT_FORM: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        STARTER_CHECK: {
+                            noAdditionalValidationRequired: null,
+                        },
+                        NO_BANK_PROOF: {
+                            noAdditionalValidationRequired: null,
+                        },
+                    },
+                },
             },
             formRestriction: {
                 restrictions: [

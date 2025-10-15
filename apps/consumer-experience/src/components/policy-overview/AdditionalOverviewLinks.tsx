@@ -31,6 +31,7 @@ const AdditionalLinks: FC<AdditionalLinksProps> = async ({
     loggingContext
   );
 
+  //TODO: Do we need some sort of error state?
   if (error) {
     return null;
   }

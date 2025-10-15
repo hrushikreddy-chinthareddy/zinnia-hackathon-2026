@@ -3,6 +3,7 @@ import { createContext } from 'react';
 
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -77,6 +78,8 @@ export interface OtpWithdrawalFormState {
     formESignatureData?: FormEsignatureData | any;
     policySystematicPrograms: SystematicSpecialPrograms[] | [];
     isLC?: boolean;
+    bankDetails?: BankingDetails;
+    setBankDetails?: React.Dispatch<React.SetStateAction<BankingDetails>>;
     setFormESignatureData: React.Dispatch<React.SetStateAction<any>>;
     setFormPeriodicPension: React.Dispatch<
         React.SetStateAction<PeriodicPensionFormType | null>
@@ -177,6 +180,8 @@ export const defaultFormDataContext = {
     formPeriodicPension: {} as PeriodicPensionFormType,
     formEsignatureData: {} as FormEsignatureData,
     policySystematicPrograms: [] as SystematicSpecialPrograms[],
+    BankDetails: {} as BankingDetails,
+    setBankDetails: noop,
     setFormPeriodicPension: noop,
     setCurrentFormState: noop,
     setFormAdditionalWaivers: noop,

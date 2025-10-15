@@ -1,5 +1,6 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 
+import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 import { Link } from '@/components/link/Link';
 
 import styles from './Styles.module.css';
@@ -7,11 +8,13 @@ import styles from './Styles.module.css';
 type PaymentErrorProps = {
   goToUrl: string;
   transactionType: string;
+  correlationId?: string;
 };
 
 export const TransactionError = ({
   goToUrl,
   transactionType,
+  correlationId,
 }: PaymentErrorProps) => {
   return (
     <div style={{ maxWidth: '500px', margin: '0 auto' }}>
@@ -36,6 +39,7 @@ export const TransactionError = ({
           text="Back to contract overview"
           href={goToUrl}
         />
+        {correlationId && <CorrelationId id={correlationId} />}
       </div>
     </div>
   );

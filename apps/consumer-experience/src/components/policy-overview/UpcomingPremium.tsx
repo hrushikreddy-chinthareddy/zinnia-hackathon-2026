@@ -123,6 +123,7 @@ export const UpcomingPremium = async ({
         <NoDataAvailable
           iconType={IconType.AUTOPAY}
           message="There is currently no premium payments data available."
+          correlationId={error.correlationId}
         />
       </div>
     );

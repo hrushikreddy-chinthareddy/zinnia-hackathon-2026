@@ -442,11 +442,13 @@ export default function getFlicRmdConfig(t: TFunction) {
         formDisbursement,
         formSignature,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
         if (

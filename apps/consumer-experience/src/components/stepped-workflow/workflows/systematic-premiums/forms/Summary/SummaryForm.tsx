@@ -7,16 +7,13 @@ import { useForm } from 'react-hook-form';
 
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
-import {
-  TRANSACTION_ERROR_QUERY_PARAM,
-  TransactionErrorType,
-} from '@/components/stepped-workflow/types';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { QueryKeys } from '@/queries/query-keys';
 import {
   getSystematicPremiumValidation,
   submitSystematicPremium,
 } from '@/queries/transaction-queries';
+import { generateTransactionErrorUrl } from '@/services/errors/errors';
 
 import { SummaryTable } from './SummaryTable';
 import { useSystematicPremiums } from '../../provider/useSystematicPremiums';
@@ -43,14 +40,11 @@ export const SummaryForm = () => {
       if (data && 'caseId' in data) {
         router.push(stepInfo.nextStepUrl);
         setPrimaryButtonDisabled(false);
-      } else {
-        router.push(
-          `error?${TRANSACTION_ERROR_QUERY_PARAM}=${TransactionErrorType.SUBMISSION_FAILED}`
-        );
       }
     },
-    onError: () => {
-      router.push('error');
+    onError: err => {
+      const errorUrl = generateTransactionErrorUrl(err);
+      router.push(errorUrl);
     },
   });
 
@@ -58,6 +52,7 @@ export const SummaryForm = () => {
     data: validationResponse,
     isError: validationError,
     isSuccess: isValidationSuccess,
+    error,
     isFetching: isValidationFetching,
   } = useQuery({
     queryKey: [
@@ -75,14 +70,19 @@ export const SummaryForm = () => {
   });
 
   if (validationError) {
-    router.push('error');
+    router.push(`error?correlationId=${error.correlationId}`);
   }
 
   // Show pending state while:
   // - The mutation is pending
   // - The validation is fetching
   // - The mutation is successful, as we want to wait for the redirect in the onSuccess callback to finish unmounting the component
-  if (isValidationFetching || mutation.isPending || mutation.isSuccess) {
+  if (
+    isValidationFetching ||
+    mutation.isPending ||
+    mutation.isSuccess ||
+    mutation.isError
+  ) {
     setPrimaryButtonDisabled(true);
     return <PaymentLoading />;
   }

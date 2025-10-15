@@ -113,28 +113,27 @@ describe('SBGC SSW form config', () => {
                     bank: [
                         {
                             ...DEFAULT_BANK_DETAILS,
-                            accountNumber: bankingDetails.accountNumber,
-                            accountType: {
-                                text: bankingDetails.accountType,
-                            },
-                            bankName: bankingDetails.bankName,
-                            nameOnBankAccount:
-                                bankingDetails.accountHolder ?? '',
-                            routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount:
-                                bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName:
-                                bankingDetails.bankFurtherCreditName,
-                            reEnterAccountNumber: '',
-                            reEnterBankRoutingNumber: '',
+                            accountNumber: '',
+                            accountType: { text: undefined },
+                            bankName: '',
+                            routingNumber: '',
+                            reEnterAccountNumber: undefined,
+                            reEnterBankRoutingNumber: undefined,
+                            nameOnBankAccount: '',
+                            bankContactPerson: '',
+                            bankFurtherCreditAccount: '',
+                            bankFurtherCreditName: '',
+                            bankInfoCompleteInd: '',
+                            bankLocation: '',
+                            bankPhone: '',
+                            isDirectDeposit: { text: true },
+                            isDirectDepositValid: { text: null },
+                            maskedAccountNumber: null,
                         },
                     ],
-                    voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt:
-                        bankingDetails?.doesCheckMeetSecurityRequirements,
+                    bankVerification: undefined,
                 });
             });
-
             it('should generate a correct payload for a check selection', () => {
                 const checkOption = disbursementOptions.find(
                     (option) => option.value === PaymentMailType.Check

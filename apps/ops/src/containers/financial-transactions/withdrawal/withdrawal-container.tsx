@@ -16,6 +16,7 @@ import { PaymentStepSetState } from '@deps/components/workflows/payment-step/typ
 import StartStep, {
     StartStepSetState,
 } from '@deps/components/workflows/start-step/start-step';
+import { TransactionName } from '@deps/constants/policy';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -135,6 +136,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
                     validateTransaction={validateCall}
+                    transactionName={TransactionName.Withdrawal}
                 />
             ) : (
                 <PaymentStep

@@ -10,6 +10,10 @@ import {
 } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
@@ -19,11 +23,7 @@ import {
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 
 import { tooltipFormatter } from './page-views-tooltip';
 import {
@@ -139,17 +139,11 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
             <BlurOverlayLoader loading={zinniaLivePageViewsDataFetching}>
                 <div className="w-full flex-grow">
                     {chartNotRenderable ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {zinniaLivePageViewsDataError
-                                    ? 'Something went wrong fetching the zinnia live unique logins, please try again by refreshing the page'
-                                    : 'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        zinniaLivePageViewsDataError ? (
+                            <ErrorMessage />
+                        ) : (
+                            <NoDataMessage />
+                        )
                     ) : (
                         <DateTimeLineChart
                             series={series}
