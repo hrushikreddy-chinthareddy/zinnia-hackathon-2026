@@ -43,8 +43,8 @@ jobs:
               console.log("✅ PR description/title JIRA ID check passed.");
             }
 
-  prettier-lint-typecheck:
-    name: Prettier, Lint, and TS Type Check for apps/ops
+  prettier-typecheck-lint:
+    name: Prettier, Type Check, and Lint
     runs-on: ubuntu-latest
     env:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -60,18 +60,30 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@zinnia'
-      - name: Clean and install all monorepo deps
-        run: |
-          rm -rf node_modules apps/ops/node_modules
-          pnpm install --frozen-lockfile
-      - name: Prune and install only apps/ops deps
-        run: pnpm install --filter ./apps/ops --frozen-lockfile
+          cache: 'pnpm'
+      - name: Configure npm auth
+        run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
+      - name: Clean monorepo deps
+        run: rm -rf node_modules apps/*/node_modules
+      - name: Install monorepo deps
+        run: pnpm install --frozen-lockfile
       - name: Run prettier
         run: |
           export NODE_OPTIONS="--max-old-space-size=4096"
           npx turbo prettier
+      - name: Build dependent workspace packages
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          pnpm --filter '!./apps/ops' --filter '!./apps/consumer-experience' build
       - name: Run type checks
         run: npx turbo check-types
+      - name: Build ops dependencies
+        run: |
+          export NODE_OPTIONS="--max-old-space-size=4096"
+          pnpm --filter './apps/ops' --filter './apps/consumer-experience' build
+      - name: Run lint
+        run: |
+          npx turbo lint
 
   test:
     name: Test apps/ops
