@@ -338,7 +338,7 @@ export default function FormParties({
                                                 key={phoneIndex}
                                                 fields={field.fields || null}
                                                 phone={
-                                                    party.phones.find(
+                                                    party?.phones?.find(
                                                         (phone) =>
                                                             phone?.phoneType
                                                                 ?.text ===

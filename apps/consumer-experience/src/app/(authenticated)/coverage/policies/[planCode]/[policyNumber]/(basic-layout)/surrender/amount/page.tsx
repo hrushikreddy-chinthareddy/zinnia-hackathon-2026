@@ -22,7 +22,12 @@ export default async function ConfirmPage({
 
   // TODO: is this the right error handling? it's blocking surrenderValue === 0
   if (!!error || !data?.surrenderValue) {
-    return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+    return (
+      <NoDataAvailable
+        message={DEFAULT_UNAVAILABLE_STRING}
+        correlationId={error?.correlationId}
+      />
+    );
   }
 
   return (

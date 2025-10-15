@@ -477,11 +477,13 @@ export default function useMassMutualRmdConfig(t: TFunction) {
         formSignature,
         formDisbursement,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
 

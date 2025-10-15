@@ -39,7 +39,12 @@ export default async function SurrenderPolicy({
 
   const surrenderData = () => {
     if (error || !data) {
-      return <NoDataAvailable message={DEFAULT_UNAVAILABLE_STRING} />;
+      return (
+        <NoDataAvailable
+          message={DEFAULT_UNAVAILABLE_STRING}
+          correlationId={error?.correlationId}
+        />
+      );
     }
 
     return (

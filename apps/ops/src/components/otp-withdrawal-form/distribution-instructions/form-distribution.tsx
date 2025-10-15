@@ -85,7 +85,7 @@ export default function FormDistribution({
         } else if (val === FundWithdrawnMethod.SpecifyFunds) {
             setFormDistribution((fdd) => ({
                 ...fdd,
-                funds: fdd.funds.map((fund) => ({
+                funds: fdd.funds?.map((fund) => ({
                     ...fund,
                     amount: {
                         text: fund.amount.text,

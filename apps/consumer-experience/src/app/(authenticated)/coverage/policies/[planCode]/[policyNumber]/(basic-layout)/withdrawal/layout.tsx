@@ -29,6 +29,7 @@ export default async function WithdrawalLayout({
     loggingCtx
   );
 
+  //TODO: Do we need an error component or redirect?
   if (!data?.isEligible || !!error || !showPartialWithdrawalOneTime) {
     redirect(`/coverage/policies/${params.planCode}/${params.policyNumber}/`);
   }

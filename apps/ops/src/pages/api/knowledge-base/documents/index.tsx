@@ -5,8 +5,8 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { DocumentsDisplayType } from '@deps/types/knowledge-base';
 import {
-    logCompliance,
     logError,
+    logInfo,
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
@@ -44,7 +44,7 @@ export default withAuthAndLogging(
                 : undefined;
 
         try {
-            logCompliance(
+            logInfo(
                 `Fetching documents for client ${clientId}`,
                 loggingContext
             );

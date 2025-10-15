@@ -1,0 +1,87 @@
+.topSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg, 16px);
+}
+
+.formContainer {
+    display: flex;
+    padding: var(--measure-dimension-padding-4xl, 32px);
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-3xl, 40px);
+}
+.sectionTitle {
+    font-weight: 700;
+}
+
+.products {
+    width: 204px;
+
+    .productsOptions {
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    button {
+        height: 44px;
+    }
+}
+
+.inputRow {
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+    .ageInput {
+        width: 64px;
+    }
+}
+
+.clientState {
+    width: 94px;
+
+    .clientStateOptions {
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    button {
+        height: 44px;
+    }
+}
+
+.faceAmount {
+    width: 145px;
+}
+
+.bottomSection {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg, 16px);
+    background-color: var(--color-base-surface-surface-secondary);
+    padding: var(--measure-dimension-padding-2xl, 16px);
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: var(--measure-dimension-gap-lg, 16px);
+
+        .leftCol {
+            display: flex;
+            flex-grow: 5;
+            align-items: center;
+        }
+        .rightCol {
+            display: flex;
+            flex-grow: 1.25;
+        }
+        .faceAmount {
+            width: 124px;
+        }
+    }
+}
+
+.actionButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--measure-dimension-gap-lg, 16px);
+}

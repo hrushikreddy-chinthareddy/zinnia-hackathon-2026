@@ -28,9 +28,25 @@ const TransactionAccordion = ({
         setActiveIndex((prev) => (prev === index ? null : index));
     };
 
+    const deepEqual = (obj1: any, obj2: any): boolean => {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
+    };
+
     const handleItemChange = (index: number, updatedItem: any) => {
         const updatedList = [...value];
-        updatedList[index] = updatedItem;
+        const previousItem = updatedList[index];
+        const hasChanged = !deepEqual(previousItem, updatedItem);
+
+        if (updatedItem.party?.partyType === 'TRUST') {
+            updatedItem.party.supportingDocumentAttached =
+                updatedItem.party.supportingDocumentAttached ?? false;
+        }
+
+        updatedList[index] = {
+            ...updatedItem,
+            action: hasChanged ? Action.UPDATE : Action.NONE,
+        };
+
         onChange(updatedList);
     };
 
@@ -38,7 +54,7 @@ const TransactionAccordion = ({
         const updatedList = [...value];
         updatedList[index] = {
             ...updatedList[index],
-            action: checked ? Action.DELETE : Action.UPDATE,
+            action: checked ? Action.DELETE : Action.NONE,
         };
         onChange(updatedList);
     };
@@ -46,23 +62,25 @@ const TransactionAccordion = ({
     const handleAddItem = () => {
         const newItem = {
             action: Action.ADD,
+            actionType: 'BENE_CHANGE',
             isIrrevocable: false,
             isPerStirpes: false,
             party: {
                 partyType: 'INDIVIDUAL',
                 firstName: '',
                 lastName: '',
+                middleName: null,
                 gender: 'MALE',
                 preferredCommunicationType: 'EMAIL',
                 supportingDocumentAttached: false,
                 emails: [
                     {
-                        emailAddress: '',
+                        emailAddress: null,
                     },
                 ],
                 phones: [
                     {
-                        dialNumber: '',
+                        dialNumber: null,
                         phoneType: 'HOME',
                     },
                 ],
@@ -70,16 +88,17 @@ const TransactionAccordion = ({
                     {
                         addressType: 'RESIDENCE',
                         addressLine1: '',
-                        addressLine2: '',
+                        addressLine2: null,
                         city: '',
                         state: '',
                         zipCode: '',
-                        zipCodeExtension: '',
+                        zipCodeExtension: null,
                     },
                 ],
                 identifications: [
                     {
-                        identificationValue: '',
+                        identificationValue: null,
+                        IdentificationType: 'SSN',
                     },
                 ],
             },
@@ -121,6 +140,30 @@ const TransactionAccordion = ({
         setActiveIndex(null);
     };
 
+    const getConditionalUiSchema = (role: string) => {
+        let currentUiSchema = JSON.parse(JSON.stringify(uiSchema.items));
+
+        if (role === 'Joint Owner') {
+            currentUiSchema = {
+                ...currentUiSchema,
+                phones: {
+                    ...currentUiSchema?.phones,
+                    'ui:widget': 'hidden',
+                },
+                addresses: {
+                    ...currentUiSchema?.addresses,
+                    'ui:widget': 'hidden',
+                },
+                emails: {
+                    ...currentUiSchema?.emails,
+                    'ui:widget': 'hidden',
+                },
+            };
+        }
+
+        return currentUiSchema;
+    };
+
     useEffect(() => {
         if (activeIndex !== null) {
             const element = contentRefs.current[activeIndex];
@@ -144,6 +187,7 @@ const TransactionAccordion = ({
                 const isBeneAddition = item?.action === Action.ADD;
                 const hideIrrevocableSignType =
                     item.signType === 'IRREVOCABLE' && !isIrrevocableBene;
+                const updatedUiSchema = getConditionalUiSchema(item?.partyRole);
 
                 return (
                     <div key={`accordion-item-${index}`}>
@@ -232,7 +276,7 @@ const TransactionAccordion = ({
                                     {isActive && (
                                         <ObjectField
                                             schema={schema.items as any}
-                                            uiSchema={uiSchema.items}
+                                            uiSchema={updatedUiSchema}
                                             formData={item}
                                             onChange={(data) =>
                                                 handleItemChange(index, data)

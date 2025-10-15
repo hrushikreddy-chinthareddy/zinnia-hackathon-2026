@@ -13,7 +13,10 @@ import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
-import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import {
+    SignatureFieldNames,
+    SignatureFields,
+} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
@@ -80,7 +83,8 @@ export default function getRSLNOftConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'owner-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
@@ -110,7 +114,8 @@ export default function getRSLNOftConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'joint-sign-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
@@ -146,7 +151,8 @@ export default function getRSLNOftConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'beneficiary-sign-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType:
@@ -158,11 +164,13 @@ export default function getRSLNOftConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
 
         // fbo details required
@@ -175,6 +183,90 @@ export default function getRSLNOftConfig(t: TFunction) {
         ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
+
+        const ownerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
+        );
+
+        const jointOwnerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.JointOwner
+        );
+
+        const beneficiarySignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+        );
+
+        // No choice made for signature valid
+        if (
+            ownerSignature &&
+            ownerSignature?.isSigned &&
+            !ownerSignature?.isSignatureValid &&
+            ownerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSigned &&
+            !jointOwnerSignature?.isSignatureValid &&
+            jointOwnerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSigned &&
+            !beneficiarySignature?.isSignatureValid &&
+            beneficiarySignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        // No signature comment added
+        if (
+            ownerSignature &&
+            ownerSignature?.isSignatureValid &&
+            !ownerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSignatureValid &&
+            !jointOwnerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSignatureValid &&
+            !beneficiarySignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
         return errors;
     };
 

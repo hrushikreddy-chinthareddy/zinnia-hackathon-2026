@@ -43,6 +43,7 @@ export default async function Riders({
             <NoDataAvailable
               iconType={IconType.SHIELD_CHECKMARK}
               message="There is currently no riders data available."
+              correlationId={error?.correlationId}
             />
           </div>
         </div>

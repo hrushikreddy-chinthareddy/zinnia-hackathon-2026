@@ -3,11 +3,13 @@ import clsx from 'clsx';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 
+import { useAgentFieldContext } from './agent-field-context';
 import styles from './agent-search.module.css';
 import { AgentOption } from './types';
 
@@ -21,6 +23,8 @@ export const AgentSearchItem = ({
     onSelect,
 }: AgentSearchItemProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { searchQuery } = useAgentFieldContext();
+    const { sendAgentSearch } = useIllustrationAnalytics();
 
     const { firstName, lastName, email, lookupId, npn } = agentOption;
     const name =
@@ -28,10 +32,10 @@ export const AgentSearchItem = ({
             ? `${firstName} ${lastName}`
             : firstName || lastName;
 
-    const handleSelect = useCallback(
-        () => onSelect(agentOption),
-        [agentOption, onSelect]
-    );
+    const handleSelect = useCallback(() => {
+        sendAgentSearch(true, searchQuery, [agentOption]);
+        onSelect(agentOption);
+    }, [agentOption, onSelect, searchQuery, sendAgentSearch]);
 
     return (
         <div

@@ -49,6 +49,7 @@ export default function getUsaaConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if (
@@ -82,22 +83,37 @@ export default function getUsaaConfig(t: TFunction) {
                 SignatureValidationTypeWithdrawal.Owner
         );
 
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        const ownerESignature = formESignatureData?.eSignatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Owner
+        );
+
+        if (
+            ownerSignature?.isSigned !== false &&
+            !ownerSignature?.isSigned &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
             errors[
                 `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
         }
 
         if (
-            formDisbursement?.bank[0].accountType?.text === '' &&
-            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
-                formDisbursement?.paymentMethod?.text as PaymentMethod
-            )
+            ownerSignature?.isDesignationPresent === null &&
+            !formESignatureData?.isFormESignaturePresent
         ) {
-            errors[BankingFields.AccountType] = t(
-                'formValidation.accountTypeMustBeSelected'
-            );
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+            ] = t('formValidation.signatureDesignationMustBeSelected');
+        }
+
+        if (formESignatureData?.isFormESignaturePresent) {
+            if (!ownerESignature?.isSigned) {
+                errors[
+                    `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
+                ] = t('formValidation.signaturePresentOptionMustBeSelected');
+            }
         }
         return errors;
     };

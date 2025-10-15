@@ -60,11 +60,11 @@ const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
         ].includes(form.data.clientCode as Carrier)
     ) {
         const filterdFunds =
-            form.data.formRequest.formDistribution.funds.filter(
-                (fund) => !isNullEmptyOrUndefined(fund.amount?.text || '')
+            form.data.formRequest.formDistribution?.funds?.filter(
+                (fund) => !isNullEmptyOrUndefined(fund?.amount?.text || '')
             );
 
-        if (filterdFunds.length > 0) {
+        if (filterdFunds?.length > 0) {
             return FundWithdrawnMethod.SpecifyFunds;
         }
         return FundWithdrawnMethod.Prorata;
@@ -74,10 +74,10 @@ const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
         [Carrier.SBGC, Carrier.FLIC].includes(form.data.clientCode as Carrier)
     ) {
         const filterdFunds =
-            form.data.formRequest.formDistribution.funds.filter(
-                (fund) => !isNullEmptyOrUndefined(fund.amount?.text || '')
+            form.data.formRequest.formDistribution?.funds?.filter(
+                (fund) => !isNullEmptyOrUndefined(fund?.amount?.text || '')
             );
-        if (filterdFunds.length > 0) {
+        if (filterdFunds?.length > 0) {
             return FundWithdrawnMethod.SpecifyFunds;
         }
         return FundWithdrawnMethod.Default;

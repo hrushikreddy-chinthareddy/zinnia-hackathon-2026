@@ -51,11 +51,13 @@ export default function useSbgcConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         if (
             [PaymentMethod.EFT].includes(

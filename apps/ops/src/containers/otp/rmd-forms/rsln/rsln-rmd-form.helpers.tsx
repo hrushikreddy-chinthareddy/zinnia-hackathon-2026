@@ -31,6 +31,7 @@ import {
     FundWithdrawnMethod,
     FormParts,
     FormValidationErrors,
+    SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -73,6 +74,18 @@ export default function getRslnRmdConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'owner-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'owner-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
+                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
@@ -91,6 +104,18 @@ export default function getRslnRmdConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
+                },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'joint-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'joint-sign-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
@@ -116,6 +141,18 @@ export default function getRslnRmdConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',
                 },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'beneficiary-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'beneficiary-sign-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
+                },
             ],
             signatureType:
                 SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
@@ -140,6 +177,18 @@ export default function getRslnRmdConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'spouse-date',
+                },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'spouse-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'spouse-sign-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             shouldDisplay: ({
@@ -193,6 +242,24 @@ export default function getRslnRmdConfig(t: TFunction) {
                 SignatureValidationTypeWithdrawal.Owner
         );
 
+        const jointOwnerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.JointOwner
+        );
+
+        const beneficiarySignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+        );
+
+        const spouseSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Spouse
+        );
+
         const rmds = formProgram?.rmd?.rmdPrograms;
 
         if (rmds && rmds?.length === 0) {
@@ -210,6 +277,92 @@ export default function getRslnRmdConfig(t: TFunction) {
             errors[
                 `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
+
+        // No choice made for signature valid
+        if (
+            ownerSignature &&
+            ownerSignature?.isSigned &&
+            !ownerSignature?.isSignatureValid &&
+            ownerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSigned &&
+            !jointOwnerSignature?.isSignatureValid &&
+            jointOwnerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSigned &&
+            !beneficiarySignature?.isSignatureValid &&
+            beneficiarySignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            spouseSignature &&
+            spouseSignature?.isSigned &&
+            !spouseSignature?.isSignatureValid &&
+            spouseSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        // No signature comment added
+        if (
+            ownerSignature &&
+            ownerSignature?.isSignatureValid &&
+            !ownerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSignatureValid &&
+            !jointOwnerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSignatureValid &&
+            !beneficiarySignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            spouseSignature &&
+            spouseSignature?.isSignatureValid &&
+            !spouseSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
         }
 
         return errors;

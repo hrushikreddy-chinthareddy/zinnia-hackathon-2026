@@ -54,7 +54,7 @@ export const submitPartialWithdrawalOneTime = async ({
     )
   ).json();
 
-  if (response.error || !response) {
+  if (response.error || !response || 'errors' in response.data) {
     throw response.error;
   }
 
@@ -100,7 +100,7 @@ export const submitSystematicPremium = async ({
     )
   ).json();
 
-  if (response.error || !response) {
+  if (response.error || !response || 'errors' in response.data) {
     throw response.error;
   }
 
@@ -125,7 +125,7 @@ export const cancelSystematicPremium = async ({
     )
   ).json();
 
-  if (response.error || !response) {
+  if (response.error || !response || 'errors' in response.data) {
     throw response.error;
   }
 

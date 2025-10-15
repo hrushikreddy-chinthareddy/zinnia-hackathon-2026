@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { Loader } from '@zinnia/bloom/components';
 
+import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PaymentProvider } from '@/types/carrier-config';
@@ -30,6 +31,7 @@ export const SelectBankWrapper = ({
     isLoading,
     isError,
     isSuccess,
+    error,
   } = useQuery({
     queryKey: [QueryKeys.PAYMENT_METHODS, policyNumber, planCode],
     queryFn: () => getPaymentMethods(policyNumber, planCode),
@@ -58,8 +60,8 @@ export const SelectBankWrapper = ({
       {isLoading && <Loader />}
       {isError && (
         <div>
-          We’re having trouble getting your payment methods. Please try again
-          later.
+          We're having trouble getting your payment methods. Please try again
+          later. <CorrelationId id={error?.correlationId} />
         </div>
       )}
       {isSuccess && (

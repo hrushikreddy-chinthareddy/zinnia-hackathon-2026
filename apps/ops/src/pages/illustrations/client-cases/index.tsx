@@ -11,6 +11,7 @@ import { ClientCaseTable } from '@deps/components/client-case/client-case-list/t
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { PageHead } from '@deps/components/page-title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -53,10 +54,11 @@ type IllustrationsPageProps = {
 };
 
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
+const NEW_QUICK_QUOTE_URL = '/illustrations/client-cases/quick-quote';
 const INTERNAL_ERROR_LABEL = 'We were unable to create this client case.';
 const EXTERNAL_ERROR_LABEL =
     'We were unable to create the required client case due to external issues';
-//This should be  just a red    ict page or maybe a redirect with urk params read and user/permision validation
+
 export default function Illustrations({
     fetchingErrorMessage,
     fetchingErrorOrigin,
@@ -64,14 +66,20 @@ export default function Illustrations({
     const searchParams = useSearchParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [bannerText, setBannerText] = useState('');
-    const { isAllowWriteClientCase, partyReferenceData } =
-        usePermissionsContext();
+    const {
+        isAllowWriteClientCase,
+        partyReferenceData,
+        isAllowReadIllustrations,
+    } = usePermissionsContext();
     const { sendNewClientCaseClicked } = useIllustrationAnalytics();
 
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases?.length ?? 0 > 0;
 
     const allowCreateCase = isAgent || isAllowWriteClientCase;
+    const allowQuickQuote =
+        (isAgent && isAllowReadIllustrations && isAllowWriteClientCase) ||
+        isAllowReadIllustrations;
 
     const bannerBodyText = (
         <Typography
@@ -112,6 +120,7 @@ export default function Illustrations({
 
     return (
         <>
+            <PageHead titleKey="clientCases" />
             <IllustrationsClientCaseProvider>
                 {bannerText !== '' && (
                     <BannerAlert
@@ -130,42 +139,92 @@ export default function Illustrations({
                     >
                         {t('illustrations')}
                     </Typography>
-                    {allowCreateCase ? (
-                        <Link
-                            href={{
-                                pathname: NEW_CLIENT_CASE_URL,
-                                query: createClientCaseSearchParams.toString(),
-                            }}
-                            passHref
-                            onClick={sendNewClientCaseClicked}
-                        >
-                            <Button
-                                mode="link"
-                                data-testid="new-client-case-btn"
-                                aria-label={t('ariaLabel.search') as string}
-                                type="button"
-                                size="small"
+                    <div
+                        className="flex gap-4 justify-center"
+                        data-testid="quick-quote-cta"
+                    >
+                        {allowQuickQuote ? (
+                            <Link
+                                href={{
+                                    pathname: NEW_QUICK_QUOTE_URL,
+                                }}
+                                passHref
+                                className="flex items-center gap-2"
                             >
-                                {t('clientCase.newClientCase')}
-                            </Button>
-                        </Link>
-                    ) : (
-                        <TempNavInactive
-                            tooltipBody={t('clientCase.clientCasePermissions')}
-                            navElementClassName="!bg-transparent"
-                        >
-                            <Button
-                                disabled={!allowCreateCase}
-                                mode="link"
-                                data-testid="new-client-case-btn"
-                                aria-label={t('ariaLabel.search') as string}
-                                type="button"
-                                size="small"
+                                {/* <Icon
+                                    width={24}
+                                    height={24}
+                                    type={IconType.AUTOPAY}
+                                /> */}
+                                <Button
+                                    mode="link"
+                                    data-testid="quick-quote-btn"
+                                    aria-label={t('ariaLabel.search') as string}
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.quickQuote')}
+                                </Button>
+                            </Link>
+                        ) : (
+                            <TempNavInactive
+                                tooltipBody={t(
+                                    'clientCase.quickQuotePermissions'
+                                )}
+                                navElementClassName="!bg-transparent"
                             >
-                                {t('clientCase.newClientCase')}
-                            </Button>
-                        </TempNavInactive>
-                    )}
+                                <Button
+                                    disabled={!allowCreateCase}
+                                    mode="link"
+                                    data-testid="quick-quote-btn"
+                                    aria-label={t('ariaLabel.search') as string}
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.quickQuote')}
+                                </Button>
+                            </TempNavInactive>
+                        )}
+
+                        {allowCreateCase ? (
+                            <Link
+                                href={{
+                                    pathname: NEW_CLIENT_CASE_URL,
+                                    query: createClientCaseSearchParams.toString(),
+                                }}
+                                passHref
+                                onClick={sendNewClientCaseClicked}
+                            >
+                                <Button
+                                    mode="link"
+                                    data-testid="new-client-case-btn"
+                                    aria-label={t('ariaLabel.search') as string}
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.newClientCase')}
+                                </Button>
+                            </Link>
+                        ) : (
+                            <TempNavInactive
+                                tooltipBody={t(
+                                    'clientCase.clientCasePermissions'
+                                )}
+                                navElementClassName="!bg-transparent"
+                            >
+                                <Button
+                                    disabled={!allowCreateCase}
+                                    mode="link"
+                                    data-testid="new-client-case-btn"
+                                    aria-label={t('ariaLabel.search') as string}
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.newClientCase')}
+                                </Button>
+                            </TempNavInactive>
+                        )}
+                    </div>
                 </div>
 
                 <div className="mb-8">

@@ -201,6 +201,22 @@
                                                 "type": ["string", "null"],
                                                 "default": null
                                             },
+                                            "identifications": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "identificationValue": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "SSN"
+                                                        }
+                                                    }
+                                                }
+                                            },
                                             "emails": {
                                                 "type": "array",
                                                 "title": "Email",
@@ -208,7 +224,10 @@
                                                     "type": "object",
                                                     "properties": {
                                                         "emailAddress": {
-                                                            "type": "string"
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
                                                         }
                                                     }
                                                 }
@@ -220,7 +239,10 @@
                                                     "type": "object",
                                                     "properties": {
                                                         "dialNumber": {
-                                                            "type": "string"
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ]
                                                         }
                                                     }
                                                 }
@@ -232,7 +254,10 @@
                                                     "type": "object",
                                                     "properties": {
                                                         "addressLine1": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Address"
                                                         },
                                                         "addressType": {
@@ -243,14 +268,20 @@
                                                             ]
                                                         },
                                                         "city": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "City"
                                                         },
                                                         "state": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "State",
                                                             "enum": [
-                                                                "",
+                                                                null,
                                                                 "AA",
                                                                 "AE",
                                                                 "AK",
@@ -310,14 +341,21 @@
                                                                 "WI",
                                                                 "WV",
                                                                 "WY"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "zipCode": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Zip"
                                                         },
                                                         "zipCodeExtension": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Zip+4"
                                                         }
                                                     }
@@ -338,15 +376,24 @@
                                                 "then": {
                                                     "properties": {
                                                         "firstName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "First name"
                                                         },
                                                         "middleName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Middle name"
                                                         },
                                                         "lastName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Last name"
                                                         }
                                                     }
@@ -363,18 +410,25 @@
                                                 "then": {
                                                     "properties": {
                                                         "lastName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Trust name"
                                                         },
                                                         "trustType": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Trust type",
                                                             "enum": [
-                                                                "",
+                                                                null,
                                                                 "INDIVIDUALTRUST",
                                                                 "CORPORATETRUST",
                                                                 "TESTAMENTARYTRUST"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         }
                                                     }
                                                 }
@@ -392,7 +446,10 @@
                                                 "then": {
                                                     "properties": {
                                                         "lastName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Company name"
                                                         }
                                                     }
@@ -408,7 +465,12 @@
                                             "middleName": "",
                                             "lastName": "",
                                             "dateOfBirth": null,
-                                            "trustType": "",
+                                            "trustType": null,
+                                            "identifications": [
+                                                {
+                                                    "identificationValue": ""
+                                                }
+                                            ],
                                             "phones": [
                                                 {
                                                     "dialNumber": ""
@@ -424,15 +486,15 @@
                                                     "addressLine1": "",
                                                     "addressType": "Residential Address",
                                                     "city": "",
-                                                    "state": "",
-                                                    "zipCode": "",
+                                                    "state": null,
+                                                    "zipCode": null,
                                                     "zipCodeExtension": ""
                                                 },
                                                 {
                                                     "addressLine1": "",
                                                     "addressType": "Mailing Address",
                                                     "city": "",
-                                                    "state": "",
+                                                    "state": null,
                                                     "zipCode": "",
                                                     "zipCodeExtension": ""
                                                 }
@@ -475,6 +537,7 @@
                                     "middleName",
                                     "lastName",
                                     "dateOfBirth",
+                                    "identifications",
                                     "emails",
                                     "phones",
                                     "addresses"
@@ -501,6 +564,21 @@
                                             "Trust",
                                             "Estate/Organization"
                                         ]
+                                    }
+                                },
+                                "identifications": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": false
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
+                                        }
                                     }
                                 },
                                 "emails": {
@@ -637,7 +715,8 @@
                                                     "WV",
                                                     "WY"
                                                 ]
-                                            }
+                                            },
+                                            "ui:placeholder": "Select state"
                                         }
                                     }
                                 },
@@ -651,7 +730,8 @@
                                             "Corporate Trust",
                                             "Testamentary Trust"
                                         ]
-                                    }
+                                    },
+                                    "ui:placeholder": "Select trust type"
                                 }
                             }
                         }
@@ -672,7 +752,12 @@
                                     "action": {
                                         "type": "string",
                                         "title": "Action",
-                                        "enum": ["ADD", "UPDATE", "DELETE"]
+                                        "enum": [
+                                            "ADD",
+                                            "UPDATE",
+                                            "DELETE",
+                                            "NONE"
+                                        ]
                                     },
                                     "isPerStirpes": {
                                         "type": "boolean",
@@ -711,7 +796,10 @@
                                                     "type": "object",
                                                     "properties": {
                                                         "identificationValue": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "SSN"
                                                         }
                                                     }
@@ -734,22 +822,35 @@
                                                             ]
                                                         },
                                                         "addressLine1": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Address line 1",
                                                             "minLength": 1
                                                         },
                                                         "addressLine2": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Address line 2"
                                                         },
                                                         "city": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "City"
                                                         },
                                                         "state": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "State",
                                                             "enum": [
+                                                                null,
                                                                 "AA",
                                                                 "AE",
                                                                 "AK",
@@ -809,14 +910,21 @@
                                                                 "WI",
                                                                 "WV",
                                                                 "WY"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "zipCode": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Zip"
                                                         },
                                                         "zipCodeExtension": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Zip+4"
                                                         }
                                                     },
@@ -849,7 +957,10 @@
                                                             ]
                                                         },
                                                         "dialNumber": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Number"
                                                         }
                                                     }
@@ -862,7 +973,10 @@
                                                     "type": "object",
                                                     "properties": {
                                                         "emailAddress": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Email"
                                                         }
                                                     }
@@ -892,41 +1006,58 @@
                                                 "then": {
                                                     "properties": {
                                                         "prefix": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Prefix",
                                                             "enum": [
-                                                                "",
+                                                                null,
                                                                 "DR",
                                                                 "MR",
                                                                 "MRS",
                                                                 "MS"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "firstName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "First name",
                                                             "minLength": 1
                                                         },
                                                         "middleName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Middle name"
                                                         },
                                                         "lastName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Last name",
                                                             "minLength": 1
                                                         },
                                                         "suffix": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Suffix",
                                                             "enum": [
-                                                                "",
+                                                                null,
                                                                 "JR",
                                                                 "SN",
                                                                 "I",
                                                                 "II",
                                                                 "III"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "gender": {
                                                             "type": "string",
@@ -959,23 +1090,30 @@
                                                 "then": {
                                                     "properties": {
                                                         "lastName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Trust name",
                                                             "minLength": 1
                                                         },
                                                         "trustType": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Trust type",
                                                             "enum": [
-                                                                "",
+                                                                null,
                                                                 "INDIVIDUALTRUST",
                                                                 "CORPORATETRUST",
                                                                 "TESTAMENTARYTRUST",
                                                                 "INTERVIVOSTRUST",
                                                                 "GRANTORTRUST"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
-                                                        "attachments": {
+                                                        "documents": {
                                                             "type": "array",
                                                             "title": "Link or upload the supporting document(s)",
                                                             "items": {
@@ -993,7 +1131,10 @@
                                                             }
                                                         },
                                                         "trustDate": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "format": "date",
                                                             "title": "Trust date"
                                                         },
@@ -1029,7 +1170,10 @@
                                                 "then": {
                                                     "properties": {
                                                         "lastName": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Company name",
                                                             "minLength": 1
                                                         },
@@ -1114,14 +1258,14 @@
                                         ],
                                         "addresses": [
                                             {
-                                                "addressLine1": "",
-                                                "addressLine2": "",
-                                                "addressLine3": "",
+                                                "addressLine1": null,
+                                                "addressLine2": null,
+                                                "addressLine3": null,
                                                 "addressType": "RESIDENCE",
-                                                "city": "",
-                                                "state": "",
-                                                "zipCode": "",
-                                                "zipCodeExtension": ""
+                                                "city": null,
+                                                "state": null,
+                                                "zipCode": null,
+                                                "zipCodeExtension": null
                                             }
                                         ],
                                         "phones": [
@@ -1184,7 +1328,12 @@
                                 "ui:widget": "hidden",
                                 "ui:options": {
                                     "inline": true,
-                                    "enumNames": ["Add", "Update", "Delete"]
+                                    "enumNames": [
+                                        "Add",
+                                        "Update",
+                                        "Delete",
+                                        "None"
+                                    ]
                                 }
                             },
                             "isPerStirpes": {
@@ -1208,7 +1357,7 @@
                                     "lastName",
                                     "suffix",
                                     "trustType",
-                                    "attachments",
+                                    "documents",
                                     "trustDate",
                                     "supportingDocumentAttached",
                                     "entityType",
@@ -1225,6 +1374,9 @@
                                 ],
                                 "ui:options": {
                                     "label": false
+                                },
+                                "beneficiaryPercentage": {
+                                    "ui:widget": "PercentageWidget"
                                 },
                                 "partyType": {
                                     "ui:widget": "radio",
@@ -1248,7 +1400,8 @@
                                             "Inter Vivos Trust",
                                             "Grantor Trust"
                                         ]
-                                    }
+                                    },
+                                    "ui:placeholder": "Select trust type"
                                 },
                                 "uploadDocuments": {
                                     "inline": true,
@@ -1281,7 +1434,7 @@
                                         }
                                     }
                                 },
-                                "attachments": {
+                                "documents": {
                                     "inline": true,
                                     "ui:widget": "AttachmentWidget",
                                     "ui:options": {
@@ -1364,6 +1517,7 @@
                                         "state": {
                                             "ui:options": {
                                                 "enumNames": [
+                                                    "Select state",
                                                     "AA",
                                                     "AE",
                                                     "AK",
@@ -1503,7 +1657,8 @@
                                             "Mrs.",
                                             "Ms."
                                         ]
-                                    }
+                                    },
+                                    "ui:placeholder": "Select prefix"
                                 },
                                 "suffix": {
                                     "ui:widget": "SelectWidget",
@@ -1517,7 +1672,8 @@
                                             "II",
                                             "III"
                                         ]
-                                    }
+                                    },
+                                    "ui:placeholder": "Select suffix"
                                 },
                                 "preferredCommunicationType": {
                                     "ui:widget": "RadioWidget",
@@ -1602,10 +1758,10 @@
                                                 "type": "boolean"
                                             },
                                             "signDesignation": {
-                                                "type": "string",
+                                                "type": ["string", "null"],
                                                 "title": "Designation",
                                                 "enum": [
-                                                    "",
+                                                    null,
                                                     "Trustee",
                                                     "Executor",
                                                     "Custodian",
@@ -1627,19 +1783,19 @@
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
-                                            "signDesignation": "",
+                                            "signDesignation": null,
                                             "signType": "OWNER"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
-                                            "signDesignation": "",
+                                            "signDesignation": null,
                                             "signType": "JOINT_OWNER"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
-                                            "signDesignation": "",
+                                            "signDesignation": null,
                                             "signType": "IRREVOCABLE"
                                         }
                                     ]
@@ -1711,7 +1867,8 @@
                                             "Assignee",
                                             "NA"
                                         ]
-                                    }
+                                    },
+                                    "ui:placeholder": "Select designation"
                                 },
                                 "signDate": {
                                     "ui:widget": "NewDateWidget"

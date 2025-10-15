@@ -150,7 +150,7 @@ export default function useFlicSSWConfig(t: TFunction) {
             formDisbursement,
         });
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(
+        const funds = formDistribution?.funds?.filter(
             (fund) => !!fund.amount.text
         );
 
@@ -328,6 +328,12 @@ export default function useFlicSSWConfig(t: TFunction) {
             value: SSWType.JointLifetimeIncomeOption,
             generateSSWPayloadFromSelection: (val: SSWProgram) =>
                 generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
+        },
+        {
+            label: t('sswProgram.sswOptions.variableAnnuity'),
+            value: SSWType.VariableAnnuity,
+            generateSSWPayloadFromSelection: (val: SSWProgram) =>
+                generateSSWPayload(val, SSWType.VariableAnnuity),
         },
     ];
 

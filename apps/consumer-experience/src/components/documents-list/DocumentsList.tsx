@@ -43,6 +43,7 @@ export default function DocumentsList({
       <NoDataAvailable
         message={`No ${documentCategoryDisplayName[docCategory] ?? 'documents'} available.`}
         iconType={IconType.DOCUMENT_DUPLICATE}
+        correlationId={undefined}
       />
     );
   }

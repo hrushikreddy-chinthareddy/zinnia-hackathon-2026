@@ -10,8 +10,10 @@ import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import IconButton from '@deps/components/icon-button/icon-button';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { TranslationFiles } from '@deps/config/translations';
 
+import { useAgentFieldContext } from './agent-field-context';
 import styles from './agent-search.module.css';
 
 const ENTER_KEY_NAME = 'enter';
@@ -29,6 +31,8 @@ export const AgentSearchTextInput = ({
 }: AgentSearchTextInputProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [searchQuery, setSearchQuery] = useState('');
+    const { sendAgentSearch, setSearchText } = useIllustrationAnalytics();
+    const { agentOptions } = useAgentFieldContext();
 
     const isValid = searchQuery.length >= 3;
 
@@ -36,8 +40,17 @@ export const AgentSearchTextInput = ({
         if (!isValid) {
             return;
         }
+
+        setSearchText(searchQuery);
         onSearch(searchQuery);
-    }, [onSearch, isValid, searchQuery]);
+    }, [isValid, setSearchText, searchQuery, onSearch]);
+
+    const handleCancel = () => {
+        if (agentOptions?.length) {
+            sendAgentSearch(false, undefined, agentOptions);
+        }
+        onCancel();
+    };
 
     return (
         <div
@@ -65,7 +78,7 @@ export const AgentSearchTextInput = ({
                 />
                 {searchQuery && (
                     <div className={styles.searchCancelIcon}>
-                        <IconButton onClick={onCancel}>
+                        <IconButton onClick={handleCancel}>
                             <Icon
                                 type={IconType.CLOSE}
                                 height={24}

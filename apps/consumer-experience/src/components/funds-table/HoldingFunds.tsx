@@ -49,7 +49,7 @@ export const HoldingFunds = ({
     width !== Infinity && width >= SHOW_ALL_HOLDING_FUNDS_DETAILS_WIDTH;
 
   if ((!funds || funds.length === 0) && !isLoading) {
-    return <NoDataAvailable />;
+    return <NoDataAvailable correlationId={undefined} />;
   }
 
   return (

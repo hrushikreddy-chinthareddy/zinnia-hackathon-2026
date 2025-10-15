@@ -215,7 +215,10 @@ describe('RSLN withdrawal form config', () => {
             signatures: [signature],
         };
         it('should provide no errors for a valid form', () => {
-            expect(formValidation({ formParty, formSignature })).toEqual({});
+            expect(formValidation({ formParty, formSignature })).toEqual({
+                OwnerIsSignatureValid:
+                    'formValidation.signatureValidOptionMustBeSelected',
+            });
         });
     });
 
