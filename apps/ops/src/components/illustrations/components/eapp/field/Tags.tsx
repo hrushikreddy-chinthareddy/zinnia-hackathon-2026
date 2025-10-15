@@ -2,6 +2,7 @@ import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { RenderingCustomField } from 'node_modules/@zinnia/form-engine-sdk/dist/esm/questionnaire-engine/renderingTransforms/RenderingQuestionnaire';
 
 import { useQuestionnaireEngine } from '@deps/components/illustrations/providers/QuestionnaireEngineProvider';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 
 import style from './field.module.css';
 
@@ -25,11 +26,13 @@ export function Tags(props: Props) {
 
     if (tags.length > 0) {
         return (
-            <Tag
-                text={tags.join(' ')}
-                variant={TagVariant.White}
-                className={style.fieldTag}
-            />
+            <PiiWrapper>
+                <Tag
+                    text={tags.join(' ')}
+                    variant={TagVariant.White}
+                    className={style.fieldTag}
+                />
+            </PiiWrapper>
         );
     }
     return <></>;
