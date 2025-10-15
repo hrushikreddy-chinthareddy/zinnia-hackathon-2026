@@ -12,7 +12,7 @@
     "lint": "next lint",
     "lint-staged": "lint-staged",
     "lint:fix": "next lint --fix",
-    "prettier": "echo 'FIXME: Ignoring Prettier | prettier --check --cache --log-level=warn ./src'",
+    "prettier": "prettier --check --cache --log-level=warn ./src",
     "prettier:fix": "prettier --write --cache ./src",
     "test": "cd ../.. pnpm build && cd apps/consumer-experience && jest",
     "test:watch": "jest --watch",
