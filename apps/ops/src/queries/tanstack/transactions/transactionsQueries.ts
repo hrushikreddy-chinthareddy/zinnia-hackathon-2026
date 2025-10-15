@@ -10,7 +10,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 
 interface GetTransactionsProps {
-    historyFilters: HistoryFilters;
+    historyFilters: Partial<HistoryFilters>;
     policyNumber?: string;
     planCode?: string;
     sortField?: 'PROCESSDATE' | 'EFFECTIVEDATE' | 'REVERSALDATE';
@@ -30,8 +30,8 @@ export const getTransactionsQuery = async ({
     if (!planCode) {
         throw 'No plan code provided';
     }
-    const { eventFilter, yearFilter, statusFilter } = historyFilters;
-    const transactionTypes = getEvents(eventFilter);
+    const { ...filters } = historyFilters;
+    const transactionTypes = getEvents(filters.eventFilter);
 
     const results = await getPolicyTransactions({
         transactionTypes: transactionTypes,
@@ -39,8 +39,8 @@ export const getTransactionsQuery = async ({
         planCode: planCode,
         sortField,
         sortOrder,
-        status: statusFilter,
-        ...(hasFilter(yearFilter) && { year: yearFilter }),
+        status: filters.statusFilter,
+        ...(hasFilter(filters.yearFilter) && { year: filters.yearFilter }),
     });
 
     return results;

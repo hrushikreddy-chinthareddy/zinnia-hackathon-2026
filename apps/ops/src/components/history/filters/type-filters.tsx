@@ -1,6 +1,9 @@
 import { Transition } from '@headlessui/react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
+import {
+    Transaction,
+    TransactionStatus,
+} from '@xd/api-types/dist/generated-types/sor';
 import {
     FieldSize,
     TabGroup,
@@ -249,12 +252,39 @@ const TypeFilters = () => {
     );
 };
 
-export const TransactionStatusTabGroup = () => {
+export const TransactionStatusTabGroup = ({
+    transactions,
+    children,
+}: {
+    transactions: Transaction[] | undefined;
+    children: React.ReactNode;
+}) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: undefined,
     });
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { statusFilter } = historyFilters;
+
+    const totals = transactions?.reduce(
+        (acc, transaction) => {
+            for (const status in acc) {
+                if (status === transaction.status) {
+                    acc = {
+                        ...acc,
+                        [status]: acc[status] + 1,
+                    };
+                }
+            }
+            return acc;
+        },
+        {
+            [TransactionStatus.COMPLETED]: 0,
+            [TransactionStatus.PENDING]: 0,
+            [TransactionStatus.CANCELED]: 0,
+            [TransactionStatus.FAILED]: 0,
+            [TransactionStatus.REVERSED]: 0,
+        }
+    );
 
     const transactionStatuses = Object.values([
         TransactionStatus.COMPLETED,
@@ -264,7 +294,7 @@ export const TransactionStatusTabGroup = () => {
         TransactionStatus.REVERSED,
     ]).map((status) => (
         <TabTrigger key={`${status}-trigger`} value={status}>
-            {t(`${status}`)}
+            {`${t(`${status}`)} ${`(${totals[status]})`}`}
         </TabTrigger>
     ));
     return (
@@ -277,6 +307,7 @@ export const TransactionStatusTabGroup = () => {
             className="px-8"
         >
             <TabList>{transactionStatuses}</TabList>
+            {children}
         </TabGroup>
     );
 };
