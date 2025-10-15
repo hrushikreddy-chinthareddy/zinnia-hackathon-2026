@@ -273,7 +273,7 @@ export interface FormDisbursement {
                 noAdditionalValidationRequired: boolean | null;
             } | null;
         };
-    };
+    } | null;
 }
 export interface FormDistribution {
     moneyType: {

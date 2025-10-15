@@ -91,16 +91,7 @@ export const getDefaultFormDisbursementValues = (): FormDisbursement => {
                 },
             },
         ],
-        bankVerification: {
-            selectedBankingType: '',
-            validationsMap: {
-                VOIDED_CHECK: null,
-                BANK_LETTERHEAD: null,
-                DIRECT_DEPOSIT_FORM: null,
-                STARTER_CHECK: null,
-                NO_BANK_PROOF: null,
-            },
-        },
+        bankVerification: null,
         paymentToBrokerageAccount: false,
         brokerage: null,
         payeeType: '',

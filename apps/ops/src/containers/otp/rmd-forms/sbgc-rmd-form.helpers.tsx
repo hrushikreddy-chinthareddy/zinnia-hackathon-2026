@@ -390,7 +390,8 @@ export default function getSbgcRmdConfig(t: TFunction) {
                                 bank?.reEnterBankRoutingNumber,
                         },
                     ],
-                    bankVerification: defaultDisbursementInfo.bankVerification,
+                    bankVerification:
+                        defaultDisbursementInfo?.bankVerification ?? null,
                 };
             },
         },
