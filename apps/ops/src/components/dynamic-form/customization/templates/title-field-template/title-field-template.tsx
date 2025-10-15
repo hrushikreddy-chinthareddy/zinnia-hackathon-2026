@@ -1,8 +1,8 @@
-import { ObjectFieldTemplateProps } from '@rjsf/utils';
+import { TitleFieldProps } from '@rjsf/utils';
 
 import classes from './title-field.module.css';
 
-export function TitleFieldTemplate(props: ObjectFieldTemplateProps) {
+export function TitleFieldTemplate(props: TitleFieldProps) {
     const { title, uiSchema } = props;
     const fontSize = (uiSchema?.['ui:options']?.fontSize as number) || 32;
 
