@@ -80,7 +80,7 @@ export const NotificationCenter = ({
         style={{
           backgroundColor: clsx(
             (isError || isLoading) &&
-            'var(--color-base-surface-surface-secondary)'
+              'var(--color-base-surface-surface-secondary)'
           ),
         }}
         className={Styles.end}

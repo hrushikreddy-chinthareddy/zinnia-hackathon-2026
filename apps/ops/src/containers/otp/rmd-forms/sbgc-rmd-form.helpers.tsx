@@ -42,13 +42,11 @@ export default function getSbgcRmdConfig(t: TFunction) {
         formSignature,
         formDisbursement,
         formProgram,
-        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
-            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
         if (
@@ -392,7 +390,8 @@ export default function getSbgcRmdConfig(t: TFunction) {
                                 bank?.reEnterBankRoutingNumber,
                         },
                     ],
-                    bankVerification: defaultDisbursementInfo.bankVerification,
+                    bankVerification:
+                        defaultDisbursementInfo?.bankVerification ?? null,
                 };
             },
         },

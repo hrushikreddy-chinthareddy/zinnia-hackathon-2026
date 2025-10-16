@@ -68,9 +68,13 @@ export default function useMassSSWConfig(t: TFunction) {
         ({
             formSignature,
             formDisbursement,
-            formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
+            const ownerSignature = formSignature?.signatures?.find(
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
 
             if (
                 [PaymentMethod.EFT].includes(
@@ -97,22 +101,10 @@ export default function useMassSSWConfig(t: TFunction) {
                 }
             }
 
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            const ownerESignature = formESignatureData?.eSignatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
+            // No choice made for signature
             if (
                 ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned &&
-                !formESignatureData?.isFormESignaturePresent
+                !ownerSignature?.isSigned
             ) {
                 errors[
                     `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
@@ -120,22 +112,20 @@ export default function useMassSSWConfig(t: TFunction) {
             }
 
             if (
-                ownerSignature?.isDesignationPresent === null &&
-                !formESignatureData?.isFormESignaturePresent
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
             ) {
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
+            }
+
+            if (ownerSignature?.isDesignationPresent === null) {
                 errors[
                     `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
                 ] = t('formValidation.signatureDesignationMustBeSelected');
-            }
-
-            if (formESignatureData?.isFormESignaturePresent) {
-                if (!ownerESignature?.isSigned) {
-                    errors[
-                        `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
-                    ] = t(
-                        'formValidation.signaturePresentOptionMustBeSelected'
-                    );
-                }
             }
 
             return errors;

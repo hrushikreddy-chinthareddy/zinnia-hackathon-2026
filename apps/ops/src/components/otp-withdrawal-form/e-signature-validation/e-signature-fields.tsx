@@ -48,15 +48,6 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
     isFormStateReadOnly,
     t,
 }) => {
-    const getSignPresent = (value: string) => {
-        if (value === SelectionStateYesNo.Yes) {
-            return true;
-        } else if (value === SelectionStateYesNo.No) {
-            return false;
-        } else {
-            return null;
-        }
-    };
     return (
         <>
             {eSignatures?.map((signature, index) => (
@@ -79,7 +70,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                         <SelectSimple
                             message={
                                 formErrors[
-                                    `${signature?.signType?.text}-e-signature-present`
+                                    `${signature?.signType?.text}-signPresent`
                                 ]
                             }
                             label={t('signPresent') as string}
@@ -87,7 +78,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                                 updateFormESignatureField(
                                     index,
                                     'isSigned',
-                                    getSignPresent(value) as boolean
+                                    value === SelectionStateYesNo.Yes
                                 )
                             }
                             options={selectYesNoOptions}
@@ -101,7 +92,7 @@ const ESignatureFields: React.FC<ESignatureFieldsProps> = ({
                                     : SelectionStateYesNo.No
                             }
                             disabled={isFormStateReadOnly}
-                            name={`${signature?.signType?.text}-e-signature-present`}
+                            name={`${signature?.isSigned}-signature-present`}
                         />
                     )}
 

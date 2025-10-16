@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { actionLogInfo } from '@/actions/log-actions';
 import { getPolicyProfile } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { useBpmStore , PropertyKeys } from '@/store/store';
+import { useBpmStore, PropertyKeys } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { refetchHandler } from '@/utils/transactions';
@@ -14,13 +14,13 @@ export const POLL_LIMIT = 5;
 export const useAddresses = (
   planCode: string,
   policyNumber: string,
-  initialProfileData?: PolicyProfile,
+  initialProfileData?: PolicyProfile
 ) => {
   const bpmAction = useBpmStore(state => state.bpmAction);
   const pollCount = useRef(0);
   const removeBpmAction = useBpmStore(state => state.removeBpmAction);
   const queryClient = useQueryClient();
-  
+
   const logHandler = () => {
     actionLogInfo('Address poll limit reached', {
       policyNumber,
@@ -31,28 +31,27 @@ export const useAddresses = (
   };
 
   const { data: addresses } = useQuery({
-      queryKey: [QueryKeys.POLICY_PROFILE, 'addresses', policyNumber],
-      refetchInterval: ({ state }) => {
-        const addresses = filterItemsWithPastEndDate(state.data?.addresses);
-        return refetchHandler({
-          data: addresses,
-          bpmAction,
-          propertyKey: PropertyKeys.ADDRESSES,
-          logHandler,
-          finishedHandler: async () => {
-            queryClient.refetchQueries({
-              queryKey: [QueryKeys.CASES_FOR_POLICY, policyNumber],
-            });
-            removeBpmAction();
-          },
-          pollCount,
-        });
-      },
-      initialData: initialProfileData,
-      queryFn: () => getPolicyProfile(planCode, policyNumber),
-      select: data => filterItemsWithPastEndDate(data?.addresses),
-    });
+    queryKey: [QueryKeys.POLICY_PROFILE, 'addresses', policyNumber],
+    refetchInterval: ({ state }) => {
+      const addresses = filterItemsWithPastEndDate(state.data?.addresses);
+      return refetchHandler({
+        data: addresses,
+        bpmAction,
+        propertyKey: PropertyKeys.ADDRESSES,
+        logHandler,
+        finishedHandler: async () => {
+          queryClient.refetchQueries({
+            queryKey: [QueryKeys.CASES_FOR_POLICY, policyNumber],
+          });
+          removeBpmAction();
+        },
+        pollCount,
+      });
+    },
+    initialData: initialProfileData,
+    queryFn: () => getPolicyProfile(planCode, policyNumber),
+    select: data => filterItemsWithPastEndDate(data?.addresses),
+  });
 
-    return addresses;
-
-}
+  return addresses;
+};

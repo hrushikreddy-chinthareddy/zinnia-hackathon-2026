@@ -335,7 +335,6 @@ export default function getRslnConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
-        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if (
@@ -375,17 +374,7 @@ export default function getRslnConfig(t: TFunction) {
                 SignatureValidationTypeWithdrawal.JointOwner
         );
 
-        const ownerESignature = formESignatureData?.eSignatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
-
-        if (
-            ownerSignature?.isSigned !== false &&
-            !ownerSignature?.isSigned &&
-            !formESignatureData?.isFormESignaturePresent
-        ) {
+        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
             errors[
                 `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
             ] = t('formValidation.signaturePresentOptionMustBeSelected');
@@ -433,23 +422,6 @@ export default function getRslnConfig(t: TFunction) {
             errors[
                 `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
             ] = t('formValidation.signatureCommentMustBePresent');
-        }
-
-        if (
-            ownerSignature?.isDesignationPresent === null &&
-            !formESignatureData?.isFormESignaturePresent
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
-        if (formESignatureData?.isFormESignaturePresent) {
-            if (!ownerESignature?.isSigned) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
         }
 
         return errors;

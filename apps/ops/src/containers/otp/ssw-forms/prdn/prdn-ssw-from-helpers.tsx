@@ -53,9 +53,14 @@ export default function getPrdnConfig(t: TFunction) {
         ({
             formSignature,
             formDisbursement,
-            formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
+
+            const ownerSignature = formSignature?.signatures?.find(
+                (sigInfo) =>
+                    sigInfo?.signType?.text ===
+                    SignatureValidationTypeWithdrawal.Owner
+            );
 
             if (
                 [PaymentMethod.EFT].includes(
@@ -83,22 +88,9 @@ export default function getPrdnConfig(t: TFunction) {
             }
 
             // No choice made for signature
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            const ownerESignature = formESignatureData?.eSignatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
             if (
                 ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned &&
-                !formESignatureData?.isFormESignaturePresent
+                !ownerSignature?.isSigned
             ) {
                 errors[
                     `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
@@ -106,22 +98,20 @@ export default function getPrdnConfig(t: TFunction) {
             }
 
             if (
-                ownerSignature?.isDesignationPresent === null &&
-                !formESignatureData?.isFormESignaturePresent
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                )
             ) {
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
+            }
+
+            if (ownerSignature?.isDesignationPresent === null) {
                 errors[
                     `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
                 ] = t('formValidation.signatureDesignationMustBeSelected');
-            }
-
-            if (formESignatureData?.isFormESignaturePresent) {
-                if (!ownerESignature?.isSigned) {
-                    errors[
-                        `${SignatureValidationTypeWithdrawal.Owner}-e-signature-present`
-                    ] = t(
-                        'formValidation.signaturePresentOptionMustBeSelected'
-                    );
-                }
             }
             return errors;
         },

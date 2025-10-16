@@ -10,15 +10,14 @@ const meta: Meta = {
     confirmTitle: 'Are you sure you want to do that?',
     confirmMessage: 'you really ought to think about it before you do this',
     confirmButtonText: 'Confirm',
-    confirmCallback: () => { },
-    denyCallback: () => { },
+    confirmCallback: () => {},
+    denyCallback: () => {},
   },
   decorators: [
     Story => (
       <UserProvider user={undefined}>
         <div style={{ maxWidth: '400px' }}>
           <Story />
-
         </div>
       </UserProvider>
     ),
@@ -29,5 +28,4 @@ const meta: Meta = {
 export default meta;
 
 type Story = StoryObj<typeof meta>;
-export const Default: Story = {
-};
+export const Default: Story = {};

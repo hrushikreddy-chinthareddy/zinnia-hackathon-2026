@@ -29,10 +29,7 @@ export const Success: FC<SuccessProps> = ({
         </div>
         <h3 className="typography-desktop-headline-3-d">{successTitle}</h3>
       </div>
-      <p
-        className={styles.message}
-        dangerouslySetInnerHTML={successHtml}
-      />
+      <p className={styles.message} dangerouslySetInnerHTML={successHtml} />
       <Button expand onClick={closeCallback} className={styles.close}>
         Close
       </Button>
