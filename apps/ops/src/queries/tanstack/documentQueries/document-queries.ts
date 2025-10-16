@@ -48,6 +48,12 @@ const buildV2SearchArgs = ({
             ? { documentEndDate: searchBody?.documentEndDate }
             : {}),
         ...(searchBody?.periods ? { periods: searchBody?.periods } : {}),
+        ...(searchBody?.documentType
+            ? { documentType: searchBody?.documentType }
+            : {}),
+        ...(searchBody?.excludeDocumentTypes
+            ? { excludeDocumentTypes: searchBody?.excludeDocumentTypes }
+            : {}),
         limit,
         offset,
     };

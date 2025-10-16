@@ -101,7 +101,7 @@ export default function DocumentsTab({
     }, [caseDetails, docSource, isZinniaInternalProcessor]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.policyNumber || !policy?.carrierId) {
+        if (!caseDetails?.policyNumber || !caseDetails?.carrier) {
             return null;
         }
         const documentClassification =
@@ -126,7 +126,7 @@ export default function DocumentsTab({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(policy?.carrierId) &&
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
             !isZinniaInternalProcessor // IMH-85894
         ) {
             body.documentType = includeDocumentTypesInbound.join(',');
