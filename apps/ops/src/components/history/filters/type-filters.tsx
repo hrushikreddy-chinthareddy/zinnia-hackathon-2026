@@ -17,6 +17,7 @@ import ChipX from '@deps/components/chip/chip-x';
 import { FieldType } from '@deps/components/fields/field';
 import {
     getFilter,
+    getFilterEnumKey,
     hasFilter,
     removeAllFilters,
     removeEventFilter,
@@ -256,7 +257,7 @@ export const TransactionStatusTabGroup = ({
     transactions,
     children,
 }: {
-    transactions: Transaction[];
+    transactions: Transaction[] | undefined;
     children: React.ReactNode;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -316,12 +317,16 @@ export const TransactionTypeSelect = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.history.filter',
     });
-
-    const typeOptions = Object.values(TransactionFilters).map((type) => ({
-        value: type,
+    const options = {
+        ...TransactionFilters,
+        ...PeopleFilters,
+        ...PolicyFilters,
+    };
+    const typeOptions = Object.values(options).map((type) => ({
+        value: type as string,
         label: t(`${type}`) || type,
+        displayText: t(`${type}`) || type,
     }));
-
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { eventFilter } = historyFilters;
     const { subfilterName } = getFilter(eventFilter);
@@ -329,19 +334,25 @@ export const TransactionTypeSelect = () => {
     return (
         <SelectSimple
             className="max-w-[280px]"
+            isMultiselect={true}
             label={t('byTransactionType') as string}
             onChange={(filter) => {
+                console.log({ filter });
                 setFilter(
                     setHistoryFilters,
-                    EventFilterKeys.Transactions,
-                    filter as TransactionFilters
+                    getFilterEnumKey(filter) as EventFilterKeys,
+                    filter as EventFilterKeys
                 );
             }}
-            defaultValue={TransactionFilters.All}
+            defaultValue={[EventFilterKeys.All]}
             options={typeOptions}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
-            value={subfilterName ?? TransactionFilters.All}
+            value={{
+                [EventFilterKeys.All]: subfilterName
+                    ? subfilterName
+                    : EventFilterKeys.All,
+            }}
         />
     );
 };

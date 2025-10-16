@@ -62,7 +62,7 @@ export type AllFilters =
 
 export interface HistoryFilters {
     eventFilter?: EventFilters;
-    statusFilter?: TransactionStatus;
+    statusFilter: TransactionStatus;
     yearFilter?: YearFilters;
 }
 
@@ -75,9 +75,6 @@ interface HistoryFiltersProps {
 
 export const initialFilter: HistoryFilters = {
     statusFilter: TransactionStatus.COMPLETED,
-    eventFilter: {
-        [EventFilterKeys.Transactions]: TransactionFilters.All,
-    },
 };
 
 export const HistoryFiltersContext = createContext<HistoryFiltersProps>({

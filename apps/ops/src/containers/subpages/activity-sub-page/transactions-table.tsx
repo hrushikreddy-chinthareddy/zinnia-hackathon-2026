@@ -109,7 +109,7 @@ export const TransactionsTable = ({
                                     </TableCell>
                                 </TableRow>
                             ))}
-                        </TableBody>
+                        </>
                     ) : (
                         <TableCell className={styles.noResultsTd} colSpan={100}>
                             <Typography variant={TypographyVariant.Body}>
@@ -118,9 +118,9 @@ export const TransactionsTable = ({
                                 })}
                             </Typography>
                         </TableCell>
-                    </Table>
-                </>
-            )}
+                    )}
+                </TableBody>
+            </Table>
         </div>
     );
 };
