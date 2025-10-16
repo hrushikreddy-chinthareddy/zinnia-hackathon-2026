@@ -3,15 +3,16 @@
   position: relative;
   width: 100%;
   border: var(--border-style);
-   li {
+  li {
     padding: var(--measure-dimension-padding-2xl, 1rem);
     &:not(:last-child) {
-      border-bottom:var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+      border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
     }
   }
   .allocationHeader {
-     padding: var(--measure-dimension-padding-2xl, 1rem);
-   }
+    padding: var(--measure-dimension-padding-2xl, 1rem);
+  }
 }
 
 .allocationHeader {

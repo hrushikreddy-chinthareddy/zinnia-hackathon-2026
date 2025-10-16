@@ -310,7 +310,7 @@ export default function getSbgcConfig(t: TFunction) {
                             },
                         ],
                         bankVerification:
-                            defaultDisbursementInfo?.bankVerification,
+                            defaultDisbursementInfo?.bankVerification ?? null,
                     };
                 },
             },
@@ -430,7 +430,7 @@ export default function getSbgcConfig(t: TFunction) {
                             },
                         ],
                         bankVerification:
-                            defaultDisbursementInfo.bankVerification,
+                            defaultDisbursementInfo?.bankVerification ?? null,
                     };
                 },
             },

@@ -19,6 +19,7 @@ import { useCallback, useEffect, useState } from 'react';
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -208,35 +209,35 @@ const IllustrationCaseSumary = ({
             <section className={clsx(styles.summary)}>
                 <article>
                     <Label>{t('clientCase.caseSummary.insured')}</Label>
-                    <span
+                    <PiiWrapper
                         className={clsx(
                             styles.value,
                             'typography-content-value'
                         )}
                     >
                         {insurredFullName}
-                    </span>
+                    </PiiWrapper>
                     {insuranceDetails && (
-                        <span
+                        <PiiWrapper
                             className={clsx(
                                 styles.caption,
                                 'typography-content-caption'
                             )}
                         >
                             {insuranceDetails}
-                        </span>
+                        </PiiWrapper>
                     )}
                 </article>
                 <article>
                     <Label>{t('clientCase.caseSummary.agent')}</Label>
-                    <span
+                    <PiiWrapper
                         className={clsx(
                             styles.value,
                             'typography-content-value'
                         )}
                     >
                         {agentFullName}
-                    </span>
+                    </PiiWrapper>
                     <span
                         className={clsx(
                             styles.caption,

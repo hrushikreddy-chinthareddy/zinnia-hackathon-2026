@@ -936,24 +936,12 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
             return riders;
         };
 
-        const getDeathBenefits = () => {
-            const deathBenefitAmount =
-                assumed?.annualTimeSeriesData?.[0]?.deathBenefitAmount;
-
-            if (deathBenefitAmount) {
-                return `Death Benefits ${numberFormatify(deathBenefitAmount)}`;
-            }
-
-            return '';
-        };
-
         return [
             creationDate,
             `Initial Annual Premium  ${numberFormatify(
                 assumed.initial.totalPremium
             )}`,
-            numberFormatify(assumed.initial.totalFaceAmount),
-            getDeathBenefits(),
+            `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
             ...getRidersTextList(),
         ]
             .filter((x) => x)

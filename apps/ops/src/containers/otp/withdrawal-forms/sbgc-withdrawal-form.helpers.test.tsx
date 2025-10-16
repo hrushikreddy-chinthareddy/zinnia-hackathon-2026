@@ -114,7 +114,7 @@ describe('SBGC withdrawal form config', () => {
                             routingNumber: '',
                         },
                     ],
-                    bankVerification: undefined,
+                    bankVerification: null,
                 });
             });
             it('should generate a correct payload for a wire selection', () => {
@@ -143,7 +143,7 @@ describe('SBGC withdrawal form config', () => {
                             reEnterBankRoutingNumber: undefined,
                         },
                     ],
-                    bankVerification: undefined,
+                    bankVerification: null,
                 });
             });
             it('should generate a correct payload for a check selection', () => {

@@ -47,7 +47,11 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
         <Button
-          className={clsx([styles.confirmTrigger, inline && styles.inline, linkClassName])}
+          className={clsx([
+            styles.confirmTrigger,
+            inline && styles.inline,
+            linkClassName,
+          ])}
           size={inline ? 'small' : undefined}
           mode="link"
         >

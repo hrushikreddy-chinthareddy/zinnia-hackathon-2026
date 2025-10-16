@@ -18,13 +18,15 @@ const meta: Meta<typeof ConfirmDialog> = {
       description: 'The message to be displayed as the body of the dialog',
     },
     cancelCallback: {
-      description: 'The callback to be called when the cancel button is clicked',
+      description:
+        'The callback to be called when the cancel button is clicked',
     },
     cancelText: {
       description: 'The text to be displayed on the cancel button',
     },
     confirmCallback: {
-      description: 'The callback to be called when the confirm button is clicked',
+      description:
+        'The callback to be called when the confirm button is clicked',
     },
     confirmDescription: {
       description: 'Aria description for the confirm button',
@@ -33,10 +35,12 @@ const meta: Meta<typeof ConfirmDialog> = {
       description: 'The text to be displayed on the confirm button',
     },
     linkText: {
-      description: 'The text to be displayed on the button that opens the dialog',
+      description:
+        'The text to be displayed on the button that opens the dialog',
     },
     title: {
-      description: 'The title to be displayed at the top of the dialog, in the title bar',
+      description:
+        'The title to be displayed at the top of the dialog, in the title bar',
     },
   },
   decorators: Story => (
@@ -58,12 +62,10 @@ export const Inline: StoryObj<typeof ConfirmDialog> = {
     inline: true,
   },
   decorators: Story => (
-
     <p>
       The inline props causes the the
       <Story />
       button to be rendered inline with the text
     </p>
-
   ),
 };

@@ -10,7 +10,8 @@
 }
 
 .paymentSummaryValues {
-  border: var(--measure-dimension-stroke-sm) solid var(--color-base-border-border-light);
+  border: var(--measure-dimension-stroke-sm) solid
+    var(--color-base-border-border-light);
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -39,7 +40,8 @@
 .paymentSummaryLabel:after {
   content: '';
   flex: 1;
-  border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted var(--color-grayscale-color-300-gray, #b3b3b3);
+  border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted
+    var(--color-grayscale-color-300-gray, #b3b3b3);
   margin-left: var(--measure-dimension-gap-md, 8px);
   margin-top: var(--measure-dimension-gap-md);
 }
@@ -47,7 +49,8 @@
 .paymentSummaryValue::before {
   content: '';
   flex: 1;
-  border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted var(--color-grayscale-color-300-gray, #b3b3b3);
+  border-bottom: var(--measure-dimension-stroke-sm, 2px) dotted
+    var(--color-grayscale-color-300-gray, #b3b3b3);
   margin-right: var(--measure-dimension-gap-md, 8px);
   margin-top: var(--measure-dimension-gap-md);
 }

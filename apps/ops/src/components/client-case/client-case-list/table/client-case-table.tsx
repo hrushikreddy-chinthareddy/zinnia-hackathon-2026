@@ -18,6 +18,7 @@ import { TFunction } from 'next-i18next';
 import { useTranslation } from 'react-i18next';
 
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -49,7 +50,7 @@ const generateTableContent = (
                 productTypes,
                 agencyName,
             } = caseData;
-            const clientCase = title || DEFAULT_ERROR_STRING;
+            const clientCaseTitle = title || DEFAULT_ERROR_STRING;
 
             const insuredName =
                 `${insuredDetails?.firstName || ''} ${
@@ -103,12 +104,12 @@ const generateTableContent = (
                                 height={16}
                                 className={styles.iconTableAlignment}
                             />
-                            {clientCase}
+                            <PiiWrapper>{clientCaseTitle}</PiiWrapper>
                         </Typography>
                     </TableCell>
                     <TableCell>
                         <Typography variant={TypographyVariant.BodySm}>
-                            {insuredName}
+                            <PiiWrapper>{insuredName}</PiiWrapper>
                         </Typography>
                         <Typography
                             variant={TypographyVariant.BodySm}
@@ -119,7 +120,7 @@ const generateTableContent = (
                     </TableCell>
                     <TableCell>
                         <Typography variant={TypographyVariant.BodySm}>
-                            {agentName}
+                            <PiiWrapper>{agentName}</PiiWrapper>
                         </Typography>
                     </TableCell>
                     <TableCell>

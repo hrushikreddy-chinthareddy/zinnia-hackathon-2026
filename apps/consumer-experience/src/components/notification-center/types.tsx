@@ -1,6 +1,6 @@
-import { CaseInstanceSummary } from "@xd/api-types/dist/generated-types/case";
+import { CaseInstanceSummary } from '@xd/api-types/dist/generated-types/case';
 
-import { CaseAcknowledgmentItem } from "@/services/terms-and-conditions";
+import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
 
 export type NotificationCenterNotification = {
   id: string;
