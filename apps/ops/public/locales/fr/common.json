@@ -8162,7 +8162,33 @@
             }
         },
         "quickQuoteForm": {
-            "title": "Cotisation rapide"
+            "title": "Cotisacion rapide",
+            "subtitle": "Remplissez les informations ci-dessous pour créer un devis rapide.",
+            "details": "Détails",
+            "productType": "Type de produit",
+            "age": "Âge",
+            "sexAtBirth": "Sexe à la naissance",
+            "nicotineUse": "Consommation de nicotine",
+            "state": "État",
+            "faceAmount": "Montant assuré",
+            "nicotineYes": "Y",
+            "nicotineNo": "N",
+            "maleButton": "M",
+            "femaleButton": "F",
+            "riders": "Avenants",
+            "accidentalDeath": "Avenant en cas de décès accidentel",
+            "childrensTerm": "Avenant d'assurance temporaire pour enfants",
+            "waiverOfPremium": "Exonération de prime",
+            "premiumfreeRiders": "Avenants sans prime",
+            "acceleratedDeathBenefit": "Avenant en cas de décès accéléré pour Maladie terminale",
+            "charitableGiving": "Avenant aux dons de bienfaisance",
+            "ageRequired": "Veuillez saisir un âge",
+            "mustBePositive": "Doit être un nombre positif",
+            "selectAnOption": "Veuillez sélectionner une option",
+            "selectAnState": "Veuillez sélectionner un État",
+            "provideFaceAmount": "Veuillez indiquer un montant nominal",
+            "provideValidAmount": "Veuillez indiquer un montant valide",
+            "faceAmountError": "Le montant nominal doit être supérieur à 0"
         }
     },
     "usage": {

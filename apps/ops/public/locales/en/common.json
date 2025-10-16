@@ -8327,7 +8327,14 @@
             "waiverOfPremium": "Waiver of Premium",
             "premiumfreeRiders": "Premium-free Riders",
             "acceleratedDeathBenefit": "Accelerated Death Benefit Rider for Terminal Illness",
-            "charitableGiving": "Charitable Giving Rider"
+            "charitableGiving": "Charitable Giving Rider",
+            "ageRequired": "Please enter an age",
+            "mustBePositive": "Must be a positive number",
+            "selectAnOption": "Please select an option",
+            "selectAnState": "Please select an state",
+            "provideFaceAmount": "Please provide a face amount",
+            "provideValidAmount": "Please provide a valid amount",
+            "faceAmountError": "Face amount must be greater than 0"
         }
     },
     "zinniaAiAssistant": {
