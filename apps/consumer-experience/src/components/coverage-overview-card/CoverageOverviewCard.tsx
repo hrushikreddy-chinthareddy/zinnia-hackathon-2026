@@ -56,11 +56,54 @@ export const CoverageOverviewCard = ({
             summary={{ ...policy }}
           />
           <div className={styles.policyCardPolicyValues}>
+            {policy.lineOfBusiness === LineOfBusiness.LIFE &&
+              componentVisibility?.[ComponentName.OVERVIEW_COVERAGE_CARD] && (
+                <FieldData
+                  className="mr-3xl typography-content-body-sm-bold"
+                  Label={
+                    <Label
+                      interactiveElements={[
+                        <CoveragePopover key="coverage-popover" />,
+                      ]}
+                    >
+                      Coverage
+                    </Label>
+                  }
+                >
+                  {formatUSDollars(policy.totalCoverageAmount)}
+                </FieldData>
+              )}
+            {policy.lineOfBusiness === LineOfBusiness.ANNUITY && (
+              <FieldData
+                className="mr-3xl typography-content-body-sm-bold"
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <LabelPopover
+                        key="death-benefit-popover"
+                        title="Death Benefit"
+                      >
+                        <div className={styles.popoverContent}>
+                          <p>
+                            This is how much money your beneficiaries may
+                            receive when you die.
+                          </p>
+                        </div>
+                      </LabelPopover>,
+                    ]}
+                  >
+                    Death Benefit
+                  </Label>
+                }
+              >
+                {formatUSDollars(policy.cumulativeGrossDeathBenefitAmount)}
+              </FieldData>
+            )}
             {componentVisibility?.[
               ComponentName.OVERVIEW_ACCOUNT_VALUE_CARD
             ] && (
               <FieldData
-                className="mr-3xl typography-content-body-sm-bold"
+                className="typography-content-body-sm-bold"
                 Label={
                   <Label
                     interactiveElements={[
@@ -85,49 +128,6 @@ export const CoverageOverviewCard = ({
                 }
               >
                 {formatUSDollars(policy.endingAccountValue)}
-              </FieldData>
-            )}
-            {policy.lineOfBusiness === LineOfBusiness.LIFE &&
-              componentVisibility?.[ComponentName.OVERVIEW_COVERAGE_CARD] && (
-                <FieldData
-                  className="typography-content-body-sm-bold"
-                  Label={
-                    <Label
-                      interactiveElements={[
-                        <CoveragePopover key="coverage-popover" />,
-                      ]}
-                    >
-                      Coverage
-                    </Label>
-                  }
-                >
-                  {formatUSDollars(policy.totalCoverageAmount)}
-                </FieldData>
-              )}
-            {policy.lineOfBusiness === LineOfBusiness.ANNUITY && (
-              <FieldData
-                className="typography-content-body-sm-bold"
-                Label={
-                  <Label
-                    interactiveElements={[
-                      <LabelPopover
-                        key="death-benefit-popover"
-                        title="Death Benefit"
-                      >
-                        <div className={styles.popoverContent}>
-                          <p>
-                            This is how much money your beneficiaries may
-                            receive when you die.
-                          </p>
-                        </div>
-                      </LabelPopover>,
-                    ]}
-                  >
-                    Death Benefit
-                  </Label>
-                }
-              >
-                {formatUSDollars(policy.cumulativeGrossDeathBenefitAmount)}
               </FieldData>
             )}
           </div>
