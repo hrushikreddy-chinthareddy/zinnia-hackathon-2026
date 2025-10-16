@@ -2,7 +2,6 @@ import {
     AssistiveText,
     AssistiveTextVariant,
     Checkbox,
-    FieldData,
     FieldTypes as FieldDataTypes,
     FieldSize,
     FieldStatus,
@@ -27,6 +26,7 @@ import { ReactElement, useCallback, useEffect, memo } from 'react';
 import { FieldContainer, FieldContainerProps, FieldLabel } from './common';
 import style from './field.module.css';
 import { IllustrationScheduler } from './IllustrationScheduler';
+import { StatefulFieldData } from './StatefulFieldData';
 import { Tags } from './Tags';
 import { CheckboxGroup } from '../../bloom-temp/checkbox-group';
 
@@ -249,7 +249,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
             return (
                 <FieldContainer {...defaultContainerProps}>
                     <FieldLabel field={field} />
-                    <FieldData
+                    <StatefulFieldData
                         name={field.id}
                         errorMessage={field.validationError?.message}
                         fieldStatus={
@@ -272,7 +272,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
             return (
                 <FieldContainer {...defaultContainerProps}>
                     <FieldLabel field={field} />
-                    <FieldData
+                    <StatefulFieldData
                         name={field.id}
                         errorMessage={field.validationError?.message}
                         fieldStatus={
@@ -292,7 +292,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
             return (
                 <FieldContainer {...defaultContainerProps}>
                     <FieldLabel field={field} />
-                    <FieldData
+                    <StatefulFieldData
                         name={field.id}
                         errorMessage={field.validationError?.message}
                         fieldStatus={
@@ -316,7 +316,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
             return (
                 <FieldContainer {...defaultContainerProps}>
                     <FieldLabel field={field} />
-                    <FieldData
+                    <StatefulFieldData
                         name={field.id}
                         errorMessage={field.validationError?.message}
                         fieldStatus={
@@ -340,7 +340,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
             return (
                 <FieldContainer {...defaultContainerProps}>
                     <FieldLabel field={field} />
-                    <FieldData
+                    <StatefulFieldData
                         name={field.id}
                         errorMessage={field.validationError?.message}
                         fieldStatus={
@@ -475,7 +475,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
               onAnswerChangeForFieldProps(value);
             }}
           /> */}
-                    <FieldData
+                    <StatefulFieldData
                         type="date"
                         name={field.id}
                         errorMessage={field.validationError?.message}
