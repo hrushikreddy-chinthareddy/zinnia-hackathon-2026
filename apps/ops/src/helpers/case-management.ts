@@ -8,6 +8,7 @@ import { PartyInstance } from '@deps/models/case/party-instance';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 export const isSearchValueObjectEmpty = (
     searchValueObject: Partial<Record<PolicySearchKeys, string>> = {}
@@ -28,6 +29,7 @@ export const getSearchValueObject = (
         agentSsn = '',
         firmName = '',
         documentNumber = '',
+        fullName = '',
     }: SearchViewQuery,
     toggleValue: PolicySearchKeys
 ): SearchViewQuery => {
@@ -40,9 +42,11 @@ export const getSearchValueObject = (
             return agentSsn ? { agentSsn: agentSsn.replaceAll('-', '') } : {};
         case 'ownerFirstName':
         case 'ownerLastName':
+        case 'fullName':
             return {
                 ...(ownerFirstName ? { ownerFirstName } : {}),
                 ...(ownerLastName ? { ownerLastName } : {}),
+                ...(fullName ? { fullName } : {}),
             };
         case 'caseId':
             return caseId ? { caseIds: [caseId] } : {};
@@ -259,79 +263,124 @@ export const getAdditionalFilters = (
     return result;
 };
 
-export const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => {
-    const labels: LabelValue<PolicySearchKeys>[] = [
-        {
-            label: t('dashboard.search.buttons.policyNumber'),
-            value: 'policyNumber',
-            placeholder: t('dashboard.search.buttons.policyPlaceholder') ?? '',
-        },
-        {
-            label: t('caseManagementDashboard.case.caseId'),
-            value: 'caseId',
-            placeholder: t('dashboard.search.buttons.policyPlaceholder') ?? '',
-        },
-        {
-            label: t('dashboard.search.buttons.ownerSsn'),
-            value: 'ssn',
-            fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
-            placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
-            format: '###-##-####',
-            replaceValue: '-',
-        },
-        {
-            label: t('dashboard.search.buttons.ownerName'),
-            value: 'ownerFirstName',
-            group: [
-                {
-                    label: t('dashboard.search.buttons.firstName'),
-                    value: 'ownerFirstName',
-                    placeholder: '',
-                },
-                {
-                    label: t('dashboard.search.buttons.lastName'),
-                    value: 'ownerLastName',
-                    placeholder: '',
-                },
-            ],
-        },
-        {
-            label: t('dashboard.search.buttons.agentName'),
-            value: 'agentName',
-            group: [
-                {
-                    label: t('dashboard.search.buttons.firstName'),
-                    value: 'agentFirstName',
-                    placeholder: '',
-                },
-                {
-                    label: t('dashboard.search.buttons.lastName'),
-                    value: 'agentLastName',
-                    placeholder: '',
-                },
-            ],
-        },
-        {
-            label: t('dashboard.search.buttons.agentSsn'),
-            value: 'agentSsn',
-            fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
-            placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
-            format: '###-##-####',
-            replaceValue: '-',
-        },
-        {
-            label: t('dashboard.search.buttons.firmName'),
-            value: 'firmName',
-            placeholder: t('dashboard.search.buttons.firmName') ?? '',
-        },
-        {
-            label: t('caseManagementDashboard.case.documentNumber'),
-            value: 'documentNumber',
-            placeholder: t('dashboard.search.buttons.documentNumber') ?? '',
-        },
-    ];
-    return labels;
-};
+export const toggleLabels =
+    (featureFlags: FeatureFlags) =>
+    (t: TFunction): LabelValue<PolicySearchKeys>[] => {
+        const labels: LabelValue<PolicySearchKeys>[] = [
+            {
+                label: t('dashboard.search.buttons.policyNumber'),
+                value: 'policyNumber',
+                placeholder:
+                    t('dashboard.search.buttons.policyPlaceholder') ?? '',
+            },
+            {
+                label: t('caseManagementDashboard.case.caseId'),
+                value: 'caseId',
+                placeholder:
+                    t('dashboard.search.buttons.policyPlaceholder') ?? '',
+            },
+            {
+                label: t('dashboard.search.buttons.ownerSsn'),
+                value: 'ssn',
+                fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
+                placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
+                format: '###-##-####',
+                replaceValue: '-',
+            },
+            {
+                label: t('dashboard.search.buttons.name'),
+                value: 'ownerFirstName',
+                ...(featureFlags.enterprise_search_trust_or_organization
+                    ? {
+                          group: [
+                              {
+                                  label: t(
+                                      'dashboard.search.buttons.firstName'
+                                  ),
+                                  value: 'ownerFirstName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.firstName'
+                                  ) as string,
+                              },
+                              {
+                                  label: t('dashboard.search.buttons.lastName'),
+                                  value: 'ownerLastName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.lastName'
+                                  ) as string,
+                              },
+                              {
+                                  label: t('dashboard.search.buttons.fullName'),
+                                  value: 'fullName',
+                                  placeholder: 'Trust or organization',
+                                  errorMessage: t(
+                                      'dashboard.search.error.fullName'
+                                  ) as string,
+                              },
+                          ],
+                      }
+                    : {
+                          group: [
+                              {
+                                  label: t(
+                                      'dashboard.search.buttons.firstName'
+                                  ),
+                                  value: 'firstName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.firstName'
+                                  ) as string,
+                              },
+                              {
+                                  label: t('dashboard.search.buttons.lastName'),
+                                  value: 'lastName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.lastName'
+                                  ) as string,
+                              },
+                          ],
+                      }),
+            },
+            {
+                label: t('dashboard.search.buttons.agentName'),
+                value: 'agentName',
+                group: [
+                    {
+                        label: t('dashboard.search.buttons.firstName'),
+                        value: 'agentFirstName',
+                        placeholder: '',
+                    },
+                    {
+                        label: t('dashboard.search.buttons.lastName'),
+                        value: 'agentLastName',
+                        placeholder: '',
+                    },
+                ],
+            },
+            {
+                label: t('dashboard.search.buttons.agentSsn'),
+                value: 'agentSsn',
+                fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
+                placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
+                format: '###-##-####',
+                replaceValue: '-',
+            },
+            {
+                label: t('dashboard.search.buttons.firmName'),
+                value: 'firmName',
+                placeholder: t('dashboard.search.buttons.firmName') ?? '',
+            },
+            {
+                label: t('caseManagementDashboard.case.documentNumber'),
+                value: 'documentNumber',
+                placeholder: t('dashboard.search.buttons.documentNumber') ?? '',
+            },
+        ];
+        return labels;
+    };
 
 export const calculateDaysAgo = (date: Date): number => {
     const now = new Date();

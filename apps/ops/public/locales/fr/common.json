@@ -1395,14 +1395,15 @@
                 "ssnFullLabel": "Numéro de sécurité sociale du propriétaire",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Nom",
-                "firstName": "Prénom",
-                "lastName": "Nom de famille",
+                "firstName": "Prénom de l'individu",
+                "lastName": "Nom de famille de l'individu",
                 "ownerName": "Nom du propriétaire",
                 "agentName": "Nom de l'agent",
                 "firmName": "Nom de l'entreprise",
                 "documentNumber": "20250101-AB-123456",
                 "agentSsn": "SSN de l'agent",
-                "agentNpn": "NPN de l'agent"
+                "agentNpn": "NPN de l'agent",
+                "fullName": "Fiducie ou organisation"
             }
         },
         "quickSearch": {
