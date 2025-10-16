@@ -27,14 +27,6 @@ import {
 import styles from './transaction-wrapper.module.css';
 import { TransactionsTable } from './transactions-table';
 
-const initialFilterTransactions = {
-    [TransactionStatus.COMPLETED]: [],
-    [TransactionStatus.PENDING]: [],
-    [TransactionStatus.CANCELED]: [],
-    [TransactionStatus.FAILED]: [],
-    [TransactionStatus.REVERSED]: [],
-};
-
 export const TransactionsWrapper = () => {
     const { t } = useTranslation();
     const { policy } = useContext(PolicyData);
@@ -81,31 +73,6 @@ export const TransactionsWrapper = () => {
             });
         }
     }, [filteredTransactions, limit, t, statusFilter]);
-
-    useEffect(() => {
-        if (previousStatus.current !== statusFilter) {
-            goToPage(1);
-        }
-    }, [previousStatus, statusFilter, goToPage]);
-
-    const liveResultsMessage = useMemo(() => {
-        if (transactions?.length) {
-            return t('policy.documents.xToYOfZ', {
-                x: totals?.[statusFilter] + 1,
-                y: Math.min(
-                    totals?.[statusFilter] + limit,
-                    totals?.[statusFilter] || 0
-                ),
-                z: `${totals?.[statusFilter]?.toLocaleString() ?? '0'}${
-                    totals?.[statusFilter] === 10000 ? '+' : ''
-                }`,
-            });
-        } else {
-            return t('policy.history.noTransactionsTitle', {
-                status: statusFilter.toLocaleLowerCase(),
-            });
-        }
-    }, [transactions, limit, t, statusFilter, totals]);
 
     return (
         <div className={styles.transactionWrapper}>

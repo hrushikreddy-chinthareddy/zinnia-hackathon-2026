@@ -1,9 +1,6 @@
 import { Transition } from '@headlessui/react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import {
-    Transaction,
-    TransactionStatus,
-} from '@xd/api-types/dist/generated-types/sor';
+import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
 import {
     FieldSize,
     TabGroup,
@@ -257,7 +254,7 @@ export const TransactionStatusTabGroup = ({
     totals,
     children,
 }: {
-    transactions: Transaction[] | undefined;
+    totals: { [key: string]: number };
     children: React.ReactNode;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
