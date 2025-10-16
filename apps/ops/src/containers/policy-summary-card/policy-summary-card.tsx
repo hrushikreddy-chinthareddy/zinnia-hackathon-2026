@@ -546,7 +546,7 @@ export const StatusBanner = ({
                 freelookCancellation?.isEligibleFreelookCancellation &&
                 policy.freeLookPeriodDetails.isInFreeLookPeriod && (
                     <BannerAlert
-                        variant={BannerVariant.Warning}
+                        variant={BannerVariant.Information}
                         bodyText={t(
                             'dashboard.search.results.policySummaryCard.freeLookCancelBannerText',
                             {
