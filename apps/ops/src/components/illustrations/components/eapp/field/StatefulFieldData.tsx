@@ -1,33 +1,46 @@
 import { FieldDataProps, FieldData } from '@zinnia/bloom/components';
-import { ChangeEventHandler, useState, useEffect } from 'react';
+import { ChangeEventHandler, useState, useEffect, useCallback } from 'react';
 
 type StatefulFieldDataProps = Omit<FieldDataProps, 'onChange' | 'onBlur'> & {
     onChange: (value: any) => void;
 };
 
 export function StatefulFieldData(props: StatefulFieldDataProps) {
-    const { onChange: callerOnChange, ...restProps } = props;
-    const [value, setValue] = useState<any>(props.value);
+    const { onChange: onAnswerChange, value: propsValue, ...restProps } = props;
+    const [localValue, setLocalValue] = useState<any>(propsValue);
+    const [lastSentValue, setLastSentValue] = useState<any>(propsValue);
 
-    // Sync local state with Caller's value when it changes
+    // Sync local state with parent's value when it changes
+    // This handles both: normal prop changes AND rejected changes
     useEffect(() => {
-        setValue(props.value);
-    }, [props.value]);
+        // Only update if parent value changed from what we last sent
+        // This detects when parent rejected our change (kept same value)
+        if (propsValue !== lastSentValue) {
+            setLocalValue(propsValue);
+            setLastSentValue(propsValue);
+        }
+    }, [propsValue, lastSentValue]);
 
-    const onBlur = (): void => {
-        callerOnChange(value);
-    };
+    const handleBlur = useCallback((): void => {
+        // Only notify parent if value actually changed
+        if (localValue !== propsValue) {
+            onAnswerChange(localValue); // Run the whole questionnaireEngine.update in sync (might update the default value).
+            setLastSentValue(localValue); // (Very important, this has to run after the onAnswerChange ^)
+        }
+    }, [localValue, propsValue, onAnswerChange]);
 
-    const onChange: ChangeEventHandler<any> = (e): void => {
-        setValue(e.target.value);
-    };
+    const handleChange: ChangeEventHandler<any> = useCallback((e): void => {
+        // Convert empty string to undefined for consistency
+        const newValue = e.target.value === '' ? undefined : e.target.value;
+        setLocalValue(newValue);
+    }, []);
 
     return (
         <FieldData
             {...restProps}
-            value={value}
-            onChange={onChange}
-            onBlur={onBlur}
+            value={localValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
         />
     );
 }

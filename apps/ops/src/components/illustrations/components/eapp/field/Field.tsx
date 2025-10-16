@@ -259,9 +259,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         }
                         required={!field.optional}
                         value={field.value}
-                        onChange={(e) =>
-                            onAnswerChangeForFieldProps(e.target.value)
-                        }
+                        onChange={onAnswerChangeForFieldProps}
                         fieldSize={FieldSize.Small}
                         readOnly={field.readOnly}
                         disabled={field.disabled}
@@ -282,9 +280,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         }
                         required={!field.optional}
                         value={field.value}
-                        onChange={(e) =>
-                            onAnswerChangeForFieldProps(e.target.value)
-                        }
+                        onChange={onAnswerChangeForFieldProps}
                     />
                 </FieldContainer>
             );
@@ -302,9 +298,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         }
                         required={!field.optional}
                         value={field.value}
-                        onChange={(e) =>
-                            onAnswerChangeForFieldProps(e.target.value)
-                        }
+                        onChange={onAnswerChangeForFieldProps}
                         fieldType={FieldDataTypes.Number}
                         fieldSize={FieldSize.Small}
                     />
@@ -326,9 +320,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         }
                         required={!field.optional}
                         value={field.value}
-                        onChange={(e) =>
-                            onAnswerChangeForFieldProps(e.target.value)
-                        }
+                        onChange={onAnswerChangeForFieldProps}
                         fieldType={FieldDataTypes.Value}
                         fieldSize={FieldSize.Small}
                     />
@@ -350,9 +342,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         }
                         required={!field.optional}
                         value={field.value}
-                        onChange={(e) =>
-                            onAnswerChangeForFieldProps(e.target.value)
-                        }
+                        onChange={onAnswerChangeForFieldProps}
                         fieldSize={FieldSize.Small}
                     />
                 </FieldContainer>
@@ -486,9 +476,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         }
                         required={!field.optional}
                         value={field.value}
-                        onChange={(e) =>
-                            onAnswerChangeForFieldProps(e.target.value)
-                        }
+                        onChange={onAnswerChangeForFieldProps}
                         fieldSize={FieldSize.Small}
                         readOnly={field.disabled}
                     />
