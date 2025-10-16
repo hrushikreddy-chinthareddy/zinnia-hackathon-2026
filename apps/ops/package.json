@@ -179,7 +179,6 @@
     "scripts": {
         "build": "next build --no-lint",
         "build-storybook": "storybook build",
-        "check": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm run lint && pnpm run typecheck && pnpm run test",
         "clean": "./scripts/clean.sh",
         "cypress": "bash ./e2e/scripts/cypress-tests.sh",
         "cypress:local": "bash ./e2e/scripts/cypress-tests.sh --local",
@@ -191,15 +190,15 @@
         "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
         "orval": "orval",
         "pre-commit": "pnpm run lint-staged",
-        "pre-push": "pnpm check",
+        "pre-push": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm --silent prettier && pnpm lint && pnpm check-types && pnpm test",
         "prettier": "prettier --check --cache --loglevel=warn ./src",
         "prettier:fix": "prettier --write --cache ./src",
         "start": "next start",
         "storybook": "storybook dev -p 6006",
-        "test": "cd ../.. pnpm run build && cd apps/ops && jest --verbose=true --maxWorkers=50% --coverage",
-        "test-watch": "pnpm run test -- --watch",
+        "test": "cd ../.. pnpm build && cd apps/ops && jest --verbose=true --maxWorkers=50% --coverage",
+        "test-watch": "pnpm test -- --watch",
         "tokenize": "style-dictionary build",
-        "typecheck": "tsc --project ./tsconfig.json"
+        "check-types": "tsc --project ./tsconfig.json"
     },
     "version": "2.16.0"
 }
