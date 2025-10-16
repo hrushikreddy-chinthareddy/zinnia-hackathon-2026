@@ -88,6 +88,25 @@ export const TransactionsWrapper = () => {
         }
     }, [previousStatus, statusFilter, goToPage]);
 
+    const liveResultsMessage = useMemo(() => {
+        if (transactions?.length) {
+            return t('policy.documents.xToYOfZ', {
+                x: totals?.[statusFilter] + 1,
+                y: Math.min(
+                    totals?.[statusFilter] + limit,
+                    totals?.[statusFilter] || 0
+                ),
+                z: `${totals?.[statusFilter]?.toLocaleString() ?? '0'}${
+                    totals?.[statusFilter] === 10000 ? '+' : ''
+                }`,
+            });
+        } else {
+            return t('policy.history.noTransactionsTitle', {
+                status: statusFilter.toLocaleLowerCase(),
+            });
+        }
+    }, [transactions, limit, t, statusFilter, totals]);
+
     return (
         <div className={styles.transactionWrapper}>
             <PageHeader

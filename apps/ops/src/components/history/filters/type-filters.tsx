@@ -254,7 +254,7 @@ const TypeFilters = () => {
 };
 
 export const TransactionStatusTabGroup = ({
-    transactions,
+    totals,
     children,
 }: {
     transactions: Transaction[] | undefined;
@@ -265,27 +265,6 @@ export const TransactionStatusTabGroup = ({
     });
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { statusFilter } = historyFilters;
-
-    const totals = transactions?.reduce(
-        (acc, transaction) => {
-            for (const status in acc) {
-                if (status === transaction.status) {
-                    acc = {
-                        ...acc,
-                        [status]: acc[status] + 1,
-                    };
-                }
-            }
-            return acc;
-        },
-        {
-            [TransactionStatus.COMPLETED]: 0,
-            [TransactionStatus.PENDING]: 0,
-            [TransactionStatus.CANCELED]: 0,
-            [TransactionStatus.FAILED]: 0,
-            [TransactionStatus.REVERSED]: 0,
-        }
-    );
 
     const transactionStatuses = Object.values([
         TransactionStatus.COMPLETED,
