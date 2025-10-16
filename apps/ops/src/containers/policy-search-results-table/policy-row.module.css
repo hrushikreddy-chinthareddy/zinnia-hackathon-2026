@@ -66,6 +66,6 @@
     align-items: center;
 }
 
-.warningColor {
-    color: rgb(var(--color-semantic-warning));
+.infoColor {
+    color: rgb(var(--color-semantic-information));
 }
