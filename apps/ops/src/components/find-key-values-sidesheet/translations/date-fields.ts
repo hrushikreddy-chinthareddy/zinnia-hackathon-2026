@@ -43,6 +43,7 @@ export const dateFields = new Set([
     'coverageChangeEffectiveDate',
     'coverageTerminationDate',
     'effectiveDate',
+    'terminationDate',
     'exerciseDate',
     'nextEvaluationDate',
     'riderPaymentDate',
