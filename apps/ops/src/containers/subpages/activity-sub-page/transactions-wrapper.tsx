@@ -82,6 +82,12 @@ export const TransactionsWrapper = () => {
         }
     }, [filteredTransactions, limit, t, statusFilter]);
 
+    useEffect(() => {
+        if (previousStatus.current !== statusFilter) {
+            goToPage(1);
+        }
+    }, [previousStatus, statusFilter, goToPage]);
+
     return (
         <div className={styles.transactionWrapper}>
             <PageHeader

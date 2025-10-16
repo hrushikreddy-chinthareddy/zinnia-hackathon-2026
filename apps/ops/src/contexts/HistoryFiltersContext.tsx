@@ -62,7 +62,7 @@ export type AllFilters =
 
 export interface HistoryFilters {
     eventFilter?: EventFilters;
-    statusFilter: TransactionStatus;
+    statusFilter?: TransactionStatus;
     yearFilter?: YearFilters;
 }
 

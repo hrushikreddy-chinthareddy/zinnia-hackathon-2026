@@ -323,9 +323,8 @@ export const TransactionTypeSelect = () => {
         ...PolicyFilters,
     };
     const typeOptions = Object.values(options).map((type) => ({
-        value: type as string,
+        value: type,
         label: t(`${type}`) || type,
-        displayText: t(`${type}`) || type,
     }));
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { eventFilter } = historyFilters;
@@ -334,25 +333,19 @@ export const TransactionTypeSelect = () => {
     return (
         <SelectSimple
             className="max-w-[280px]"
-            isMultiselect={true}
             label={t('byTransactionType') as string}
             onChange={(filter) => {
-                console.log({ filter });
                 setFilter(
                     setHistoryFilters,
                     getFilterEnumKey(filter) as EventFilterKeys,
                     filter as EventFilterKeys
                 );
             }}
-            defaultValue={[EventFilterKeys.All]}
+            defaultValue={EventFilterKeys.All}
             options={typeOptions}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
-            value={{
-                [EventFilterKeys.All]: subfilterName
-                    ? subfilterName
-                    : EventFilterKeys.All,
-            }}
+            value={subfilterName ?? EventFilterKeys.All}
         />
     );
 };
