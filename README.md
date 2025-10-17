@@ -199,6 +199,57 @@ Below are some examples of how you would make an update to a `package` and see i
 
   > NOTE: We don't want to run `pnpm run dev` without filtering because it will run the `dev` script for all `apps` and `packages` in the monorepo.
 
+## Testing GitHub Workflows Locally
+
+Testing GitHub workflows on GitHub is a big hurdle in development efficiency. Luckily, there's already a solution!
+
+[act](https://nektosact.com/introduction.html) allows you to simulate a GitHub event, such a push to a branch or pull request, and execute all the related GitHub workflows in a Docker VM, on your local machine.
+
+### Installation
+
+You will need to install [Docker](https://www.docker.com/) on your local machine. If you already have [Homebrew](https://brew.sh/) installed, run this in your terminal:
+```bash
+  brew install --cask docker
+```
+
+Launch Docker Desktop. You don't need to log into any accounts, just press the "skip" button when it prompts you.
+
+Next, install Act. If using Homebrew,
+```bash
+  brew install act
+```
+
+And you're done!
+
+### Prerequisites
+
+In order to execute GitHub workflows locally via Act, you will need
+- Your Zinnia GitHub token. You probably already have this in your `~/.npmrc`; it should start with `//npm.pkg.github.com/:_authToken=`.
+- A mock event file. There's already a mock created for PR events in `.github/workflows/mock_events/pull_request.json`. You can add other events if needed.
+  
+### Running a GitHub workflow
+Act can be pre-configured, or it you can just supply everything it needs via command line args: 
+
+```bash
+act \
+  pull_request \
+  -e .github/workflows/mock_events/pull_request.json \
+  -P ubuntu-latest=catthehacker/ubuntu:act-latest \
+  --reuse \
+  -j prettier-typecheck-lint \
+  -s GITHUB_TOKEN=<your_gh_token_here>
+```
+
+* **act** Act executable
+* **pull_request** GitHub event name, and should match your "on" descriptor in the workflow
+* **-e .github/workflows/mock_events/pull_request.json**  Path to mock event file that supplies metadata for your GH event
+* **-P ubuntu-latest=catthehacker/ubuntu:act-latest**  Use the "micro" Ubuntu image, same as our actual GH actions
+* **--reuse** Reuse the same Docker image from the previous run, instead of building it from scratch
+* **-j prettier-lint-typecheck** Specify the action execute; this can be omitted to run all actions responding to the event
+* **-s GITHUB_TOKEN=<your_gh_token>** Your GH token
+
+This first time Act runs your workflow, it will need to build the Docker image, which takes a long time. It will skip this step as long as you use the `--reuse` arg in the command line, and all subsequent runs should be pretty fast.
+
 ## Useful Links about Turborepo
 
 Learn more about the power of Turborepo:

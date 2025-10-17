@@ -21,7 +21,8 @@ export type PolicySearchKeys =
     | 'agentLastName'
     | 'documentNumber'
     | 'taskName'
-    | 'agentSsn';
+    | 'agentSsn'
+    | 'fullName';
 
 export interface PolicySearchResult {
     carrierId: string;
@@ -60,6 +61,7 @@ export interface SearchViewQuery {
     brokerDealerName?: string;
     [key: string]: any; // used to loop over the object
     documentNumber?: string;
+    fullName?: string;
 }
 
 export interface SearchParams {

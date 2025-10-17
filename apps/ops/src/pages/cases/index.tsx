@@ -536,7 +536,7 @@ const CaseManagementDashboard = ({
                 <SearchBar
                     searchValue={caseManagementFilters.searchValue}
                     onSearch={handleSearch}
-                    toggleLabels={toggleLabels}
+                    toggleLabels={toggleLabels(featureFlags)}
                     initialToggleValue={caseManagementFilters.toggleValue}
                     onToggle={handleToggle}
                     onClear={handleClear}

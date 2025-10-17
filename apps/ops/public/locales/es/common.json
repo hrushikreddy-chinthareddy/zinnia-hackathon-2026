@@ -1312,14 +1312,15 @@
                 "ssnFullLabel": "Número de Seguro Social del propietario",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Nombre",
-                "firstName": "Nombre",
-                "lastName": "Apellido",
+                "firstName": "Nombre del individuo",
+                "lastName": "Apellido del individuo",
                 "ownerName": "Nombre del propietario",
                 "agentName": "Nombre del agente",
                 "firmName": "Nombre de la firma",
                 "documentNumber": "20250101-AB-123456",
                 "agentSsn": "SSN del agente",
-                "agentNpn": "NPN del agente"
+                "agentNpn": "NPN del agente",
+                "fullName": "Confianza u organización"
             }
         },
         "quickSearch": {
@@ -8148,7 +8149,33 @@
             }
         },
         "quickQuoteForm": {
-            "title": "Cotización rápida"
+            "title": "Cotización rápida",
+            "subtitle": "Llene el formulario para obtener una cotización rápida",
+            "details": "Detalles",
+            "productType": "Tipo de producto",
+            "age": "Edad",
+            "sexAtBirth": "Sexo al nacer",
+            "nicotineUse": "Uso de nicotina",
+            "state": "Estado",
+            "faceAmount": "Valor nominal",
+            "nicotineYes": "Y",
+            "nicotineNo": "N",
+            "maleButton": "M",
+            "femaleButton": "F",
+            "riders": "Cláusulas adicionales",
+            "accidentalDeath": "Cláusula adicional de prestación por muerte accidental",
+            "childrensTerm": "Cláusula adicional de seguro a término para niños",
+            "waiverOfPremium": "Exención de prima",
+            "premiumfreeRiders": "Cláusulas adicionales sin prima",
+            "acceleratedDeathBenefit": "Cláusula adicional de beneficio por muerte acelerada en caso de enfermedad terminal",
+            "charitableGiving": "Cláusula adicional de donaciones benéficas",
+            "ageRequired": "Por favor ingrese una edad",
+            "mustBePositive": "Debe ser un numero positivo",
+            "selectAnOption": "Por favor seleccione una opción",
+            "selectAnState": "Por favor seleccione un estado",
+            "provideFaceAmount": "Por favor ingrese un valor nominal",
+            "provideValidAmount": "Por favor ingrese un valor nominal valido",
+            "faceAmountError": "Face amount must be greater than 0"
         }
     },
     "zinniaAiAssistant": {

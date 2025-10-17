@@ -9,16 +9,18 @@
     "build": "next build --no-lint",
     "start": "NODE_OPTIONS='--max-http-header-size=32000' next start",
     "check-types": "tsc --noemit",
-    "lint": "next lint && pnpm check-types",
-    "lint-staged": "pnpm run lint",
+    "lint": "next lint",
+    "lint-staged": "lint-staged",
     "lint:fix": "next lint --fix",
-    "test": "cd ../.. pnpm run build && cd apps/consumer-experience && jest",
+    "prettier": "prettier --check --cache --log-level=warn ./src",
+    "prettier:fix": "prettier --write --cache ./src",
+    "test": "cd ../.. pnpm build && cd apps/consumer-experience && jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic",
-    "pre-commit": "pnpm run lint-staged",
-    "pre-push": "pnpm run test"
+    "pre-commit": "pnpm lint-staged",
+    "pre-push": "pnpm lint && pnpm check-types && pnpm test"
   },
   "dependencies": {
     "@datadog/browser-rum": "^5.17.1",
@@ -114,5 +116,14 @@
     "ts-jest": "^29.1.1",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "src/**/*.{css,scss}": [
+      "prettier --write"
+    ],
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

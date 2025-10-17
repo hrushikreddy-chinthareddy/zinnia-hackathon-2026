@@ -49,7 +49,6 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
 
     const {
         control,
-        register,
         handleSubmit,
         setValue,
         getValues,
@@ -118,34 +117,62 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                 </Typography>
                 <div className={styles.inputRow}>
                     <div className={styles.ageInput}>
-                        <FieldData
-                            id="age"
-                            fieldType={FieldTypes.Number}
-                            className={styles.ageInput}
-                            fieldSize={FieldSize.Small}
-                            {...(errors.age && {
-                                fieldStatus: FieldStatus.ERROR,
-                                errorMessage: errors.age.message,
-                            })}
-                            label={
-                                <Label>
-                                    {t('clientCase.quickQuoteForm.age')}
-                                </Label>
-                            }
-                            {...register('age', {
-                                required: 'Please enter an age',
-                                valueAsNumber: true,
+                        <Controller
+                            control={control}
+                            name="age"
+                            rules={{
+                                required: t(
+                                    'clientCase.quickQuoteForm.ageRequired'
+                                ) as string,
                                 validate: (v) =>
                                     (typeof v === 'number' && v > 0) ||
-                                    'Must be a positive number',
-                            })}
+                                    (t(
+                                        'clientCase.quickQuoteForm.mustBePositive'
+                                    ) as string),
+                            }}
+                            render={({ field }) => (
+                                <FieldData
+                                    id="age"
+                                    fieldType={FieldTypes.Number}
+                                    className={styles.ageInput}
+                                    fieldSize={FieldSize.Small}
+                                    {...(errors.age && {
+                                        fieldStatus: FieldStatus.ERROR,
+                                        errorMessage: errors.age.message,
+                                    })}
+                                    label={
+                                        <Label>
+                                            {t('clientCase.quickQuoteForm.age')}
+                                        </Label>
+                                    }
+                                    value={field.value ?? ''}
+                                    onChange={(
+                                        e: React.ChangeEvent<HTMLInputElement>
+                                    ) => {
+                                        const next =
+                                            e.target.value === ''
+                                                ? ''
+                                                : Number(e.target.value);
+                                        field.onChange(
+                                            Number.isFinite(next)
+                                                ? next
+                                                : e.target.value
+                                        );
+                                    }}
+                                    name={field.name}
+                                />
+                            )}
                         />
                     </div>
                     <div className={styles.buttonGroup}>
                         <Controller
                             control={control}
                             name="sexAtBirth"
-                            rules={{ required: 'Please select an option' }}
+                            rules={{
+                                required: t(
+                                    'clientCase.quickQuoteForm.selectAnOption'
+                                ) as string,
+                            }}
                             render={({ field }) => (
                                 <ButtonGroup
                                     id="sexAtBirth"
@@ -180,7 +207,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                             )}
                                         </Label>
                                     }
-                                    defaultValue={field.value}
+                                    defaultValue={field.value ?? 'M'}
                                     onClick={(v) => field.onChange(v)}
                                 />
                             )}
@@ -197,11 +224,9 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                         control={control}
                         name="nicotineUser"
                         rules={{
-                            required: 'Please select an option',
-                            validate: (v) =>
-                                v === true ||
-                                v === false ||
-                                'Please select an option',
+                            required: t(
+                                'clientCase.quickQuoteForm.selectAnOption'
+                            ) as string,
                         }}
                         render={({ field }) => (
                             <ButtonGroup
@@ -239,7 +264,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                 }
                                 defaultValue={
                                     field.value === undefined
-                                        ? ''
+                                        ? 'true'
                                         : String(field.value)
                                 }
                                 onClick={(v) => field.onChange(v === 'true')}
@@ -257,9 +282,14 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                         control={control}
                         name="state"
                         rules={{
-                            required: 'Please select an state',
+                            required: t(
+                                'clientCase.quickQuoteForm.selectAnState'
+                            ) as string,
                             validate: (v) =>
-                                (v && v.length > 0) || 'Please select an state',
+                                (v && v.length > 0) ||
+                                (t(
+                                    'clientCase.quickQuoteForm.selectAnState'
+                                ) as string),
                         }}
                         render={({ field }) => (
                             <Select
@@ -288,14 +318,18 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                         control={control}
                         name="faceAmount"
                         rules={{
-                            required: 'Please provide a face amount',
+                            required: t(
+                                'clientCase.quickQuoteForm.provideFaceAmount'
+                            ) as string,
                             validate: (raw) => {
                                 const n = toNumber(raw as any);
                                 return (
                                     (typeof n === 'number' &&
                                         isFinite(n) &&
                                         n > 0) ||
-                                    'Please provide a valid amount'
+                                    (t(
+                                        'clientCase.quickQuoteForm.provideValidAmount'
+                                    ) as string)
                                 );
                             },
                         }}
@@ -374,7 +408,9 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                         (typeof n === 'number' &&
                                             isFinite(n) &&
                                             n > 0) ||
-                                        'Face amount must be greater than 0'
+                                        (t(
+                                            'clientCase.quickQuoteForm.faceAmountError'
+                                        ) as string)
                                     );
                                 },
                             }}
@@ -442,7 +478,9 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                         (typeof n === 'number' &&
                                             isFinite(n) &&
                                             n > 0) ||
-                                        'Face amount must be greater than 0'
+                                        (t(
+                                            'clientCase.quickQuoteForm.faceAmountError'
+                                        ) as string)
                                     );
                                 },
                             }}
@@ -552,7 +590,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                 <Button
                     size="small"
                     type="submit"
-                    disabled={isValid && isSubmitting}
+                    disabled={isValid || isSubmitting}
                 >
                     {t('clientCase.createClientCaseForm.continueButton')}
                 </Button>
