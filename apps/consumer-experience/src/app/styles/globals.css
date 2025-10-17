@@ -283,7 +283,7 @@ input[type='radio'] {
   }
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   input {
     /* On mobile phones, Safari auto-zooms into inputs if the font size is less than 16px.
        To prevent layout issues, set font-size to 16px for mobile screens only. */
