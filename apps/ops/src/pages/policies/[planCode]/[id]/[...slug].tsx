@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils/dist';
 import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -13,7 +12,6 @@ import PageLoader, {
 import { PageHead } from '@deps/components/page-title';
 import PolicyLayout from '@deps/components/policy-layout';
 import { TranslationFiles } from '@deps/config/translations';
-import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import AnnuitizationSubPage from '@deps/containers/annuitization-sub-page';
 import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
 import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
@@ -32,31 +30,21 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import {
-    doesUserHavePagePermissions,
-    getUserData,
-} from '@deps/helpers/query-data.helpers';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserPermission } from '@deps/models/user-profile';
 import Custom404Page from '@deps/pages/404s';
-import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
     getPolicyQuery,
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
-import { FgaRelation } from '@deps/types/fga';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import {
-    FeatureFlags,
-    optimizelyService,
-} from '@deps/utils/optimizely/optimizely';
 import {
     logError,
     logWarn,
@@ -274,40 +262,40 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const featureFlagDecisions: FeatureFlags =
-                await optimizelyService.getFeatureFlagDecisions(
-                    user.sub,
-                    loggingContext
-                );
-            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadPolicyAdmin,
-                      loggingContext
-                  );
-            const isAdvisorsExcel = await checkTuplePage(
-                context,
-                FgaRelation.Party,
-                AE_FGA_ROLE,
-                loggingContext
-            );
+            // const featureFlagDecisions: FeatureFlags =
+            //     await optimizelyService.getFeatureFlagDecisions(
+            //         user.sub,
+            //         loggingContext
+            //     );
+            // const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
+            //     FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
+            // ]
+            //     ? await checkTuplePage(
+            //           context,
+            //           FgaRelation.UiAccess,
+            //           FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
+            //           loggingContext
+            //       )
+            //     : await doesUserHavePagePermissions(
+            //           context,
+            //           UserPermission.AllowReadPolicyAdmin,
+            //           loggingContext
+            //       );
+            // const isAdvisorsExcel = await checkTuplePage(
+            //     context,
+            //     FgaRelation.Party,
+            //     AE_FGA_ROLE,
+            //     loggingContext
+            // );
 
-            if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
-            }
+            // if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
+            //     return {
+            //         redirect: {
+            //             destination: '/403',
+            //             permanent: false,
+            //         },
+            //     };
+            // }
 
             try {
                 const translations = await serverSideTranslations(
