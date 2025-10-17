@@ -143,5 +143,3 @@ To view mermaid diagrams install [Markdown Preview Mermaid Support](https://mark
 [Setting up auth for Postman](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3870654971/Configure+Postman+auth)
 
 [Helpful resources for team contacts](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3635053994/Helpful+Resources)
-
-# Checking pre-commit
