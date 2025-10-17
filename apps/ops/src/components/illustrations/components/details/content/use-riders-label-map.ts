@@ -1,13 +1,7 @@
 import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-
-const prefix = 'clientCase.illustrationDetails.riders' as const;
-const _ridersLabelMap = {
-    accidentalDeathBenefit: `${prefix}.accidentalDeathBenefit`,
-    acceleratedDeathBenefitForTerminalIllness: `${prefix}.`,
-    acceleratedDeathBenefitForChronicIllness: ``,
-} as const;
+import { RiderName } from '@deps/types/illustrations';
 
 export function useRidersLabelMap() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -43,7 +37,7 @@ export function useRidersLabelMap() {
         waiverOfPremium: t(
             'clientCase.illustrationDetails.riders.waiverOfPremium'
         ),
-    } as const;
+    } satisfies Record<RiderName, string>;
 
     return labelMap as typeof labelMap & Record<string, undefined>;
 }

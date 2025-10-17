@@ -19,7 +19,7 @@ import {
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import IllustrationsPage from './index';
+import IllustrationsPage from '../index';
 
 type additionalDataProps = {
     user: UserProfile;
