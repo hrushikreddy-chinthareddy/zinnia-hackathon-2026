@@ -5,6 +5,7 @@
 .policyCardPolicyValues {
   display: flex;
   margin-top: var(--measure-dimension-gap-lg);
+  gap: var(--measure-dimension-gap-3xl);
 }
 
 @media (width > 500px) {

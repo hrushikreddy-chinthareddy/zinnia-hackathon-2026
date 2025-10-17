@@ -59,7 +59,7 @@ export const CoverageOverviewCard = ({
             {policy.lineOfBusiness === LineOfBusiness.LIFE &&
               componentVisibility?.[ComponentName.OVERVIEW_COVERAGE_CARD] && (
                 <FieldData
-                  className="mr-3xl typography-content-body-sm-bold"
+                  className="typography-content-body-sm-bold"
                   Label={
                     <Label
                       interactiveElements={[
@@ -75,7 +75,7 @@ export const CoverageOverviewCard = ({
               )}
             {policy.lineOfBusiness === LineOfBusiness.ANNUITY && (
               <FieldData
-                className="mr-3xl typography-content-body-sm-bold"
+                className="typography-content-body-sm-bold"
                 Label={
                   <Label
                     interactiveElements={[
