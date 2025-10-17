@@ -233,17 +233,14 @@ export function SubmitProvider({
     const {
         isError: createIllustrationError,
         isPending: createIllustrationPending,
+        mutateAsync: createIllustrationMutateAsync,
     } = createIllustrationMutation;
+
     const {
         isError: editIllustrationError,
         isPending: editIllustrationPending,
+        mutateAsync: editIllustrationMutateAsync,
     } = editIllustrationMutation;
-
-    const { mutateAsync: createIllustrationMutateAsync } =
-        createIllustrationMutation;
-
-    const { mutateAsync: editIllustrationMutateAsync } =
-        editIllustrationMutation;
 
     const contextValue: SubmitContextValue = useMemo(
         () => ({

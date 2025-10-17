@@ -9,11 +9,12 @@ import {
     BannerVariant,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
+import { useIllustrationDetail } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { useSubmit } from '@deps/components/illustrations/providers/SubmitProvider';
 import { TranslationFiles } from '@deps/config/translations';
@@ -48,17 +49,19 @@ export default function IllustrationDetailsToolbar({
     eAppId,
     planCode,
 }: IllustrationDetailsToolbarProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isPdfGenerationErrorVisible, setIsPdfGenerationErrorVisible] =
         useState<boolean>(false);
+
+    const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { isLoadingSelectForApplication, selectedIllustration } =
         useSelectedIllustration();
-    const { product } = selectedIllustration ?? {};
     const { unarchiveIllustrationMutation } = useIllustrationActions();
-
-    const handleSelectForApplication = useSelectIllustrationForApplication();
     const { onNewSubmit } = useSubmit();
+    const handleSelectForApplication = useSelectIllustrationForApplication();
     const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
+    const illustrationDetail = useIllustrationDetail();
+
+    const { product } = selectedIllustration ?? {};
 
     const { data: isPdfReportAvailable, isError } = useQuery({
         queryKey: ['illustrationProcessingStatus', illustrationId],
@@ -161,9 +164,30 @@ export default function IllustrationDetailsToolbar({
         }
     }, [isError]);
 
+    const warningMessage = useMemo((): string => {
+        const unsatisfiedSolveMessage =
+            illustrationDetail?.response.messages.some(
+                (message) => message.code === 4001
+            );
+        if (unsatisfiedSolveMessage) {
+            return t('clientCase.illustrationDetails.unsatisfiedSolveMessage');
+        }
+        const unreachDesiredSolutionMessage =
+            illustrationDetail?.response.messages.some(
+                (message) => message.code === 4000
+            );
+
+        if (unreachDesiredSolutionMessage) {
+            return t(
+                'clientCase.illustrationDetails.unreachDesiredSolutionMessage'
+            );
+        }
+        return '';
+    }, [illustrationDetail?.response.messages, t]);
+
     return (
         <>
-            <div className="flex justify-start items-center gap-4 py-6 pl-6 pr-4 border-border-light border-b-2">
+            <div className={styles.toolbarContainer}>
                 {product?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE && (
                     <ToolbarButton
                         disabled={isLoading || !isPdfReportAvailable}
@@ -237,6 +261,14 @@ export default function IllustrationDetailsToolbar({
                         </span>
                     )}
                 </div>
+                {warningMessage && (
+                    <div className={styles.bannerWrapperWarning}>
+                        <BannerAlert
+                            bodyText={warningMessage}
+                            variant={BannerVariant.Warning}
+                        />
+                    </div>
+                )}
             </div>
             {isPdfGenerationErrorVisible && (
                 <div className={styles.bannerWrapper}>

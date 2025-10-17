@@ -8268,7 +8268,9 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive"
+            "archive": "Archive",
+            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",

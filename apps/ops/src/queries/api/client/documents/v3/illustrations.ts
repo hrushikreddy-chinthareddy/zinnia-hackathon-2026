@@ -168,21 +168,27 @@ interface IndexUniversalLifeScenario extends BaseScenario {
     };
 }
 
-type GetNewTermLifeIllustrationResponseBody = {
-    inputs: IllustrationInputsBase;
+type Severity = 'INFO' | 'WARNING' | 'ERROR';
+
+type responseMessage = {
+    code: number;
+    severity: Severity;
+    text: string;
+};
+
+type GetIllustrationResponseBody<T, TI = IllustrationInputsBase> = {
+    inputs: TI;
     response: {
         id: string;
-        assumed: TermLifeScenario;
+        assumed: T;
+        messages: responseMessage[];
     };
 };
 
-type GetIndexedUniversalLifeIllustrationResponseBody = {
-    inputs: IllustrationInputsBase;
-    response: {
-        id: string;
-        assumed: IndexUniversalLifeScenario;
-    };
-};
+type GetNewTermLifeIllustrationResponseBody =
+    GetIllustrationResponseBody<TermLifeScenario>;
+type GetIndexedUniversalLifeIllustrationResponseBody =
+    GetIllustrationResponseBody<IndexUniversalLifeScenario>;
 
 type IllustrationTypeMap = {
     TERM: GetNewTermLifeIllustrationResponseBody;
