@@ -3088,7 +3088,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'YEARS',
+                                            value: 'YEAR',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -3529,7 +3529,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'YEARS',
+                                            value: 'YEAR',
                                             text: {
                                                 en: 'Years',
                                             },
