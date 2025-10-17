@@ -74,7 +74,7 @@ const DeathNotificationSidesheet = ({
             owners:
                 entity.owners?.map((owner: any) => ({
                     party: {
-                        fullName: owner.party?.fullName,
+                        fullName: owner.party?.fullName || getName(owner.party),
                         partyRole: owner.party?.partyRole,
                     },
                     dateOfDeath: parseAndFormatDate(
