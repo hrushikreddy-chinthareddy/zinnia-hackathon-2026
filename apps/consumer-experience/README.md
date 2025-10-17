@@ -69,7 +69,6 @@ Then go to `.env.local` and change these values to match:
 AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW='mypolicyview.local'
 ```
 
-
 Now you can run the project. If you are at the root, use `pnpm dev:cui` or if you are in the consumer-experience app, use `pnpm dev`
 
 Now you should be able to open `http://everly.mypolicyview.local:3000/` to view the subdomain locally.
@@ -144,3 +143,5 @@ To view mermaid diagrams install [Markdown Preview Mermaid Support](https://mark
 [Setting up auth for Postman](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3870654971/Configure+Postman+auth)
 
 [Helpful resources for team contacts](https://zinnia.atlassian.net/wiki/spaces/AU/pages/3635053994/Helpful+Resources)
+
+# Checking pre-commit
