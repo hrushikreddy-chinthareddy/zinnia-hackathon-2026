@@ -103,57 +103,57 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
-    const {
-        data: isAllowReadCaseManagement,
-        isLoading: caseManagementLoading,
-    } = useQuery({
-        queryKey: [
-            'isAllowReadCaseManagement',
-            partyId,
-            featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
-        ],
-        queryFn: async () => {
-            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
-                const res = await checkTuple(
-                    partyId,
-                    FgaRelation.UiAccess,
-                    FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
-                );
-                return !!res.data;
-            }
-            return await doesUserHavePagePermissionQuery(
-                UserPermission.AllowReadCaseManagement,
-                partyId
-            );
-        },
-        enabled: !!partyId,
-        staleTime: FIFTEEN_MINUTES_IN_MS,
-    });
+    // const {
+    //     data: isAllowReadCaseManagement,
+    //     isLoading: caseManagementLoading,
+    // } = useQuery({
+    //     queryKey: [
+    //         'isAllowReadCaseManagement',
+    //         partyId,
+    //         featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
+    //     ],
+    //     queryFn: async () => {
+    //         if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
+    //             const res = await checkTuple(
+    //                 partyId,
+    //                 FgaRelation.UiAccess,
+    //                 FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
+    //             );
+    //             return !!res.data;
+    //         }
+    //         return await doesUserHavePagePermissionQuery(
+    //             UserPermission.AllowReadCaseManagement,
+    //             partyId
+    //         );
+    //     },
+    //     enabled: !!partyId,
+    //     staleTime: FIFTEEN_MINUTES_IN_MS,
+    // });
 
-    const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } =
-        useQuery({
-            queryKey: [
-                'isAllowReadPolicyAdmin',
-                partyId,
-                featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY],
-            ],
-            queryFn: async () => {
-                if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
-                    const res = await checkTuple(
-                        partyId,
-                        FgaRelation.UiAccess,
-                        FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
-                    );
-                    return !!res.data;
-                }
-                return await doesUserHavePagePermissionQuery(
-                    UserPermission.AllowReadPolicyAdmin,
-                    partyId
-                );
-            },
-            enabled: !!partyId,
-            staleTime: FIFTEEN_MINUTES_IN_MS,
-        });
+    // const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } =
+    //     useQuery({
+    //         queryKey: [
+    //             'isAllowReadPolicyAdmin',
+    //             partyId,
+    //             featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY],
+    //         ],
+    //         queryFn: async () => {
+    //             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
+    //                 const res = await checkTuple(
+    //                     partyId,
+    //                     FgaRelation.UiAccess,
+    //                     FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
+    //                 );
+    //                 return !!res.data;
+    //             }
+    //             return await doesUserHavePagePermissionQuery(
+    //                 UserPermission.AllowReadPolicyAdmin,
+    //                 partyId
+    //             );
+    //         },
+    //         enabled: !!partyId,
+    //         staleTime: FIFTEEN_MINUTES_IN_MS,
+    //     });
 
     const { data: isAllowReadOtpRenewals, isLoading: otpRenewalsLoading } =
         useQuery({
@@ -214,11 +214,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         queryFn: async () => {
             const tuples = [
                 ...createBulkCheckBodyRequest(partyId).tuples,
-                {
-                    user: `party:${partyId}`,
-                    relation: FgaRelation.UiAccess,
-                    object: 'entity:zinnia_live_test_harness',
-                },
+                // {
+                //     user: `party:${partyId}`,
+                //     relation: FgaRelation.UiAccess,
+                //     object: 'entity:zinnia_live_test_harness',
+                // },
                 {
                     user: `party:${partyId}`,
                     relation: FgaRelation.Party,
@@ -230,11 +230,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     relation: FgaRelation.Party,
                     object: FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
                 },
-                {
-                    user: `party:${partyId}`,
-                    relation: FgaRelation.UiAccess,
-                    object: FgaRoles.WELB_SALES_MATERIALS,
-                },
+                // {
+                //     user: `party:${partyId}`,
+                //     relation: FgaRelation.UiAccess,
+                //     object: FgaRoles.WELB_SALES_MATERIALS,
+                // },
                 {
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
@@ -290,11 +290,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.Party
             );
 
-            const hasWelbSalesMaterials = !!checkRelation(
-                data,
-                FgaRoles.WELB_SALES_MATERIALS,
-                FgaRelation.UiAccess
-            );
+            // const hasWelbSalesMaterials = !!checkRelation(
+            //     data,
+            //     FgaRoles.WELB_SALES_MATERIALS,
+            //     FgaRelation.UiAccess
+            // );
 
             const hasCreateClientAccess = !!checkRelation(
                 data,
@@ -318,7 +318,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
                 isZinniaInternalProcessor,
-                hasWelbSalesMaterials,
+                hasWelbSalesMaterials: false,
                 hasCreateClientAccess,
             };
         },
@@ -328,8 +328,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
     const permissionsLoadingComplete =
         !bulkCheckLoading &&
-        !caseManagementLoading &&
-        !policyAdminLoading &&
+        true &&
+        true &&
         !otpRenewalsLoading &&
         !hasServiceRequestLoading &&
         !partyRefLoading &&
@@ -349,18 +349,18 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasDashboardPermission: !!fgaRoleData?.hasDashboardPermission,
                 hasCaseInsightPermission:
                     !!fgaRoleData?.hasCaseInsightPermission,
-                isAllowReadCaseManagement: !!isAllowReadCaseManagement,
-                isAllowReadPolicyAdmin: !!isAllowReadPolicyAdmin,
+                isAllowReadCaseManagement: true, //!!isAllowReadCaseManagement,
+                isAllowReadPolicyAdmin: true, //!!isAllowReadPolicyAdmin,
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
                 isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
                 isOpsManagerView: !!opsManagerCheck?.data,
-                showWelbSalesMaterials: !!fgaRoleData?.hasWelbSalesMaterials,
+                showWelbSalesMaterials: false, //!!fgaRoleData?.hasWelbSalesMaterials,
                 showCommissions: partyReferenceData
                     ? !!getMasterAgentNumber(partyReferenceData)
                     : false,
                 partyReferenceData,
-                hasTestHarnessAccess: !!fgaRoleData?.hasTestHarnessAccess,
+                hasTestHarnessAccess: false, //!!fgaRoleData?.hasTestHarnessAccess,
                 permissionsLoadingComplete,
                 hasPolicyIndexPageAccess:
                     !!fgaRoleData?.hasPolicyIndexPageAccess,
