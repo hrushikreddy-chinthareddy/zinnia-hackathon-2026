@@ -102,7 +102,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
-
+    // IMH-87188-87186 (186 is ther IMH you can view in JIRA)
     // const {
     //     data: isAllowReadCaseManagement,
     //     isLoading: caseManagementLoading,

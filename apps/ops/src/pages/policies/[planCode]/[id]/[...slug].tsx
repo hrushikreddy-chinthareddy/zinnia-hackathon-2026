@@ -262,6 +262,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
+            // IMH-87188-87186 (186 is ther IMH you can view in JIRA)
             // const featureFlagDecisions: FeatureFlags =
             //     await optimizelyService.getFeatureFlagDecisions(
             //         user.sub,

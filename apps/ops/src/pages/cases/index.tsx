@@ -611,6 +611,8 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
+
+            // IMH-87188-87186 (186 is ther IMH you can view in JIRA)
             // const featureFlagDecisions: FeatureFlags =
             //     await optimizelyService.getFeatureFlagDecisions(
             //         user.sub,
