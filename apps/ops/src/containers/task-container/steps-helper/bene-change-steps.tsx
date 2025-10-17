@@ -23,16 +23,14 @@ export const getBeneChangeSteps = ({
             <TaskFormStep
                 readonly={readOnly}
                 taskInfoLink={taskInfoLink}
-                isSubmit={readOnly || index === 3 || !isIssueResolved}
+                isSubmit={(index === 3 && !readOnly) || !isIssueResolved}
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}
             ></TaskFormStep>
         ),
         text: metadata?.title || '',
-        isSubmit: true,
         index: index,
-        isCompleted: true,
         screenReaderLabel: metadata?.title || '',
     }));
 

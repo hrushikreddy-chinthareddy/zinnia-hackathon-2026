@@ -14,6 +14,7 @@ const TransactionAccordion = ({
     registry,
     options,
     formContext,
+    readonly,
 }: WidgetProps) => {
     const { ObjectField } = registry.fields;
     const { tabTitle, showAddBtn, showDeleteBtn, hideAccordion } = options;
@@ -245,19 +246,21 @@ const TransactionAccordion = ({
                                             </svg>
                                         </button>
                                     )}
-                                    {showDeleteBtn && !isBeneAddition && (
-                                        <CheckboxText
-                                            id={`remove-${index}`}
-                                            label="Remove"
-                                            checked={isMarkedForRemoval}
-                                            onChange={(checked) =>
-                                                handleRemoveToggle(
-                                                    index,
-                                                    checked
-                                                )
-                                            }
-                                        />
-                                    )}
+                                    {showDeleteBtn &&
+                                        !isBeneAddition &&
+                                        !readonly && (
+                                            <CheckboxText
+                                                id={`remove-${index}`}
+                                                label="Remove"
+                                                checked={isMarkedForRemoval}
+                                                onChange={(checked) =>
+                                                    handleRemoveToggle(
+                                                        index,
+                                                        checked
+                                                    )
+                                                }
+                                            />
+                                        )}
                                 </div>
                                 <div
                                     ref={(element: any) =>
@@ -288,6 +291,7 @@ const TransactionAccordion = ({
                                             onBlur={() => {}}
                                             onFocus={() => {}}
                                             idSchema={{ $id: `${index}` }}
+                                            readonly={readonly}
                                         />
                                     )}
                                 </div>
@@ -296,7 +300,7 @@ const TransactionAccordion = ({
                     </div>
                 );
             })}
-            {showAddBtn && (
+            {showAddBtn && !readonly && (
                 <div className="flex justify-start mt-3">
                     <button
                         type="button"
