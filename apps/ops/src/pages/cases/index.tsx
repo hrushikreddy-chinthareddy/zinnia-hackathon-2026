@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils/dist';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -48,10 +47,7 @@ import {
     toggleLabels,
 } from '@deps/helpers/case-management';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
-import {
-    doesUserHavePagePermissions,
-    getUserData,
-} from '@deps/helpers/query-data.helpers';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
@@ -72,11 +68,6 @@ import {
     SegmentTrackedEventName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import {
-    FeatureFlags,
-    optimizelyService,
-} from '@deps/utils/optimizely/optimizely';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -620,26 +611,28 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags =
-                await optimizelyService.getFeatureFlagDecisions(
-                    user.sub,
-                    loggingContext
-                );
 
-            const doesUserHasPagePermissions = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadCaseManagement,
-                      loggingContext
-                  );
+            // IMH-87188-87186 (186 is ther IMH you can view in JIRA)
+            // const featureFlagDecisions: FeatureFlags =
+            //     await optimizelyService.getFeatureFlagDecisions(
+            //         user.sub,
+            //         loggingContext
+            //     );
+
+            // const doesUserHasPagePermissions = featureFlagDecisions?.[
+            //     FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
+            // ]
+            //     ? await checkTuplePage(
+            //           context,
+            //           FgaRelation.UiAccess,
+            //           FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
+            //           loggingContext
+            //       )
+            //     : await doesUserHavePagePermissions(
+            //           context,
+            //           UserPermission.AllowReadCaseManagement,
+            //           loggingContext
+            //       );
 
             // DEPU-2835
             const isAdvisorsExcel = await checkTuplePage(
@@ -649,14 +642,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
-            }
+            // if (!isAdvisorsExcel) {
+            //     return {
+            //         redirect: {
+            //             destination: '/403',
+            //             permanent: false,
+            //         },
+            //     };
+            // }
 
             const { locale = DEFAULT_LOCALE } = context;
 

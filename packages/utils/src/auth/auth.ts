@@ -64,11 +64,11 @@ export function createBulkCheckBodyRequest(partyId: string) {
         relation: FgaRelation.Party,
         object: FgaRoles.ADVISORS_EXCEL,
       },
-      {
-        user,
-        relation: FgaRelation.UiAccess,
-        object: FgaRoles.WELB_SALES_MATERIALS,
-      },
+      // {
+      //   user,
+      //   relation: FgaRelation.UiAccess,
+      //   object: FgaRoles.WELB_SALES_MATERIALS,
+      // },
       {
         user,
         relation: FgaRelation.UiAccess,
