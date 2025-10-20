@@ -16,3 +16,9 @@
 .divider {
   border: 2px solid var(--color-base-border-border-light);
 }
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}

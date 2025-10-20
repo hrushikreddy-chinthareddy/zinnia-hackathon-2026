@@ -1,4 +1,5 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { Button } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import { getTransactionSummaryById } from '@/services/transactions';
@@ -54,6 +55,10 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         <TransactionSummaryDetails transactionSummary={data} />
         <hr className={styles.divider} />
         <TransactionPaymentDetails transactionSummary={data} />
+      </div>
+      <div className={styles.buttons}>
+        <Button mode="primary">Approve</Button>
+        <Button mode="error">Deny</Button>
       </div>
     </div>
   );
