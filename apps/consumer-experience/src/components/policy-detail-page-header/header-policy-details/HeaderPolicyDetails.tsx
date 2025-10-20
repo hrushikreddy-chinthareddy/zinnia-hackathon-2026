@@ -12,10 +12,18 @@ import { toSentenceCase } from '@/utils/strings';
 
 import styles from './HeaderPolicyDetails.module.css';
 
+interface FieldVisibility {
+  policyName: boolean;
+  policyNumber: boolean;
+  status: boolean;
+  agentInfo: boolean;
+}
+
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   planCode: string;
   policyNumber: string;
   lineOfBusiness?: LineOfBusiness;
+  fieldVisibility?: FieldVisibility;
 }
 
 export const HeaderPolicyDetails = async ({
@@ -23,6 +31,12 @@ export const HeaderPolicyDetails = async ({
   lineOfBusiness = LineOfBusiness.LIFE,
   planCode,
   policyNumber,
+  fieldVisibility = {
+    policyName: true,
+    policyNumber: true,
+    status: true,
+    agentInfo: true,
+  },
 }: Props) => {
   const loggingContext = await buildCommonLogContext();
 
@@ -70,37 +84,48 @@ export const HeaderPolicyDetails = async ({
         styles.container
       )}
     >
-      <div className={`mr-md ${styles.mobileBadge}`}>
-        <Badge
-          label={toSentenceCase(
-            policyStatusDisplayText[policyData.policyStatus as PolicyStatus]
-          )}
-          variant={badgeVariant()}
-        />
-      </div>
+      {fieldVisibility.status && (
+        <div className={`mr-md ${styles.mobileBadge}`}>
+          <Badge
+            label={toSentenceCase(
+              policyStatusDisplayText[policyData.policyStatus as PolicyStatus]
+            )}
+            variant={badgeVariant()}
+          />
+        </div>
+      )}
+
       <div>
-        <p>{policyData.product?.marketingName}</p>
-        <p>
-          <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
-          <span>{policyNumber}</span>
-        </p>
+        {fieldVisibility.policyName && (
+          <p>{policyData.product?.marketingName}</p>
+        )}
+
+        {fieldVisibility.policyNumber && (
+          <p>
+            <span>{isAnnuity(lineOfBusiness) ? 'Contract' : 'Policy'} #: </span>
+            <span>{policyNumber}</span>
+          </p>
+        )}
+
         {/* There is the possibility that an agent id is on the policy, but no agent data
           is returned from mcs so null check is on the name rather than on the full object */}
-        {pomAgentData && (
+        {pomAgentData && fieldVisibility.agentInfo && (
           <>
             <span>Agent:</span>
             <AgentSidesheet agentData={pomAgentData} />
           </>
         )}
       </div>
-      <div className={`ml-md ${styles.desktopBadge}`}>
-        <Badge
-          label={toSentenceCase(
-            policyStatusDisplayText[policyData.policyStatus as PolicyStatus]
-          )}
-          variant={badgeVariant()}
-        />
-      </div>
+      {fieldVisibility.status && (
+        <div className={`ml-md ${styles.desktopBadge}`}>
+          <Badge
+            label={toSentenceCase(
+              policyStatusDisplayText[policyData.policyStatus as PolicyStatus]
+            )}
+            variant={badgeVariant()}
+          />
+        </div>
+      )}
     </div>
   );
 };

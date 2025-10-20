@@ -41,6 +41,12 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         planCode={planCode}
         policyNumber={policyNumber}
         lineOfBusiness={lineOfBusiness}
+        fieldVisibility={{
+          policyName: true,
+          policyNumber: true,
+          status: false,
+          agentInfo: false,
+        }}
       />
       <div className={styles.summaryContainer}>
         <TransactionSummarySubmissionDetails transactionSummary={data} />
