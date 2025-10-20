@@ -1,9 +1,18 @@
 .container {
   padding: var(--measure-dimension-padding-2xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-3xl);
 }
 
 .summaryContainer {
   display: flex;
   flex-direction: column;
   gap: var(--measure-dimension-gap-lg);
+  background-color: var(--color-base-surface-surface-secondary);
+  padding: var(--measure-dimension-padding-2xl);
+}
+
+.divider {
+  border: 2px solid var(--color-base-border-border-light);
 }

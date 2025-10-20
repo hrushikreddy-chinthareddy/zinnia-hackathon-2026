@@ -50,9 +50,9 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
       />
       <div className={styles.summaryContainer}>
         <TransactionSummarySubmissionDetails transactionSummary={data} />
-        <hr />
+        <hr className={styles.divider} />
         <TransactionSummaryDetails transactionSummary={data} />
-        <hr />
+        <hr className={styles.divider} />
         <TransactionPaymentDetails transactionSummary={data} />
       </div>
     </div>
