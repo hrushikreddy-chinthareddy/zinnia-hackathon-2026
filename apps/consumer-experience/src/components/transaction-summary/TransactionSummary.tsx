@@ -3,6 +3,7 @@ import { Button } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import { getTransactionSummaryById } from '@/services/transactions';
+import { formatUSDollars } from '@/utils/currency';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
@@ -10,6 +11,7 @@ import styles from './TransactionSummary.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import { TransactionPaymentDetails } from './sections/TransactionPaymentDetails';
 import { TransactionSummaryDetails } from './sections/TransactionSummaryDetails';
+import { ConfirmDialog } from '../confirm-dialog/ConfirmDialog';
 import { HeaderPolicyDetails } from '../policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
 
 interface TransactionsSummaryProps {
@@ -36,6 +38,11 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
     return <NoDataAvailable correlationId={error?.correlationId} />;
   }
 
+  //TODO: How to handle this when its not a withdrawal?
+  const totalTransactionAmount =
+    data?.entity.withdrawalTransaction.withdrawalSummary.totalPayment +
+    data?.entity.withdrawalTransaction.withdrawalSummary.withdrawalCharge;
+
   return (
     <div className={styles.container}>
       <HeaderPolicyDetails
@@ -57,7 +64,14 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         <TransactionPaymentDetails transactionSummary={data} />
       </div>
       <div className={styles.buttons}>
-        <Button mode="primary">Approve</Button>
+        <ConfirmDialog
+          confirmText="Approve"
+          cancelText="Go back"
+          message={`Are you sure you want to approve this transaction for ${formatUSDollars(totalTransactionAmount)}?`}
+          title="Approve transaction"
+          linkText="Approve"
+          buttonMode="primary"
+        />
         <Button mode="error">Deny</Button>
       </div>
     </div>
