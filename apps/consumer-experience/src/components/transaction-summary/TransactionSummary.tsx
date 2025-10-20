@@ -7,6 +7,7 @@ import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
 import styles from './TransactionSummary.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
+import { TransactionPaymentDetails } from './sections/TransactionPaymentDetails';
 import { TransactionSummaryDetails } from './sections/TransactionSummaryDetails';
 import { HeaderPolicyDetails } from '../policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
 
@@ -45,6 +46,8 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         <TransactionSummarySubmissionDetails transactionSummary={data} />
         <hr />
         <TransactionSummaryDetails transactionSummary={data} />
+        <hr />
+        <TransactionPaymentDetails transactionSummary={data} />
       </div>
     </div>
   );

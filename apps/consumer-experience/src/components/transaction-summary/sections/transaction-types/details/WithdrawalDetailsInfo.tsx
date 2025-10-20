@@ -2,13 +2,13 @@ import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
 
-import { KeyValueLabelGroup } from '../../components/KeyValueLabel';
+import { KeyValueLabelGroup } from '../../../components/KeyValueLabel';
 
 interface WithdrawalSummaryDetailsProps {
   transactionSummary: WithdrawalTransaction;
 }
 
-export const WithdrawalSummaryDetails: FC<WithdrawalSummaryDetailsProps> = ({
+export const WithdrawalDetailsInfo: FC<WithdrawalSummaryDetailsProps> = ({
   transactionSummary,
 }) => {
   const withdrawalDate =

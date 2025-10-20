@@ -2,18 +2,18 @@ import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
 
-import { WithdrawalDetailsInfo } from './transaction-types/details/WithdrawalDetailsInfo';
+import { WithdrawalPaymentInfo } from './transaction-types/payment/WithdrawalPaymentInfo';
 
-interface TransactionSummaryDetailsProps {
+interface TransactionPaymentDetailsProps {
   transactionSummary: WithdrawalTransaction;
 }
 
-export const TransactionSummaryDetails: FC<TransactionSummaryDetailsProps> = ({
+export const TransactionPaymentDetails: FC<TransactionPaymentDetailsProps> = ({
   transactionSummary,
 }) => {
   switch (transactionSummary.transactionType) {
     case 'WITHDRAWAL': //TODO: Replace with the api type
-      return <WithdrawalDetailsInfo transactionSummary={transactionSummary} />;
+      return <WithdrawalPaymentInfo transactionSummary={transactionSummary} />;
   }
 
   return null;

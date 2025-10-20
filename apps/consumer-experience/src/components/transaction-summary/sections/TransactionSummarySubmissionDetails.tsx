@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
 
-import styles from './sections.module.css';
 import { KeyValueLabelGroup } from '../components/KeyValueLabel';
 
 interface TransactionSummarySubmissionDetailsProps {
@@ -64,11 +63,5 @@ export const TransactionSummarySubmissionDetails: FC<
     },
   ];
 
-  return (
-    <div className={styles.sectionsColumn}>
-      <div className={styles.sectionItem}>
-        <KeyValueLabelGroup fields={fields} />
-      </div>
-    </div>
-  );
+  return <KeyValueLabelGroup fields={fields} />;
 };

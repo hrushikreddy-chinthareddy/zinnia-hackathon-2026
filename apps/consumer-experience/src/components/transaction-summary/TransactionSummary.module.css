@@ -1,3 +1,9 @@
 .container {
   padding: var(--measure-dimension-padding-2xl);
 }
+
+.summaryContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}

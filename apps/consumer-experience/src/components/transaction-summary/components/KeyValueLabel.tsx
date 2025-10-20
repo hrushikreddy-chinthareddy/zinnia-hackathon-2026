@@ -20,7 +20,8 @@ export const KeyValueLabelGroup: FC<KeyValuePairLabelGroupProps> = ({
   fields,
 }) => {
   return (
-    <div>
+    <>
+      {' '}
       {fields.map((field, index) => (
         <div key={index}>
           <p className={'typography-labels-field-label'}>{field.title}</p>
@@ -44,6 +45,6 @@ export const KeyValueLabelGroup: FC<KeyValuePairLabelGroupProps> = ({
           })}
         </div>
       ))}
-    </div>
+    </>
   );
 };
