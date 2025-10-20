@@ -1,7 +1,7 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
-import { TransactionsSummary } from '@/components/transactions-summary/TransactionSummary';
+import { TransactionsSummary } from '@/components/transaction-summary/TransactionSummary';
 import { RouteKey, getPageTitle } from '@/route-map';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARY); //TODO: Change this

@@ -5,7 +5,7 @@ import { getTransactionSummaryById } from '@/services/transactions';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
-import styles from './TransactionsSummary.module.css';
+import styles from './TransactionSummary.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
 import { TransactionSummaryDetails } from './sections/TransactionSummaryDetails';
 import { HeaderPolicyDetails } from '../policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
