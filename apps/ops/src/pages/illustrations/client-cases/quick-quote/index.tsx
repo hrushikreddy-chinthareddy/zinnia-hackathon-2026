@@ -4,13 +4,14 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { ComponentProps, useCallback, useEffect } from 'react';
 
 import { canUserCreateClientCase } from '@deps/components/client-case/client-case-list/sureify-flow/validate-user-permission';
+import { serializeQuickQuoteParams } from '@deps/components/client-case/quick-quote/helpers';
 import QuickQuoteForm from '@deps/components/client-case/quick-quote/quick-quote-form';
+import { QuickQuoteParams } from '@deps/components/client-case/quick-quote/types';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
-import { QuickQuoteFormData } from '@deps/types/quickQuote';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -38,7 +39,12 @@ export default function NewQuickQuote(
         });
     }, [router]);
 
-    const onSubmitForm = (clientCaseData: Partial<QuickQuoteFormData>) => {};
+    const onSubmitForm = async (quickQuoteParams: QuickQuoteParams) => {
+        await router.push({
+            pathname: '/illustrations/client-cases/quick-quote/results',
+            query: serializeQuickQuoteParams(quickQuoteParams),
+        });
+    };
 
     useEffect(() => {
         sideSheet.events.on('close', closeSideSheet);

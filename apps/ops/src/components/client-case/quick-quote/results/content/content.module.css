@@ -99,6 +99,10 @@
     padding: var(--measure-dimension-padding-3xl, 24px);
 }
 
+.productInfoCellAvatar {
+    grid-row: 1 / -1;
+}
+
 .productHeaderTitle {
     align-self: stretch;
 

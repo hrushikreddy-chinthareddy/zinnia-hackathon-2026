@@ -1,12 +1,11 @@
-import { NumberOrRange } from '../../../types';
+import { NumberOrRange, QuickQuoteFormState } from '../../../types';
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { useQuickQuoteResults } from '../results-context';
-import {
-    QuickQuoteRiderRowHeader,
-    QuickQuoteRiderRowHeaderProps,
-} from './rider-row-header';
+import { QuickQuoteRiderRowHeader } from './rider-row-header';
 
-type QuickQuoteRiderRowProps = QuickQuoteRiderRowHeaderProps;
+type QuickQuoteRiderRowProps = {
+    riderName: keyof QuickQuoteFormState['riders'];
+};
 
 export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
     const { results } = useQuickQuoteResults();
@@ -23,7 +22,7 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
 
     return (
         <QuickQuoteResultTableRow
-            rowHeader={<QuickQuoteRiderRowHeader {...props} />}
+            rowHeader={<QuickQuoteRiderRowHeader riderName={riderName} />}
             data={data}
         />
     );

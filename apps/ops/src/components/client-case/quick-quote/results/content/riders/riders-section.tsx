@@ -19,16 +19,11 @@ export const QuickQuoteRidersSection = () => {
         <QuickQuoteResultTableSection
             title={t('clientCase.quickQuoteResults.riders.title')}
         >
-            {RIDERS_WITH_FACE_AMOUNT.map((riderName) => (
-                <QuickQuoteRiderRow
-                    key={riderName}
-                    riderName={riderName}
-                    hasFaceValue
-                />
-            ))}
-            {NO_PARAM_RIDERS.map((riderName) => (
-                <QuickQuoteRiderRow key={riderName} riderName={riderName} />
-            ))}
+            {[...RIDERS_WITH_FACE_AMOUNT, ...NO_PARAM_RIDERS].map(
+                (riderName) => (
+                    <QuickQuoteRiderRow key={riderName} riderName={riderName} />
+                )
+            )}
             {/*
             <QuickQuoteResultTableRow>
                 {results.map((result, idx) => {

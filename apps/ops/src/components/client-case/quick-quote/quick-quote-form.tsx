@@ -10,7 +10,7 @@ import {
     Select,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { ChangeEvent, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useForm, Controller, useWatch } from 'react-hook-form';
 
 import Typography, {
@@ -18,9 +18,13 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import { QuickQuoteFormData } from '@deps/types/quickQuote';
 
 import styles from './quick-quote-form.module.css';
+import {
+    QuickQuoteFormState,
+    QuickQuoteParams,
+    quickQuoteParamsSchema,
+} from './types';
 
 const toNumber = (v: unknown) => {
     if (typeof v === 'number') return v;
@@ -35,9 +39,7 @@ const toNumber = (v: unknown) => {
 
 interface CreateQuickQuoteFormProps {
     onCancel: () => void;
-    onSubmit?: (
-        quickQuote: Partial<QuickQuoteFormData>
-    ) => Promise<unknown> | void;
+    onSubmit?: (quickQuote: QuickQuoteParams) => Promise<unknown> | void;
 }
 
 const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
@@ -53,33 +55,46 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
         setValue,
         getValues,
         formState: { errors, isSubmitting, isValid },
-    } = useForm<QuickQuoteFormData>({
+    } = useForm<QuickQuoteFormState>({
         mode: 'onChange',
         defaultValues: {
-            Riders: {
-                accidentalDeathBenefitRider: false,
-                accidentalDeathBenefitRiderAmount: undefined,
-                childrensTermInsuranceRider: false,
-                childrensTermInsuranceRiderAmount: undefined,
-                waiverOfPremium: false,
-                acceleratedDeathBenefitRiderForTerminalIllness: false,
-                charitableGivingRider: false,
+            sexAtBirth: 'M',
+            nicotineUser: false,
+            riders: {
+                accidentalDeathBenefit: {
+                    type: 'WITH_FACE_AMOUNT',
+                    enabled: false,
+                    faceAmount: undefined,
+                },
+                childrensTerm: {
+                    type: 'WITH_FACE_AMOUNT',
+                    enabled: false,
+                    faceAmount: undefined,
+                },
+                waiverOfPremium: {
+                    type: 'NO_PARAMS',
+                    enabled: false,
+                },
+            },
+            premiumFreeRiders: {
+                acceleratedDeathBenefitForTerminalIllness: false,
+                charitableGiving: false,
             },
         },
     });
 
     const accidentalOn = useWatch({
         control,
-        name: 'Riders.accidentalDeathBenefitRider',
+        name: 'riders.accidentalDeathBenefit.enabled',
     });
     const childrenOn = useWatch({
         control,
-        name: 'Riders.childrensTermInsuranceRider',
+        name: 'riders.childrensTerm.enabled',
     });
 
     useEffect(() => {
         if (!accidentalOn) {
-            setValue('Riders.accidentalDeathBenefitRiderAmount', undefined, {
+            setValue('riders.accidentalDeathBenefit.faceAmount', undefined, {
                 shouldValidate: true,
                 shouldDirty: true,
             });
@@ -88,15 +103,40 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
 
     useEffect(() => {
         if (!childrenOn) {
-            setValue('Riders.childrensTermInsuranceRiderAmount', undefined, {
+            setValue('riders.childrensTerm.faceAmount', undefined, {
                 shouldValidate: true,
                 shouldDirty: true,
             });
         }
     }, [childrenOn, setValue]);
 
-    const submit = async (data: QuickQuoteFormData) => {
-        await onSubmit?.(data);
+    const submit = async (data: QuickQuoteFormState) => {
+        const { riders } = data;
+
+        const params: Partial<QuickQuoteParams> = {
+            ...data,
+            riders: Object.fromEntries(
+                Object.entries(riders).map(([riderName, riderField]) => {
+                    if (!riderField.enabled) {
+                        return [riderName, false];
+                    }
+
+                    if (riderField.type === 'WITH_FACE_AMOUNT') {
+                        return [riderName, riderField.faceAmount];
+                    }
+                    return [riderName, true];
+                })
+            ),
+        };
+
+        const result = quickQuoteParamsSchema.parse(params);
+
+        if (!result.success) {
+            console.error(result.error);
+            return;
+        }
+
+        await onSubmit?.(result.value);
     };
 
     return (
@@ -119,7 +159,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.ageInput}>
                         <Controller
                             control={control}
-                            name="age"
+                            name="insuredAge"
                             rules={{
                                 required: t(
                                     'clientCase.quickQuoteForm.ageRequired'
@@ -132,13 +172,13 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                             }}
                             render={({ field }) => (
                                 <FieldData
-                                    id="age"
+                                    id="insuredAge"
                                     fieldType={FieldTypes.Number}
                                     className={styles.ageInput}
                                     fieldSize={FieldSize.Small}
-                                    {...(errors.age && {
+                                    {...(errors.insuredAge && {
                                         fieldStatus: FieldStatus.ERROR,
-                                        errorMessage: errors.age.message,
+                                        errorMessage: errors.insuredAge.message,
                                     })}
                                     label={
                                         <Label>
@@ -146,17 +186,14 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                         </Label>
                                     }
                                     value={field.value ?? ''}
-                                    onChange={(
-                                        e: React.ChangeEvent<HTMLInputElement>
-                                    ) => {
-                                        const next =
-                                            e.target.value === ''
-                                                ? ''
-                                                : Number(e.target.value);
+                                    onChange={(e) => {
+                                        const next = !e.target.value
+                                            ? undefined
+                                            : Number(e.target.value);
                                         field.onChange(
                                             Number.isFinite(next)
                                                 ? next
-                                                : e.target.value
+                                                : undefined
                                         );
                                     }}
                                     name={field.name}
@@ -223,11 +260,6 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <Controller
                         control={control}
                         name="nicotineUser"
-                        rules={{
-                            required: t(
-                                'clientCase.quickQuoteForm.selectAnOption'
-                            ) as string,
-                        }}
                         render={({ field }) => (
                             <ButtonGroup
                                 id="nicotineUse"
@@ -262,11 +294,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                         )}
                                     </Label>
                                 }
-                                defaultValue={
-                                    field.value === undefined
-                                        ? 'true'
-                                        : String(field.value)
-                                }
+                                defaultValue={String(field.value ?? false)}
                                 onClick={(v) => field.onChange(v === 'true')}
                             />
                         )}
@@ -321,12 +349,9 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                             required: t(
                                 'clientCase.quickQuoteForm.provideFaceAmount'
                             ) as string,
-                            validate: (raw) => {
-                                const n = toNumber(raw as any);
+                            validate: (value) => {
                                 return (
-                                    (typeof n === 'number' &&
-                                        isFinite(n) &&
-                                        n > 0) ||
+                                    (isFinite(value) && value > 0) ||
                                     (t(
                                         'clientCase.quickQuoteForm.provideValidAmount'
                                     ) as string)
@@ -350,10 +375,10 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                 fieldType={FieldTypes.Value}
                                 id="faceAmount"
                                 value={field.value ?? ''}
-                                onChange={(
-                                    event: ChangeEvent<HTMLInputElement>
-                                ) => {
-                                    field.onChange(event.target.value);
+                                onChange={(event) => {
+                                    field.onChange(
+                                        toNumber(event.target.value)
+                                    );
                                 }}
                                 name={field.name}
                             />
@@ -376,7 +401,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.leftCol}>
                         <Controller
                             control={control}
-                            name="Riders.accidentalDeathBenefitRider"
+                            name="riders.accidentalDeathBenefit.enabled"
                             render={({ field }) => (
                                 <Checkbox
                                     id="accidentalDeathBenefitRider"
@@ -396,18 +421,17 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.rightCol}>
                         <Controller
                             control={control}
-                            name="Riders.accidentalDeathBenefitRiderAmount"
+                            name="riders.accidentalDeathBenefit.faceAmount"
                             rules={{
-                                validate: (raw) => {
+                                validate: (value) => {
                                     const on = getValues(
-                                        'Riders.accidentalDeathBenefitRider'
+                                        'riders.accidentalDeathBenefit.enabled'
                                     );
                                     if (!on) return true;
-                                    const n = toNumber(raw as any);
                                     return (
-                                        (typeof n === 'number' &&
-                                            isFinite(n) &&
-                                            n > 0) ||
+                                        (value != null &&
+                                            isFinite(value) &&
+                                            value > 0) ||
                                         (t(
                                             'clientCase.quickQuoteForm.faceAmountError'
                                         ) as string)
@@ -420,21 +444,20 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                     className={styles.faceAmount}
                                     fieldSize={FieldSize.Small}
                                     fieldType={FieldTypes.Value}
-                                    {...(errors.Riders
-                                        ?.accidentalDeathBenefitRiderAmount && {
+                                    {...(errors.riders?.accidentalDeathBenefit
+                                        ?.faceAmount && {
                                         fieldStatus: FieldStatus.ERROR,
                                         errorMessage:
-                                            errors.Riders
-                                                ?.accidentalDeathBenefitRiderAmount
-                                                .message,
+                                            errors.riders
+                                                ?.accidentalDeathBenefit
+                                                ?.faceAmount.message,
                                     })}
                                     id="faceAmountAccidentalDeath"
                                     value={field.value ?? ''}
                                     onChange={(val: any) => {
-                                        const next = val?.target
-                                            ? val.target.value
-                                            : val;
-                                        field.onChange(next);
+                                        field.onChange(
+                                            toNumber(val.target.value)
+                                        );
                                     }}
                                     name={field.name}
                                 />
@@ -446,7 +469,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.leftCol}>
                         <Controller
                             control={control}
-                            name="Riders.childrensTermInsuranceRider"
+                            name="riders.childrensTerm.enabled"
                             render={({ field }) => (
                                 <Checkbox
                                     id="childrensTermInsuranceRider"
@@ -466,18 +489,17 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.rightCol}>
                         <Controller
                             control={control}
-                            name="Riders.childrensTermInsuranceRiderAmount"
+                            name="riders.childrensTerm.faceAmount"
                             rules={{
-                                validate: (raw) => {
+                                validate: (value) => {
                                     const on = getValues(
-                                        'Riders.childrensTermInsuranceRider'
+                                        'riders.childrensTerm.enabled'
                                     );
                                     if (!on) return true;
-                                    const n = toNumber(raw as any);
                                     return (
-                                        (typeof n === 'number' &&
-                                            isFinite(n) &&
-                                            n > 0) ||
+                                        (value != null &&
+                                            isFinite(value) &&
+                                            value > 0) ||
                                         (t(
                                             'clientCase.quickQuoteForm.faceAmountError'
                                         ) as string)
@@ -490,21 +512,19 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                                     className={styles.faceAmount}
                                     fieldSize={FieldSize.Small}
                                     fieldType={FieldTypes.Value}
-                                    {...(errors.Riders
-                                        ?.childrensTermInsuranceRiderAmount && {
+                                    {...(errors.riders?.childrensTerm
+                                        ?.faceAmount && {
                                         fieldStatus: FieldStatus.ERROR,
                                         errorMessage:
-                                            errors.Riders
-                                                ?.childrensTermInsuranceRiderAmount
-                                                .message,
+                                            errors.riders?.childrensTerm
+                                                ?.faceAmount.message,
                                     })}
                                     id="faceAmountChildrensTermInsuranceRider"
                                     value={field.value ?? ''}
-                                    onChange={(val: any) => {
-                                        const next = val?.target
-                                            ? val.target.value
-                                            : val;
-                                        field.onChange(next);
+                                    onChange={(e) => {
+                                        field.onChange(
+                                            toNumber(e.target.value)
+                                        );
                                     }}
                                     name={field.name}
                                 />
@@ -516,7 +536,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.leftCol}>
                         <Controller
                             control={control}
-                            name="Riders.waiverOfPremium"
+                            name="riders.waiverOfPremium.enabled"
                             render={({ field }) => (
                                 <Checkbox
                                     id="waiverOfPremium"
@@ -545,10 +565,10 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.leftCol}>
                         <Controller
                             control={control}
-                            name="Riders.acceleratedDeathBenefitRiderForTerminalIllness"
+                            name="premiumFreeRiders.acceleratedDeathBenefitForTerminalIllness"
                             render={({ field }) => (
                                 <Checkbox
-                                    id="acceleratedDeathBenefitRiderForTerminalIllness"
+                                    id="acceleratedDeathBenefitForTerminalIllness"
                                     name={field.name}
                                     isCheckedByDefault={!!field.value}
                                     onClick={(value?: boolean) =>
@@ -567,10 +587,10 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.leftCol}>
                         <Controller
                             control={control}
-                            name="Riders.charitableGivingRider"
+                            name="premiumFreeRiders.charitableGiving"
                             render={({ field }) => (
                                 <Checkbox
-                                    id="charitableGivingRider"
+                                    id="charitableGiving"
                                     name={field.name}
                                     isCheckedByDefault={!!field.value}
                                     onClick={(value?: boolean) =>
@@ -590,7 +610,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                 <Button
                     size="small"
                     type="submit"
-                    disabled={isValid || isSubmitting}
+                    disabled={!isValid || isSubmitting}
                 >
                     {t('clientCase.createClientCaseForm.continueButton')}
                 </Button>

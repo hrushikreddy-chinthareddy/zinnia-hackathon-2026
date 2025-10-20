@@ -4,6 +4,7 @@ import {
     FieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
+import { includes } from 'lodash';
 import { useId } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
@@ -11,24 +12,25 @@ import { useRidersLabelMap } from '@deps/components/illustrations/components/det
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { narrowIncludes } from '@deps/utils/array';
 
+import { RIDERS_WITH_FACE_AMOUNT, RiderWithFaceAmount } from '../../../config';
 import { QuickQuoteFormState } from '../../../types';
 import { useQuickQuoteResultsForm } from '../../use-results-form-context';
 import styles from '../content.module.css';
 
 export type QuickQuoteRiderRowHeaderProps = {
     riderName: keyof QuickQuoteFormState['riders'];
-    hasFaceValue?: boolean;
 };
 
-export const QuickQuoteRiderRowHeader = (
-    props: QuickQuoteRiderRowHeaderProps
-) => {
-    const label = useRidersLabelMap()[props.riderName];
+export const QuickQuoteRiderRowHeader = ({
+    riderName,
+}: QuickQuoteRiderRowHeaderProps) => {
+    const label = useRidersLabelMap()[riderName];
     const { control } = useQuickQuoteResultsForm();
     const isChecked = useWatch({
         control,
-        name: `riders.${props.riderName}.enabled`,
+        name: `riders.${riderName}.enabled`,
     });
     const checkboxId = useId();
     const faceAmountId = useId();
@@ -37,7 +39,7 @@ export const QuickQuoteRiderRowHeader = (
         <div className={styles.riderRowHeader}>
             <Controller
                 control={control}
-                name={`riders.${props.riderName}.enabled`}
+                name={`riders.${riderName}.enabled`}
                 render={({ field }) => (
                     <div className={styles.riderRowHeaderCheckbox}>
                         <Checkbox
@@ -54,10 +56,10 @@ export const QuickQuoteRiderRowHeader = (
             <Typography variant={TypographyVariant.BodySm} htmlFor={checkboxId}>
                 {label}
             </Typography>
-            {props.hasFaceValue && (
+            {narrowIncludes(RIDERS_WITH_FACE_AMOUNT, riderName) && (
                 <Controller
                     control={control}
-                    name={`riders.${props.riderName}.faceAmount`}
+                    name={`riders.${riderName}.faceAmount`}
                     render={({ field }) => (
                         <FieldData
                             className={styles.riderRowHeaderInput}

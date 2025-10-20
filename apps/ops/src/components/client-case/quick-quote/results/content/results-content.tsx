@@ -15,7 +15,7 @@ export const QuickQuoteResultsContent = () => {
         <div
             className={styles.contentMainTable}
             style={{
-                gridTemplateColumns: `minmax(max-content, 370px) repeat(${results.length}, minmax(auto, 320px))`,
+                gridTemplateColumns: `minmax(max-content, 420px) repeat(${results.length}, minmax(auto, 360px))`,
             }}
         >
             <QuickQuoteResultProductSection />

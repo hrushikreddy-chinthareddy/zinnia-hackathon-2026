@@ -55,7 +55,7 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                               (totalPremiumRange) =>
                                   totalPremiumRange.termLength === termLength
                           )?.range,
-                          period: 'mon.',
+                          period: 'mo.',
                       }
             )}
         />

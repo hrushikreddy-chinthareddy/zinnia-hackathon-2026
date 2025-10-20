@@ -1,9 +1,8 @@
-import { ValueOf } from 'type-fest';
+import { ConditionalExcept, Simplify, ValueOf } from 'type-fest';
 import { Infer, t } from 'typegate';
 
-import { RIDER_NAMES, RiderName } from '@deps/types/illustrations';
+import { RiderName } from '@deps/types/illustrations';
 import { Product, ProductTypes } from '@deps/types/product';
-import { Prettify } from '@deps/utils/types';
 
 import { NoParamRider, PremiumFreeRider, RiderWithFaceAmount } from './config';
 
@@ -35,7 +34,21 @@ export const quickQuoteParamsSchema = t.intersection(
 /**
  * Type for the QuickQuote inputs
  */
-export type QuickQuoteParams = Prettify<Infer<typeof quickQuoteParamsSchema>>;
+export type QuickQuoteParams = Simplify<Infer<typeof quickQuoteParamsSchema>>;
+
+export type SerializedQuickQuoteParams = Simplify<
+    {
+        [K in keyof ConditionalExcept<QuickQuoteParams, object>]: string;
+    } & {
+        [K in RiderWithFaceAmount as `riders.${K}`]+?: string;
+    } & {
+        [K in NoParamRider as `riders.${K}`]+?: 'true' | 'false';
+    } & {
+        [K in PremiumFreeRider as `premiumFreeRiders.${K}`]+?: 'true' | 'false';
+    }
+>;
+
+type a = keyof QuickQuoteParams['riders'];
 
 export const RIDER_FIELD_TYPES = {
     NO_PARAMS: 'NO_PARAMS',
@@ -52,12 +65,12 @@ type RiderFieldBase = {
 type RiderTypeSpecificFields = {
     NO_PARAMS: object;
     WITH_FACE_AMOUNT: {
-        faceAmount: number;
+        faceAmount: number | undefined;
     };
 };
 
 export type RiderFieldMap = {
-    [K in keyof RiderTypeSpecificFields]: Prettify<
+    [K in keyof RiderTypeSpecificFields]: Simplify<
         RiderFieldBase & {
             type: K;
         } & RiderTypeSpecificFields[K]
@@ -67,16 +80,17 @@ export type RiderFieldMap = {
 export type RiderField = ValueOf<RiderFieldMap>;
 
 type QuickQuoteRidersFormState = Record<
-    RiderWithFaceAmount | NoParamRider,
-    RiderField
->;
+    RiderWithFaceAmount,
+    RiderFieldMap['WITH_FACE_AMOUNT']
+> &
+    Record<NoParamRider, RiderFieldMap['NO_PARAMS']>;
 
 type QuickQuotePremiumFreeRidersFormState = Record<PremiumFreeRider, boolean>;
 
 /**
  * Quick Quote Form State
  */
-export type QuickQuoteFormState = Prettify<
+export type QuickQuoteFormState = Simplify<
     Infer<typeof quickQuoteParamsBaseSchema> & {
         riders: QuickQuoteRidersFormState;
         premiumFreeRiders: QuickQuotePremiumFreeRidersFormState;

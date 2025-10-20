@@ -23,7 +23,7 @@ export const QuickQuoteResultProductInfoCell = ({
 }: QuickQuoteResultProductInfoCellProps) => {
     return (
         <div className={clsx(styles.productInfoCell, className)} {...rest}>
-            <div style={{ gridRow: '1 / 3' }}>
+            <div className={styles.productInfoCellAvatar}>
                 <CarrierAvatar
                     carrier={getProductCarrierName(product)}
                     height={48}
