@@ -939,7 +939,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return [
             creationDate,
             `Initial Modal Premium ${numberFormatify(
-                assumed.initial.totalPremium
+                assumed.initial.totalModalPremium
             )}`,
             `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
             ...getRidersTextList(),
