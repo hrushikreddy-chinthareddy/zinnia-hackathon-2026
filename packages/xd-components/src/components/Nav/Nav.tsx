@@ -243,19 +243,24 @@ export const Nav = ({
                     <ul>
                       {group.items.map(navItem => {
                         return (
-                          <li
-                            className={clsx(styles.listItem)}
-                            key={navItem.id}
-                          >
-                            <Tooltip
-                              placement={TooltipPlacement.CenterRight}
-                              delayDuration={0}
-                              tooltipClassName={clsx(
-                                styles.tooltip,
-                                !isExpanded && styles.visible
-                              )}
-                              triggerClassName={styles.tooltipTrigger}
-                              trigger={
+                          <Tooltip
+                            placement={TooltipPlacement.CenterRight}
+                            delayDuration={0}
+                            tooltipClassName={clsx(
+                              styles.tooltip,
+                              !isExpanded && styles.visible
+                            )}
+                            replaceElement
+                            triggerClassName={styles.tooltipTrigger}
+                            trigger={
+                              // NavLink is not an actual element so we have to wrap it in this li
+                              // so that the tooltip will have an element to attach to for proper location.
+                              // Yes, this not the best solution but it works until all the circular excessive
+                              // navlink stuff is fixed between here and ops.
+                              <li
+                                className={clsx(styles.listItem)}
+                                key={navItem.id}
+                              >
                                 <NavLink
                                   renderComponent={
                                     navItem.renderComponent
@@ -291,11 +296,11 @@ export const Nav = ({
                                     <span>{navItem.display}</span>
                                   </>
                                 </NavLink>
-                              }
-                            >
-                              {navItem.display}
-                            </Tooltip>
-                          </li>
+                              </li>
+                            }
+                          >
+                            {navItem.display}
+                          </Tooltip>
                         );
                       })}
                     </ul>
