@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { TransactionsSummary } from '@/components/transaction-summary/TransactionSummary';
 import { RouteKey, getPageTitle } from '@/route-map';
 
-const pageTitle = getPageTitle(RouteKey.TRANSACTION_SUMMARY); //TODO: Change this
+const pageTitle = getPageTitle(RouteKey.TRANSACTION_SUMMARY);
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

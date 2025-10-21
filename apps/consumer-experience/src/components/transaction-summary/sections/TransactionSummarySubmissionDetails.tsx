@@ -1,8 +1,10 @@
+import { Tag } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
 
 import { KeyValueLabelGroup } from '../components/KeyValueLabel';
+import { getAuthorizationTagStatus } from '../utils';
 
 interface TransactionSummarySubmissionDetailsProps {
   transactionSummary: WithdrawalTransaction; //TODO: replace this with the real API type
@@ -31,6 +33,12 @@ export const TransactionSummarySubmissionDetails: FC<
       children: [
         {
           title: authorizationStatus,
+          customComponent: (
+            <Tag
+              variant={getAuthorizationTagStatus(authorizationStatus)}
+              text={authorizationStatus}
+            />
+          ),
         },
       ],
     },
