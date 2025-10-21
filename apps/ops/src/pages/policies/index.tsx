@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { FgaRelation, FgaRoles } from '@xd/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { createContext } from 'react';
 
@@ -7,14 +8,24 @@ import { PolicyIndexCardView } from '@deps/components/policy-index/policy-index-
 import { PolicyIndexTableView } from '@deps/components/policy-index/policy-index-table-view';
 import { SearchBarInitialValues } from '@deps/components/search/search-bar';
 import { TranslationFiles } from '@deps/config/translations';
+import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { getUserData } from '@deps/helpers/query-data.helpers';
+import {
+    doesUserHavePagePermissions,
+    getUserData,
+} from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { UserPermission } from '@deps/models/user-profile';
+import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { SearchViewQuery } from '@deps/types/search';
 import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import {
     logWarn,
     parseErrorInformation,
@@ -70,40 +81,47 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            // const featureFlagDecisions: FeatureFlags =
-            //     await optimizelyService.getFeatureFlagDecisions(
-            //         user.sub,
-            //         loggingContext
-            //     );
-            // const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
-            //     FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
-            // ]
-            //     ? await checkTuplePage(
-            //           context,
-            //           FgaRelation.UiAccess,
-            //           FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
-            //           loggingContext
-            //       )
-            //     : await doesUserHavePagePermissions(
-            //           context,
-            //           UserPermission.AllowReadPolicyAdmin,
-            //           loggingContext
-            //       );
-            // const isAdvisorsExcel = await checkTuplePage(
-            //     context,
-            //     FgaRelation.Party,
-            //     AE_FGA_ROLE,
-            //     loggingContext
-            // );
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT
+                ]
+            ) {
+                const hasPermissionToReadPolicyManagement =
+                    featureFlagDecisions?.[
+                        FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
+                    ]
+                        ? await checkTuplePage(
+                              context,
+                              FgaRelation.UiAccess,
+                              FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
+                              loggingContext
+                          )
+                        : await doesUserHavePagePermissions(
+                              context,
+                              UserPermission.AllowReadPolicyAdmin,
+                              loggingContext
+                          );
+                const isAdvisorsExcel = await checkTuplePage(
+                    context,
+                    FgaRelation.Party,
+                    AE_FGA_ROLE,
+                    loggingContext
+                );
 
-            // if (!isAdvisorsExcel) {
-            //     return {
-            //         redirect: {
-            //             destination: '/403',
-            //             permanent: false,
-            //         },
-            //     };
-            // }
+                if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+            }
 
             const translations = await serverSideTranslations(
                 locale,
