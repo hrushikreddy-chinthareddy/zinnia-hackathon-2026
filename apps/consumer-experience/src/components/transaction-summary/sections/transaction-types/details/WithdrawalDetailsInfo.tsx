@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
@@ -31,7 +32,7 @@ export const WithdrawalDetailsInfo: FC<WithdrawalSummaryDetailsProps> = ({
       title: 'Withdrawal date',
       children: [
         {
-          title: withdrawalDate,
+          title: dayjs(withdrawalDate).format('MM/DD/YYYY'),
         },
       ],
     },

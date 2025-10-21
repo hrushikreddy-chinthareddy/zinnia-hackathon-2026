@@ -1,7 +1,9 @@
 import { Tag } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { KeyValueLabelGroup } from '../components/KeyValueLabel';
 import { getAuthorizationTagStatus } from '../utils';
@@ -46,7 +48,7 @@ export const TransactionSummarySubmissionDetails: FC<
       title: 'Submitted On',
       children: [
         {
-          title: submittedOn, //conver to m/d/yyyy
+          title: dayjs(submittedOn).format(DEFAULT_DATE_FORMAT),
         },
       ],
     },
@@ -54,7 +56,7 @@ export const TransactionSummarySubmissionDetails: FC<
       title: 'Expiration Date',
       children: [
         {
-          title: expiresOn, //conver to m/d/yyyy
+          title: dayjs(expiresOn).format(DEFAULT_DATE_FORMAT),
         },
       ],
     },

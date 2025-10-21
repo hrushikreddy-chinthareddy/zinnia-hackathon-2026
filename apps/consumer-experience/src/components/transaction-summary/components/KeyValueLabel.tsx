@@ -38,7 +38,7 @@ export const KeyValueLabelGroup: FC<KeyValuePairLabelGroupProps> = ({
             }
 
             return (
-              <p className={'`typography-content-body-sm`'} key={childIndex}>
+              <p className={'typography-content-body-sm'} key={childIndex}>
                 {child.title}
               </p>
             );
