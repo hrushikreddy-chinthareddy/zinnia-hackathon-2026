@@ -31,7 +31,7 @@ import {
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-all-key-values-sidesheet.module.css';
-import { preparePolicy } from './transformations';
+import { preparePolicy, prepareTransaction } from './transformations';
 import {
     NestedData,
     label,
@@ -39,11 +39,11 @@ import {
     link,
     MetaData,
     DataTuple,
-    PolicySection,
     Collapse,
     ExpandCollapse,
     Expand,
     toolTip,
+    Section,
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
@@ -68,12 +68,12 @@ interface FindAllKeyValuesSidebarProps {
  * @returns {JSX.Element} - A JSX element representing the key-value pairs
  */
 const KeyValueBasics = ({
-    preparedPolicy,
+    preparedData,
     policyBasics,
     searchValue,
     treeState,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
+    preparedData: ReturnType<typeof preparePolicy | prepareTransaction>;
     policyBasics: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
@@ -81,7 +81,7 @@ const KeyValueBasics = ({
     <Accordion
         sectionLabel={
             <Highlighter
-                text={preparedPolicy.formatAsSectionLabel('policyBasics')}
+                text={preparedData.formatAsSectionLabel('policyBasics')}
                 highlights={[searchValue]}
             />
         }
@@ -97,29 +97,29 @@ const KeyValueBasics = ({
 );
 
 /**
- * Renders a list of policy sections.
+ * Renders a list of data sections.
  * Each section is rendered as a separate Accordion item.
  * The label of each section is highlighted if it matches the searchValue.
  * Each section contains a list of DataField components and/or a list of subsections.
  * The subsections are rendered recursively using the KeyValueSubSections component.
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy
- * @param {PolicySection[]} policySections
+ * @param {ReturnType<typeof preparePolicy | prepareTransaction>} preparedData
+ * @param {Section[]} section
  * @param {string} searchValue
  * @returns {JSX.Element[]}
  */
 const KeyValueSections = ({
-    preparedPolicy,
-    policySections,
+    preparedData,
+    sections,
     searchValue,
     treeState,
 }: {
-    preparedPolicy: ReturnType<typeof preparePolicy>;
-    policySections: PolicySection[];
+    preparedData: ReturnType<typeof preparePolicy | prepareTransaction>;
+    sections: Section[];
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
-    return policySections?.map((policySection, i) => {
-        const [sectionLabel, sectionData] = policySection;
+    return sections?.map((section, i) => {
+        const [sectionLabel, sectionData] = section;
         const { fields, subSections } = sectionData;
 
         if (
@@ -133,7 +133,7 @@ const KeyValueSections = ({
                 key={`section_${i}`}
                 sectionLabel={
                     <Highlighter
-                        text={preparedPolicy.formatAsSectionLabel(sectionLabel)}
+                        text={preparedData.formatAsSectionLabel(sectionLabel)}
                         highlights={[searchValue]}
                     />
                 }

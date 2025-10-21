@@ -27,7 +27,7 @@ export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
 export const toolTip = Symbol('toolTip');
 
-export type PolicySection = [
+export type Section = [
     string,
     {
         fields?: NestedData;

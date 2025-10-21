@@ -47,7 +47,7 @@ import {
  * @returns An object with the prepared policy properties
  */
 export const preparePolicy = (
-    policy: Policy,
+    data: Policy,
     t: TFunction,
     searchValue?: string
 ): {
