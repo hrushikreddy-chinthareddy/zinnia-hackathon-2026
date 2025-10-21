@@ -15,6 +15,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
+import { CarrierCode } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import styles from './content-container.module.css';
@@ -41,10 +42,12 @@ const ContentContainer = ({
     const { t } = useTranslation();
     const { globalValuesData } = useContentContext();
     const { featureFlags } = useOptimizely();
-    const showAllKeyValues =
-        policy.carrierId === 'SBGC'
+    const SBGC: CarrierCode = 'SBGC'; // typed to prevent typos
+    const showAllKeyValues = policy.carrierId
+        ? policy.carrierId === SBGC
             ? featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL_SB]
-            : featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
+            : featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL]
+        : false;
 
     const {
         highlight,
