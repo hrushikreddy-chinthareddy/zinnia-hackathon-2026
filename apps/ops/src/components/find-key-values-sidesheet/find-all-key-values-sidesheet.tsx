@@ -1,5 +1,4 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Policy } from '@xd/api-types/dist/generated-types/sor';
+import { useQueryClient } from '@tanstack/react-query';
 import { Accordion } from '@xd/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
 import useDebounce from '@xd/xd-components/src/hooks/useDebounce';
@@ -24,10 +23,7 @@ import {
     buttonClickedTrackEvent,
     filterAppliedTrackEvent,
 } from '@deps/helpers/analytics/segment-analytics';
-import {
-    getPolicyQueryKey,
-    getPolicyQuery,
-} from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './find-all-key-values-sidesheet.module.css';
@@ -47,9 +43,7 @@ import {
 } from './types';
 import DotContainer from '../dot-container/dot-container';
 import { FieldSize, FieldType, FieldVariant } from '../fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '../fields/field-date-select/field-date-select';
+import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import Highlighter from '../highlighter/highlighter';
 import { BlurOverlayLoader } from '../overlay-loader/overlay-loader';
 
@@ -77,24 +71,27 @@ const KeyValueBasics = ({
     policyBasics: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
-}) => (
-    <Accordion
-        sectionLabel={
-            <Highlighter
-                text={preparedData.formatAsSectionLabel('policyBasics')}
-                highlights={[searchValue]}
-            />
-        }
-        type={AccordionType.NESTED}
-        treeState={treeState}
-    >
-        <KeyValueFieldList
-            fields={policyBasics}
-            searchValue={searchValue}
+}) => {
+    console.log({ preparedData });
+    return (
+        <Accordion
+            sectionLabel={
+                <Highlighter
+                    text={preparedData.formatAsSectionLabel('policyBasics')}
+                    highlights={[searchValue]}
+                />
+            }
+            type={AccordionType.NESTED}
             treeState={treeState}
-        />
-    </Accordion>
-);
+        >
+            <KeyValueFieldList
+                fields={policyBasics}
+                searchValue={searchValue}
+                treeState={treeState}
+            />
+        </Accordion>
+    );
+};
 
 /**
  * Renders a list of data sections.
@@ -414,29 +411,13 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
 
-    // TODO: abstract to custom hook
-    const {
-        data: policy,
-        isFetching,
-        isError,
-    } = useQuery({
-        queryKey: [getPolicyQueryKey, policyNumber, planCode, date],
-        queryFn: () =>
-            getPolicyQuery(
-                policyNumber as string,
-                planCode as string,
-                dayjs(date, DATE_PICKER_FORMAT).format('YYYY-MM-DD')
-            ),
-        placeholderData: () => {
-            const initialData = queryClient.getQueryData<Policy>([
-                getPolicyQueryKey,
-                policyNumber,
-                planCode,
-            ]);
-            return initialData;
-        },
-        enabled: enableQuery,
-    });
+    const { policy, isFetching, isError } = usePolicyQuery(
+        planCode,
+        policyNumber,
+        date,
+        queryClient,
+        enableQuery
+    );
 
     const isDateAllowed = (date: Dayjs) => {
         const policyIssuanceDate = dayjs(
@@ -582,7 +563,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
                         </div>
                         {policyBasics && (
                             <KeyValueBasics
-                                preparedPolicy={preparedPolicy}
+                                preparedData={preparedPolicy}
                                 policyBasics={policyBasics as NestedData[]}
                                 searchValue={searchValue}
                                 treeState={treeState}
@@ -591,8 +572,8 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
 
                         {!!policySections?.length && (
                             <KeyValueSections
-                                preparedPolicy={preparedPolicy}
-                                policySections={policySections}
+                                preparedData={preparedPolicy}
+                                sections={policySections}
                                 searchValue={searchValue}
                                 treeState={treeState}
                             />

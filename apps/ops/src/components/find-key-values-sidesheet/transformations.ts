@@ -24,7 +24,7 @@ import {
     link,
     linkedField,
     MetaData,
-    PolicySection,
+    Section,
 } from './types';
 
 /**
@@ -47,7 +47,7 @@ import {
  * @returns An object with the prepared policy properties
  */
 export const preparePolicy = (
-    data: Policy,
+    policy: Policy,
     t: TFunction,
     searchValue?: string
 ): {
@@ -57,7 +57,7 @@ export const preparePolicy = (
     allPartiesById?: Record<string, Party>;
     toSections: (policyOverride?: Policy) => {
         policyBasics: NestedData[] | null;
-        policySections: PolicySection[];
+        policySections: Section[];
     };
     formatAsSectionLabel: (label: string) => string;
 } => {
@@ -115,7 +115,7 @@ export const toSections = (
     allPartiesById?: Record<string, Party>
 ): {
     policyBasics: NestedData[] | null;
-    policySections: PolicySection[];
+    policySections: Section[];
 } => {
     const policyTuples = Object.entries(policy);
     const basicsAndSections = policyTuples.reduce(
@@ -124,7 +124,7 @@ export const toSections = (
             [currentKey, currentVal]
         ): {
             policyBasics: NestedData[] | null;
-            policySections: PolicySection[];
+            policySections: Section[];
         } => {
             // If the value is an object, treat it as a section
             if (typeof currentVal === 'object') {
@@ -191,7 +191,7 @@ export const toSections = (
                             ...acc,
                             policySections: [
                                 ...acc.policySections,
-                                [currentKey, currentVal] as PolicySection,
+                                [currentKey, currentVal] as Section,
                             ],
                         };
                 }
@@ -256,7 +256,7 @@ export const toSections = (
                     ? [policySection[0], fieldsAndSubsections]
                     : null;
             })
-            .filter((section) => section != null) as PolicySection[],
+            .filter((section) => section != null) as Section[],
     };
 };
 
@@ -660,7 +660,7 @@ function parseLoanValues(
     t: TFunction,
     acc: {
         policyBasics: NestedData[] | null;
-        policySections: PolicySection[];
+        policySections: Section[];
     },
     currentVal: Policy['loanValues']
 ) {
@@ -681,7 +681,7 @@ function parseLoanValues(
                     ...currentVal,
                     ...loanSegments,
                 },
-            ] as PolicySection,
+            ] as Section,
         ],
     };
 }
@@ -703,7 +703,7 @@ function parseRiders(
     t: TFunction,
     acc: {
         policyBasics: NestedData[] | null;
-        policySections: PolicySection[];
+        policySections: Section[];
     },
     currentKey: string,
     currentVal: Policy['riders']
@@ -741,7 +741,7 @@ function parseRiders(
         ...acc,
         policySections: [
             ...acc.policySections,
-            [currentKey, ridersAndParticipants ?? currentVal] as PolicySection,
+            [currentKey, ridersAndParticipants ?? currentVal] as Section,
         ],
     };
 }
@@ -769,7 +769,7 @@ function parseSystematicPrograms(
     lineOfBusiness: LineOfBusiness,
     acc: {
         policyBasics: NestedData[] | null;
-        policySections: PolicySection[];
+        policySections: Section[];
     },
     currentKey: string,
     currentVal: Policy['systematicPrograms']
@@ -823,10 +823,7 @@ function parseSystematicPrograms(
         ...acc,
         policySections: [
             ...acc.policySections,
-            [
-                currentKey,
-                systematicProgramsAndParties ?? currentVal,
-            ] as PolicySection,
+            [currentKey, systematicProgramsAndParties ?? currentVal] as Section,
         ],
     };
 }
@@ -849,7 +846,7 @@ function parseAllocation(
     t: TFunction,
     acc: {
         policyBasics: NestedData[] | null;
-        policySections: PolicySection[];
+        policySections: Section[];
     },
     currentVal: Policy['allocation']
 ) {
@@ -881,7 +878,7 @@ function parseAllocation(
                         ...currentVal,
                         ...funds,
                     },
-                ] as PolicySection,
+                ] as Section,
             ],
         }),
     };
