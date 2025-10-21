@@ -17,6 +17,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationsClientCaseProvider } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -63,18 +64,22 @@ export default function Illustrations({
     fetchingErrorMessage,
     fetchingErrorOrigin,
 }: IllustrationsPageProps) {
+    const [bannerText, setBannerText] = useState('');
+
+    const { featureFlags } = useOptimizely();
     const searchParams = useSearchParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const [bannerText, setBannerText] = useState('');
     const {
         isAllowWriteClientCase,
         partyReferenceData,
         isAllowReadIllustrations,
     } = usePermissionsContext();
     const { sendNewClientCaseClicked } = useIllustrationAnalytics();
-
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
+
     const isAgent = aliases?.length ?? 0 > 0;
+    const illustrationsQuickQuoteEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_QUICK_QUOTE];
 
     const allowCreateCase = isAgent || isAllowWriteClientCase;
     const allowQuickQuote =
@@ -117,6 +122,55 @@ export default function Illustrations({
 
     const createClientCaseSearchParams = toLowerCaseSearchParams(searchParams);
     createClientCaseSearchParams.delete('eappid');
+    const renderQuickQuote = () => {
+        if (!illustrationsQuickQuoteEnabled) {
+            return <></>;
+        }
+        return (
+            <>
+                {allowQuickQuote ? (
+                    <Link
+                        href={{
+                            pathname: NEW_QUICK_QUOTE_URL,
+                        }}
+                        passHref
+                        className="flex items-center gap-2"
+                    >
+                        {/* <Icon
+                                    width={24}
+                                    height={24}
+                                    type={IconType.AUTOPAY}
+                                /> */}
+                        <Button
+                            mode="link"
+                            data-testid="quick-quote-btn"
+                            aria-label={t('ariaLabel.search') as string}
+                            type="button"
+                            size="small"
+                        >
+                            {t('clientCase.quickQuote')}
+                        </Button>
+                    </Link>
+                ) : (
+                    <TempNavInactive
+                        tooltipBody={t('clientCase.quickQuotePermissions')}
+                        navElementClassName="!bg-transparent"
+                    >
+                        <Button
+                            disabled={!allowCreateCase}
+                            mode="link"
+                            data-testid="quick-quote-btn"
+                            aria-label={t('ariaLabel.search') as string}
+                            type="button"
+                            size="small"
+                        >
+                            {t('clientCase.quickQuote')}
+                        </Button>
+                    </TempNavInactive>
+                )}
+            </>
+        );
+    };
 
     return (
         <>
@@ -143,49 +197,7 @@ export default function Illustrations({
                         className="flex gap-4 justify-center"
                         data-testid="quick-quote-cta"
                     >
-                        {allowQuickQuote ? (
-                            <Link
-                                href={{
-                                    pathname: NEW_QUICK_QUOTE_URL,
-                                }}
-                                passHref
-                                className="flex items-center gap-2"
-                            >
-                                {/* <Icon
-                                    width={24}
-                                    height={24}
-                                    type={IconType.AUTOPAY}
-                                /> */}
-                                <Button
-                                    mode="link"
-                                    data-testid="quick-quote-btn"
-                                    aria-label={t('ariaLabel.search') as string}
-                                    type="button"
-                                    size="small"
-                                >
-                                    {t('clientCase.quickQuote')}
-                                </Button>
-                            </Link>
-                        ) : (
-                            <TempNavInactive
-                                tooltipBody={t(
-                                    'clientCase.quickQuotePermissions'
-                                )}
-                                navElementClassName="!bg-transparent"
-                            >
-                                <Button
-                                    disabled={!allowCreateCase}
-                                    mode="link"
-                                    data-testid="quick-quote-btn"
-                                    aria-label={t('ariaLabel.search') as string}
-                                    type="button"
-                                    size="small"
-                                >
-                                    {t('clientCase.quickQuote')}
-                                </Button>
-                            </TempNavInactive>
-                        )}
-
+                        {renderQuickQuote()}
                         {allowCreateCase ? (
                             <Link
                                 href={{
