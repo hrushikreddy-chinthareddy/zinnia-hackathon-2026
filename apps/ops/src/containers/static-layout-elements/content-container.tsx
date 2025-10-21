@@ -41,7 +41,10 @@ const ContentContainer = ({
     const { t } = useTranslation();
     const { globalValuesData } = useContentContext();
     const { featureFlags } = useOptimizely();
-    const showAllKeyValues = featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
+    const showAllKeyValues =
+        policy.carrierId === 'SBGC'
+            ? featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL_SB]
+            : featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
 
     const {
         highlight,
