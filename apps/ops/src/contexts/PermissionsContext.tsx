@@ -26,7 +26,7 @@ import {
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
-import { isProd } from '@deps/utils/environment.helpers';
+import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useOptimizely } from './OptimizelyContext';
@@ -253,7 +253,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             ];
 
             if (
-                !isProd() &&
+                isDemo() &&
                 featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
             ) {
                 tuples.push({
@@ -306,7 +306,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             );
             let hasTestHarnessAccess = false;
             if (
-                !isProd() &&
+                isDemo() &&
                 featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
             ) {
                 hasTestHarnessAccess = !!checkRelation(
