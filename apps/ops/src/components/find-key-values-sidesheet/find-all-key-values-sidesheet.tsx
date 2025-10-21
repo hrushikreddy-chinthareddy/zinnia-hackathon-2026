@@ -110,7 +110,7 @@ const KeyValueSections = ({
     searchValue,
     treeState,
 }: {
-    preparedData: ReturnType<typeof preparePolicy | prepareTransaction>;
+    preparedData: ReturnType<typeof preparePolicy | typeof prepareTransaction>;
     sections: Section[];
     searchValue: string;
     treeState: ExpandCollapse;
