@@ -26,6 +26,7 @@ import {
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
+import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { useOptimizely } from './OptimizelyContext';
@@ -102,58 +103,70 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
-    // IMH-87188-87186 (186 is ther IMH you can view in JIRA)
-    // const {
-    //     data: isAllowReadCaseManagement,
-    //     isLoading: caseManagementLoading,
-    // } = useQuery({
-    //     queryKey: [
-    //         'isAllowReadCaseManagement',
-    //         partyId,
-    //         featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
-    //     ],
-    //     queryFn: async () => {
-    //         if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
-    //             const res = await checkTuple(
-    //                 partyId,
-    //                 FgaRelation.UiAccess,
-    //                 FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
-    //             );
-    //             return !!res.data;
-    //         }
-    //         return await doesUserHavePagePermissionQuery(
-    //             UserPermission.AllowReadCaseManagement,
-    //             partyId
-    //         );
-    //     },
-    //     enabled: !!partyId,
-    //     staleTime: FIFTEEN_MINUTES_IN_MS,
-    // });
+    // IMH-87188-87186 (186 is the IMH you can view in JIRA)
+    const isCaseManagementFgaEnabled =
+        featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT];
+    const {
+        data: isAllowReadCaseManagement,
+        isLoading: caseManagementLoading,
+    } = useQuery({
+        queryKey: [
+            'isAllowReadCaseManagement',
+            partyId,
+            featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
+            isCaseManagementFgaEnabled,
+        ],
+        queryFn: async () => {
+            if (!isCaseManagementFgaEnabled) {
+                return true;
+            }
+            if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
+                const res = await checkTuple(
+                    partyId,
+                    FgaRelation.UiAccess,
+                    FgaRoles.CASE_MANAGEMENT_ZL_ENTITY
+                );
+                return !!res.data;
+            }
+            return await doesUserHavePagePermissionQuery(
+                UserPermission.AllowReadCaseManagement,
+                partyId
+            );
+        },
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
+    const isPolicyManagementFgaEnabled =
+        featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT];
+    const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } =
+        useQuery({
+            queryKey: [
+                'isAllowReadPolicyAdmin',
+                partyId,
+                featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY],
+                isPolicyManagementFgaEnabled,
+            ],
+            queryFn: async () => {
+                if (!isPolicyManagementFgaEnabled) {
+                    return true;
+                }
 
-    // const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } =
-    //     useQuery({
-    //         queryKey: [
-    //             'isAllowReadPolicyAdmin',
-    //             partyId,
-    //             featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY],
-    //         ],
-    //         queryFn: async () => {
-    //             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
-    //                 const res = await checkTuple(
-    //                     partyId,
-    //                     FgaRelation.UiAccess,
-    //                     FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
-    //                 );
-    //                 return !!res.data;
-    //             }
-    //             return await doesUserHavePagePermissionQuery(
-    //                 UserPermission.AllowReadPolicyAdmin,
-    //                 partyId
-    //             );
-    //         },
-    //         enabled: !!partyId,
-    //         staleTime: FIFTEEN_MINUTES_IN_MS,
-    //     });
+                if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
+                    const res = await checkTuple(
+                        partyId,
+                        FgaRelation.UiAccess,
+                        FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY
+                    );
+                    return !!res.data;
+                }
+                return await doesUserHavePagePermissionQuery(
+                    UserPermission.AllowReadPolicyAdmin,
+                    partyId
+                );
+            },
+            enabled: !!partyId,
+            staleTime: FIFTEEN_MINUTES_IN_MS,
+        });
 
     const { data: isAllowReadOtpRenewals, isLoading: otpRenewalsLoading } =
         useQuery({
@@ -210,15 +223,16 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         isFetching: _rolesFetching,
         isError: _rolesError,
     } = useQuery({
-        queryKey: ['fgaRoles', partyId],
+        queryKey: [
+            'fgaRoles',
+            partyId,
+            featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS],
+            featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS],
+        ],
         queryFn: async () => {
             const tuples = [
                 ...createBulkCheckBodyRequest(partyId).tuples,
-                // {
-                //     user: `party:${partyId}`,
-                //     relation: FgaRelation.UiAccess,
-                //     object: 'entity:zinnia_live_test_harness',
-                // },
+
                 {
                     user: `party:${partyId}`,
                     relation: FgaRelation.Party,
@@ -230,17 +244,33 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     relation: FgaRelation.Party,
                     object: FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
                 },
-                // {
-                //     user: `party:${partyId}`,
-                //     relation: FgaRelation.UiAccess,
-                //     object: FgaRoles.WELB_SALES_MATERIALS,
-                // },
+
                 {
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
                     object: FgaRoles.ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE,
                 },
             ];
+
+            if (
+                isDemo() &&
+                featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
+            ) {
+                tuples.push({
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: FgaRoles.TEST_HARNESS_ACCESS,
+                });
+            }
+
+            if (featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS]) {
+                tuples.push({
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: FgaRoles.WELB_SALES_MATERIALS,
+                });
+            }
+
             const data = await bulkCheckPermissionsQuery({ tuples });
             const superAdmin = checkIfUserIsSuperAdmin(data);
             const hasDashboard = checkIfUserHasDashboardAccess(data);
@@ -274,11 +304,17 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.NOTES_ACCESS,
                 FgaRelation.UiAccess
             );
-            const hasTestHarnessAccess = !!checkRelation(
-                data,
-                FgaRoles.TEST_HARNESS_ACCESS,
-                FgaRelation.UiAccess
-            );
+            let hasTestHarnessAccess = false;
+            if (
+                isDemo() &&
+                featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
+            ) {
+                hasTestHarnessAccess = !!checkRelation(
+                    data,
+                    FgaRoles.TEST_HARNESS_ACCESS,
+                    FgaRelation.UiAccess
+                );
+            }
             const isZinniaInternalViewer = !!checkRelation(
                 data,
                 FgaRoles.ZINNIA_INTERNAL_VIEWER,
@@ -289,12 +325,14 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
                 FgaRelation.Party
             );
-
-            // const hasWelbSalesMaterials = !!checkRelation(
-            //     data,
-            //     FgaRoles.WELB_SALES_MATERIALS,
-            //     FgaRelation.UiAccess
-            // );
+            let hasWelbSalesMaterials = false;
+            if (featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS]) {
+                hasWelbSalesMaterials = !!checkRelation(
+                    data,
+                    FgaRoles.WELB_SALES_MATERIALS,
+                    FgaRelation.UiAccess
+                );
+            }
 
             const hasCreateClientAccess = !!checkRelation(
                 data,
@@ -318,7 +356,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
                 isZinniaInternalProcessor,
-                hasWelbSalesMaterials: false,
+                hasWelbSalesMaterials,
                 hasCreateClientAccess,
             };
         },
@@ -328,8 +366,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
     const permissionsLoadingComplete =
         !bulkCheckLoading &&
-        true &&
-        true &&
+        !caseManagementLoading &&
+        !policyAdminLoading &&
         !otpRenewalsLoading &&
         !hasServiceRequestLoading &&
         !partyRefLoading &&
@@ -349,18 +387,18 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasDashboardPermission: !!fgaRoleData?.hasDashboardPermission,
                 hasCaseInsightPermission:
                     !!fgaRoleData?.hasCaseInsightPermission,
-                isAllowReadCaseManagement: true, //!!isAllowReadCaseManagement,
-                isAllowReadPolicyAdmin: true, //!!isAllowReadPolicyAdmin,
+                isAllowReadCaseManagement: !!isAllowReadCaseManagement,
+                isAllowReadPolicyAdmin: !!isAllowReadPolicyAdmin,
                 isAllowReadOtpRenewals: !!isAllowReadOtpRenewals,
                 isCallLogAudioPermitted: !!fgaRoleData?.isCallLogAudioPermitted,
                 hasHomeExperience: !!homeCheck?.data,
                 isOpsManagerView: !!opsManagerCheck?.data,
-                showWelbSalesMaterials: false, //!!fgaRoleData?.hasWelbSalesMaterials,
+                showWelbSalesMaterials: !!fgaRoleData?.hasWelbSalesMaterials,
                 showCommissions: partyReferenceData
                     ? !!getMasterAgentNumber(partyReferenceData)
                     : false,
                 partyReferenceData,
-                hasTestHarnessAccess: false, //!!fgaRoleData?.hasTestHarnessAccess,
+                hasTestHarnessAccess: !!fgaRoleData?.hasTestHarnessAccess,
                 permissionsLoadingComplete,
                 hasPolicyIndexPageAccess:
                     !!fgaRoleData?.hasPolicyIndexPageAccess,
