@@ -137,7 +137,11 @@ export default function DatePicker({
     const getDisabledClasses = (_month: number, _day: number) => {
         const disabledClasses =
             '!cursor-auto !pointer-events-none !text-gray-300';
-        const dayjsDate = dayjs().year(year).month(_month).date(_day);
+        const dayjsDate = dayjs()
+            .year(year)
+            .month(_month)
+            .date(_day)
+            .startOf('day');
         const dateAllowed = isDateAllowed(dayjsDate);
 
         if (!dateAllowed) {
