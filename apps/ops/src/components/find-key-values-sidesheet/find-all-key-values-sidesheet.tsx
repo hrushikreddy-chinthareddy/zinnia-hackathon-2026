@@ -67,7 +67,7 @@ const KeyValueBasics = ({
     searchValue,
     treeState,
 }: {
-    preparedData: ReturnType<typeof preparePolicy | prepareTransaction>;
+    preparedData: ReturnType<typeof preparePolicy | typeof prepareTransaction>;
     policyBasics: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;

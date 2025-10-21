@@ -6,6 +6,7 @@ import {
     FundAllocation,
     Party,
     ProductType,
+    Transaction,
 } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'next-i18next';
 
@@ -90,6 +91,21 @@ export const preparePolicy = (
                 allPartiesById
             );
         },
+        formatAsSectionLabel: (label: string) =>
+            formatAsSectionLabel(label, lineOfBusiness, t),
+    };
+};
+
+export const prepareTransaction = (
+    transaction: Transaction,
+    t: TFunction
+): {
+    transaction: Transaction;
+    formatAsSectionLabel: (label: string) => string;
+} => {
+    const lineOfBusiness = LineOfBusiness.ANNUITY;
+    return {
+        transaction,
         formatAsSectionLabel: (label: string) =>
             formatAsSectionLabel(label, lineOfBusiness, t),
     };
@@ -237,7 +253,7 @@ export const toSections = (
         basicsAndSections.policySections.push([
             String(t('policy.allFields.people')),
             people,
-        ] as PolicySection);
+        ] as Section);
     }
 
     return {
