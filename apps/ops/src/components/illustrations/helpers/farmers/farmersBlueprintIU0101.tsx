@@ -3178,7 +3178,7 @@ export const farmersBlueprintIU0101 = {
                                         conditions: [
                                             {
                                                 type: 'equalityCondition',
-                                                value: 'YEARS',
+                                                value: 'YEAR',
                                                 isEqual: true,
                                                 targetNodeId:
                                                     'solve-for-target-cash-value-age-or-year',
@@ -3620,7 +3620,7 @@ export const farmersBlueprintIU0101 = {
                                         conditions: [
                                             {
                                                 type: 'equalityCondition',
-                                                value: 'YEARS',
+                                                value: 'YEAR',
                                                 isEqual: true,
                                                 targetNodeId:
                                                     'solve-for-target-cash-value-age-or-year',
