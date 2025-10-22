@@ -66,6 +66,12 @@
     align-items: center;
 }
 
-.infoColor {
+.infoCases {
     color: rgb(var(--color-semantic-information));
+    /* necessary for WCAG minimum touch target of 44x44 */
+    padding: 10px;
+}
+
+.infoIcon {
+    padding-bottom: 2px;
 }
