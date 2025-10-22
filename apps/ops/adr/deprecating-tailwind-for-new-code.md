@@ -2,9 +2,13 @@
 
 Decision made by: XD Engineering team
 
+**Last updated:** 2025-10-22
+
 **Decision**
 
 Moving forward, we are deciding to deprecate Tailwind for new code and shift to using css modules when custom styles are necessary. We can expect to maintain tailwind usage for bugfixes and small changes, but anything major we should put in the effort to migrate to css modules when time allows.
+
+This change aligns with the internal effort to lean on the @zinnia/bloom design system as much as possible. By requiring moving away from Tailwind, we reduce the potential for one-off styles. Adding new CSS modules is more effort and should make the engineer think twice before adding new styles that we currently do not account for with the @zinnia/bloom design system.
 
 **Details**
 
