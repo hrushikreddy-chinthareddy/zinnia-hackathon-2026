@@ -2,7 +2,7 @@ import { FC } from 'react';
 
 import { WithdrawalTransaction } from '@/services/transactions/types';
 
-import { WithdrawalPaymentInfo } from './transaction-types/payment/WithdrawalPaymentInfo';
+import { WithdrawalPaymentInfo } from './transaction-types/withdrawal/WithdrawalPaymentInfo';
 
 interface TransactionPaymentDetailsProps {
   transactionSummary: WithdrawalTransaction;
