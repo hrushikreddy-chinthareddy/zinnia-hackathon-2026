@@ -206,7 +206,7 @@ export const Days = ({
                             )} ${getDisabledClasses(
                                 previousMonth,
                                 dayItem
-                            )} flex items-center justify-center focus:ring-2 focus:ring-primary focus:ring-offset-2`}
+                            )} flex items-center justify-center`}
                             onClick={createClickHandler(() =>
                                 handleDateSelect(year, previousMonth, dayItem)
                             )}
@@ -252,7 +252,7 @@ export const Days = ({
                             )} ${getDisabledClasses(
                                 month,
                                 dayItem
-                            )} flex items-center justify-center focus:ring-2 focus:ring-primary focus:ring-offset-2`}
+                            )} flex items-center justify-center`}
                             onClick={createClickHandler(() =>
                                 handleDateSelect(year, month, dayItem)
                             )}
@@ -301,7 +301,7 @@ export const Days = ({
                             )} ${getDisabledClasses(
                                 nextMonth,
                                 dayItem
-                            )} flex items-center justify-center focus:ring-2 focus:ring-primary focus:ring-offset-2`}
+                            )} flex items-center justify-center`}
                             onClick={createClickHandler(() =>
                                 handleDateSelect(year, nextMonth, dayItem)
                             )}
