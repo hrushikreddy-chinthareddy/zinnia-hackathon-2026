@@ -618,7 +618,6 @@ export const mockPolicy: Policy = {
             attainedAge: 39,
             birthCountry: Country.US,
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
-            preferredAddressIndicator: '1',
             formerName: {},
             taxWithholdings: [
                 {
@@ -651,6 +650,7 @@ export const mockPolicy: Policy = {
                     state: State.FL,
                     zipCode: '33132',
                     country: Country.US,
+                    isPreferred: true,
                 },
             ],
             phones: [
@@ -722,7 +722,6 @@ export const mockPolicy: Policy = {
             attainedAge: 22,
             birthCountry: Country.US,
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
-            preferredAddressIndicator: '1',
             formerName: {},
             taxWithholdings: [],
             partyId: 'Party_PB_Primary_Bene_1',
@@ -736,6 +735,7 @@ export const mockPolicy: Policy = {
                     state: State.FL,
                     zipCode: '33132',
                     country: Country.US,
+                    isPreferred: true,
                 },
             ],
             phones: [
@@ -781,7 +781,6 @@ export const mockPolicy: Policy = {
             dateOfBirth: '2020-05-04',
             attainedAge: 4,
             birthCountry: Country.US,
-            preferredAddressIndicator: '1',
             formerName: {},
             taxWithholdings: [],
             partyId: 'Party_CI_Coverage_Ins_1',
@@ -795,6 +794,7 @@ export const mockPolicy: Policy = {
                     state: State.FL,
                     zipCode: '33132',
                     country: Country.US,
+                    isPreferred: true,
                 },
             ],
             phones: [],
@@ -865,7 +865,6 @@ export const mockPolicy: Policy = {
             trustTitle: undefined,
             trustAccessCode: undefined,
             preferredCommunicationType: undefined,
-            preferredAddressIndicator: undefined,
             formerName: {
                 firstName: undefined,
                 middleName: undefined,

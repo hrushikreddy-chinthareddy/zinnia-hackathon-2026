@@ -35,6 +35,7 @@ interface AddressesProps {
         address?: Address;
         header: SideSheetPeopleHeaderProps;
     }) => void;
+    /** @deprecated use address.isPreferred instead */
     preferredAddressIndicator?: string;
     showAdditional?: boolean;
 }
@@ -44,17 +45,13 @@ interface FormattedAddressProps {
     isLoading?: boolean;
 }
 
-type SortAddressesByType = Pick<
-    Party,
-    'addresses' | 'preferredAddressIndicator'
->;
+type SortAddressesByType = Pick<Party, 'addresses'>;
 
 export const Addresses = ({
     addresses,
     editable,
     infoOnly,
     onEditClick,
-    preferredAddressIndicator,
     showAdditional,
 }: AddressesProps) => {
     const { t } = useTranslation();
@@ -68,9 +65,7 @@ export const Addresses = ({
                     address as AddressWithPending;
 
                 const showPreferredAddressMessage =
-                    addresses.length > 1 &&
-                    address.addressId === preferredAddressIndicator &&
-                    !infoOnly;
+                    addresses.length > 1 && address.isPreferred && !infoOnly;
 
                 const defaultKey = `${addressType}-${index}`;
 
@@ -210,7 +205,6 @@ export const FormattedAddress = ({
 
 export const sortAddressesByType = ({
     addresses,
-    preferredAddressIndicator,
 }: SortAddressesByType): Address[] => {
     if (!addresses) return [];
 
@@ -225,7 +219,7 @@ export const sortAddressesByType = ({
     const unknownAddresses: Address[] = [];
 
     validAddresses.forEach((address) => {
-        if (address.addressId === preferredAddressIndicator) {
+        if (address.isPreferred) {
             preferredAddresses.push(address);
         } else {
             switch (address.addressType) {
