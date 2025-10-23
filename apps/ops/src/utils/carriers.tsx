@@ -27,8 +27,50 @@ import usaa from '@deps/styles/elements/icons/carriers/usaa.svg';
 import wellabe from '@deps/styles/elements/icons/carriers/wellabe.svg';
 import zinnia from '@deps/styles/elements/icons/carriers/zinnia.svg';
 
+const carrierCodes = [
+    'ALLM',
+    'ALLS',
+    'CWA',
+    'DLIC',
+    'EVGA',
+    'EVGL',
+    'ELIC',
+    'EMRS',
+    'FLIC',
+    'GDMN',
+    'GLAC',
+    'GLCO',
+    'ILIC',
+    'ILNA',
+    'JHLI',
+    'MASS',
+    'MWOA',
+    'NASU',
+    'NLVF',
+    'PICA',
+    'PLIC',
+    'PMHC',
+    'PRDN',
+    'PRUD',
+    'RSLN',
+    'SAAG',
+    'SBGC',
+    'SBUL',
+    'SFGI',
+    'SMTR',
+    'THRI',
+    'ULIC',
+    'ULPC',
+    'USAA',
+    'WELB',
+    'FNWL',
+    'CPAF',
+] as const;
+
+export type CarrierCode = (typeof carrierCodes)[number];
+
 // This is a stopgap until the carrier api is deployed
-const carriers = {
+export const carrierNames: Record<CarrierCode, string> = {
     ALLM: 'Allmerica',
     ALLS: 'Allstate',
     CWA: 'Commonwealth',
@@ -74,7 +116,7 @@ export const getCarrierNameByClientId = (
 ): string => {
     if (!clientId) return '';
     const carrierName =
-        carriers[clientId.toUpperCase() as keyof typeof carriers];
+        carrierNames[clientId.toUpperCase() as keyof typeof carrierNames];
 
     if (showClientCode) {
         return carrierName
@@ -85,7 +127,7 @@ export const getCarrierNameByClientId = (
     }
 };
 
-const carrierNameClientIdMappings = (activeCarriers: typeof carriers) => {
+const carrierNameClientIdMappings = (activeCarriers: typeof carrierNames) => {
     return Object.entries(activeCarriers).reduce((prev, curr) => {
         return {
             ...prev,
@@ -111,9 +153,9 @@ const getActiveCarriers = (authorizedCarriers: string[]) => {
     const filteredCarriers: { [code: string]: string } = {};
     authorizedCarriers.forEach((carrier) => {
         filteredCarriers[carrier.toUpperCase()] =
-            carriers[carrier.toUpperCase() as keyof typeof carriers];
+            carrierNames[carrier.toUpperCase() as keyof typeof carrierNames];
     });
-    return filteredCarriers as typeof carriers;
+    return filteredCarriers as typeof carrierNames;
 };
 
 export const getCarrierNamesByClientIds = (
