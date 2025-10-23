@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 
 import { TypographyVariant } from '@deps/components/typography/typography';
+import { NumberOrRange } from '@deps/types/quickQuote';
 
 import { QuickQuoteRangeCell } from './range-cell';
-import { NumberOrRange } from '../../../types';
 import styles from '../content.module.css';
 
 type DataItem = {
@@ -29,9 +29,9 @@ export const QuickQuoteResultTableRow = ({
             <div className={styles.contentTableRowHeader} role="rowheader">
                 {rowHeader}
             </div>
-            {data?.map(({ value, period }) => (
+            {data?.map(({ value, period }, idx) => (
                 <QuickQuoteRangeCell
-                    key={Array.isArray(value) ? value.join('-') : value}
+                    key={idx}
                     value={value}
                     period={period}
                     variant={cellsVariant}

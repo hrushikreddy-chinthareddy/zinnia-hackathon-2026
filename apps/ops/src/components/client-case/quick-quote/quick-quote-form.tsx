@@ -18,13 +18,13 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-
-import styles from './quick-quote-form.module.css';
 import {
     QuickQuoteFormState,
     QuickQuoteParams,
     quickQuoteParamsSchema,
-} from './types';
+} from '@deps/types/quickQuote';
+
+import styles from './quick-quote-form.module.css';
 
 const toNumber = (v: unknown) => {
     if (typeof v === 'number') return v;

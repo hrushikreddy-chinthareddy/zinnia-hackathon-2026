@@ -1,4 +1,4 @@
-import { QuickQuoteFormData } from '@deps/types/quickQuote';
+import { QuickQuoteParams } from '@deps/types/quickQuote';
 
 import type {
     ProductClassResult,
@@ -21,7 +21,7 @@ export class QuickQuoteProducts {
 
     constructor(private rules: RulesModel) {}
 
-    getProductsAvailableFor(input: QuickQuoteFormData): ProductClassResult[] {
+    getProductsAvailableFor(input: QuickQuoteParams): ProductClassResult[] {
         const code = input.state;
         if (code && this.NOT_COVERED_STATES.has(code)) {
             this.rejectReasonField = 'state';
@@ -36,7 +36,7 @@ export class QuickQuoteProducts {
                 (productClass) =>
                     this.getClassEligible(
                         productClass.alternatives,
-                        input.age,
+                        input.insuredAge,
                         input.nicotineUser,
                         input.faceAmount
                     )
@@ -53,14 +53,14 @@ export class QuickQuoteProducts {
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [minClass, maxClass],
-                    notAvailabilityReasonField: this.rejectReasonField ?? '',
+                    notAvailabilityReasonField: this.rejectReasonField,
                 });
             } else {
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [],
-                    notAvailabilityReasonField: this.rejectReasonField ?? '',
+                    notAvailabilityReasonField: this.rejectReasonField,
                 });
             }
         }

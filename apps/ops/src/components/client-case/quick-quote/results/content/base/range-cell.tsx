@@ -6,9 +6,9 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { NumberOrRange } from '@deps/types/quickQuote';
 
 import { buildRangeText } from '../../../helpers';
-import { NumberOrRange } from '../../../types';
 import styles from '../content.module.css';
 
 type QuickQuoteRangeCellProps = {

@@ -1,3 +1,5 @@
+import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
+
 export type ProductName =
     | 'Term Life 10 Yr'
     | 'Term Life 15 Yr'
@@ -27,7 +29,7 @@ export type ClassRule = {
 export type ProductRule = {
     productName: ProductName; // for debugging
     planCode: PlanCode;
-    termLength: number;
+    termLength: TermFixedCostPeriod;
     classes: ClassRule[];
 };
 
@@ -38,7 +40,7 @@ export type RulesModel = {
 
 export type ProductClassResult = {
     planCode: PlanCode;
-    termLength: number;
+    termLength: TermFixedCostPeriod;
     classCodes: string[];
-    notAvailabilityReasonField: string;
+    notAvailabilityReasonField: NotAvailabilityReasonField;
 };

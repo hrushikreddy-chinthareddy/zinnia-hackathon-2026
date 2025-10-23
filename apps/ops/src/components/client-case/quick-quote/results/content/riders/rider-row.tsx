@@ -1,4 +1,5 @@
-import { NumberOrRange, QuickQuoteFormState } from '../../../types';
+import { NumberOrRange, QuickQuoteFormState } from '@deps/types/quickQuote';
+
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { useQuickQuoteResults } from '../results-context';
 import { QuickQuoteRiderRowHeader } from './rider-row-header';

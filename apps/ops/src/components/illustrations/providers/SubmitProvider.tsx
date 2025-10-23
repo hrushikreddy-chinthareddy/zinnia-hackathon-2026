@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { createIllustration } from '@deps/queries/api/client/documents/v3/illustrations';
+import { createIllustration } from '@deps/queries/api/v3/illustrations';
 import {
     editIllustrationToClientCase,
     saveIllustrationToClientCase,

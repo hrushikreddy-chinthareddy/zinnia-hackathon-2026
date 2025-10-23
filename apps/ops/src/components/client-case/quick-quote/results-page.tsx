@@ -4,11 +4,13 @@ import {
     NO_PARAM_RIDERS,
     PREMIUM_FREE_RIDERS,
     RIDERS_WITH_FACE_AMOUNT,
-} from './config';
+    QuickQuoteFormState,
+    QuickQuoteParams,
+} from '@deps/types/quickQuote';
+
 import { QuickQuoteResultsContent } from './results/content/results-content';
 import { QuickQuoteResultsProvider } from './results/content/results-context';
 import { QuickQuoteResultPageHeader as ResultPageHeader } from './results/page-header';
-import { QuickQuoteFormState, QuickQuoteParams } from './types';
 
 type QuickQuoteResultsPageProps = {
     quickQuoteParams: QuickQuoteParams;
@@ -62,7 +64,7 @@ export const QuickQuoteResultsPage = ({
     return (
         <div>
             <FormProvider {...formMethods}>
-                <QuickQuoteResultsProvider>
+                <QuickQuoteResultsProvider quickQuoteParams={params}>
                     <ResultPageHeader />
                     <QuickQuoteResultsContent />
                 </QuickQuoteResultsProvider>

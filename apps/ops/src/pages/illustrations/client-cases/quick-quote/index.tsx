@@ -6,12 +6,12 @@ import { ComponentProps, useCallback, useEffect } from 'react';
 import { canUserCreateClientCase } from '@deps/components/client-case/client-case-list/sureify-flow/validate-user-permission';
 import { serializeQuickQuoteParams } from '@deps/components/client-case/quick-quote/helpers';
 import QuickQuoteForm from '@deps/components/client-case/quick-quote/quick-quote-form';
-import { QuickQuoteParams } from '@deps/components/client-case/quick-quote/types';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
+import { QuickQuoteParams } from '@deps/types/quickQuote';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
