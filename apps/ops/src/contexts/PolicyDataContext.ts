@@ -1,5 +1,5 @@
 import { Policy } from '@zinnia/api-types/types/sor';
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
@@ -10,3 +10,7 @@ export const PolicyData = createContext({
     policyDetails: {} as PolicyDetails,
     refreshPolicy: noop,
 });
+
+export const usePolicyDataContext = () => {
+    return useContext(PolicyData);
+};

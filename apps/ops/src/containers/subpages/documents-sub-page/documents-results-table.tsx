@@ -52,6 +52,7 @@ type DocumentsResultsTableProps = {
     policyNumber: string;
     results: DocumentWithSource[] | V3DocumentWithSource[];
     planCode: string | undefined;
+    policyDeliveryDate: string | undefined;
 };
 
 const DownloadItem = ({
@@ -110,7 +111,7 @@ const DownloadItem = ({
     );
 };
 
-export const createViewAction = (
+export const createViewDownloadAction = (
     doc: DocumentWithSource | V3DocumentWithSource,
     carrierCode: string,
     t: TFunction,
@@ -138,21 +139,23 @@ export const createViewAction = (
 };
 
 export const createSendAction = (
-    doc: DocumentWithSource | V3DocumentWithSource,
     policyNumber: string,
     planCode: string | undefined,
+    policyDeliveryDate: string | undefined,
     t: TFunction
 ) => {
     return (
         <NavElement
             className={clsx(
                 'text-left underline underline-offset-2',
-                styles.actionPadding
+                styles.actionPadding,
+                !policyDeliveryDate && styles.disabled
             )}
             href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
             size={NavElementSize.Small}
             title={`${t('general.send')}`}
             type={NavElementType.Link}
+            disabled={!policyDeliveryDate}
         >
             {t('general.send')}
         </NavElement>
@@ -166,6 +169,7 @@ export default function DocumentsResultsTable({
     policyNumber,
     results,
     planCode,
+    policyDeliveryDate,
 }: DocumentsResultsTableProps) {
     const pd = 'policy.documents';
     const { t } = useTranslation();
@@ -303,12 +307,16 @@ export default function DocumentsResultsTable({
                                 <span>{document.fileType}</span>
                             </TableCell>
                             <TableCell>
-                                {createViewAction(document, carrierCode, t)}
+                                {createViewDownloadAction(
+                                    document,
+                                    carrierCode,
+                                    t
+                                )}
                                 {document.documentType === 'POLPG'
                                     ? createSendAction(
-                                          document,
                                           policyNumber,
                                           planCode,
+                                          policyDeliveryDate,
                                           t
                                       )
                                     : null}
