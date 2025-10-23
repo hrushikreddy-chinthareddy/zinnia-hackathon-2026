@@ -1,8 +1,11 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 import { TransactionsSummary } from '@/components/transaction-summary/TransactionSummary';
 import { RouteKey, getPageTitle } from '@/route-map';
+import { getFeatureFlags } from '@/services/feature-flags';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.TRANSACTION_SUMMARY);
 
@@ -22,6 +25,12 @@ export default async function TransactionSummary({
   };
 }) {
   const { planCode, policyNumber, transactionId } = params;
+  const flags = await getFeatureFlags();
+
+  const transactionSummaryEnabled =
+    flags?.[FEATURE_FLAGS.AMP_TRANSACTION_SUMMARY];
+
+  if (!transactionSummaryEnabled) return notFound();
 
   return (
     <TransactionsSummary
