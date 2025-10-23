@@ -284,6 +284,7 @@ export default function DocumentsTab({
                                         }
                                         results={caseDocuments ?? []}
                                         policyNumber={caseDetails.policyNumber}
+                                        planCode={caseDetails.planCode}
                                     />
                                 )}
 
@@ -331,6 +332,7 @@ export default function DocumentsTab({
                                         }
                                         results={policyDocuments ?? []}
                                         policyNumber={caseDetails.policyNumber}
+                                        planCode={caseDetails.planCode}
                                     />
                                 )}
                                 <DocumentResultsPagination

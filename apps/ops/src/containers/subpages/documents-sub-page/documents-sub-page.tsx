@@ -198,6 +198,7 @@ const NormalDocs = ({
                     documentType={documentType as DocumentTypeView}
                     policyNumber={policy.policyNumber ?? ''}
                     results={policyDocuments ?? []}
+                    planCode={policy.product?.planCode}
                 />
             )}
             <DocumentResultsPagination

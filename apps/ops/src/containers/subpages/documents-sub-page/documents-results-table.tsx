@@ -13,6 +13,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
+import { v4 as uuidV4 } from 'uuid';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import NavElement, {
@@ -50,6 +51,7 @@ type DocumentsResultsTableProps = {
     linkedDocumentIdentifiers?: string[];
     policyNumber: string;
     results: DocumentWithSource[] | V3DocumentWithSource[];
+    planCode: string | undefined;
 };
 
 const DownloadItem = ({
@@ -135,17 +137,22 @@ export const createViewAction = (
     );
 };
 
-export const createSendAction = (t: TFunction) => {
+export const createSendAction = (
+    doc: DocumentWithSource | V3DocumentWithSource,
+    policyNumber: string,
+    planCode: string | undefined,
+    t: TFunction
+) => {
     return (
         <NavElement
             className={clsx(
                 'text-left underline underline-offset-2',
                 styles.actionPadding
             )}
-            onClick={() => console.log('Sending...')}
+            href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
             size={NavElementSize.Small}
             title={`${t('general.send')}`}
-            type={NavElementType.Button}
+            type={NavElementType.Link}
         >
             {t('general.send')}
         </NavElement>
@@ -158,6 +165,7 @@ export default function DocumentsResultsTable({
     linkedDocumentIdentifiers = [],
     policyNumber,
     results,
+    planCode,
 }: DocumentsResultsTableProps) {
     const pd = 'policy.documents';
     const { t } = useTranslation();
@@ -296,7 +304,14 @@ export default function DocumentsResultsTable({
                             </TableCell>
                             <TableCell>
                                 {createViewAction(document, carrierCode, t)}
-                                {createSendAction(t)}
+                                {document.documentType === 'POLPG'
+                                    ? createSendAction(
+                                          document,
+                                          policyNumber,
+                                          planCode,
+                                          t
+                                      )
+                                    : null}
                             </TableCell>
                         </TableRow>
                     );
