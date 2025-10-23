@@ -67,11 +67,6 @@ export function createBulkCheckBodyRequest(partyId: string) {
       {
         user,
         relation: FgaRelation.UiAccess,
-        object: FgaRoles.WELB_SALES_MATERIALS,
-      },
-      {
-        user,
-        relation: FgaRelation.UiAccess,
         object: FgaRoles.CALL_LOG_ACCESS,
       },
       {

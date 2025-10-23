@@ -1,6 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils/dist';
+import { FgaRelation, FgaRoles } from '@xd/utils';
 import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -47,7 +47,6 @@ import {
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
-import { FgaRelation } from '@deps/types/fga';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
@@ -274,39 +273,48 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
+            // IMH-87188-87186 (186 is the IMH you can view in JIRA)
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
                     user.sub,
                     loggingContext
                 );
-            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadPolicyAdmin,
-                      loggingContext
-                  );
-            const isAdvisorsExcel = await checkTuplePage(
-                context,
-                FgaRelation.Party,
-                AE_FGA_ROLE,
-                loggingContext
-            );
 
-            if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT
+                ]
+            ) {
+                const hasPermissionToReadPolicyManagement =
+                    featureFlagDecisions?.[
+                        FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
+                    ]
+                        ? await checkTuplePage(
+                              context,
+                              FgaRelation.UiAccess,
+                              FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
+                              loggingContext
+                          )
+                        : await doesUserHavePagePermissions(
+                              context,
+                              UserPermission.AllowReadPolicyAdmin,
+                              loggingContext
+                          );
+                const isAdvisorsExcel = await checkTuplePage(
+                    context,
+                    FgaRelation.Party,
+                    AE_FGA_ROLE,
+                    loggingContext
+                );
+
+                if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
             }
 
             try {

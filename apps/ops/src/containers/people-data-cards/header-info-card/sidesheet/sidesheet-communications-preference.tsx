@@ -125,7 +125,7 @@ export const SidesheetCommunicationsPreference = ({
 
     const handleChange = (value: string) => {
         if (value.includes('addressId')) {
-            const addressId = value.split('-')[1];
+            const addressId = value.split('-').slice(1).join('-');
             const address = addresses.find(
                 (address) => address.addressId === addressId
             );
@@ -137,7 +137,7 @@ export const SidesheetCommunicationsPreference = ({
             setSelectedOption(newOption);
         }
         if (value.includes('emailId')) {
-            const emailId = value.split('-')[1];
+            const emailId = value.split('-').slice(1).join('-');
             const email = emails.find((email) => email.emailId === emailId);
             const newOption = {
                 contactType: PreferredCommunicationType.EMAIL,

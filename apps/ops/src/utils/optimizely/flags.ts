@@ -170,4 +170,11 @@ export enum FEATURE_FLAGS {
     BANK_CHANGE_DELETE_TRANSACTION = 'bank_change_delete_transaction',
     FKV_SHOW_ALL = 'fkv-show-all',
     BENE_CHANGE_NEW_API = 'bene_change_new_api',
+    ENTERPRISE_SEARCH_TRUST_OR_ORGANIZATION = 'enterprise_search_trust_or_organization',
+    //Illustrations
+    ILLUSTRATIONS_QUICK_QUOTE = 'illustrations_quick_quote',
+    FGA_ENTITY_SALES_MATERIALS = 'fga_entity_sales_materials',
+    FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS = 'fga_entity_zinnia_live_test_harness',
+    FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT = 'fga_entity_zinnia_live_policy_management',
+    FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT = 'fga_entity_zinnia_live_case_management',
 }

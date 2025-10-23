@@ -3088,7 +3088,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'YEARS',
+                                            value: 'YEAR',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -3178,7 +3178,7 @@ export const farmersBlueprintIU0101 = {
                                         conditions: [
                                             {
                                                 type: 'equalityCondition',
-                                                value: 'YEARS',
+                                                value: 'YEAR',
                                                 isEqual: true,
                                                 targetNodeId:
                                                     'solve-for-target-cash-value-age-or-year',
@@ -3529,7 +3529,7 @@ export const farmersBlueprintIU0101 = {
                                             orderingIndex: 1,
                                         },
                                         {
-                                            value: 'YEARS',
+                                            value: 'YEAR',
                                             text: {
                                                 en: 'Years',
                                             },
@@ -3620,7 +3620,7 @@ export const farmersBlueprintIU0101 = {
                                         conditions: [
                                             {
                                                 type: 'equalityCondition',
-                                                value: 'YEARS',
+                                                value: 'YEAR',
                                                 isEqual: true,
                                                 targetNodeId:
                                                     'solve-for-target-cash-value-age-or-year',

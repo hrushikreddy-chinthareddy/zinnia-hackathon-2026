@@ -1395,14 +1395,15 @@
                 "ssnFullLabel": "Numéro de sécurité sociale du propriétaire",
                 "ssnPlaceholder": "###-##-####",
                 "name": "Nom",
-                "firstName": "Prénom",
-                "lastName": "Nom de famille",
+                "firstName": "Prénom de l'individu",
+                "lastName": "Nom de famille de l'individu",
                 "ownerName": "Nom du propriétaire",
                 "agentName": "Nom de l'agent",
                 "firmName": "Nom de l'entreprise",
                 "documentNumber": "20250101-AB-123456",
                 "agentSsn": "SSN de l'agent",
-                "agentNpn": "NPN de l'agent"
+                "agentNpn": "NPN de l'agent",
+                "fullName": "Fiducie ou organisation"
             }
         },
         "quickSearch": {
@@ -8120,7 +8121,9 @@
             "addProductAriaLabel": "Bouton pour ajouter un produit",
             "editIllustration": "Modifier l'illustration",
             "initialDeathBenefitOption": "Option de prestation de décès",
-            "archive": "Archive"
+            "archive": "Archive",
+            "unsatisfiedSolveMessage": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
+            "unreachDesiredSolutionMessage": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué."
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",
@@ -8162,7 +8165,33 @@
             }
         },
         "quickQuoteForm": {
-            "title": "Cotisation rapide"
+            "title": "Cotisacion rapide",
+            "subtitle": "Remplissez les informations ci-dessous pour créer un devis rapide.",
+            "details": "Détails",
+            "productType": "Type de produit",
+            "age": "Âge",
+            "sexAtBirth": "Sexe à la naissance",
+            "nicotineUse": "Consommation de nicotine",
+            "state": "État",
+            "faceAmount": "Montant assuré",
+            "nicotineYes": "Y",
+            "nicotineNo": "N",
+            "maleButton": "M",
+            "femaleButton": "F",
+            "riders": "Avenants",
+            "accidentalDeath": "Avenant en cas de décès accidentel",
+            "childrensTerm": "Avenant d'assurance temporaire pour enfants",
+            "waiverOfPremium": "Exonération de prime",
+            "premiumfreeRiders": "Avenants sans prime",
+            "acceleratedDeathBenefit": "Avenant en cas de décès accéléré pour Maladie terminale",
+            "charitableGiving": "Avenant aux dons de bienfaisance",
+            "ageRequired": "Veuillez saisir un âge",
+            "mustBePositive": "Doit être un nombre positif",
+            "selectAnOption": "Veuillez sélectionner une option",
+            "selectAnState": "Veuillez sélectionner un État",
+            "provideFaceAmount": "Veuillez indiquer un montant nominal",
+            "provideValidAmount": "Veuillez indiquer un montant valide",
+            "faceAmountError": "Le montant nominal doit être supérieur à 0"
         }
     },
     "usage": {

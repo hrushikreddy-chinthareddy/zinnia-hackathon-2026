@@ -6,10 +6,27 @@
     }
 }
 
+.toolbarContainer {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--measure-dimension-z-space-4, 16px);
+    padding: var(--measure-dimension-z-space-6, 24px)
+        var(--measure-dimension-z-space-4, 16px)
+        var(--measure-dimension-z-space-6, 24px)
+        var(--measure-dimension-z-space-6, 24px);
+    border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+}
+
 .bannerWrapper {
     position: fixed;
     top: var(--measure-dimension-z-space-4);
     right: 0;
     width: calc(100vw - var(--measure-dimension-z-space-4));
     z-index: 50;
+}
+
+.bannerWrapperWarning {
+    flex-basis: 100%;
 }

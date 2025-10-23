@@ -1297,7 +1297,8 @@
                 "policyNumber": "Enter a policy/contract number to return search results",
                 "ssn": "Enter a Social Security number to return search results",
                 "firstName": "Enter a first name to return search results",
-                "lastName": "Enter a last name to return search results"
+                "lastName": "Enter a last name to return search results",
+                "fullName": "Enter a trust or organization to return search results"
             },
             "buttons": {
                 "policyNumber": "Policy or contract number",
@@ -1306,15 +1307,16 @@
                 "ssn": "SSN",
                 "ssnFullLabel": "Owner Social Security number",
                 "ssnPlaceholder": "###-##-####",
-                "name": "Name",
-                "firstName": "First name",
-                "lastName": "Last name",
+                "name": "Owner",
+                "firstName": "Individual's first name",
+                "lastName": "Individual's last name",
                 "ownerName": "Owner name",
                 "agentName": "Agent name",
                 "firmName": "Firm name",
                 "documentNumber": "20250101-AB-123456",
                 "agentSsn": "Agent SSN",
-                "agentNpn": "Agent NPN"
+                "agentNpn": "Agent NPN",
+                "fullName": "Trust or organization"
             }
         },
         "quickSearch": {
@@ -8266,7 +8268,9 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive"
+            "archive": "Archive",
+            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
@@ -8276,6 +8280,29 @@
             "ariaSubmit": "Submit for application",
             "cancel": "Cancel",
             "ariaCancel": "Cancel submission"
+        },
+        "quickQuoteResults": {
+            "title": "Quick Quote",
+            "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
+            "notAvailable": "Not Available",
+            "product": {
+                "title": "Product",
+                "totalPremiumRange": "Total Premium Range",
+                "totalPremiumRangeSubtitle": "(Base Premium Range + Riders)",
+                "totalPremiumRangeRowHeader": "{{years}} year term"
+            },
+            "coverage": {
+                "title": "Coverage & Summary",
+                "basePremiumRange": "Base Premium Range",
+                "hint": "",
+                "nYearTerm": "{{years}} year term"
+            },
+            "riders": {
+                "title": "Riders",
+                "disabledPlaceholder": "Select to add and see pricing",
+                "totalRiderPricing": "Total Rider Pricing",
+                "premiumFreeRiders": "Premium-free Riders"
+            }
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "New Client Case",
@@ -8327,7 +8354,14 @@
             "waiverOfPremium": "Waiver of Premium",
             "premiumfreeRiders": "Premium-free Riders",
             "acceleratedDeathBenefit": "Accelerated Death Benefit Rider for Terminal Illness",
-            "charitableGiving": "Charitable Giving Rider"
+            "charitableGiving": "Charitable Giving Rider",
+            "ageRequired": "Please enter an age",
+            "mustBePositive": "Must be a positive number",
+            "selectAnOption": "Please select an option",
+            "selectAnState": "Please select an state",
+            "provideFaceAmount": "Please provide a face amount",
+            "provideValidAmount": "Please provide a valid amount",
+            "faceAmountError": "Face amount must be greater than 0"
         }
     },
     "zinniaAiAssistant": {

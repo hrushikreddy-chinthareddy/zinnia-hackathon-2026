@@ -1,5 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRoles } from '@xd/utils/dist';
+import { FgaRoles } from '@xd/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { PageHead } from '@deps/components/page-title';
@@ -82,26 +82,40 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext
                 );
 
-            const hasPermissionToReadCaseManagement = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadCaseManagement,
-                      loggingContext
-                  );
-            const isAdvisorsExcel = await checkTuplePage(
-                context,
-                FgaRelation.Party,
-                AE_FGA_ROLE,
-                loggingContext
-            );
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT
+                ]
+            ) {
+                const hasPermissionToReadCaseManagement =
+                    featureFlagDecisions?.[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]
+                        ? await checkTuplePage(
+                              context,
+                              FgaRelation.UiAccess,
+                              FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
+                              loggingContext
+                          )
+                        : await doesUserHavePagePermissions(
+                              context,
+                              UserPermission.AllowReadCaseManagement,
+                              loggingContext
+                          );
+                const isAdvisorsExcel = await checkTuplePage(
+                    context,
+                    FgaRelation.Party,
+                    AE_FGA_ROLE,
+                    loggingContext
+                );
+
+                if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
+            }
 
             const isPermittedToViewRawData = await checkTuplePage(
                 context,
@@ -109,15 +123,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 FgaRoles.ZINNIA_INTERNAL_VIEWER,
                 loggingContext
             );
-
-            if (!isAdvisorsExcel && !hasPermissionToReadCaseManagement) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
-            }
 
             const id = (params?.id as string) || '';
             const tab = (params?.tab as string) || '';
