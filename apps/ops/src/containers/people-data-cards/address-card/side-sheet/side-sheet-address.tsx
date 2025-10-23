@@ -86,6 +86,7 @@ export interface SideSheetAddressProps {
     planCode?: string;
     policyNumber?: string;
     setCurrentAddresses: Dispatch<SetStateAction<Address[]>>;
+    currentAddresses: Address[];
     updateAddress?: Address;
 }
 
@@ -101,6 +102,7 @@ const SideSheetAddress = ({
     policyNumber,
     setCurrentAddresses,
     updateAddress,
+    currentAddresses,
 }: SideSheetAddressProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.address',
@@ -116,14 +118,12 @@ const SideSheetAddress = ({
     const INITIAL_ADDRESS: Address = {
         addressType: AddressType.RESIDENCE,
         country: Country.US,
+        isPreferred: isCurrentMailingAddress,
     };
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: correlationIdFromRoute || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
-        preferredAddressIndicator: isCurrentMailingAddress
-            ? PreferredAddressIndicator.Yes
-            : PreferredAddressIndicator.No,
         reverseInitiator: false,
     };
 
@@ -154,8 +154,7 @@ const SideSheetAddress = ({
     const isAdd = action === NonFinancialTransactionActions.Add;
     const isDelete = action === NonFinancialTransactionActions.Delete;
     const isEdit = action === NonFinancialTransactionActions.Edit;
-    const isSelectedMailingAddress =
-        body.preferredAddressIndicator === PreferredAddressIndicator.Yes;
+    const isSelectedMailingAddress = address.isPreferred;
     const stopLoading =
         currentErrors === undefined
             ? true
@@ -198,10 +197,23 @@ const SideSheetAddress = ({
     };
 
     const handleDelete = async () => {
+        //If we're deelete an address set to preferred, we need to set a new one using the `preferredAddressId` field. I'm just taking the next address in the list.
+        const firstNonPreferredAddressId = currentAddresses.find(
+            (address) => !address.isPreferred
+        )?.addressId;
+
         const reqBody = {
             ...body,
-            address,
+            address: {
+                ...address,
+                isPreferred: false,
+            },
+            //TODO: remove this when BPM doesnt 500 at us for not passing in preferredAddressIndicator, even though this is SUPPOSED to be deprecated from BPM
+            preferredAddressIndicator: PreferredAddressIndicator.No,
             deleteRequest: true,
+            preferredAddressId: isCurrentMailingAddress
+                ? firstNonPreferredAddressId
+                : undefined,
         };
         const response = await editNonFinancialTransaction({
             body: reqBody,
@@ -251,6 +263,10 @@ const SideSheetAddress = ({
                 body: {
                     ...body,
                     address,
+                    //TODO: remove this when BPM doesnt 500 at us for not passing in preferredAddressIndicator, even though this is SUPPOSED to be deprecated from BPM
+                    preferredAddressIndicator: address.isPreferred
+                        ? PreferredAddressIndicator.Yes
+                        : PreferredAddressIndicator.No,
                     correlationId: body.caseId ? body.correlationId : uuidV4(),
                 },
                 partyId,
@@ -259,11 +275,28 @@ const SideSheetAddress = ({
                 transaction: NonFinancialTransactions.Address,
             });
         } else {
+            const isPreferredSelected = address.isPreferred;
+            const isCurrentMailingAddressSelected = isCurrentMailingAddress;
+            const unsettingMailingAddress =
+                isCurrentMailingAddressSelected && !isPreferredSelected;
+
+            //If we're deelete an address set to preferred, we need to set a new one using the `preferredAddressId` field. I'm just taking the next address in the list.
+            const firstNonPreferredAddressId = currentAddresses.find(
+                (address) => !address.isPreferred
+            )?.addressId;
+
             response = await editNonFinancialTransaction({
                 body: {
                     ...body,
                     address,
+                    //TODO: remove this when BPM doesnt 500 at us for not passing in preferredAddressIndicator, even though this is SUPPOSED to be deprecated from BPM
+                    preferredAddressIndicator: address.isPreferred
+                        ? PreferredAddressIndicator.Yes
+                        : PreferredAddressIndicator.No,
                     correlationId: body.caseId ? body.correlationId : uuidV4(),
+                    preferredAddressId: unsettingMailingAddress
+                        ? firstNonPreferredAddressId
+                        : undefined,
                 },
                 itemId: updateAddress?.addressId,
                 partyId,
@@ -575,14 +608,12 @@ const SideSheetAddress = ({
                     checked={isSelectedMailingAddress}
                     isDisabled={(isOnlyAddress && isEdit) || isDelete}
                     label={t('labels.setAsMailingAddress')}
-                    onChange={(e) =>
-                        setBody((prevState) => ({
+                    onChange={(e) => {
+                        setAddress((prevState) => ({
                             ...prevState,
-                            preferredAddressIndicator: e
-                                ? PreferredAddressIndicator.Yes
-                                : PreferredAddressIndicator.No,
-                        }))
-                    }
+                            isPreferred: e,
+                        }));
+                    }}
                 />
 
                 {!isAdd && (
