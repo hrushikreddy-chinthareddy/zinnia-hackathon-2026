@@ -88,7 +88,10 @@ const DownloadItem = ({
 
     return (
         <NavElement
-            className="text-left underline underline-offset-2"
+            className={clsx(
+                'text-left underline underline-offset-2',
+                styles.actionPadding
+            )}
             onClick={downloadDocument}
             size={NavElementSize.Small}
             title={`${t('general.download')} ${doc.displayName}`}
@@ -105,7 +108,7 @@ const DownloadItem = ({
     );
 };
 
-export const createAction = (
+export const createViewAction = (
     doc: DocumentWithSource | V3DocumentWithSource,
     carrierCode: string,
     t: TFunction,
@@ -113,7 +116,7 @@ export const createAction = (
 ) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
-            className="!underline-offset-2"
+            className={clsx('!underline-offset-2', styles.actionPadding)}
             carrier={carrierCode}
             displayName={
                 (doc.displayName || doc.documentId) ??
@@ -125,10 +128,27 @@ export const createAction = (
             }
             activeDocType={doc.documentSource}
         >
-            {label ? t(label) : t('view')}
+            {label ? t(label) : t('policy.documents.view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />
+    );
+};
+
+export const createSendAction = (t: TFunction) => {
+    return (
+        <NavElement
+            className={clsx(
+                'text-left underline underline-offset-2',
+                styles.actionPadding
+            )}
+            onClick={() => console.log('Sending...')}
+            size={NavElementSize.Small}
+            title={`${t('general.send')}`}
+            type={NavElementType.Button}
+        >
+            {t('general.send')}
+        </NavElement>
     );
 };
 
@@ -139,13 +159,14 @@ export default function DocumentsResultsTable({
     policyNumber,
     results,
 }: DocumentsResultsTableProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
+    const pd = 'policy.documents';
+    const { t } = useTranslation();
 
     return (
         <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className="hidden">{`${policyNumber} ${t(
-                'documents'
-            )}`}</caption>
+            <caption className="hidden">
+                {`${policyNumber} ${t(`${pd}.documents`)}`}
+            </caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
                     <TableHeaderCell>
@@ -154,13 +175,13 @@ export default function DocumentsResultsTable({
                                 variant={TypographyVariant.BodySmBold}
                                 asTag="h3"
                             >
-                                {t('documentId')}
+                                {t(`${pd}.documentId`)}
                             </Typography>
                             {documentType !==
                                 DocumentTypeView.Correspondence && (
                                 <Popover
-                                    body={t('documentIdentifierTooltip')}
-                                    title={t('documentId') as string}
+                                    body={t(`${pd}.documentIdentifierTooltip`)}
+                                    title={t(`${pd}.documentId`) as string}
                                     placement={PopoverPlacement.TopRight}
                                 >
                                     <Icon
@@ -176,22 +197,27 @@ export default function DocumentsResultsTable({
                     <TableHeaderCell>
                         {t(
                             documentType === DocumentTypeView.Correspondence
-                                ? 'sentDate'
-                                : 'receivedDate'
+                                ? `${pd}.sentDate`
+                                : `${pd}.receivedDate`
                         )}
                     </TableHeaderCell>
-                    <TableHeaderCell>{t('fileType')}</TableHeaderCell>
+                    <TableHeaderCell>{t(`${pd}.fileType`)}</TableHeaderCell>
                     <TableHeaderCell>
-                        <div className="flex flex-row items-center gap-1">
+                        <div
+                            className={clsx(
+                                'flex flex-row items-center gap-1',
+                                styles.actionPadding
+                            )}
+                        >
                             <Typography
                                 variant={TypographyVariant.BodySmBold}
                                 asTag="h3"
                             >
-                                {t('actions')}
+                                {t(`${pd}.actions`)}
                             </Typography>
                             <Popover
-                                body={t('actionsTooltip')}
-                                title={t('actions') as string}
+                                body={t(`${pd}.actionsTooltip`)}
+                                title={t(`${pd}.actions`) as string}
                                 placement={PopoverPlacement.TopLeft}
                             >
                                 <Icon
@@ -232,7 +258,7 @@ export default function DocumentsResultsTable({
                                         ) ? (
                                             <Tooltip
                                                 body={
-                                                    t('linkedTo', {
+                                                    t(`${pd}.linkedTo`, {
                                                         type:
                                                             document.documentType?.toLowerCase() ||
                                                             DEFAULT_ERROR_STRING,
@@ -269,7 +295,8 @@ export default function DocumentsResultsTable({
                                 <span>{document.fileType}</span>
                             </TableCell>
                             <TableCell>
-                                {createAction(document, carrierCode, t)}
+                                {createViewAction(document, carrierCode, t)}
+                                {createSendAction(t)}
                             </TableCell>
                         </TableRow>
                     );
@@ -283,7 +310,7 @@ export default function DocumentsResultsTable({
                             )}
                             colSpan={5}
                         >
-                            {t('noResults')}
+                            {t(`${pd}.noResults`)}
                         </TableCell>
                     </TableRow>
                 )}
