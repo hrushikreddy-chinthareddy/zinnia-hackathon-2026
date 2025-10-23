@@ -38,3 +38,8 @@ export type Section = [
 export const [Expand, Collapse] = [true, false];
 
 export type ExpandCollapse = typeof Expand | typeof Collapse;
+
+export interface FindAllKeyValuesSidebarProps {
+    planCode?: string;
+    policyNumber?: string;
+}
