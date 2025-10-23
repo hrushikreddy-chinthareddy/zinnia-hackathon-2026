@@ -1,16 +1,16 @@
 import { TitleFieldProps } from '@rjsf/utils';
 
+import Content from '@deps/components/content/content';
+
 import classes from './title-field.module.css';
 
 export function TitleFieldTemplate(props: TitleFieldProps) {
     const { title, uiSchema } = props;
     const fontSize = (uiSchema?.['ui:options']?.fontSize as number) || 32;
 
-    const fontClass = (fontSize: number) => {
-        return fontSize === 24 ? 'text-xl' : fontSize === 16 ? 'text-lg' : '';
-    };
-
     return (
-        <div className={`${classes.text} ${fontClass(fontSize)}`}>{title}</div>
+        <Content className={`${classes.text} text-[${fontSize}px]`}>
+            {title}
+        </Content>
     );
 }

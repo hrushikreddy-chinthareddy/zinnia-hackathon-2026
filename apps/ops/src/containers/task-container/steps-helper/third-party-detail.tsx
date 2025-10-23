@@ -16,79 +16,33 @@ export const getThirdPartyDetailSteps = ({
     const readOnly = task.status === TaskStatus.Completed;
     const isIssueResolved = task.data.issueResolved;
 
-    const dynamicSteps = [
-        {
-            ariaLabel: taskMetadata[0]?.title || '',
-            isVisible: () => true,
+    const dynamicSteps = taskMetadata.map((meta, index) => {
+        const title = meta?.title || '';
+        const isVisible =
+            index === 0
+                ? () => true
+                : index === 3
+                ? () => !isIssueResolved
+                : () => isIssueResolved;
+
+        return {
+            isVisible,
             component: (
                 <TaskFormStep
                     readonly={readOnly}
                     taskInfoLink={taskInfoLink}
-                    taskMetadata={taskMetadata[0]}
-                    key={`step_${0}`}
+                    taskMetadata={meta}
+                    key={`step_${index}`}
                     isContinueButtonEnabled={isContinueButtonEnabled}
-                ></TaskFormStep>
+                    isSubmit={index > 0}
+                />
             ),
-            text: taskMetadata[0]?.title || '',
-            index: 0,
+            text: title,
+            index,
             isCompleted: true,
-            screenReaderLabel: taskMetadata[0]?.title || '',
-        },
-        {
-            ariaLabel: taskMetadata[1]?.title || '',
-            isVisible: () => isIssueResolved,
-            component: (
-                <TaskFormStep
-                    readonly={readOnly}
-                    taskInfoLink={taskInfoLink}
-                    taskMetadata={taskMetadata[1]}
-                    key={`step_${1}`}
-                    isContinueButtonEnabled={isContinueButtonEnabled}
-                ></TaskFormStep>
-            ),
-            text: taskMetadata[1]?.title || '',
-            isSubmit: true,
-            index: 1,
-            isCompleted: true,
-            screenReaderLabel: taskMetadata[1]?.title || '',
-        },
-        {
-            ariaLabel: taskMetadata[2]?.title || '',
-            isVisible: () => isIssueResolved,
-            component: (
-                <TaskFormStep
-                    readonly={readOnly}
-                    taskInfoLink={taskInfoLink}
-                    taskMetadata={taskMetadata[2]}
-                    key={`step_${2}`}
-                    isContinueButtonEnabled={isContinueButtonEnabled}
-                ></TaskFormStep>
-            ),
-            text: taskMetadata[2]?.title || '',
-            isSubmit: true,
-            index: 2,
-            isCompleted: true,
-            screenReaderLabel: taskMetadata[2]?.title || '',
-        },
-        {
-            ariaLabel: taskMetadata[3]?.title || '',
-            isVisible: () => !isIssueResolved,
-            component: (
-                <TaskFormStep
-                    readonly={readOnly}
-                    taskInfoLink={taskInfoLink}
-                    isSubmit={true}
-                    taskMetadata={taskMetadata[3]}
-                    key={`step_${3}`}
-                    isContinueButtonEnabled={isContinueButtonEnabled}
-                ></TaskFormStep>
-            ),
-            text: taskMetadata[3].title || '',
-            index: 3,
-            isCompleted: true,
-            screenReaderLabel: taskMetadata[3].title || '',
-        },
-    ];
+            screenReaderLabel: title,
+        };
+    });
 
     const staticSteps: Step[] = [
         {
