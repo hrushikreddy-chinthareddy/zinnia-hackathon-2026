@@ -11,13 +11,13 @@
     "dev:consumer-experience": "pnpm run dev --filter consumer-experience",
     "dev:cui": "pnpm run dev --filter consumer-experience",
     "lint": "turbo run lint",
-    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' + && find . -name '.turbo' -type d -prune -exec rm -rf '{}' +",
+    "clean": "find . -name '.next' -type d -prune -exec rm -rf '{}' + && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' + && find . -name '.turbo' -type d -prune -exec rm -rf '{}' +",
     "test": "turbo run test",
     "build-storybook": "turbo run build-storybook",
     "link-package": "node ./scripts/link-package.mjs",
     "unlink-package": "node ./scripts/unlink-packages.mjs",
     "pre-commit": ".husky/pre-commit",
-    "pre-push": ".husky/pre-push",
+    "pre-push": "turbo run build --filter \"@zinnia/*\" && .husky/pre-push",
     "prepare": "husky install"
   },
   "devDependencies": {
