@@ -35,8 +35,7 @@ export const FullName = ({ firstName, lastName, fullName, ...rest }: Props) => {
       {fullName && <Name displayName={toSentenceCase(fullName)} {...rest} />}
       {firstName && lastName && (
         <>
-          <Name displayName={toSentenceCase(firstName)} {...rest} />
-          &nbsp;
+          <Name displayName={toSentenceCase(firstName)} {...rest} />{' '}
           <Name displayName={toSentenceCase(lastName)} {...rest} />
         </>
       )}
