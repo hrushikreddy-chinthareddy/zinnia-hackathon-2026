@@ -24,6 +24,7 @@ import {
     quickQuoteParamsSchema,
 } from '@deps/types/quickQuote';
 
+import { buildQuickQuoteParams } from './helpers';
 import styles from './quick-quote-form.module.css';
 
 const toNumber = (v: unknown) => {
@@ -111,32 +112,9 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
     }, [childrenOn, setValue]);
 
     const submit = async (data: QuickQuoteFormState) => {
-        const { riders } = data;
+        const params = buildQuickQuoteParams(data);
 
-        const params: Partial<QuickQuoteParams> = {
-            ...data,
-            riders: Object.fromEntries(
-                Object.entries(riders).map(([riderName, riderField]) => {
-                    if (!riderField.enabled) {
-                        return [riderName, false];
-                    }
-
-                    if (riderField.type === 'WITH_FACE_AMOUNT') {
-                        return [riderName, riderField.faceAmount];
-                    }
-                    return [riderName, true];
-                })
-            ),
-        };
-
-        const result = quickQuoteParamsSchema.parse(params);
-
-        if (!result.success) {
-            console.error(result.error);
-            return;
-        }
-
-        await onSubmit?.(result.value);
+        await onSubmit?.(params);
     };
 
     return (

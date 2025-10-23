@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { PartialDeep } from 'type-fest';
 import { v4 as uuid4 } from 'uuid';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -15,6 +16,7 @@ import {
     NumberRange,
     QuickQuoteParams,
     SerializedQuickQuoteParams,
+    QuickQuoteFormState,
 } from '@deps/types/quickQuote';
 import { NotAvailabilityReasonField } from '@deps/utils/quick-quotes-rules/types';
 
@@ -75,6 +77,28 @@ export const buildRangeText = (
     return withPeriodText(formatted.join(' — '), period);
 };
 
+export const buildQuickQuoteParams = (
+    data: QuickQuoteFormState
+): QuickQuoteParams => {
+    const { riders } = data;
+
+    return {
+        ...data,
+        riders: Object.fromEntries(
+            Object.entries(riders).map(([riderName, riderField]) => {
+                if (!riderField.enabled) {
+                    return [riderName, false];
+                }
+
+                if (riderField.type === 'WITH_FACE_AMOUNT') {
+                    return [riderName, riderField.faceAmount];
+                }
+                return [riderName, true];
+            })
+        ),
+    };
+};
+
 export const serializeQuickQuoteParams = ({
     insuredAge,
     sexAtBirth,
@@ -109,6 +133,48 @@ export const serializeQuickQuoteParams = ({
         nicotineUser: nicotineUser ? 'true' : 'false',
         faceAmount: faceAmount.toString(),
         ...Object.fromEntries(ridersEntries),
+    };
+};
+
+export const buildDefaultFormStateValues = (
+    params: QuickQuoteParams
+): PartialDeep<QuickQuoteFormState> => {
+    const { riders, premiumFreeRiders } = params;
+
+    return {
+        ...params,
+        premiumFreeRiders: Object.fromEntries(
+            PREMIUM_FREE_RIDERS.map((riderName) => [
+                riderName,
+                riderName in premiumFreeRiders
+                    ? premiumFreeRiders[riderName] ?? false
+                    : false,
+            ])
+        ),
+        riders: Object.fromEntries([
+            ...RIDERS_WITH_FACE_AMOUNT.map(
+                (riderName) => [
+                    riderName,
+                    {
+                        type: 'WITH_FACE_AMOUNT',
+                        enabled:
+                            riderName in riders ? !!riders[riderName] : false,
+                        faceAmount:
+                            typeof riders[riderName] !== 'number'
+                                ? undefined
+                                : riders[riderName] || undefined,
+                    },
+                ],
+                ...NO_PARAM_RIDERS.map((riderName) => [
+                    riderName,
+                    {
+                        type: 'NO_PARAMS',
+                        enabled:
+                            riderName in riders ? !!riders[riderName] : false,
+                    },
+                ])
+            ),
+        ]),
     };
 };
 

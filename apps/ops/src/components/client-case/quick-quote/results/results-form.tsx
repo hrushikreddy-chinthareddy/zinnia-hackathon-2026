@@ -20,8 +20,6 @@ export const QuickQuoteResultsPageForm = () => {
     const {
         register,
         control,
-        getValues,
-        handleSubmit,
         formState: { errors, isValid },
     } = useQuickQuoteResultsForm();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -55,13 +53,7 @@ export const QuickQuoteResultsPageForm = () => {
     ];
 
     return (
-        <form
-            className={styles.quickQuoteFormContainer}
-            onSubmit={handleSubmit(() => {
-                console.log('getValues', getValues());
-                console.log('errors', errors);
-            })}
-        >
+        <div className={styles.quickQuoteFormContainer}>
             <div className={styles.ageInput}>
                 <FieldData
                     id="insuredAge"
@@ -185,6 +177,6 @@ export const QuickQuoteResultsPageForm = () => {
             >
                 <span className="button-sm">Update quote</span>
             </Button>
-        </form>
+        </div>
     );
 };
