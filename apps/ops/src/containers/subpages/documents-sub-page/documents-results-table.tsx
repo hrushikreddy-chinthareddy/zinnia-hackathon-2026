@@ -27,6 +27,7 @@ import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
@@ -62,6 +63,7 @@ const DownloadItem = ({
     doc: DocumentWithSource | MetadataSearchResponse;
     carrierCode: string;
 }) => {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
     const docId =
         doc.documentId || ((doc as DocumentWithSource).documentID as string);
@@ -93,7 +95,7 @@ const DownloadItem = ({
         <NavElement
             className={clsx(
                 'text-left underline underline-offset-2',
-                styles.actionPadding
+                featureFlags.send_policy_pages && styles.actionPadding
             )}
             onClick={downloadDocument}
             size={NavElementSize.Small}
@@ -117,9 +119,13 @@ export const createViewDownloadAction = (
     t: TFunction,
     label?: string
 ) => {
+    const { featureFlags } = useOptimizely();
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
-            className={clsx('!underline-offset-2', styles.actionPadding)}
+            className={clsx(
+                '!underline-offset-2',
+                featureFlags.send_policy_pages && styles.actionPadding
+            )}
             carrier={carrierCode}
             displayName={
                 (doc.displayName || doc.documentId) ??
@@ -171,6 +177,7 @@ export default function DocumentsResultsTable({
     planCode,
     policyDeliveryDate,
 }: DocumentsResultsTableProps) {
+    const { featureFlags } = useOptimizely();
     const pd = 'policy.documents';
     const { t } = useTranslation();
 
@@ -218,7 +225,8 @@ export default function DocumentsResultsTable({
                         <div
                             className={clsx(
                                 'flex flex-row items-center gap-1',
-                                styles.actionPadding
+                                featureFlags.send_policy_pages &&
+                                    styles.actionPadding
                             )}
                         >
                             <Typography
@@ -312,7 +320,9 @@ export default function DocumentsResultsTable({
                                     carrierCode,
                                     t
                                 )}
-                                {document.documentType === 'POLPG'
+
+                                {featureFlags.send_policy_pages &&
+                                document.documentType === 'POLPG'
                                     ? createSendAction(
                                           policyNumber,
                                           planCode,
