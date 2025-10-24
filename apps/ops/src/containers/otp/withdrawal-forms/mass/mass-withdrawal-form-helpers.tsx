@@ -442,12 +442,12 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     doesCheckMeetSecurityRequirements:
                         doesCheckMeetSecRequiremnt,
                     isVoidCheckAttached: voidCheck,
-                    accountHolder: selectedBank.nameOnBankAccount ?? '',
-                    accountNumber: selectedBank.accountNumber ?? '',
+                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
+                    accountNumber: selectedBank?.accountNumber ?? '',
                     accountType:
-                        selectedBank.accountType?.text ?? AccountType.Checking,
-                    bankName: selectedBank.bankName ?? '',
-                    bankRoutingNumber: selectedBank.routingNumber ?? '',
+                        selectedBank?.accountType?.text ?? AccountType.Checking,
+                    bankName: selectedBank?.bankName ?? '',
+                    bankRoutingNumber: selectedBank?.routingNumber ?? '',
                 };
             },
             generatePayloadFromSelection: ({
