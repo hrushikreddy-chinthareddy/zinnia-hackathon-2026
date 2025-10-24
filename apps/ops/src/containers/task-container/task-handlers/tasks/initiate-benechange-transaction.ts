@@ -83,12 +83,12 @@ const formatParties = (policyResponse: PolicyResponse) => {
             party.emails.length > 0
                 ? party.emails.map((email: any) => ({
                       emailAddress: email.emailAddress ?? null,
-                      emailType: email.emailType ?? null,
+                      emailType: email.emailType ?? 'PERSONAL',
                   }))
                 : [
                       {
                           emailAddress: null,
-                          emailType: null,
+                          emailType: 'PERSONAL',
                       },
                   ],
         phones:
@@ -211,7 +211,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                 ? bene.emails.map((email: any) => ({
                                       emailAddress: email.emailAddress ?? null,
                                       emailId: email.emailId ?? null,
-                                      emailType: email.emailType ?? null,
+                                      emailType: email.emailType ?? 'PERSONAL',
                                       endDate: email.endDate ?? null,
                                       isPreferred: email.isPreferred ?? false,
                                       startDate: email.startDate ?? null,
@@ -220,7 +220,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                       {
                                           emailAddress: null,
                                           emailId: null,
-                                          emailType: null,
+                                          emailType: 'PERSONAL',
                                           endDate: null,
                                           isPreferred: false,
                                           startDate: null,

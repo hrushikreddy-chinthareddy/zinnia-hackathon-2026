@@ -45,7 +45,9 @@ const PercentageWidget = ({
     const actionData = formContext.customData.actionData;
     const validate = validatePercentage(actionData);
 
-    return (
+    return readonly ? (
+        value
+    ) : (
         <div className="max-w-sm flex w-full flex-col">
             <Field
                 name={id}
