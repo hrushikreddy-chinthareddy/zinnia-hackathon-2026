@@ -29,6 +29,7 @@ export type NigoEntryFormState = {
     submitFailed: boolean | undefined;
     formComment?: FormComment;
     initRelatedDocCount: number;
+    isLC?: boolean;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     areAttachmentsViewed: boolean;
     setAreAttachmentsViewed: React.Dispatch<React.SetStateAction<boolean>>;

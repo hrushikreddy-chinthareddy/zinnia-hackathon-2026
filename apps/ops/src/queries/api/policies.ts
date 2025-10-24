@@ -526,14 +526,28 @@ export const getPolicyNotesInfo = async ({
         const lcEndPoint = `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`;
         const endpoint = isLC ? lcEndPoint : fastEndPoint;
 
+        if (!isLC && !planCode) {
+            browserLogError(
+                'getPolicyNotesInfo::planCode is required for FAST policies'
+            );
+        }
+
+        browserLogError('getPolicyNotesInfo::Fetching Diary Notes Data');
+
         const { data } = await client.get<
             PolicyNotesInfoResponse,
             AxiosResponse<PolicyNotesInfoResponse>
         >(endpoint);
 
+        browserLogError('getPolicyNotesInfo Diary Notes Data fetched');
+
         return data;
     } catch (e) {
         console.error('getPolicyNotesInfo::error getting notesInfo', e);
+        browserLogError('getPolicyNotesInfo::error getting Diary Notes data', {
+            e,
+        });
+
         return null;
     }
 };
