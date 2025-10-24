@@ -188,7 +188,7 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                 {hasCases ? (
                     <Link
                         aria-label={`View Cases for policy ${item.policyNumber}`}
-                        className={styles.infoColor}
+                        className={styles.casesCount}
                         href={`/cases${convertToQueryString({
                             policyNumber: item.policyNumber || '',
                         })}`}
@@ -196,12 +196,12 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                     >
                         <Icon
                             type={IconType.CIRCLE_INFO}
-                            className={styles.infoColor}
+                            className={styles.infoIcon}
                         />
                         {caseData && 'total' in caseData && caseData?.total}
                     </Link>
                 ) : (
-                    '--'
+                    <span className={styles.noCases}>--</span>
                 )}
             </TableCell>
             {/* End Case Table Cell */}
