@@ -8191,7 +8191,8 @@
             "selectAnState": "Veuillez sélectionner un État",
             "provideFaceAmount": "Veuillez indiquer un montant nominal",
             "provideValidAmount": "Veuillez indiquer un montant valide",
-            "faceAmountError": "Le montant nominal doit être supérieur à 0"
+            "faceAmountError": "Le montant nominal doit être supérieur à 0",
+            "updating": "Mise à jour du devis..."
         }
     },
     "usage": {

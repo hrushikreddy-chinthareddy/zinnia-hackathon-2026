@@ -20,7 +20,7 @@ import {
     QuickQuoteParams,
 } from '@deps/types/quickQuote';
 
-import { asNumberOrRange } from '../../helpers';
+import { asNumberOrRange, placeholderData } from '../../helpers';
 import { useQuickQuoteQueries, VariantNotAvailableError } from '../../hooks';
 
 type QuickQuoteResultsContextState = {
@@ -273,7 +273,7 @@ export const QuickQuoteResultsProvider = ({
             isLoading,
             isFetching: isFetching || isFetchingProducts,
             isPending,
-            results,
+            results: results ?? placeholderData,
         }),
         [results, isLoading, isFetching, isFetchingProducts, isPending]
     );

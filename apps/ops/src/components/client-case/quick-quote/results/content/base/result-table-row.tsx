@@ -23,21 +23,19 @@ export const QuickQuoteResultTableRow = ({
     data,
     children,
     cellsVariant,
-}: QuickQuoteResultTableRowProps) => {
-    return (
-        <div role="row" className={styles.contentTableRow}>
-            <div className={styles.contentTableRowHeader} role="rowheader">
-                {rowHeader}
-            </div>
-            {data?.map(({ value, period }, idx) => (
-                <QuickQuoteRangeCell
-                    key={idx}
-                    value={value}
-                    period={period}
-                    variant={cellsVariant}
-                />
-            ))}
-            {children}
+}: QuickQuoteResultTableRowProps) => (
+    <div role="row" className={styles.contentTableRow}>
+        <div className={styles.contentTableRowHeader} role="rowheader">
+            {rowHeader}
         </div>
-    );
-};
+        {data?.map(({ value, period }, idx) => (
+            <QuickQuoteRangeCell
+                key={idx}
+                value={value}
+                period={period}
+                variant={cellsVariant}
+            />
+        ))}
+        {children}
+    </div>
+);

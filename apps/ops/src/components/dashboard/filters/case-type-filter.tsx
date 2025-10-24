@@ -49,7 +49,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
             const options = formatProcessListOptions(data);
             options.unshift({
                 value: ExtendedProcesses.ALL,
-                label: 'All case types',
+                label: 'All',
             });
             return options;
         },

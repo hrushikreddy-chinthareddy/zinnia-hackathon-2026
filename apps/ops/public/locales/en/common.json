@@ -8371,7 +8371,8 @@
             "selectAnState": "Please select an state",
             "provideFaceAmount": "Please provide a face amount",
             "provideValidAmount": "Please provide a valid amount",
-            "faceAmountError": "Face amount must be greater than 0"
+            "faceAmountError": "Face amount must be greater than 0",
+            "updating": "Updating quote..."
         }
     },
     "zinniaAiAssistant": {
