@@ -24,11 +24,13 @@ export const TransactionsTable = ({
     status,
     offset,
     limit,
+    onTableRowClick,
 }: {
     transactions?: Transaction[];
     status: string;
     offset: number;
     limit: number;
+    onTableRowClick: (transaction: Transaction) => void;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: undefined,
@@ -72,7 +74,10 @@ export const TransactionsTable = ({
                         </TableHeader>
                         <TableBody>
                             {paginatedData.map((transaction) => (
-                                <TableRow key={transaction.transactionId}>
+                                <TableRow
+                                    key={transaction.transactionId}
+                                    onClick={() => onTableRowClick(transaction)}
+                                >
                                     <TableCell>
                                         {t(
                                             `historyEventCard.transactionTypes.${transaction.transactionType}`

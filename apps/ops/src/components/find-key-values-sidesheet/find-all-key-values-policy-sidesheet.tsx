@@ -19,10 +19,9 @@ import { FindAllKeyValuesSidebarProps } from './types';
  * @param {string} policyNumber - the policy number of the policy
  * @returns {JSX.Element} - the rendered component
  */
-export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
-    planCode,
-    policyNumber,
-}) => {
+export const FindAllKeyValuesPolicySidesheet: FC<
+    FindAllKeyValuesSidebarProps
+> = ({ planCode, policyNumber }) => {
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
     return (
