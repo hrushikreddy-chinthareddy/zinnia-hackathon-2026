@@ -8,6 +8,10 @@
         var(--color-base-border-border-subtle, #ccc);
 }
 
+.contentSubtitle {
+    margin-bottom: var(--measure-dimension-gap-lg, 16px);
+}
+
 .contentSection,
 .contentSubtable,
 .contentTableSection,

@@ -7,6 +7,7 @@ import {
     CreateNewTermLineIllustrationPayload,
     TermFixedCostPeriod,
 } from '@deps/queries/api/v3/illustrations';
+import { ProductTypes } from '@deps/types/product';
 import {
     NO_PARAM_RIDERS,
     PREMIUM_FREE_RIDERS,
@@ -17,6 +18,7 @@ import {
     QuickQuoteParams,
     SerializedQuickQuoteParams,
     QuickQuoteFormState,
+    TermQuickQuoteResult,
 } from '@deps/types/quickQuote';
 import { NotAvailabilityReasonField } from '@deps/utils/quick-quotes-rules/types';
 
@@ -258,3 +260,102 @@ export const buildNewTermQuickQuotePayload = (
         },
     } satisfies CreateNewTermLineIllustrationPayload;
 };
+
+export const placeholderData = [
+    {
+        productType: ProductTypes.TERM,
+        product: {
+            id: 'bf8c083ba55e436da03aa79666da69e9',
+            productId: 'ZIN-PROD-XXX',
+            carrierProductId: 'TL0101',
+            productMarketingName: 'Farmers Term Life',
+            carrier: 'FNWL',
+            productLine: 'LIFE',
+            productType: 'TERM',
+            planCode: 'TL0101',
+        },
+        data: {
+            totalPremiumRange: [
+                {
+                    termLength: 10,
+                    range: undefined,
+                },
+                {
+                    termLength: 15,
+                    range: undefined,
+                },
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            basePremiumRange: [
+                {
+                    termLength: 10,
+                    range: undefined,
+                },
+                {
+                    termLength: 15,
+                    range: undefined,
+                },
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            riders: {
+                accidentalDeathBenefit: undefined,
+                acceleratedDeathBenefitForTerminalIllness: true,
+                charitableGiving: true,
+            },
+        },
+    },
+    {
+        productType: ProductTypes.TERM,
+        product: {
+            id: 'd0a35dc2c79046fab649ea84246f35ff',
+            productId: 'ZIN-PROD-XXX',
+            carrierProductId: 'TR0101',
+            productMarketingName: 'Farmers Return of Premium Term',
+            carrier: 'FNWL',
+            productLine: 'LIFE',
+            productType: 'TERM',
+            planCode: 'TR0101',
+        },
+        data: {
+            totalPremiumRange: [
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            basePremiumRange: [
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            riders: {
+                accidentalDeathBenefit: undefined,
+                acceleratedDeathBenefitForTerminalIllness: true,
+                charitableGiving: true,
+            },
+        },
+    },
+] as TermQuickQuoteResult[];

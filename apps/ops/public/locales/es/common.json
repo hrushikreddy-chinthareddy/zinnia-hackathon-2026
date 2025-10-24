@@ -8177,7 +8177,8 @@
             "selectAnState": "Por favor seleccione un estado",
             "provideFaceAmount": "Por favor ingrese un valor nominal",
             "provideValidAmount": "Por favor ingrese un valor nominal valido",
-            "faceAmountError": "Face amount must be greater than 0"
+            "faceAmountError": "Face amount must be greater than 0",
+            "updating": "Actualizando cotización..."
         }
     },
     "zinniaAiAssistant": {
