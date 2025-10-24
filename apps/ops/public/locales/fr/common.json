@@ -6163,7 +6163,7 @@
             "missingAmountError": "Le montant de paiement automatique du prêt est manquant.",
             "invalidAmountError": "Le montant de paiement automatique du prêt doit être supérieur à 1,00 $",
             "annually": "Annuellement",
-            "biAnnually": "Semi-annuellement",
+            "semiAnnually": "Semi-annuellement",
             "monthly": "Mensuellement",
             "quarterly": "Trimestriellement"
         },
@@ -6382,7 +6382,7 @@
             "missingAmountError": "Le montant du prélèvement automatique de la prime est manquant.",
             "invalidAmountError": "Le montant du prélèvement automatique de la prime doit être supérieur à 1,00 $",
             "annually": "Annuellement",
-            "biAnnually": "Semestriellement",
+            "semiAnnually": "Semestriellement",
             "monthly": "Mensuellement",
             "quarterly": "Trimestriellement"
         },
@@ -6442,7 +6442,7 @@
             "missingAmountError": "Le montant est manquant.",
             "invalidAmountError": "Le montant doit être supérieur à 1,00 $",
             "annually": "Annuellement",
-            "biAnnually": "Semestriellement",
+            "semiAnnually": "Semestriellement",
             "monthly": "Mensuellement",
             "quarterly": "Trimestriellement",
             "withdrawal": "Prélèvement",
@@ -6663,7 +6663,7 @@
         "time": {
             "monthly": "mensuel",
             "quarterly": "trimestriel",
-            "biannual": "semi-annuel",
+            "semiAnnual": "semi-annuel",
             "annual": "annuel",
             "oneTime": "ponctuel",
             "initial": "initial"
@@ -6672,16 +6672,13 @@
     "systematicProgram": {
         "frequency": {
             "annual": "Annuel",
-            "biAnnual": "Bi-Annuellement",
-            "biannual": "Bi-Annuellement",
             "daily": "Quotidien",
-            "everytwoweeks": "Bimensuel",
+            "everyTwoWeeks": "Bihebdomadaire",
             "initial": "Initial",
             "monthly": "Mensuellement",
             "oneTime": "Ponctuel",
             "quarterly": "Trimestriel",
             "semiAnnual": "Semestriellement",
-            "semiannual": "Semestriellement",
             "singlepayment": "Paiement unique"
         },
         "validation": {

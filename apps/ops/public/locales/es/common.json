@@ -6196,7 +6196,7 @@
             "missingAmountError": "Falta el monto del pago automático de préstamo.",
             "invalidAmountError": "El monto del pago automático de préstamo debe ser mayor a $1.00",
             "annually": "Anualmente",
-            "biAnnually": "Bi-anualmente",
+            "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",
             "quarterly": "Trimestralmente"
         },
@@ -6416,7 +6416,7 @@
             "missingAmountError": "Falta el monto del pago automático de prima.",
             "invalidAmountError": "El monto del pago automático de prima debe ser mayor a $1.00",
             "annually": "Anualmente",
-            "biAnnually": "Bi-anualmente",
+            "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",
             "quarterly": "Trimestralmente"
         },
@@ -6620,7 +6620,7 @@
         "time": {
             "monthly": "Mensual",
             "quarterly": "Trimestral",
-            "biannual": "Bi-anual",
+            "semiAnnual": "Semi-anual",
             "annual": "Anual",
             "oneTime": "Único",
             "initial": "Inicial"
@@ -6629,16 +6629,13 @@
     "systematicProgram": {
         "frequency": {
             "annual": "anual",
-            "biAnnual": "bi-anual",
-            "biannual": "bi-anual",
-            "everytwoweeks": "quincenal",
+            "everyTwoWeeks": "quincenal",
             "daily": "diario",
             "initial": "inicial",
             "monthly": "mensual",
             "oneTime": "único",
             "quarterly": "trimestral",
             "semiAnnual": "semi-anual",
-            "semiannual": "semi-anual",
             "singlepayment": "pago único"
         },
         "validation": {
