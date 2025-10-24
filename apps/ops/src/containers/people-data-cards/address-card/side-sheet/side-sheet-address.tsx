@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -34,7 +34,6 @@ import Radio from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
-import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
 import {
     ViewState,
@@ -47,7 +46,6 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     AdditionalAddressLine,
-    AddressDetails,
     Errors,
     getAddressTypeOptions,
     getFormErrors,
@@ -86,6 +84,7 @@ export interface SideSheetAddressProps {
     planCode?: string;
     policyNumber?: string;
     setCurrentAddresses: Dispatch<SetStateAction<Address[]>>;
+    currentAddresses: Address[];
     updateAddress?: Address;
 }
 
@@ -101,6 +100,7 @@ const SideSheetAddress = ({
     policyNumber,
     setCurrentAddresses,
     updateAddress,
+    currentAddresses,
 }: SideSheetAddressProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.address',
@@ -116,14 +116,12 @@ const SideSheetAddress = ({
     const INITIAL_ADDRESS: Address = {
         addressType: AddressType.RESIDENCE,
         country: Country.US,
+        isPreferred: isCurrentMailingAddress,
     };
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
         correlationId: correlationIdFromRoute || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
-        preferredAddressIndicator: isCurrentMailingAddress
-            ? PreferredAddressIndicator.Yes
-            : PreferredAddressIndicator.No,
         reverseInitiator: false,
     };
 
@@ -154,8 +152,7 @@ const SideSheetAddress = ({
     const isAdd = action === NonFinancialTransactionActions.Add;
     const isDelete = action === NonFinancialTransactionActions.Delete;
     const isEdit = action === NonFinancialTransactionActions.Edit;
-    const isSelectedMailingAddress =
-        body.preferredAddressIndicator === PreferredAddressIndicator.Yes;
+    const isSelectedMailingAddress = address.isPreferred;
     const stopLoading =
         currentErrors === undefined
             ? true
@@ -198,10 +195,23 @@ const SideSheetAddress = ({
     };
 
     const handleDelete = async () => {
+        //If we're deelete an address set to preferred, we need to set a new one using the `preferredAddressId` field. I'm just taking the next address in the list.
+        const firstNonPreferredAddressId = currentAddresses.find(
+            (address) => !address.isPreferred
+        )?.addressId;
+
         const reqBody = {
             ...body,
-            address,
+            address: {
+                ...address,
+                isPreferred: false,
+            },
+            //TODO: remove this when BPM doesnt 500 at us for not passing in preferredAddressIndicator, even though this is SUPPOSED to be deprecated from BPM
+            preferredAddressIndicator: PreferredAddressIndicator.No,
             deleteRequest: true,
+            preferredAddressId: isCurrentMailingAddress
+                ? firstNonPreferredAddressId
+                : undefined,
         };
         const response = await editNonFinancialTransaction({
             body: reqBody,
@@ -251,6 +261,10 @@ const SideSheetAddress = ({
                 body: {
                     ...body,
                     address,
+                    //TODO: remove this when BPM doesnt 500 at us for not passing in preferredAddressIndicator, even though this is SUPPOSED to be deprecated from BPM
+                    preferredAddressIndicator: address.isPreferred
+                        ? PreferredAddressIndicator.Yes
+                        : PreferredAddressIndicator.No,
                     correlationId: body.caseId ? body.correlationId : uuidV4(),
                 },
                 partyId,
@@ -259,11 +273,28 @@ const SideSheetAddress = ({
                 transaction: NonFinancialTransactions.Address,
             });
         } else {
+            const isPreferredSelected = address.isPreferred;
+            const isCurrentMailingAddressSelected = isCurrentMailingAddress;
+            const unsettingMailingAddress =
+                isCurrentMailingAddressSelected && !isPreferredSelected;
+
+            //If we're deelete an address set to preferred, we need to set a new one using the `preferredAddressId` field. I'm just taking the next address in the list.
+            const firstNonPreferredAddressId = currentAddresses.find(
+                (address) => !address.isPreferred
+            )?.addressId;
+
             response = await editNonFinancialTransaction({
                 body: {
                     ...body,
                     address,
+                    //TODO: remove this when BPM doesnt 500 at us for not passing in preferredAddressIndicator, even though this is SUPPOSED to be deprecated from BPM
+                    preferredAddressIndicator: address.isPreferred
+                        ? PreferredAddressIndicator.Yes
+                        : PreferredAddressIndicator.No,
                     correlationId: body.caseId ? body.correlationId : uuidV4(),
+                    preferredAddressId: unsettingMailingAddress
+                        ? firstNonPreferredAddressId
+                        : undefined,
                 },
                 itemId: updateAddress?.addressId,
                 partyId,
@@ -298,24 +329,22 @@ const SideSheetAddress = ({
         });
     };
 
+    //This needs to be in a useEffect to prevent it from firing multiple times.
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Address,
+                newItem: address,
+                setState: setCurrentAddresses,
+            });
+        }
+    }, [action, address, setCurrentAddresses, viewState]);
+
     switch (viewState) {
         case ViewState.Loading:
             return <LoadingState />;
         case ViewState.BpmError:
-            return (
-                <BpmErrorState
-                    onCancel={onCancel}
-                    onContinue={handleSubmit}
-                    setViewState={setViewState}
-                    transaction={NonFinancialTransactions.Address}
-                    validationResults={validationResults}
-                >
-                    <AddressDetails
-                        address={address}
-                        isSelectedMailingAddress={isSelectedMailingAddress}
-                    />
-                </BpmErrorState>
-            );
         case ViewState.ApiError:
             return (
                 <ApiErrorState
@@ -339,13 +368,6 @@ const SideSheetAddress = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Address,
-                newItem: address,
-                setState: setCurrentAddresses,
-            });
-
             return (
                 <SuccessState
                     action={action}
@@ -575,14 +597,12 @@ const SideSheetAddress = ({
                     checked={isSelectedMailingAddress}
                     isDisabled={(isOnlyAddress && isEdit) || isDelete}
                     label={t('labels.setAsMailingAddress')}
-                    onChange={(e) =>
-                        setBody((prevState) => ({
+                    onChange={(e) => {
+                        setAddress((prevState) => ({
                             ...prevState,
-                            preferredAddressIndicator: e
-                                ? PreferredAddressIndicator.Yes
-                                : PreferredAddressIndicator.No,
-                        }))
-                    }
+                            isPreferred: e,
+                        }));
+                    }}
                 />
 
                 {!isAdd && (

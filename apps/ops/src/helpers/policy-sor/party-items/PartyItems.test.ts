@@ -13,7 +13,7 @@ let phones: Phones;
 describe('PartyItems', () => {
     describe('Addresses', () => {
         beforeAll(() => {
-            addresses = new Addresses(firstParty?.addresses, '1');
+            addresses = new Addresses(firstParty?.addresses);
         });
         it('should return the preferred address', () => {
             expect(addresses.preferred).toBe(firstParty?.addresses?.[0]);

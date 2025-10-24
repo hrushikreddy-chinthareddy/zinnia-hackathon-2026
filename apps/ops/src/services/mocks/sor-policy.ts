@@ -129,7 +129,7 @@ export const mockPolicy: Policy = {
             // trustTitle: null,
             // trustAccessCode: null,
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
-            preferredAddressIndicator: '1',
+
             // formerName: {
             //   firstName: null,
             //   middleName: null,
@@ -191,6 +191,7 @@ export const mockPolicy: Policy = {
                     zipCode: '***',
                     // zipCodeExtension: null,
                     country: Country.US,
+                    isPreferred: true,
                 },
             ],
             phones: [
@@ -276,7 +277,6 @@ export const mockPolicy: Policy = {
             // trustTitle: null,
             // trustAccessCode: null,
             // preferredCommunicationType: null,
-            // preferredAddressIndicator: null,
             // formerName: {
             //   firstName: null,
             //   middleName: null,
@@ -302,6 +302,7 @@ export const mockPolicy: Policy = {
                     zipCode: '********',
                     zipCodeExtension: '**',
                     country: Country.US,
+                    isPreferred: true,
                 },
             ],
             phones: [],
@@ -344,7 +345,6 @@ export const mockPolicy: Policy = {
             // trustTitle: null,
             // trustAccessCode: null,
             // preferredCommunicationType: null,
-            // preferredAddressIndicator: null,
             // formerName: {
             //   firstName: null,
             //   middleName: null,
@@ -370,6 +370,7 @@ export const mockPolicy: Policy = {
                     zipCode: '*******',
                     zipCodeExtension: '***',
                     country: Country.US,
+                    isPreferred: true,
                 },
             ],
             phones: [],

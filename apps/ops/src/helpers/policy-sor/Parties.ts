@@ -87,10 +87,7 @@ export class PolicyParty {
         this.partyId = party.partyId;
         this.suffix = party.suffix;
 
-        this.addresses = new Addresses(
-            party.addresses,
-            party.preferredAddressIndicator
-        );
+        this.addresses = new Addresses(party.addresses);
         this.banks = new Banks(party.bankDetails);
         // to do - this is fake right now since there is no citizenCountry key on PartyBase yet
         this.citizenCountry = Country['US'];

@@ -389,7 +389,6 @@ const fullyMaskPolicyParties = (
             lastName,
             middleName,
             phones,
-            preferredAddressIndicator,
             preferredCommunicationType,
             prefix,
             suffix,

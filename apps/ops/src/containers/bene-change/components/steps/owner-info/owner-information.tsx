@@ -126,8 +126,8 @@ const getFormattedAddresses = (policyParty: any) => {
         .filter((item: any) => item !== undefined);
 
     homeAddresses = homeAddresses?.sort((a: any, b: any) => {
-        if (a.addressId === policyParty?.preferredAddressIndicator) return -1;
-        if (b.addressId === policyParty?.preferredAddressIndicator) return 1;
+        if (a.isPreferred) return -1;
+        if (b.isPreferred) return 1;
 
         return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(
             dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)
@@ -151,8 +151,8 @@ const getFormattedAddresses = (policyParty: any) => {
         .filter((item: any) => item !== undefined);
 
     mailingAddresses = mailingAddresses?.sort((a: any, b: any) => {
-        if (a.addressId === policyParty?.preferredAddressIndicator) return -1;
-        if (b.addressId === policyParty?.preferredAddressIndicator) return 1;
+        if (a.isPreferred) return -1;
+        if (b.isPreferred) return 1;
         return dayjs(a?.startDate, ZAHARA_API_DATE_FORMAT).isBefore(
             dayjs(b?.startDate, ZAHARA_API_DATE_FORMAT)
         )
@@ -213,7 +213,6 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
         fullName = '',
         dateOfBirth = null,
         identifications = [],
-        preferredAddressIndicator = null,
         trustType = undefined,
     } = policyParty || {};
 
@@ -237,7 +236,6 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
         addresses: formattedAddresses ?? [],
         phones: phones ?? [],
         id: id,
-        preferredAddressIndicator,
         partyType,
         trustType,
     };
