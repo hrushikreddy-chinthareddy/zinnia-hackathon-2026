@@ -27,7 +27,6 @@ export const KeyValueBasics = ({
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
-    console.log({ preparedData });
     return (
         <Accordion
             sectionLabel={
