@@ -12,7 +12,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -34,7 +34,6 @@ import Radio from '@deps/components/radio/radio';
 import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
-import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
 import {
     ViewState,
@@ -47,7 +46,6 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     AdditionalAddressLine,
-    AddressDetails,
     Errors,
     getAddressTypeOptions,
     getFormErrors,
@@ -331,24 +329,22 @@ const SideSheetAddress = ({
         });
     };
 
+    //This needs to be in a useEffect to prevent it from firing multiple times.
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Address,
+                newItem: address,
+                setState: setCurrentAddresses,
+            });
+        }
+    }, [action, address, setCurrentAddresses, viewState]);
+
     switch (viewState) {
         case ViewState.Loading:
             return <LoadingState />;
         case ViewState.BpmError:
-            return (
-                <BpmErrorState
-                    onCancel={onCancel}
-                    onContinue={handleSubmit}
-                    setViewState={setViewState}
-                    transaction={NonFinancialTransactions.Address}
-                    validationResults={validationResults}
-                >
-                    <AddressDetails
-                        address={address}
-                        isSelectedMailingAddress={isSelectedMailingAddress}
-                    />
-                </BpmErrorState>
-            );
         case ViewState.ApiError:
             return (
                 <ApiErrorState
@@ -372,13 +368,6 @@ const SideSheetAddress = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Address,
-                newItem: address,
-                setState: setCurrentAddresses,
-            });
-
             return (
                 <SuccessState
                     action={action}
