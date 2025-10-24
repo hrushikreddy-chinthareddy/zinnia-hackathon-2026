@@ -1,11 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import {
-    getIllustrationAsyncCalculationStatus,
-    getNewIndexedUniversalLifeIllustration,
-    getNewTermLifeIllustration,
-} from '@deps/queries/api/client/documents/v3/illustrations';
-import {
     archiveIllustration,
     createClientCase,
     patchClientCase,
@@ -13,6 +8,11 @@ import {
     selectIllustrationForApplication,
     unarchiveIllustration,
 } from '@deps/queries/api/v1/client-cases';
+import {
+    getIllustrationAsyncCalculationStatus,
+    getNewIndexedUniversalLifeIllustration,
+    getNewTermLifeIllustration,
+} from '@deps/queries/api/v3/illustrations';
 import {
     ClientCaseSearchInputs,
     IllustraionsClientCaseSearchResponse,

@@ -1,8 +1,27 @@
-import { createContext, ReactNode, useContext, useMemo } from 'react';
+import { groupBy, includes } from 'lodash';
+import {
+    createContext,
+    ReactNode,
+    useCallback,
+    useContext,
+    useMemo,
+} from 'react';
+import { ArrayValues } from 'type-fest';
 
+import { getQuickQuoteProductMapping } from '@deps/queries/api/v1/quick-quote';
+import { useQueryProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
 import { ProductTypes } from '@deps/types/product';
+import {
+    NO_PARAM_RIDERS,
+    PREMIUM_FREE_RIDERS,
+    RIDERS_WITH_FACE_AMOUNT,
+    QuickQuoteResult,
+    TermQuickQuoteResult,
+    QuickQuoteParams,
+} from '@deps/types/quickQuote';
 
-import { QuickQuoteResult, TermQuickQuoteResult } from '../../types';
+import { asNumberOrRange } from '../../helpers';
+import { useQuickQuoteQueries, VariantNotAvailableError } from '../../hooks';
 
 type QuickQuoteResultsContextState = {
     isLoading: boolean;
@@ -27,119 +46,236 @@ export const useQuickQuoteResults = () => {
 };
 
 type QuickQuoteResultsProviderProps = {
+    quickQuoteParams: QuickQuoteParams;
     children: ReactNode;
 };
 
 export const QuickQuoteResultsProvider = ({
+    quickQuoteParams,
     children,
 }: QuickQuoteResultsProviderProps) => {
-    // TODO: Result fetching
+    // TODO: Get real variations based on params
+    const variants = useMemo(
+        () => getQuickQuoteProductMapping(quickQuoteParams),
+        [quickQuoteParams]
+    );
+
+    const { data: products, isFetching: isFetchingProducts } =
+        useQueryProductsByCarrier({
+            carrierCode: 'FNWL',
+        });
+
+    const {
+        data: results,
+        isLoading,
+        isFetching,
+        isPending,
+    } = useQuickQuoteQueries(
+        { quickQuoteParams, variants },
+        useCallback(
+            (results) => {
+                const items = results
+                    .map((result) => {
+                        if (result.data) {
+                            return result.data;
+                        }
+
+                        const { error } = result;
+
+                        if (error instanceof VariantNotAvailableError) {
+                            const { variant } = error;
+                            return {
+                                planCode: variant.planCode,
+                                variant,
+                                response: undefined,
+                            };
+                        }
+                    })
+                    .filter(
+                        (item): item is Exclude<typeof item, undefined> =>
+                            item != null
+                    );
+
+                return Object.entries(groupBy(items, 'planCode'))
+                    .map(
+                        ([planCode, sameProductData]):
+                            | TermQuickQuoteResult
+                            | undefined => {
+                            const product = products?.find(
+                                (product) => product.planCode == planCode
+                            );
+
+                            if (!product) {
+                                return;
+                            }
+
+                            const groupedByTermLength = groupBy(
+                                sameProductData,
+                                (item) => {
+                                    if ('inputs' in item) {
+                                        return item.inputs.options
+                                            .fixedCostPeriod;
+                                    }
+
+                                    return item.variant.termLength;
+                                }
+                            );
+
+                            const extractNotAvailabilityReason = (
+                                data: typeof sameProductData
+                            ) =>
+                                data.find(
+                                    (
+                                        item
+                                    ): item is Extract<
+                                        typeof item,
+                                        { response: undefined }
+                                    > =>
+                                        item.response == null &&
+                                        !!item.variant
+                                            .notAvailabilityReasonField
+                                )?.variant?.notAvailabilityReasonField;
+
+                            const isAvailableResponse = (
+                                item:
+                                    | ArrayValues<
+                                          typeof sameProductData
+                                      >['response']
+                                    | undefined
+                            ): item is Extract<
+                                NonNullable<typeof item>,
+                                { assumed: any }
+                            > =>
+                                item != null &&
+                                'assumed' in item &&
+                                item.assumed != null;
+
+                            return {
+                                product,
+                                productType: ProductTypes.TERM,
+                                planCode,
+                                data: {
+                                    totalPremiumRange: Object.entries(
+                                        groupedByTermLength
+                                    ).map(([termLength, data]) => {
+                                        const range = asNumberOrRange(
+                                            data
+                                                .map((item) => item.response)
+                                                .filter(isAvailableResponse)
+                                                .map(
+                                                    (item) =>
+                                                        item.assumed.initial
+                                                            .totalModalPremium
+                                                )
+                                        );
+
+                                        const notAvailabilityReasonField =
+                                            extractNotAvailabilityReason(data);
+
+                                        if (range) {
+                                            return {
+                                                termLength:
+                                                    parseInt(termLength),
+                                                range,
+                                                available: true,
+                                            };
+                                        }
+
+                                        return {
+                                            termLength: parseInt(termLength),
+                                            available: false,
+                                            notAvailabilityReasonField,
+                                        };
+                                    }),
+                                    basePremiumRange: Object.entries(
+                                        groupedByTermLength
+                                    ).map(([termLength, data]) => {
+                                        const range = asNumberOrRange(
+                                            data
+                                                .map((item) => item.response)
+                                                .filter(isAvailableResponse)
+                                                .map(
+                                                    ({ assumed }) =>
+                                                        assumed.coverages.base
+                                                            .modalPremium
+                                                )
+                                        );
+
+                                        const notAvailabilityReasonField =
+                                            extractNotAvailabilityReason(data);
+
+                                        if (range) {
+                                            return {
+                                                termLength:
+                                                    parseInt(termLength),
+                                                range,
+                                                available: true,
+                                            };
+                                        }
+
+                                        return {
+                                            termLength: parseInt(termLength),
+                                            available: false,
+                                            notAvailabilityReasonField,
+                                        };
+                                    }),
+                                    riders: Object.fromEntries(
+                                        [
+                                            ...RIDERS_WITH_FACE_AMOUNT,
+                                            ...NO_PARAM_RIDERS,
+                                            ...PREMIUM_FREE_RIDERS,
+                                        ].map((riderName) => {
+                                            const values = sameProductData
+                                                .map((data) => data.response)
+                                                .filter(isAvailableResponse)
+                                                .map(
+                                                    (data) =>
+                                                        data.assumed.coverages[
+                                                            riderName
+                                                        ]?.modalPremium
+                                                );
+
+                                            if (
+                                                includes(
+                                                    PREMIUM_FREE_RIDERS,
+                                                    riderName
+                                                )
+                                            ) {
+                                                return [
+                                                    riderName,
+                                                    values.some(
+                                                        (v) => v != null
+                                                    ),
+                                                ] as const;
+                                            }
+
+                                            return [
+                                                riderName,
+                                                asNumberOrRange(values),
+                                            ] as const;
+                                        })
+                                    ),
+                                },
+                            };
+                        }
+                    )
+                    .filter(
+                        (item): item is Exclude<typeof item, undefined> =>
+                            item != null
+                    );
+            },
+            [products]
+        )
+    );
 
     const value = useMemo(
         () => ({
-            isLoading: false,
-            isFetching: false,
-            isPending: false,
-            results: [
-                {
-                    productType: ProductTypes.TERM,
-                    product: {
-                        id: 'bf8c083ba55e436da03aa79666da69e9',
-                        productId: 'ZIN-PROD-001',
-                        carrierProductId: 'TL0101',
-                        productMarketingName: 'Farmers Term Life',
-                        carrier: 'FNWL',
-                        productLine: 'LIFE',
-                        productType: 'TERM',
-                        planCode: 'TL0101',
-                    },
-                    data: {
-                        totalPremiumRange: [
-                            {
-                                termLength: 10,
-                                range: [41.64, 56.23],
-                            },
-                            {
-                                termLength: 15,
-                                range: [46.59, 61.17],
-                            },
-                            {
-                                termLength: 20,
-                                range: [50.59, 66.17],
-                            },
-                            {
-                                termLength: 30,
-                                range: [56.59, 71.17],
-                            },
-                        ],
-                        basePremiumRange: [
-                            {
-                                termLength: 10,
-                                range: [25.59, 40.18],
-                            },
-                            {
-                                termLength: 15,
-                                range: [30.54, 45.12],
-                            },
-                            {
-                                termLength: 20,
-                                range: [34.54, 50.12],
-                            },
-                            {
-                                termLength: 30,
-                                range: [40.54, 55.12],
-                            },
-                        ],
-                        riders: {
-                            accidentalDeathBenefit: 10.59,
-                            acceleratedDeathBenefitForTerminalIllness: true,
-                            charitableGiving: true,
-                        },
-                    },
-                },
-                {
-                    productType: ProductTypes.TERM,
-                    product: {
-                        id: 'd0a35dc2c79046fab649ea84246f35ff',
-                        productId: 'ZIN-PROD-002',
-                        carrierProductId: 'TR0101',
-                        productMarketingName: 'Farmers Return of Premium Term',
-                        carrier: 'FNWL',
-                        productLine: 'LIFE',
-                        productType: 'TERM',
-                        planCode: 'TR0101',
-                    },
-                    data: {
-                        totalPremiumRange: [
-                            {
-                                termLength: 20,
-                                range: [59.79, 74.37],
-                            },
-                            {
-                                termLength: 30,
-                                range: [64.79, 79.35],
-                            },
-                        ],
-                        basePremiumRange: [
-                            {
-                                termLength: 20,
-                                range: [40.54, 55.12],
-                            },
-                            {
-                                termLength: 30,
-                                range: [45.54, 60.1],
-                            },
-                        ],
-                        riders: {
-                            accidentalDeathBenefit: 12.5,
-                            acceleratedDeathBenefitForTerminalIllness: true,
-                            charitableGiving: true,
-                        },
-                    },
-                },
-            ] as TermQuickQuoteResult[],
+            isLoading,
+            isFetching: isFetching || isFetchingProducts,
+            isPending,
+            results,
         }),
-        []
+        [results, isLoading, isFetching, isFetchingProducts, isPending]
     );
 
     return (

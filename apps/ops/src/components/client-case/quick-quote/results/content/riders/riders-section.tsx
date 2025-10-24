@@ -1,11 +1,14 @@
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
+import {
+    NO_PARAM_RIDERS,
+    RIDERS_WITH_FACE_AMOUNT,
+} from '@deps/types/quickQuote';
 
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
 import { useQuickQuoteResults } from '../results-context';
 import { QuickQuoteRiderRow } from './rider-row';
-import { NO_PARAM_RIDERS, RIDERS_WITH_FACE_AMOUNT } from '../../../config';
 
 export const QuickQuoteRidersSection = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});

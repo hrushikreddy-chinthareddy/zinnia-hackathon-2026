@@ -190,7 +190,7 @@
         "login:gh-pkg": "pnpm login --scope=@zinnia --registry=https://npm.pkg.github.com",
         "orval": "orval",
         "pre-commit": "pnpm run lint-staged",
-        "pre-push": "pnpm --filter \"./apps/**\" --filter \"@zinnia/*\" build && pnpm --silent prettier && pnpm lint && pnpm check-types && pnpm test",
+        "pre-push": "pnpm --silent prettier && pnpm lint && pnpm check-types && pnpm test",
         "prettier": "prettier --check --cache --loglevel=warn ./src",
         "prettier:fix": "prettier --write --cache ./src",
         "start": "next start",

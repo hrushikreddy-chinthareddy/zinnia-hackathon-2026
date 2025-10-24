@@ -5,8 +5,8 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { isTermResult } from '@deps/types/quickQuote';
 
-import { isTermResult } from '../../../types';
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
 import { useQuickQuoteResults } from '../results-context';

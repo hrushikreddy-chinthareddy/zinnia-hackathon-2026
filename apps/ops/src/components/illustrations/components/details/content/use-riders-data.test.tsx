@@ -2,7 +2,7 @@ import { render, renderHook, screen } from '@testing-library/react';
 import { format } from 'path';
 
 import { IllustrationDetailProvider } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
-import { Illustration } from '@deps/queries/api/client/documents/v3/illustrations';
+import { Illustration } from '@deps/queries/api/v3/illustrations';
 
 import { useIllustrationRidersData } from './use-riders-data';
 

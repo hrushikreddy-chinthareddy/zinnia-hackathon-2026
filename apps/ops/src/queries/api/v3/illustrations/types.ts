@@ -1,14 +1,9 @@
-import { AxiosResponse } from 'axios';
+import { ValueOf } from 'type-fest';
 
 import { USStates } from '@deps/constants/geography/us-states';
-import { baseAppUrl } from '@deps/queries/api-config';
-import { client } from '@deps/queries/api-utils/client';
-import { ProductType, ProductTypes } from '@deps/types/product';
-import { Prettify } from '@deps/utils/types';
+import { PartyType } from '@deps/models/policy/sor-policy';
 
-type CreateIllustrationQueryBodyValue = unknown;
-
-interface SingleYearValuesBase {
+export interface SingleYearValuesBase {
     year: number;
     accountValue: number;
     cumulativePremiumAmount: number;
@@ -26,7 +21,7 @@ interface SingleYearValuesBase {
     premiumAmount: number;
 }
 
-interface SingleYearValuesIUL extends SingleYearValuesBase {
+export interface SingleYearValuesIUL extends SingleYearValuesBase {
     accumulatedPremiumAmountAtInterest: number;
     costOfInsurance: number;
     cumulativeWithdrawalAmount: number;
@@ -63,13 +58,13 @@ export type OutputCoverageValues = {
     faceAmount: number;
 };
 
-interface BaseScenario {}
+export interface BaseScenario {}
 
-interface ScenarioCoveragesBase {
+export interface ScenarioCoveragesBase {
     base: OutputCoverageValues;
 }
 
-interface TermLifeCoverages extends ScenarioCoveragesBase {
+export interface TermLifeCoverages extends ScenarioCoveragesBase {
     acceleratedDeathBenefitForTerminalIllness?: OutputCoverageValues;
     acceleratedDeathBenefitForChronicIllness?: OutputCoverageValues;
     acceleratedDeathBenefitForCriticalIllness?: OutputCoverageValues;
@@ -79,7 +74,7 @@ interface TermLifeCoverages extends ScenarioCoveragesBase {
     waiverOfPremium?: OutputCoverageValues;
 }
 
-interface IndexedUniversalLifeCoverages extends ScenarioCoveragesBase {
+export interface IndexedUniversalLifeCoverages extends ScenarioCoveragesBase {
     acceleratedDeathBenefitForTerminalIllness?: OutputCoverageValues;
     acceleratedDeathBenefitForChronicIllness?: OutputCoverageValues;
     acceleratedDeathBenefitForCriticalIllness?: OutputCoverageValues;
@@ -92,7 +87,7 @@ interface IndexedUniversalLifeCoverages extends ScenarioCoveragesBase {
     waiverOfDeduction?: OutputCoverageValues;
 }
 
-type Options = {
+export type Options = {
     revisedIllustration: boolean;
     solveFor: string;
     fixedCostPeriod: number;
@@ -121,7 +116,7 @@ type Options = {
     };
 };
 
-type IllustrationInputsBase = {
+export type IllustrationInputsBase = {
     calculationType: string;
     source: string;
     illustrationRequestDate: string;
@@ -130,7 +125,7 @@ type IllustrationInputsBase = {
     options: Options;
 };
 
-interface TermLifeScenario extends BaseScenario {
+export interface TermLifeScenario extends BaseScenario {
     annualTimeSeriesData: SingleYearValuesBase[];
     coverages: TermLifeCoverages;
     initial: {
@@ -147,7 +142,7 @@ interface TermLifeScenario extends BaseScenario {
     };
 }
 
-interface IndexUniversalLifeScenario extends BaseScenario {
+export interface IndexUniversalLifeScenario extends BaseScenario {
     annualTimeSeriesData: SingleYearValuesIUL[];
     coverages: IndexedUniversalLifeCoverages;
     initial: {
@@ -170,107 +165,99 @@ interface IndexUniversalLifeScenario extends BaseScenario {
 
 type Severity = 'INFO' | 'WARNING' | 'ERROR';
 
-type responseMessage = {
+export type responseMessage = {
     code: number;
     severity: Severity;
     text: string;
 };
 
-type GetIllustrationResponseBody<T, TI = IllustrationInputsBase> = {
-    inputs: TI;
-    response: {
-        id: string;
-        assumed: T;
-        messages: responseMessage[];
-    };
-};
+export const PARTY_GENDER_MAP = {
+    MALE: 'MALE',
+    FEMALE: 'FEMALE',
+    UNISEX: 'UNISEX',
+    OTHER: 'OTHER',
+} as const;
 
-type GetNewTermLifeIllustrationResponseBody =
-    GetIllustrationResponseBody<TermLifeScenario>;
-type GetIndexedUniversalLifeIllustrationResponseBody =
-    GetIllustrationResponseBody<IndexUniversalLifeScenario>;
+type PartyGender = ValueOf<typeof PARTY_GENDER_MAP>;
 
-type IllustrationTypeMap = {
-    TERM: GetNewTermLifeIllustrationResponseBody;
-    INDEX_UNIVERSAL_LIFE: GetIndexedUniversalLifeIllustrationResponseBody;
-};
+export const PARTY_TYPE_CODE_MAP = {
+    INDIVIDUAL: 'INDIVIDUAL',
+    ORGANIZATION: 'ORGANIZATION',
+    TRUST: 'TRUST',
+} as const;
 
-export type Illustration = {
-    [K in keyof IllustrationTypeMap]: Prettify<
-        {
-            productType: K;
-        } & IllustrationTypeMap[K]
-    >;
-}[keyof IllustrationTypeMap];
+type PartyTypeCode = ValueOf<typeof PartyType>;
 
-type GetIllustrationResponseBodyUnion =
-    | GetNewTermLifeIllustrationResponseBody
-    | GetIndexedUniversalLifeIllustrationResponseBody;
-
-export function isIULIllustrationResponseBody(
-    data: GetIllustrationResponseBodyUnion
-): data is GetIndexedUniversalLifeIllustrationResponseBody {
-    return data.inputs.planCode === 'UL0101';
+interface IllustrationPartyBase {
+    partyId: string;
+    partyTypeCode: PartyTypeCode;
 }
 
-export function isTLIllustrationResponseBody(
-    data: GetIllustrationResponseBodyUnion
-): data is GetNewTermLifeIllustrationResponseBody {
-    return data.inputs.planCode === 'TL0101';
+interface InsuredParty extends IllustrationPartyBase {
+    gender: PartyGender;
+    roleCode: 'INSURED';
 }
 
-const BASE_URL = `${baseAppUrl}/api/illustration/v3`;
+interface NonInsuredParty extends IllustrationPartyBase {
+    roleCode:
+        | 'OWNER'
+        | 'PRIMARYBENEFICIARY'
+        | 'CONTINGENTBENEFICIARY'
+        | 'INSURED'
+        | 'PAYOR'
+        | 'PAYEE'
+        | 'AGENT'
+        | 'PRIMARYWRITINGAGENT'
+        | 'PRIMARYSERVICINGAGENT'
+        | 'ADDITIONALSERVICINGAGENT'
+        | 'ADDITIONALWRITINGAGENT'
+        | 'THIRDPARTYDESIGNEE'
+        | 'JOINTOWNER'
+        | 'COVERAGEINSURED'
+        | 'ASSIGNEE'
+        | 'ANNUITANT'
+        | 'EXCHANGECOMPANY'
+        | 'JOINTANNUITANT'
+        | 'GRANTOR'
+        | 'TRUSTEE'
+        | 'POWEROFATTORNEY'
+        | 'AUTHORIZEDSIGNATORY'
+        | 'OTHERINTERESTEDPARTY'
+        | 'CONTINGENTOWNER';
+}
 
-export const createIllustration = async ({
-    bodyData,
-    path,
-}: {
-    bodyData: CreateIllustrationQueryBodyValue;
-    path: string;
-}) => {
-    return await client.post<any, AxiosResponse<any>>(
-        `${baseAppUrl}/${path}`,
-        bodyData
-    );
+export type IllustrationParty = InsuredParty | NonInsuredParty;
+
+export const COVERAGE_ID_MAP = {
+    BASE_COVERAGE: 'BASE_COVERAGE',
+    Rider_ABRTRM: 'Rider_ABRTRM',
+    Rider_CTR: 'Rider_CTR',
+    Rider_ABRCHR: 'Rider_ABRCHR',
+    Rider_ADR: 'Rider_ADR',
+    Rider_WPR: 'Rider_WPR',
+    Rider_CGR: 'Rider_CGR',
+    Rider_GIBR: 'Rider_GIBR',
+    Rider_OPR: 'Rider_OPR',
+    Rider_OWDR: 'Rider_OWDR',
+    Rider_WDR: 'Rider_WDR',
+    Rider_NHR: 'Rider_NHR',
+    Rider_ABRCRI: 'Rider_ABRCRI',
+};
+export type CoverageId = ValueOf<typeof COVERAGE_ID_MAP>;
+
+export type FlatExtra = {};
+
+export type Participant = {
+    participantId: string;
+    issueAge: number;
+    underwritingClass?: string;
+    subStandardRating?: string;
+    flatExtra?: FlatExtra[];
 };
 
-export const getNewTermLifeIllustration = async (illustrationId: string) => {
-    return client
-        .get<GetNewTermLifeIllustrationResponseBody>(
-            `${BASE_URL}/term-life/new-business/${illustrationId}`
-        )
-        .then((res) => {
-            return {
-                ...res.data,
-                productType: ProductTypes.TERM as const satisfies ProductType,
-            };
-        });
-};
-
-export const getNewIndexedUniversalLifeIllustration = async (
-    illustrationId: string
-) => {
-    return client
-        .get<GetIndexedUniversalLifeIllustrationResponseBody>(
-            `${BASE_URL}/indexed-universal-life/new-business/${illustrationId}`
-        )
-        .then((res) => {
-            return {
-                ...res.data,
-                productType:
-                    ProductTypes.INDEX_UNIVERSAL_LIFE as const satisfies ProductType,
-            };
-        });
-};
-
-export const getIllustrationAsyncCalculationStatus = async (
-    illustrationId: string
-) => {
-    return client
-        .get<any>(
-            `${BASE_URL}/illustration-request/${illustrationId}?format=FORMATTED_ILLUSTRATION_PDF`
-        )
-        .then((res) => {
-            return res;
-        });
+export type Coverage = {
+    coverageId: CoverageId;
+    riderYears?: number;
+    currentAmount?: number;
+    participants: Participant[];
 };

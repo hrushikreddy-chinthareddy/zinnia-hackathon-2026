@@ -1,3 +1,10 @@
+import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
+import {
+    NoParamRider,
+    PremiumFreeRider,
+    RiderWithFaceAmount,
+} from '@deps/types/quickQuote';
+
 export type ProductName =
     | 'Term Life 10 Yr'
     | 'Term Life 15 Yr'
@@ -18,17 +25,31 @@ export type ClassAlternatives = {
     faceMax: number;
 };
 
+export type RiderAlternatives = {
+    ageMin: number;
+    ageMax: number;
+    faceMin?: number;
+    faceMax?: number;
+};
+
 export type ClassRule = {
     className: string; // for debugging
     classCode: string;
     alternatives: ClassAlternatives;
 };
 
+export type RiderRule = {
+    riderName: string; // for debugging
+    riderCode: string;
+    alternatives: RiderAlternatives;
+};
+
 export type ProductRule = {
     productName: ProductName; // for debugging
     planCode: PlanCode;
-    termLength: number;
+    termLength: TermFixedCostPeriod;
     classes: ClassRule[];
+    riders: RiderRule[];
 };
 
 export type RulesModel = {
@@ -38,7 +59,14 @@ export type RulesModel = {
 
 export type ProductClassResult = {
     planCode: PlanCode;
-    termLength: number;
+    termLength: TermFixedCostPeriod;
     classCodes: string[];
-    notAvailabilityReasonField: string;
+    notAvailabilityReasonField: NotAvailabilityReasonField;
+    riders: ProductClassResultRiders;
+};
+
+export type ProductClassResultRiders = {
+    [K in RiderWithFaceAmount | NoParamRider | PremiumFreeRider]+?:
+        | boolean
+        | NotAvailabilityReasonField;
 };

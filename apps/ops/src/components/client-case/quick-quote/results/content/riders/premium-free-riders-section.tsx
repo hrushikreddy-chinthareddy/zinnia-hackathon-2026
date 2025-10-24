@@ -5,8 +5,8 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { PREMIUM_FREE_RIDERS } from '@deps/types/quickQuote';
 
-import { PREMIUM_FREE_RIDERS } from '../../../config';
 import { QuickQuoteRangeCell } from '../base/range-cell';
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { QuickQuoteResultTableSection } from '../base/result-table-section';

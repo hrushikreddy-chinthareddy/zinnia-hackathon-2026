@@ -4,7 +4,6 @@ import {
     FieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
-import { includes } from 'lodash';
 import { useId } from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 
@@ -12,10 +11,12 @@ import { useRidersLabelMap } from '@deps/components/illustrations/components/det
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import {
+    RIDERS_WITH_FACE_AMOUNT,
+    QuickQuoteFormState,
+} from '@deps/types/quickQuote';
 import { narrowIncludes } from '@deps/utils/array';
 
-import { RIDERS_WITH_FACE_AMOUNT, RiderWithFaceAmount } from '../../../config';
-import { QuickQuoteFormState } from '../../../types';
 import { useQuickQuoteResultsForm } from '../../use-results-form-context';
 import styles from '../content.module.css';
 

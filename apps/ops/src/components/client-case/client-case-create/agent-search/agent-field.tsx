@@ -10,9 +10,9 @@ import {
     useGetProducerById,
     useGetProducersListQuery,
     useHierarchyListQuery,
-    useReduceCombinedResults,
 } from '@deps/components/illustrations/helpers/hooks/pom';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { useReduceCombinedResults } from '@deps/hooks/combined-query';
 import {
     GetDownlineResponse,
     GetHierarchyResponse,

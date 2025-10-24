@@ -1,10 +1,12 @@
-import { QuickQuoteFormData } from '@deps/types/quickQuote';
+import { QuickQuoteParams } from '@deps/types/quickQuote';
 
 import type {
     ProductClassResult,
     ClassAlternatives,
     RulesModel,
     NotAvailabilityReasonField,
+    RiderAlternatives,
+    RiderRule,
 } from './types';
 
 export class QuickQuoteProducts {
@@ -17,30 +19,58 @@ export class QuickQuoteProducts {
         'WV',
         'DC',
     ]);
-    private rejectReasonField: NotAvailabilityReasonField;
+    private rejectReasonFieldForClass: NotAvailabilityReasonField;
+    private rejectReasonFieldForRider: NotAvailabilityReasonField;
 
     constructor(private rules: RulesModel) {}
 
-    getProductsAvailableFor(input: QuickQuoteFormData): ProductClassResult[] {
+    getProductsAvailableFor(input: QuickQuoteParams): ProductClassResult[] {
         const code = input.state;
         if (code && this.NOT_COVERED_STATES.has(code)) {
-            this.rejectReasonField = 'state';
+            this.rejectReasonFieldForClass = 'state';
             return [];
         }
 
         const result: ProductClassResult[] = [];
 
         for (const product of this.rules.products) {
-            this.rejectReasonField = undefined;
+            this.rejectReasonFieldForClass = undefined;
+            this.rejectReasonFieldForRider = undefined;
+
             const eligibleClassByPosition = product.classes.map(
                 (productClass) =>
                     this.getClassEligible(
                         productClass.alternatives,
-                        input.age,
+                        input.insuredAge,
                         input.nicotineUser,
                         input.faceAmount
                     )
             );
+
+            const resultRiders = {
+                accidentalDeathBenefit: this.isRiderEligible(
+                    input.insuredAge,
+                    input.riders.accidentalDeathBenefit,
+                    product.riders.find(
+                        (rider) => rider.riderCode === 'Rider_ADR'
+                    )
+                ),
+                childrensTerm: this.isRiderEligible(
+                    input.insuredAge,
+                    input.riders.childrensTerm,
+                    product.riders.find(
+                        (rider) => rider.riderCode === 'Rider_CTR'
+                    )
+                ),
+                waiverOfPremium: this.isRiderEligible(
+                    input.insuredAge,
+                    input.riders.waiverOfPremium,
+                    product.riders.find(
+                        (rider) => rider.riderCode === 'Rider_WPR'
+                    )
+                ),
+                ...input.premiumFreeRiders,
+            } as const;
 
             const { minIdx, maxIdx } = this.getClassRangeIndex(
                 eligibleClassByPosition
@@ -53,14 +83,20 @@ export class QuickQuoteProducts {
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [minClass, maxClass],
-                    notAvailabilityReasonField: this.rejectReasonField ?? '',
+                    notAvailabilityReasonField: undefined,
+                    riders: {
+                        ...resultRiders,
+                    },
                 });
             } else {
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [],
-                    notAvailabilityReasonField: this.rejectReasonField ?? '',
+                    notAvailabilityReasonField: this.rejectReasonFieldForClass,
+                    riders: {
+                        ...resultRiders,
+                    },
                 });
             }
         }
@@ -90,12 +126,12 @@ export class QuickQuoteProducts {
         const isFaceInRange = this.isWithin(face, faceMin, faceMax);
 
         if (!isFaceInRange) {
-            this.rejectReasonField = 'face';
+            this.rejectReasonFieldForClass = 'face';
         }
 
         // age has higher priority as an error.
         if (!isAgeInRange) {
-            this.rejectReasonField = 'age';
+            this.rejectReasonFieldForClass = 'age';
         }
 
         return isNicotineUserMatch && isAgeInRange && isFaceInRange;
@@ -111,5 +147,43 @@ export class QuickQuoteProducts {
             }
         }
         return { minIdx, maxIdx };
+    }
+
+    private getRiderEligible(
+        alternatives: RiderAlternatives,
+        age: number,
+        face: number
+    ): true | NotAvailabilityReasonField {
+        const { ageMin, ageMax, faceMin, faceMax } = alternatives;
+
+        const isAgeInRange = this.isWithin(age, ageMin, ageMax);
+        let isFaceInRange = true;
+
+        if (faceMin && faceMax) {
+            isFaceInRange = this.isWithin(face, faceMin, faceMax);
+
+            if (!isFaceInRange) {
+                return 'face';
+            }
+        }
+
+        // age has higher priority as an error.
+        if (!isAgeInRange) {
+            return 'age';
+        }
+
+        return true; // this is always true baseds on the code above
+    }
+
+    isRiderEligible(
+        age: number,
+        rider: boolean | number,
+        riderRules: RiderRule | undefined
+    ) {
+        if (riderRules && rider) {
+            const { alternatives } = riderRules;
+            return this.getRiderEligible(alternatives, age, rider as number);
+        }
+        return false;
     }
 }

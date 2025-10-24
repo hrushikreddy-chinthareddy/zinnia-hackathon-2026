@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { OutputCoverageValues } from '@deps/queries/api/client/documents/v3/illustrations';
+import { OutputCoverageValues } from '@deps/queries/api/v3/illustrations/types';
 
 import { formatIllustrationDetailYearlyCurrency } from './illustration-details-helpers';
 import { useRidersLabelMap } from './use-riders-label-map';
