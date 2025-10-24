@@ -35,6 +35,11 @@ export type SingleTermProductQuickQuoteParams = {
     notAvailabilityReasonField: NotAvailabilityReasonField;
 };
 
+/**
+ *
+ * Reduces an array of numbers to a single range array
+ * or to a single number if all values are "the same"
+ */
 export const asNumberOrRange = (values: (number | undefined)[]) => {
     const filtered = values.filter((v) => v != null);
 
@@ -57,6 +62,23 @@ export const asNumberOrRange = (values: (number | undefined)[]) => {
 
     return [min, max] as NumberRange;
 };
+
+export const sumNumberOrRanges = (values: NumberOrRange[]): NumberOrRange =>
+    values.reduce((result, value) => {
+        if (Array.isArray(result)) {
+            if (Array.isArray(value)) {
+                return [result[0] + value[0], result[1] + value[1]];
+            }
+
+            return result.map((x) => x + value) as NumberOrRange;
+        }
+
+        if (Array.isArray(value)) {
+            return value.map((x) => x + result) as NumberOrRange;
+        }
+
+        return result + value;
+    }, 0);
 
 const withPeriodText = (formatted: string, period: string | undefined) => {
     if (!period) {
