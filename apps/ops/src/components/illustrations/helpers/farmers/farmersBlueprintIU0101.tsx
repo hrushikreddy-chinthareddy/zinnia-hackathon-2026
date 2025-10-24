@@ -3154,7 +3154,7 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'solve-for-target-cash-value-years',
-                                    outputPath: 'targetCashValueYears',
+                                    outputPath: 'targetCashValueYear',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
@@ -3596,7 +3596,7 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     answerNodeId:
                                         'solve-for-target-cash-value-years',
-                                    outputPath: 'targetCashValueYears',
+                                    outputPath: 'targetCashValueYear',
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
