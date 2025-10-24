@@ -1,16 +1,23 @@
 import { TitleFieldProps } from '@rjsf/utils';
 
-import Content from '@deps/components/content/content';
-
-import classes from './title-field.module.css';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 
 export function TitleFieldTemplate(props: TitleFieldProps) {
     const { title, uiSchema } = props;
-    const fontSize = (uiSchema?.['ui:options']?.fontSize as number) || 32;
+    const fontType = uiSchema?.['ui:options']?.fonttype as string;
 
     return (
-        <Content className={`${classes.text} text-[${fontSize}px]`}>
+        <Typography
+            variant={
+                fontType === 'title'
+                    ? TypographyVariant.H3
+                    : TypographyVariant.Body
+            }
+            className="my-2"
+        >
             {title}
-        </Content>
+        </Typography>
     );
 }

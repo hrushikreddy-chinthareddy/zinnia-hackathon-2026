@@ -354,7 +354,7 @@
                         "policyInfoHeader": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "TitleFieldTemplate",
-                                "fontSize": 24
+                                "fontType": "title"
                             }
                         },
                         "policyNumber": {
@@ -416,7 +416,7 @@
                         "designeeDetailsHeader": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "TitleFieldTemplate",
-                                "fontSize": 24
+                                 "fontType": "title"
                             }
                         },
                         "designeeType": {
@@ -500,7 +500,7 @@
                         "signatureHeader": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "TitleFieldTemplate",
-                                "fontSize": 24
+                                 "fontType": "title"
                             }
                         },
                         "signature": {
@@ -605,13 +605,13 @@
                         "summaryHeader": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "TitleFieldTemplate",
-                                "fontSize": 24
+                                 "fontType": "title"
                             }
                         },
                         "policyInfoHeader": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "TitleFieldTemplate",
-                                "fontSize": 16
+                                 "fontType": "description"
                             }
                         },
                         "matchDetails": {
@@ -625,7 +625,7 @@
                         "designeeDetailsHeader": {
                             "ui:options": {
                                 "ObjectFieldTemplate": "TitleFieldTemplate",
-                                "fontSize": 16
+                                "fontType": "description"
                             }
                         },
                         "designeeType": {
