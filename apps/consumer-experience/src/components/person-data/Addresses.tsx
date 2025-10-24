@@ -24,6 +24,7 @@ const displayAddressType: { [key in AddressType]?: string } = {
   [AddressType.POBOX]: 'PO Box',
   [AddressType.RESIDENCE]: 'Residential',
   [AddressType.BUSINESS]: 'Business',
+  [AddressType.MAILING]: 'Mailing',
 };
 
 const AddressGroup = ({
@@ -134,6 +135,9 @@ export const Addresses = ({
   const businessAddresses = addresses?.filter(
     address => address.addressType === AddressType.BUSINESS
   );
+  const mailingAddresses = addresses?.filter(
+    address => address.addressType === AddressType.MAILING
+  );
 
   const userOnlyHasOneAddress = addresses.length == 1;
 
@@ -160,6 +164,13 @@ export const Addresses = ({
         />
         <AddressGroup
           addresses={businessAddresses}
+          preferredAddressIndicator={preferredAddressIndicator}
+          showEditButton={allowAddressChanges}
+          partyId={partyId}
+          userOnlyHasOneAddress={userOnlyHasOneAddress}
+        />
+        <AddressGroup
+          addresses={mailingAddresses}
           preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
