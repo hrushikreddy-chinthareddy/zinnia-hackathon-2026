@@ -5,23 +5,34 @@ import {
     PolicyNotesInfoItem,
     getPolicyNotesInfo,
 } from '@deps/queries/api/policies';
+import { browserLogError } from '@deps/utils/browser-logging';
 
-export const useDiaryNotes = (
-    policyNumber: string,
-    clientCode: string,
-    offset: number,
-    limit: number,
-    showDiaryNotes: boolean = true,
-    planCode?: string,
-    isLC?: boolean
-) => {
+type UseDiaryNotesParams = {
+    policyNumber: string;
+    clientCode: string;
+    offset: number;
+    limit: number;
+    showDiaryNotes?: boolean;
+    planCode?: string;
+    isLC?: boolean;
+};
+
+export const useDiaryNotes = ({
+    policyNumber,
+    clientCode,
+    offset,
+    limit,
+    showDiaryNotes = true,
+    planCode,
+    isLC,
+}: UseDiaryNotesParams) => {
     const [diaryNotes, setDiaryNotes] = useState<PolicyNotesInfoItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [totalLogs, setTotalLogs] = useState(0);
 
     const sortedNotes = (diaryNotes: any) => {
         const today = new Date();
-        return diaryNotes.sort(
+        return diaryNotes?.sort(
             (a: { NoteDate: string }, b: { NoteDate: string }) => {
                 const dateA = new Date(a.NoteDate);
                 const dateB = new Date(b.NoteDate);
@@ -73,9 +84,9 @@ export const useDiaryNotes = (
             setIsLoading(false);
         } else {
             setIsLoading(false);
-            console.error('No policy number or client code provided');
+            browserLogError('No policy number or client code provided');
         }
-    }, [policyNumber, clientCode, offset, limit]);
+    }, [policyNumber, clientCode, offset, limit, planCode]);
 
     useEffect(() => {
         if (showDiaryNotes) getDiaryNotes();
