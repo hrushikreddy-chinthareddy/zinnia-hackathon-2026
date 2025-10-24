@@ -1,5 +1,6 @@
 import { Transaction } from '@xd/api-types/dist/generated-types/sor';
 import { SideSheet } from '@zinnia/bloom/components';
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
@@ -17,9 +18,11 @@ import { TransactionSidesheetContent } from './content/transaction-sidesheet-con
 export const FindAllKeyValuesTransactionSidesheet = ({
     transaction,
     open,
+    onOpenChange,
 }: {
     transaction: Transaction;
     open: boolean;
+    onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) => {
     const { t } = useTranslation();
     console.log('is it open?', open);
@@ -32,7 +35,8 @@ export const FindAllKeyValuesTransactionSidesheet = ({
                 </span>
             }
             open={open}
-            onOpenChange={() => ({})}
+            onOpenChange={onOpenChange}
+            preventCloseOnOutsideClick={false}
         >
             <TransactionSidesheetContent transaction={transaction} />
         </SideSheet>

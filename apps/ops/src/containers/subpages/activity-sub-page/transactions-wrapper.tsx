@@ -158,6 +158,7 @@ export const TransactionsWrapper = () => {
                     <FindAllKeyValuesTransactionSidesheet
                         transaction={selectedTransaction}
                         open={isSideSheetOpen}
+                        onOpenChange={setIsSideSheetOpen}
                     />
                 </>
             ) : (
