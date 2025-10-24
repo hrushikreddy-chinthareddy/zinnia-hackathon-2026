@@ -87,13 +87,9 @@ export const IssueCountsByStatusProvider: FC<PropsWithChildren> = ({
     const [category, setCategory] = useState<string[]>([]);
 
     //Issue Status Filter
-    const [exceptionStatus, setExceptionStatus] = useState([
-        ExceptionStatus.UNRESOLVED,
-        ExceptionStatus.INPROGRESS,
-        ExceptionStatus.IN_PROGRESS,
-        ExceptionStatus.NEW,
-        ExceptionStatus.RESOLVED,
-    ]);
+    const [exceptionStatus, setExceptionStatus] = useState<ExceptionStatus[]>(
+        []
+    );
 
     // Case Type Filter
     const [selectedProcess, setSelectedProcess] = useState<
