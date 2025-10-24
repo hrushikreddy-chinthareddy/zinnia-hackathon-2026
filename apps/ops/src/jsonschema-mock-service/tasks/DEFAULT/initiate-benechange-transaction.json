@@ -985,7 +985,7 @@
                                             "preferredCommunicationType": {
                                                 "type": "string",
                                                 "title": "Preferred Contact Method",
-                                                "enum": ["EMAIL", "MAIL"]
+                                                "enum": ["EMAIL", "REGULARMAIL"]
                                             }
                                         },
                                         "required": [
@@ -1229,6 +1229,7 @@
                                                     "GRANDCHILD",
                                                     "LIFEPARTNER",
                                                     "MOTHER",
+                                                    "SIBLING",
                                                     "SISTER",
                                                     "SON",
                                                     "SPOUSE",
@@ -1690,6 +1691,7 @@
                                             "Grandchild",
                                             "Life Partner",
                                             "Mother",
+                                            "Sibling",
                                             "Sister",
                                             "Son",
                                             "Spouse",

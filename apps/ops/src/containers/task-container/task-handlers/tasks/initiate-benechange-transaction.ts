@@ -182,7 +182,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         partyId: bene.partyId ?? null,
                         partyType: bene.partyType,
                         preferredCommunicationType:
-                            bene.preferredCommunicationType ?? 'EMAIL',
+                            bene.preferredCommunicationType ?? '',
                         prefix: bene.prefix ?? null,
                         firstName: bene.firstName ?? null,
                         middleName: bene.middleName ?? null,
