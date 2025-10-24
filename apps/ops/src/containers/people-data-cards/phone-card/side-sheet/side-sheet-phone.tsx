@@ -10,7 +10,7 @@ import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -262,18 +262,6 @@ export const SideSheetPhone = ({
         });
     };
 
-    // this needs to be in a useEffect to prevent it from firing multiple times
-    useEffect(() => {
-        if (viewState === ViewState.Success) {
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Phone,
-                newItem: phone,
-                setState: setCurrentPhones,
-            });
-        }
-    }, [action, phone, setCurrentPhones, stopLoading, viewState]);
-
     switch (viewState) {
         case ViewState.Loading:
             return <LoadingState />;
@@ -311,6 +299,13 @@ export const SideSheetPhone = ({
                 />
             );
         case ViewState.Success:
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Phone,
+                newItem: phone,
+                setState: setCurrentPhones,
+            });
+
             return (
                 <SuccessState
                     action={action}

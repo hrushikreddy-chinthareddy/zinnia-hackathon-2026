@@ -55,9 +55,9 @@ const AddressCard = ({
     const { policyDetails } = useContext(PolicyData);
     const [showAdditional, setShowAdditional] = useState(false);
 
-    const { addresses } = party ?? {};
+    const { addresses, preferredAddressIndicator } = party ?? {};
     const [currentAddresses, setCurrentAddresses] = useState<Address[]>(
-        sortAddressesByType({ addresses })
+        sortAddressesByType({ addresses, preferredAddressIndicator })
     );
 
     const showToggle = currentAddresses.length > 4;
@@ -73,7 +73,9 @@ const AddressCard = ({
                 typeTranslation={typeTranslation}
             />,
             <SideSheetAddress
-                isCurrentMailingAddress={!!address?.isPreferred}
+                isCurrentMailingAddress={
+                    party?.preferredAddressIndicator === address?.addressId
+                }
                 isOnlyAddress={currentAddresses?.length === 1}
                 onCancel={() => sideSheet.handleOpen(false)}
                 party={party}
@@ -81,7 +83,6 @@ const AddressCard = ({
                 policy={policyDetails.policy}
                 policyNumber={policyNumber}
                 setCurrentAddresses={setCurrentAddresses}
-                currentAddresses={currentAddresses}
                 updateAddress={address ?? undefined}
             />
         );
@@ -97,6 +98,7 @@ const AddressCard = ({
                 editable={editable}
                 infoOnly={infoOnly}
                 onEditClick={openSideSheet}
+                preferredAddressIndicator={party?.preferredAddressIndicator}
                 showAdditional={showAdditional}
             />
         </div>

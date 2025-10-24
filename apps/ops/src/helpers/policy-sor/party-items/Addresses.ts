@@ -6,9 +6,11 @@ import { isEndDated } from '@deps/helpers/date.helpers';
 import { BasePartyItems } from './BasePartyItems';
 
 export class Addresses extends BasePartyItems<Address> {
+    private preferredAddressIndicator: string | undefined;
     public addressById: Record<string, Address>;
-    constructor(addresses: Address[] = []) {
+    constructor(addresses: Address[] = [], preferredAddressIndicator?: string) {
         super(addresses);
+        this.preferredAddressIndicator = preferredAddressIndicator;
         this.addressById = this.historicalList.reduce((acc, address) => {
             if (address.addressId) {
                 acc[address.addressId] = address;
@@ -29,8 +31,17 @@ export class Addresses extends BasePartyItems<Address> {
     }
 
     public get preferred(): Address | undefined {
+        if (this.preferredAddressIndicator) {
+            return this.currentList?.find(
+                (address) =>
+                    address.addressId === this.preferredAddressIndicator
+            );
+        }
+        // BPB - preferredAddress was showing up in QA.  Use it if we have it
         return this.currentList?.find(
-            (address) => address.isPreferred && !isEndDated(address.endDate)
+            (address) =>
+                (address as Address & { preferredAddress: boolean })
+                    .preferredAddress && !isEndDated(address.endDate)
         );
     }
 }

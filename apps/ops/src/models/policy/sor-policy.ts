@@ -1199,7 +1199,7 @@ export interface ThirdPartyAdministrator {
     /** TBD */
     partyType?: string;
     phones?: Phone[];
-    /** @deprecated  use isPreferred in the address object*/
+    /** TBD */
     preferredAddressIndicator?: string;
     preferredCommunicationType?: CommunicationType;
     /** TBD */
@@ -1850,7 +1850,6 @@ export type PolicySummarySnapshotPartiesItem = {
     partyStatus?: PartyStatus;
     partyType?: PartyType;
     /** TBD */
-    /** @deprecated  use isPreferred in the address object*/
     preferredAddressIndicator?: string;
 };
 
@@ -2753,7 +2752,6 @@ export interface PartyBase {
     partyStatus?: PartyStatus;
     partyType?: PartyType;
     /** TBD */
-    /** @deprecated  use isPreferred in the address object*/
     preferredAddressIndicator?: string;
     preferredCommunicationType?: PreferredCommunicationType;
     prefix?: Prefix;
@@ -4926,7 +4924,6 @@ export interface Carrier {
     partyType?: string;
     phones?: Phone[];
     /** TBD */
-    /** @deprecated  use isPreferred in the address object*/
     preferredAddressIndicator?: string;
     preferredCommunicationType?: CommunicationType;
     /** TBD */

@@ -57,9 +57,7 @@ export interface NonFinancialTransactionBody {
     correlationId: string;
     effectiveDate: string;
     deleteRequest?: boolean;
-    //@deprecated This is going away
     preferredAddressIndicator?: PreferredAddressIndicator;
-    preferredAddressId?: string;
     reverseInitiator?: boolean;
 }
 

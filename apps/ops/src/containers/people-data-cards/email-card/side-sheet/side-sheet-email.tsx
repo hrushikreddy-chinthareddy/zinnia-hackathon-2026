@@ -9,7 +9,7 @@ import {
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -258,18 +258,6 @@ const SideSheetEmail = ({
         });
     };
 
-    // this needs to be in a useEffect to prevent it from firing multiple times
-    useEffect(() => {
-        if (viewState === ViewState.Success) {
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Email,
-                newItem: email,
-                setState: setCurrentEmails,
-            });
-        }
-    }, [action, email, setCurrentEmails, viewState]);
-
     switch (viewState) {
         case ViewState.Loading:
             return <LoadingState />;
@@ -311,6 +299,13 @@ const SideSheetEmail = ({
                 />
             );
         case ViewState.Success:
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Email,
+                newItem: email,
+                setState: setCurrentEmails,
+            });
+
             return (
                 <SuccessState
                     action={action}

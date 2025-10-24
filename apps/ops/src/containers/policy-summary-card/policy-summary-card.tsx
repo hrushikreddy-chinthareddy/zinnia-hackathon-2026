@@ -708,8 +708,9 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const addresses = owner?.bestAvailableAddress
         ? [owner?.bestAvailableAddress]
         : undefined;
+    const preferredAddressIndicator = owner?.preferredAddress?.addressId;
     const [currentAddresses, setCurrentAddresses] = useState<Address[]>(
-        sortAddressesByType({ addresses })
+        sortAddressesByType({ addresses, preferredAddressIndicator })
     );
     const bestAvailAddress = currentAddresses[0] as AddressWithPending;
 
@@ -781,7 +782,10 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                 );
                 content = (
                     <SideSheetAddress
-                        isCurrentMailingAddress={!!bestAvailAddress.isPreferred}
+                        isCurrentMailingAddress={
+                            preferredAddressIndicator ===
+                            bestAvailAddress.addressId
+                        }
                         isOnlyAddress={currentAddresses?.length === 1}
                         onCancel={() => sideSheet.handleOpen(false)}
                         party={owner?.party}
@@ -790,7 +794,6 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         policy={policy.policy}
                         setCurrentAddresses={setCurrentAddresses}
                         updateAddress={bestAvailAddress ?? undefined}
-                        currentAddresses={currentAddresses}
                     />
                 );
         }
