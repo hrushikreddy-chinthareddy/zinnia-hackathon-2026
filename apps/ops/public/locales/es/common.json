@@ -8107,7 +8107,9 @@
             "addProductAriaLabel": "Boton para agregar un producto",
             "editIllustration": "Editar ilustración",
             "initialDeathBenefitOption": "Opción de beneficio por muerte inicial",
-            "archive": "Archivar"
+            "archive": "Archivar",
+            "unsatisfiedSolveMessage": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
+            "unreachDesiredSolutionMessage": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló."
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",

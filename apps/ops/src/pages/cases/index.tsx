@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils/dist';
+import { FgaRoles } from '@xd/utils';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -620,26 +620,6 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags =
-                await optimizelyService.getFeatureFlagDecisions(
-                    user.sub,
-                    loggingContext
-                );
-
-            const doesUserHasPagePermissions = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadCaseManagement,
-                      loggingContext
-                  );
 
             // DEPU-2835
             const isAdvisorsExcel = await checkTuplePage(
@@ -649,13 +629,41 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
+            // IMH-87188-87186 (186 is the IMH you can view in JIRA)
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT
+                ]
+            ) {
+                console.log('case management feature flag enabled');
+                const doesUserHasPagePermissions = featureFlagDecisions?.[
+                    FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
+                ]
+                    ? await checkTuplePage(
+                          context,
+                          FgaRelation.UiAccess,
+                          FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
+                          loggingContext
+                      )
+                    : await doesUserHavePagePermissions(
+                          context,
+                          UserPermission.AllowReadCaseManagement,
+                          loggingContext
+                      );
+
+                if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
             }
 
             const { locale = DEFAULT_LOCALE } = context;

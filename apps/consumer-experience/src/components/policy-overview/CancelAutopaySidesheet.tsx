@@ -141,7 +141,7 @@ export const CancelAutopaySidesheet = ({
           startDate: systematicProgram?.startDate,
           endDate: effectiveDate,
           previousProgramDate: systematicProgram?.previousProgramDate,
-          nextProgramDate: effectiveDate,
+          nextProgramDate: systematicProgram?.nextProgramDate,
           party: {
             bankId: systematicProgram?.party?.[0]?.bankId,
             partyId: systematicProgram?.party?.[0]?.partyId,

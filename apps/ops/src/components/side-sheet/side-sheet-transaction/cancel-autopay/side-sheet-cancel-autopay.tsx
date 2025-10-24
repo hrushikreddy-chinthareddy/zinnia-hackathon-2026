@@ -188,7 +188,7 @@ const SideSheetCancelAutopay = ({
                 startDate: systematicProgram?.startDate,
                 endDate: effectiveDateFormatted,
                 previousProgramDate: systematicProgram?.previousProgramDate,
-                nextProgramDate: effectiveDateFormatted,
+                nextProgramDate: systematicProgram?.nextProgramDate,
                 ...(systematicProgram?.parties && {
                     parties: systematicProgram.parties,
                 }),

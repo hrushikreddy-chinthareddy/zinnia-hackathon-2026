@@ -8278,7 +8278,9 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive"
+            "archive": "Archive",
+            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
@@ -8288,6 +8290,29 @@
             "ariaSubmit": "Submit for application",
             "cancel": "Cancel",
             "ariaCancel": "Cancel submission"
+        },
+        "quickQuoteResults": {
+            "title": "Quick Quote",
+            "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
+            "notAvailable": "Not Available",
+            "product": {
+                "title": "Product",
+                "totalPremiumRange": "Total Premium Range",
+                "totalPremiumRangeSubtitle": "(Base Premium Range + Riders)",
+                "totalPremiumRangeRowHeader": "{{years}} year term"
+            },
+            "coverage": {
+                "title": "Coverage & Summary",
+                "basePremiumRange": "Base Premium Range",
+                "hint": "",
+                "nYearTerm": "{{years}} year term"
+            },
+            "riders": {
+                "title": "Riders",
+                "disabledPlaceholder": "Select to add and see pricing",
+                "totalRiderPricing": "Total Rider Pricing",
+                "premiumFreeRiders": "Premium-free Riders"
+            }
         },
         "createClientCaseForm": {
             "clientCaseSideSheetTitle": "New Client Case",

@@ -442,10 +442,7 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
         const policyIssuanceDate = dayjs(
             policy?.policyDates?.issueDate as string
         );
-        return (
-            date.isAfter(policyIssuanceDate) &&
-            date.isBefore(dayjs().add(1, 'day'))
-        );
+        return date.isBetween(policyIssuanceDate, dayjs(), 'day', '[]');
     };
 
     const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -455,7 +452,6 @@ export const FindAllKeyValuesSidesheet: FC<FindAllKeyValuesSidebarProps> = ({
             return;
         }
         const day = dayjs(e.target.value, NUMERIC_DATE_FORMAT);
-
         if (day.isValid() && isDateAllowed(day)) {
             setDate(day.format(NUMERIC_DATE_FORMAT));
             setEnableQuery(true);

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { createIllustration } from '@deps/queries/api/client/documents/v3/illustrations';
+import { createIllustration } from '@deps/queries/api/v3/illustrations';
 import {
     editIllustrationToClientCase,
     saveIllustrationToClientCase,
@@ -233,17 +233,14 @@ export function SubmitProvider({
     const {
         isError: createIllustrationError,
         isPending: createIllustrationPending,
+        mutateAsync: createIllustrationMutateAsync,
     } = createIllustrationMutation;
+
     const {
         isError: editIllustrationError,
         isPending: editIllustrationPending,
+        mutateAsync: editIllustrationMutateAsync,
     } = editIllustrationMutation;
-
-    const { mutateAsync: createIllustrationMutateAsync } =
-        createIllustrationMutation;
-
-    const { mutateAsync: editIllustrationMutateAsync } =
-        editIllustrationMutation;
 
     const contextValue: SubmitContextValue = useMemo(
         () => ({

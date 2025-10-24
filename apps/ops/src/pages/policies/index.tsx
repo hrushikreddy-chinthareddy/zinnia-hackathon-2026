@@ -1,5 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRoles } from '@xd/utils/dist';
+import { FgaRelation, FgaRoles } from '@xd/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { createContext } from 'react';
 
@@ -19,7 +19,6 @@ import {
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import { FgaRelation } from '@deps/types/fga';
 import { SearchViewQuery } from '@deps/types/search';
 import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -87,34 +86,41 @@ export const getServerSideProps = withPageAuthAndLogging(
                     user.sub,
                     loggingContext
                 );
-            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadPolicyAdmin,
-                      loggingContext
-                  );
-            const isAdvisorsExcel = await checkTuplePage(
-                context,
-                FgaRelation.Party,
-                AE_FGA_ROLE,
-                loggingContext
-            );
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT
+                ]
+            ) {
+                const hasPermissionToReadPolicyManagement =
+                    featureFlagDecisions?.[
+                        FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
+                    ]
+                        ? await checkTuplePage(
+                              context,
+                              FgaRelation.UiAccess,
+                              FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
+                              loggingContext
+                          )
+                        : await doesUserHavePagePermissions(
+                              context,
+                              UserPermission.AllowReadPolicyAdmin,
+                              loggingContext
+                          );
+                const isAdvisorsExcel = await checkTuplePage(
+                    context,
+                    FgaRelation.Party,
+                    AE_FGA_ROLE,
+                    loggingContext
+                );
 
-            if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
+                if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
             }
 
             const translations = await serverSideTranslations(
