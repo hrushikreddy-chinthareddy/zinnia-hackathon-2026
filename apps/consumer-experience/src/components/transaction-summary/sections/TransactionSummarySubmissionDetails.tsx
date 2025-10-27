@@ -21,6 +21,9 @@ export const TransactionSummarySubmissionDetails: FC<
   const submittedOn =
     transactionSummary?.entity?.withdrawalTransaction?.withdrawalSummary
       .withdrawalSubmittedDate;
+  const approvedOn =
+    transactionSummary?.entity?.withdrawalTransaction?.withdrawalSummary
+      .withdrawalSubmittedDate; //TODO: Fix
   const expiresOn =
     transactionSummary?.entity?.withdrawalTransaction?.withdrawalSummary
       .withdrawalExpireDate;
@@ -41,6 +44,14 @@ export const TransactionSummarySubmissionDetails: FC<
               text={authorizationStatus}
             />
           ),
+        },
+      ],
+    },
+    {
+      title: 'Approved On',
+      children: [
+        {
+          title: dayjs(approvedOn).format(DEFAULT_DATE_FORMAT),
         },
       ],
     },
