@@ -7,27 +7,27 @@ import Field, {
 } from '@deps/components/fields/field';
 
 const validatePercentage = (actionData: any) => {
-    const primaryBene = actionData.filter(
+    const primaryBene = actionData?.filter(
         (bene: any) => bene.partyRole.partyRole === 'PRIMARYBENEFICIARY'
     );
-    const primaryBeneTotal = primaryBene.reduce(
+    const primaryBeneTotal = primaryBene?.reduce(
         (acc: number, bene: any) =>
             acc + Number(bene.party.beneficiaryPercentage || 0),
         0
     );
     const isPrimaryBeneValid =
-        primaryBene.length === 0 || primaryBeneTotal === 100;
+        primaryBene?.length === 0 || primaryBeneTotal === 100;
 
-    const contingentBene = actionData.filter(
+    const contingentBene = actionData?.filter(
         (bene: any) => bene.partyRole.partyRole === 'CONTINGENTBENEFICIARY'
     );
-    const contingentBeneTotal = contingentBene.reduce(
+    const contingentBeneTotal = contingentBene?.reduce(
         (acc: number, bene: any) =>
             acc + Number(bene.party.beneficiaryPercentage || 0),
         0
     );
     const isContingentBeneValid =
-        contingentBene.length === 0 || contingentBeneTotal === 100;
+        contingentBene?.length === 0 || contingentBeneTotal === 100;
 
     return isPrimaryBeneValid && isContingentBeneValid;
 };
