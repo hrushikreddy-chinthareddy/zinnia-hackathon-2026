@@ -86,7 +86,7 @@ export const formatAsSectionLabel = (
     lineOfBusiness: LineOfBusiness,
     t: TFunction
 ) => {
-    const exactTranslation = t(`policy.allFields.${label}`, {
+    const exactTranslation = t(`allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -128,7 +128,7 @@ export const formatAsDataLabel = (
     lineOfBusiness: LineOfBusiness,
     t: TFunction
 ) => {
-    const exactTranslation = t(`policy.allFields.${label}`, {
+    const exactTranslation = t(`allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE

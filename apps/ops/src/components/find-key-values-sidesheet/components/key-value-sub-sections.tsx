@@ -3,7 +3,13 @@ import { AccordionType } from '@xd/xd-components/src/components/Accordion/types'
 
 import Highlighter from '@deps/components/highlighter/highlighter';
 
-import { ExpandCollapse, MetaData, NestedData, tags } from '../types';
+import {
+    DisplayType,
+    ExpandCollapse,
+    MetaData,
+    NestedData,
+    tags,
+} from '../types';
 import { KeyValueFieldList } from './key-value-field-list';
 import styles from '../find-all-key-values-sidesheet.module.css';
 
@@ -20,10 +26,12 @@ export const KeyValueSubSections = ({
     subSections,
     searchValue,
     treeState,
+    displayType = DisplayType.ACCORDION,
 }: {
     subSections: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
+    displayType?: DisplayType;
 }) => {
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
@@ -31,6 +39,7 @@ export const KeyValueSubSections = ({
             NestedData
         ];
         const subsectionTags = (subSection as MetaData)[tags];
+
         return (
             <div key={`subsection_${i}`} className={styles.subSection}>
                 <Accordion

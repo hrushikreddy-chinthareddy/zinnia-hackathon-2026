@@ -11,7 +11,6 @@ import {
 import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { TranslationFiles } from '@deps/config/translations';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
 import { KeyValueBasics } from '../components/key-value-basics';
@@ -27,13 +26,8 @@ export const TransactionSidesheetContent = ({
 }) => {
     const [treeState, setTreeState] = useState(Collapse);
     const [searchValue, setSearchValue] = useState('');
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'policy',
-    });
+    const { t } = useTranslation();
     const { policy } = useContext(PolicyData);
-
-    // const debouncedSearchValue = useDebounce(searchValue, 200);
-
     const preparedTransaction = prepareTransaction(transaction, policy, t, '');
 
     const { transactionDetails, transactionSections } = useMemo(

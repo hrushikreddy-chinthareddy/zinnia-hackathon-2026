@@ -43,3 +43,8 @@ export interface FindAllKeyValuesSidebarProps {
     planCode?: string;
     policyNumber?: string;
 }
+
+export enum DisplayType {
+    ACCORDION = 'accordion',
+    RULE = 'rule',
+}
