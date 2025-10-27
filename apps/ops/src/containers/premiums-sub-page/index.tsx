@@ -28,6 +28,7 @@ import {
     getFlatExtra,
     getParty,
 } from '@deps/helpers/payments.helpers';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
@@ -289,9 +290,9 @@ export const PremiumsSubPage = () => {
                 }
                 paymentFrequencyText={
                     t('paymentFrequencyText', {
-                        paymentMode: tRoot(
-                            `systematicProgram.frequency.${upcomingPayment?.frequency?.toLowerCase()}`
-                        ),
+                        paymentMode: upcomingPayment?.frequency
+                            ? getFrequency(upcomingPayment?.frequency, tRoot)
+                            : '',
                         paymentType: t('paymentType.premium'),
                     }) || undefined
                 }
