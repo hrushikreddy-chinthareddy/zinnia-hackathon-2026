@@ -20,7 +20,11 @@ import {
     QuickQuoteFormState,
     TermQuickQuoteResult,
 } from '@deps/types/quickQuote';
-import { NotAvailabilityReasonField } from '@deps/utils/quick-quotes-rules/types';
+import {
+    NotAvailabilityReasonField,
+    ProductClassResult,
+    ProductClassResultRiders,
+} from '@deps/utils/quick-quotes-rules/types';
 
 /**
  *
@@ -33,6 +37,7 @@ export type SingleTermProductQuickQuoteParams = {
     classCode: string;
     available: boolean;
     notAvailabilityReasonField: NotAvailabilityReasonField;
+    riders: ProductClassResultRiders;
 };
 
 /**
@@ -202,9 +207,35 @@ export const buildDefaultFormStateValues = (
     };
 };
 
+export const expandQuickQuoteVariants = (
+    rawVariants: ProductClassResult[]
+): SingleTermProductQuickQuoteParams[] =>
+    rawVariants.flatMap(
+        ({
+            planCode,
+            termLength,
+            classCodes,
+            notAvailabilityReasonField,
+            riders,
+        }) =>
+            classCodes.map((classCode) => ({
+                planCode,
+                termLength,
+                classCode,
+                available: !notAvailabilityReasonField,
+                notAvailabilityReasonField,
+                riders,
+            }))
+    );
+
 export const buildNewTermQuickQuotePayload = (
     params: QuickQuoteParams,
-    { classCode, planCode, termLength }: SingleTermProductQuickQuoteParams
+    {
+        classCode,
+        planCode,
+        termLength,
+        riders,
+    }: SingleTermProductQuickQuoteParams
 ) => {
     const participantId = uuid4();
 
@@ -230,7 +261,8 @@ export const buildNewTermQuickQuotePayload = (
             },
 
             ...RIDERS_WITH_FACE_AMOUNT.filter(
-                (riderName) => params.riders[riderName]
+                (riderName) =>
+                    params.riders[riderName] && riders[riderName] === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 currentAmount: params.riders[riderName] as number,
@@ -243,7 +275,8 @@ export const buildNewTermQuickQuotePayload = (
                 ],
             })),
             ...NO_PARAM_RIDERS.filter(
-                (riderName) => params.riders[riderName]
+                (riderName) =>
+                    params.riders[riderName] && riders[riderName] === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 participants: [
@@ -255,7 +288,9 @@ export const buildNewTermQuickQuotePayload = (
                 ],
             })),
             ...PREMIUM_FREE_RIDERS.filter(
-                (riderName) => params.premiumFreeRiders[riderName]
+                (riderName) =>
+                    params.premiumFreeRiders[riderName] &&
+                    riders[riderName] === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 participants: [

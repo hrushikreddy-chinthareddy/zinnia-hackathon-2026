@@ -65,35 +65,19 @@ export const buildNewTermQuickQuoteOptions = (
 export const useQuickQuoteQueries = <MT>(
     {
         quickQuoteParams,
-        variants: rawVariants,
+        variants,
     }: {
         quickQuoteParams: QuickQuoteParams;
-        variants: ProductClassResult[];
+        variants: SingleTermProductQuickQuoteParams[];
     },
     combine: (
         results: UseQueryResult<CreateNewTermLifeIllustrationResponse>[]
     ) => MT
 ) =>
     useQueries({
-        queries: rawVariants
-            .flatMap(
-                ({
-                    planCode,
-                    termLength,
-                    classCodes,
-                    notAvailabilityReasonField,
-                }) =>
-                    classCodes.map((classCode) => ({
-                        planCode,
-                        termLength,
-                        classCode,
-                        available: !notAvailabilityReasonField,
-                        notAvailabilityReasonField,
-                    }))
-            )
-            .map((variantParams) =>
-                buildNewTermQuickQuoteOptions(quickQuoteParams, variantParams)
-            ),
+        queries: variants.map((variant) =>
+            buildNewTermQuickQuoteOptions(quickQuoteParams, variant)
+        ),
         combine: useCallback(
             (
                 results: UseQueryResult<CreateNewTermLifeIllustrationResponse>[]
