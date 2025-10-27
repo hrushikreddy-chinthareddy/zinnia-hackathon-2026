@@ -1477,6 +1477,11 @@
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
+                                        },
+                                        "identificationValue": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]$",
+                                            "format": "###########"
                                         }
                                     }
                                 },
@@ -1575,6 +1580,16 @@
                                                     "WY"
                                                 ]
                                             }
+                                        },
+                                        "zipCode": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{5}$",
+                                            "format": "#####"
+                                        },
+                                        "zipCodeExtension": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{4}$",
+                                            "format": "####"
                                         }
                                     }
                                 },
@@ -1605,6 +1620,10 @@
                                                     "Default"
                                                 ]
                                             }
+                                        },
+                                        "dialNumber": {
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "+### (###) ###-####"
                                         }
                                     }
                                 },
@@ -1624,6 +1643,10 @@
                                         }
                                     }
                                 },
+                                "dateOfBirth": {
+                                    "ui:widget": "NewDateWidget"
+                                },
+
                                 "prefix": {
                                     "ui:widget": "SelectWidget",
                                     "ui:allowEmptyValue": true,
@@ -1849,7 +1872,9 @@
                                     },
                                     "ui:placeholder": "Select designation"
                                 },
-                                "signDate": {}
+                                "signDate": {
+                                    "ui:widget": "NewDateWidget"
+                                }
                             }
                         }
                     }
