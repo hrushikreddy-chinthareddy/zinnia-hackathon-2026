@@ -25,13 +25,13 @@ export const FindAllKeyValuesTransactionSidesheet = ({
     onOpenChange: Dispatch<SetStateAction<boolean>>;
 }) => {
     const { t } = useTranslation();
-    console.log('is it open?', open);
+
     return (
         <SideSheet
             trigger={null}
             header={
                 <span className="typography-desktop-headline-2-d">
-                    {t('label.findKeyValuesTitle')}
+                    {t('label.transactionDetails')}
                 </span>
             }
             open={open}

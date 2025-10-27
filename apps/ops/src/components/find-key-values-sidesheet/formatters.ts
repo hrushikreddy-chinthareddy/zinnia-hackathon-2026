@@ -187,7 +187,7 @@ export const formatAsDataValue = (
 
     // Enums
     // Attempt to translate first, then process as numeric data if no translation found
-    const exactTranslation = t(`policy.enums.${fieldData}`, {
+    const exactTranslation = t(`enums.${fieldData}`, {
         defaultValue: null,
     });
     if (exactTranslation !== null) return exactTranslation;

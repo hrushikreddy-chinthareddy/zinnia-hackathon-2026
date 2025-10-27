@@ -48,6 +48,7 @@ export const FindAllKeyValuesPolicySidesheet: FC<
                     {t('label.findKeyValuesTitle')}
                 </span>
             }
+            preventCloseOnOutsideClick={false}
         >
             <PolicySidesheetContent
                 planCode={planCode}
