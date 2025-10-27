@@ -1,19 +1,24 @@
 import Highcharts from 'highcharts';
+import Drilldown from 'highcharts/modules/drilldown';
 import HighchartsReact from 'highcharts-react-official';
 import { FC } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 
+import {
+    AXIS_LABEL_STYLE,
+    AXIS_TITLE_STYLE,
+    DRILLDOWN_STYLES,
+} from './grouped-column-chart.styles';
+
+if (typeof Highcharts === 'object') {
+    Drilldown(Highcharts);
+}
 export type GroupedColumnSeries = {
     name: string;
-    data: number[];
+    data: any[];
     color?: string;
-};
-
-export const AXIS_TITLE_STYLE: Highcharts.CSSObject = {
-    color: '#212121',
-    fontSize: '14px',
-    fontWeight: '700',
+    colorByPoint?: boolean;
 };
 
 type Props = {
@@ -25,6 +30,9 @@ type Props = {
     pointWidth?: number;
     groupPadding?: number;
     tooltipFormatter?: Highcharts.TooltipFormatterCallbackFunction;
+    labelRotation?: number;
+    enableDrilldown?: boolean;
+    drilldownSeries?: Highcharts.SeriesOptionsType[];
 };
 
 const defaultCategoryValueTooltip: Highcharts.TooltipFormatterCallbackFunction =
@@ -45,29 +53,43 @@ export const GroupedColumnsChart: FC<Props> = ({
     pointWidth = 8,
     groupPadding,
     tooltipFormatter,
+    labelRotation = 0,
+    enableDrilldown = false,
+    drilldownSeries,
 }) => {
     const base = caseChartHelpers.getBaseBarChartConfiguration();
+    const commonXAxisConfig = {
+        title: {
+            text: xAxisTitle,
+            y: 12,
+            style: AXIS_TITLE_STYLE,
+        },
+        gridLineWidth: 1,
+        labels: {
+            useHTML: false,
+            rotation: labelRotation,
+            style: {
+                ...AXIS_LABEL_STYLE,
+            },
+        },
+    };
 
     const options: Highcharts.Options = Highcharts.merge(base, {
         chart: { type: 'column', height, spacingBottom: 40 },
 
         legend: { ...base.legend, enabled: false, title: { text: '' } },
 
-        xAxis: {
-            ...base.xAxis,
-            categories,
-            title: { text: xAxisTitle, y: 12, style: AXIS_TITLE_STYLE },
-            gridLineWidth: 1,
-            labels: {
-                useHTML: false,
-                rotation: -45.604,
-                style: {
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    color: '#212121',
-                },
-            },
-        },
+        xAxis: enableDrilldown
+            ? {
+                  type: 'category',
+                  categories: undefined,
+                  ...commonXAxisConfig,
+              }
+            : {
+                  ...base.xAxis,
+                  categories,
+                  ...commonXAxisConfig,
+              },
 
         yAxis: {
             ...base.yAxis,
@@ -94,7 +116,22 @@ export const GroupedColumnsChart: FC<Props> = ({
             name: s.name,
             data: s.data,
             color: s.color,
+            colorByPoint: s.colorByPoint,
         })),
+        ...(enableDrilldown
+            ? {
+                  drilldown: {
+                      animation: { duration: 500 },
+                      breadcrumbs: {
+                          showFullPath: true,
+                          buttonTheme: DRILLDOWN_STYLES.breadcrumbs.buttonTheme,
+                          separator: DRILLDOWN_STYLES.breadcrumbs.separator,
+                      },
+                      activeAxisLabelStyle: DRILLDOWN_STYLES.activeAxisLabel,
+                      series: drilldownSeries,
+                  },
+              }
+            : {}),
     });
 
     return <HighchartsReact highcharts={Highcharts} options={options} />;

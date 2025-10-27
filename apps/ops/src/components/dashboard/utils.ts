@@ -157,6 +157,7 @@ export const groupByUrlMap: Record<CaseCountGroupByEnum, string> = {
     [CaseCountGroupByEnum.UPDATED_DAY]: 'updatedDate',
     [CaseCountGroupByEnum.APPLICATION_TYPE]: 'applicationType',
     [CaseCountGroupByEnum.CASE_STATUS]: 'caseStatus',
+    [CaseCountGroupByEnum.CASE_RESULT]: '',
 };
 
 interface generateLinkArgs {
@@ -299,6 +300,7 @@ export const friendlyGroupByName: Record<
     [ExceptionCountGroupByEnum.EXCEPTION_REASON]: 'Exception reason',
     [ExceptionCountGroupByEnum.EXCEPTION_CREATED_DAY]: 'Exception created date',
     [ExceptionCountGroupByEnum.EXCEPTION_UPDATED_DAY]: 'Exception updated date',
+    [CaseCountGroupByEnum.CASE_RESULT]: '',
 };
 
 /**

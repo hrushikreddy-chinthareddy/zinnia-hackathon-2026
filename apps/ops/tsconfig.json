@@ -26,7 +26,8 @@
         "declaration.d.ts",
         "jest.config.js",
         "src/jest/coverage/**/*",
-        "src/components/case-sub-page/case-tabs"
+        "src/components/case-sub-page/case-tabs",
+        "src/components/dashboard/charts/bar-charts/grouped-column-chart"
     ],
     "exclude": ["node_modules", "e2e"]
 }

@@ -8209,7 +8209,8 @@
         "exportToCSV": "Export to CSV",
         "tabs": {
             "logins": "Logins",
-            "pageViews": "Page Views"
+            "pageViews": "Page Views",
+            "activity": "Activity"
         },
         "logins": {
             "zinniaLive": {
@@ -8232,6 +8233,15 @@
             "zinniaLiveCaseViews": {
                 "title": "Zinnia Live Top Case Views",
                 "description": "Shows number of case views for selected user groups only."
+            }
+        },
+        "activity": {
+            "zinniaLiveTransactionActivity": {
+                "title": "Self-Serve Transaction Activity",
+                "description": "Shows the total self-serve transaction activity for roles listed in the filter."
+            },
+            "toolTip": {
+                "description": "Click a transaction type for more details on counts. Use the link below the chart to return to the main view."
             }
         }
     },

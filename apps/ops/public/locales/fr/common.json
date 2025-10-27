@@ -8293,7 +8293,8 @@
         "exportToCSV": "Exporter au format CSV",
         "tabs": {
             "logins": "Connexions",
-            "pageViews": "Pages vues"
+            "pageViews": "Pages vues",
+            "activity": "Activité"
         },
         "logins": {
             "zinniaLive": {
@@ -8316,6 +8317,15 @@
             "zinniaLiveCaseViews": {
                 "title": "Top des cas de Zinnia Live",
                 "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
+            }
+        },
+        "activity": {
+            "zinniaLiveTransactionActivity": {
+                "title": "Activité des Transactions en Libre-Service",
+                "description": "Affiche l’activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre."
+            },
+            "toolTip": {
+                "description": "Cliquez sur un type de transaction pour voir plus de détails sur les décomptes. Utilisez le lien sous le graphique pour revenir à la vue principale."
             }
         }
     },
