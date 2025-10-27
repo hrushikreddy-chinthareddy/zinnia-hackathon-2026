@@ -95,7 +95,7 @@ const DownloadItem = ({
         <NavElement
             className={clsx(
                 'text-left underline underline-offset-2',
-                featureFlags.send_policy_pages && styles.actionPadding
+                styles.actionPadding
             )}
             onClick={downloadDocument}
             size={NavElementSize.Small}
@@ -122,10 +122,7 @@ export const createViewDownloadAction = (
     const { featureFlags } = useOptimizely();
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
-            className={clsx(
-                '!underline-offset-2',
-                featureFlags.send_policy_pages && styles.actionPadding
-            )}
+            className={clsx('!underline-offset-2', styles.actionPadding)}
             carrier={carrierCode}
             displayName={
                 (doc.displayName || doc.documentId) ??
@@ -225,8 +222,7 @@ export default function DocumentsResultsTable({
                         <div
                             className={clsx(
                                 'flex flex-row items-center gap-1',
-                                featureFlags.send_policy_pages &&
-                                    styles.actionPadding
+                                styles.actionPadding
                             )}
                         >
                             <Typography
