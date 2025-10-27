@@ -57,9 +57,13 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         }}
       />
       <div className={styles.summaryContainer}>
-        <TransactionSummarySubmissionDetails transactionSummary={data} />
+        <div className={styles.detailWrapper}>
+          <TransactionSummarySubmissionDetails transactionSummary={data} />
+        </div>
         <hr className={styles.divider} />
-        <TransactionSummaryDetails transactionSummary={data} />
+        <div className={styles.detailWrapper}>
+          <TransactionSummaryDetails transactionSummary={data} />
+        </div>
         <hr className={styles.divider} />
         <TransactionPaymentDetails transactionSummary={data} />
       </div>
