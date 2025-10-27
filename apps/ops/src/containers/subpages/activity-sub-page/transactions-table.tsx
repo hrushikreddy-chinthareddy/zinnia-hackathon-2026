@@ -46,33 +46,33 @@ export const TransactionsTable = ({
     }, [offset, limit, transactions]);
 
     return (
-        <div className="flex flex-col px-8 pb-8">
-            {transactions?.length ? (
-                <>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHeaderCell className="typography-content-body-sm-bold">
-                                    {t('historyEventCard.transactionType')}
-                                </TableHeaderCell>
-                                <TableHeaderCell className="typography-content-body-sm-bold">
-                                    {t('historyEventCard.requestDate')}
-                                </TableHeaderCell>
-                                <TableHeaderCell className="typography-content-body-sm-bold">
-                                    {t('historyEventCard.processDate')}
-                                </TableHeaderCell>
-                                <TableHeaderCell className="typography-content-body-sm-bold">
-                                    {t('historyEventCard.effectiveDate')}
-                                </TableHeaderCell>
-                                <TableHeaderCell className="typography-content-body-sm-bold">
-                                    {t('historyEventCard.requestedAmount')}
-                                </TableHeaderCell>
-                                <TableHeaderCell className="typography-content-body-sm-bold">
-                                    {t('historyEventCard.appliedAmount')}
-                                </TableHeaderCell>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
+        <div className={styles.table}>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('historyEventCard.transactionType')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('historyEventCard.requestDate')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('historyEventCard.processDate')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('historyEventCard.effectiveDate')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('historyEventCard.requestedAmount')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('historyEventCard.appliedAmount')}
+                        </TableHeaderCell>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {paginatedData.length ? (
+                        <>
                             {paginatedData.map((transaction) => (
                                 <TableRow
                                     key={transaction.transactionId}

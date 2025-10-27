@@ -1,4 +1,7 @@
-import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
+import {
+    Transaction,
+    TransactionStatus,
+} from '@xd/api-types/dist/generated-types/sor';
 import {
     useCallback,
     useContext,
@@ -11,10 +14,8 @@ import { useTranslation } from 'react-i18next';
 
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import { FindAllKeyValuesTransactionSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-transaction-sidesheet';
-import {
-    TransactionStatusTabGroup,
-    TransactionTypeSelect,
-} from '@deps/components/history/filters/type-filters';
+import { TransactionStatusTabGroup } from '@deps/components/history/filters/transaction-status-tab-group';
+import { TransactionTypeSelect } from '@deps/components/history/filters/transaction-type-select';
 import PageHeader from '@deps/components/page-header/page-header';
 import PaginationControls from '@deps/components/pagination/pagination';
 import Typography, {

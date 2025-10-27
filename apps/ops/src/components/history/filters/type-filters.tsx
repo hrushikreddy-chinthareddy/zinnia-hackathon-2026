@@ -1,25 +1,15 @@
 import { Transition } from '@headlessui/react';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
-import {
-    FieldSize,
-    TabGroup,
-    TabList,
-    TabTrigger,
-} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import ChipX from '@deps/components/chip/chip-x';
-import { FieldType } from '@deps/components/fields/field';
 import {
     getFilter,
-    getFilterEnumKey,
     hasFilter,
     removeAllFilters,
     removeEventFilter,
     setFilter,
-    setStatusFilter,
     setYearFilter,
 } from '@deps/components/history/filters/filter.helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -27,7 +17,6 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     AllFilters,
@@ -247,82 +236,6 @@ const TypeFilters = () => {
                 <Subfilter />
             </Transition>
         </div>
-    );
-};
-
-export const TransactionStatusTabGroup = ({
-    totals,
-    children,
-}: {
-    totals: { [key: string]: number };
-    children: React.ReactNode;
-}) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: undefined,
-    });
-    const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
-    const { statusFilter } = historyFilters;
-
-    const transactionStatuses = Object.values([
-        TransactionStatus.COMPLETED,
-        TransactionStatus.PENDING,
-        TransactionStatus.CANCELED,
-        TransactionStatus.FAILED,
-        TransactionStatus.REVERSED,
-    ]).map((status) => (
-        <TabTrigger key={`${status}-trigger`} value={status}>
-            {`${t(`${status}`)} ${`(${totals?.[status] || 0})`}`}
-        </TabTrigger>
-    ));
-    return (
-        <TabGroup
-            defaultValue={statusFilter}
-            value={statusFilter}
-            onValueChange={(tab) =>
-                setStatusFilter(setHistoryFilters, tab as TransactionStatus)
-            }
-            className="px-8"
-        >
-            <TabList>{transactionStatuses}</TabList>
-            {children}
-        </TabGroup>
-    );
-};
-
-export const TransactionTypeSelect = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'policy.history.filter',
-    });
-    const options = {
-        ...TransactionFilters,
-        ...PeopleFilters,
-        ...PolicyFilters,
-    };
-    const typeOptions = Object.values(options).map((type) => ({
-        value: type,
-        label: t(`${type}`) || type,
-    }));
-    const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
-    const { eventFilter } = historyFilters;
-    const { subfilterName } = getFilter(eventFilter);
-
-    return (
-        <SelectSimple
-            className="max-w-[280px]"
-            label={t('byTransactionType') as string}
-            onChange={(filter) => {
-                setFilter(
-                    setHistoryFilters,
-                    getFilterEnumKey(filter) as EventFilterKeys,
-                    filter as EventFilterKeys
-                );
-            }}
-            defaultValue={EventFilterKeys.All}
-            options={typeOptions}
-            size={FieldSize.Small}
-            type={FieldType.BaseActive}
-            value={subfilterName ?? EventFilterKeys.All}
-        />
     );
 };
 
