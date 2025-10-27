@@ -23,7 +23,11 @@ import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { filterPayorViewParties, formatPartyRoles } from '@/utils/party';
+import {
+  filterPayorViewParties,
+  filterOutCoverageInsuredParties,
+  formatPartyRoles,
+} from '@/utils/party';
 
 export const ProfileView = async ({
   lineOfBusiness,
@@ -150,9 +154,11 @@ export const ProfileView = async ({
       return null;
     }
 
-    const filteredParties = hasPayorView
+    const initialFiltered = hasPayorView
       ? filterPayorViewParties(parties)
       : parties;
+
+    const filteredParties = filterOutCoverageInsuredParties(initialFiltered);
 
     return (
       <AccordionDetails

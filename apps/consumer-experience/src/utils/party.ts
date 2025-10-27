@@ -82,3 +82,22 @@ export const filterPayorViewParties = (parties: PolicyParty[]) => {
     )
   );
 };
+
+export const filterOutCoverageInsuredParties = (parties: PolicyParty[]) => {
+  const result: PolicyParty[] = [];
+
+  for (const party of parties || []) {
+    if (!party.partyRoles?.includes(PartyRole.COVERAGEINSURED)) {
+      result.push(party);
+    } else if (party.partyRoles.length > 1) {
+      result.push({
+        ...party,
+        partyRoles: party.partyRoles.filter(
+          role => role !== PartyRole.COVERAGEINSURED
+        ),
+      });
+    }
+  }
+
+  return result;
+};
