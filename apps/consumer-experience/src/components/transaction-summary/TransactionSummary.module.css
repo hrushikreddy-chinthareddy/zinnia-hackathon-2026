@@ -35,7 +35,9 @@
 
 @media screen and (max-width: 768px) {
   .detailWrapper {
-    grid-template-rows: repeat(1, minmax(0, 1fr));
+    grid-auto-rows: auto;
     grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+}
   }
 }
