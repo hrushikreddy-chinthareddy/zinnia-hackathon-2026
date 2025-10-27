@@ -65,7 +65,6 @@ export const KeyValueSections = ({
                         subSections={subSections}
                         searchValue={searchValue}
                         treeState={treeState}
-                        displayType
                     />
                 )}
             </Accordion>
