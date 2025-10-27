@@ -76,7 +76,7 @@ export const formatPartyRoles = (partyRoles: PartyRole[] | undefined) => {
 };
 
 export const filterPayorViewParties = (parties: PolicyParty[]) => {
-  return parties?.filter(party =>
+  return parties.filter(party =>
     [PartyRole.PAYOR, PartyRole.OWNER, PartyRole.JOINTOWNER].some(role =>
       party.partyRoles?.includes(role)
     )
@@ -86,7 +86,7 @@ export const filterPayorViewParties = (parties: PolicyParty[]) => {
 export const filterOutCoverageInsuredParties = (parties: PolicyParty[]) => {
   const result: PolicyParty[] = [];
 
-  for (const party of parties || []) {
+  for (const party of parties) {
     if (!party.partyRoles?.includes(PartyRole.COVERAGEINSURED)) {
       result.push(party);
     } else if (party.partyRoles.length > 1) {
