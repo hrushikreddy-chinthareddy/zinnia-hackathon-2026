@@ -30,16 +30,9 @@ export const FullName = ({ firstName, lastName, fullName, ...rest }: Props) => {
     return DEFAULT_ERROR_STRING;
   }
 
-  return (
-    <>
-      {fullName && <Name displayName={toSentenceCase(fullName)} {...rest} />}
-      {firstName && lastName && (
-        <>
-          <Name displayName={toSentenceCase(firstName)} {...rest} />
-          &nbsp;
-          <Name displayName={toSentenceCase(lastName)} {...rest} />
-        </>
-      )}
-    </>
-  );
+  const displayName = fullName
+    ? toSentenceCase(fullName)
+    : toSentenceCase(`${firstName}`) + ' ' + toSentenceCase(`${lastName}`);
+
+  return <Name displayName={displayName} {...rest} />;
 };
