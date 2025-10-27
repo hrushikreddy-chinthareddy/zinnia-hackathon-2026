@@ -14,7 +14,7 @@
 }
 
 .divider {
-  border: 2px solid var(--color-base-border-border-light);
+  border: 1px solid var(--color-base-border-border-light);
 }
 
 .buttons {
