@@ -6267,7 +6267,7 @@
             "missingAmountError": "Loan autopay amount is missing.",
             "invalidAmountError": "Loan autopay amount must be greater than $1.00",
             "annually": "Annually",
-            "biAnnually": "Bi-Annually",
+            "semiAnnually": "Semi-Annually",
             "monthly": "Monthly",
             "quarterly": "Quarterly"
         },
@@ -6487,7 +6487,7 @@
             "missingAmountError": "Premium autopay amount is missing.",
             "invalidAmountError": "Premium autopay amount must be greater than $1.00",
             "annually": "Annually",
-            "biAnnually": "Bi-Annually",
+            "semiAnnually": "Semi-Annually",
             "monthly": "Monthly",
             "quarterly": "Quarterly"
         },
@@ -6547,7 +6547,7 @@
             "missingAmountError": "Amount is missing.",
             "invalidAmountError": "Amount must be greater than $1.00",
             "annually": "Annually",
-            "biAnnually": "Bi-Annually",
+            "semiAnnually": "Semi-Annually",
             "monthly": "Monthly",
             "quarterly": "Quarterly",
             "withdrawal": "Withdrawal",
@@ -6769,7 +6769,7 @@
         "time": {
             "monthly": "Monthly",
             "quarterly": "Quarterly",
-            "biannual": "Biannual",
+            "semiAnnual": "Semi-annual",
             "annual": "Annual",
             "oneTime": "One-time",
             "initial": "Initial"
@@ -6778,16 +6778,13 @@
     "systematicProgram": {
         "frequency": {
             "annual": "annual",
-            "biAnnual": "bi-annual",
-            "biannual": "bi-annual",
-            "everytwoweeks": "bi-weekly",
+            "everyTwoWeeks": "bi-weekly",
             "daily": "daily",
             "initial": "initial",
             "monthly": "monthly",
             "oneTime": "one-time",
             "quarterly": "quarterly",
             "semiAnnual": "semi-annual",
-            "semiannual": "semi-annual",
             "singlepayment": "single payment"
         },
         "validation": {
