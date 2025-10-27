@@ -1913,6 +1913,8 @@
                 "reasonNoExceptions": "À déterminer",
                 "badgeText": "Annulé",
                 "tooltip": "Ce {{processSubType}} a été annulé le ",
+                "leadExpired": "Le prospect a expiré en raison de 30 jours d'inactivité",
+                "leadWithdrawn": "Le candidat a retiré ce lead.",
                 "application expired": "La candidature a expiré en raison de 30 jours d'inactivité.",
                 "application withdrawn": "Le demandeur a retiré cette demande.",
                 "underwriting declined": "Le souscripteur a refusé cette demande.",
