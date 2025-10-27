@@ -5,12 +5,10 @@ import CheckboxWidget from './checkbox-widget/checkbox-widget';
 import CheckBoxesSelectWidget from './checkboxes-select-widget/checkboxes-select-widget';
 import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
 import DateWidget from './date-widget/date-widget';
-import NewDateWidget from './date-widget/new-date-widget';
 import AttachmentWidget from './file-widget/attachment-widget';
 import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
 import NotesWidget from './notes-widget/notes-widget';
-import NumbersWidget from './numbers/numbers';
 import PercentageWidget from './percentage-widget/percentage-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
@@ -36,8 +34,6 @@ export function generateWidgets(): RegistryWidgetsType {
         AttachmentWidget,
         ArithmeticOperationWidget,
         TransactionAccordion,
-        NumbersWidget,
-        NewDateWidget,
         PercentageWidget,
     };
 }

@@ -321,8 +321,7 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
                 policyNumber,
                 planCode,
                 accessToken,
-                (logCtx ?? {}) as LoggingContext,
-                true
+                (logCtx ?? {}) as LoggingContext
             ),
         ]);
         return {
