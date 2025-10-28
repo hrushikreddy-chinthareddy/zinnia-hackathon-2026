@@ -59,7 +59,6 @@ export const buildNewTermQuickQuoteOptions = (
             return createNewTermLifeIllustration(payload);
         },
         staleTime: 600_000,
-        enabled: !variantParams?.notAvailabilityReasonField,
     });
 
 export const useQuickQuoteQueries = <MT>(
