@@ -87,7 +87,14 @@ export const PolicySidesheetContent = ({
 
     // This retains all the persistent extracted data on the policy
     const preparedPolicy = useMemo(
-        () => (policy ? preparePolicy(policy, t, debouncedSearchValue) : null),
+        () =>
+            policy
+                ? preparePolicy({
+                      policy,
+                      t,
+                      searchValue: debouncedSearchValue,
+                  })
+                : null,
         [policy, debouncedSearchValue, t]
     );
 

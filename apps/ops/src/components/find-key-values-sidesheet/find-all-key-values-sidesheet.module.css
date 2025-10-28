@@ -44,7 +44,11 @@
     z-index: 600;
 }
 
-.subSection {
+.subSectionContainer + .subSectionStd {
+    background-color: red;
+}
+
+.subSectionTags {
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-sm) solid

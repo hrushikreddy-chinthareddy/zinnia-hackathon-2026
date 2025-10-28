@@ -7,6 +7,7 @@ import { preparePolicy, prepareTransaction } from '../transformations';
 import { ExpandCollapse, Section } from '../types';
 import { KeyValueFieldList } from './key-value-field-list';
 import { KeyValueSubSections } from './key-value-sub-sections';
+import styles from '../find-all-key-values-sidesheet.module.css';
 
 /**
  * Renders a list of data sections.
@@ -61,11 +62,13 @@ export const KeyValueSections = ({
                 )}
 
                 {subSections && (
-                    <KeyValueSubSections
-                        subSections={subSections}
-                        searchValue={searchValue}
-                        treeState={treeState}
-                    />
+                    <div className={styles.subSectionContainer}>
+                        <KeyValueSubSections
+                            subSections={subSections}
+                            searchValue={searchValue}
+                            treeState={treeState}
+                        />
+                    </div>
                 )}
             </Accordion>
         );

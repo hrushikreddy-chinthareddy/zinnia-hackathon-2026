@@ -11,7 +11,7 @@ import { KeyValueFieldList } from './key-value-field-list';
  * A component that renders a list of key-value pairs based on the policyBasics
  * and searchValue.
  *
- * @param {ReturnType<typeof preparePolicy>} preparedPolicy - The policy details
+ * @param {ReturnType<typeof preparePolicy | typeof prepareTransaction>} preparedPolicy | preparedTransaction - The details
  * @param {NestedData} policyBasics - The policy basics
  * @param {string} searchValue - The search value
  * @returns {JSX.Element} - A JSX element representing the key-value pairs

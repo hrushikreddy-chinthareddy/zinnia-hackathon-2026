@@ -47,11 +47,15 @@ import {
  * @param searchValue The search value to filter sections and fields by
  * @returns An object with the prepared policy properties
  */
-export const preparePolicy = (
-    policy: Policy,
-    t: TFunction,
-    searchValue?: string
-): {
+export const preparePolicy = ({
+    policy,
+    t,
+    searchValue,
+}: {
+    policy: Policy;
+    t: TFunction;
+    searchValue?: string;
+}): {
     lineOfBusiness: LineOfBusiness;
     planCode?: string;
     productType?: ProductType;
@@ -95,12 +99,17 @@ export const preparePolicy = (
     };
 };
 
-export const prepareTransaction = (
-    transaction: Transaction,
-    policy: Policy,
-    t: TFunction,
-    searchValue?: string
-) => {
+export const prepareTransaction = ({
+    transaction,
+    policy,
+    t,
+    searchValue,
+}: {
+    transaction: Transaction;
+    policy: Policy;
+    t: TFunction;
+    searchValue?: string;
+}) => {
     const allPartiesById = convertListToMap({
         subSectionList: policy.parties ?? [],
         subSectionTitleField: 'partyId',

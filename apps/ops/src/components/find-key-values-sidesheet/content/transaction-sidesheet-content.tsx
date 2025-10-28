@@ -8,10 +8,11 @@ import {
     FieldSize as BloomFieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { useDebounce } from '@deps/hooks/useDebounce';
 
 import { KeyValueBasics } from '../components/key-value-basics';
 import { KeyValueSections } from '../components/key-value-sections';
@@ -28,7 +29,24 @@ export const TransactionSidesheetContent = ({
     const [searchValue, setSearchValue] = useState('');
     const { t } = useTranslation();
     const { policy } = useContext(PolicyData);
-    const preparedTransaction = prepareTransaction(transaction, policy, t, '');
+
+    const debouncedSearchValue = useDebounce(searchValue, 200);
+    useEffect(() => {
+        if (!debouncedSearchValue) return;
+
+        setTreeState(Expand);
+    }, [debouncedSearchValue]);
+
+    const preparedTransaction = useMemo(
+        () =>
+            prepareTransaction({
+                transaction,
+                policy,
+                t,
+                searchValue: debouncedSearchValue,
+            }),
+        [transaction, policy, debouncedSearchValue, t]
+    );
 
     const { transactionDetails, transactionSections } = useMemo(
         () =>

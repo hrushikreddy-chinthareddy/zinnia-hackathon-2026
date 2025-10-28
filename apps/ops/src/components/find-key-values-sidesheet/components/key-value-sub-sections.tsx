@@ -1,15 +1,10 @@
 import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
+import { Label } from '@zinnia/bloom/components';
 
 import Highlighter from '@deps/components/highlighter/highlighter';
 
-import {
-    DisplayType,
-    ExpandCollapse,
-    MetaData,
-    NestedData,
-    tags,
-} from '../types';
+import { ExpandCollapse, MetaData, NestedData, tags } from '../types';
 import { KeyValueFieldList } from './key-value-field-list';
 import styles from '../find-all-key-values-sidesheet.module.css';
 
@@ -26,12 +21,10 @@ export const KeyValueSubSections = ({
     subSections,
     searchValue,
     treeState,
-    displayType = DisplayType.ACCORDION,
 }: {
     subSections: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
-    displayType?: DisplayType;
 }) => {
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
@@ -41,25 +34,49 @@ export const KeyValueSubSections = ({
         const subsectionTags = (subSection as MetaData)[tags];
 
         return (
-            <div key={`subsection_${i}`} className={styles.subSection}>
-                <Accordion
-                    sectionLabel={
-                        <Highlighter
-                            text={String(subSectionLabel)}
-                            highlights={[searchValue]}
+            <>
+                {subsectionTags?.length ? (
+                    <div
+                        key={`subsection_${i}`}
+                        className={styles.subSectionTags}
+                    >
+                        <Accordion
+                            sectionLabel={
+                                <Highlighter
+                                    text={String(subSectionLabel)}
+                                    highlights={[searchValue]}
+                                />
+                            }
+                            tags={subsectionTags}
+                            type={AccordionType.NESTED}
+                            treeState={treeState}
+                        >
+                            <KeyValueFieldList
+                                fields={subSectionFields}
+                                searchValue={searchValue}
+                                treeState={treeState}
+                            />
+                        </Accordion>
+                    </div>
+                ) : (
+                    <div
+                        key={`subsection_${i}`}
+                        className={styles.subSectionStd}
+                    >
+                        <Label>
+                            <Highlighter
+                                text={String(subSectionLabel)}
+                                highlights={[searchValue]}
+                            />
+                        </Label>
+                        <KeyValueFieldList
+                            fields={subSectionFields}
+                            searchValue={searchValue}
+                            treeState={treeState}
                         />
-                    }
-                    tags={subsectionTags}
-                    type={AccordionType.NESTED}
-                    treeState={treeState}
-                >
-                    <KeyValueFieldList
-                        fields={subSectionFields}
-                        searchValue={searchValue}
-                        treeState={treeState}
-                    />
-                </Accordion>
-            </div>
+                    </div>
+                )}
+            </>
         );
     });
 };
