@@ -343,7 +343,10 @@
         "patternNoSpecial": "Contiene únicamente letras y números (sin caracteres especiales).",
         "maxLength": "El campo no puede tener más de {{limit}} caracteres.",
         "minLength": "El campo no debe tener menos de {{limit}} caracteres.",
-        "minItems": "Seleccione al menos {{limit}} artículo(s)."
+        "minItems": "Seleccione al menos {{limit}} artículo(s).",
+        "patternSsn": "Por favor, introduzca un SSN válido.",
+        "maximum": "El campo no debe ser mayor que {{limit}}.",
+        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia."
     },
     "beneChange": {
         "tabs": {
@@ -1165,7 +1168,9 @@
             "fileDeletedError": "No se pudo eliminar el archivo {{fileName}}"
         },
         "true": "Verdadero",
-        "false": "Falso"
+        "false": "Falso",
+        "email": "Correo electrónico",
+        "emailTooltip": "Por favor, introduce una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo."
     },
     "dashboard": {
         "h1": "Politiques  y Contratos",
@@ -7783,11 +7788,20 @@
             "submitTask": "Enviar"
         }
     },
+    "claimsOpsToFinanceEscheatmentTrigger": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Se envió el Claims Ops To Finance Escheatment.",
+            "cta": "Ir al reclamo de muerte",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "claimsFiEscheatmentTask": {
         "confirmStep": {
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se presentó Reclamación de Renuncia a FI.",
-            "cta": "Ir a transferencia entrante",
+            "cta": "Ir al reclamo de muerte",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }

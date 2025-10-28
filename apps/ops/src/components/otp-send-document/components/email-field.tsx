@@ -35,7 +35,7 @@ const EmailAddress = ({
                 value={email as string}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
-                className="max-w-xs "
+                className="max-w-xs"
                 message={error?.email}
                 variant={
                     error?.email

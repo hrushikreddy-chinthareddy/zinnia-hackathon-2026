@@ -13,7 +13,10 @@ function transformErrors({ errors, t }: TransformErrorsProps) {
             if (error.params.pattern === '^[0-9]+$') {
                 error.message = t('formValidations.patternDigit');
             }
-            if (error.params.pattern === '^82000[0-9]*$') {
+            if (
+                error.params.pattern === '^82000[0-9]*$' ||
+                error.params.pattern === '^(|82000[0-9]*)$'
+            ) {
                 error.message = t('formValidations.patternNumber');
             }
             if (error.params.pattern === '^[a-zA-Z0-9]*$') {
@@ -22,8 +25,15 @@ function transformErrors({ errors, t }: TransformErrorsProps) {
             if (error.params.pattern === '^[a-zA-Z0-9-_]+$') {
                 error.message = t('formValidations.patternWithSpecial');
             }
+            if (error.params.pattern === '^(|[0-9]{9})$') {
+                error.message = t('formValidations.patternSsn');
+            }
         } else if (error.name === 'minLength') {
             error.message = t('formValidations.minLength', {
+                limit: error.params.limit,
+            });
+        } else if (error.name === 'maximum') {
+            error.message = t('formValidations.maximum', {
                 limit: error.params.limit,
             });
         } else if (error.name === 'minItems') {

@@ -358,7 +358,10 @@
         "patternWithSpecial": "Only contain letters and numbers with characters: -, _.",
         "maxLength": "Field cannot be longer than {{limit}} characters.",
         "minLength": "Field must not have fewer than {{limit}} characters.",
-        "minItems": "Please select atleast {{limit}} item(s)."
+        "minItems": "Please select atleast {{limit}} item(s).",
+        "patternSsn": "Please enter valid SSN.",
+        "maximum": "Field must not be more than {{limit}}.",
+        "inValidDomain": "Only Zinnia emails are allowed."
     },
     "beneChange": {
         "tabs": {
@@ -1160,7 +1163,9 @@
             "fileDeletedError": "Failed to delete file {{fileName}}"
         },
         "true": "True",
-        "false": "False"
+        "false": "False",
+        "email": "Email",
+        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field."
     },
     "dashboard": {
         "h1": "Policies & Contracts",
@@ -7938,11 +7943,20 @@
             "submitTask": "Submit"
         }
     },
+    "claimsOpsToFinanceEscheatmentTrigger": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Claims Ops To Finance Escheatment was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "claimsFiEscheatmentTask": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Claims FI Escheatment was submitted.",
-            "cta": "Go to incoming transfer ",
+            "cta": "Go to death claim",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }

@@ -355,7 +355,10 @@
         "patternWithSpecial": "Contient uniquement des lettres et des chiffres avec les caractères : -, _.",
         "maxLength": "Le champ ne peut pas dépasser {{limit}} caractères.",
         "minLength": "Le champ ne doit pas contenir moins de {{limit}} caractères.",
-        "minItems": "Veuillez sélectionner au moins {{limit}} élément(s)."
+        "minItems": "Veuillez sélectionner au moins {{limit}} élément(s).",
+        "patternSsn": "Veuillez saisir un numéro SSN valide.",
+        "maximum": "Le champ ne doit pas dépasser 100 {{limit}}.",
+        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés."
     },
     "taskManagementQueue": {
         "homeTitle": "Accueil",
@@ -1248,7 +1251,9 @@
             "fileDeletedError": "Échec de la suppression du fichier {{fileName}}"
         },
         "true": "Vrai",
-        "false": "Faux"
+        "false": "Faux",
+        "email": "E-mail",
+        "emailTooltip": "Veuillez saisir une adresse e-mail valide. Une seule adresse e-mail est autorisée dans ce champ."
     },
     "dashboard": {
         "h1": "Politiques et Contrats",
@@ -7833,11 +7838,20 @@
             "submitTask": "Soumettre"
         }
     },
+    "claimsOpsToFinanceEscheatmentTrigger": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Claims Ops To Finance Escheatment soumis.",
+            "cta": "Aller à la demande de décès",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "claimsFiEscheatmentTask": {
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Tâche : Les réclamations FI en déshérence ont été soumises.",
-            "cta": "Aller au transfert entrant",
+            "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }

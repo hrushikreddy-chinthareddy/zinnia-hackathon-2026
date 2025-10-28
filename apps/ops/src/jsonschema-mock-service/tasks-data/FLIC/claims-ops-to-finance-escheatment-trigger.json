@@ -1,0 +1,166 @@
+{
+    "taskType": "CLAIMS_OPS_TO_FINANCE_ESCHEATMENT_TRIGGER",
+    "caseId": "CA0000395559",
+    "carrier": "FLIC",
+    "status": "NEW",
+    "externalId": "b00dcf13-e5d9-4636-b805-ed35f95ba20c",
+    "taskName": "Ops to Finance Escheatment Trigger ",
+    "process": "Claims",
+    "source": "BPM.ClaimProcessing",
+    "data": {
+        "details": {
+            "beneOpsEscheatment": {
+                "beneficiary": {
+                    "recordId": "0aec8070-86da-4150-8964-bedfd6f2a663",
+                    "recordType": "IDN_CLAIM_BENE_RECORD",
+                    "party": {
+                        "partyId": "1810667950",
+                        "partyRoleId": "-2|0|3",
+                        "partyRole": "PRIMARYBENEFICIARY",
+                        "partyType": "INDIVIDUAL",
+                        "prefix": "Mr.",
+                        "firstName": "SAUN",
+                        "lastName": "Bene",
+                        "fullName": "SAUN Bene",
+                        "gender": "MALE",
+                        "dateOfBirth": "1976-01-02",
+                        "relationshipToInsured": "SON",
+                        "beneficiaryPartyType": "INDIVIDUAL",
+                        "beneficiaryPercentage": 50.0,
+                        "ssn": "315005258"
+                    },
+                    "notificationPreferences": {
+                        "notificationMethod": {
+                            "method": "EMAIL",
+                            "faxOpted": false,
+                            "emailOpted": true,
+                            "mailOpted": false
+                        },
+                        "email": {
+                            "emailType": "PERSONAL",
+                            "emailAddress": "hariprasanth.baskaran@zinnia.com",
+                            "emailId": "-999"
+                        },
+                        "address": {
+                            "addressId": "743686016",
+                            "addressType": "DEFAULT",
+                            "addressLine1": "437 N HIGHLAND AVE",
+                            "city": "LOS ANGELES",
+                            "state": "CA",
+                            "zipCode": "90036",
+                            "country": "USA",
+                            "correspondenceOnly": false
+                        }
+                    }
+                },
+                "escheatmentDetail": {
+                    "policyNumber": "680081581",
+                    "planName": "SecureFore 3",
+                    "lineOfBusiness": "Forethought 820",
+                    "productType": "FIXEDANNUITY",
+                    "policyStatus": "DEATHCLAIMPENDING",
+                    "qualificationType": "NONQUALIFIED",
+                    "ira": true,
+                    "netDeathBenefit": 65063.9,
+                    "maturityDate": "2042-07-23",
+                    "deathReportedNotificationDate": "2025-09-30",
+                    "financialEscheatmentDate": "2025-10-06",
+                    "notificationMethod": "EMAIL",
+                    "dueDiligenceCaseId": "CA0000501294",
+                    "owners": [
+                        {
+                            "party": {
+                                "partyId": "1810667949",
+                                "partyRoleId": "0|0|2",
+                                "partyRole": "OWNER",
+                                "partyType": "INDIVIDUAL",
+                                "prefix": "Mr.",
+                                "firstName": "Owen",
+                                "middleName": "check",
+                                "lastName": "Campbell",
+                                "fullName": "Owen Campbell",
+                                "gender": "MALE",
+                                "dateOfBirth": "1942-01-02",
+                                "relationshipToInsured": "OTHER",
+                                "beneficiaryPartyType": "INDIVIDUAL",
+                                "beneficiaryPercentage": 100.0,
+                                "ssn": "921959643"
+                            },
+                            "email": {
+                                "emailType": "PERSONAL",
+                                "emailAddress": "hariprasanth.baskaran@zinnia.com",
+                                "emailId": "-999"
+                            },
+                            "address": {
+                                "addressId": "743686016",
+                                "addressType": "DEFAULT",
+                                "addressLine1": "437 N HIGHLAND AVE",
+                                "city": "LOS ANGELES",
+                                "state": "CA",
+                                "zipCode": "90036",
+                                "country": "USA",
+                                "correspondenceOnly": false
+                            },
+                            "dateOfDeath": "2025-09-01",
+                            "propCode": "IN03",
+                            "propDescription": "PROCEEDS DUE BENEFICIARIES"
+                        }
+                    ],
+                    "beneficiary": {
+                        "party": {
+                            "partyId": "1810667950",
+                            "partyRoleId": "-2|0|3",
+                            "partyRole": "PRIMARYBENEFICIARY",
+                            "partyType": "INDIVIDUAL",
+                            "prefix": "Mr.",
+                            "firstName": "SAUN",
+                            "middleName": "check",
+                            "lastName": "Bene",
+                            "fullName": "SAUN Bene",
+                            "gender": "MALE",
+                            "dateOfBirth": "1976-01-02",
+                            "relationshipToInsured": "SON",
+                            "beneficiaryPartyType": "INDIVIDUAL",
+                            "beneficiaryPercentage": 50.0,
+                            "ssn": "315005258"
+                        },
+                        "emails": {
+                            "emailType": "PERSONAL",
+                            "emailAddress": "hariprasanth.baskaran@zinnia.com",
+                            "emailId": "-999"
+                        },
+                        "address": {
+                            "addressId": "743686016",
+                            "addressType": "DEFAULT",
+                            "addressLine1": "437 N HIGHLAND AVE",
+                            "city": "LOS ANGELES",
+                            "state": "CA",
+                            "zipCode": "90036",
+                            "country": "USA",
+                            "correspondenceOnly": false
+                        },
+                        "dateOfDeath": "2999-12-31",
+                        "beneficiaryPercentage": 50.0,
+                        "beneficiaryDueAmount": 32531.99
+                    }
+                }
+            }
+        },
+        "uploadRequired": false
+    },
+    "contextData": {
+        "entityId": "0aec8070-86da-4150-8964-bedfd6f2a663",
+        "entityType": "IDN_CLAIM_BENE_RECORD",
+        "attributes": [
+            {
+                "value": "SAUN",
+                "attribute": "firstName"
+            },
+            {
+                "value": "Bene",
+                "attribute": "lastName"
+            }
+        ]
+    },
+    "mappedDocuments": []
+}
