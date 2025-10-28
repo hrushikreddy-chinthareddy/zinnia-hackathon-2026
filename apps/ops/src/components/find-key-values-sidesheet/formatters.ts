@@ -318,6 +318,7 @@ export const removeExcludedAndEmptyFields = (
     tuples: NestedData,
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
+    type: FormatterType,
     fieldLink?: string,
     linkedField?: string,
     searchValue?: string,
@@ -338,6 +339,7 @@ export const removeExcludedAndEmptyFields = (
                       tuple,
                       lineOfBusiness,
                       t,
+                      type,
                       searchValue,
                       fieldLink,
                       linkedField
