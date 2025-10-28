@@ -27,7 +27,7 @@ export const KeyValueBasics = ({
     policyBasics: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;
-    type: string;
+    type?: string;
 }) => {
     return (
         <Accordion
