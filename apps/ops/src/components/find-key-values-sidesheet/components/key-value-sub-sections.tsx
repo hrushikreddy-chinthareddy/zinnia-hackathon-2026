@@ -1,5 +1,6 @@
 import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
+import { Label } from '@zinnia/bloom/components';
 import React from 'react';
 
 import Highlighter from '@deps/components/highlighter/highlighter';
@@ -57,6 +58,14 @@ export const KeyValueSubSections = ({
                     </div>
                 ) : (
                     <div className={styles.subSectionStd}>
+                        {subSectionLabel !== 'undefined' && (
+                            <Label>
+                                <Highlighter
+                                    text={String(subSectionLabel)}
+                                    highlights={[searchValue]}
+                                />
+                            </Label>
+                        )}
                         <KeyValueFieldList
                             fields={subSectionFields}
                             searchValue={searchValue}
