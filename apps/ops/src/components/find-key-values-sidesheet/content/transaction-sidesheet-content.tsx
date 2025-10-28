@@ -59,8 +59,6 @@ export const TransactionSidesheetContent = ({
         [preparedTransaction]
     );
 
-    console.log({ transaction });
-
     return (
         <div className={styles.keyValuesContainer}>
             <FieldData
