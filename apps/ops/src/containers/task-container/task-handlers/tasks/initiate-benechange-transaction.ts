@@ -211,7 +211,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         trustType: bene.trustType ?? null,
                         trustDate: bene.trustDate ?? null,
                         entityType: bene.entityType ?? 'UNKNOWN',
-                        gender: bene.gender ?? '',
+                        gender: bene.gender ?? null,
                         dateOfBirth: bene.dateOfBirth ?? null,
                         documents: bene.documents ?? [],
                         endDate: bene.endDate ?? null,
