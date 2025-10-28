@@ -206,7 +206,7 @@ export const PolicySidesheetContent = ({
                                     small={true}
                                     className={styles.infoIcon}
                                 />
-                                {t('policy.allFields.emptySearch')}
+                                {t('allFields.emptySearch')}
                             </Label>
                         </div>
                     )}
