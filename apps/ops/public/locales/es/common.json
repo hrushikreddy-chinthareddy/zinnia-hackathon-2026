@@ -7027,6 +7027,30 @@
         },
         "settlementInProgress": "El acuerdo está en curso."
     },
+    "deathAuditFiles": {
+        "noData": "Detalles del archivo no disponibles.",
+        "loadingTransactions": "Recuperando detalles del archivo...",
+        "errorGettingTransactions": "No se pudieron recuperar los detalles del archivo.",
+        "details": "Detalles",
+        "summary": {
+            "totalRecordsSent": "Total de registros enviados",
+            "totalHits": "Total de visitas",
+            "existingCaseMatches": "Coincidencias de casos existentes",
+            "newCases": "Nuevos casos",
+            "totalRecord": "Récord total",
+            "cancelledCaseMatches": "Coincidencias de casos cancelados"
+        },
+        "tabs": {
+            "matchedCase": "Caso emparejado",
+            "cancelledCase": "Caso cancelado"
+        }
+    },
+    "deathAuditQualification": {
+        "loadingTransactions": "Recuperando detalles..",
+        "errorGettingTransactions": "No se pudieron recuperar los datos.",
+        "title": "Detalles",
+        "idnCaseId": "ID de caso de IDN"
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Revisión del Formulario de Servicio",

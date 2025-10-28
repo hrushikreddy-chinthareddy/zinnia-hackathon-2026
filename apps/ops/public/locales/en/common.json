@@ -7183,6 +7183,30 @@
         },
         "settlementInProgress": "Settlement is in progress."
     },
+    "deathAuditFiles": {
+        "noData": "File details not available.",
+        "loadingTransactions": "Retrieving file details...",
+        "errorGettingTransactions": "File details couldn't be retrieved.",
+        "details": "Details",
+        "summary": {
+            "totalRecordsSent": "Total records sent",
+            "totalHits": "Total hits",
+            "existingCaseMatches": "Existing case matches",
+            "newCases": "New cases",
+            "totalRecord": "Total record",
+            "cancelledCaseMatches": "Cancelled case matches"
+        },
+        "tabs": {
+            "matchedCase": "Matched Case",
+            "cancelledCase": "Cancelled Case"
+        }
+    },
+    "deathAuditQualification": {
+        "loadingTransactions": "Retrieving  details...",
+        "errorGettingTransactions": "Data couldn't be retrieved.",
+        "title": "Details",
+        "idnCaseId": "IDN Case ID"
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Service Form Review",
