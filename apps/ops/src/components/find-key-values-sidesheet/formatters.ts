@@ -220,23 +220,15 @@ export const formatAsDataValue = (
  * @param type The
  * @returns The formatted data field tuple
  */
-export const formatDataField = ({
-    tuple,
-    lineOfBusiness,
-    t,
-    type,
-    searchValue,
-    fieldLink,
-    fieldLinkedField,
-}: {
-    tuple: NestedData | NestedDataTuple;
-    lineOfBusiness: LineOfBusiness;
-    t: TFunction;
-    type: FormatterType;
-    searchValue?: string;
-    fieldLink?: string;
-    fieldLinkedField?: string;
-}): NestedData => {
+export const formatDataField = (
+    tuple: NestedData | NestedDataTuple,
+    lineOfBusiness: LineOfBusiness,
+    t: TFunction,
+    type: FormatterType,
+    searchValue?: string,
+    fieldLink?: string,
+    fieldLinkedField?: string
+): NestedData => {
     if (!isTuple(tuple)) {
         return null;
     }

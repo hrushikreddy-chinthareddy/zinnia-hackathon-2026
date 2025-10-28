@@ -240,14 +240,13 @@ export const toSections = (
 
             // Otherwise, the value is a primitive, so add it to the policy basics
             // formatDataField will determine if the field should be shown
-            const formattedField = formatDataField({
-                tuple: [currentKey, currentVal],
-                lineOfBusiness:
-                    policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+            const formattedField = formatDataField(
+                [currentKey, currentVal],
+                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                 t,
-                searchValue,
-                type: FormatterType.POLICY,
-            });
+                FormatterType.POLICY,
+                searchValue
+            );
 
             return {
                 ...acc,
@@ -301,6 +300,7 @@ export const toSections = (
                     policySection,
                     policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                     t,
+                    FormatterType.POLICY,
                     searchValue
                 );
 
@@ -356,14 +356,13 @@ export const toTransactionSections = (
 
             // Otherwise, the value is a primitive, so add it to the policy basics
             // formatDataField will determine if the field should be shown
-            const formattedField = formatDataField({
-                tuple: [currentKey, currentVal],
-                lineOfBusiness:
-                    policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+            const formattedField = formatDataField(
+                [currentKey, currentVal],
+                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                 t,
-                searchValue,
-                type: FormatterType.TRANSACTION,
-            });
+                FormatterType.TRANSACTION,
+                searchValue
+            );
 
             return {
                 ...acc,
@@ -409,6 +408,7 @@ export const toTransactionSections = (
                     transactionSection,
                     policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                     t,
+                    FormatterType.TRANSACTION,
                     searchValue
                 );
 
@@ -546,6 +546,7 @@ export const toFieldsAndSubsections = (
     [sectionName, sectionData]: [string, unknown[] | Record<string, unknown>],
     lineOfBusiness: LineOfBusiness,
     t: TFunction,
+    type: FormatterType,
     searchValue?: string
 ): {
     fields?: NestedData;
@@ -657,6 +658,7 @@ export const toFieldsAndSubsections = (
                     [subSectionName, fieldData] as NestedData,
                     lineOfBusiness,
                     t,
+                    type,
                     searchValue
                 );
             })
