@@ -28,6 +28,7 @@
     "contractNumber": "Contract number",
     "illustrations": "Ilustraciones",
     "allFields": {
+        "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
         "policyBasics": "Básicos de {{policyNomenclature}}",
         "transactionDetails": "Detalles de la transacción",

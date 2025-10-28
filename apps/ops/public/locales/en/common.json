@@ -28,6 +28,7 @@
     "contractNumber": "Contract number",
     "illustrations": "Illustrations",
     "allFields": {
+        "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",
         "policyBasics": "{{policyNomenclature, capitalize}} basics",
         "transactionDetails": "Transaction details",

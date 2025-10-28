@@ -116,13 +116,18 @@ export const TransactionsTable = ({
                             ))}
                         </>
                     ) : (
-                        <TableCell className={styles.noResultsTd} colSpan={100}>
-                            <Typography variant={TypographyVariant.Body}>
-                                {t('policy.history.noTransactionsTitle', {
-                                    status: status.toLocaleLowerCase(),
-                                })}
-                            </Typography>
-                        </TableCell>
+                        <TableRow>
+                            <TableCell
+                                className={styles.noResultsTd}
+                                colSpan={100}
+                            >
+                                <Typography variant={TypographyVariant.Body}>
+                                    {t('policy.history.noTransactionsTitle', {
+                                        status: status.toLocaleLowerCase(),
+                                    })}
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
                     )}
                 </TableBody>
             </Table>
