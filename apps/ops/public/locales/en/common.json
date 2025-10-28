@@ -27,6 +27,22 @@
     "cancel": "Cancel",
     "contractNumber": "Contract number",
     "illustrations": "Illustrations",
+    "transaction": {
+        "toolTips": {
+            "correlationId": "This identifier is assigned to linked transactions so they can be tracked together.",
+            "requestDate": "This is the date when the system of record received the transaction.",
+            "effectiveDate": "This is the date from which the transaction impacts policy values.",
+            "processDate": "This is the date when the transaction posts to the policy.",
+            "reversalDate": "This transaction was reversed on this date.",
+            "reverseInitiator": "This tells you if a transaction was backdated. When \"true\", that means it triggered reversals of prior transactions.",
+            "deathClaimPayoutPreStateSpecificInterest": "The claim payout amount prior to supplemental security income (SSI) offsets.",
+            "claimStatutoryInterestAmount": "This is the supplemental security income (SSI) offset or adjustment amount",
+            "modifiedEndowmentContractStatus": "MEC stands for Modified Endowment Contract. A policy becomes a MEC if it fails the 7-pay premium test. This can happen when an owner pays too much premium during an active 7-pay period.",
+            "preTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis that predates the passing of the Tax Equity and Fiscal Responsibility Act.",
+            "postTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis after the Tax Equity and Fiscal Responsibility Act passed in 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988."
+        }
+    },
     "allFields": {
         "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",

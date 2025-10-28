@@ -27,6 +27,22 @@
     "cancel": "Annuler",
     "contractNumber": "Numéro de contrat",
     "illustrations": "Illustrations",
+    "transaction": {
+        "toolTips": {
+            "correlationId": "Cet identifiant est attribué aux transactions liées afin qu'elles puissent être suivies ensemble.",
+            "requestDate": "C’est la date à laquelle le système d’enregistrement a reçu la transaction.",
+            "effectiveDate": "C’est la date à partir de laquelle la transaction affecte les valeurs de la police.",
+            "processDate": "C’est la date à laquelle la transaction est comptabilisée sur la police.",
+            "reversalDate": "Cette transaction a été annulée à cette date.",
+            "reverseInitiator": "Cela indique si une transaction a été antidatée. Lorsque la valeur est « true », cela signifie qu’elle a entraîné l’annulation de transactions antérieures.",
+            "deathClaimPayoutPreStateSpecificInterest": "Le montant du paiement de la réclamation avant les compensations de revenu de sécurité supplémentaire (SSI).",
+            "claimStatutoryInterestAmount": "Il s’agit du montant de la compensation ou de l’ajustement lié au revenu de sécurité supplémentaire (SSI).",
+            "modifiedEndowmentContractStatus": "MEC signifie « Modified Endowment Contract » (contrat de dotation modifié). Une police devient un MEC si elle échoue au test de prime sur sept ans. Cela peut se produire lorsqu’un propriétaire paie trop de primes pendant une période de sept ans active.",
+            "preTaxEquityAndFiscalResponsibilityActBasis": "C’est le coût de base antérieur à l’adoption de la loi sur l’équité et la responsabilité fiscales (Tax Equity and Fiscal Responsibility Act).",
+            "postTaxEquityAndFiscalResponsibilityActBasis": "C’est le coût de base après l’adoption de la loi sur l’équité et la responsabilité fiscales en 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "C’est le coût de base après l’adoption de la loi sur les recettes techniques et diverses (Technical and Miscellaneous Revenue Act) en 1988."
+        }
+    },
     "allFields": {
         "emptySearch": "Aucun résultat trouvé",
         "policyBasics": "Bases de {{policyNomenclature}}",

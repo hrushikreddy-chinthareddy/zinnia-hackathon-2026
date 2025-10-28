@@ -27,6 +27,22 @@
     "cancel": "Cancelar",
     "contractNumber": "Contract number",
     "illustrations": "Ilustraciones",
+    "transaction": {
+        "toolTips": {
+            "correlationId": "Este identificador se asigna a transacciones vinculadas para que puedan rastrearse en conjunto.",
+            "requestDate": "Esta es la fecha en que el sistema de registro recibió la transacción.",
+            "effectiveDate": "Esta es la fecha a partir de la cual la transacción impacta los valores de la póliza.",
+            "processDate": "Esta es la fecha en que la transacción se aplica a la póliza.",
+            "reversalDate": "Esta transacción fue revertida en esta fecha.",
+            "reverseInitiator": "Esto indica si una transacción fue retroactiva. Cuando es \"true\", significa que provocó la reversión de transacciones anteriores.",
+            "deathClaimPayoutPreStateSpecificInterest": "El monto del pago del reclamo antes de los ajustes por ingresos suplementarios de seguridad (SSI).",
+            "claimStatutoryInterestAmount": "Este es el monto del ajuste o compensación por ingresos suplementarios de seguridad (SSI).",
+            "modifiedEndowmentContractStatus": "MEC significa Contrato de Dotación Modificado. Una póliza se convierte en MEC si no cumple con la prueba de prima de 7 pagos. Esto puede ocurrir cuando el propietario paga demasiada prima durante un período activo de 7 pagos.",
+            "preTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base que antecede a la promulgación de la Ley de Equidad Fiscal y Responsabilidad Financiera.",
+            "postTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base después de la promulgación de la Ley de Equidad Fiscal y Responsabilidad Financiera en 1982.",
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de la promulgación de la Ley Técnica y de Ingresos Misceláneos en 1988."
+        }
+    },
     "allFields": {
         "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
