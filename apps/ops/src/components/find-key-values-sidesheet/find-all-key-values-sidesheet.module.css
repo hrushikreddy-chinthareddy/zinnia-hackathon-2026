@@ -31,6 +31,10 @@
     gap: 8px;
 }
 
+.subSectionStd > .itemsList {
+    padding-bottom: var(--measure-dimension-padding-lg);
+}
+
 .fieldLabel {
     display: flex;
     color: var(--color-base-text-text-secondary);
@@ -44,8 +48,20 @@
     z-index: 600;
 }
 
-.subSectionContainer + .subSectionStd {
-    background-color: red;
+.subSectionContainer:has(.subSectionStd) {
+    border: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    border-radius: var(--measure-dimension-radius-sm);
+}
+
+.subSectionContainer > .subSectionStd {
+    margin: var(--measure-dimension-padding-xl);
+}
+
+.subSectionStd + .subSectionStd {
+    border-top: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    padding-top: var(--measure-dimension-padding-xl);
 }
 
 .subSectionTags {
