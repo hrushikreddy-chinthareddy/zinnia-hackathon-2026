@@ -5834,6 +5834,8 @@
         },
         "type": "Type",
         "submissionType": "Type de soumission",
+        "submissionSource": "Source de soumission",
+        "submittedBy": "Soumis par",
         "caseId": "ID du dossier parent",
         "caseTransactionType": "Type de transaction de cas",
         "caseCompletionDate": "Date d'achèvement du dossier",

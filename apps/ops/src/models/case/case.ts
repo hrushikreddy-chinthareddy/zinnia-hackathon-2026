@@ -68,6 +68,16 @@ export type Case = {
     updatedAt: string;
     caseResult?: string;
     caseResultDetail?: string;
+    caseProcessingDetails?: {
+        detailType: string;
+        details: {
+            performedBy?: string;
+            source?: string;
+            partyId?: string;
+            applicationType?: string;
+        };
+        eventTimeStamp: number;
+    }[];
 };
 
 // Case Type and a Case's Process are the same

@@ -5922,6 +5922,8 @@
         },
         "type": "Type",
         "submissionType": "Submission Type",
+        "submissionSource": "Submission Source",
+        "submittedBy": "Submitted By",
         "caseId": "Parent Case ID",
         "caseTransactionType": "Case Transaction Type",
         "caseCompletionDate": "Case Completion Date",
