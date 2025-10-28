@@ -256,6 +256,7 @@ export const formatDataField = (
             Object.entries(formattedData),
             lineOfBusiness,
             t,
+            type,
             fieldLink,
             fieldLinkedField,
             searchValue

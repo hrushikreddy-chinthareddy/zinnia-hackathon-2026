@@ -578,6 +578,7 @@ export const toFieldsAndSubsections = (
                     Object.entries(subSection),
                     lineOfBusiness,
                     t,
+                    type,
                     subSectionLink,
                     subSectionLinkedField,
                     searchValue,
@@ -624,6 +625,7 @@ export const toFieldsAndSubsections = (
                                 fieldEntry as NestedData,
                                 lineOfBusiness,
                                 t,
+                                type,
                                 undefined,
                                 undefined,
                                 searchValue
