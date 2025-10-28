@@ -1,5 +1,6 @@
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { IdentificationType } from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { LoggingContext } from '@deps/utils/server-logging';
@@ -16,6 +17,25 @@ import {
     Party,
     PolicyResponse,
 } from '../types';
+
+type Identification = {
+    identificationId?: string | null;
+    startDate?: string | null;
+    endDate?: string | null;
+    identificationType?: string | null;
+    identificationKey?: string | null;
+    identificationValue?: string | null;
+    identificationDescription?: string | null;
+    issueState?: string | null;
+    issueCountry?: string | null;
+};
+
+const getIdentifications = (identifications: Identification[] = []) => {
+    const ssnIdentification = (identifications ?? []).find(
+        (id: Identification) => id.identificationType === IdentificationType.SSN
+    );
+    return ssnIdentification ? [ssnIdentification] : [];
+};
 
 const formatParties = (policyResponse: PolicyResponse) => {
     const partyRoleMap = policyResponse.partyRoles.reduce(
@@ -78,7 +98,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
         suffix: null,
         trustType: null,
         addresses: getAddresses(party?.addresses ?? []),
-        identifications: party.identifications ?? [],
+        identifications: getIdentifications(party.identifications),
         emails:
             party.emails.length > 0
                 ? party.emails.map((email: any) => ({
@@ -256,7 +276,9 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                           timezone: null,
                                       },
                                   ],
-                        identifications: bene.identifications ?? [],
+                        identifications: getIdentifications(
+                            bene.identifications
+                        ),
                         addresses: (bene.addresses ?? []).map(
                             (address: ExtendedAddress) => ({
                                 addressId: address.addressId ?? null,
