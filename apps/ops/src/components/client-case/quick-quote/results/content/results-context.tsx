@@ -186,7 +186,7 @@ export const QuickQuoteResultsProvider = ({
                                         const notAvailabilityReasonField =
                                             extractNotAvailabilityReason(data);
 
-                                        if (range) {
+                                        if (range != null) {
                                             return {
                                                 termLength:
                                                     parseInt(termLength),
@@ -218,7 +218,7 @@ export const QuickQuoteResultsProvider = ({
                                         const notAvailabilityReasonField =
                                             extractNotAvailabilityReason(data);
 
-                                        if (range) {
+                                        if (range != null) {
                                             return {
                                                 termLength:
                                                     parseInt(termLength),
@@ -287,7 +287,7 @@ export const QuickQuoteResultsProvider = ({
             isLoading,
             isFetching: isFetching || isFetchingProducts,
             isPending,
-            results: results ?? placeholderData,
+            results: results?.length ? results : placeholderData,
         }),
         [results, isLoading, isFetching, isFetchingProducts, isPending]
     );
