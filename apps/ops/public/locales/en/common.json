@@ -359,6 +359,7 @@
         "matchVestingDate": "Match vesting date",
         "vestingPeriod": "Vesting period",
         "people": "People",
+        "payorPayeeDetails": "Payor/Payee details",
         "transactionId": "Transaction ID",
         "originalTransactionId": "Original transaction ID",
         "partyPolicyChangeReferenceId": "Previous record",

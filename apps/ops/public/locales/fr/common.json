@@ -358,6 +358,7 @@
         "matchVestingDate": "Date d'acquisition d'appariement",
         "vestingPeriod": "Période d'acquisition",
         "people": "Personnes",
+        "payorPayeeDetails": "Détails du payeur/bénéficiaire",
         "transactionId": "ID de transacción",
         "originalTransactionId": "ID de transacción original",
         "partyPolicyChangeReferenceId": "Registro anterior",
