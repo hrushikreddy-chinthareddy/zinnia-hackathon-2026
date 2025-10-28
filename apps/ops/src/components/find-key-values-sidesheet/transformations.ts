@@ -26,6 +26,7 @@ import {
     linkedField,
     MetaData,
     Section,
+    FormatterType,
 } from './types';
 
 /**
@@ -239,12 +240,14 @@ export const toSections = (
 
             // Otherwise, the value is a primitive, so add it to the policy basics
             // formatDataField will determine if the field should be shown
-            const formattedField = formatDataField(
-                [currentKey, currentVal],
-                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+            const formattedField = formatDataField({
+                tuple: [currentKey, currentVal],
+                lineOfBusiness:
+                    policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                 t,
-                searchValue
-            );
+                searchValue,
+                type: FormatterType.POLICY,
+            });
 
             return {
                 ...acc,
@@ -353,12 +356,14 @@ export const toTransactionSections = (
 
             // Otherwise, the value is a primitive, so add it to the policy basics
             // formatDataField will determine if the field should be shown
-            const formattedField = formatDataField(
-                [currentKey, currentVal],
-                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+            const formattedField = formatDataField({
+                tuple: [currentKey, currentVal],
+                lineOfBusiness:
+                    policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                 t,
-                searchValue
-            );
+                searchValue,
+                type: FormatterType.TRANSACTION,
+            });
 
             return {
                 ...acc,

@@ -44,7 +44,7 @@ export interface FindAllKeyValuesSidebarProps {
     policyNumber?: string;
 }
 
-export enum DisplayType {
-    ACCORDION = 'accordion',
-    RULE = 'rule',
+export enum FormatterType {
+    POLICY = 'policy',
+    TRANSACTION = 'transaction',
 }
