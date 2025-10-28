@@ -366,7 +366,7 @@ export const toTransactionSections = (
     const people = parsePeople(policy, allPartiesById, t);
     if (people) {
         basicsAndSections.transactionSections.push([
-            String(t('policy.allFields.people')),
+            String(t('allFields.people')),
             people,
         ] as Section);
     }

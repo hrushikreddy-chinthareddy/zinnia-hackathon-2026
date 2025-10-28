@@ -28,6 +28,7 @@
     "contractNumber": "Numéro de contrat",
     "illustrations": "Illustrations",
     "allFields": {
+        "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
         "effectiveDate": "Date d'effet",
         "carrierId": "ID du transporteur",

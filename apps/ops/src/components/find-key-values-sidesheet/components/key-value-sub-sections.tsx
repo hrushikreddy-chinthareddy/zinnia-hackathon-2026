@@ -1,6 +1,6 @@
 import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
-import { Label } from '@zinnia/bloom/components';
+import React from 'react';
 
 import Highlighter from '@deps/components/highlighter/highlighter';
 
@@ -34,12 +34,9 @@ export const KeyValueSubSections = ({
         const subsectionTags = (subSection as MetaData)[tags];
 
         return (
-            <>
+            <React.Fragment key={`subsection_${i}`}>
                 {subsectionTags?.length ? (
-                    <div
-                        key={`subsection_${i}`}
-                        className={styles.subSectionTags}
-                    >
+                    <div className={styles.subSectionTags}>
                         <Accordion
                             sectionLabel={
                                 <Highlighter
@@ -59,16 +56,7 @@ export const KeyValueSubSections = ({
                         </Accordion>
                     </div>
                 ) : (
-                    <div
-                        key={`subsection_${i}`}
-                        className={styles.subSectionStd}
-                    >
-                        <Label>
-                            <Highlighter
-                                text={String(subSectionLabel)}
-                                highlights={[searchValue]}
-                            />
-                        </Label>
+                    <div className={styles.subSectionStd}>
                         <KeyValueFieldList
                             fields={subSectionFields}
                             searchValue={searchValue}
@@ -76,7 +64,7 @@ export const KeyValueSubSections = ({
                         />
                     </div>
                 )}
-            </>
+            </React.Fragment>
         );
     });
 };
