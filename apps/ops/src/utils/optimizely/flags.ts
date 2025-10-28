@@ -178,4 +178,5 @@ export enum FEATURE_FLAGS {
     FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS = 'fga_entity_zinnia_live_test_harness',
     FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT = 'fga_entity_zinnia_live_policy_management',
     FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT = 'fga_entity_zinnia_live_case_management',
+    REVISED_HISTORY_TABLE = 'revised_history_table',
 }

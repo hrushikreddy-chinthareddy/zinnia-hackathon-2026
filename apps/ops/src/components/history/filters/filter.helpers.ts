@@ -5,7 +5,10 @@ import {
     AllFilters,
     EventFilterKeys,
     EventFilters,
+    PeopleFilters,
+    PolicyFilters,
     SetHistoryFilters,
+    TransactionFilters,
     YearFilters,
     initialFilter,
 } from '@deps/contexts/HistoryFiltersContext';
@@ -47,6 +50,25 @@ export const getFilter = (eventFilter?: EventFilters) => {
         : [];
 
     return { filterName, subfilterName };
+};
+
+export const getFilterEnumKey = (filter: string) => {
+    const enums = {
+        [EventFilterKeys.People]: { ...PeopleFilters },
+        [EventFilterKeys.Transactions]: { ...TransactionFilters },
+        [EventFilterKeys.Policy]: { ...PolicyFilters },
+    };
+
+    // This finds the EventFilterKey enum property by the value or returns ALL when the subfilter is All
+    for (const [key, value] of Object.entries(enums)) {
+        if (
+            filter !== EventFilterKeys.All &&
+            Object.values(value).includes(filter)
+        ) {
+            return key;
+        }
+    }
+    return EventFilterKeys.All;
 };
 
 export const setFilter = (

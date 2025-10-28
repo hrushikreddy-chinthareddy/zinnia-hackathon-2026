@@ -3,7 +3,7 @@ import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analyti
 import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useTranslation } from 'react-i18next';
 
-import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart';
+import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
 import {
     ErrorMessage,
@@ -74,9 +74,20 @@ export const ZinniaLiveCaseViewsByTransaction = ({
     const categories = top5ProcessesByVisibleRoles(rows);
 
     const series = toGroupedBarSeriesFromRows(rows, categories, colors);
+    const hasNoCategories = !categories || categories.length === 0;
+    const hasNoSeries = !series || series.length === 0;
+    const seriesAllEmpty =
+        !hasNoSeries &&
+        series.every(
+            (s) =>
+                !s.data || s.data.length === 0 || s.data.every((v) => v === 0)
+        );
 
     const chartNotRenderable =
-        zinniaLiveCaseViewsByTransactionDataError || !series?.length;
+        zinniaLiveCaseViewsByTransactionDataError ||
+        hasNoCategories ||
+        hasNoSeries ||
+        seriesAllEmpty;
 
     const { t } = useTranslation();
 
@@ -143,17 +154,22 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                             height={495}
                             pointWidth={8}
                             tooltipFormatter={categoryValueTooltip}
+                            labelRotation={-45.604}
                         />
                     )}
                 </div>
                 <div className="w-full pl-2">
-                    {series?.length !== 0 && (
-                        <Legend
-                            title={''} // no title needed
-                            colors={series.map((item) => item.color)}
-                            labels={series.map((item) => item.name)}
-                        />
-                    )}
+                    {categories &&
+                        categories.length > 0 &&
+                        series &&
+                        series.length > 0 &&
+                        !seriesAllEmpty && (
+                            <Legend
+                                title={''} // no title needed
+                                colors={series.map((item) => item.color)}
+                                labels={series.map((item) => item.name)}
+                            />
+                        )}
                 </div>
             </BlurOverlayLoader>
         </div>

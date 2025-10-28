@@ -11064,7 +11064,7 @@
           "QUARTERLY",
           "ANNUAL",
           "SINGLEPAYMENT",
-          "BIANNUAL"
+          "SEMIANNUAL"
         ],
         "description": "Indicates how often the  program runs.  The most common modes used are monthly, quarterly, semi-annually, and annually."
       },

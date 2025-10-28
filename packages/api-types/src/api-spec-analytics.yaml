@@ -9,22 +9,33 @@ info:
 servers:
   - url: http://127.0.0.1:8080
     description: Local Dev
+  - url: https://dev.api.zinnia.io
+    description: Dev Environment
   - url: https://qa.api.zinnia.io
     description: QA Environment
+  - url: https://uat.api.zinnia.io
+    description: UAT Environment
   - url: https://api.zinnia.io
     description: Production Environment
 paths:
   /analytics/v1/dashboard/completed_case_time:
     post:
       summary: Completed Case Time
-      description: Get the average time spent on completed cases
+      description: Get the average time spent on completed and cancelled cases
       operationId: completed_case_time_analytics_v1_dashboard_completed_case_time_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CompletedCaseTimeInput'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -36,25 +47,82 @@ paths:
           description: Authentication failed
         '403':
           description: Access denied
-        '500':
-          description: Internal Server Error
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/completed_case_time:
+    post:
+      summary: Completed Case Time
+      description: Get the average time spent on completed and cancelled cases
+      operationId: >-
+        completed_case_time__env_space__analytics_v1_dashboard_completed_case_time_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletedCaseTimeInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedCaseTimeOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
   /analytics/v1/dashboard/case_count:
     post:
       summary: Case Count
-      description: Get the quantity of cases matching filters
+      description: Get the quantity of cases
       operationId: case_count_analytics_v1_dashboard_case_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/CaseCountInput'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -66,25 +134,81 @@ paths:
           description: Authentication failed
         '403':
           description: Access denied
-        '500':
-          description: Internal Server Error
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/case_count:
+    post:
+      summary: Case Count
+      description: Get the quantity of cases
+      operationId: case_count__env_space__analytics_v1_dashboard_case_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseCountInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseCountOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
   /analytics/v1/dashboard/exception_count:
     post:
       summary: Exception Count
-      description: Get the quantity of exceptions matching filters
+      description: Get the quantity of exceptions
       operationId: exception_count_analytics_v1_dashboard_exception_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ExceptionCountInput'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -96,27 +220,81 @@ paths:
           description: Authentication failed
         '403':
           description: Access denied
-        '500':
-          description: Internal Server Error
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/exception_count:
+    post:
+      summary: Exception Count
+      description: Get the quantity of exceptions
+      operationId: exception_count__env_space__analytics_v1_dashboard_exception_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExceptionCountInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionCountOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
   /analytics/v1/dashboard/user_activity_count:
     post:
       summary: User Activity Count
-      description:
-        Get the quantity of users matching filters grouped by selected
-        dimensions
+      description: Get the quantity of active users
       operationId: user_activity_count_analytics_v1_dashboard_user_activity_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/UserActivityInput'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -128,25 +306,82 @@ paths:
           description: Authentication failed
         '403':
           description: Access denied
-        '500':
-          description: Internal Server Error
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/user_activity_count:
+    post:
+      summary: User Activity Count
+      description: Get the quantity of active users
+      operationId: >-
+        user_activity_count__env_space__analytics_v1_dashboard_user_activity_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserActivityInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserActivityOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
   /analytics/v1/dashboard/user_views_count:
     post:
       summary: User Views Count
       description: Get user specific activity (i.e. tied to carriers)
       operationId: user_views_count_analytics_v1_dashboard_user_views_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/UserViewsInput'
-        required: true
       responses:
         '200':
           description: Successful Response
@@ -158,14 +393,412 @@ paths:
           description: Authentication failed
         '403':
           description: Access denied
-        '500':
-          description: Internal Server Error
         '422':
           description: Validation Error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/user_views_count:
+    post:
+      summary: User Views Count
+      description: Get user specific activity (i.e. tied to carriers)
+      operationId: >-
+        user_views_count__env_space__analytics_v1_dashboard_user_views_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserViewsInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserViewsOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /analytics/v1/dashboard/task_count:
+    post:
+      summary: Task Count
+      description: Get the quantity of tasks that are completed or in progress.
+      operationId: task_count_analytics_v1_dashboard_task_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCountInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCountOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/task_count:
+    post:
+      summary: Task Count
+      description: Get the quantity of tasks that are completed or in progress.
+      operationId: task_count__env_space__analytics_v1_dashboard_task_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCountInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskCountOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /analytics/v1/dashboard/completed_task_time:
+    post:
+      summary: Completed Task Time
+      description: Get the average time spent on completed tasks
+      operationId: completed_task_time_analytics_v1_dashboard_completed_task_time_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletedTaskTimeInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedTaskTimeOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/completed_task_time:
+    post:
+      summary: Completed Task Time
+      description: Get the average time spent on completed tasks
+      operationId: >-
+        completed_task_time__env_space__analytics_v1_dashboard_completed_task_time_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompletedTaskTimeInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompletedTaskTimeOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /analytics/v1/predict/case_time_predict:
+    post:
+      summary: Case Time Predict
+      description: Predict time for the case to complete (in seconds), if always IGO.
+      operationId: case_time_predict_analytics_v1_predict_case_time_predict_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseTimePredictInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseTimePredictOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/predict/case_time_predict:
+    post:
+      summary: Case Time Predict
+      description: Predict time for the case to complete (in seconds), if always IGO.
+      operationId: >-
+        case_time_predict__env_space__analytics_v1_predict_case_time_predict_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseTimePredictInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseTimePredictOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /analytics/v1/dashboard/user_transaction_count:
+    post:
+      summary: User Transaction Count
+      description: Counts of user-submitted transactions
+      operationId: >-
+        user_transaction_count_analytics_v1_dashboard_user_transaction_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTransactionInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransactionOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/user_transaction_count:
+    post:
+      summary: User Transaction Count
+      description: Counts of user-submitted transactions
+      operationId: >-
+        user_transaction_count__env_space__analytics_v1_dashboard_user_transaction_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserTransactionInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserTransactionOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
 components:
   schemas:
     CaseCountGroupByEnum:
@@ -178,6 +811,7 @@ components:
         - process
         - productName
         - applicationType
+        - caseResult
         - createdDay
         - updatedDay
       title: CaseCountGroupByEnum
@@ -249,6 +883,14 @@ components:
           title: Brokerdealername
           example:
             - SANTANDER  SECURITIES LLC
+        caseResult:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Caseresult
+          example:
+            - Issued
         createdDateStart:
           anyOf:
             - type: string
@@ -363,6 +1005,35 @@ components:
         - name
         - count
       title: CaseCountOutputLevel3
+    CaseTimePredictInput:
+      properties:
+        caseId:
+          type: string
+          title: Caseid
+          example: CA0000493923
+      type: object
+      title: CaseTimePredictInput
+    CaseTimePredictOutput:
+      properties:
+        caseId:
+          type: string
+          title: Caseid
+          example: CA0000493923
+        secondsIGO:
+          type: integer
+          title: Secondsigo
+          example: 360
+        timestamp:
+          type: string
+          format: date-time
+          title: Timestamp
+          example: '2025-01-11T01:01:31.316Z'
+      type: object
+      required:
+        - caseId
+        - secondsIGO
+        - timestamp
+      title: CaseTimePredictOutput
     CompletedCaseTimeGroupByEnum:
       type: string
       enum:
@@ -602,6 +1273,262 @@ components:
         - secondHigh
         - count
       title: CompletedCaseTimeOutputLevel3
+    CompletedTaskTimeGroupByEnum:
+      type: string
+      enum:
+        - carrier
+        - process
+        - processSubType
+        - brokerDealerName
+        - taskCategory
+        - taskName
+        - taskType
+      title: CompletedTaskTimeGroupByEnum
+    CompletedTaskTimeInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/CompletedTaskTimeInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/CompletedTaskTimeGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - carrier
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: CompletedTaskTimeInput
+    CompletedTaskTimeInputFilter:
+      properties:
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Carrier
+          example:
+            - MASS
+        process:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Process
+          example:
+            - New Business
+        processSubType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Processsubtype
+          example:
+            - Suitability Review
+        brokerDealerName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Brokerdealername
+          example:
+            - SANTANDER  SECURITIES LLC
+        taskCategory:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Taskcategory
+          example:
+            - Review Task
+        taskName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Taskname
+          example:
+            - Withdrawal Form Input
+        taskType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Tasktype
+          example:
+            - Nb Follow-Up
+        taskCreatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskcreateddatestart
+          example: '2025-06-01T01:01:31.316Z'
+        taskCreatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskcreateddateend
+          example: '2025-07-01T23:34:31.316Z'
+        taskUpdatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskupdateddatestart
+          example: '2025-06-03T01:01:01.316Z'
+        taskUpdatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskupdateddateend
+          example: '2025-07-04T23:34:31.316Z'
+      type: object
+      title: CompletedTaskTimeInputFilter
+    CompletedTaskTimeOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/CompletedTaskTimeOutputLevel1'
+          type: array
+          title: Data
+      type: object
+      required:
+        - data
+      title: CompletedTaskTimeOutput
+    CompletedTaskTimeOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: carrier
+        name:
+          type: string
+          title: Name
+          example: MASS
+        secondLow:
+          type: integer
+          title: Secondlow
+          example: 0
+        secondMedian:
+          type: integer
+          title: Secondmedian
+          example: 10
+        secondMean:
+          type: integer
+          title: Secondmean
+          example: 1331258
+        secondHigh:
+          type: integer
+          title: Secondhigh
+          example: 5259134
+        count:
+          type: integer
+          title: Count
+          example: 5832
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CompletedTaskTimeOutputLevel2'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
+      title: CompletedTaskTimeOutputLevel1
+    CompletedTaskTimeOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: process
+        name:
+          type: string
+          title: Name
+          example: New Business
+        secondLow:
+          type: integer
+          title: Secondlow
+          example: 24794
+        secondMedian:
+          type: integer
+          title: Secondmedian
+          example: 50709
+        secondMean:
+          type: integer
+          title: Secondmean
+          example: 740047
+        secondHigh:
+          type: integer
+          title: Secondhigh
+          example: 6109775
+        count:
+          type: integer
+          title: Count
+          example: 19
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/CompletedTaskTimeOutputLevel3'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
+      title: CompletedTaskTimeOutputLevel2
+    CompletedTaskTimeOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: taskName
+        name:
+          type: string
+          title: Name
+          example: Withdrawal Form Input
+        secondLow:
+          type: integer
+          title: Secondlow
+          example: 24794
+        secondMedian:
+          type: integer
+          title: Secondmedian
+          example: 50709
+        secondMean:
+          type: integer
+          title: Secondmean
+          example: 740047
+        secondHigh:
+          type: integer
+          title: Secondhigh
+          example: 6109775
+        count:
+          type: integer
+          title: Count
+          example: 19
+      type: object
+      required:
+        - key
+        - name
+        - secondLow
+        - secondMedian
+        - secondMean
+        - secondHigh
+        - count
+      title: CompletedTaskTimeOutputLevel3
     ExceptionCountGroupByEnum:
       type: string
       enum:
@@ -871,6 +1798,200 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    TaskCountGroupByEnum:
+      type: string
+      enum:
+        - carrier
+        - process
+        - brokerDealerName
+        - taskCategory
+        - taskName
+        - taskStatus
+        - taskCreatedDay
+        - taskUpdatedDay
+      title: TaskCountGroupByEnum
+    TaskCountInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/TaskCountInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/TaskCountGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - carrier
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: TaskCountInput
+    TaskCountInputFilter:
+      properties:
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Carrier
+          example:
+            - MASS
+        process:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Process
+          example:
+            - New Business
+        brokerDealerName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Brokerdealername
+          example:
+            - SANTANDER  SECURITIES LLC
+        taskCategory:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Taskcategory
+          example:
+            - Review Task
+        taskName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Taskname
+          example:
+            - Withdrawal Form Input
+        taskStatus:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Taskstatus
+          example:
+            - COMPLETED
+        taskCreatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskcreateddatestart
+          example: '2025-06-01T01:01:31.316Z'
+        taskCreatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskcreateddateend
+          example: '2025-07-01T23:34:31.316Z'
+        taskUpdatedDateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskupdateddatestart
+          example: '2025-06-03T01:01:01.316Z'
+        taskUpdatedDateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Taskupdateddateend
+          example: '2025-07-04T23:34:31.316Z'
+      type: object
+      title: TaskCountInputFilter
+    TaskCountOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/TaskCountOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 12345
+      type: object
+      required:
+        - data
+        - totalElements
+      title: TaskCountOutput
+    TaskCountOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: carrier
+        name:
+          type: string
+          title: Name
+          example: MASS
+        count:
+          type: integer
+          title: Count
+          example: 5832
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/TaskCountOutputLevel2'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: TaskCountOutputLevel1
+    TaskCountOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: process
+        name:
+          type: string
+          title: Name
+          example: New Business
+        count:
+          type: integer
+          title: Count
+          example: 2294
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/TaskCountOutputLevel3'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: TaskCountOutputLevel2
+    TaskCountOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: taskName
+        name:
+          type: string
+          title: Name
+          example: Withdrawal Form Input
+        count:
+          type: integer
+          title: Count
+          example: 28
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: TaskCountOutputLevel3
     UserActivityGroupByEnum:
       type: string
       enum:
@@ -1033,6 +2154,169 @@ components:
         - name
         - count
       title: UserActivityOutputLevel3
+    UserTransactionGroupByEnum:
+      type: string
+      enum:
+        - userRole
+        - carrier
+        - transactionCategory
+        - transactionType
+        - transactionSubmittedDay
+      title: UserTransactionGroupByEnum
+    UserTransactionInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/UserTransactionInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/UserTransactionGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - userRole
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: UserTransactionInput
+    UserTransactionInputFilter:
+      properties:
+        userRole:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Userrole
+          example:
+            - Zinnia Operations
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Carrier
+          example:
+            - ELIC
+        transactionCategory:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Transactioncategory
+          example:
+            - financial
+        transactionType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Transactiontype
+          example:
+            - premium
+        dateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Datestart
+          example: '2025-09-01T00:00:00.000Z'
+        dateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Dateend
+          example: '2025-09-30T00:00:00.000Z'
+      type: object
+      title: UserTransactionInputFilter
+    UserTransactionOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/UserTransactionOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 123
+      type: object
+      required:
+        - data
+        - totalElements
+      title: UserTransactionOutput
+    UserTransactionOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: userRole
+        name:
+          type: string
+          title: Name
+          example: Zinnia Operations
+        count:
+          type: integer
+          title: Count
+          example: 18
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/UserTransactionOutputLevel2'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserTransactionOutputLevel1
+    UserTransactionOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: transactionCategory
+        name:
+          type: string
+          title: Name
+          example: financial
+        count:
+          type: integer
+          title: Count
+          example: 24
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/UserTransactionOutputLevel3'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserTransactionOutputLevel2
+    UserTransactionOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: transactionType
+        name:
+          type: string
+          title: Name
+          example: premium
+        count:
+          type: integer
+          title: Count
+          example: 35
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserTransactionOutputLevel3
     UserViewsGroupByEnum:
       type: string
       enum:
