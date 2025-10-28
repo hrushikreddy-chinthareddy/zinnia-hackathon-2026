@@ -30,6 +30,7 @@
     "allFields": {
         "emptySearch": "No se encontraron coincidencias",
         "policyBasics": "Básicos de {{policyNomenclature}}",
+        "transactionDetails": "Detalles de la transacción",
         "effectiveDate": "Fecha de vigencia",
         "carrierId": "ID del transportista",
         "policySource": "Fuente de {{policyNomenclature}}",
@@ -5219,6 +5220,7 @@
     },
     "label": {
         "findKeyValues": "Buscar valores clave",
+        "transactionDetails": "Detalles de la transacción",
         "findKeyValuesTitle": "Buscar valores clave",
         "findKeyValuesDate": "Mostrar datos desde",
         "findKeyValuesDateError": "No se pueden obtener datos para la fecha seleccionada.",

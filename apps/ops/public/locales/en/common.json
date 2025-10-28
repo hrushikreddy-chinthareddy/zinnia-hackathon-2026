@@ -30,6 +30,7 @@
     "allFields": {
         "emptySearch": "No matches found",
         "policyBasics": "{{policyNomenclature, capitalize}} basics",
+        "transactionDetails": "Transaction details",
         "effectiveDate": "Effective date",
         "carrierId": "Carrier ID",
         "policySource": "{{policyNomenclature, capitalize}} source",
@@ -5254,6 +5255,7 @@
     },
     "label": {
         "findKeyValues": "Search key values",
+        "transactionDetails": "Transaction details",
         "findKeyValuesTitle": "Find key values",
         "findKeyValuesDate": "Display data from",
         "findKeyValuesDateError": "Unable to retrieve data for the selected date.",

@@ -117,7 +117,12 @@ export const prepareTransaction = (
                 searchValue
             );
         },
-        formatAsSectionLabel: (label: string) => t(`${label}`),
+        formatAsSectionLabel: (label: string) =>
+            formatAsSectionLabel(
+                label,
+                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+                t
+            ),
     };
 };
 
@@ -252,7 +257,7 @@ export const toSections = (
     ).filter(([, data]) => data != null);
     if (nonNullMatchEntries.length) {
         basicsAndSections.policySections.push([
-            String(t('policy.allFields.match')),
+            String(t('allFields.match')),
             Object.fromEntries(nonNullMatchEntries),
         ]);
     }
@@ -261,9 +266,19 @@ export const toSections = (
     const people = parsePeople(policy, allPartiesById, t);
     if (people) {
         basicsAndSections.policySections.push([
-            String(t('policy.allFields.people')),
+            String(t('allFields.people')),
             people,
         ] as Section);
+    }
+
+    // Fill in the section title
+    if (basicsAndSections.policyBasics != null) {
+        (basicsAndSections.policyBasics as MetaData)[label] =
+            formatAsSectionLabel(
+                'policyBasics',
+                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+                t
+            );
     }
 
     return {
@@ -357,9 +372,19 @@ export const toTransactionSections = (
     const people = parsePeople(policy, allPartiesById, t);
     if (people) {
         basicsAndSections.transactionSections.push([
-            String(t('policy.allFields.people')),
+            String(t('allFields.people')),
             people,
         ] as Section);
+    }
+
+    // Fill in the section title
+    if (basicsAndSections.transactionDetails != null) {
+        (basicsAndSections.transactionDetails as MetaData)[label] =
+            formatAsSectionLabel(
+                'transactionDetails',
+                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+                t
+            );
     }
 
     return {

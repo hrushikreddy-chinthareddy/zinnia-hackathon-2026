@@ -4,7 +4,7 @@ import { AccordionType } from '@xd/xd-components/src/components/Accordion/types'
 import Highlighter from '@deps/components/highlighter/highlighter';
 
 import { preparePolicy, prepareTransaction } from '../transformations';
-import { ExpandCollapse, NestedData } from '../types';
+import { ExpandCollapse, label, NestedData } from '../types';
 import { KeyValueFieldList } from './key-value-field-list';
 
 /**
@@ -27,11 +27,15 @@ export const KeyValueBasics = ({
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
+    if (policyBasics == null) {
+        return null;
+    }
+
     return (
         <Accordion
             sectionLabel={
                 <Highlighter
-                    text={preparedData.formatAsSectionLabel('policyBasics')}
+                    text={policyBasics[label]}
                     highlights={[searchValue]}
                 />
             }
