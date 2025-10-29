@@ -343,7 +343,10 @@
         "patternNoSpecial": "Contiene únicamente letras y números (sin caracteres especiales).",
         "maxLength": "El campo no puede tener más de {{limit}} caracteres.",
         "minLength": "El campo no debe tener menos de {{limit}} caracteres.",
-        "minItems": "Seleccione al menos {{limit}} artículo(s)."
+        "minItems": "Seleccione al menos {{limit}} artículo(s).",
+        "patternSsn": "Por favor, introduzca un SSN válido.",
+        "maximum": "El campo no debe ser mayor que {{limit}}.",
+        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia."
     },
     "beneChange": {
         "tabs": {
@@ -1165,7 +1168,9 @@
             "fileDeletedError": "No se pudo eliminar el archivo {{fileName}}"
         },
         "true": "Verdadero",
-        "false": "Falso"
+        "false": "Falso",
+        "email": "Correo electrónico",
+        "emailTooltip": "Por favor, introduce una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo."
     },
     "dashboard": {
         "h1": "Politiques  y Contratos",
@@ -5870,6 +5875,8 @@
         },
         "type": "Tipo",
         "submissionType": "Tipo de envío",
+        "submissionSource": "Origen de envío",
+        "submittedBy": "Presentado por",
         "caseId": "ID del caso principal",
         "caseTransactionType": "Tipo de transacción de caso",
         "caseCompletionDate": "Fecha de finalización del caso",
@@ -7020,6 +7027,30 @@
         },
         "settlementInProgress": "El acuerdo está en curso."
     },
+    "deathAuditFiles": {
+        "noData": "Detalles del archivo no disponibles.",
+        "loadingTransactions": "Recuperando detalles del archivo...",
+        "errorGettingTransactions": "No se pudieron recuperar los detalles del archivo.",
+        "details": "Detalles",
+        "summary": {
+            "totalRecordsSent": "Total de registros enviados",
+            "totalHits": "Total de visitas",
+            "existingCaseMatches": "Coincidencias de casos existentes",
+            "newCases": "Nuevos casos",
+            "totalRecord": "Récord total",
+            "cancelledCaseMatches": "Coincidencias de casos cancelados"
+        },
+        "tabs": {
+            "matchedCase": "Caso emparejado",
+            "cancelledCase": "Caso cancelado"
+        }
+    },
+    "deathAuditQualification": {
+        "loadingTransactions": "Recuperando detalles..",
+        "errorGettingTransactions": "No se pudieron recuperar los datos.",
+        "title": "Detalles",
+        "idnCaseId": "ID de caso de IDN"
+    },
     "nigoEntry": {
         "tabs": {
             "serviceFormReview": "Revisión del Formulario de Servicio",
@@ -7781,11 +7812,20 @@
             "submitTask": "Enviar"
         }
     },
+    "claimsOpsToFinanceEscheatmentTrigger": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Se envió el Claims Ops To Finance Escheatment.",
+            "cta": "Ir al reclamo de muerte",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "claimsFiEscheatmentTask": {
         "confirmStep": {
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se presentó Reclamación de Renuncia a FI.",
-            "cta": "Ir a transferencia entrante",
+            "cta": "Ir al reclamo de muerte",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
         }

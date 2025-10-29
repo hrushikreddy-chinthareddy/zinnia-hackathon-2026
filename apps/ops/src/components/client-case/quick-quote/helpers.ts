@@ -218,14 +218,23 @@ export const expandQuickQuoteVariants = (
             notAvailabilityReasonField,
             riders,
         }) =>
-            classCodes.map((classCode) => ({
-                planCode,
-                termLength,
-                classCode,
-                available: !notAvailabilityReasonField,
-                notAvailabilityReasonField,
-                riders,
-            }))
+            classCodes?.length
+                ? classCodes.map((classCode) => ({
+                      planCode,
+                      termLength,
+                      classCode,
+                      available: !notAvailabilityReasonField,
+                      notAvailabilityReasonField,
+                      riders,
+                  }))
+                : {
+                      planCode,
+                      termLength,
+                      classCode: 'None',
+                      available: false,
+                      notAvailabilityReasonField,
+                      riders,
+                  }
     );
 
 export const buildNewTermQuickQuotePayload = (

@@ -56,6 +56,7 @@ export enum TaskType {
     Purchase_enrichment = 'NB_PURCHASE_ENRICHMENT',
     Cost_Basis_Review = 'NB_COST_BASIS_REVIEW',
     Claims_Fi_Escheatment_Task = 'CLAIMS_FI_ESCHEATMENT_TASK',
+    Claims_Ops_To_Finance_Escheatment_Trigger = 'CLAIMS_OPS_TO_FINANCE_ESCHEATMENT_TRIGGER',
     Bene_Address_Verification = 'BENE_ADDRESS_VERIFICATION',
     Claims_Bene_Review = 'CLAIMS_BENE_REVIEW',
     Day_150_Review = 'DAY_150_REVIEW',
@@ -240,6 +241,7 @@ export type TaskEventProps = {
     dataKey: string;
     responseType: ApiResponseTypes;
 };
+
 export enum DataFormattingTypes {
     SSN = 'ssn',
     Date = 'date',
@@ -251,6 +253,7 @@ export enum DataFormattingTypes {
     Percentage = 'percentage',
     Phone = 'phone',
     DateTime = 'dateTime',
+    String = 'string',
 }
 
 export interface AddressFormFields {

@@ -11,7 +11,6 @@ import {
     CreateNewTermLifeIllustrationResponse,
 } from '@deps/queries/api/v3/illustrations';
 import { QuickQuoteParams } from '@deps/types/quickQuote';
-import { ProductClassResult } from '@deps/utils/quick-quotes-rules/types';
 
 import {
     buildNewTermQuickQuotePayload,
@@ -59,7 +58,7 @@ export const buildNewTermQuickQuoteOptions = (
 
             return createNewTermLifeIllustration(payload);
         },
-        enabled: !variantParams?.notAvailabilityReasonField,
+        staleTime: 600_000,
     });
 
 export const useQuickQuoteQueries = <MT>(

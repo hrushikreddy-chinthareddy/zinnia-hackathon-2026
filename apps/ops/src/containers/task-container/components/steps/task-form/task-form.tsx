@@ -7,6 +7,7 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -84,6 +85,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         setMappedDocuments,
     } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
+    const prevFormDataRef = useRef<any>(null);
 
     const formContext = {
         carrier: task.carrier,
@@ -228,15 +230,46 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         onSubmit('');
     }, [readonly, isSubmit, correlationId, onSubmit, setSubmitFailed, task]);
 
+    const formOnChangeUpdater: {
+        [key in TaskType]?: (formData: any) => any;
+    } = {
+        [TaskType.Claims_Ops_To_Finance_Escheatment_Trigger]: (
+            formData: any
+        ) => {
+            const updatedFormData = structuredClone(formData);
+            const eschDetail =
+                updatedFormData.details?.beneOpsEscheatment?.escheatmentDetail;
+            const prevEschDetail =
+                prevFormDataRef.current?.details?.beneOpsEscheatment
+                    ?.escheatmentDetail;
+            if (
+                prevFormDataRef?.current !== null &&
+                (eschDetail?.netDeathBenefit !==
+                    prevEschDetail?.netDeathBenefit ||
+                    eschDetail?.beneficiary?.beneficiaryPercentage !==
+                        prevEschDetail?.beneficiary?.beneficiaryPercentage)
+            ) {
+                updatedFormData.details.beneOpsEscheatment.escheatmentDetail.beneficiary.beneficiaryDueAmount =
+                    undefined;
+            }
+            prevFormDataRef.current = updatedFormData;
+            return updatedFormData;
+        },
+    };
+
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
             const { formData } = event;
             const { uiSchema } = formSchema;
 
-            const updatedFormData = applyHiddenFieldPopulation(
-                formData,
+            const updatedFormData =
+                formOnChangeUpdater[task.taskType as TaskType]?.(formData) ||
+                formData;
+            const finalFormData = applyHiddenFieldPopulation(
+                updatedFormData,
                 uiSchema
             );
+
             const hasDataPathFields = Object.keys(uiSchema).some(
                 (field) => uiSchema[field]?.['ui:dataPath']
             );
@@ -244,7 +277,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             if (!hasDataPathFields) {
                 setTask((ogTask) => ({
                     ...ogTask,
-                    data: updatedFormData,
+                    data: finalFormData,
                 }));
                 return;
             }
@@ -253,7 +286,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             setTask((prevTask) => {
                 const updatedTask = getUpdatedTaskFromFormData(
                     prevTask,
-                    updatedFormData,
+                    finalFormData,
                     uiSchema
                 );
                 return updatedTask;

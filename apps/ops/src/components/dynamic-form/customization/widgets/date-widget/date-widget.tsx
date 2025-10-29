@@ -29,7 +29,8 @@ export default function DateWidget<
 >(props: WidgetProps<T, S, F>) {
     const { id, value, onChange, disabled, uiSchema, readonly, rawErrors } =
         props;
-    const { futureDateEnabled, inline, title } = getUiOptions(uiSchema);
+    const { futureDateEnabled, inline, title, dataType } =
+        getUiOptions(uiSchema);
 
     const disableAfterDate = futureDateEnabled ? undefined : new Date();
 
@@ -52,7 +53,7 @@ export default function DateWidget<
     return (disabled as boolean) ? (
         <div>{value}</div>
     ) : readonly ? (
-        <>{value}</>
+        <> {formatValueByDataType((dataType as string) || 'text', value)}</>
     ) : (
         <div className="max-w-sm flex w-full flex-col">
             <FieldDate

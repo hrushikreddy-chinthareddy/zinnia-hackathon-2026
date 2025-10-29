@@ -278,6 +278,7 @@ export const formatValueByDataType = (dataType: string, value: any) => {
 
         case DataFormattingTypes.Percentage:
             return formatPercentage(value);
+        case DataFormattingTypes.String:
         default:
             return value;
     }

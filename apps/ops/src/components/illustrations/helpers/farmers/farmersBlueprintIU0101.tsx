@@ -5150,6 +5150,13 @@ export const farmersBlueprintIU0101 = {
                                                         mathOperator:
                                                             'subtract',
                                                     },
+                                                    {
+                                                        type: 'matchesCondition',
+                                                        value: ['FACE'],
+                                                        targetNodeId:
+                                                            'solve-for',
+                                                        quantifier: 'any',
+                                                    },
                                                 ],
                                             },
                                             message: {

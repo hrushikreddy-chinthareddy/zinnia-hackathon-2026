@@ -1,8 +1,8 @@
 {
-    "formId": "f44caa75-6068-43e3-b2ce-c513ca2ef437",
+    "formId": "9140b3ca-adc2-4c15-a1f8-8eb64e8599ae",
     "process": "Claims",
     "carrier": "FLIC",
-    "taskType": "CLAIMS_FI_ESCHEATMENT_TASK",
+    "taskType": "CLAIMS_OPS_TO_FINANCE_ESCHEATMENT_TRIGGER",
     "formSchema": {
         "type": "object"
     },
@@ -12,19 +12,19 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "FI Escheatment",
+                "title": "Ops Escheatment Task",
                 "formSchema": {
                     "type": "object",
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
                             "title": "Processing Instructions",
-                            "description": "Mark the funds as “Abandoned Property” in the appropriate state portal or system and create an “Ops Escheatment” task in OnBase."
+                            "description": "For escheatment, validate the prefilled data, manually enter missing details, and correct any inaccuracies before final submission."
                         },
                         "details": {
                             "type": "object",
                             "properties": {
-                                "beneEscheatment": {
+                                "beneOpsEscheatment": {
                                     "type": "object",
                                     "properties": {
                                         "escheatmentDetail": {
@@ -77,19 +77,22 @@
                                                     "enum": [true, false],
                                                     "enumNames": [
                                                         "IRA",
-                                                        "Non IRA"
+                                                        "NON IRA"
                                                     ]
                                                 },
                                                 "qualificationType": {
                                                     "type": "string",
-                                                    "title": "IRA Type"
+                                                    "title": "IRA Type",
+                                                    "minLength": 1
                                                 },
                                                 "deathTransactionProcessDate": {
                                                     "type": "string",
-                                                    "title": "Date Death Transaction processed on Admin System"
+                                                    "title": "Date Death Transaction processed on Admin System",
+                                                    "format": "date"
                                                 },
                                                 "netDeathBenefit": {
                                                     "type": "number",
+                                                    "maxLength": 23,
                                                     "title": "Total Amount Due"
                                                 },
                                                 "owners": {
@@ -115,7 +118,7 @@
                                                                     },
                                                                     "middleName": {
                                                                         "type": "string",
-                                                                        "title": "Owner Middle Name"
+                                                                        "title": "Owner Middle Initial"
                                                                     },
                                                                     "lastName": {
                                                                         "type": "string",
@@ -158,18 +161,20 @@
                                                             },
                                                             "dateOfDeath": {
                                                                 "type": "string",
-                                                                "title": "Owner Date of Death"
+                                                                "title": "Owner Date of Death",
+                                                                "format": "date"
                                                             },
                                                             "driversLicenseNumber": {
                                                                 "type": "string",
                                                                 "title": "Owner's Drivers License"
                                                             },
                                                             "email": {
-                                                                "title": "",
                                                                 "type": "object",
                                                                 "properties": {
                                                                     "emailAddress": {
-                                                                        "type": "string"
+                                                                        "title": "Owner's Email Address",
+                                                                        "type": "string",
+                                                                        "format": "email"
                                                                     }
                                                                 }
                                                             },
@@ -183,9 +188,14 @@
                                                             },
                                                             "lastContactDate": {
                                                                 "type": "string",
-                                                                "title": "Last Contact Date"
+                                                                "title": "Last Contact Date",
+                                                                "format": "date"
                                                             }
-                                                        }
+                                                        },
+                                                        "required": [
+                                                            "dateOfDeath",
+                                                            "lastContactDate"
+                                                        ]
                                                     }
                                                 },
                                                 "checks": {
@@ -193,141 +203,160 @@
                                                     "title": "Check Information",
                                                     "items": {
                                                         "type": "object",
-                                                        "title": "",
                                                         "properties": {
                                                             "checkNumber": {
                                                                 "type": "string",
-                                                                "title": "Check Number"
+                                                                "title": "Check Number",
+                                                                "pattern": "^(|82000[0-9]*)$",
+                                                                "maxLength": 20
                                                             },
                                                             "checkDate": {
                                                                 "type": "string",
-                                                                "title": "Check Date"
+                                                                "title": "Check Date",
+                                                                "format": "date"
                                                             },
                                                             "checkAmount": {
                                                                 "type": "number",
-                                                                "title": "Check Amount"
+                                                                "title": "Check Amount",
+                                                                "maxLength": 23
                                                             }
                                                         }
                                                     }
                                                 },
                                                 "beneficiary": {
                                                     "type": "object",
-                                                    "title": "Beneficiary Information",
                                                     "properties": {
                                                         "party": {
                                                             "type": "object",
                                                             "properties": {
                                                                 "ssn": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary SSN"
+                                                                    "title": "Beneficiary SSN",
+                                                                    "pattern": "^(|[0-9]{9})$"
                                                                 },
                                                                 "prefix": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Suffix"
+                                                                    "title": "Beneficiary Suffix",
+                                                                    "minLength": 1
                                                                 },
                                                                 "firstName": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary First Name"
+                                                                    "title": "Beneficiary First Name",
+                                                                    "minLength": 1
                                                                 },
                                                                 "middleName": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Middle Name"
+                                                                    "title": "Beneficiary Middle Initial",
+                                                                    "minLength": 1
                                                                 },
                                                                 "lastName": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Last Name"
+                                                                    "title": "Beneficiary Last Name",
+                                                                    "minLength": 1
                                                                 },
                                                                 "dateOfBirth": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Date of Birth"
+                                                                    "title": "Beneficiary Date of Birth",
+                                                                    "format": "date"
                                                                 }
-                                                            }
+                                                            },
+                                                            "required": [
+                                                                "lastName",
+                                                                "firstName",
+                                                                "middleName",
+                                                                "prefix",
+                                                                "dateOfBirth"
+                                                            ]
                                                         },
                                                         "address": {
                                                             "type": "object",
                                                             "properties": {
                                                                 "addressLine1": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Address Line 1"
+                                                                    "title": "Beneficiary Address Line 1",
+                                                                    "minLength": 1
                                                                 },
                                                                 "addressLine2": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Address Line 2"
+                                                                    "title": "Beneficiary Address Line 2",
+                                                                    "minLength": 1
                                                                 },
                                                                 "city": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary City"
+                                                                    "title": "Beneficiary City",
+                                                                    "minLength": 1
                                                                 },
                                                                 "state": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary State"
+                                                                    "title": "Beneficiary State",
+                                                                    "minLength": 1
                                                                 },
                                                                 "zipCode": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Zip"
+                                                                    "title": "Beneficiary Zip",
+                                                                    "minLength": 1
                                                                 },
                                                                 "country": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Country"
+                                                                    "title": "Beneficiary Country",
+                                                                    "minLength": 1
                                                                 }
-                                                            }
+                                                            },
+                                                            "required": [
+                                                                "addressLine1",
+                                                                "city",
+                                                                "state",
+                                                                "zipCode",
+                                                                "country"
+                                                            ]
                                                         },
                                                         "dateOfDeath": {
                                                             "type": "string",
-                                                            "title": "Beneficiary Date of Death"
+                                                            "title": "Beneficiary Date of Death",
+                                                            "format": "date"
                                                         },
                                                         "beneficiaryPercentage": {
                                                             "type": "number",
-                                                            "title": "Beneficiary Percentage of Total"
+                                                            "title": "Beneficiary Percentage of Total",
+                                                            "maximum": 100
                                                         },
                                                         "beneficiaryDueAmount": {
                                                             "type": "number",
-                                                            "title": "Beneficiary Amount Due"
+                                                            "title": "Beneficiary Amount Due",
+                                                            "minimum": 1
                                                         },
                                                         "lastContactDate": {
                                                             "type": "string",
-                                                            "title": "Last Contact Date"
+                                                            "title": "Last Contact Date",
+                                                            "format": "date"
                                                         }
-                                                    }
+                                                    },
+                                                    "required": [
+                                                        "party",
+                                                        "address",
+                                                        "beneficiaryPercentage",
+                                                        "beneficiaryDueAmount",
+                                                        "lastContactDate"
+                                                    ]
                                                 },
                                                 "comments": {
                                                     "type": "string",
                                                     "title": "Comments"
                                                 }
-                                            }
-                                        },
-                                        "escheatmentPortalUpdateConfirmed": {
-                                            "type": "boolean",
-                                            "title": "I have marked the unclaimed funds as “Abandoned Property” in the applicable state escheatment portal or financial system.",
-                                            "enum": [true]
-                                        },
-                                        "escheatmentOnBase": {
-                                            "type": "boolean",
-                                            "title": "I have manually created an Ops Escheatment case in OnBase to document the escheatment activity and entered the OnBase Case ID below:",
-                                            "enum": [true]
-                                        },
-                                        "escheatmentExternalCaseId": {
-                                            "type": "string",
-                                            "title": "OnBase Case ID:",
-                                            "minLength": 12,
-                                            "pattern": "^[A-Za-z0-9]+$",
-                                            "trim": true
-                                        },
-                                        "escheatmentSorUpdateConfirmed": {
-                                            "type": "boolean",
-                                            "title": "I have confirmed that the Admin System has been updated to reflect the escheatment status.",
-                                            "enum": [true]
+                                            },
+                                            "required": [
+                                                "netDeathBenefit",
+                                                "ira",
+                                                "qualificationType",
+                                                "owners",
+                                                "beneficiary"
+                                            ]
                                         }
                                     },
-                                    "required": [
-                                        "escheatmentPortalUpdateConfirmed",
-                                        "escheatmentOnBase",
-                                        "escheatmentExternalCaseId",
-                                        "escheatmentSorUpdateConfirmed"
-                                    ]
+                                    "required": ["escheatmentDetail"]
                                 }
                             },
-                            "required": ["beneEscheatment"]
+                            "required": ["beneOpsEscheatment"]
                         }
                     }
                 },
@@ -339,7 +368,11 @@
                             "noValidate": false
                         }
                     },
-                    "ui:hideError": true,
+                    "ui:options": {
+                        "noValidate": true,
+                        "showErrors": false,
+                        "liveValidate": false
+                    },
                     "sectionHeader": {
                         "ui:title": "",
                         "ui:options": {
@@ -349,11 +382,9 @@
                     },
                     "details": {
                         "ui:title": "",
-                        "beneEscheatment": {
-                            "ui:title": "",
-                            "ui:hideError": true,
+                        "beneOpsEscheatment": {
                             "ui:options": {
-                                "label": true
+                                "label": false
                             },
                             "escheatmentDetail": {
                                 "policyNumber": {
@@ -365,17 +396,10 @@
                                 },
                                 "financialEscheatmentDate": {
                                     "ui:options": {
-                                        "inline": true,
                                         "label": false,
+                                        "disabled": true,
                                         "dataType": "date",
-                                        "disabled": true
-                                    }
-                                },
-                                "netDeathBenefit": {
-                                    "ui:options": {
-                                        "inline": true,
-                                        "label": false,
-                                        "dataType": "amount"
+                                        "inline": true
                                     }
                                 },
                                 "lineOfBusiness": {
@@ -429,27 +453,6 @@
                                         "dataType": "string"
                                     }
                                 },
-                                "ira": {
-                                    "ui:widget": "radio",
-                                    "ui:options": {
-                                        "readonly": true
-                                    }
-                                },
-                                "qualificationType": {
-                                    "ui:options": {
-                                        "inline": true,
-                                        "label": false,
-                                        "dataType": "string"
-                                    }
-                                },
-                                "deathTransactionProcessDate": {
-                                    "ui:options": {
-                                        "inline": true,
-                                        "label": false,
-                                        "dataType": "date",
-                                        "disabled": true
-                                    }
-                                },
                                 "dueDiligenceCaseId": {
                                     "ui:options": {
                                         "inline": true,
@@ -457,18 +460,30 @@
                                         "dataType": "string"
                                     }
                                 },
+                                "ira": {
+                                    "ui:widget": "radio"
+                                },
+                                "deathTransactionProcessDate": {
+                                    "ui:options": {
+                                        "dataType": "date"
+                                    }
+                                },
+                                "netDeathBenefit": {
+                                    "ui:options": {
+                                        "label": true,
+                                        "widget": "ValueWidget",
+                                        "format": "numeric",
+                                        "dataType": "amount"
+                                    }
+                                },
                                 "owners": {
                                     "ui:options": {
-                                        "addable": false,
-                                        "classNames": "mt-2"
+                                        "addable": false
                                     },
                                     "items": {
-                                        "ui:title": "",
                                         "ui:options": {
-                                            "nobackground": true,
                                             "title": "{{party.fullName}}",
-                                            "minItems": 1,
-                                            "label": true,
+                                            "nobackground": true,
                                             "expandable": true
                                         },
                                         "party": {
@@ -482,14 +497,7 @@
                                                     "dataType": "string"
                                                 }
                                             },
-                                            "prefix": {
-                                                "ui:options": {
-                                                    "inline": true,
-                                                    "label": false,
-                                                    "dataType": "string"
-                                                }
-                                            },
-                                            "firstName": {
+                                            "lastName": {
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
@@ -503,7 +511,14 @@
                                                     "dataType": "string"
                                                 }
                                             },
-                                            "lastName": {
+                                            "firstName": {
+                                                "ui:options": {
+                                                    "inline": true,
+                                                    "label": false,
+                                                    "dataType": "string"
+                                                }
+                                            },
+                                            "prefix": {
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
@@ -514,15 +529,12 @@
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
-                                                    "dataType": "date",
-                                                    "disabled": true
+                                                    "dataType": "date"
                                                 }
                                             }
                                         },
                                         "address": {
-                                            "ui:options": {
-                                                "label": false
-                                            },
+                                            "ui:title": "",
                                             "addressLine1": {
                                                 "ui:options": {
                                                     "inline": true,
@@ -568,28 +580,17 @@
                                         },
                                         "dateOfDeath": {
                                             "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "date",
-                                                "disabled": true
-                                            }
-                                        },
-                                        "driversLicenseNumber": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
+                                                "dataType": "date"
                                             }
                                         },
                                         "email": {
+                                            "ui:options": {
+                                                "label": false
+                                            },
                                             "emailAddress": {
-                                                "ui:inline": true,
                                                 "ui:options": {
-                                                    "title": "Owners Email Address",
                                                     "label": false,
-                                                    "disabled": true,
-                                                    "dataType": "email",
-                                                    "inline": true
+                                                    "dataType": "string"
                                                 }
                                             }
                                         },
@@ -609,212 +610,101 @@
                                         },
                                         "lastContactDate": {
                                             "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "date",
-                                                "disabled": true
+                                                "dataType": "date"
                                             }
                                         }
                                     }
                                 },
                                 "checks": {
                                     "ui:options": {
-                                        "ArrayFieldTemplate": "ArrayFieldTableTemplate",
-                                        "sorting": false,
-                                        "classNames": "mt-2"
+                                        "inline": true,
+                                        "orderable": false
                                     },
                                     "items": {
+                                        "inline": true,
                                         "ui:options": {
-                                            "canAdd": false,
-                                            "label": false
+                                            "title": "Check",
+                                            "label": false,
+                                            "minItems": 0,
+                                            "centralizedToolbar": true
                                         },
                                         "checkNumber": {
                                             "ui:options": {
-                                                "label": false
+                                                "label": true,
+                                                "dataType": "number"
                                             }
                                         },
                                         "checkDate": {
                                             "ui:options": {
-                                                "label": false,
+                                                "label": true,
+                                                "format": "MM-DD-YYYY",
+                                                "outputFormat": "MM-DD-YYYY",
                                                 "dataType": "date"
                                             }
                                         },
                                         "checkAmount": {
                                             "ui:options": {
-                                                "label": false,
+                                                "label": true,
+                                                "widget": "ValueWidget",
+                                                "format": "numeric",
                                                 "dataType": "amount"
                                             }
                                         }
                                     }
                                 },
                                 "beneficiary": {
-                                    "ui:title": "",
                                     "ui:options": {
                                         "nobackground": true,
                                         "title": "Beneficiary Information",
+                                        "minItems": 1,
                                         "label": true,
-                                        "expandable": true,
-                                        "classNames": "mt-4"
+                                        "expandable": true
                                     },
                                     "party": {
                                         "ui:options": {
                                             "label": false
                                         },
-                                        "ssn": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "prefix": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "firstName": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "middleName": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "lastName": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
                                         "dateOfBirth": {
                                             "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "date",
-                                                "disabled": true
+                                                "dataType": "date"
                                             }
                                         }
                                     },
                                     "address": {
                                         "ui:options": {
                                             "label": false
-                                        },
-                                        "addressLine1": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "addressLine2": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "city": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "state": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "zipCode": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
-                                        "country": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
                                         }
                                     },
                                     "dateOfDeath": {
                                         "ui:options": {
-                                            "inline": true,
-                                            "label": false,
-                                            "dataType": "date",
-                                            "disabled": true
+                                            "dataType": "date"
                                         }
                                     },
                                     "beneficiaryPercentage": {
                                         "ui:options": {
-                                            "inline": true,
-                                            "label": false,
                                             "dataType": "percentage"
                                         }
                                     },
                                     "beneficiaryDueAmount": {
                                         "ui:options": {
-                                            "inline": true,
-                                            "label": false,
+                                            "label": true,
+                                            "widget": "ValueWidget",
+                                            "format": "numeric",
                                             "dataType": "amount"
                                         }
                                     },
                                     "lastContactDate": {
                                         "ui:options": {
-                                            "inline": true,
-                                            "label": false,
                                             "dataType": "date"
                                         }
                                     }
                                 },
                                 "comments": {
                                     "ui:options": {
-                                        "inline": true,
-                                        "label": false,
-                                        "classNames": "mt-4",
-                                        "dataType": "string"
-                                    }
+                                        "label": true
+                                    },
+                                    "ui:widget": "textarea"
                                 }
-                            },
-                            "escheatmentPortalUpdateConfirmed": {
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
-                            },
-                            "escheatmentOnBase": {
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
-                            },
-                            "escheatmentExternalCaseId": {
-                                "inline": true,
-                                "ui:placeholder": "eg: CA1234567890",
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
-                            },
-                            "escheatmentSorUpdateConfirmed": {
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
                             }
                         }
                     }

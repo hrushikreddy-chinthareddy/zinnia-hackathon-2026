@@ -27,8 +27,16 @@ export class QuickQuoteProducts {
     getProductsAvailableFor(input: QuickQuoteParams): ProductClassResult[] {
         const code = input.state;
         if (code && this.NOT_COVERED_STATES.has(code)) {
-            this.rejectReasonFieldForClass = 'state';
-            return [];
+            return this.rules.products.map((product) => ({
+                ...product,
+                classCodes: [],
+                notAvailabilityReasonField: 'state',
+                riders: {
+                    accidentalDeathBenefit: 'state',
+                    childrensTerm: 'state',
+                    waiverOfPremium: 'state',
+                },
+            }));
         }
 
         const result: ProductClassResult[] = [];

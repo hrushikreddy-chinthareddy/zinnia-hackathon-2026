@@ -25,12 +25,23 @@ import {
 } from '@deps/models/case/additional-data-instance';
 import { Processes } from '@deps/models/case/case';
 import { TransactionTypes } from '@deps/models/case/correspondence';
+import { CaseSource } from '@deps/models/case/enums';
 
 type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;
     carrier: string;
     process?: Processes;
     applicationType?: string;
+    caseProcessingDetails?: {
+        detailType: string;
+        details: {
+            performedBy?: string;
+            source?: string;
+            partyId?: string;
+            applicationType?: string;
+        };
+        eventTimeStamp: number;
+    }[];
 };
 
 const parentCaseDetailsKeys: string[] = [
@@ -44,8 +55,10 @@ const CaseDetailsSideNav = ({
     carrier,
     process,
     applicationType,
+    caseProcessingDetails,
 }: CaseDetailsSideNavProps) => {
     const { t } = useTranslation();
+    const submissionDetails = caseProcessingDetails?.[0]?.details;
     const { agentFirstName, agentLastName, agentNPN, agentSSN } =
         CaseAdditionalDetails;
     const displayAgentDetails = !!(
@@ -70,6 +83,10 @@ const CaseDetailsSideNav = ({
         setCookie('documentType', DocumentTypeView.Correspondence);
         setCookie('carrierCode', carrier);
     };
+
+    const showSubmissionDetails = Object.values(CaseSource).includes(
+        submissionDetails?.source as CaseSource
+    );
 
     const url =
         CaseAdditionalDetails[CaseAdditionalDataKeys.requestSubType] !==
@@ -128,6 +145,39 @@ const CaseDetailsSideNav = ({
                             </Typography>
                             <Content
                                 details={toSentenceCase(submissionType)}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
+
+                    {showSubmissionDetails && submissionDetails?.source && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.submissionSource')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(
+                                    submissionDetails?.source
+                                )}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
+                    {showSubmissionDetails && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.submittedBy')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(
+                                    submissionDetails?.performedBy || ''
+                                )}
                                 variant={ContentVariant.BodySm}
                             />
                         </>
