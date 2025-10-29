@@ -8284,7 +8284,7 @@
                 "description": "Shows the total self-serve transaction activity for roles listed in the filter."
             },
             "toolTip": {
-                "description": "Click a transaction type for more details on counts. Use the link below the chart to return to the main view."
+                "description": "Click a transaction type for more details on counts. Use the breadcrumb above the chart to return to all transaction types."
             }
         }
     },

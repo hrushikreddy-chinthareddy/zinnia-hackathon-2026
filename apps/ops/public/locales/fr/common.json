@@ -8368,7 +8368,7 @@
                 "description": "Affiche l’activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre."
             },
             "toolTip": {
-                "description": "Cliquez sur un type de transaction pour voir plus de détails sur les décomptes. Utilisez le lien sous le graphique pour revenir à la vue principale."
+                "description": "Cliquez sur un type de transaction pour plus de détails sur les décomptes. Utilisez le fil d’Ariane au-dessus du graphique pour revenir à tous les types de transaction."
             }
         }
     },

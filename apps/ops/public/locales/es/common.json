@@ -8092,7 +8092,7 @@
                 "description": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro."
             },
             "toolTip": {
-                "description": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa el enlace debajo del gráfico para volver a la vista principal."
+                "description": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa la ruta de navegación encima del gráfico para volver a todos los tipos de transacción."
             }
         }
     },
