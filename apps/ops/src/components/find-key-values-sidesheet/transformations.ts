@@ -789,8 +789,6 @@ function parsePeople({
         {}
     );
 
-    console.log(partyRoleMap);
-
     // Populate the People section
     const people = policy.parties
         ?.map((party) => {
