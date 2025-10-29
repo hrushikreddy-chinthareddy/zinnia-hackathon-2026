@@ -274,7 +274,7 @@ export const toSections = (
     }
 
     // Fill in the people section
-    const people = parsePeople(policy, allPartiesById, t);
+    const people = parsePeople({ policy, allPartiesById, t });
     if (people) {
         basicsAndSections.policySections.push(['people', people] as Section);
     }
@@ -346,8 +346,6 @@ export const toTransactionSections = (
                 }
 
                 // Find the field within the subsection tuples to use as the subsection title
-                // const subSectionTitleField =
-                //     sectionTypeToSubSectionTitleFields[sectionTitle];
                 switch (sectionTitle) {
                     default:
                         return {
@@ -394,7 +392,7 @@ export const toTransactionSections = (
     ]);
 
     // Fill in the people section
-    const people = parsePeople(policy, allPartiesById, t);
+    const people = parsePeople({ policy, transaction, allPartiesById, t });
     basicsAndSections.transactionSections.push([
         'payorPayeeDetails',
         people,
@@ -477,6 +475,7 @@ const fillInRequiredPartyDetails = ({
     const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
 
     const additionalPartyData = {
+        partyId,
         [idFieldName]: partyName,
         [label]: partyName,
         [link]: partyLink,
@@ -755,13 +754,20 @@ const shouldShowSection = (
  * @param lineOfBusiness The line of business for the policy
  * @returns A nested data tuple containing the policy's People section
  */
-function parsePeople(
-    policy: Policy,
-    allPartiesById: Record<string, Party> | undefined,
-    t: TFunction
-) {
+function parsePeople({
+    policy,
+    transaction,
+    allPartiesById,
+    t,
+}: {
+    policy: Policy;
+    transaction?: Transaction;
+    allPartiesById: Record<string, Party> | undefined;
+    t: TFunction;
+}) {
+    const peopleMap = transaction ? transaction.payors : policy.partyRoles;
     // Make a map of party roles to reference as tags for the People section
-    const partyRoleMap = policy.partyRoles?.reduce<Record<string, string[]>>(
+    const partyRoleMap = peopleMap?.reduce<Record<string, string[]>>(
         (acc, currentPartyRole) => {
             const currentPartyIdRoles =
                 (currentPartyRole.partyId && acc[currentPartyRole.partyId]) ||
@@ -782,6 +788,8 @@ function parsePeople(
         },
         {}
     );
+
+    console.log(partyRoleMap);
 
     // Populate the People section
     const people = policy.parties
@@ -812,7 +820,11 @@ function parsePeople(
 
             return partyDetails;
         })
-        .filter((p) => p != null);
+        .filter((p) => {
+            if (p) {
+                return p !== null && partyRoleMap?.[p?.partyId];
+            }
+        });
     return people;
 }
 
