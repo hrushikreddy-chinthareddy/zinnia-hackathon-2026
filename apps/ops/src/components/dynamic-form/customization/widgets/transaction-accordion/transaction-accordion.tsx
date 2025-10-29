@@ -36,8 +36,8 @@ const TransactionAccordion = ({
     };
 
     const handleItemChange = (index: number, updatedItem: any) => {
-        const updatedList = [...valueRef.current];
-        const originalItem = originalDataRef.current[index];
+        const updatedList = [...valueRef?.current];
+        const originalItem = originalDataRef?.current?.[index];
         const hasChanged = !deepEqual(originalItem, updatedItem);
 
         if (updatedItem.party?.partyType === 'TRUST') {
@@ -58,7 +58,7 @@ const TransactionAccordion = ({
     };
 
     const handleRemoveToggle = (index: number, checked: boolean) => {
-        const updatedList = [...valueRef.current];
+        const updatedList = [...valueRef?.current];
         updatedList[index] = {
             ...updatedList[index],
             action: checked ? Action.DELETE : Action.NONE,
@@ -115,7 +115,7 @@ const TransactionAccordion = ({
             },
         };
 
-        const updatedList = [...valueRef.current, newItem];
+        const updatedList = [...valueRef?.current, newItem];
         onChange(updatedList);
         setActiveIndex(updatedList.length - 1);
     };
@@ -187,7 +187,7 @@ const TransactionAccordion = ({
     // Keep track of original data on first load
     useEffect(() => {
         valueRef.current = value;
-        if (originalDataRef.current.length === 0 && value.length > 0) {
+        if (originalDataRef?.current?.length === 0 && value.length > 0) {
             originalDataRef.current = value.map((item: any) => ({ ...item }));
         }
     }, [value]);
