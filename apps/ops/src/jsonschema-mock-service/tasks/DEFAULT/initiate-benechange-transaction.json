@@ -1060,7 +1060,10 @@
                                                             "default": null
                                                         },
                                                         "gender": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Gender",
                                                             "enum": [
                                                                 "MALE",
