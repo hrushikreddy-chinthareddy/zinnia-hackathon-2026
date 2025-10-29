@@ -33,10 +33,38 @@ const TransactionAccordion = ({
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     };
 
+    const updateFullNameIfChanged = (
+        prevObj: any,
+        updatedObj: any,
+        target: any = updatedObj
+    ) => {
+        const prevFirstName = prevObj?.firstName ?? '';
+        const prevMidName = prevObj?.middleName ?? '';
+        const prevLastName = prevObj?.lastName ?? '';
+        const newFirstName = updatedObj?.firstName ?? '';
+        const newMidName = updatedObj?.middleName ?? '';
+        const newLastName = updatedObj?.lastName ?? '';
+        if (
+            prevFirstName !== newFirstName ||
+            prevLastName !== newLastName ||
+            prevMidName !== newMidName
+        ) {
+            target.fullName = [newFirstName, newMidName, newLastName]
+                .filter(Boolean)
+                .join(' ');
+        }
+    };
+
     const handleItemChange = (index: number, updatedItem: any) => {
         const updatedList = [...value];
         const previousItem = updatedList[index];
         const hasChanged = !deepEqual(previousItem, updatedItem);
+
+        if (updatedItem.actionType === 'BENE_CHANGE' && updatedItem.party) {
+            updateFullNameIfChanged(previousItem?.party, updatedItem.party);
+        } else {
+            updateFullNameIfChanged(previousItem, updatedItem);
+        }
 
         if (updatedItem.party?.partyType === 'TRUST') {
             updatedItem.party.supportingDocumentAttached =
