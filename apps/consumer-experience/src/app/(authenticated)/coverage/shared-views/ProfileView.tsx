@@ -154,10 +154,12 @@ export const ProfileView = async ({
       return null;
     }
 
+    // If payor view is enabled, only show parties with PAYOR, OWNER, or JOINTOWNER roles
     const initialFiltered = hasPayorView
       ? filterPayorViewParties(parties)
       : parties;
 
+    // Remove parties that only have COVERAGEINSURED role (or filter out COVERAGEINSURED from mixed roles)
     const filteredParties = filterOutCoverageInsuredParties(initialFiltered);
 
     return (
