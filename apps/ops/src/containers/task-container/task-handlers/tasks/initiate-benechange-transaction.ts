@@ -88,7 +88,10 @@ const formatParties = (policyResponse: PolicyResponse) => {
         prefix: null,
         firstName: party?.firstName ?? null,
         middleName: party?.middleName ?? null,
-        lastName: party?.lastName ?? null,
+        lastName:
+            party?.lastName ||
+            (party.partyType !== 'INDIVIDUAL' ? party?.fullName : null) ||
+            null,
         fullName: toTitleCase(
             [party.firstName, party.middleName, party.lastName]
                 .filter(Boolean)
@@ -206,7 +209,12 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         prefix: bene.prefix ?? null,
                         firstName: bene.firstName ?? null,
                         middleName: bene.middleName ?? null,
-                        lastName: bene.lastName ?? null,
+                        lastName:
+                            bene.lastName ||
+                            (bene.partyType !== 'INDIVIDUAL'
+                                ? bene.fullName
+                                : null) ||
+                            null,
                         suffix: bene.suffix ?? null,
                         trustType: bene.trustType ?? null,
                         trustDate: bene.trustDate ?? null,

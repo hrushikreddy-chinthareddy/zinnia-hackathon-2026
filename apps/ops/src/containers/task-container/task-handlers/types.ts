@@ -74,6 +74,7 @@ export interface Party {
     firstName?: string;
     middleName?: string;
     lastName?: string;
+    fullName?: string;
     dateOfBirth?: string;
     trustType?: string;
     addresses: ExtendedAddress[];
