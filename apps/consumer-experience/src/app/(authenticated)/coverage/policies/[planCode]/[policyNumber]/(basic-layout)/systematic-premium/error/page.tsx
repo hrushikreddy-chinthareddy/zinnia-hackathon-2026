@@ -1,6 +1,9 @@
 import { TransactionError } from '@/components/stepped-workflow/common/TransactionError';
 import { TransactionInvalid } from '@/components/stepped-workflow/common/TransactionInvalid';
-import { TransactionErrorType } from '@/components/stepped-workflow/types';
+import {
+  TransactionErrorType,
+  TransactionType,
+} from '@/components/stepped-workflow/types';
 import { PolicyRequestInputs } from '@/types/policy';
 
 const ErrorPage = ({
@@ -22,7 +25,7 @@ const ErrorPage = ({
   }
   return (
     <TransactionError
-      transactionType="surrender"
+      transactionType={TransactionType.SURRENDER}
       goToUrl={goToUrl}
       correlationId={searchParams?.correlationId}
     />

@@ -47,7 +47,7 @@ export const getCarrierConfig = withLogging(
         },
       },
       freeLookCancel: {
-        enabled: false,
+        enabled: true,
       },
       systematicPremium: {
         enabled: false,

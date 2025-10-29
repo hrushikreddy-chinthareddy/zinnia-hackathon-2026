@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import { TransactionError } from '@/components/stepped-workflow/common/TransactionError';
+import { TransactionType } from '@/components/stepped-workflow/types';
 import { PolicyRequestInputs } from '@/types/policy';
 
 interface ErrorPageProps {
@@ -14,7 +15,7 @@ const ErrorPage: FC<ErrorPageProps> = ({ params, searchParams }) => {
   const goToUrl = `/coverage/policies/${planCode}/${policyNumber}/`;
   return (
     <TransactionError
-      transactionType="one-time-premium"
+      transactionType={TransactionType.ONE_TIME_PREMIUM}
       goToUrl={goToUrl}
       correlationId={searchParams?.correlationId}
     />
