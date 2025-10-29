@@ -1,4 +1,5 @@
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { v4 as uuid4 } from 'uuid';
 
 import {
@@ -175,6 +176,21 @@ class ServerHttpRequest extends HttpRequest {
 
     if (!result.ok) {
       const service = this.identifyService(input.toString());
+      
+      // Handle 401 Unauthorized - immediately logout user
+      if (result.status === 401) {
+        logWarn(
+          `${LoggingModule.SERVER_HTTP_REQUEST}::401::UNAUTHORIZED::redirecting_to_logout`,
+          {
+            ...loggingContext,
+            message: 'Received 401 response, logging user out immediately',
+          }
+        );
+        
+        // Redirect to logout endpoint which will clear session and redirect appropriately
+        redirect('/api/logout');
+      }
+      
       handleLogging(service, result.status, loggingContext, result);
     }
 
