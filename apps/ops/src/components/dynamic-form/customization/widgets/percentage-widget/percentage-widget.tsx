@@ -1,4 +1,5 @@
 import { WidgetProps } from '@rjsf/utils';
+import { useEffect } from 'react';
 
 import Field, {
     FieldSize,
@@ -8,7 +9,9 @@ import Field, {
 
 const validatePercentage = (actionData: any) => {
     const primaryBene = actionData?.filter(
-        (bene: any) => bene.partyRole.partyRole === 'PRIMARYBENEFICIARY'
+        (bene: any) =>
+            bene.action !== 'DELETE' &&
+            bene.partyRole.partyRole === 'PRIMARYBENEFICIARY'
     );
     const primaryBeneTotal = primaryBene?.reduce(
         (acc: number, bene: any) =>
@@ -19,7 +22,9 @@ const validatePercentage = (actionData: any) => {
         primaryBene?.length === 0 || primaryBeneTotal === 100;
 
     const contingentBene = actionData?.filter(
-        (bene: any) => bene.partyRole.partyRole === 'CONTINGENTBENEFICIARY'
+        (bene: any) =>
+            bene.action !== 'DELETE' &&
+            bene.partyRole.partyRole === 'CONTINGENTBENEFICIARY'
     );
     const contingentBeneTotal = contingentBene?.reduce(
         (acc: number, bene: any) =>
@@ -43,7 +48,14 @@ const PercentageWidget = ({
     formContext,
 }: WidgetProps) => {
     const actionData = formContext.customData.actionData;
-    const validate = validatePercentage(actionData);
+    let validate = validatePercentage(actionData);
+    const beneficiaryPercentages = Array.isArray(actionData)
+        ? actionData.map((item) => item?.party?.beneficiaryPercentage).join(',')
+        : '';
+
+    useEffect(() => {
+        validate = validatePercentage(actionData);
+    }, [beneficiaryPercentages]);
 
     return readonly ? (
         value
