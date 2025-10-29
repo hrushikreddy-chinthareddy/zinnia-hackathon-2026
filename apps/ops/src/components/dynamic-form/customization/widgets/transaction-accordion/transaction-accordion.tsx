@@ -24,6 +24,8 @@ const TransactionAccordion = ({
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const [heights, setHeights] = useState<PanelHeights>({});
     const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const valueRef = useRef(value);
+    const originalDataRef = useRef<any[]>([]);
 
     const toggleIndex = (index: number) => {
         setActiveIndex((prev) => (prev === index ? null : index));
@@ -56,9 +58,9 @@ const TransactionAccordion = ({
     };
 
     const handleItemChange = (index: number, updatedItem: any) => {
-        const updatedList = [...value];
-        const previousItem = updatedList[index];
-        const hasChanged = !deepEqual(previousItem, updatedItem);
+        const updatedList = [...valueRef?.current];
+        const originalItem = originalDataRef?.current?.[index];
+        const hasChanged = !deepEqual(originalItem, updatedItem);
 
         if (updatedItem.actionType === 'BENE_CHANGE' && updatedItem.party) {
             updateFullNameIfChanged(previousItem?.party, updatedItem.party);
@@ -73,14 +75,18 @@ const TransactionAccordion = ({
 
         updatedList[index] = {
             ...updatedItem,
-            action: hasChanged ? Action.UPDATE : Action.NONE,
+            action: updatedItem.partyRole?.partyId
+                ? hasChanged
+                    ? Action.UPDATE
+                    : Action.NONE
+                : Action.ADD,
         };
 
         onChange(updatedList);
     };
 
     const handleRemoveToggle = (index: number, checked: boolean) => {
-        const updatedList = [...value];
+        const updatedList = [...valueRef?.current];
         updatedList[index] = {
             ...updatedList[index],
             action: checked ? Action.DELETE : Action.NONE,
@@ -137,7 +143,7 @@ const TransactionAccordion = ({
             },
         };
 
-        const updatedList = [...value, newItem];
+        const updatedList = [...valueRef?.current, newItem];
         onChange(updatedList);
         setActiveIndex(updatedList.length - 1);
     };
@@ -205,6 +211,14 @@ const TransactionAccordion = ({
             }
         }
     }, [activeIndex, value]);
+
+    // Keep track of original data on first load
+    useEffect(() => {
+        valueRef.current = value;
+        if (originalDataRef?.current?.length === 0 && value.length > 0) {
+            originalDataRef.current = value.map((item: any) => ({ ...item }));
+        }
+    }, [value]);
 
     return (
         <div>
