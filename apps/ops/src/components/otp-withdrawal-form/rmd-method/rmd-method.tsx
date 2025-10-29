@@ -198,8 +198,6 @@ export default function RMDMethod({
         setFormProgram((prevFormProgram) => ({
             ...prevFormProgram,
             withdrawType: { text: WithdrawalType.Gross },
-            program: prevFormProgram.program, // Keep the program from parent
-            programType: prevFormProgram.programType,
             rmd: {
                 ...rmd,
                 isOneTimeWithdrawal: rmdType === RMDType.OneTimeRMD,
