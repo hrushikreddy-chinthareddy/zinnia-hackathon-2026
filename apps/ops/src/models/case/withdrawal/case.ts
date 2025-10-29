@@ -426,7 +426,7 @@ export enum SSWType {
 }
 
 export interface RMD {
-    rmdType: null;
+    rmdType: RMDType | null;
     rmdSubType: null;
     rmdRelationship: null;
     ralationshipDate: null;

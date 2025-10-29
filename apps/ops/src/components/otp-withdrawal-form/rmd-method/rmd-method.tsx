@@ -107,7 +107,9 @@ export default function RMDMethod({
         getrmdRows(formProgram?.rmd?.rmdPrograms || [DEFAULT_RMD_PROGRAM])
     );
     const [terminated, setTerminated] = useState<Terminateprogram[]>([]);
-    const [rmdType, setRmdType] = useState(RMDType.AutoRMD);
+    const [rmdType, setRmdType] = useState(
+        formProgram?.rmd?.rmdType || RMDType.AutoRMD
+    );
     const [overlappingRmds, setOverlappingRmds] = useState<string[]>([]);
 
     const addRmdRow = (e: FormEvent) => {
@@ -190,23 +192,20 @@ export default function RMDMethod({
             ...DEFAULT_RMD,
             ...formProgram?.rmd,
             rmdPrograms: programs,
+            rmdType,
         };
 
-        setFormProgram({
-            ...formProgram,
+        setFormProgram((prevFormProgram) => ({
+            ...prevFormProgram,
             withdrawType: { text: WithdrawalType.Gross },
-            program: {
-                text: 'Required Minimum Distribution',
-            },
-            programType: {
-                text: 'RMD',
-            },
+            program: prevFormProgram.program, // Keep the program from parent
+            programType: prevFormProgram.programType,
             rmd: {
                 ...rmd,
                 isOneTimeWithdrawal: rmdType === RMDType.OneTimeRMD,
             },
             terminateprograms: terminated,
-        });
+        }));
     }, [rmdRows, terminated, rmdType]);
 
     const validateDuration = (programs: RMDProgram[]) => {
