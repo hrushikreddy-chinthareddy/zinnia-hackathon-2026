@@ -41,7 +41,10 @@ export const KeyValueNestedSubSections = ({
         const subSectionTags = (subSection as MetaData)[tags] as string[];
 
         return (
-            <div key={`nested_subsection_${i}`} className={styles.subSection}>
+            <div
+                key={`nested_subsection_${i}`}
+                className={styles.subSectionBoxed}
+            >
                 <Accordion
                     key={String(subSectionLabel)}
                     sectionLabel={

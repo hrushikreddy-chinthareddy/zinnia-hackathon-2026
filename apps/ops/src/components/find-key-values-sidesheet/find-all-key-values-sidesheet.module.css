@@ -64,7 +64,7 @@
     padding-top: var(--measure-dimension-padding-xl);
 }
 
-.subSectionTags {
+.subSectionBoxed {
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-sm) solid

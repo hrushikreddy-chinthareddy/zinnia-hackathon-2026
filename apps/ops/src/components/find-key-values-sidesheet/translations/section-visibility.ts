@@ -39,4 +39,6 @@ export const sectionVisibility: Record<
     taxBasis: NEVER,
     taxWithholdingInstructions: NEVER,
     taxWithheldAmounts: NEVER,
+    payors: NEVER,
+    payeeOrBeneficiaries: NEVER,
 };

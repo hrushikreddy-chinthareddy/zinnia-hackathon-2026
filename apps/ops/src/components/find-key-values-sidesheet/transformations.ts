@@ -189,6 +189,17 @@ export const toSections = (
                     sectionTypeToSubSectionTitleFields[sectionTitle];
                 switch (sectionTitle) {
                     case 'allocation':
+                        console.log(
+                            'parseAllocation........',
+                            parseAllocation(
+                                policy,
+                                subSectionTitleField,
+                                sectionTitle,
+                                t,
+                                acc,
+                                currentVal as Policy['allocation']
+                            )
+                        );
                         return parseAllocation(
                             policy,
                             subSectionTitleField,
@@ -320,6 +331,91 @@ export const toTransactionSections = (
     transactionDetails: NestedData[] | null;
     transactionSections: Section[];
 } => {
+    // FIXME: rm
+    transaction = {
+        ...transaction,
+        taxWithholdingInstructions: [
+            {
+                appliesToPartyId: 'Party_PI_1',
+                taxWithholdingType: 'FEDERAL',
+                taxRateToUse: 'NOWITHHOLDINGELECTED',
+                filingStatus: 'SINGLE',
+                dollar: 0,
+                percentage: 0,
+                exemptions: 0,
+                taxJurisdiction: 'USA_WY',
+                contribution: 'NOTAPPLICABLE',
+                taxFormType: 'T1035COSTBASIS',
+                w4p: {
+                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
+                    totalAmountOfClaimsAndOtherCredits: 213.73,
+                    otherIncome: 144.53,
+                    otherDeduction: 42.83,
+                },
+                partyRole: 'OWNER',
+            },
+            {
+                appliesToPartyId: 'Party_PI_1',
+                taxWithholdingType: 'STATE',
+                taxRateToUse: 'NOWITHHOLDINGELECTED',
+                filingStatus: 'SINGLE',
+                dollar: 0,
+                percentage: 0,
+                exemptions: 0,
+                taxJurisdiction: 'USA_WY',
+                contribution: 'NOTAPPLICABLE',
+                taxFormType: 'T1035COSTBASIS',
+                w4p: {
+                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
+                    totalAmountOfClaimsAndOtherCredits: 213.73,
+                    otherIncome: 144.53,
+                    otherDeduction: 42.83,
+                },
+                partyRole: 'OWNER',
+            },
+            {
+                appliesToPartyId: 'Party_PI_1',
+                taxWithholdingType: 'STATE',
+                taxRateToUse: 'NOWITHHOLDINGELECTED',
+                filingStatus: 'SINGLE',
+                dollar: 0,
+                percentage: 0,
+                exemptions: 0,
+                taxJurisdiction: 'USA_NY',
+                contribution: 'NOTAPPLICABLE',
+                taxFormType: 'T1035COSTBASIS',
+                w4p: {
+                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
+                    totalAmountOfClaimsAndOtherCredits: 213.73,
+                    otherIncome: 144.53,
+                    otherDeduction: 42.83,
+                },
+                partyRole: 'OWNER',
+            },
+        ],
+        taxWithheldAmounts: [
+            {
+                partyRole: 'OWNER',
+                partyId: 'Party_PI_1',
+                taxWithholdingType: 'FEDERAL',
+                withheldAmount: 100,
+                withheldTaxableAmount: 100,
+                taxableFlag: true,
+                appliedTaxRate: 100,
+            },
+            {
+                partyRole: 'OWNER',
+                partyId: 'Party_PI_1',
+                taxWithholdingType: 'STATE',
+                withheldAmount: 100,
+                withheldTaxableAmount: 100,
+                taxableFlag: true,
+                appliedTaxRate: 100,
+            },
+        ],
+    };
+    console.log('transaction....', transaction);
+
     const transactionTuples = Object.entries(transaction);
     const basicsAndSections = transactionTuples.reduce(
         (
@@ -388,8 +484,9 @@ export const toTransactionSections = (
     // Fill in aggregated sections
     basicsAndSections.transactionSections.push([
         'taxes',
-        parseTransactionTaxes(transaction),
+        parseTransactionTaxes(transaction, t),
     ]);
+    console.log('taxes....', basicsAndSections);
 
     // Fill in the people section
     const people = parsePeople({ policy, transaction, allPartiesById, t });
@@ -572,12 +669,11 @@ export const toFieldsAndSubsections = (
                 if (subSection == null) {
                     return null;
                 }
-                const subSectionLabel = String(
+                const subSectionLabel =
                     (subSection as MetaData)[label] ??
-                        (subSection as Record<string, unknown>)[
-                            subSectionTitleField
-                        ]
-                );
+                    (subSection as Record<string, unknown>)[
+                        subSectionTitleField
+                    ];
                 const subSectionLink = (subSection as MetaData)[link];
                 const subSectionLinkedField = (subSection as MetaData)[
                     linkedField
@@ -599,7 +695,9 @@ export const toFieldsAndSubsections = (
                 }
 
                 const subSectionTuple = [
-                    formatAsDataValue(subSectionLabel, t),
+                    subSectionLabel
+                        ? formatAsDataValue(String(subSectionLabel), t)
+                        : undefined,
                     subSectionEntries,
                 ];
                 (subSectionTuple as MetaData)[tags] = subSectionTags;
@@ -765,7 +863,14 @@ function parsePeople({
     allPartiesById: Record<string, Party> | undefined;
     t: TFunction;
 }) {
-    const peopleMap = transaction ? transaction.payors : policy.partyRoles;
+    // TODO: maybe pass the peopleMap into this instead
+    const peopleMap = transaction
+        ? [
+              ...(transaction.payors ?? []),
+              ...(transaction.payeeOrBeneficiaries ?? []),
+          ]
+        : policy.partyRoles;
+
     // Make a map of party roles to reference as tags for the People section
     const partyRoleMap = peopleMap?.reduce<Record<string, string[]>>(
         (acc, currentPartyRole) => {
@@ -832,12 +937,33 @@ function parsePeople({
  * @returns A nested data tuple containing the transaction's tax information
  */
 function parseTransactionTaxes(
-    transaction: Transaction
+    transaction: Transaction,
+    t: TFunction
 ): Record<string, unknown> {
+    const taxWithholdingInstructionsMap =
+        transaction.taxWithholdingInstructions?.reduce(
+            (acc, withholdingInstruction) => ({
+                ...acc,
+                [`${t('withholdingInstructions')} – ${
+                    withholdingInstruction.taxWithholdingType
+                } – ${withholdingInstruction.taxJurisdiction}`]:
+                    withholdingInstruction,
+            }),
+            {}
+        );
+
+    const taxWithheldAmountsMap = transaction.taxWithheldAmounts?.reduce(
+        (acc, withholdingAmounts) => ({
+            ...acc,
+            [`${t('withholdingAmounts')} - ${t(
+                withholdingAmounts.taxWithholdingType ?? ''
+            )}`]: withholdingAmounts,
+        })
+    );
     return {
         ...transaction.taxBasis,
-        taxWitholdingAmounts: transaction.taxWithholdingInstructions,
-        taxWitholdingInstructions: transaction.taxWithholdingInstructions,
+        ...taxWithholdingInstructionsMap,
+        ...taxWithheldAmountsMap,
     };
 }
 

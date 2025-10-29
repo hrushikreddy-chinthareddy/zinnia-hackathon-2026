@@ -1,6 +1,5 @@
 import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion';
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
-import { Label } from '@zinnia/bloom/components';
 import React from 'react';
 
 import Highlighter from '@deps/components/highlighter/highlighter';
@@ -27,6 +26,7 @@ export const KeyValueSubSections = ({
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
+    console.log('kvs.....', subSections);
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
             string,
@@ -36,8 +36,8 @@ export const KeyValueSubSections = ({
 
         return (
             <React.Fragment key={`subsection_${i}`}>
-                {subsectionTags?.length ? (
-                    <div className={styles.subSectionTags}>
+                {subSectionLabel ? (
+                    <div className={styles.subSectionBoxed}>
                         <Accordion
                             sectionLabel={
                                 <Highlighter
@@ -58,14 +58,6 @@ export const KeyValueSubSections = ({
                     </div>
                 ) : (
                     <div className={styles.subSectionStd}>
-                        {subSectionLabel !== 'undefined' && (
-                            <Label>
-                                <Highlighter
-                                    text={String(subSectionLabel)}
-                                    highlights={[searchValue]}
-                                />
-                            </Label>
-                        )}
                         <KeyValueFieldList
                             fields={subSectionFields}
                             searchValue={searchValue}
