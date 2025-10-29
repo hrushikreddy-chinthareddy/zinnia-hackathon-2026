@@ -454,7 +454,9 @@
         "payors": "Payors",
         "payeeOrBeneficiaries": "Payee Or Beneficiaries",
         "disbursementAmount": "Disbursement amount",
-        "payeeGrossAmount": "Payee gross amount"
+        "payeeGrossAmount": "Payee gross amount",
+        "timeline": "Timeline",
+        "taxes": "Taxes"
     },
     "enums": {
         "LIFE": "Life",

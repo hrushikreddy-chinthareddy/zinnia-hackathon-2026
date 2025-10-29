@@ -268,7 +268,7 @@ export const toSections = (
     ).filter(([, data]) => data != null);
     if (nonNullMatchEntries.length) {
         basicsAndSections.policySections.push([
-            String(t('allFields.match')),
+            'match',
             Object.fromEntries(nonNullMatchEntries),
         ]);
     }
@@ -276,10 +276,7 @@ export const toSections = (
     // Fill in the people section
     const people = parsePeople(policy, allPartiesById, t);
     if (people) {
-        basicsAndSections.policySections.push([
-            String(t('allFields.people')),
-            people,
-        ] as Section);
+        basicsAndSections.policySections.push(['people', people] as Section);
     }
 
     // Fill in the section title
@@ -335,7 +332,16 @@ export const toTransactionSections = (
             // If the value is an object, treat it as a section
             if (typeof currentVal === 'object') {
                 const sectionTitle = currentKey;
-                if (currentVal == null) {
+
+                // If there are rules to hide this section,
+                // or if the section is empty, skip it
+                if (
+                    !shouldShowSection(
+                        sectionTitle,
+                        policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER
+                    ) ||
+                    currentVal == null
+                ) {
                     return acc;
                 }
 
@@ -381,14 +387,18 @@ export const toTransactionSections = (
         }
     );
 
+    // Fill in aggregated sections
+    basicsAndSections.transactionSections.push([
+        'taxes',
+        parseTransactionTaxes(transaction),
+    ]);
+
     // Fill in the people section
     const people = parsePeople(policy, allPartiesById, t);
-    if (people) {
-        basicsAndSections.transactionSections.push([
-            String(t('allFields.payorPayeeDetails')),
-            people,
-        ] as Section);
-    }
+    basicsAndSections.transactionSections.push([
+        'payorPayeeDetails',
+        people,
+    ] as Section);
 
     // Fill in the section title
     if (basicsAndSections.transactionDetails != null) {
@@ -804,6 +814,21 @@ function parsePeople(
         })
         .filter((p) => p != null);
     return people;
+}
+
+/**
+ * Transforms the transaction's tax information into a nested data tuple.
+ * Combines the transaction's tax basis, tax withholding instructions and tax withholding amounts into a single object.
+ * @returns A nested data tuple containing the transaction's tax information
+ */
+function parseTransactionTaxes(
+    transaction: Transaction
+): Record<string, unknown> {
+    return {
+        ...transaction.taxBasis,
+        taxWitholdingAmounts: transaction.taxWithholdingInstructions,
+        taxWitholdingInstructions: transaction.taxWithholdingInstructions,
+    };
 }
 
 /**

@@ -453,7 +453,9 @@
         "payors": "Pagadores",
         "payeeOrBeneficiaries": "Beneficiario(s)",
         "disbursementAmount": "Monto del desembolso",
-        "payeeGrossAmount": "Monto bruto del beneficiario"
+        "payeeGrossAmount": "Monto bruto del beneficiario",
+        "timeline": "Ponctualité",
+        "taxes": "Impôts"
     },
     "enums": {
         "LIFE": "Vie",

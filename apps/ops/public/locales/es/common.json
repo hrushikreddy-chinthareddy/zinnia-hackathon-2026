@@ -454,7 +454,9 @@
         "payors": "Payeurs",
         "payeeOrBeneficiaries": "Bénéficiaire ou bénéficiaires",
         "disbursementAmount": "Montant du décaissement",
-        "payeeGrossAmount": "Montant brut du bénéficiaire"
+        "payeeGrossAmount": "Montant brut du bénéficiaire",
+        "timeliness": "Cronología",
+        "taxes": "Impuestos"
     },
     "enums": {
         "LIFE": "Vida",

@@ -25,6 +25,7 @@ export const sectionVisibility: Record<
     string,
     Set<LineOfBusiness | ProductType | ExceptionalPlanCode>
 > = {
+    // policy
     loanValues: UL_IUL_TR0101,
     marketValueAdjustment: ANNUITY_ONLY,
     withdrawalValues: ANNUITY_UL_IUL,
@@ -33,4 +34,9 @@ export const sectionVisibility: Record<
     allocation: ANNUITY_UL_IUL,
     partyRoles: NEVER,
     parties: NEVER,
+
+    // transaction
+    taxBasis: NEVER,
+    taxWithholdingInstructions: NEVER,
+    taxWithheldAmounts: NEVER,
 };
