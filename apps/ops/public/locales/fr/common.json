@@ -2226,7 +2226,8 @@
                 "nasu": "Demande de retrait de contrat de rente",
                 "gdmn": "Demande de retrait du Commonwealth",
                 "rsln": "Lincoln Benefit Life Withdrawal Request",
-                "ulpc": "Unified Life Withdrawal Request"
+                "ulpc": "Unified Life Withdrawal Request",
+                "usaa": "Demande de retrait du USAA"
             },
             "personalDetails": {
                 "title": "Détails personnels",
@@ -2599,7 +2600,7 @@
                 "cedingCompanyDistribution": "Distribution des sociétés cédantes",
                 "contractNumber": "Notes de contrat et d'attention",
                 "fboDetails": "Détails du FBO",
-                "onlyContractNumber": "Numéro de contrat",
+                "onlyContractNumber": "Numéro de contrat/BIN Numéro",
                 "contractLabelPopoverMessage": "Ce champ est mappé à la ligne d'adresse 2 dans le système d'administration lors de l'ajout du bénéficiaire. Veuillez fournir le numéro de contrat associé à cette transaction. De plus, s’il existe des notes d’attention ou des instructions spécifiques liées à ce contrat, veuillez les inclure ici. Par exemple: À l'attention : <Msg> & 798456412",
                 "contractLabelPopoverTitle": "Info",
                 "taxId": "SSN",
@@ -2877,7 +2878,9 @@
                 "diaryNotesViewWarning": "La soumission du formulaire est limitée en raison de la présence de notes de journal. Afficher les notes de journal et soumettre",
                 "attachmentsViewWarning": "La soumission du formulaire est restreinte en raison de la présence de nouvelles pièces jointes. Veuillez vérifier avant de continuer.",
                 "fboDetails": "Les détail du FBO sont obligatoires",
-                "accountTypeMustBeSelected": "Veuillez choisir un type de compte pour procéder à votre demande."
+                "accountTypeMustBeSelected": "Veuillez choisir un type de compte pour procéder à votre demande.",
+                "participantIdCannotBeSubmitted": "L'identifiant du participant 0000 ne peut pas être soumis",
+                "contractNumberRequired": "Le numéro de contrat est requis/BIN numéro"
             },
             "formSubtype": {
                 "formType": "Type de formulaire",

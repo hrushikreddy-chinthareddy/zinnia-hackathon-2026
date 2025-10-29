@@ -2231,7 +2231,8 @@
                 "gdmn": "Solicitud de Retiro Commonwealth",
                 "rsln": "Solicitud de Retiro Lincoln Benefit Life",
                 "glco": "Solicitud de Retiro de Contrato de Anualidad",
-                "ulpc": "Solicitud de Retiro Unified Life"
+                "ulpc": "Solicitud de Retiro Unified Life",
+                "usaa": "Solicitud de Retiro USAA"
             },
             "personalDetails": {
                 "title": "Detalles Personales",
@@ -2611,7 +2612,7 @@
                 "cedingCompanyDistribution": "Distribución de la Compañía Cedente",
                 "contractNumber": "Contrato y notas de atención",
                 "fboDetails": "Detalles FBO",
-                "onlyContractNumber": "Número de contrato",
+                "onlyContractNumber": "Número de contrato/ BIN Número",
                 "contractLabelPopoverMessage": "Este campo se asigna a la línea de dirección 2 en el Sistema Admin mientras se agrega el beneficiario. Proporcione el número de contrato asociado con esta transacción. Además, si hay notas de atención específicas o instrucciones relacionadas con este contrato, inclúyalas aquí. Por ejemplo: Attn: <Msg> & 798456412",
                 "contractLabelPopoverTitle": "Información",
                 "taxId": "NSS",
@@ -2895,7 +2896,9 @@
                 "diaryNotesViewWarning": "La presentación del formulario está restringida debido a la presencia de notas en el diario. Vea las notas del diario y envíe",
                 "attachmentsViewWarning": "El envío del formulario está restringido debido a la presencia de nuevos archivos adjuntos. Por favor, revise antes de continuar.",
                 "fboDetails": "Se requieren detalles del FBO",
-                "accountTypeMustBeSelected": "Por favor, elija un tipo de cuenta para proceder con su solicitud."
+                "accountTypeMustBeSelected": "Por favor, elija un tipo de cuenta para proceder con su solicitud.",
+                "participantIdCannotBeSubmitted": "El ID de participante 0000 no se puede enviar",
+                "contractNumberRequired": "Se requiere el número de contrato//BIN número"
             },
             "formSubtype": {
                 "formType": "Tipo de formulario",

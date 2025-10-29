@@ -2229,7 +2229,8 @@
                 "gdmn": "Commonwealth Withdrawal Request",
                 "rsln": "Lincoln Benefit Life Withdrawal Request",
                 "glco": "Annuity Contract Withdrawal Request",
-                "ulpc": "Unified Life Withdrawal Request"
+                "ulpc": "Unified Life Withdrawal Request",
+                "usaa": "USAA Withdrawal Request"
             },
             "personalDetails": {
                 "title": "Personal Details",
@@ -2610,7 +2611,7 @@
                 "cedingCompanyDistribution": "Ceding Company Distribution",
                 "contractNumber": "Contract & attention notes",
                 "fboDetails": "FBO Details",
-                "onlyContractNumber": "Contract number",
+                "onlyContractNumber": "Contract Number/BIN number",
                 "contractLabelPopoverMessage": "This field is mapped to the address line 2 in the Admin System while adding the payee. Please provide the contract number associated with this transaction. Additionally, if there are any specific attention notes or instructions related to this contract, kindly include them here. For example: Attn: <Msg> & 798456412",
                 "contractLabelPopoverTitle": "Info",
                 "taxId": "SSN",
@@ -2895,7 +2896,9 @@
                 "diaryNotesViewWarning": "Form submission is restricted due to presence of diary notes. View diary notes and submit",
                 "attachmentsViewWarning": "Form submission is restricted due to presence of new attachments. Please review before proceeding.",
                 "fboDetails": "FBO detail is required",
-                "accountTypeMustBeSelected": "Please choose an account type to proceed with your request."
+                "accountTypeMustBeSelected": "Please choose an account type to proceed with your request.",
+                "participantIdCannotBeSubmitted": "Participant ID 0000 cannot be submitted",
+                "contractNumberRequired": "Contract number/BIN number is required"
             },
             "formSubtype": {
                 "formType": "Form type",
