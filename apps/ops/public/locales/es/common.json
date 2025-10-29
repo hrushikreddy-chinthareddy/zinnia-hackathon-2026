@@ -5256,7 +5256,7 @@
                     "addressType": "Tipo de dirección",
                     "city": "Ciudad",
                     "removeAddress": "Eliminar esta dirección",
-                    "setAsMailingAddress": "Establecer como dirección de envío",
+                    "setAsMailingAddress": "Establecer como dirección de envío preferida",
                     "state": "Estado",
                     "type": "Tipo",
                     "zip": "Código postal",
@@ -5267,7 +5267,7 @@
                 },
                 "mailingAddressAssitiveText": {
                     "add": "El correo se enviará a esta dirección en adelante.",
-                    "remove": "Si eliminas la dirección de envío de la póliza, se elegirá una para ti."
+                    "remove": "Si eliminas la dirección de envío preferida de la póliza, se elegirá una para ti."
                 },
                 "mainCta": {
                     "add": "Guardar dirección de {{type}}",
@@ -5485,6 +5485,7 @@
                     "add": "Añadir",
                     "empty": "No hay direcciones guardadas.",
                     "mailingAddress": "Dirección de envío",
+                    "preferredMailingAddress": "Dirección de envío preferida",
                     "new": "Nuevo",
                     "showAdditional": "Mostrar direcciones adicionales"
                 },

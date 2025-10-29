@@ -5221,7 +5221,7 @@
                     "addressType": "Type d'adresse",
                     "city": "Ville",
                     "removeAddress": "Supprimer cette adresse",
-                    "setAsMailingAddress": "Définir comme adresse de correspondance",
+                    "setAsMailingAddress": "Définir comme adresse postale préférée",
                     "state": "État",
                     "type": "Type",
                     "zip": "Code postal",
@@ -5232,7 +5232,7 @@
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Le courrier sera envoyé à cette adresse à partir de maintenant.",
-                    "remove": "Si vous supprimez l'adresse postale de la police, une adresse sera choisie pour vous."
+                    "remove": "Si vous supprimez l'adresse postale préférée de la police, une adresse sera choisie pour vous."
                 },
                 "mainCta": {
                     "add": "Enregistrer l'adresse {{type}}",
@@ -5449,6 +5449,7 @@
                     "add": "Ajouter",
                     "empty": "Aucune adresse enregistrée.",
                     "mailingAddress": "Adresse postale",
+                    "preferredMailingAddress": "Adresse postale préférée",
                     "new": "Nouveau",
                     "showAdditional": "Afficher des adresses supplémentaires"
                 },

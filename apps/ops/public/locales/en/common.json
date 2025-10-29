@@ -5305,7 +5305,7 @@
                     "addressType": "Address type",
                     "city": "City",
                     "removeAddress": "Remove address",
-                    "setAsMailingAddress": "Set as mailing address",
+                    "setAsMailingAddress": "Set as preferred mailing address",
                     "state": "State",
                     "type": "Type",
                     "zip": "Zip",
@@ -5316,7 +5316,7 @@
                 },
                 "mailingAddressAssitiveText": {
                     "add": "Mail will be sent to this address going forward.",
-                    "remove": "If you remove the policy's mailing address, one will be chosen for you."
+                    "remove": "If you remove the policy's preferred mailing address, one will be chosen for you."
                 },
                 "mainCta": {
                     "add": "Save {{type}} address",
@@ -5537,6 +5537,7 @@
                     "add": "Add",
                     "empty": "No addresses saved.",
                     "mailingAddress": "Mailing address",
+                    "preferredMailingAddress": "Preferred mailing address",
                     "new": "New",
                     "showAdditional": "Show additional addresses"
                 },
