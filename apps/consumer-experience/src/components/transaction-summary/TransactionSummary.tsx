@@ -1,9 +1,7 @@
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
-import { Button } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
 import { getTransactionSummaryById } from '@/services/transactions';
-import { formatUSDollars } from '@/utils/currency';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
@@ -71,12 +69,19 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
         <ConfirmDialog
           confirmText="Approve"
           cancelText="Go back"
-          message={`Are you sure you want to approve this transaction for ${formatUSDollars(totalTransactionAmount)}?`}
+          message={`Are you sure you want to approve this transaction?`}
           title="Approve transaction"
           linkText="Approve"
           buttonMode="primary"
         />
-        <Button mode="error">Deny</Button>
+        <ConfirmDialog
+          confirmText="Deny"
+          cancelText="Go back"
+          message={`Are you sure you want to deny this transaction?`}
+          title="Deny transaction"
+          linkText="Deny"
+          buttonMode="error"
+        />
       </div>
     </div>
   );
