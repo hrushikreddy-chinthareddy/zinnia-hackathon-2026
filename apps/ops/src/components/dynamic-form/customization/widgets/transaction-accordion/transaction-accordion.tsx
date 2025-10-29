@@ -63,9 +63,9 @@ const TransactionAccordion = ({
         const hasChanged = !deepEqual(originalItem, updatedItem);
 
         if (updatedItem.actionType === 'BENE_CHANGE' && updatedItem.party) {
-            updateFullNameIfChanged(previousItem?.party, updatedItem.party);
+            updateFullNameIfChanged(originalItem?.party, updatedItem.party);
         } else {
-            updateFullNameIfChanged(previousItem, updatedItem);
+            updateFullNameIfChanged(originalItem, updatedItem);
         }
 
         if (updatedItem.party?.partyType === 'TRUST') {
