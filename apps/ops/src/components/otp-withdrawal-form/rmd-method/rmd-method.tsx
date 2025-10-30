@@ -27,6 +27,7 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as RemoveIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import ExistingPrograms from './existing-programs';
 import RMDCalculator, { findOverlaps } from './rmd-calculator';
@@ -102,6 +103,10 @@ export default function RMDMethod({
     });
     const { formProgram, setFormProgram, formErrors } =
         useContext(FormDataContext);
+
+    browserLogInfo('RMDMethod::render', {
+        rmdType: formProgram?.rmd?.rmdType,
+    });
 
     const [rmdRows, setrmdRows] = useState<RMDMethodId[]>(
         getrmdRows(formProgram?.rmd?.rmdPrograms || [DEFAULT_RMD_PROGRAM])
