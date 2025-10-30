@@ -16,7 +16,7 @@
   flex-direction: column;
   max-width: 500px;
   padding: var(--measure-dimension-padding-4xl);
-  position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);

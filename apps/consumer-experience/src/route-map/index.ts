@@ -25,6 +25,7 @@ export enum RouteKey {
   RIDERS = '/riders',
   SURRENDER = '/surrender',
   WITHDRAWALS = '/withdrawals',
+  TRANSACTION_SUMMARY = '/transactions',
 }
 
 const annuityPageTitles: Partial<Record<RouteKey, string>> = {
@@ -138,6 +139,12 @@ export const routeMap: Record<RouteKey, RouteMap> = {
       '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/my-coverage',
     source: '/my-coverage',
     title: 'Coverage',
+  },
+  [RouteKey.TRANSACTION_SUMMARY]: {
+    destination:
+      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/transactions[id]',
+    source: '/transactions',
+    title: 'Transaction Summary',
   },
 };
 

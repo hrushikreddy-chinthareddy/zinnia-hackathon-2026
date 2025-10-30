@@ -18,6 +18,7 @@ import { UserBadge } from '@/components/user-badge/UserBadge';
 import { useCarrierConfig } from '@/hooks/use-carrier-config';
 import useMock from '@/hooks/use-mock';
 import { getAllPoliciesForCarriers } from '@/queries/policy-queries';
+import { RouteKey } from '@/route-map';
 import { CarrierNames } from '@/types/carriers';
 import { CarrierListDetail, getCarrierSubdomainByName } from '@/utils/carriers';
 
@@ -47,19 +48,20 @@ export const NavMenu = ({
 }: {
   userName: { firstName?: string; lastName?: string };
 }) => {
-  const [currentUrl, setCurrentUrl] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
   const { isMockOn } = useMock();
 
   const { data: carrierConfig } = useCarrierConfig();
+  const hideCarrierPaths = pathname.includes(RouteKey.TRANSACTION_SUMMARY);
 
   const { data } = useQuery({
     queryKey: ['carrierPolicyDetails'],
     queryFn: () => getAllPoliciesForCarriers(),
     // Only fetch policies if the carrier config is set and the sso is not enabled
-    enabled: !!carrierConfig && !carrierConfig?.sso.enabled,
+    enabled:
+      !!carrierConfig && !carrierConfig?.sso.enabled && !hideCarrierPaths,
   });
 
   return (
@@ -85,7 +87,7 @@ export const NavMenu = ({
           align="end"
         >
           <div className="typography-nav-nav-drawer">
-            {data && data.length > 0 && (
+            {data && data.length > 0 && !hideCarrierPaths && (
               <>
                 <p className="typography-labels-label-sm">My Coverage</p>
                 <ul>
@@ -104,7 +106,7 @@ export const NavMenu = ({
                           [styles.active as string]:
                             // companyName might be an empty string
                             companyName &&
-                            currentUrl.includes(companyName) &&
+                            window.location.href.includes(companyName) &&
                             pathname === navUrls.allPolicies,
                         })}
                       >

@@ -18,6 +18,7 @@ export interface ConfirmDialogProps {
   confirmText?: string;
   inline?: boolean;
   linkText?: string;
+  buttonMode?: 'primary' | 'link' | 'error' | 'secondary';
   linkClassName?: string;
   message?: string;
   title?: string;
@@ -32,6 +33,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   confirmText = 'Yes',
   inline = false,
   linkText = 'Open',
+  buttonMode = 'link',
   linkClassName,
   message,
   title = 'Are you sure?',
@@ -53,7 +55,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             linkClassName,
           ])}
           size={inline ? 'small' : undefined}
-          mode="link"
+          mode={buttonMode}
         >
           {linkText}
         </Button>
