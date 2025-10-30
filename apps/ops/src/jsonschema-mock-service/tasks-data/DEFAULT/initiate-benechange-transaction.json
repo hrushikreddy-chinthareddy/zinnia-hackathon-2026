@@ -34,7 +34,7 @@
             "parties": [
                 {
                     "partyType": "TRUST",
-                    "partyRole": "Owner",
+                    "partyRole": "OWNER",
                     "firstName": "ROBYN",
                     "middleName": "S",
                     "lastName": "WILSON",
@@ -99,7 +99,7 @@
                 },
                 {
                     "partyType": "INDIVIDUAL",
-                    "partyRole": "Joint Owner",
+                    "partyRole": "JOINTOWNER",
                     "firstName": "ROBY",
                     "middleName": "",
                     "lastName": "WILL",
