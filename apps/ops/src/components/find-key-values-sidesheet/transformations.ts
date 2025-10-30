@@ -336,7 +336,7 @@ export const toTransactionSections = (
         ...transaction,
         taxWithholdingInstructions: [
             {
-                appliesToPartyId: 'Party_Annuitant_1',
+                partyId: 'Party_Annuitant_1',
                 taxWithholdingType: 'FEDERAL',
                 taxRateToUse: 'NOWITHHOLDINGELECTED',
                 filingStatus: 'SINGLE',
@@ -355,7 +355,7 @@ export const toTransactionSections = (
                 partyRole: 'OWNER',
             },
             {
-                appliesToPartyId: 'Party_Agent_1',
+                partyId: 'Party_Agent_1',
                 taxWithholdingType: 'STATE',
                 taxRateToUse: 'NOWITHHOLDINGELECTED',
                 filingStatus: 'SINGLE',
@@ -374,7 +374,7 @@ export const toTransactionSections = (
                 partyRole: 'AGENT',
             },
             {
-                appliesToPartyId: 'Party_Agent_1',
+                partyId: 'Party_Agent_1',
                 taxWithholdingType: 'STATE',
                 taxRateToUse: 'NOWITHHOLDINGELECTED',
                 filingStatus: 'SINGLE',
@@ -948,10 +948,10 @@ function parseTransactionTaxes(
         transaction.taxWithholdingInstructions?.reduce(
             (acc, withholdingInstruction) => {
                 const additionalPartyData = fillInRequiredPartyDetails({
-                    partyId: withholdingInstruction.appliesToPartyId,
+                    partyId: withholdingInstruction.partyId,
                     allPartiesById,
                     policy,
-                    idFieldName: 'appliesToPartyId',
+                    idFieldName: 'partyId',
                 });
 
                 return {
