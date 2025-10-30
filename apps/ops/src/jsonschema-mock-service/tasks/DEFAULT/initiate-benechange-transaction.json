@@ -184,7 +184,7 @@
                                             "partyRole": {
                                                 "type": "string",
                                                 "title": "Party Role",
-                                                "enum": ["Owner", "Joint Owner"]
+                                                "enum": ["OWNER", "JOINTOWNER"]
                                             },
                                             "partyType": {
                                                 "type": "string",
@@ -460,7 +460,7 @@
                                     "default": [
                                         {
                                             "partyType": "INDIVIDUAL",
-                                            "partyRole": "Owner",
+                                            "partyRole": "OWNER",
                                             "firstName": "",
                                             "middleName": "",
                                             "lastName": "",

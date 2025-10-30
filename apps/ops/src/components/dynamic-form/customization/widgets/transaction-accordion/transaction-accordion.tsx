@@ -108,6 +108,7 @@ const TransactionAccordion = ({
                 gender: 'MALE',
                 preferredCommunicationType: 'EMAIL',
                 supportingDocumentAttached: false,
+                entityType: 'UNKNOWN',
                 emails: [
                     {
                         emailAddress: null,
@@ -152,7 +153,7 @@ const TransactionAccordion = ({
     const setTitle = (item: any, index: number) => {
         let title = `Item ${index + 1}`;
         if (tabTitle == TabTitle.OwnerDetails) {
-            title = item.partyRole;
+            title = item.partyRole == 'OWNER' ? 'Owner' : 'Joint Owner';
         } else if (tabTitle == TabTitle.BeneficiaryDetails) {
             title =
                 item.partyRole.partyRole === 'PRIMARYBENEFICIARY'
@@ -179,7 +180,7 @@ const TransactionAccordion = ({
     const getConditionalUiSchema = (role: string) => {
         let currentUiSchema = JSON.parse(JSON.stringify(uiSchema.items));
 
-        if (role === 'Joint Owner') {
+        if (role === 'JOINTOWNER') {
             currentUiSchema = {
                 ...currentUiSchema,
                 phones: {

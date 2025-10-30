@@ -11,7 +11,6 @@ import {
     BeneficiaryTaskPayload,
     AddressType,
     AddressTypeLabel,
-    PartyRoleLabel,
     PartyRoleType,
     PartyRole,
     Party,
@@ -149,11 +148,11 @@ const formatParties = (policyResponse: PolicyResponse) => {
     const rolesToFormat = [
         {
             roleKey: PartyRoleType.OWNER,
-            roleLabel: PartyRoleLabel.OWNER,
+            roleLabel: PartyRoleType.OWNER,
         },
         {
             roleKey: PartyRoleType.JOINTOWNER,
-            roleLabel: PartyRoleLabel.JOINTOWNER,
+            roleLabel: PartyRoleType.JOINTOWNER,
         },
     ];
 
