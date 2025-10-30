@@ -26,4 +26,4 @@ Add this `DEBUG=express-openid-connect:* node index.js` to include debug logs in
 5. Bother another dev to learn what the password is.
 6. Login and send the verification code to team-xd
 7. Go to `https://outlook.office.com/mail/team-xd@zinnia.com/`
-8. Use the code from the team-cd inbox to login.
+8. Use the code from the team-xd inbox to login.
