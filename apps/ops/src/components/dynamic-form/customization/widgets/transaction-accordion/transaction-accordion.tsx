@@ -111,6 +111,7 @@ const TransactionAccordion = ({
                 emails: [
                     {
                         emailAddress: null,
+                        emailType: 'PERSONAL',
                     },
                 ],
                 phones: [
