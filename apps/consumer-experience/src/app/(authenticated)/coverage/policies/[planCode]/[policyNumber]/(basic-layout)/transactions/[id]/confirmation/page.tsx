@@ -63,18 +63,20 @@ export default async function TransactionSummaryConfirmation({
   return (
     <div>
       <h1>Thank you for the confirmation!</h1>
-      <p>
+      <p className="typography-content-body">
         We received your {denyOrApprove} for the {withdrawalAmount} withdrawal
         request for {policyOwner} submitted by {agentName} from ????? TODO:
         Where does the agent corporation come from???.
       </p>
 
-      <p>
+      <p className="typography-content-body">
         There will be a confirmation sent to your email shortly. Processing
         times depend on your withdrawal type and method.
       </p>
 
-      <p>Your fee breakdown is below as a reminder.</p>
+      <p className="typography-content-body">
+        Your fee breakdown is below as a reminder.
+      </p>
 
       <TransactionPaymentDetails transactionSummary={transactionDetails} />
     </div>
