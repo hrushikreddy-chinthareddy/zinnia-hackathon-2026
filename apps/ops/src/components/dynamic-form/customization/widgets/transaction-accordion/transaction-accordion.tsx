@@ -133,7 +133,7 @@ const TransactionAccordion = ({
                 identifications: [
                     {
                         identificationValue: null,
-                        IdentificationType: 'SSN',
+                        identificationType: 'SSN',
                     },
                 ],
             },
