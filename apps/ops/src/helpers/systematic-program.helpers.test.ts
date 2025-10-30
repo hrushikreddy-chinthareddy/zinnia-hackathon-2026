@@ -57,6 +57,10 @@ describe('helpers/systematic-program.helpers', () => {
         });
 
         it('returns translated everyTwoWeeks for EVERYTWOWEEKS', () => {
+            const out = getFrequency(Frequency.EVERYTWOWEEKS, t as any);
+            expect(out).toBe(
+                'translated:systematicProgram.frequency.everyTwoWeeks'
+            );
             expect(t).toHaveBeenCalledWith(
                 'systematicProgram.frequency.everyTwoWeeks'
             );
