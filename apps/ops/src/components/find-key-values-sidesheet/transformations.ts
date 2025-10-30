@@ -336,7 +336,7 @@ export const toTransactionSections = (
         ...transaction,
         taxWithholdingInstructions: [
             {
-                appliesToPartyId: 'Party_PI_1',
+                appliesToPartyId: 'Party_Annuitant_1',
                 taxWithholdingType: 'FEDERAL',
                 taxRateToUse: 'NOWITHHOLDINGELECTED',
                 filingStatus: 'SINGLE',
@@ -355,7 +355,7 @@ export const toTransactionSections = (
                 partyRole: 'OWNER',
             },
             {
-                appliesToPartyId: 'Party_PI_1',
+                appliesToPartyId: 'Party_Agent_1',
                 taxWithholdingType: 'STATE',
                 taxRateToUse: 'NOWITHHOLDINGELECTED',
                 filingStatus: 'SINGLE',
@@ -374,7 +374,7 @@ export const toTransactionSections = (
                 partyRole: 'OWNER',
             },
             {
-                appliesToPartyId: 'Party_PI_1',
+                appliesToPartyId: 'Party_Agent_1',
                 taxWithholdingType: 'STATE',
                 taxRateToUse: 'NOWITHHOLDINGELECTED',
                 filingStatus: 'SINGLE',
@@ -396,7 +396,7 @@ export const toTransactionSections = (
         taxWithheldAmounts: [
             {
                 partyRole: 'OWNER',
-                partyId: 'Party_PI_1',
+                partyId: 'Party_Agent_1',
                 taxWithholdingType: 'FEDERAL',
                 withheldAmount: 100,
                 withheldTaxableAmount: 100,
@@ -405,7 +405,7 @@ export const toTransactionSections = (
             },
             {
                 partyRole: 'OWNER',
-                partyId: 'Party_PI_1',
+                partyId: 'Party_Annuitant_1',
                 taxWithholdingType: 'STATE',
                 withheldAmount: 100,
                 withheldTaxableAmount: 100,
@@ -484,7 +484,7 @@ export const toTransactionSections = (
     // Fill in aggregated sections
     basicsAndSections.transactionSections.push([
         'taxes',
-        parseTransactionTaxes(transaction, t),
+        parseTransactionTaxes(transaction, policy, allPartiesById, t),
     ]);
     console.log('taxes....', basicsAndSections);
 
@@ -555,13 +555,13 @@ const fillInRequiredPartyDetails = ({
         return undefined;
     }
     const partyObj = allPartiesById[partyId];
-
     if (!partyObj) {
         return undefined;
     }
     const partyName =
         `${partyObj.firstName ?? ''} ${partyObj.lastName ?? ''}`.trim() ||
-        partyObj.fullName;
+        partyObj.fullName ||
+        partyObj.agentExternalId;
 
     if (!partyName) {
         return undefined;
@@ -572,7 +572,7 @@ const fillInRequiredPartyDetails = ({
     const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
 
     const additionalPartyData = {
-        partyId,
+        // partyId, // TODO: review: I don't think we want to show partyId here
         [idFieldName]: partyName,
         [label]: partyName,
         [link]: partyLink,
@@ -938,27 +938,52 @@ function parsePeople({
  */
 function parseTransactionTaxes(
     transaction: Transaction,
+    policy: Policy,
+    allPartiesById: Record<string, Party>,
     t: TFunction
 ): Record<string, unknown> {
     const taxWithholdingInstructionsMap =
         transaction.taxWithholdingInstructions?.reduce(
-            (acc, withholdingInstruction) => ({
-                ...acc,
-                [`${t('withholdingInstructions')} – ${
-                    withholdingInstruction.taxWithholdingType
-                } – ${withholdingInstruction.taxJurisdiction}`]:
-                    withholdingInstruction,
-            }),
+            (acc, withholdingInstruction) => {
+                const additionalPartyData = fillInRequiredPartyDetails({
+                    partyId: withholdingInstruction.appliesToPartyId,
+                    allPartiesById,
+                    policy,
+                    idFieldName: 'appliesToPartyId',
+                });
+
+                return {
+                    ...acc,
+                    [`${t('withholdingInstructions')} – ${
+                        withholdingInstruction.taxWithholdingType
+                    } – ${withholdingInstruction.taxJurisdiction}`]: {
+                        ...withholdingInstruction,
+                        ...additionalPartyData,
+                    },
+                };
+            },
             {}
         );
 
     const taxWithheldAmountsMap = transaction.taxWithheldAmounts?.reduce(
-        (acc, withholdingAmounts) => ({
-            ...acc,
-            [`${t('withholdingAmounts')} - ${t(
-                withholdingAmounts.taxWithholdingType ?? ''
-            )}`]: withholdingAmounts,
-        })
+        (acc, withholdingAmounts) => {
+            const additionalPartyData = fillInRequiredPartyDetails({
+                partyId: withholdingAmounts.partyId,
+                allPartiesById,
+                policy,
+                idFieldName: 'partyId',
+            });
+
+            return {
+                ...acc,
+                [`${t('withholdingAmounts')} - ${t(
+                    withholdingAmounts.taxWithholdingType ?? ''
+                )}`]: {
+                    ...withholdingAmounts,
+                    ...additionalPartyData,
+                },
+            };
+        }
     );
     return {
         ...transaction.taxBasis,
