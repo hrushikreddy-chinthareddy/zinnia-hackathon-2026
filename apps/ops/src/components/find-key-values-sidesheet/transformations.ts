@@ -27,6 +27,7 @@ import {
     MetaData,
     Section,
     FormatterType,
+    TransformationsConfig,
 } from './types';
 
 /**
@@ -80,14 +81,9 @@ export const preparePolicy = ({
           })
         : undefined;
 
-    // Add config for showSection logic and custom labels for sections / data aggregation: @showSection, @parseTitles, labels
-    const policyConfig = {
-        showSection: (
-            sectionTitle: string,
-            policy: Policy,
-            planCode: string,
-            productType: ProductType
-        ) =>
+    // Add config for showSection logic and custom labels for sections / data aggregation: @showSection, @titles, labels
+    const policyConfig: TransformationsConfig = {
+        showSection: (sectionTitle, policy, planCode, productType) =>
             shouldShowSection({
                 sectionLabel: sectionTitle,
                 lineOfBusiness:
@@ -95,15 +91,16 @@ export const preparePolicy = ({
                 planCode,
                 productType,
             }),
+        labels: { people: 'people', sectionLabel: 'policyBasics' },
         formatterType: FormatterType.POLICY,
-        parseTitles: (sectionTitle, acc, currentVal, currentKey) => {
+        titles: (sectionTitle, acc, currentVal, currentKey) => {
             const subSectionTitleField =
-                sectionTypeToSubSectionTitleFields[sectionTitle];
+                sectionTypeToSubSectionTitleFields[sectionTitle as string];
             const titleDict = {
                 allocation: parseAllocation(
                     policy,
                     subSectionTitleField,
-                    sectionTitle,
+                    sectionTitle as string,
                     t,
                     acc,
                     currentVal
@@ -188,8 +185,11 @@ export const prepareTransaction = ({
     });
 
     const transactionsConfig = {
-        peopleLabel: 'payorPayeeDetails',
-        showSection: (sectionTitle) =>
+        labels: {
+            people: 'payorPayeeDetails',
+            sectionLabel: 'transactionDetails',
+        },
+        showSection: (sectionTitle: string, policy: Policy | undefined) =>
             shouldShowSection({
                 sectionLabel: sectionTitle,
                 lineOfBusiness:
@@ -245,13 +245,13 @@ export const toSections = ({
     planCode?: string;
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
-    config?: any;
+    config: TransformationsConfig;
 }): {
     basics: NestedData[] | null;
     sections: Section[];
 } => {
     const data = {
-        transaction: transaction,
+        transaction: transaction ?? [],
         policy: policy,
     };
     const tuples = Object.entries(data[config.formatterType]);
@@ -270,20 +270,21 @@ export const toSections = ({
                 // If there are rules to hide this section,
                 // or if the section is empty, skip it
                 if (
-                    !config.showSection(
-                        sectionTitle,
-                        policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
-                        planCode,
-                        productType
-                    ) ||
+                    (config.showSection &&
+                        !config.showSection(
+                            sectionTitle,
+                            policy,
+                            planCode,
+                            productType
+                        )) ||
                     currentVal == null
                 ) {
                     return acc;
                 }
 
                 // Find the field within the subsection tuples to use as the subsection title
-                if (config.parseTitles) {
-                    return config.parseTitles(
+                if (config.titles) {
+                    return config.titles(
                         sectionTitle,
                         acc,
                         currentVal,
@@ -306,7 +307,7 @@ export const toSections = ({
                 [currentKey, currentVal],
                 policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                 t,
-                FormatterType.POLICY,
+                config.formatterType,
                 searchValue
             );
 
@@ -340,7 +341,7 @@ export const toSections = ({
     const people = parsePeople({ policy, transaction, allPartiesById, t });
     if (people) {
         basicsAndSections.sections.push([
-            config.peopleLabel ?? 'people',
+            config.labels.people,
             people,
         ] as Section);
     }
@@ -355,7 +356,8 @@ export const toSections = ({
     // Fill in the section title
     if (basicsAndSections.basics != null) {
         (basicsAndSections.basics as MetaData)[label] = formatAsSectionLabel(
-            transaction ? 'transactionDetails' : 'policyBasics',
+            //transaction ? 'transactionDetails' : 'policyBasics',
+            config.labels.sectionLabel,
             policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
             t
         );
