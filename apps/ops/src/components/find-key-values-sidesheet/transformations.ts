@@ -371,7 +371,7 @@ export const toTransactionSections = (
                     otherIncome: 144.53,
                     otherDeduction: 42.83,
                 },
-                partyRole: 'OWNER',
+                partyRole: 'AGENT',
             },
             {
                 appliesToPartyId: 'Party_Agent_1',
@@ -390,12 +390,12 @@ export const toTransactionSections = (
                     otherIncome: 144.53,
                     otherDeduction: 42.83,
                 },
-                partyRole: 'OWNER',
+                partyRole: 'AGENT',
             },
         ],
         taxWithheldAmounts: [
             {
-                partyRole: 'OWNER',
+                partyRole: 'AGENT',
                 partyId: 'Party_Agent_1',
                 taxWithholdingType: 'FEDERAL',
                 withheldAmount: 100,
@@ -572,7 +572,9 @@ const fillInRequiredPartyDetails = ({
     const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
 
     const additionalPartyData = {
-        // partyId, // TODO: review: I don't think we want to show partyId here
+        partyId, // TODO: review: I don't think we want to show partyId here
+        // but it's unintentionally controlling visibility of People
+
         [idFieldName]: partyName,
         [label]: partyName,
         [link]: partyLink,
@@ -959,6 +961,14 @@ function parseTransactionTaxes(
                     } – ${withholdingInstruction.taxJurisdiction}`]: {
                         ...withholdingInstruction,
                         ...additionalPartyData,
+                        ...(withholdingInstruction.partyRole && {
+                            [tags]: [
+                                formatAsDataValue(
+                                    withholdingInstruction.partyRole,
+                                    t
+                                ),
+                            ],
+                        }),
                     },
                 };
             },
@@ -981,6 +991,11 @@ function parseTransactionTaxes(
                 )}`]: {
                     ...withholdingAmounts,
                     ...additionalPartyData,
+                    ...(withholdingAmounts.partyRole && {
+                        [tags]: [
+                            formatAsDataValue(withholdingAmounts.partyRole, t),
+                        ],
+                    }),
                 },
             };
         }
