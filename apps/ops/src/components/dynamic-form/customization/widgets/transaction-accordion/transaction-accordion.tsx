@@ -35,38 +35,10 @@ const TransactionAccordion = ({
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     };
 
-    const updateFullNameIfChanged = (
-        prevObj: any,
-        updatedObj: any,
-        target: any = updatedObj
-    ) => {
-        const prevFirstName = prevObj?.firstName ?? '';
-        const prevMidName = prevObj?.middleName ?? '';
-        const prevLastName = prevObj?.lastName ?? '';
-        const newFirstName = updatedObj?.firstName ?? '';
-        const newMidName = updatedObj?.middleName ?? '';
-        const newLastName = updatedObj?.lastName ?? '';
-        if (
-            prevFirstName !== newFirstName ||
-            prevLastName !== newLastName ||
-            prevMidName !== newMidName
-        ) {
-            target.fullName = [newFirstName, newMidName, newLastName]
-                .filter(Boolean)
-                .join(' ');
-        }
-    };
-
     const handleItemChange = (index: number, updatedItem: any) => {
         const updatedList = [...valueRef?.current];
         const originalItem = originalDataRef?.current?.[index];
         const hasChanged = !deepEqual(originalItem, updatedItem);
-
-        if (updatedItem.actionType === 'BENE_CHANGE' && updatedItem.party) {
-            updateFullNameIfChanged(originalItem?.party, updatedItem.party);
-        } else {
-            updateFullNameIfChanged(originalItem, updatedItem);
-        }
 
         if (updatedItem.party?.partyType === 'TRUST') {
             updatedItem.party.supportingDocumentAttached =
@@ -80,6 +52,21 @@ const TransactionAccordion = ({
                     ? Action.UPDATE
                     : Action.NONE
                 : Action.ADD,
+            party: {
+                ...updatedItem.party,
+                firstName: updatedItem.party?.firstName || null,
+                lastName: updatedItem.party?.lastName || null,
+                middleName: updatedItem.party?.middleName || null,
+                fullName: [
+                    updatedItem.party?.prefix,
+                    updatedItem.party?.firstName,
+                    updatedItem.party?.middleName,
+                    updatedItem.party?.lastName,
+                    updatedItem.party?.suffix,
+                ]
+                    .filter(Boolean)
+                    .join(' '),
+            },
         };
 
         onChange(updatedList);
