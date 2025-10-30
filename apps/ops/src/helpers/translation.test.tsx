@@ -19,6 +19,7 @@ jest.mock('i18next', () => ({
     t: jest.fn((str) => str),
 }));
 
+//Mapper helper functions test
 describe('Mapper helper functions', () => {
     const { t } = jest.requireMock('i18next');
 
