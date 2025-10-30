@@ -951,7 +951,7 @@ function parseTransactionTaxes(
                     partyId: withholdingInstruction.partyId,
                     allPartiesById,
                     policy,
-                    idFieldName: 'partyId',
+                    idFieldName: 'partyName',
                 });
 
                 return {
@@ -959,8 +959,8 @@ function parseTransactionTaxes(
                     [`${t('withholdingInstructions')} – ${
                         withholdingInstruction.taxWithholdingType
                     } – ${withholdingInstruction.taxJurisdiction}`]: {
-                        ...withholdingInstruction,
                         ...additionalPartyData,
+                        ...withholdingInstruction,
                         ...(withholdingInstruction.partyRole && {
                             [tags]: [
                                 formatAsDataValue(
@@ -981,7 +981,7 @@ function parseTransactionTaxes(
                 partyId: withholdingAmounts.partyId,
                 allPartiesById,
                 policy,
-                idFieldName: 'partyId',
+                idFieldName: 'partyName',
             });
 
             return {
@@ -989,8 +989,8 @@ function parseTransactionTaxes(
                 [`${t('withholdingAmounts')} - ${t(
                     withholdingAmounts.taxWithholdingType ?? ''
                 )}`]: {
-                    ...withholdingAmounts,
                     ...additionalPartyData,
+                    ...withholdingAmounts,
                     ...(withholdingAmounts.partyRole && {
                         [tags]: [
                             formatAsDataValue(withholdingAmounts.partyRole, t),
@@ -1147,7 +1147,7 @@ function parseSystematicPrograms(
                 const requiredPartyData = fillInRequiredPartyDetails({
                     partyId: partyData.partyId,
                     policy,
-                    idFieldName: 'partyId',
+                    idFieldName: 'partyName',
                     allPartiesById,
                 });
 
