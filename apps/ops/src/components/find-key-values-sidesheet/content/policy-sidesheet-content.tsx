@@ -98,13 +98,13 @@ export const PolicySidesheetContent = ({
         [policy, debouncedSearchValue, t]
     );
 
-    const { policyBasics, policySections } = useMemo(
+    const { basics, sections } = useMemo(
         () =>
             preparedPolicy
                 ? preparedPolicy.toSections()
                 : {
-                      policyBasics: null,
-                      policySections: null,
+                      basics: null,
+                      sections: null,
                   },
         [preparedPolicy]
     );
@@ -180,25 +180,25 @@ export const PolicySidesheetContent = ({
                                 : 'Expand all'}
                         </Button>
                     </div>
-                    {policyBasics && (
+                    {basics && (
                         <KeyValueBasics
                             preparedData={preparedPolicy}
-                            policyBasics={policyBasics as NestedData[]}
+                            policyBasics={basics as NestedData[]}
                             searchValue={searchValue}
                             treeState={treeState}
                         />
                     )}
 
-                    {!!policySections?.length && (
+                    {!!sections?.length && (
                         <KeyValueSections
                             preparedData={preparedPolicy}
-                            sections={policySections}
+                            sections={sections}
                             searchValue={searchValue}
                             treeState={treeState}
                         />
                     )}
 
-                    {!policyBasics && !policySections?.length && (
+                    {!basics && !sections?.length && (
                         <div className={styles.emptySearch}>
                             <Label>
                                 <Icon

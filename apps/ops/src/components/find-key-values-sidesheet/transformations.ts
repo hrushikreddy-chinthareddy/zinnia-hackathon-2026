@@ -62,8 +62,8 @@ export const preparePolicy = ({
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
     toSections: (policyOverride?: Policy) => {
-        policyBasics: NestedData[] | null;
-        policySections: Section[];
+        basics: NestedData[] | null;
+        sections: Section[];
     };
     formatAsSectionLabel: (label: string) => string;
 } => {
@@ -80,20 +80,90 @@ export const preparePolicy = ({
           })
         : undefined;
 
+    // Add config for showSection logic and custom labels for sections / data aggregation: @showSection, @parseTitles, labels
+    const policyConfig = {
+        showSection: (
+            sectionTitle: string,
+            policy: Policy,
+            planCode: string,
+            productType: ProductType
+        ) =>
+            shouldShowSection({
+                sectionLabel: sectionTitle,
+                lineOfBusiness:
+                    policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+                planCode,
+                productType,
+            }),
+        formatterType: FormatterType.POLICY,
+        parseTitles: (sectionTitle, acc, currentVal, currentKey) => {
+            const subSectionTitleField =
+                sectionTypeToSubSectionTitleFields[sectionTitle];
+            const titleDict = {
+                allocation: parseAllocation(
+                    policy,
+                    subSectionTitleField,
+                    sectionTitle,
+                    t,
+                    acc,
+                    currentVal
+                ),
+                systemicPrograms: parseSystematicPrograms(
+                    policy,
+                    allPartiesById,
+                    t,
+                    policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+                    acc,
+                    currentKey,
+                    currentVal
+                ),
+                riders: parseRiders(
+                    policy,
+                    allPartiesById,
+                    t,
+                    acc,
+                    currentKey,
+                    currentVal as Policy['riders']
+                ),
+                loanValues: parseLoanValues(
+                    policy,
+                    subSectionTitleField,
+                    sectionTitle,
+                    t,
+                    acc,
+                    currentVal as Policy['loanValues']
+                ),
+            };
+
+            if (titleDict[sectionTitle]) {
+                return titleDict[sectionTitle];
+            } else {
+                return {
+                    ...acc,
+                    sections: [
+                        ...acc.sections,
+                        [currentKey, currentVal] as Section,
+                    ],
+                };
+            }
+        },
+    };
+
     return {
         lineOfBusiness,
         planCode,
         productType,
         allPartiesById,
         toSections: (policyOverride) => {
-            return toSections(
-                policyOverride ?? policy,
+            return toSections({
+                policy: policyOverride ?? policy,
                 t,
                 searchValue,
                 planCode,
                 productType,
-                allPartiesById
-            );
+                allPartiesById,
+                config: policyConfig,
+            });
         },
         formatAsSectionLabel: (label: string) =>
             formatAsSectionLabel(label, lineOfBusiness, t),
@@ -117,15 +187,27 @@ export const prepareTransaction = ({
         fallbackTitle: 'Party',
     });
 
+    const transactionsConfig = {
+        peopleLabel: 'payorPayeeDetails',
+        showSection: (sectionTitle) =>
+            shouldShowSection({
+                sectionLabel: sectionTitle,
+                lineOfBusiness:
+                    policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+            }),
+        formatterType: FormatterType.TRANSACTION,
+    };
+
     return {
-        toTransactionSections: (transactionOverride?: Transaction) => {
-            return toTransactionSections(
-                transactionOverride ?? transaction,
+        toSections: (transactionOverride?: Transaction) => {
+            return toSections({
+                transaction: transactionOverride ?? transaction,
                 policy,
                 allPartiesById,
                 t,
-                searchValue
-            );
+                searchValue,
+                config: transactionsConfig,
+            });
         },
         formatAsSectionLabel: (label: string) =>
             formatAsSectionLabel(
@@ -146,25 +228,40 @@ export const prepareTransaction = ({
  * @param allPartiesById The mapping of party IDs to party objects
  * @returns A {@link PreparedPolicy} object
  */
-export const toSections = (
-    policy: Policy,
-    t: TFunction,
-    searchValue?: string,
-    planCode?: string,
-    productType?: ProductType,
-    allPartiesById?: Record<string, Party>
-): {
-    policyBasics: NestedData[] | null;
-    policySections: Section[];
+export const toSections = ({
+    policy,
+    transaction,
+    t,
+    searchValue,
+    planCode,
+    productType,
+    allPartiesById,
+    config,
+}: {
+    policy: Policy;
+    transaction?: Transaction;
+    t: TFunction;
+    searchValue?: string;
+    planCode?: string;
+    productType?: ProductType;
+    allPartiesById?: Record<string, Party>;
+    config?: any;
+}): {
+    basics: NestedData[] | null;
+    sections: Section[];
 } => {
-    const policyTuples = Object.entries(policy);
-    const basicsAndSections = policyTuples.reduce(
+    const data = {
+        transaction: transaction,
+        policy: policy,
+    };
+    const tuples = Object.entries(data[config.formatterType]);
+    const basicsAndSections = tuples.reduce(
         (
             acc,
             [currentKey, currentVal]
         ): {
-            policyBasics: NestedData[] | null;
-            policySections: Section[];
+            basics: NestedData[] | null;
+            sections: Section[];
         } => {
             // If the value is an object, treat it as a section
             if (typeof currentVal === 'object') {
@@ -173,7 +270,7 @@ export const toSections = (
                 // If there are rules to hide this section,
                 // or if the section is empty, skip it
                 if (
-                    !shouldShowSection(
+                    !config.showSection(
                         sectionTitle,
                         policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                         planCode,
@@ -185,67 +282,21 @@ export const toSections = (
                 }
 
                 // Find the field within the subsection tuples to use as the subsection title
-                const subSectionTitleField =
-                    sectionTypeToSubSectionTitleFields[sectionTitle];
-                switch (sectionTitle) {
-                    case 'allocation':
-                        console.log(
-                            'parseAllocation........',
-                            parseAllocation(
-                                policy,
-                                subSectionTitleField,
-                                sectionTitle,
-                                t,
-                                acc,
-                                currentVal as Policy['allocation']
-                            )
-                        );
-                        return parseAllocation(
-                            policy,
-                            subSectionTitleField,
-                            sectionTitle,
-                            t,
-                            acc,
-                            currentVal as Policy['allocation']
-                        );
-                    case 'systematicPrograms':
-                        return parseSystematicPrograms(
-                            policy,
-                            allPartiesById,
-                            t,
-                            policy?.product?.lineOfBusiness ??
-                                LineOfBusiness.OTHER,
-                            acc,
-                            currentKey,
-                            currentVal as Policy['systematicPrograms']
-                        );
-                    case 'riders':
-                        return parseRiders(
-                            policy,
-                            allPartiesById,
-                            t,
-                            acc,
-                            currentKey,
-                            currentVal as Policy['riders']
-                        );
-                    case 'loanValues':
-                        // Loan segments are split from the Allocation section
-                        return parseLoanValues(
-                            policy,
-                            subSectionTitleField,
-                            sectionTitle,
-                            t,
-                            acc,
-                            currentVal as Policy['loanValues']
-                        );
-                    default:
-                        return {
-                            ...acc,
-                            policySections: [
-                                ...acc.policySections,
-                                [currentKey, currentVal] as Section,
-                            ],
-                        };
+                if (config.parseTitles) {
+                    return config.parseTitles(
+                        sectionTitle,
+                        acc,
+                        currentVal,
+                        currentKey
+                    );
+                } else {
+                    return {
+                        ...acc,
+                        sections: [
+                            ...acc.sections,
+                            [currentKey, currentVal] as Section,
+                        ],
+                    };
                 }
             }
 
@@ -262,14 +313,14 @@ export const toSections = (
             return {
                 ...acc,
                 ...(formattedField && {
-                    policyBasics: [...(acc.policyBasics ?? []), formattedField],
+                    basics: [...(acc.basics ?? []), formattedField],
                 }),
             };
         },
 
         {
-            policyBasics: null,
-            policySections: [],
+            basics: null,
+            sections: [],
         }
     );
 
@@ -278,248 +329,53 @@ export const toSections = (
         policy.allocation?.matchSegment ?? {}
     ).filter(([, data]) => data != null);
     if (nonNullMatchEntries.length) {
-        basicsAndSections.policySections.push([
+        basicsAndSections.sections.push([
             'match',
             Object.fromEntries(nonNullMatchEntries),
         ]);
     }
 
-    // Fill in the people section
-    const people = parsePeople({ policy, allPartiesById, t });
-    if (people) {
-        basicsAndSections.policySections.push(['people', people] as Section);
-    }
-
-    // Fill in the section title
-    if (basicsAndSections.policyBasics != null) {
-        (basicsAndSections.policyBasics as MetaData)[label] =
-            formatAsSectionLabel(
-                'policyBasics',
-                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
-                t
-            );
-    }
-
-    return {
-        policyBasics: basicsAndSections.policyBasics,
-        policySections: basicsAndSections.policySections
-            ?.map((policySection) => {
-                const fieldsAndSubsections = toFieldsAndSubsections(
-                    policySection,
-                    policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
-                    t,
-                    FormatterType.POLICY,
-                    searchValue
-                );
-
-                return fieldsAndSubsections.fields?.length ||
-                    fieldsAndSubsections.subSections?.length
-                    ? [policySection[0], fieldsAndSubsections]
-                    : null;
-            })
-            .filter((section) => section != null) as Section[],
-    };
-};
-
-export const toTransactionSections = (
-    transaction: Transaction,
-    policy: Policy,
-    allPartiesById: Record<string, Party>,
-    t: TFunction,
-    searchValue?: string
-): {
-    transactionDetails: NestedData[] | null;
-    transactionSections: Section[];
-} => {
-    // FIXME: rm
-    transaction = {
-        ...transaction,
-        taxWithholdingInstructions: [
-            {
-                partyId: 'Party_Annuitant_1',
-                taxWithholdingType: 'FEDERAL',
-                taxRateToUse: 'NOWITHHOLDINGELECTED',
-                filingStatus: 'SINGLE',
-                dollar: 0,
-                percentage: 0,
-                exemptions: 0,
-                taxJurisdiction: 'USA_WY',
-                contribution: 'NOTAPPLICABLE',
-                taxFormType: 'T1035COSTBASIS',
-                w4p: {
-                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
-                    totalAmountOfClaimsAndOtherCredits: 213.73,
-                    otherIncome: 144.53,
-                    otherDeduction: 42.83,
-                },
-                partyRole: 'OWNER',
-            },
-            {
-                partyId: 'Party_Agent_1',
-                taxWithholdingType: 'STATE',
-                taxRateToUse: 'NOWITHHOLDINGELECTED',
-                filingStatus: 'SINGLE',
-                dollar: 0,
-                percentage: 0,
-                exemptions: 0,
-                taxJurisdiction: 'USA_WY',
-                contribution: 'NOTAPPLICABLE',
-                taxFormType: 'T1035COSTBASIS',
-                w4p: {
-                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
-                    totalAmountOfClaimsAndOtherCredits: 213.73,
-                    otherIncome: 144.53,
-                    otherDeduction: 42.83,
-                },
-                partyRole: 'AGENT',
-            },
-            {
-                partyId: 'Party_Agent_1',
-                taxWithholdingType: 'STATE',
-                taxRateToUse: 'NOWITHHOLDINGELECTED',
-                filingStatus: 'SINGLE',
-                dollar: 0,
-                percentage: 0,
-                exemptions: 0,
-                taxJurisdiction: 'USA_NY',
-                contribution: 'NOTAPPLICABLE',
-                taxFormType: 'T1035COSTBASIS',
-                w4p: {
-                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
-                    totalAmountOfClaimsAndOtherCredits: 213.73,
-                    otherIncome: 144.53,
-                    otherDeduction: 42.83,
-                },
-                partyRole: 'AGENT',
-            },
-        ],
-        taxWithheldAmounts: [
-            {
-                partyRole: 'AGENT',
-                partyId: 'Party_Agent_1',
-                taxWithholdingType: 'FEDERAL',
-                withheldAmount: 100,
-                withheldTaxableAmount: 100,
-                taxableFlag: true,
-                appliedTaxRate: 100,
-            },
-            {
-                partyRole: 'OWNER',
-                partyId: 'Party_Annuitant_1',
-                taxWithholdingType: 'STATE',
-                withheldAmount: 100,
-                withheldTaxableAmount: 100,
-                taxableFlag: true,
-                appliedTaxRate: 100,
-            },
-        ],
-    };
-    console.log('transaction....', transaction);
-
-    const transactionTuples = Object.entries(transaction);
-    const basicsAndSections = transactionTuples.reduce(
-        (
-            acc,
-            [currentKey, currentVal]
-        ): {
-            transactionDetails: NestedData[] | null;
-            transactionSections: Section[];
-        } => {
-            // If the value is an object, treat it as a section
-            if (typeof currentVal === 'object') {
-                const sectionTitle = currentKey;
-
-                // If there are rules to hide this section,
-                // or if the section is empty, skip it
-                if (
-                    !shouldShowSection(
-                        sectionTitle,
-                        policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER
-                    ) ||
-                    currentVal == null
-                ) {
-                    return acc;
-                }
-
-                // Find the field within the subsection tuples to use as the subsection title
-                switch (sectionTitle) {
-                    default:
-                        return {
-                            ...acc,
-                            transactionSections: [
-                                ...acc.transactionSections,
-                                [currentKey, currentVal] as Section,
-                            ],
-                        };
-                }
-            }
-
-            // Otherwise, the value is a primitive, so add it to the policy basics
-            // formatDataField will determine if the field should be shown
-            const formattedField = formatDataField(
-                [currentKey, currentVal],
-                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
-                t,
-                FormatterType.TRANSACTION,
-                searchValue
-            );
-
-            return {
-                ...acc,
-                ...(formattedField && {
-                    transactionDetails: [
-                        ...(acc.transactionDetails ?? []),
-                        formattedField,
-                    ],
-                }),
-            };
-        },
-
-        {
-            transactionDetails: null,
-            transactionSections: [],
-        }
-    );
-
-    // Fill in aggregated sections
-    basicsAndSections.transactionSections.push([
-        'taxes',
-        parseTransactionTaxes(transaction, policy, allPartiesById, t),
-    ]);
-    console.log('taxes....', basicsAndSections);
-
+    // Different
     // Fill in the people section
     const people = parsePeople({ policy, transaction, allPartiesById, t });
-    basicsAndSections.transactionSections.push([
-        'payorPayeeDetails',
-        people,
-    ] as Section);
+    if (people) {
+        basicsAndSections.sections.push([
+            config.peopleLabel ?? 'people',
+            people,
+        ] as Section);
+    }
+
+    if (transaction) {
+        basicsAndSections.sections.push([
+            'taxes',
+            parseTransactionTaxes(transaction, policy, allPartiesById, t),
+        ]);
+    }
 
     // Fill in the section title
-    if (basicsAndSections.transactionDetails != null) {
-        (basicsAndSections.transactionDetails as MetaData)[label] =
-            formatAsSectionLabel(
-                'transactionDetails',
-                policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
-                t
-            );
+    if (basicsAndSections.basics != null) {
+        (basicsAndSections.basics as MetaData)[label] = formatAsSectionLabel(
+            transaction ? 'transactionDetails' : 'policyBasics',
+            policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+            t
+        );
     }
 
     return {
-        transactionDetails: basicsAndSections.transactionDetails,
-        transactionSections: basicsAndSections.transactionSections
-            ?.map((transactionSection) => {
+        basics: basicsAndSections.basics,
+        sections: basicsAndSections.sections
+            ?.map((section) => {
                 const fieldsAndSubsections = toFieldsAndSubsections(
-                    transactionSection,
+                    section,
                     policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                     t,
-                    FormatterType.TRANSACTION,
+                    config.formatterType,
                     searchValue
                 );
 
                 return fieldsAndSubsections.fields?.length ||
                     fieldsAndSubsections.subSections?.length
-                    ? [transactionSection[0], fieldsAndSubsections]
+                    ? [section[0], fieldsAndSubsections]
                     : null;
             })
             .filter((section) => section != null) as Section[],
@@ -830,12 +686,17 @@ const convertListToMap = <T>({
  * @param productType The product type for the policy, if applicable
  * @returns {boolean} Whether the section should be shown
  */
-const shouldShowSection = (
-    sectionLabel: string,
-    lineOfBusiness: LineOfBusiness,
-    planCode?: string,
-    productType?: ProductType
-) => {
+const shouldShowSection = ({
+    sectionLabel,
+    lineOfBusiness,
+    planCode,
+    productType,
+}: {
+    sectionLabel: string;
+    lineOfBusiness: LineOfBusiness;
+    planCode?: string;
+    productType?: ProductType;
+}): boolean | undefined => {
     const sectionRule = sectionVisibility[sectionLabel];
 
     return (
@@ -941,7 +802,7 @@ function parsePeople({
 function parseTransactionTaxes(
     transaction: Transaction,
     policy: Policy,
-    allPartiesById: Record<string, Party>,
+    allPartiesById: Record<string, Party> | undefined,
     t: TFunction
 ): Record<string, unknown> {
     const taxWithholdingInstructionsMap =
@@ -1024,8 +885,8 @@ function parseLoanValues(
     sectionTitle: string,
     t: TFunction,
     acc: {
-        policyBasics: NestedData[] | null;
-        policySections: Section[];
+        basics: NestedData[] | null;
+        sections: Section[];
     },
     currentVal: Policy['loanValues']
 ) {
@@ -1038,8 +899,8 @@ function parseLoanValues(
         : undefined;
     return {
         ...acc,
-        policySections: [
-            ...acc.policySections,
+        sections: [
+            ...acc.sections,
             [
                 'loans',
                 {
@@ -1067,8 +928,8 @@ function parseRiders(
     allPartiesById: Record<string, Party> | undefined,
     t: TFunction,
     acc: {
-        policyBasics: NestedData[] | null;
-        policySections: Section[];
+        basics: NestedData[] | null;
+        sections: Section[];
     },
     currentKey: string,
     currentVal: Policy['riders']
@@ -1104,8 +965,8 @@ function parseRiders(
 
     return {
         ...acc,
-        policySections: [
-            ...acc.policySections,
+        sections: [
+            ...acc.sections,
             [currentKey, ridersAndParticipants ?? currentVal] as Section,
         ],
     };
@@ -1133,8 +994,8 @@ function parseSystematicPrograms(
     t: TFunction,
     lineOfBusiness: LineOfBusiness,
     acc: {
-        policyBasics: NestedData[] | null;
-        policySections: Section[];
+        basics: NestedData[] | null;
+        sections: Section[];
     },
     currentKey: string,
     currentVal: Policy['systematicPrograms']
@@ -1186,8 +1047,8 @@ function parseSystematicPrograms(
     );
     return {
         ...acc,
-        policySections: [
-            ...acc.policySections,
+        sections: [
+            ...acc.sections,
             [currentKey, systematicProgramsAndParties ?? currentVal] as Section,
         ],
     };
@@ -1210,8 +1071,8 @@ function parseAllocation(
     sectionTitle: string,
     t: TFunction,
     acc: {
-        policyBasics: NestedData[] | null;
-        policySections: Section[];
+        basics: NestedData[] | null;
+        sections: Section[];
     },
     currentVal: Policy['allocation']
 ) {
@@ -1235,8 +1096,8 @@ function parseAllocation(
     return {
         ...acc,
         ...(funds && {
-            policySections: [
-                ...acc.policySections,
+            sections: [
+                ...acc.sections,
                 [
                     'combinedFunds',
                     {

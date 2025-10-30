@@ -27,7 +27,7 @@ export const KeyValueSections = ({
     treeState,
 }: {
     preparedData: ReturnType<typeof preparePolicy | typeof prepareTransaction>;
-    sections: Section[];
+    sections: Section[] | null;
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
