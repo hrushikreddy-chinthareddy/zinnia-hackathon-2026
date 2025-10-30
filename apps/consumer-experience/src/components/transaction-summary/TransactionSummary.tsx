@@ -1,69 +1,116 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
-import { FC } from 'react';
+'use client';
 
-import { getTransactionSummaryById } from '@/services/transactions';
-import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { useMutation } from '@tanstack/react-query';
+import { usePathname, useRouter } from 'next/navigation';
+import { FC, PropsWithChildren } from 'react';
 
-import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
-import styles from './TransactionSummary.module.css';
-import { NoDataAvailable } from '../no-data-available/NoDataAvailable';
+import { WithdrawalTransaction } from '@/services/transactions/types';
+
 import { TransactionPaymentDetails } from './sections/TransactionPaymentDetails';
 import { TransactionSummaryDetails } from './sections/TransactionSummaryDetails';
+import { TransactionSummarySubmissionDetails } from './sections/TransactionSummarySubmissionDetails';
+import styles from './TransactionSummary.module.css';
 import { ConfirmDialog } from '../confirm-dialog/ConfirmDialog';
-import { HeaderPolicyDetails } from '../policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
+import { PaymentLoading } from '../stepped-workflow/common/TransactionLoading';
 
 interface TransactionsSummaryProps {
-  transactionId: string;
-  planCode: string;
-  policyNumber: string;
-  lineOfBusiness: LineOfBusiness;
+  transactionDetails: WithdrawalTransaction;
 }
 
-export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
-  transactionId,
-  planCode,
-  policyNumber,
-  lineOfBusiness,
-}) => {
-  const commonLoggingContext = await buildCommonLogContext();
+export const TransactionsSummary: FC<
+  PropsWithChildren<TransactionsSummaryProps>
+> = async ({ transactionDetails, children }) => {
+  const router = useRouter();
+  const pathname = usePathname();
+  //TODO: When API is done, fix this up
+  const fakePost = async (
+    url: string,
+    data: any
+  ): Promise<{ success: boolean }> => {
+    // Log the request for debugging
+    console.log(`Making fake POST request to ${url}`, data);
 
-  const { data, error } = await getTransactionSummaryById(
-    { transactionId },
-    commonLoggingContext
-  );
+    // Return a promise that resolves after 500ms
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve({
+          success: true,
+        });
+      }, 2000);
+    });
+  };
 
-  if (!data || error) {
-    return <NoDataAvailable correlationId={error?.correlationId} />;
+  //TODO: When API is done, fix this up
+  const handleApprove = () => {
+    return fakePost(
+      'https://example.com/api/approve-transaction',
+      transactionDetails
+    );
+  };
+
+  //TODO: When API is done, fix this up
+  const handleDeny = () => {
+    return fakePost(
+      'https://example.com/api/approve-transaction',
+      transactionDetails
+    );
+  };
+
+  //TODO: When API is done, fix this up
+  const {
+    mutate: approveTransaction,
+    isPending: isApprovePending,
+    isSuccess: isApproveSuccess,
+  } = useMutation({
+    mutationKey: ['transactionSummary', transactionDetails.entity.recordId],
+    mutationFn: handleApprove,
+    onSuccess: () => {
+      router.push(`${pathname}/confirmation`);
+    },
+
+    onError: err => {
+      router.push(
+        `${pathname}/error?correlationId=${err.correlationId}?action=approve`
+      );
+    },
+  });
+
+  //TODO: When API is done, fix this up
+  const {
+    mutate: denyTransaction,
+    isPending: isDenyPending,
+    isSuccess: isDenySuccess,
+  } = useMutation({
+    mutationKey: ['transactionSummary', transactionDetails.entity.recordId],
+    mutationFn: handleDeny,
+    onSuccess: () => {
+      router.push(`${pathname}/confirmation?action=deny`);
+    },
+
+    onError: err => {
+      router.push(`${pathname}/error?correlationId=${err.correlationId}`);
+    },
+  });
+
+  if (isDenyPending || isApprovePending || isApproveSuccess || isDenySuccess) {
+    return <PaymentLoading />;
   }
-
-  //TODO: How to handle this when its not a withdrawal?
-  const totalTransactionAmount =
-    data?.entity.withdrawalTransaction.withdrawalSummary.totalPayment +
-    data?.entity.withdrawalTransaction.withdrawalSummary.withdrawalCharge;
 
   return (
     <div className={styles.container}>
-      <HeaderPolicyDetails
-        planCode={planCode}
-        policyNumber={policyNumber}
-        lineOfBusiness={lineOfBusiness}
-        fieldVisibility={{
-          policyName: true,
-          policyNumber: true,
-          status: false,
-          agentInfo: false,
-        }}
-      />
+      {children}
       <div className={styles.summaryContainer}>
         <div className={styles.detailWrapper}>
-          <TransactionSummarySubmissionDetails transactionSummary={data} />
+          <TransactionSummarySubmissionDetails
+            transactionSummary={transactionDetails}
+          />
         </div>
         <hr className={styles.divider} />
         <div className={styles.detailWrapper}>
-          <TransactionSummaryDetails transactionSummary={data} />
+          <TransactionSummaryDetails transactionSummary={transactionDetails} />
         </div>
         <hr className={styles.divider} />
-        <TransactionPaymentDetails transactionSummary={data} />
+        <TransactionPaymentDetails transactionSummary={transactionDetails} />
       </div>
       <div className={styles.buttons}>
         <ConfirmDialog
@@ -73,6 +120,7 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
           title="Approve transaction"
           linkText="Approve"
           buttonMode="primary"
+          confirmCallback={approveTransaction}
         />
         <ConfirmDialog
           confirmText="Deny"
@@ -81,6 +129,7 @@ export const TransactionsSummary: FC<TransactionsSummaryProps> = async ({
           title="Deny transaction"
           linkText="Deny"
           buttonMode="error"
+          confirmCallback={denyTransaction}
         />
       </div>
     </div>
