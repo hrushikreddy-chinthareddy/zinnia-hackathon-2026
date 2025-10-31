@@ -1,8 +1,10 @@
+import clsx from 'clsx';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { TransactionPaymentDetails } from '@/components/transaction-summary/sections/TransactionPaymentDetails';
+import styles from '@/components/transaction-summary/TransactionSummary.module.css';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { getTransactionSummaryById } from '@/services/transactions';
@@ -62,22 +64,22 @@ export default async function TransactionSummaryConfirmation({
 
   return (
     <div>
-      <h1>Thank you for the confirmation!</h1>
-      <p className="typography-content-body">
+      <h1 className="mb-xl">Thank you for the confirmation!</h1>
+      <p className="typography-content-body mb-md">
         We received your {denyOrApprove} for the {withdrawalAmount} withdrawal
         request for {policyOwner} submitted by {agentName} from ????? TODO:
         Where does the agent corporation come from???.
       </p>
 
-      <p className="typography-content-body">
+      <p className="typography-content-body mb-md">
         There will be a confirmation sent to your email shortly. Processing
         times depend on your withdrawal type and method.
       </p>
 
-      <p className="typography-content-body">
+      <p className="typography-content-body mb-2xl">
         Your fee breakdown is below as a reminder.
       </p>
-
+      <hr className={clsx(styles.divider, 'mb-2xl')} />
       <TransactionPaymentDetails transactionSummary={transactionDetails} />
     </div>
   );

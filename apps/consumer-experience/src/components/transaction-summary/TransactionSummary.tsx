@@ -25,14 +25,27 @@ export const TransactionsSummary: FC<
   //TODO: When API is done, fix this up
   const fakePost = async (
     url: string,
-    data: any
+    data: any,
+    failureRate: number = 0.2
   ): Promise<{ success: boolean }> => {
     // Log the request for debugging
     console.log(`Making fake POST request to ${url}`, data);
 
     // Return a promise that resolves after 500ms
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       setTimeout(() => {
+        if (Math.random() < failureRate) {
+          // Simulate different types of errors
+
+          reject({
+            success: false,
+            status: 500,
+            message: 'Error',
+            correlationId: '13454',
+            timestamp: new Date().toISOString(),
+          });
+        }
+
         resolve({
           success: true,
         });
@@ -65,13 +78,11 @@ export const TransactionsSummary: FC<
     mutationKey: ['transactionSummary', transactionDetails.entity.recordId],
     mutationFn: handleApprove,
     onSuccess: () => {
-      router.push(`${pathname}/confirmation`);
+      router.push(`${pathname}/confirmation?action=approve`);
     },
 
     onError: err => {
-      router.push(
-        `${pathname}/error?correlationId=${err.correlationId}?action=approve`
-      );
+      router.push(`${pathname}/error?correlationId=${err.correlationId}`);
     },
   });
 
