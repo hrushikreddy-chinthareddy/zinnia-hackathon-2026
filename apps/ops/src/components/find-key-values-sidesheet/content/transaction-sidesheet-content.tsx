@@ -48,13 +48,13 @@ export const TransactionSidesheetContent = ({
         [transaction, policy, debouncedSearchValue, t]
     );
 
-    const { transactionDetails, transactionSections } = useMemo(
+    const { basics, sections } = useMemo(
         () =>
             preparedTransaction
-                ? preparedTransaction.toTransactionSections()
+                ? preparedTransaction.toSections()
                 : {
-                      transactionDetails: null,
-                      transactionSections: null,
+                      basics: null,
+                      sections: null,
                   },
         [preparedTransaction]
     );
@@ -87,25 +87,25 @@ export const TransactionSidesheetContent = ({
                         {treeState === Expand ? 'Collapse all' : 'Expand all'}
                     </Button>
                 </div>
-                {transactionDetails && (
+                {basics && (
                     <KeyValueBasics
                         preparedData={preparedTransaction}
-                        policyBasics={transactionDetails as NestedData[]}
+                        policyBasics={basics as NestedData[]}
                         searchValue={searchValue}
                         treeState={treeState}
                     />
                 )}
 
-                {!!transactionSections?.length && (
+                {!!sections?.length && (
                     <KeyValueSections
                         preparedData={preparedTransaction}
-                        sections={transactionSections}
+                        sections={sections}
                         searchValue={searchValue}
                         treeState={treeState}
                     />
                 )}
 
-                {!transactionDetails && !transactionSections?.length && (
+                {!basics && !sections?.length && (
                     <div className={styles.emptySearch}>
                         <Label>
                             <Icon

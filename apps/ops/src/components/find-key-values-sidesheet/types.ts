@@ -1,3 +1,5 @@
+import { Policy, ProductType } from '@xd/api-types/dist/generated-types/sor';
+
 export type DataField = string | number | boolean | null;
 
 export type DataTuple = [string, DataField];
@@ -48,3 +50,15 @@ export enum FormatterType {
     POLICY = 'policy',
     TRANSACTION = 'transaction',
 }
+
+export type TransformationsConfig = {
+    labels: { [key: string]: string };
+    titles?: any;
+    formatterType: FormatterType;
+    showSection?: (
+        sectionTitle: string,
+        policy?: Policy,
+        planCode?: string,
+        productType?: ProductType
+    ) => boolean | undefined;
+};
