@@ -15,11 +15,7 @@ export const usePolicyQuery = (
     queryClient: QueryClient,
     enableQuery: boolean
 ) => {
-    const {
-        data: policy,
-        isFetching,
-        isError,
-    } = useQuery({
+    return useQuery({
         queryKey: [getPolicyQueryKey, policyNumber, planCode, date],
         queryFn: () =>
             getPolicyQuery(
@@ -37,10 +33,4 @@ export const usePolicyQuery = (
         },
         enabled: enableQuery,
     });
-
-    return {
-        policy,
-        isFetching,
-        isError,
-    };
 };
