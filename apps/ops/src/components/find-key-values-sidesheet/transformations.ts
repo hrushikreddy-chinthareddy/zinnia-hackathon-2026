@@ -8,6 +8,7 @@ import {
     ProductType,
     Transaction,
 } from '@xd/api-types/dist/generated-types/sor';
+import { typedEntries } from '@xd/utils/dist';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -27,8 +28,9 @@ import {
     MetaData,
     Section,
     FormatterType,
-    TransformationsConfig,
     ToSections,
+    ToSectionsProps,
+    TransformationsConfig,
 } from './types';
 
 /**
@@ -88,33 +90,31 @@ export const preparePolicy = ({
         currentVal,
         currentKey,
     }: {
-        sectionTitle: string;
+        sectionTitle: keyof Policy;
         acc: ToSections;
-        currentVal: unknown;
+        currentVal: object;
         currentKey: string;
     }) => {
         const subSectionTitleField =
-            sectionTypeToSubSectionTitleFields[sectionTitle as string];
+            sectionTypeToSubSectionTitleFields[sectionTitle];
         switch (sectionTitle) {
             case 'allocation': {
                 return parseAllocation({
                     policy,
                     subSectionTitleField,
                     sectionTitle,
-                    t,
                     acc,
-                    currentVal: currentVal as Policy['allocation'],
+                    currentVal,
                 });
             }
-            case 'systemicPrograms': {
+            case 'systematicPrograms': {
                 return parseSystematicPrograms({
                     policy,
                     allPartiesById,
-                    lineOfBusiness,
                     t,
                     acc,
                     currentKey,
-                    currentVal: currentVal as Policy['systematicPrograms'],
+                    currentVal,
                 });
             }
             case 'riders': {
@@ -124,7 +124,7 @@ export const preparePolicy = ({
                     t,
                     acc,
                     currentKey,
-                    currentVal: currentVal as Policy['riders'],
+                    currentVal,
                 });
             }
             case 'loanValues': {
@@ -134,7 +134,7 @@ export const preparePolicy = ({
                     sectionTitle,
                     t,
                     acc,
-                    currentVal: currentVal as Policy['loanValues'],
+                    currentVal,
                 });
             }
             default: {
@@ -160,7 +160,6 @@ export const preparePolicy = ({
                 productType,
             }),
         labels: { people: 'people', sectionLabel: 'policyBasics' },
-        formatterType: FormatterType.POLICY,
         parseTitles,
     };
 
@@ -178,6 +177,7 @@ export const preparePolicy = ({
                 productType,
                 allPartiesById,
                 config: policyConfig,
+                type: FormatterType.POLICY,
             });
         },
         formatAsSectionLabel: (label: string) =>
@@ -213,7 +213,6 @@ export const prepareTransaction = ({
                 lineOfBusiness:
                     policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
             }),
-        formatterType: FormatterType.TRANSACTION,
     };
 
     return {
@@ -225,6 +224,7 @@ export const prepareTransaction = ({
                 t,
                 searchValue,
                 config: transactionsConfig,
+                type: FormatterType.TRANSACTION,
             });
         },
         formatAsSectionLabel: (label: string) =>
@@ -247,33 +247,34 @@ export const prepareTransaction = ({
  * @param allPartiesById The mapping of party IDs to party objects
  * @returns A {@link PreparedPolicy} object
  */
-export const toSections = ({
-    policy,
-    transaction,
-    t,
-    searchValue,
-    planCode,
-    productType,
-    allPartiesById,
-    config,
-}: {
-    policy: Policy;
-    transaction?: Transaction;
-    t: TFunction;
-    searchValue?: string;
-    planCode?: string;
-    productType?: ProductType;
-    allPartiesById?: Record<string, Party>;
-    config: TransformationsConfig;
-}): ToSections => {
-    const data = {
-        transaction: transaction ?? {},
-        policy: policy,
-    };
+export const toSections = (props: ToSectionsProps): ToSections => {
+    const {
+        policy,
+        t,
+        searchValue,
+        planCode,
+        productType,
+        allPartiesById,
+        config,
+        type,
+    } = props;
 
-    const tuples = Object.entries(data[config.formatterType]);
+    const tuples = typedEntries(
+        type === FormatterType.TRANSACTION ? props.transaction : policy
+    );
+
     const basicsAndSections = tuples.reduce(
-        (acc, [currentKey, currentVal]): ToSections => {
+        (acc, current): ToSections => {
+            if (current == null) {
+                return acc;
+            }
+
+            const [currentKey, currentVal] = current;
+
+            if (currentVal == null) {
+                return acc;
+            }
+
             // If the value is an object, treat it as a section
             if (typeof currentVal === 'object') {
                 const sectionTitle = currentKey;
@@ -319,7 +320,7 @@ export const toSections = ({
                 lineOfBusiness:
                     policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                 t,
-                type: config.formatterType,
+                type,
                 searchValue,
             });
 
@@ -338,31 +339,50 @@ export const toSections = ({
     );
 
     // Fill in aggregated sections
-    const nonNullMatchEntries = Object.entries(
-        policy.allocation?.matchSegment ?? {}
-    ).filter(([, data]) => data != null);
-    if (nonNullMatchEntries.length) {
+    if (type === FormatterType.POLICY) {
+        const nonNullMatchEntries = Object.entries(
+            policy.allocation?.matchSegment ?? {}
+        ).filter(([, data]) => data != null);
+        if (nonNullMatchEntries.length) {
+            basicsAndSections.sections.push([
+                'match',
+                Object.fromEntries(nonNullMatchEntries),
+            ]);
+        }
+    } else if (type === FormatterType.TRANSACTION) {
         basicsAndSections.sections.push([
-            'match',
-            Object.fromEntries(nonNullMatchEntries),
+            'taxes',
+            parseTransactionTaxes({
+                transaction: props.transaction,
+                policy,
+                allPartiesById,
+                t,
+            }),
         ]);
     }
 
-    // Different
+    // TODO: maybe pass the peopleMap into this instead
+    const roleMap =
+        type === FormatterType.TRANSACTION
+            ? [
+                  ...(props.transaction.payors ?? []),
+                  ...(props.transaction.payeeOrBeneficiaries ?? []),
+              ]
+            : policy.partyRoles;
+
     // Fill in the people section
-    const people = parsePeople({ policy, transaction, allPartiesById, t });
+    const people = parsePeople({
+        policy,
+        roleMap,
+        allPartiesById,
+        t,
+    });
+
     if (people) {
         basicsAndSections.sections.push([
             config.labels.people,
             people,
         ] as Section);
-    }
-
-    if (transaction) {
-        basicsAndSections.sections.push([
-            'taxes',
-            parseTransactionTaxes({ transaction, policy, allPartiesById, t }),
-        ]);
     }
 
     // Fill in the section title
@@ -384,7 +404,7 @@ export const toSections = ({
                     lineOfBusiness:
                         policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
                     t,
-                    type: config.formatterType,
+                    type,
                     searchValue,
                 });
 
@@ -742,26 +762,21 @@ const shouldShowSection = ({
  * @returns A nested data tuple containing the policy's People section
  */
 function parsePeople({
+    roleMap,
     policy,
-    transaction,
     allPartiesById,
     t,
 }: {
+    roleMap?: {
+        partyRole?: string;
+        partyId?: string;
+    }[];
     policy: Policy;
-    transaction?: Transaction;
     allPartiesById: Record<string, Party> | undefined;
     t: TFunction;
 }) {
-    // TODO: maybe pass the peopleMap into this instead
-    const peopleMap = transaction
-        ? [
-              ...(transaction.payors ?? []),
-              ...(transaction.payeeOrBeneficiaries ?? []),
-          ]
-        : policy.partyRoles;
-
     // Make a map of party roles to reference as tags for the People section
-    const partyRoleMap = peopleMap?.reduce<Record<string, string[]>>(
+    const partyRoleMap = roleMap?.reduce<Record<string, string[]>>(
         (acc, currentPartyRole) => {
             const currentPartyIdRoles =
                 (currentPartyRole.partyId && acc[currentPartyRole.partyId]) ||
@@ -928,7 +943,7 @@ function parseLoanValues({
     sectionTitle: string;
     t: TFunction;
     acc: ToSections;
-    currentVal: Policy['loanValues'];
+    currentVal: object;
 }) {
     const loanSegments = policy.allocation?.loanSegments
         ? convertListToMap<LoanSegment>({
@@ -976,7 +991,7 @@ function parseRiders({
     t: TFunction;
     acc: ToSections;
     currentKey: string;
-    currentVal: Policy['riders'];
+    currentVal: object;
 }) {
     const ridersAndParticipants = policy.riders?.map((rider) => {
         // Party name is mapped from the partyId-to-party map
@@ -1036,7 +1051,6 @@ function parseSystematicPrograms({
     policy,
     allPartiesById,
     t,
-    lineOfBusiness,
     acc,
     currentKey,
     currentVal,
@@ -1044,10 +1058,9 @@ function parseSystematicPrograms({
     policy: Policy;
     allPartiesById: Record<string, Party> | undefined;
     t: TFunction;
-    lineOfBusiness: LineOfBusiness;
     acc: ToSections;
     currentKey: string;
-    currentVal: Policy['systematicPrograms'];
+    currentVal: object;
 }) {
     const systematicProgramsAndParties = policy.systematicPrograms?.map(
         (systematicProgram) => {
@@ -1121,14 +1134,12 @@ function parseAllocation({
     policy,
     subSectionTitleField,
     sectionTitle,
-    t,
     acc,
     currentVal,
 }: {
     policy: Policy;
     subSectionTitleField: string;
     sectionTitle: string;
-    t: TFunction;
     acc: ToSections;
     currentVal: Policy['allocation'];
 }) {

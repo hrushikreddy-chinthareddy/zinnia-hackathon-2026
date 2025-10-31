@@ -1,4 +1,10 @@
-import { Policy, ProductType } from '@xd/api-types/dist/generated-types/sor';
+import {
+    Party,
+    Policy,
+    ProductType,
+    Transaction,
+} from '@xd/api-types/dist/generated-types/sor';
+import { TFunction } from 'next-i18next';
 
 export type DataField = string | number | boolean | null;
 
@@ -56,6 +62,25 @@ export enum FormatterType {
     TRANSACTION = 'transaction',
 }
 
+export type ToSectionsProps = {
+    policy: Policy;
+    t: TFunction;
+    searchValue?: string;
+    planCode?: string;
+    productType?: ProductType;
+    allPartiesById?: Record<string, Party>;
+    config: TransformationsConfig;
+} & (ToPolicySectionsProps | ToTransactionSectionsProps);
+
+export type ToPolicySectionsProps = {
+    type: FormatterType.POLICY;
+};
+
+export type ToTransactionSectionsProps = {
+    type: FormatterType.TRANSACTION;
+    transaction: Transaction;
+};
+
 export type TransformationsConfig = {
     labels: { [key: string]: string };
     parseTitles?: ({
@@ -64,12 +89,11 @@ export type TransformationsConfig = {
         currentVal,
         currentKey,
     }: {
-        sectionTitle: string;
+        sectionTitle: keyof Policy;
         acc: ToSections;
         currentVal: any; //FIXME
         currentKey: string;
     }) => ToSections;
-    formatterType: FormatterType;
     showSection?: (
         sectionTitle: string,
         policy?: Policy,
