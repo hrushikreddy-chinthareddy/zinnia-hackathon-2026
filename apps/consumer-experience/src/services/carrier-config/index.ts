@@ -49,9 +49,7 @@ export const getCarrierConfig = withLogging(
       freeLookCancel: {
         enabled: true,
       },
-      systematicPremium: {
-        enabled: false,
-      },
+
       // This should be temporary since eventually EDS (the documents team) will manage
       // the service the document is retrieved from depending on carrier. The logic for now
       // is that legacy carriers are on v2 and any new carriers from wellabe forward are on
@@ -97,9 +95,6 @@ export const getCarrierConfig = withLogging(
             },
           },
           freeLookCancel: {
-            enabled: true,
-          },
-          systematicPremium: {
             enabled: true,
           },
         };
