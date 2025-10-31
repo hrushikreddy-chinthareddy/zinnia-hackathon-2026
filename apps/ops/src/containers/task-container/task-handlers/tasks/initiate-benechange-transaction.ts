@@ -91,18 +91,20 @@ const formatParties = (policyResponse: PolicyResponse) => {
         partyRole: role,
         partyType: party?.partyType,
         prefix: null,
-        firstName: party?.firstName ?? null,
-        middleName: party?.middleName ?? null,
+        firstName:
+            party?.partyType === 'INDIVIDUAL' ? party?.firstName || null : null,
         lastName:
-            party?.lastName ||
-            (party.partyType !== 'INDIVIDUAL' ? party?.fullName : null) ||
-            null,
-        fullName: toTitleCase(
-            [party.firstName, party.middleName, party.lastName]
-                .filter(Boolean)
-                .join(' ')
-        ),
+            party?.partyType === 'INDIVIDUAL'
+                ? party?.lastName || null
+                : party?.fullName || null,
+        middleName:
+            party?.partyType === 'INDIVIDUAL'
+                ? party?.middleName || null
+                : null,
+        fullName: party?.fullName || null,
         dateOfBirth: party?.dateOfBirth ?? null,
+        trustDate:
+            party?.partyType === 'TRUST' ? party?.dateOfBirth ?? null : null,
         suffix: null,
         trustType: null,
         addresses: getAddresses(party?.addresses ?? []),
@@ -121,7 +123,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
                   ],
         phones:
             party.phones.length > 0
-                ? party.phones.map((phone: any) => ({
+                ? [party.phones[0]].map((phone: any) => ({
                       areaCode: phone?.areaCode ?? null,
                       bestTime: phone?.bestTime ?? null,
                       countryCode: phone?.countryCode ?? 'US',
@@ -261,7 +263,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                   ],
                         phones:
                             bene.phones.length > 0
-                                ? bene.phones.map((phone: any) => ({
+                                ? [bene.phones[0]].map((phone: any) => ({
                                       areaCode: phone.areaCode ?? null,
                                       bestTime: phone.bestTime ?? null,
                                       countryCode: phone.countryCode ?? 'USA',

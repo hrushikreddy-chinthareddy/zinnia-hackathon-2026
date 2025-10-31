@@ -195,11 +195,6 @@
                                                     "ORGANIZATION"
                                                 ]
                                             },
-                                            "dateOfBirth": {
-                                                "title": "Date of birth",
-                                                "type": ["string", "null"],
-                                                "default": null
-                                            },
                                             "identifications": {
                                                 "type": "array",
                                                 "title": "",
@@ -394,6 +389,15 @@
                                                                 "null"
                                                             ],
                                                             "title": "Last name"
+                                                        },
+                                                        "dateOfBirth": {
+                                                            "format": "date",
+                                                            "title": "Date of birth",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "default": null
                                                         }
                                                     }
                                                 }
@@ -426,6 +430,15 @@
                                                                 "INDIVIDUALTRUST",
                                                                 "CORPORATETRUST",
                                                                 "TESTAMENTARYTRUST"
+                                                            ],
+                                                            "default": null
+                                                        },
+                                                        "trustDate": {
+                                                            "format": "date",
+                                                            "title": "Trust Date",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
                                                             ],
                                                             "default": null
                                                         }
@@ -535,6 +548,7 @@
                                     "firstName",
                                     "middleName",
                                     "lastName",
+                                    "trustDate",
                                     "dateOfBirth",
                                     "identifications",
                                     "emails",
@@ -563,6 +577,11 @@
                                             "Individual",
                                             "Trust",
                                             "Estate/Organization"
+                                        ],
+                                        "enumDisabled": [
+                                            "INDIVIDUAL",
+                                            "TRUST",
+                                            "ORGANIZATION"
                                         ]
                                     }
                                 },
