@@ -18,7 +18,7 @@ const ensureSingle = <T,>(value: T | T[] | undefined): T | undefined =>
     Array.isArray(value) ? value[0] : value;
 
 const parseRiderQueryValue = (value: string | string[]) => {
-    if (value === '') {
+    if (value === 'true') {
         return true;
     }
     // ParseFloat allows undefined as argument
@@ -113,7 +113,11 @@ export const getServerSideProps = withPageAuthAndLogging(
             }
 
             Object.entries(params.riders)
-                .filter(([, value]) => !Number.isFinite(value))
+                .filter(
+                    ([, value]) =>
+                        !value ||
+                        (typeof value === 'number' && !Number.isFinite(value))
+                )
                 .forEach(
                     ([rider]) =>
                         delete (params.riders as Record<string, unknown>)[rider]

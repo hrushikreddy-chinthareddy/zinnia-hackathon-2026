@@ -2917,7 +2917,10 @@
                 "submitted": "¡Enviado!",
                 "failed": "Algo salió mal",
                 "successMessage": "La solicitud de actualización de retención ha sido enviada.",
-                "errorMessage": "Ocurrió un error al enviar esta tarea. Por favor, intente de nuevo."
+                "errorMessage": "Ocurrió un error al enviar esta tarea. Por favor, intente de nuevo.",
+                "formValidation": {
+                    "signaturePresentOptionMustBeSelected": ""
+                }
             },
             "cancel": "Cancelar",
             "cancelConfirm": "Volver a crear caso eliminará su borrador. ¿Está de acuerdo en volver a crear el caso?",
@@ -3119,9 +3122,9 @@
                 "actions": "Acciones",
                 "noTaxForms": "No se encontraron formularios fiscales para este período",
                 "popover": {
+                    "5498": "Informa las contribuciones realizadas a las IRA, incluidos los traspasos y los valores de mercado justo para el año fiscal.",
                     "1099R": "Informa las distribuciones de pólizas/contratos.",
-                    "1099Int": "Informa los ingresos por intereses ganados.",
-                    "5498": "Informa las contribuciones realizadas a las IRA, incluidos los traspasos y los valores de mercado justo para el año fiscal."
+                    "1099Int": "Informa los ingresos por intereses ganados."
                 },
                 "warning": {
                     "0": "Por favor, revise los formularios fiscales antes de continuar.",
@@ -8326,6 +8329,34 @@
             "provideValidAmount": "Por favor ingrese un valor nominal valido",
             "faceAmountError": "Face amount must be greater than 0",
             "updating": "Actualizando cotización..."
+        },
+        "quickQuoteResults": {
+            "title": "Cotización rápida",
+            "coverage": {
+                "basePremiumRange": "Rango de Prima Base",
+                "hint": "",
+                "nYearTerm": "{{years}} año plazo",
+                "title": "Cobertura y resumen"
+            },
+            "notAvailable": "No disponible",
+            "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
+            "notAvailableReason": {
+                "age": "No disponible para la edad {{age}}.",
+                "face": "No disponible para este monto nominal.",
+                "state": "No disponible para este estado."
+            },
+            "product": {
+                "title": "Producto",
+                "totalPremiumRange": "Gama Premium Total",
+                "totalPremiumRangeRowHeader": "{{years}} año plazo",
+                "totalPremiumRangeSubtitle": "(Rango de prima base + Adicionales)"
+            },
+            "riders": {
+                "title": "Adicionales",
+                "disabledPlaceholder": "Seleccione para agregar y ver precios",
+                "premiumFreeRiders": "Adicionales sin prima",
+                "totalRiderPricing": "Precio total de adicionales"
+            }
         }
     },
     "zinniaAiAssistant": {

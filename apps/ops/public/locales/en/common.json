@@ -8446,6 +8446,11 @@
                 "hint": "",
                 "nYearTerm": "{{years}} year term"
             },
+            "notAvailableReason": {
+                "age": "Not available for age {{age}}.",
+                "state": "Not available for this state.",
+                "face": "Not available for this face amount."
+            },
             "riders": {
                 "title": "Riders",
                 "disabledPlaceholder": "Select to add and see pricing",
