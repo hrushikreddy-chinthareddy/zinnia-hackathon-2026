@@ -26,7 +26,6 @@ export const KeyValueSubSections = ({
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
-    console.log('kvs.....', subSections);
     return subSections?.map((subSection, i) => {
         const [subSectionLabel, subSectionFields] = subSection as [
             string,

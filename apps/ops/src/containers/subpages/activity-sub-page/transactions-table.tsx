@@ -73,9 +73,9 @@ export const TransactionsTable = ({
                 <TableBody>
                     {paginatedData.length ? (
                         <>
-                            {paginatedData.map((transaction) => (
+                            {paginatedData.map((transaction, index) => (
                                 <TableRow
-                                    key={transaction.transactionId}
+                                    key={`${transaction.transactionId}-${index}`}
                                     onClick={() => onTableRowClick(transaction)}
                                 >
                                     <TableCell>
