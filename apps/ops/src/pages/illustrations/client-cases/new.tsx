@@ -16,9 +16,11 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import { SegmentPageName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -46,6 +48,10 @@ export default function NewClientCase(
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const sideSheet = useSideSheetContext();
     const searchParams = useSearchParams();
+    useSegmentPageTracker(
+        props.additionalData.user,
+        SegmentPageName.IllustrationsNewClientCase
+    );
 
     const closeSideSheet = useCallback(() => {
         const params = toLowerCaseSearchParams(searchParams);

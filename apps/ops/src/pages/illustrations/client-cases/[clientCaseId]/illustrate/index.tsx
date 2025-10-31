@@ -17,6 +17,7 @@ import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import {
     getClientCase,
@@ -26,6 +27,7 @@ import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_o
 import { ApiResponse } from '@deps/types/api-response';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { Product } from '@deps/types/product';
+import { SegmentPageName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -40,10 +42,20 @@ export type AdditionalDataProps = {
     user: UserProfile;
 };
 
-export default function ClientCaseIllustrations() {
+interface ClientCaseIllustrationsProps {
+    additionalData: AdditionalDataProps;
+}
+
+export default function ClientCaseIllustrations({
+    additionalData,
+}: ClientCaseIllustrationsProps) {
     const clientCaseId = useClientCaseId();
     const searchParams = useSearchParams();
     const carrierProductId = searchParams.get('planCode') || '';
+    useSegmentPageTracker(
+        additionalData.user,
+        SegmentPageName.IllustrationsDetails
+    );
 
     const {
         data: clientCase,
