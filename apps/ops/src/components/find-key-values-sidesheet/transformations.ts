@@ -189,17 +189,6 @@ export const toSections = (
                     sectionTypeToSubSectionTitleFields[sectionTitle];
                 switch (sectionTitle) {
                     case 'allocation':
-                        console.log(
-                            'parseAllocation........',
-                            parseAllocation(
-                                policy,
-                                subSectionTitleField,
-                                sectionTitle,
-                                t,
-                                acc,
-                                currentVal as Policy['allocation']
-                            )
-                        );
                         return parseAllocation(
                             policy,
                             subSectionTitleField,
@@ -414,7 +403,6 @@ export const toTransactionSections = (
             },
         ],
     };
-    console.log('transaction....', transaction);
 
     const transactionTuples = Object.entries(transaction);
     const basicsAndSections = transactionTuples.reduce(
@@ -486,7 +474,6 @@ export const toTransactionSections = (
         'taxes',
         parseTransactionTaxes(transaction, policy, allPartiesById, t),
     ]);
-    console.log('taxes....', basicsAndSections);
 
     // Fill in the people section
     const people = parsePeople({ policy, transaction, allPartiesById, t });
@@ -1098,7 +1085,7 @@ function parseRiders(
 
         return {
             ...rider,
-            ...(parties && { riderParties: parties }),
+            ...parties,
         };
     });
 
@@ -1178,9 +1165,7 @@ function parseSystematicPrograms(
 
             return {
                 ...systematicProgram,
-                ...(parties && {
-                    systematicProgramParties: parties,
-                }),
+                ...parties,
             };
         }
     );

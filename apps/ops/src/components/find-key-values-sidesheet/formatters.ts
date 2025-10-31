@@ -249,11 +249,16 @@ export const formatDataField = (
 
     if (typeof formattedData === 'object' && formattedData != null) {
         const fieldTags = formattedData[tags];
-        const fieldLabel = formattedData[label];
+        const fieldLabel = formattedData[label] ?? formattedLabel;
         const fieldLink = formattedData[link];
         const fieldLinkedField = formattedData[linkedField];
         const formattedEntries = removeExcludedAndEmptyFields(
-            Object.entries(formattedData),
+            formattedData instanceof Array
+                ? (formattedData.map((v, i) => [
+                      `${key} ${i + 1}`,
+                      v,
+                  ]) as NestedData)
+                : (Object.entries<NestedData>(formattedData) as NestedData),
             lineOfBusiness,
             t,
             type,
@@ -331,7 +336,7 @@ export const removeExcludedAndEmptyFields = (
             if (!isTuple(tuple)) {
                 return null;
             }
-            tuple;
+
             return !(
                 additionalFieldsToExclude &&
                 new Set(additionalFieldsToExclude).has(tuple[0])
@@ -355,4 +360,4 @@ export const isTuple = (tuple: any): tuple is NestedDataTuple =>
     tuple != null &&
     Array.isArray(tuple) &&
     tuple.length === 2 &&
-    typeof tuple[0] === 'string';
+    (typeof tuple[0] === 'string' || typeof tuple[0] === 'number');

@@ -27,20 +27,7 @@ export const KeyValueFieldList = ({
                 // subSection-in-subSection
                 const [key, data] = field as unknown[];
 
-                // The data returned is either a Tuple or an Array of Tuples;
-                // If the first element (key) is an array, it's a nested subSection
-                if (key instanceof Array) {
-                    return (
-                        <KeyValueNestedSubSections
-                            key={`subsection_${i}`}
-                            subSections={field as NestedData[]}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    );
-                }
-
-                // Otherwise, just render it as a DataField
+                // Render key-value pairs as a DataField
                 if (typeof key === 'string') {
                     return (
                         <DataField

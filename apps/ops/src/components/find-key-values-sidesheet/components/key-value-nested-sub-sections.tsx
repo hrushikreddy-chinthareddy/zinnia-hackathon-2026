@@ -60,16 +60,32 @@ export const KeyValueNestedSubSections = ({
                     <div className={styles.itemsList}>
                         {(subSection as NestedData[])
                             .map((field, j) => {
-                                const [label, data] = field as DataTuple;
+                                const [fieldLabel, data] = field as DataTuple;
                                 const fieldLink = (field as MetaData)[link];
-                                return typeof label === 'string' ? (
-                                    <DataField
-                                        key={`field_${j}`}
-                                        dataField={[label, String(data)]}
-                                        searchValue={searchValue}
-                                        link={fieldLink}
-                                    />
-                                ) : null;
+                                if (typeof fieldLabel === 'string') {
+                                    return (
+                                        <DataField
+                                            key={`field_${j}`}
+                                            dataField={[
+                                                fieldLabel,
+                                                String(data),
+                                            ]}
+                                            searchValue={searchValue}
+                                            link={fieldLink}
+                                        />
+                                    );
+                                } else if (field instanceof Array) {
+                                    return (
+                                        <KeyValueNestedSubSections
+                                            key={`sub_subsection_`}
+                                            subSections={
+                                                [field] as NestedData[]
+                                            }
+                                            searchValue={searchValue}
+                                            treeState={treeState}
+                                        />
+                                    );
+                                }
                             })
                             .filter((field) => field !== null)}
                     </div>
