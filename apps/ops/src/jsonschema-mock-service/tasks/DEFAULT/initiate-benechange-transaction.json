@@ -247,6 +247,9 @@
                                                 "items": {
                                                     "type": "object",
                                                     "properties": {
+                                                        "addressTitle": {
+                                                            "type": "string"
+                                                        },
                                                         "addressLine1": {
                                                             "type": [
                                                                 "string",
@@ -657,12 +660,13 @@
                                     "items": {
                                         "ui:options": {
                                             "label": false,
-                                            "noMargin": true,
-                                            "nobackground": true,
-                                            "ObjectFieldTemplate": "AddressFieldTemplate",
-                                            "backgroundColor": "white",
-                                            "classes": "p-0",
-                                            "showDynamicTitle": true
+                                            "nobackground": true
+                                        },
+                                        "addressTitle": {
+                                            "ui:widget": "TitleWidget",
+                                            "ui:options": {
+                                                "label": false
+                                            }
                                         },
                                         "addressType": {
                                             "ui:widget": "hidden",

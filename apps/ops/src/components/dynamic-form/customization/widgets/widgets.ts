@@ -20,6 +20,7 @@ import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
 import TextareaWidget from './textarea-widget/textarea-widget';
 import TransactionAccordion from './transaction-accordion/transaction-accordion';
+import TitleWidget from './title-widget/titile-widget';
 
 export function generateWidgets(): RegistryWidgetsType {
     return {
@@ -43,6 +44,7 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         NewDateWidget,
         SSNWidget,
+        TitleWidget,
     };
 }
 
