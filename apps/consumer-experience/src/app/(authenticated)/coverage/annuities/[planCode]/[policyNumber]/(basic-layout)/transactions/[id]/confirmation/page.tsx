@@ -24,14 +24,11 @@ export default async function TransactionSummaryConfirmation({
   searchParams,
 }: {
   params: {
-    planCode: string;
-    policyNumber: string;
     id: string;
   };
   searchParams: { action: 'deny' | 'approve' };
 }) {
-  const { planCode, policyNumber, id } = params;
-  console.log({ searchParams });
+  const { id } = params;
 
   const flags = await getFeatureFlags();
   const commonLoggingContext = await buildCommonLogContext();

@@ -30,7 +30,6 @@ export default async function TransactionSummary({
 }) {
   const { planCode, policyNumber, id } = params;
 
-  console.log({ params });
   const flags = await getFeatureFlags();
   const commonLoggingContext = await buildCommonLogContext();
 
