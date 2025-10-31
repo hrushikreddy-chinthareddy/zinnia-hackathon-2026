@@ -2,9 +2,13 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { HeaderPolicyDetails } from '@/components/policy-detail-page-header/header-policy-details/HeaderPolicyDetails';
 import { TransactionsSummary } from '@/components/transaction-summary/TransactionSummary';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { getTransactionSummaryById } from '@/services/transactions';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 const pageTitle = getPageTitle(RouteKey.TRANSACTION_SUMMARY);
@@ -21,23 +25,42 @@ export default async function TransactionSummary({
   params: {
     planCode: string;
     policyNumber: string;
-    transactionId: string;
+    id: string;
   };
 }) {
-  const { planCode, policyNumber, transactionId } = params;
+  const { planCode, policyNumber, id } = params;
+
+  console.log({ params });
   const flags = await getFeatureFlags();
+  const commonLoggingContext = await buildCommonLogContext();
 
   const transactionSummaryEnabled =
     flags?.[FEATURE_FLAGS.AMP_TRANSACTION_SUMMARY];
 
+  const { data, error } = await getTransactionSummaryById(
+    { transactionId: id },
+    commonLoggingContext
+  );
+
   if (!transactionSummaryEnabled) return notFound();
 
+  if (!id || error) {
+    return <NoDataAvailable correlationId={error?.correlationId} />;
+  }
+
   return (
-    <TransactionsSummary
-      transactionId={transactionId}
-      planCode={planCode}
-      policyNumber={policyNumber}
-      lineOfBusiness={LineOfBusiness.ANNUITY}
-    />
+    <TransactionsSummary transactionDetails={data}>
+      <HeaderPolicyDetails
+        planCode={planCode}
+        policyNumber={policyNumber}
+        lineOfBusiness={LineOfBusiness.ANNUITY}
+        fieldVisibility={{
+          policyName: true,
+          policyNumber: true,
+          status: false,
+          agentInfo: false,
+        }}
+      />
+    </TransactionsSummary>
   );
 }
