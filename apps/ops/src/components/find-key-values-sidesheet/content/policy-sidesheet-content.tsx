@@ -46,13 +46,11 @@ export const PolicySidesheetContent = ({
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
 
-    const { policy, isFetching, isError } = usePolicyQuery(
-        planCode,
-        policyNumber,
-        date,
-        queryClient,
-        enableQuery
-    );
+    const {
+        data: policy,
+        isFetching,
+        isError,
+    } = usePolicyQuery(planCode, policyNumber, date, queryClient, enableQuery);
 
     const isDateAllowed = (date: Dayjs) => {
         const policyIssuanceDate = dayjs(
