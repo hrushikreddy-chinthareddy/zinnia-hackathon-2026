@@ -13,7 +13,7 @@ const ErrorPage = ({
   params: PolicyRequestInputs;
   searchParams: { errorType?: TransactionErrorType; correlationId?: string };
 }) => {
-  const goToUrl = `/coverage/policies/${params.planCode}/${params.policyNumber}/`;
+  const goToUrl = `/coverage/annuities/${params.planCode}/${params.policyNumber}/`;
 
   if (searchParams?.errorType === TransactionErrorType.SUBMISSION_FAILED) {
     return (
