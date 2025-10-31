@@ -37,6 +37,11 @@ export type Section = [
     }
 ];
 
+export type ToSections = {
+    basics: NestedData[] | null;
+    sections: Section[];
+};
+
 export const [Expand, Collapse] = [true, false];
 
 export type ExpandCollapse = typeof Expand | typeof Collapse;
@@ -53,7 +58,7 @@ export enum FormatterType {
 
 export type TransformationsConfig = {
     labels: { [key: string]: string };
-    titles?: any;
+    titles?: (...args: unknown[]) => ToSections;
     formatterType: FormatterType;
     showSection?: (
         sectionTitle: string,

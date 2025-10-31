@@ -28,6 +28,7 @@ import {
     Section,
     FormatterType,
     TransformationsConfig,
+    ToSections,
 } from './types';
 
 /**
@@ -81,6 +82,63 @@ export const preparePolicy = ({
           })
         : undefined;
 
+    const parseTitles = (sectionTitle, acc, currentVal, currentKey) => {
+        const subSectionTitleField =
+            sectionTypeToSubSectionTitleFields[sectionTitle as string];
+        switch (sectionTitle) {
+            case 'allocation': {
+                return parseAllocation(
+                    policy,
+                    subSectionTitleField,
+                    sectionTitle,
+                    t,
+                    acc,
+                    currentVal
+                );
+            }
+            case 'systemicPrograms': {
+                return parseSystematicPrograms(
+                    policy,
+                    allPartiesById,
+                    t,
+                    policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
+                    acc,
+                    currentKey,
+                    currentVal
+                );
+            }
+            case 'riders': {
+                return parseRiders(
+                    policy,
+                    allPartiesById,
+                    t,
+                    acc,
+                    currentKey,
+                    currentVal as Policy['riders']
+                );
+            }
+            case 'loanValues': {
+                return parseLoanValues(
+                    policy,
+                    subSectionTitleField,
+                    sectionTitle,
+                    t,
+                    acc,
+                    currentVal as Policy['loanValues']
+                );
+            }
+            default: {
+                return {
+                    ...acc,
+                    sections: [
+                        ...acc.sections,
+                        [currentKey, currentVal] as Section,
+                    ],
+                };
+            }
+        }
+    };
+
     // Add config for showSection logic and custom labels for sections / data aggregation: @showSection, @titles, labels
     const policyConfig: TransformationsConfig = {
         showSection: (sectionTitle, policy, planCode, productType) =>
@@ -93,57 +151,7 @@ export const preparePolicy = ({
             }),
         labels: { people: 'people', sectionLabel: 'policyBasics' },
         formatterType: FormatterType.POLICY,
-        titles: (sectionTitle, acc, currentVal, currentKey) => {
-            const subSectionTitleField =
-                sectionTypeToSubSectionTitleFields[sectionTitle as string];
-            const titleDict = {
-                allocation: parseAllocation(
-                    policy,
-                    subSectionTitleField,
-                    sectionTitle as string,
-                    t,
-                    acc,
-                    currentVal
-                ),
-                systemicPrograms: parseSystematicPrograms(
-                    policy,
-                    allPartiesById,
-                    t,
-                    policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
-                    acc,
-                    currentKey,
-                    currentVal
-                ),
-                riders: parseRiders(
-                    policy,
-                    allPartiesById,
-                    t,
-                    acc,
-                    currentKey,
-                    currentVal as Policy['riders']
-                ),
-                loanValues: parseLoanValues(
-                    policy,
-                    subSectionTitleField,
-                    sectionTitle,
-                    t,
-                    acc,
-                    currentVal as Policy['loanValues']
-                ),
-            };
-
-            if (titleDict[sectionTitle]) {
-                return titleDict[sectionTitle];
-            } else {
-                return {
-                    ...acc,
-                    sections: [
-                        ...acc.sections,
-                        [currentKey, currentVal] as Section,
-                    ],
-                };
-            }
-        },
+        titles: parseTitles,
     };
 
     return {
@@ -246,10 +254,7 @@ export const toSections = ({
     productType?: ProductType;
     allPartiesById?: Record<string, Party>;
     config: TransformationsConfig;
-}): {
-    basics: NestedData[] | null;
-    sections: Section[];
-} => {
+}): ToSections => {
     const data = {
         transaction: transaction ?? [],
         policy: policy,
@@ -356,7 +361,6 @@ export const toSections = ({
     // Fill in the section title
     if (basicsAndSections.basics != null) {
         (basicsAndSections.basics as MetaData)[label] = formatAsSectionLabel(
-            //transaction ? 'transactionDetails' : 'policyBasics',
             config.labels.sectionLabel,
             policy.product?.lineOfBusiness ?? LineOfBusiness.OTHER,
             t
