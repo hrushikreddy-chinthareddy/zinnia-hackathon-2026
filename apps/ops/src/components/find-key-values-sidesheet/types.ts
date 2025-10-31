@@ -58,7 +58,17 @@ export enum FormatterType {
 
 export type TransformationsConfig = {
     labels: { [key: string]: string };
-    titles?: (...args: unknown[]) => ToSections;
+    parseTitles?: ({
+        sectionTitle,
+        acc,
+        currentVal,
+        currentKey,
+    }: {
+        sectionTitle: string;
+        acc: ToSections;
+        currentVal: any; //FIXME
+        currentKey: string;
+    }) => ToSections;
     formatterType: FormatterType;
     showSection?: (
         sectionTitle: string,
