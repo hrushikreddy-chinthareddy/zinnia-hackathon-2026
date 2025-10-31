@@ -2001,7 +2001,8 @@
                 "premium source": "Source de Financement",
                 "re-illustration": "Nouvelle illustration",
                 "linked case": "Cas lié",
-                "bene": "Notifier"
+                "bene": "Notifier",
+                "beneficiary": "Beneficiaire"
             },
             "reviewIssues": "Revoir problèmes",
             "suitabilityReview": "suitability",

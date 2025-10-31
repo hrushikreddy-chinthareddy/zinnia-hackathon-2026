@@ -36,7 +36,7 @@ export enum FieldVariant {
     Error = 'error',
 }
 
-export type FieldFormat = 'string' | 'number';
+export type FieldFormat = 'string' | 'number' | 'pattern';
 
 // TODO: Leaving this here as a possible implementation in the future
 // export type FieldFormat =

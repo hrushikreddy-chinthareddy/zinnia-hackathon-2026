@@ -196,7 +196,6 @@
                                                 ]
                                             },
                                             "dateOfBirth": {
-                                                "format": "date",
                                                 "title": "Date of birth",
                                                 "type": ["string", "null"],
                                                 "default": null
@@ -263,8 +262,8 @@
                                                         "addressType": {
                                                             "type": "string",
                                                             "enum": [
-                                                                "Residential Address",
-                                                                "Mailing Address"
+                                                                "RESIDENCE",
+                                                                "DEFAULT"
                                                             ]
                                                         },
                                                         "city": {
@@ -484,19 +483,19 @@
                                             "addresses": [
                                                 {
                                                     "addressLine1": "",
-                                                    "addressType": "Residential Address",
+                                                    "addressType": "RESIDENCE",
                                                     "city": "",
                                                     "state": null,
                                                     "zipCode": null,
-                                                    "zipCodeExtension": ""
+                                                    "zipCodeExtension": null
                                                 },
                                                 {
                                                     "addressLine1": "",
-                                                    "addressType": "Mailing Address",
+                                                    "addressType": "DEFAULT",
                                                     "city": "",
                                                     "state": null,
-                                                    "zipCode": "",
-                                                    "zipCodeExtension": ""
+                                                    "zipCode": null,
+                                                    "zipCodeExtension": null
                                                 }
                                             ]
                                         }
@@ -552,7 +551,8 @@
                                 "partyRole": {
                                     "ui:widget": "hidden",
                                     "ui:options": {
-                                        "enumNames": ["Owner", "Joint Owner"]
+                                        "enumNames": ["Owner", "Joint Owner"],
+                                        "ObjectFieldTemplate": "AddressFieldTemplate"
                                     }
                                 },
                                 "partyType": {
@@ -578,6 +578,9 @@
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
+                                        },
+                                        "identificationValue": {
+                                            "ui:widget": "SSNWidget"
                                         }
                                     }
                                 },
@@ -619,7 +622,9 @@
                                         "dialNumber": {
                                             "ui:options": {
                                                 "label": false
-                                            }
+                                            },
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "+### (###) ###-####"
                                         }
                                     }
                                 },
@@ -717,6 +722,16 @@
                                                 ]
                                             },
                                             "ui:placeholder": "Select state"
+                                        },
+                                        "zipCode": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{5}$",
+                                            "format": "#####"
+                                        },
+                                        "zipCodeExtension": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{4}$",
+                                            "format": "####"
                                         }
                                     }
                                 },
@@ -732,6 +747,9 @@
                                         ]
                                     },
                                     "ui:placeholder": "Select trust type"
+                                },
+                                "dateOfBirth": {
+                                    "ui:widget": "NewDateWidget"
                                 }
                             }
                         }
@@ -1072,8 +1090,7 @@
                                                         },
                                                         "dateOfBirth": {
                                                             "type": "string",
-                                                            "title": "Date of birth",
-                                                            "format": "date"
+                                                            "title": "Date of birth"
                                                         }
                                                     },
                                                     "required": [
@@ -1138,7 +1155,6 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "format": "date",
                                                             "title": "Trust date"
                                                         },
                                                         "supportingDocumentAttached": {
@@ -1338,7 +1354,8 @@
                             "defaultItemLabel": "New Beneficiary",
                             "showDeleteBtn": true,
                             "showAddBtn": true,
-                            "tabTitle": "Beneficiary Details"
+                            "tabTitle": "Beneficiary Details",
+                            "showRemoveItemBtn": true
                         },
                         "items": {
                             "ui:order": [
@@ -1507,6 +1524,9 @@
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
+                                        },
+                                        "identificationValue": {
+                                            "ui:widget": "SSNWidget"
                                         }
                                     }
                                 },
@@ -1605,6 +1625,16 @@
                                                     "WY"
                                                 ]
                                             }
+                                        },
+                                        "zipCode": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{5}$",
+                                            "format": "#####"
+                                        },
+                                        "zipCodeExtension": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{4}$",
+                                            "format": "####"
                                         }
                                     }
                                 },
@@ -1635,6 +1665,10 @@
                                                     "Default"
                                                 ]
                                             }
+                                        },
+                                        "dialNumber": {
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "+### (###) ###-####"
                                         }
                                     }
                                 },
@@ -1689,6 +1723,12 @@
                                         "inline": true,
                                         "enumNames": ["Email", "Mail"]
                                     }
+                                },
+                                "dateOfBirth": {
+                                    "ui:widget": "NewDateWidget"
+                                },
+                                "trustDate": {
+                                    "ui:widget": "NewDateWidget"
                                 }
                             },
                             "partyRole": {
@@ -1810,7 +1850,6 @@
                                             "signDate": {
                                                 "type": ["string", "null"],
                                                 "title": "Sign date",
-                                                "format": "date",
                                                 "default": null
                                             }
                                         }
@@ -1906,7 +1945,9 @@
                                     },
                                     "ui:placeholder": "Select designation"
                                 },
-                                "signDate": {}
+                                "signDate": {
+                                    "ui:widget": "NewDateWidget"
+                                }
                             }
                         }
                     }

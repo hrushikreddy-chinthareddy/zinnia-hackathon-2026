@@ -21,7 +21,7 @@ dayjs.extend(customParseFormat);
 dayjs.extend(localData);
 
 export type FieldDateSelectProps = {
-    value: string;
+    value: string | null;
     label?: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
     isFutureDateDisabled?: boolean;

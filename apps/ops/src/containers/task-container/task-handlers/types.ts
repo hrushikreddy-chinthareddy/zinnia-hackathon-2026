@@ -105,7 +105,7 @@ export enum PartyRoleLabel {
 
 export enum AddressType {
     RESIDENCE = 'RESIDENCE',
-    MAILING = 'MAILING',
+    MAILING = 'DEFAULT',
 }
 
 export enum AddressTypeLabel {

@@ -10,7 +10,6 @@ import {
     Reason,
     BeneficiaryTaskPayload,
     AddressType,
-    AddressTypeLabel,
     PartyRoleType,
     PartyRole,
     Party,
@@ -33,7 +32,14 @@ const getIdentifications = (identifications: Identification[] = []) => {
     const ssnIdentification = (identifications ?? []).find(
         (id: Identification) => id.identificationType === IdentificationType.SSN
     );
-    return ssnIdentification ? [ssnIdentification] : [];
+    return identifications.length > 0 && ssnIdentification
+        ? [ssnIdentification]
+        : [
+              {
+                  identificationValue: null,
+                  identificationType: IdentificationType.SSN,
+              },
+          ];
 };
 
 const formatParties = (policyResponse: PolicyResponse) => {
@@ -51,8 +57,8 @@ const formatParties = (policyResponse: PolicyResponse) => {
     ) => ({
         addressType:
             type === AddressType.RESIDENCE
-                ? AddressTypeLabel.RESIDENCE
-                : AddressTypeLabel.MAILING,
+                ? AddressType.RESIDENCE
+                : AddressType.MAILING,
         addressLine1: address.addressLine1 ?? null,
         addressLine2: null,
         addressLine3: null,
@@ -286,25 +292,43 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         identifications: getIdentifications(
                             bene.identifications
                         ),
-                        addresses: (bene.addresses ?? []).map(
-                            (address: ExtendedAddress) => ({
-                                addressId: address.addressId ?? null,
-                                addressType:
-                                    address?.addressType ?? 'RESIDENCE',
-                                addressLine1: address?.addressLine1 ?? null,
-                                addressLine2: address?.addressLine2 ?? null,
-                                addressLine3: address?.addressLine3 ?? null,
-                                city: address?.city ?? null,
-                                state: address?.state ?? null,
-                                zipCode: address?.zipCode ?? null,
-                                zipCodeExtension:
-                                    address?.zipCodeExtension ?? null,
-                                country: address?.country ?? 'USA',
-                                endDate: address?.endDate ?? null,
-                                isPreferred: address?.isPreferred ?? false,
-                                startDate: address?.startDate ?? null,
-                            })
-                        ),
+                        addresses:
+                            bene.addresses.length > 0
+                                ? bene.addresses.map(
+                                      (address: ExtendedAddress) => ({
+                                          addressId: address.addressId ?? null,
+                                          addressType:
+                                              address?.addressType ??
+                                              'RESIDENCE',
+                                          addressLine1:
+                                              address?.addressLine1 ?? null,
+                                          addressLine2:
+                                              address?.addressLine2 ?? null,
+                                          addressLine3:
+                                              address?.addressLine3 ?? null,
+                                          city: address?.city ?? null,
+                                          state: address?.state ?? null,
+                                          zipCode: address?.zipCode ?? null,
+                                          zipCodeExtension:
+                                              address?.zipCodeExtension ?? null,
+                                          country: address?.country ?? 'USA',
+                                          endDate: address?.endDate ?? null,
+                                          isPreferred:
+                                              address?.isPreferred ?? false,
+                                          startDate: address?.startDate ?? null,
+                                      })
+                                  )
+                                : [
+                                      {
+                                          addressType: 'RESIDENCE',
+                                          addressLine1: '',
+                                          addressLine2: null,
+                                          city: '',
+                                          state: '',
+                                          zipCode: '',
+                                          zipCodeExtension: null,
+                                      },
+                                  ],
                         beneficiaryPercentage: bene.beneficiaryPercentage ?? 0,
                     },
                 };
@@ -350,7 +374,8 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
                 policyNumber,
                 planCode,
                 accessToken,
-                (logCtx ?? {}) as LoggingContext
+                (logCtx ?? {}) as LoggingContext,
+                true
             ),
         ]);
         return {

@@ -2011,7 +2011,8 @@
                 "premium source": "Funding Source",
                 "re-illustration": "Re-Illustration",
                 "linked case": "Linked Case",
-                "bene": "Notify"
+                "bene": "Notify",
+                "beneficiary": "Beneficiary"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",

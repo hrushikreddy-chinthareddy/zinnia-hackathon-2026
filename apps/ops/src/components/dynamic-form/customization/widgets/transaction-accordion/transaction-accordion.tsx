@@ -17,7 +17,13 @@ const TransactionAccordion = ({
     readonly,
 }: WidgetProps) => {
     const { ObjectField } = registry.fields;
-    const { tabTitle, showAddBtn, showDeleteBtn, hideAccordion } = options;
+    const {
+        tabTitle,
+        showAddBtn,
+        showDeleteBtn,
+        hideAccordion,
+        showRemoveItemBtn,
+    } = options;
     const isIrrevocableBene =
         formContext.customData.signatureData?.isIrrevocableBene || false;
 
@@ -256,7 +262,7 @@ const TransactionAccordion = ({
                                             {title}
                                         </span>
                                     </button>
-                                    {isBeneAddition && (
+                                    {isBeneAddition && showRemoveItemBtn && (
                                         <button
                                             onClick={() =>
                                                 handleRemoveItem(index)
