@@ -17,11 +17,9 @@ import { KeyValueFieldList } from './key-value-field-list';
  * @returns {JSX.Element} - A JSX element representing the key-value pairs
  */
 export const KeyValueBasics = ({
-    preparedData,
     policyBasics,
     searchValue,
     treeState,
-    type = 'policy',
 }: {
     preparedData: ReturnType<typeof preparePolicy | typeof prepareTransaction>;
     policyBasics: NestedData;

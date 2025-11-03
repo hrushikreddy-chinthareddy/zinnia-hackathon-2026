@@ -121,7 +121,7 @@ export const PolicySidesheetContent = ({
         setTreeState(Expand);
     }, [debouncedSearchValue, authSessionId, planCode, policyNumber]);
 
-    if (!preparedPolicy) return null; //FIXME: add loading state
+    if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
             <FieldDateSelect

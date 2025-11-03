@@ -59,6 +59,7 @@ export const KeyValueNestedSubSections = ({
                 >
                     <div className={styles.itemsList}>
                         {(subSection as NestedData[])
+                            .filter((section) => section !== null)
                             .map((field, j) => {
                                 const [fieldLabel, data] = field as DataTuple;
                                 const fieldLink = (field as MetaData)[link];
@@ -86,8 +87,7 @@ export const KeyValueNestedSubSections = ({
                                         />
                                     );
                                 }
-                            })
-                            .filter((field) => field !== null)}
+                            })}
                     </div>
                 </Accordion>
             </div>
