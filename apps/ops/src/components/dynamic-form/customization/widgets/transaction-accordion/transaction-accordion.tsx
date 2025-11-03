@@ -133,7 +133,6 @@ const TransactionAccordion = ({
                 gender: 'MALE',
                 preferredCommunicationType: 'EMAIL',
                 supportingDocumentAttached: false,
-                startDate: dayjs.utc().format('YYYY-MM-DD'),
                 entityType: 'UNKNOWN',
                 emails: [
                     {

@@ -165,8 +165,6 @@ const formatParties = (policyResponse: PolicyResponse) => {
         },
     ];
 
-    console.log('policyResponse', policyResponse.parties);
-
     const parties = rolesToFormat
         .map(({ roleKey, roleLabel }) => {
             const partyId = partyRoleMap[roleKey];
