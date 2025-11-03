@@ -82,6 +82,9 @@ export interface Party {
     emails: ExtendedEmail[];
     identifications: Identification[];
     supportingDocumentAttached: boolean;
+    prefix?: string;
+    suffix?: string;
+    trustDate?: string;
 }
 
 export interface PolicyResponse {

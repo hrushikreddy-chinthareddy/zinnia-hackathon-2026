@@ -90,7 +90,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
         partyRoleId: party?.partyRoleId ?? null,
         partyRole: role,
         partyType: party?.partyType,
-        prefix: null,
+        prefix: party?.prefix ?? null,
         firstName:
             party?.partyType === 'INDIVIDUAL' ? party?.firstName || null : null,
         lastName:
@@ -104,9 +104,9 @@ const formatParties = (policyResponse: PolicyResponse) => {
         fullName: party?.fullName || null,
         dateOfBirth: party?.dateOfBirth ?? null,
         trustDate:
-            party?.partyType === 'TRUST' ? party?.dateOfBirth ?? null : null,
-        suffix: null,
-        trustType: null,
+            party?.partyType === 'TRUST' ? party?.trustDate ?? null : null,
+        suffix: party?.suffix ?? null,
+        trustType: party?.trustType ?? null,
         addresses: getAddresses(party?.addresses ?? []),
         identifications: getIdentifications(party.identifications),
         emails:
