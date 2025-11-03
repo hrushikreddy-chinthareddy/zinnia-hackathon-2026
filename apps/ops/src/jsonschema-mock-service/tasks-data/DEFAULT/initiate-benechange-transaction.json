@@ -1,6 +1,6 @@
 {
     "id": "TA000000054889",
-    "caseId": "CA0000494168",
+    "caseId": "CA0000543637",
     "source": "Zinnia.BPMTransactions",
     "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
     "process": "Policy Update",
@@ -10,11 +10,11 @@
     "status": "NEW",
     "data": {
         "process": "Policy Update",
-        "policyNumber": "ADA2504638",
+        "policyNumber": "FNWLIUL0171",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
         "taskName": "Beneficiary Change Data Entry",
         "processSubType": "Beneficiary Change",
-        "planCode": "WBFDAV03",
+        "planCode": "IU0101",
         "policyStatus": "ACTIVE",
         "details": {
             "documents": [
@@ -39,6 +39,7 @@
                     "middleName": "S",
                     "lastName": "WILSON",
                     "fullName": "Robyn S Wilson",
+                    "trustDate": "2025-09-04",
                     "dateOfBirth": "1978-11-05",
                     "trustType": null,
                     "prefix": null,
@@ -48,6 +49,32 @@
                         }
                     ],
                     "phones": [
+                        {
+                            "areaCode": "515",
+                            "bestTime": "",
+                            "countryCode": "USA",
+                            "dialNumber": "2585158",
+                            "endDate": "",
+                            "extension": "",
+                            "isPreferred": false,
+                            "phoneId": "Party_Annuitant_1_Phone0",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22",
+                            "timezone": ""
+                        },
+                        {
+                            "areaCode": "515",
+                            "bestTime": "",
+                            "countryCode": "USA",
+                            "dialNumber": "2585158",
+                            "endDate": "",
+                            "extension": "",
+                            "isPreferred": false,
+                            "phoneId": "Party_Annuitant_1_Phone0",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22",
+                            "timezone": ""
+                        },
                         {
                             "areaCode": "515",
                             "bestTime": "",
@@ -275,6 +302,7 @@
                     "signDate": null,
                     "signDesignation": null,
                     "signType": "OWNER",
+                    "signTypeForUI": "Owner",
                     "signGurantee": null,
                     "signPrintName": null
                 },
@@ -283,6 +311,7 @@
                     "signDate": null,
                     "signDesignation": null,
                     "signType": "JOINT_OWNER",
+                    "signTypeForUI": "Joint Owner",
                     "signGurantee": null,
                     "signPrintName": null
                 },
@@ -291,6 +320,7 @@
                     "signDate": null,
                     "signDesignation": null,
                     "signType": "IRREVOCABLE",
+                    "signTypeForUI": "Irrevocable Beneficiary",
                     "signGurantee": null,
                     "signPrintName": null
                 }

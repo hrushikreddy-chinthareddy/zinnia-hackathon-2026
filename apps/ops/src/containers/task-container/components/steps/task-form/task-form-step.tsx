@@ -109,7 +109,7 @@ const TaskFormStep = ({
         <WorkflowCard
             className="!gap-0"
             title={
-                (task.taskName || taskMetadata?.title) ?? (t('title') as string)
+                (taskMetadata?.title || task.taskName) ?? (t('title') as string)
             }
             subtitle={taskMetadata?.description as string}
             footerContent={

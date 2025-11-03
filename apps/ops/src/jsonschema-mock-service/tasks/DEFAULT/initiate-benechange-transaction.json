@@ -195,11 +195,6 @@
                                                     "ORGANIZATION"
                                                 ]
                                             },
-                                            "dateOfBirth": {
-                                                "title": "Date of birth",
-                                                "type": ["string", "null"],
-                                                "default": null
-                                            },
                                             "identifications": {
                                                 "type": "array",
                                                 "title": "",
@@ -252,6 +247,9 @@
                                                 "items": {
                                                     "type": "object",
                                                     "properties": {
+                                                        "addressTitle": {
+                                                            "type": "string"
+                                                        },
                                                         "addressLine1": {
                                                             "type": [
                                                                 "string",
@@ -394,6 +392,15 @@
                                                                 "null"
                                                             ],
                                                             "title": "Last name"
+                                                        },
+                                                        "dateOfBirth": {
+                                                            "format": "date",
+                                                            "title": "Date of birth",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "default": null
                                                         }
                                                     }
                                                 }
@@ -426,6 +433,15 @@
                                                                 "INDIVIDUALTRUST",
                                                                 "CORPORATETRUST",
                                                                 "TESTAMENTARYTRUST"
+                                                            ],
+                                                            "default": null
+                                                        },
+                                                        "trustDate": {
+                                                            "format": "date",
+                                                            "title": "Trust Date",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
                                                             ],
                                                             "default": null
                                                         }
@@ -535,6 +551,7 @@
                                     "firstName",
                                     "middleName",
                                     "lastName",
+                                    "trustDate",
                                     "dateOfBirth",
                                     "identifications",
                                     "emails",
@@ -563,6 +580,11 @@
                                             "Individual",
                                             "Trust",
                                             "Estate/Organization"
+                                        ],
+                                        "enumDisabled": [
+                                            "INDIVIDUAL",
+                                            "TRUST",
+                                            "ORGANIZATION"
                                         ]
                                     }
                                 },
@@ -638,12 +660,13 @@
                                     "items": {
                                         "ui:options": {
                                             "label": false,
-                                            "noMargin": true,
-                                            "nobackground": true,
-                                            "ObjectFieldTemplate": "AddressFieldTemplate",
-                                            "backgroundColor": "white",
-                                            "classes": "p-0",
-                                            "showDynamicTitle": true
+                                            "nobackground": true
+                                        },
+                                        "addressTitle": {
+                                            "ui:widget": "TitleWidget",
+                                            "ui:options": {
+                                                "label": false
+                                            }
                                         },
                                         "addressType": {
                                             "ui:widget": "hidden",
@@ -1829,6 +1852,10 @@
                                                 "type": "string",
                                                 "title": "Type"
                                             },
+                                            "signTypeForUI": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
                                             "isSignedPresent": {
                                                 "title": "Signed present",
                                                 "type": "boolean"
@@ -1859,19 +1886,22 @@
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "OWNER"
+                                            "signType": "OWNER",
+                                            "signTypeForUI": "Owner"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "JOINT_OWNER"
+                                            "signType": "JOINT_OWNER",
+                                            "signTypeForUI": "Joint Owner"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "IRREVOCABLE"
+                                            "signType": "IRREVOCABLE",
+                                            "signTypeForUI": "Irrevocable Beneficiary"
                                         }
                                     ]
                                 }
@@ -1917,6 +1947,13 @@
                                 },
                                 "signType": {
                                     "ui:options": {
+                                        "disabled": true
+                                    },
+                                    "ui:widget": "hidden"
+                                },
+                                "signTypeForUI": {
+                                    "ui:options": {
+                                        "omitValue": true,
                                         "disabled": true
                                     }
                                 },

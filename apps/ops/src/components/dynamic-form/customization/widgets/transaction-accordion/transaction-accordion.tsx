@@ -49,6 +49,16 @@ const TransactionAccordion = ({
         if (updatedItem.party?.partyType === 'TRUST') {
             updatedItem.party.supportingDocumentAttached =
                 updatedItem.party.supportingDocumentAttached ?? false;
+            updatedItem.party.dateOfBirth = null;
+        }
+
+        if (updatedItem.party?.partyType === 'INDIVIDUAL') {
+            updatedItem.party.trustDate = null;
+        }
+
+        if (updatedItem.party?.partyType === 'ORGANIZATION') {
+            updatedItem.party.dateOfBirth = null;
+            updatedItem.party.trustDate = null;
         }
 
         updatedList[index] = {
@@ -60,9 +70,15 @@ const TransactionAccordion = ({
                 : Action.ADD,
             party: {
                 ...updatedItem.party,
-                firstName: updatedItem.party?.firstName || null,
+                firstName:
+                    updatedItem.party?.partyType === 'INDIVIDUAL'
+                        ? updatedItem.party?.firstName || null
+                        : null,
                 lastName: updatedItem.party?.lastName || null,
-                middleName: updatedItem.party?.middleName || null,
+                middleName:
+                    updatedItem.party?.partyType === 'INDIVIDUAL'
+                        ? updatedItem.party?.middleName || null
+                        : null,
                 fullName: [
                     updatedItem.party?.prefix,
                     updatedItem.party?.firstName,
@@ -170,7 +186,7 @@ const TransactionAccordion = ({
         setActiveIndex(null);
     };
 
-    const getConditionalUiSchema = (role: string) => {
+    const getConditionalUiSchema = (role: string, title: string) => {
         let currentUiSchema = JSON.parse(JSON.stringify(uiSchema.items));
 
         if (role === 'JOINTOWNER') {
@@ -186,6 +202,15 @@ const TransactionAccordion = ({
                 },
                 emails: {
                     ...currentUiSchema?.emails,
+                    'ui:widget': 'hidden',
+                },
+            };
+        }
+        if (title === 'Irrevocable Beneficiary') {
+            currentUiSchema = {
+                ...currentUiSchema,
+                signDesignation: {
+                    ...currentUiSchema?.signDesignation,
                     'ui:widget': 'hidden',
                 },
             };
@@ -225,7 +250,10 @@ const TransactionAccordion = ({
                 const isBeneAddition = item?.action === Action.ADD;
                 const hideIrrevocableSignType =
                     item.signType === 'IRREVOCABLE' && !isIrrevocableBene;
-                const updatedUiSchema = getConditionalUiSchema(item?.partyRole);
+                const updatedUiSchema = getConditionalUiSchema(
+                    item?.partyRole,
+                    title
+                );
 
                 return (
                     <div key={`accordion-item-${index}`}>
