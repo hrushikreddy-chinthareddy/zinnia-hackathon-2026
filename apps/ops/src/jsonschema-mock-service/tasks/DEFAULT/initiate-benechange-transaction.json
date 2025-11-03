@@ -1852,6 +1852,10 @@
                                                 "type": "string",
                                                 "title": "Type"
                                             },
+                                            "signTypeForUI": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
                                             "isSignedPresent": {
                                                 "title": "Signed present",
                                                 "type": "boolean"
@@ -1882,19 +1886,22 @@
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "OWNER"
+                                            "signType": "OWNER",
+                                            "signTypeForUI": "Owner"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "JOINT_OWNER"
+                                            "signType": "JOINT_OWNER",
+                                            "signTypeForUI": "Joint Owner"
                                         },
                                         {
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "IRREVOCABLE"
+                                            "signType": "IRREVOCABLE",
+                                            "signTypeForUI": "Irrevocable Beneficiary"
                                         }
                                     ]
                                 }
@@ -1940,6 +1947,13 @@
                                 },
                                 "signType": {
                                     "ui:options": {
+                                        "disabled": true
+                                    },
+                                    "ui:widget": "hidden"
+                                },
+                                "signTypeForUI": {
+                                    "ui:options": {
+                                        "omitValue": true,
                                         "disabled": true
                                     }
                                 },

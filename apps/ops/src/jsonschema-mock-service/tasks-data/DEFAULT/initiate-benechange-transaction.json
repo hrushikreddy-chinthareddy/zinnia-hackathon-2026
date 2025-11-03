@@ -302,6 +302,7 @@
                     "signDate": null,
                     "signDesignation": null,
                     "signType": "OWNER",
+                    "signTypeForUI": "Owner",
                     "signGurantee": null,
                     "signPrintName": null
                 },
@@ -310,6 +311,7 @@
                     "signDate": null,
                     "signDesignation": null,
                     "signType": "JOINT_OWNER",
+                    "signTypeForUI": "Joint Owner",
                     "signGurantee": null,
                     "signPrintName": null
                 },
@@ -318,6 +320,7 @@
                     "signDate": null,
                     "signDesignation": null,
                     "signType": "IRREVOCABLE",
+                    "signTypeForUI": "Irrevocable Beneficiary",
                     "signGurantee": null,
                     "signPrintName": null
                 }
