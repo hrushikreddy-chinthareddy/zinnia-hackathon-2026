@@ -91,7 +91,7 @@ export type TransformationsConfig = {
     }: {
         sectionTitle: keyof Policy;
         acc: ToSections;
-        currentVal: any; //FIXME
+        currentVal: object;
         currentKey: string;
     }) => ToSections;
     showSection?: (
