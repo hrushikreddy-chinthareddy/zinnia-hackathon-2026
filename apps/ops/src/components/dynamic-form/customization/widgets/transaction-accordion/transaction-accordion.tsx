@@ -25,8 +25,19 @@ const TransactionAccordion = ({
         showRemoveItemBtn,
     } = options;
     const isIrrevocableBene =
-        formContext.customData.signatureData?.isIrrevocableBene || false;
+        formContext?.customData?.signatureData?.isIrrevocableBene || false;
 
+    const isJointOwnerPresent =
+        formContext?.customData?.contractInfo?.parties?.some(
+            (party: any) => party.partyRole === 'JOINTOWNER'
+        );
+    if (formContext?.customData?.signatureData) {
+        formContext.customData.signatureData.signatures = isJointOwnerPresent
+            ? formContext.customData.signatureData.signatures
+            : formContext.customData.signatureData.signatures?.filter(
+                  (signature: any) => signature.signType !== 'JOINT_OWNER'
+              );
+    }
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
     const [heights, setHeights] = useState<PanelHeights>({});
     const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
