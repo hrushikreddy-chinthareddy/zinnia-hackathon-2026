@@ -8369,7 +8369,8 @@
                 "initial": "Initial annual premium",
                 "initialModal": "Initial modal premium",
                 "target": "Target annual premium",
-                "mec": "MEC annual premium",
+                "mec": "7-Pay annual premium",
+                "guidelineLevelPremium": "Guideline level annual premium",
                 "initialBase": "Initial base premium",
                 "totalInitial": "Total initial premium",
                 "initialModalPremium": "Initial modal premium"

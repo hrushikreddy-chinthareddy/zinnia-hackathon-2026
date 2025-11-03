@@ -871,6 +871,9 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
         mecPremium:
             data?.assumed?.initial?.modifiedEndowmentPremium ||
             DEFAULT_ERROR_STRING,
+        guidelineLevelPremium:
+            data?.assumed?.initial?.guidelineLevelPremium ||
+            DEFAULT_ERROR_STRING,
         ...netSurrenderValue,
     };
 }

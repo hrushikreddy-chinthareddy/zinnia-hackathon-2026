@@ -8209,7 +8209,8 @@
                 "initial": "Prima anual inicial",
                 "initialModal": "Prima modal inicial",
                 "target": "Prima anual planeada",
-                "mec": "Prima MEC anual",
+                "mec": "Prima anual 7-Pay",
+                "guidelineLevelPremium": "Prima anual de referencia",
                 "initialBase": "Prima base inicial",
                 "totalInitial": "Prima inicial total",
                 "initialModalPremium": "Prima modal inicial"
