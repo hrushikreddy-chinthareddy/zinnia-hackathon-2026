@@ -109,7 +109,7 @@ function TaskQueueDrawer({
     };
 
     const handleClose = () => {
-        router.back();
+        sideSheet.onClose();
     };
     const updateTaskStatus = async () => {
         if (isSupportTicketRaised && !notes) {
