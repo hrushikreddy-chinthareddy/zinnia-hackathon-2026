@@ -202,6 +202,7 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
             return globalAtlantic;
         case 'GLCO':
         case 'GILICO':
+        case 'GILI':
             return guaranty;
         case 'GLAC':
             return guggenheim;
@@ -223,6 +224,7 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
         case 'PICA':
             return prudential;
         case 'SBGC':
+        case 'SBL':
             return securityBenefit;
         case 'SAAG':
             return sunAmerica;
