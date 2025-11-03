@@ -38,7 +38,7 @@
                 }
             ]
         },
-        "isPrimaryDocumentPresent": false
+        "isPrimaryDocumentPresent": true
     },
     "mappedExceptions": [],
     "mappedDocuments": [],

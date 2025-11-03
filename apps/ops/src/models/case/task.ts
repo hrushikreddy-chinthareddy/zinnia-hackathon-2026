@@ -227,6 +227,7 @@ export type ApiProps = {
         enumNames: string;
     };
     responseType: ApiResponseTypes;
+    sorted?: boolean;
 };
 
 export enum EventType {
