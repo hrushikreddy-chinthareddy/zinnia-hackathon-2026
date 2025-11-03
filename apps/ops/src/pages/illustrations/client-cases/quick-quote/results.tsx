@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { QuickQuoteResultsPage } from '@deps/components/client-case/quick-quote/results-page';
@@ -5,7 +6,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
-import { quickQuoteParamsSchema } from '@deps/types/quickQuote';
+import {
+    QuickQuoteParams,
+    quickQuoteParamsSchema,
+} from '@deps/types/quickQuote';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -67,7 +71,10 @@ export const getServerSideProps = withPageAuthAndLogging(
             );
 
             const paramsResult = quickQuoteParamsSchema.parse({
-                ...query,
+                ...pick(query, [
+                    'sexAtBirth',
+                    'state',
+                ] satisfies (keyof QuickQuoteParams)[]),
                 insuredAge: parseInt(ensureSingle(query?.insuredAge)!),
                 nicotineUser: ensureSingle(query?.nicotineUser) === 'true',
                 faceAmount: parseFloat(ensureSingle(query?.faceAmount)!),
