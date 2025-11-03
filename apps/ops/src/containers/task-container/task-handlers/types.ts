@@ -53,6 +53,7 @@ export interface PartyRole {
     partyId: string;
     relationshipToParty: string;
     partyRoleId?: string;
+    endDate?: string;
 }
 
 export interface Identification {
