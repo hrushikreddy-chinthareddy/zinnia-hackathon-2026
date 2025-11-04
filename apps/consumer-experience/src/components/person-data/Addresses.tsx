@@ -29,23 +29,17 @@ const displayAddressType: { [key in AddressType]?: string } = {
 
 const AddressGroup = ({
   addresses,
-  preferredAddressIndicator,
   showEditButton,
   partyId,
   userOnlyHasOneAddress,
 }: {
   addresses: AddressInterface[];
-  preferredAddressIndicator?: string;
   showEditButton?: boolean;
   partyId: string;
   userOnlyHasOneAddress: boolean;
 }) => {
   return addresses?.map((address, index) => {
-    const isPreferredAddress =
-      !!preferredAddressIndicator &&
-      preferredAddressIndicator === address?.addressId;
-
-    const mailingAddressText = isPreferredAddress ? 'Mailing address' : '';
+    const mailingAddressText = address.isPreferred ? 'Mailing address' : '';
 
     //Build out the addresses array by taking all the address lines and making sure we filter all the bad values out
     // there has to be a prettier and easier way of doing this
@@ -67,7 +61,7 @@ const AddressGroup = ({
       city: address.city,
       state: address.state as unknown as AddressChange.state,
       zipCode: address.zipCode,
-      defaultAddress: isPreferredAddress,
+      defaultAddress: address.isPreferred,
     };
 
     return (
@@ -122,7 +116,6 @@ const AddressGroup = ({
 
 export const Addresses = ({
   addresses,
-  preferredAddressIndicator,
   partyId,
   allowAddressChanges,
 }: AddressProps) => {
@@ -150,28 +143,24 @@ export const Addresses = ({
       <div className={styles.itemsRow}>
         <AddressGroup
           addresses={residentialAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
           addresses={boxAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
           addresses={businessAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
           addresses={mailingAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}

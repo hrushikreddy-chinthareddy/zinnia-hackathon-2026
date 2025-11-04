@@ -108,12 +108,15 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
     const formattedAddressLines = formatAddressLines(requestValues.addresses);
     const zipCodeParts = zipCodeInParts(requestValues?.zipCode);
     const addressChangeRequest = {
+      //TODO: The API needs to remove this from the required request body. This has been replaced by `isPreferred` on the address itself but
+      // The API currently 500s without the indicator value.
       preferredAddressIndicator: requestValues.defaultAddress
         ? AddressChange.preferredAddressIndicator.YES
         : AddressChange.preferredAddressIndicator.NO,
       address: {
         ...formattedAddressLines,
         ...zipCodeParts,
+        isPreferred: requestValues.defaultAddress,
         // TODO: i think these are for seasonal address setting which isn't available
         // yet so leaving null
         // startDate: '4186-48-30',
