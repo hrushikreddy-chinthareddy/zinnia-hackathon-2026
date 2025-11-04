@@ -68,7 +68,7 @@ export const Layout: FC<LayoutType> = ({
   };
 
   return (
-    <div className={styles.container} id="__layout" tabIndex={-1}>
+    <div className={styles.container} id="main-layout" tabIndex={-1}>
       <SkipLink />
       {/* visible only below 1024px */}
       <SideSheet

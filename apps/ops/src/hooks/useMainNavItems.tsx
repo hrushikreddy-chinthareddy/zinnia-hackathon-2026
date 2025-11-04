@@ -75,7 +75,7 @@ export const useMainNavItems = (): NavGroup[] => {
 
     const handleClick = (linkText: string) => {
         // always focus on 'main content' nav button
-        document.getElementById('__layout')?.focus();
+        document.getElementById('main-layout')?.focus();
         handleAnalytics(linkText);
     };
 
