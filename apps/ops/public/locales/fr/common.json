@@ -388,7 +388,7 @@
         "lastUpdated": "Dernière mise à jour",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
-            "setTaskAsPending": "Définir la tâche comme en attente",
+            "setTaskAsPending": "Définir la tâche comme planifiée",
             "followUpDate": "Date de suivi",
             "reason": "Raison",
             "selectReason": "Sélectionner une raison",
@@ -1967,6 +1967,7 @@
             "notes": "Notes",
             "openSince": "Ouvrir depuis {{date}}",
             "pendingTill": "En attente",
+            "scheduledTill": "Programmé",
             "otherIssues": "Problèmes en suspens",
             "percentComplete": "{{percent}} Complet",
             "postedOnBy": "Posté le {{date}} par",
@@ -7281,10 +7282,10 @@
         },
         "taskReview": {
             "title": "Données d’adéquation des entrées",
-            "subTitle": "Le formulaire d'adéquation est-il complet?",
+            "subTitle": "Toutes les sections obligatoires sont-elles complètes ?",
             "options": {
-                "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
-                "missingDetails": "Toutes les sections ne sont pas complètes."
+                "allSectionsAreComplete": "Oui, toutes les sections sont complètes et prêtes.",
+                "missingDetails": "Non, les sections sont incomplètes."
             },
             "selectException": "Sélectionner des exceptions",
             "view": "Voir",

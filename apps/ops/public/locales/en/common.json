@@ -1362,7 +1362,7 @@
         "lastUpdated": "Last Updated",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
-            "setTaskAsPending": "Set Task as Pending",
+            "setTaskAsPending": "Set Task as Scheduled",
             "followUpDate": "Follow-Up Date",
             "reason": "Reason",
             "selectReason": "Select Reason",
@@ -1978,6 +1978,7 @@
             "otherIssues": "Outstanding Resolutions",
             "openSince": "Open since {{date}}",
             "pendingTill": "Pending",
+            "scheduledTill": "Scheduled",
             "percentComplete": "{{percent}} Complete",
             "postedOnBy": "Posted on {{date}} by",
             "progress": "Progress",
@@ -7410,10 +7411,10 @@
         },
         "taskReview": {
             "title": "Input Suitability Data",
-            "subTitle": "Is the suitability form complete?",
+            "subTitle": "Are all required sections complete?",
             "options": {
-                "allSectionsAreComplete": "All sections are complete and ready for data entry.",
-                "missingDetails": "All sections are not complete."
+                "allSectionsAreComplete": "Yes, all sections are complete and ready.",
+                "missingDetails": "No, sections are incomplete."
             },
             "selectException": "Select Exceptions",
             "view": "View",

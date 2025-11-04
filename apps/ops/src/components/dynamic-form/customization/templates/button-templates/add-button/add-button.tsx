@@ -15,7 +15,6 @@ export default function AddButton<
 >({ uiSchema, registry, ...props }: Omit<IconButtonProps, 'iconType'>) {
     const { translateString } = registry;
     const { title, defaultItemLabel } = getUiOptions(uiSchema?.items);
-
     return (
         <Button aria-label="Add" mode="link" size="small" {...props}>
             + Add{' '}

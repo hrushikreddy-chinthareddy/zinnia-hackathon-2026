@@ -104,7 +104,7 @@ const useTaskManagementQueue = ({
 
             if (isHomePage()) {
                 const activeTasks = assignedTasks.filter(
-                    (task) => task.status !== TaskStatus.Pending
+                    (task) => task.status !== TaskStatus.Scheduled
                 );
 
                 if (activeTasks.length > 0) {

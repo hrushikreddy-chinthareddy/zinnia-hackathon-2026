@@ -155,7 +155,7 @@ function TaskQueueDrawer({
 
             const body = {
                 ...taskData,
-                status: TaskStatus.Pending,
+                status: TaskStatus.Scheduled,
                 source: TaskSource.ZinniaTaskManagement,
                 scheduledReason: pendingReason,
                 scheduledDate: formattedDate,

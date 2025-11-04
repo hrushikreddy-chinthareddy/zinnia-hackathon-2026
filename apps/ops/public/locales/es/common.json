@@ -1366,7 +1366,7 @@
         "lastUpdated": "Última actualización",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Actualizar Estado de la Tarea",
-            "setTaskAsPending": "Establecer Tarea como Pendiente",
+            "setTaskAsPending": "Establecer la tarea como programada",
             "followUpDate": "Fecha de Seguimiento",
             "reason": "Razón",
             "selectReason": "Seleccionar Razón",
@@ -1980,6 +1980,7 @@
             "otherIssues": "Resoluciones Pendientes",
             "openSince": "Abierto desde {{date}}",
             "pendingTill": "Pendiente",
+            "scheduledTill": "Programado",
             "percentComplete": "{{percent}} Completado",
             "postedOnBy": "Publicado el {{date}} por",
             "progress": "Progreso",
@@ -7257,10 +7258,10 @@
         },
         "taskReview": {
             "title": "Ingresar Datos de Idoneidad",
-            "subTitle": "¿Está completo el formulario de idoneidad?",
+            "subTitle": "¿Están completas todas las secciones requeridas?",
             "options": {
-                "allSectionsAreComplete": "Todas las secciones están completas y listas para la entrada de datos.",
-                "missingDetails": "No todas las secciones están completas."
+                "allSectionsAreComplete": "Sí, todas las secciones están completas y listas.",
+                "missingDetails": "No, las secciones están incompletas."
             },
             "selectException": "Seleccionar Excepciones",
             "view": "Ver",
