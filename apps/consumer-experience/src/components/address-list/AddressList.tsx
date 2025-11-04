@@ -91,9 +91,6 @@ export const AddressList: FC<AddressListProps> = ({
       )}
       <Addresses
         addresses={addresses as Address[]}
-        preferredAddressIndicator={
-          initialProfileData?.preferredAddressIndicator || ''
-        }
         partyId={initialProfileData?.partyId || ''}
         allowAddressChanges={allowAddressChanges}
       />

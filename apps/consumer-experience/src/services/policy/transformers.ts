@@ -217,7 +217,6 @@ export const transformPolicyForProfile = (
   const parties = policyParties(policy);
 
   return {
-    preferredAddressIndicator: partyInfo?.preferredAddressIndicator || '',
     partyId: partyInfo?.partyId || '',
     name: {
       firstName: partyInfo?.firstName || '',

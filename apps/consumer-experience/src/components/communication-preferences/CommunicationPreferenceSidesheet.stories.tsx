@@ -14,9 +14,9 @@ const mockPolicyProfile = {
       state: State.CA,
       zipCode: '12345',
       country: Country.US,
+      isPreferred: true,
     },
   ],
-  preferredAddressIndicator: '1',
   emails: [
     {
       emailId: '1',
