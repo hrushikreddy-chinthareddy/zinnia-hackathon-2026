@@ -76,7 +76,7 @@ function RadioWidget<
         formContext,
         readonly,
     } = widgetProps;
-    const { enumOptions, enumDisabled, inline } = options;
+    const { enumOptions, enumDisabled, inline, enumHideLabel } = options;
     const { customOptions, props, properties, cardType, icon, sectionTitle } =
         getUiOptions<T, S, F>(uiSchema);
 
@@ -128,6 +128,9 @@ function RadioWidget<
                     label: option.label || String(option.value),
                     value: stringifyObjectValue(option.value),
                     disabled: enumDisabled?.includes(option.value) || false,
+                    hideLabel: Array.isArray(enumHideLabel)
+                        ? enumHideLabel.includes(option.value)
+                        : false,
                     subElement:
                         option.subElement &&
                         renderSubElement(
@@ -153,6 +156,7 @@ function RadioWidget<
     }, [
         currentOptions,
         enumDisabled,
+        enumHideLabel,
         properties,
         cardType,
         icon,

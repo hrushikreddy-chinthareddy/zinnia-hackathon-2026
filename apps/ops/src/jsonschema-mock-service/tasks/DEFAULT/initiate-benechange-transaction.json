@@ -1024,9 +1024,14 @@
                                                 }
                                             },
                                             "preferredCommunicationType": {
-                                                "type": "string",
+                                                "type": ["null", "string"],
                                                 "title": "Preferred Contact Method",
-                                                "enum": ["EMAIL", "REGULARMAIL"]
+                                                "enum": [
+                                                    null,
+                                                    "EMAIL",
+                                                    "REGULARMAIL"
+                                                ],
+                                                "default": null
                                             }
                                         },
                                         "required": [
@@ -1107,9 +1112,11 @@
                                                             ],
                                                             "title": "Gender",
                                                             "enum": [
+                                                                null,
                                                                 "MALE",
                                                                 "FEMALE"
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "dateOfBirth": {
                                                             "type": "string",
@@ -1538,7 +1545,8 @@
                                 "gender": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
-                                        "enumNames": ["Male", "Female"]
+                                        "enumNames": [null, "Male", "Female"],
+                                        "enumHideLabel": [null]
                                     }
                                 },
                                 "addresses": {
@@ -1726,7 +1734,8 @@
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
                                         "inline": true,
-                                        "enumNames": ["Email", "Mail"]
+                                        "enumNames": [null, "Email", "Mail"],
+                                        "enumHideLabel": [null]
                                     }
                                 },
                                 "dateOfBirth": {

@@ -23,6 +23,7 @@ export enum RadioOrientation {
 export type RadioItem = {
     label: string;
     subElement?: JSX.Element;
+    hideLabel?: Array<string | null>;
 } & RadioGroupItemProps &
     Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
 
@@ -116,49 +117,53 @@ export default function Radio({
                         : '';
 
                     return (
-                        <div
-                            key={item.value}
-                            className={`${containerClasses} ${className}`}
-                        >
-                            <input
-                                type="radio"
-                                value={item.value}
-                                className={`${classes} ${disabledClass}${readonlyClass}`}
-                                tabIndex={0}
-                                checked={value === item.value}
-                                data-testid={dataTestId}
-                                name={name || label}
-                                id={`radio-${label}-${index}-${id}`}
-                                onChange={() => undefined}
-                                disabled={item?.disabled ?? disabled}
-                                onClick={() => {
-                                    onChange(
-                                        createRadioChangeEvent(
-                                            item.value,
+                        !item.hideLabel && (
+                            <div
+                                key={item.value}
+                                className={`${containerClasses} ${className}`}
+                            >
+                                <input
+                                    type="radio"
+                                    value={item.value}
+                                    className={`${classes} ${disabledClass}${readonlyClass}`}
+                                    tabIndex={0}
+                                    checked={value === item.value}
+                                    data-testid={dataTestId}
+                                    name={name || label}
+                                    id={`radio-${label}-${index}-${id}`}
+                                    onChange={() => undefined}
+                                    disabled={item?.disabled ?? disabled}
+                                    onClick={() => {
+                                        onChange(
+                                            createRadioChangeEvent(
+                                                item.value,
+                                                value
+                                            )
+                                        );
+                                    }}
+                                    onKeyDown={(e) =>
+                                        handleKeyDown(
+                                            e,
+                                            item,
+                                            variant,
+                                            onChange,
                                             value
                                         )
-                                    );
-                                }}
-                                onKeyDown={(e) =>
-                                    handleKeyDown(
-                                        e,
-                                        item,
-                                        variant,
-                                        onChange,
-                                        value
-                                    )
-                                }
-                            />
-                            {item.subElement}
-                            <label
-                                className={labelClasses}
-                                aria-label={`Select ${item.value}`}
-                                htmlFor={`radio-${label}-${index}-${id}`}
-                                {...(disabled && { 'aria-disabled': 'true' })}
-                            >
-                                {item.label}
-                            </label>
-                        </div>
+                                    }
+                                />
+                                {item.subElement}
+                                <label
+                                    className={labelClasses}
+                                    aria-label={`Select ${item.value}`}
+                                    htmlFor={`radio-${label}-${index}-${id}`}
+                                    {...(disabled && {
+                                        'aria-disabled': 'true',
+                                    })}
+                                >
+                                    {item.label}
+                                </label>
+                            </div>
+                        )
                     );
                 })}
             </div>
