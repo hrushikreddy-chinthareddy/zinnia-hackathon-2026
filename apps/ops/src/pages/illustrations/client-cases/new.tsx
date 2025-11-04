@@ -148,6 +148,20 @@ const getAuthToken = async (
     }
 };
 
+/**
+ * Server-side entry point for the Sureify flow.
+ *
+ * This page requires:
+ *  - User authentication (wrapped by `withPageAuthAndLogging`)
+ *  - Access to the Illustrations feature (feature flag)
+ *  - Permission to create client cases when an eAppId is present
+ *
+ * Behavior summary:
+ *  - If Illustrations flag disabled → redirect to /cases
+ *  - If user is not allowed to create cases → render client cases page with error message
+ *  - If `eAppId` is provided → attempt to bootstrap a client case from Sureify
+ *  - Otherwise → load translations + common props and render normally
+ */
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
@@ -186,6 +200,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 additionalData,
             };
 
+            /**
+             * Normalize query params to lowercase keys
+             * Important because Sureify uses `eAppId` → we map to `eappid`
+             */
             const normalizedQuery = Object.fromEntries(
                 Object.entries(context.query).map(([key, value]) => [
                     key.toLocaleLowerCase(),
@@ -207,6 +225,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            /**
+             * If an eAppId is provided → attempt to import a Sureify application
+             * Only applies in direct links from Sureify → not standard navigation
+             */
             if (hasSingleEappId) {
                 const accessToken = await getAuthToken(context, loggingContext);
 
