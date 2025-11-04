@@ -59,7 +59,7 @@ const TransactionAccordion = ({
 
         if (updatedItem.party?.partyType === 'TRUST') {
             updatedItem.party.supportingDocumentAttached =
-                updatedItem.party.supportingDocumentAttached ?? false;
+                updatedItem.party.supportingDocumentAttached ?? null;
             updatedItem.party.dateOfBirth = null;
         }
 
@@ -127,7 +127,7 @@ const TransactionAccordion = ({
                 middleName: null,
                 gender: 'MALE',
                 preferredCommunicationType: 'EMAIL',
-                supportingDocumentAttached: false,
+                supportingDocumentAttached: null,
                 entityType: 'UNKNOWN',
                 emails: [
                     {

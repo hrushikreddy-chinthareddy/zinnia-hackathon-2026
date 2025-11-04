@@ -1034,10 +1034,7 @@
                                                 "default": null
                                             }
                                         },
-                                        "required": [
-                                            "partyType",
-                                            "beneficiaryPercentage"
-                                        ],
+                                        "required": ["beneficiaryPercentage"],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -1189,15 +1186,16 @@
                                                         },
                                                         "supportingDocumentAttached": {
                                                             "title": "Is the uploaded supporting document(s) valid and relevant?",
-                                                            "type": "boolean",
+                                                            "type": [
+                                                                "null",
+                                                                "boolean"
+                                                            ],
                                                             "enum": [
+                                                                null,
                                                                 true,
                                                                 false
                                                             ],
-                                                            "enumNames": [
-                                                                "Yes",
-                                                                "No"
-                                                            ]
+                                                            "default": null
                                                         }
                                                     },
                                                     "required": [
@@ -1298,7 +1296,8 @@
                                                     "OTHER"
                                                 ]
                                             }
-                                        }
+                                        },
+                                        "required": ["relationshipToParty"]
                                     }
                                 }
                             },
@@ -1504,8 +1503,9 @@
                                 "supportingDocumentAttached": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
-                                        "enumNames": ["Yes", "No"],
-                                        "inline": true
+                                        "enumNames": [null, "Yes", "No"],
+                                        "inline": true,
+                                        "enumHideLabel": [null]
                                     }
                                 },
                                 "entityType": {
