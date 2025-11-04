@@ -60,9 +60,6 @@ export interface CarrierConfig {
       enabled: boolean;
     };
   };
-  systematicPremium: {
-    enabled: boolean;
-  };
   freeLookCancel: {
     enabled: boolean;
   };

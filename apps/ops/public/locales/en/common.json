@@ -1149,8 +1149,11 @@
             "or": "or",
             "documentCategory": "Category",
             "documentType": "Type",
+            "documentClassification": "Classification",
             "formNumber": "Form number",
             "restricted": "Restricted",
+            "received": "Received",
+            "sent": "Sent",
             "upload": "Upload",
             "cancel": "Cancel",
             "select": "Select",
@@ -1362,7 +1365,7 @@
         "lastUpdated": "Last Updated",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
-            "setTaskAsPending": "Set Task as Pending",
+            "setTaskAsPending": "Set Task as Scheduled",
             "followUpDate": "Follow-Up Date",
             "reason": "Reason",
             "selectReason": "Select Reason",
@@ -1978,6 +1981,7 @@
             "otherIssues": "Outstanding Resolutions",
             "openSince": "Open since {{date}}",
             "pendingTill": "Pending",
+            "scheduledTill": "Scheduled",
             "percentComplete": "{{percent}} Complete",
             "postedOnBy": "Posted on {{date}} by",
             "progress": "Progress",
@@ -7410,10 +7414,10 @@
         },
         "taskReview": {
             "title": "Input Suitability Data",
-            "subTitle": "Is the suitability form complete?",
+            "subTitle": "Are all required sections complete?",
             "options": {
-                "allSectionsAreComplete": "All sections are complete and ready for data entry.",
-                "missingDetails": "All sections are not complete."
+                "allSectionsAreComplete": "Yes, all sections are complete and ready.",
+                "missingDetails": "No, sections are incomplete."
             },
             "selectException": "Select Exceptions",
             "view": "View",
@@ -8369,7 +8373,8 @@
                 "initial": "Initial annual premium",
                 "initialModal": "Initial modal premium",
                 "target": "Target annual premium",
-                "mec": "MEC annual premium",
+                "mec": "7-Pay annual premium",
+                "guidelineLevelPremium": "Guideline level annual premium",
                 "initialBase": "Initial base premium",
                 "totalInitial": "Total initial premium",
                 "initialModalPremium": "Initial modal premium"
@@ -8445,6 +8450,11 @@
                 "basePremiumRange": "Base Premium Range",
                 "hint": "",
                 "nYearTerm": "{{years}} year term"
+            },
+            "notAvailableReason": {
+                "age": "Not available for age {{age}}.",
+                "state": "Not available for this state.",
+                "face": "Not available for this face amount."
             },
             "riders": {
                 "title": "Riders",

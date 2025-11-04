@@ -95,7 +95,7 @@
         var(--measure-dimension-padding-3xl, 24px);
 }
 
-.notAvailableReasonCell {
+.fullDataCell {
     grid-column: 2 / -1;
 }
 

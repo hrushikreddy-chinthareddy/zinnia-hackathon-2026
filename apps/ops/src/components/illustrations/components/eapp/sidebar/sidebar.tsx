@@ -18,7 +18,11 @@ const dataToTitleMap: Record<
 > = {
     solveFor: { label: 'Solve for', type: 'string' },
     targetPremium: { label: 'Target annual premium', type: 'money' },
-    mecPremium: { label: 'MEC annual premium', type: 'money' },
+    mecPremium: { label: '7-Pay annual premium', type: 'money' },
+    guidelineLevelPremium: {
+        label: 'Guideline level annual premium',
+        type: 'money',
+    },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
     initialModalPremium: { label: 'Initial modal premium', type: 'money' },

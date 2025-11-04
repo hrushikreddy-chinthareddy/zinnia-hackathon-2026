@@ -32,6 +32,7 @@ import {
 } from '@deps/containers/role-change/role-change-helper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
+import { formatSSN } from '@deps/helpers/string.helpers';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import {
     EDS_DATE_DISPLAY_FORMAT,
@@ -593,13 +594,18 @@ const BeneficiaryIdentification = ({
                                     formatOptions={{ format: '#########' }}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
-                                    value={party?.ssn || ''}
+                                    value={
+                                        existingBene
+                                            ? formatSSN(party?.ssn || '')
+                                            : party?.ssn || ''
+                                    }
                                     maxLength={9}
                                     variant={
-                                        isReadOnly
+                                        isReadOnly || existingBene
                                             ? FieldVariant.Inactive
                                             : FieldVariant.Default
                                     }
+                                    disabled={isReadOnly || existingBene}
                                 />
                             </div>
                             {isRolePartyCheck && (

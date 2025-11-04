@@ -13,7 +13,7 @@ import {
 import { SystematicPremiumsProvider } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/SystematicPremiumsProvider';
 // import { getSystematicPremiumEligibility } from '@/services/bpm/systematic-premium';
 import { getPolicyDetails } from '@/services';
-import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { getPolicyFeatures } from '@/services/policy/features';
 import { getAllSystematicPrograms } from '@/services/policy/systematic-programs';
 import { PolicyRequestInputs } from '@/types/policy';
@@ -30,11 +30,9 @@ export default async function SystematicPremiumLayout({
   };
   children: ReactNode;
 }) {
-  const { featureFlags: flags, carrierConfig } =
-    await getFeatureFlagsWithCarrierConfig();
+  const flags = await getFeatureFlags();
   const showPartialSystematicPremiumOneTime =
-    flags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM] &&
-    carrierConfig?.systematicPremium?.enabled;
+    flags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM];
 
   const loggingCtx = await buildCommonLogContext();
 

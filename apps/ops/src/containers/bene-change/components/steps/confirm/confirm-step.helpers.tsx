@@ -13,6 +13,7 @@ import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/fi
 import { EntityTypeValue } from '@deps/constants/policy';
 import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helpers';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
+import { BeneChangePayload } from '@deps/contexts/BeneChangeContext';
 import {
     isNullEmptyOrUndefined,
     toTitleCase,
@@ -124,7 +125,12 @@ const getPolicySignatureType = (
 export const transformSignatureStateToPayload = (
     data: SignatureState | null
 ) => {
-    if (!data) return {};
+    if (!data)
+        return {
+            signatures: [],
+            isSpousePresent: null,
+            isIrrevocableBene: false,
+        };
 
     const signature = data.signatures.map((item: SignatureWithdrawal) => ({
         signType: item.signType.text
@@ -435,7 +441,7 @@ export const buildReRegRequestBody = ({
     selectedDocument,
     parties,
     sorSystem = SorSystem.LifeCad,
-}: any) => {
+}: any): BeneChangePayload => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
 
     const records = beneData.map((item: any) =>

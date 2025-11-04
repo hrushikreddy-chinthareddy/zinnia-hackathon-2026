@@ -402,7 +402,7 @@ const TaskQueueTableRow = ({
 
     const statuses = [
         {
-            label: 'Pending',
+            label: 'Scheduled',
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
                 openSideSheet();
@@ -431,10 +431,10 @@ const TaskQueueTableRow = ({
             badgeVariant = BadgeVariant.Urgent;
             badgeLabel = 'Closed';
             break;
-        case TaskStatus.Pending:
+        case TaskStatus.Scheduled:
             (badgeIcon = <Pause width={16} height={16} />),
                 (badgeVariant = BadgeVariant.Error);
-            badgeLabel = 'Pending';
+            badgeLabel = 'Scheduled';
             break;
         default:
             badgeIcon = <ToDo width={16} height={16} />;

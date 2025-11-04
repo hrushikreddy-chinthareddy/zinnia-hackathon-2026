@@ -71,7 +71,8 @@ export const csrApiHelper = async (
     formData: any,
     strigify = false
 ) => {
-    const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
+    const { apiUrl, apiMethod, apiPayload, responseData, response, sorted } =
+        props;
     browserLogInfo('csrApiHelper:: fetching data', {
         apiUrl,
         apiMethod,
@@ -157,11 +158,17 @@ export const csrApiHelper = async (
             if (response) {
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach((key) => {
-                    mapDataToKeys[key] = filteredApiData?.map((item: any) => {
-                        const filteredItem = item[(response as any)?.[key]];
-                        return filteredItem ? filteredItem : item;
-                    });
+                    let values =
+                        filteredApiData?.map((item: any) => {
+                            const filteredItem = item[(response as any)?.[key]];
+                            return filteredItem ? filteredItem : item;
+                        }) || [];
+                    if (sorted) {
+                        values = values.sort();
+                    }
+                    mapDataToKeys[key] = values;
                 });
+
                 return mapDataToKeys;
             }
             return filteredApiData;

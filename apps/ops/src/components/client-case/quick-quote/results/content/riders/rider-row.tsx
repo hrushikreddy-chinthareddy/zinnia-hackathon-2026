@@ -1,5 +1,8 @@
 import { useTranslation } from 'react-i18next';
 
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { NumberOrRange, QuickQuoteFormState } from '@deps/types/quickQuote';
 
@@ -7,7 +10,7 @@ import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { useQuickQuoteResults } from '../results-context';
 import { QuickQuoteRiderRowHeader } from './rider-row-header';
 import { useQuickQuoteParams } from '../../params-context';
-import { QuickQuoteNotAvailableReasonCell } from '../base/not-available-reason-cell';
+import styles from '../content.module.css';
 
 type QuickQuoteRiderRowProps = {
     riderName: keyof QuickQuoteFormState['riders'];
@@ -35,11 +38,16 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
             data={isActive ? data : []}
         >
             {!isActive && (
-                <QuickQuoteNotAvailableReasonCell>
-                    {t(
-                        'clientCase.quickQuoteResults.riders.disabledPlaceholder'
-                    )}
-                </QuickQuoteNotAvailableReasonCell>
+                <div className={styles.notAvailableReasonCell}>
+                    <Typography
+                        className={styles.notAvailableText}
+                        variant={TypographyVariant.BodySm}
+                    >
+                        {t(
+                            'clientCase.quickQuoteResults.riders.disabledPlaceholder'
+                        )}
+                    </Typography>
+                </div>
             )}
         </QuickQuoteResultTableRow>
     );

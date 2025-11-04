@@ -6,7 +6,6 @@ export const getQuickQuoteProductMapping = (input: QuickQuoteParams) => {
     const results = new QuickQuoteProducts(
         FarmerProductsRules
     ).getProductsAvailableFor(input);
-    console.log('results', results);
 
     return results;
 };

@@ -15,7 +15,12 @@ export type ProductName =
 
 export type PlanCode = 'TL0101' | 'TR0101';
 
-export type NotAvailabilityReasonField = 'age' | 'state' | 'face' | undefined;
+export type NotAvailabilityReasonField =
+    | 'age'
+    | 'state'
+    | 'face'
+    | 'termLength'
+    | undefined;
 
 export type ClassAlternatives = {
     nicotine: 'Y' | 'N';

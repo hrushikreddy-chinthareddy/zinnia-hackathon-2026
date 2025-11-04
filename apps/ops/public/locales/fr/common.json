@@ -388,7 +388,7 @@
         "lastUpdated": "Dernière mise à jour",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
-            "setTaskAsPending": "Définir la tâche comme en attente",
+            "setTaskAsPending": "Définir la tâche comme planifiée",
             "followUpDate": "Date de suivi",
             "reason": "Raison",
             "selectReason": "Sélectionner une raison",
@@ -1237,6 +1237,9 @@
             "or": "ou",
             "documentCategory": "Catégorie de document",
             "documentType": "Type de document",
+            "documentClassification": "Classification",
+            "sent": "Envoyé",
+            "received": "Reçu",
             "formNumber": "Numéro du formulaire",
             "restricted": "Restreint",
             "upload": "Téléverser",
@@ -1967,6 +1970,7 @@
             "notes": "Notes",
             "openSince": "Ouvrir depuis {{date}}",
             "pendingTill": "En attente",
+            "scheduledTill": "Programmé",
             "otherIssues": "Problèmes en suspens",
             "percentComplete": "{{percent}} Complet",
             "postedOnBy": "Posté le {{date}} par",
@@ -3099,9 +3103,9 @@
                 "actions": "Actions",
                 "noTaxForms": "Aucun formulaire fiscale trouvé pour cette période",
                 "popover": {
+                    "5498": "Déclare les contributions versées aux IRA, y compris les rollovers et les valeurs de marché équitables pour l'année fiscale.",
                     "1099R": "Déclare les distributions provenant de polices/contrats.",
-                    "1099Int": "Déclare les revenus d'intérêts gagnés.",
-                    "5498": "Déclare les contributions versées aux IRA, y compris les rollovers et les valeurs de marché équitables pour l'année fiscale."
+                    "1099Int": "Déclare les revenus d'intérêts gagnés."
                 },
                 "warning": {
                     "0": "Veuillez consulter les formulaires fiscaux avant de continuer.",
@@ -7281,10 +7285,10 @@
         },
         "taskReview": {
             "title": "Données d’adéquation des entrées",
-            "subTitle": "Le formulaire d'adéquation est-il complet?",
+            "subTitle": "Toutes les sections obligatoires sont-elles complètes ?",
             "options": {
-                "allSectionsAreComplete": "Toutes les sections sont complètes et prêtes pour la saisie des données.",
-                "missingDetails": "Toutes les sections ne sont pas complètes."
+                "allSectionsAreComplete": "Oui, toutes les sections sont complètes et prêtes.",
+                "missingDetails": "Non, les sections sont incomplètes."
             },
             "selectException": "Sélectionner des exceptions",
             "view": "Voir",
@@ -8210,7 +8214,8 @@
                 "initial": "Prime annuelle initiale",
                 "initialModal": "Prime modale initiale",
                 "target": "Prime annuelle cible",
-                "mec": "Prime annuelle MEC",
+                "mec": "Prime annuelle 7-Pay",
+                "guidelineLevelPremium": "Prime annuelle de niveau indicatif",
                 "initialBase": "Prime de base initiale",
                 "totalInitial": "Prime initiale totale",
                 "initialModalPremium": "Prime modale initiale"
@@ -8330,6 +8335,33 @@
             "provideValidAmount": "Veuillez indiquer un montant valide",
             "faceAmountError": "Le montant nominal doit être supérieur à 0",
             "updating": "Mise à jour du devis..."
+        },
+        "quickQuoteResults": {
+            "notAvailable": "Pas disponible",
+            "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
+            "title": "Devis rapide",
+            "coverage": {
+                "basePremiumRange": "Gamme Base Premium",
+                "nYearTerm": "Durée de {{years}} année",
+                "title": "Couverture"
+            },
+            "notAvailableReason": {
+                "age": "Non disponible pour l'âge {{age}}.",
+                "face": "Non disponible pour ce montant assuré.",
+                "state": "Non disponible pour cet état."
+            },
+            "product": {
+                "title": "Produit",
+                "totalPremiumRange": "Gamme Premium Totale",
+                "totalPremiumRangeRowHeader": "Durée de {{years}} année",
+                "totalPremiumRangeSubtitle": "(Gamme Base Premium + Avenants de politique)"
+            },
+            "riders": {
+                "title": "Avenants de politique",
+                "disabledPlaceholder": "Sélectionnez pour ajouter et voir les prix",
+                "premiumFreeRiders": "Avenants de politique sans prime",
+                "totalRiderPricing": "Prix ​​total du passager"
+            }
         }
     },
     "usage": {

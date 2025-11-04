@@ -181,28 +181,24 @@ export const buildDefaultFormStateValues = (
             ])
         ),
         riders: Object.fromEntries([
-            ...RIDERS_WITH_FACE_AMOUNT.map(
-                (riderName) => [
-                    riderName,
-                    {
-                        type: 'WITH_FACE_AMOUNT',
-                        enabled:
-                            riderName in riders ? !!riders[riderName] : false,
-                        faceAmount:
-                            typeof riders[riderName] !== 'number'
-                                ? undefined
-                                : riders[riderName] || undefined,
-                    },
-                ],
-                ...NO_PARAM_RIDERS.map((riderName) => [
-                    riderName,
-                    {
-                        type: 'NO_PARAMS',
-                        enabled:
-                            riderName in riders ? !!riders[riderName] : false,
-                    },
-                ])
-            ),
+            ...RIDERS_WITH_FACE_AMOUNT.map((riderName) => [
+                riderName,
+                {
+                    type: 'WITH_FACE_AMOUNT',
+                    enabled: riderName in riders ? !!riders[riderName] : false,
+                    faceAmount:
+                        typeof riders[riderName] !== 'number'
+                            ? undefined
+                            : riders[riderName] || undefined,
+                },
+            ]),
+            ...NO_PARAM_RIDERS.map((riderName) => [
+                riderName,
+                {
+                    type: 'NO_PARAMS',
+                    enabled: riderName in riders ? !!riders[riderName] : false,
+                },
+            ]),
         ]),
     };
 };

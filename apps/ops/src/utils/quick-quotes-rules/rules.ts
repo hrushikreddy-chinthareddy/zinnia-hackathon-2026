@@ -39,7 +39,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -159,7 +159,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -279,7 +279,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -399,7 +399,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -491,7 +491,7 @@ export const RULES_MODEL: RulesModel = {
             ],
         },
         {
-            productName: 'Return of Premium Term Life 20 Yr', // Excek shows Life 20 Yr, prodcut aPI returns 10 and 30  as term length for ROP
+            productName: 'Return of Premium Term Life 20 Yr',
             planCode: 'TR0101',
             termLength: 20,
             classes: [
@@ -519,7 +519,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -639,7 +639,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
