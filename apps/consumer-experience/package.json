@@ -14,7 +14,7 @@
     "lint:fix": "next lint --fix",
     "prettier": "prettier --check --cache --log-level=warn ./src",
     "prettier:fix": "prettier --write --cache ./src",
-    "test": "cd ../.. pnpm build && cd apps/consumer-experience && jest",
+    "test": "cd ../.. && npx turbo run build --filter=consumer-experience && cd apps/consumer-experience && jest",
     "test:watch": "jest --watch",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build",
