@@ -216,6 +216,9 @@ importers:
       autoprefixer:
         specifier: ^10.0.1
         version: 10.4.21(postcss@8.5.6)
+      canvas:
+        specifier: 3.1.2
+        version: 3.1.2
       chromatic:
         specifier: ^11.0.0
         version: 11.29.0
@@ -269,7 +272,7 @@ importers:
         version: 29.7.0(@types/node@20.19.7)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@types/node@20.19.7)(typescript@5.8.3))
       jest-environment-jsdom:
         specifier: ^29.7.0
-        version: 29.7.0(canvas@2.11.2)
+        version: 29.7.0(canvas@3.1.2)
       lint-staged:
         specifier: ^15.2.2
         version: 15.5.2
