@@ -36,6 +36,7 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
   addressId,
   fullAddressData,
   disableEditingPreferredAddress,
+  addresses,
 }) => {
   const updateBpmAction = useBpmStore(state => state.updateBpmAction);
   const params = useParams<{
@@ -60,6 +61,11 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
 
   const removeCallback = async () => {
     setStep(FormSteps.LOADING);
+    const wasPreferred = fullAddressData?.isPreferred;
+    const nextPreferredAddressId = addresses?.find(
+      address => !address.isPreferred
+    )?.addressId;
+
     const { data, error } = await putEndDateAddress({
       planCode: params.planCode,
       policyNumber: params.policyNumber,
@@ -68,12 +74,15 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
       addressChangeRequest: {
         address: {
           ...fullAddressData,
+          isPreferred: false,
           //ridiculous casting because BPM and SOR types are slightly off
           state: fullAddressData?.state as unknown as AddressChange.state,
           addressType:
             fullAddressData?.addressType as unknown as AddressChange.addressType,
           country: fullAddressData?.country as unknown as AddressChange.country,
         },
+        preferredAddressIndicator: AddressChange.preferredAddressIndicator.NO,
+        preferredAddressId: wasPreferred ? nextPreferredAddressId : undefined,
       },
     });
 

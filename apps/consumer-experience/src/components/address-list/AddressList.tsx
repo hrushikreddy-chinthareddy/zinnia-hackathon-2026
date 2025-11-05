@@ -98,6 +98,7 @@ export const AddressList: FC<AddressListProps> = ({
         <AddEditAddressSidesheet
           partyId={initialProfileData?.partyId || ''}
           actionType={FormActionType.ADD}
+          addresses={addresses as Address[]}
         />
       )}
     </div>

@@ -80,6 +80,7 @@ const AddressGroup = ({
                     addressId={address.addressId}
                     fullAddressData={address}
                     disableEditingPreferredAddress={userOnlyHasOneAddress}
+                    addresses={addresses}
                   />,
                 ],
               })}
