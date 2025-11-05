@@ -42,6 +42,21 @@ const getIdentifications = (identifications: Identification[] = []) => {
           ];
 };
 
+const getPrefix = (prefix: string | null) => {
+    switch (prefix) {
+        case 'MR':
+            return 'Mr.';
+        case 'MRS':
+            return 'Mrs.';
+        case 'MS':
+            return 'Ms.';
+        case 'DR':
+            return 'Dr.';
+        default:
+            return null;
+    }
+};
+
 const formatParties = (policyResponse: PolicyResponse) => {
     const partyRoleMap = policyResponse.partyRoles.reduce(
         (acc: Record<string, string>, role: PartyRole) => {
@@ -213,7 +228,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         partyType: bene.partyType,
                         preferredCommunicationType:
                             bene.preferredCommunicationType ?? null,
-                        prefix: bene.prefix ?? null,
+                        prefix: getPrefix(bene.prefix),
                         firstName: bene.firstName ?? null,
                         middleName: bene.middleName ?? null,
                         lastName:
