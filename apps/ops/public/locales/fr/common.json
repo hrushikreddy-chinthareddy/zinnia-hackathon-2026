@@ -8204,6 +8204,11 @@
             "duplicate": "Double",
             "calculating": "Calculé",
             "ariaValuePerYear": "{{value}} par an",
+            "insured": {
+                "title": "Assuré",
+                "issueAge": "Âge d’émission",
+                "premiumClass": "Classe de prime"
+            },
             "coverage": {
                 "title": "Couverture",
                 "faceAmount": "Montant nominal",

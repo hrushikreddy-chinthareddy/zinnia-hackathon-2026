@@ -8203,6 +8203,11 @@
             "duplicate": "Duplicar",
             "calculating": "Calculando",
             "ariaValuePerYear": "{{value}} por año",
+            "insured": {
+                "title": "Asegurado",
+                "issueAge": "Edad de emisión",
+                "premiumClass": "Clase de prima"
+            },
             "coverage": {
                 "title": "Cobertura",
                 "faceAmount": "Valor nominal",
