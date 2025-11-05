@@ -37,14 +37,16 @@ export const ClientCasePaginator = () => {
                     total
                 )} ${t('of')} ${total}`}</p>
             </div>
-            <div>
-                <Pagination
-                    limit={limit}
-                    offset={offset}
-                    total={total}
-                    goToPage={goToPage}
-                />
-            </div>
+            {total > limit && (
+                <div>
+                    <Pagination
+                        limit={limit}
+                        offset={offset}
+                        total={total}
+                        goToPage={goToPage}
+                    />
+                </div>
+            )}
             <div className={styles.emptyColumn}></div>
         </div>
     );
