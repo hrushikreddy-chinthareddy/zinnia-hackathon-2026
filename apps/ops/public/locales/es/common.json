@@ -4423,6 +4423,7 @@
                 "currentAnnualLimit": "Límite Anual Actual",
                 "remainingAnnualLimit": "Límite Anual Restante",
                 "hypotheticalAnnualLimit": "Límite Anual Hipotético",
+                "lastResetDate": "Último día de reinicio",
                 "coverageType": "Tipo de cobertura",
                 "coverageName": "Nombre de la cobertura",
                 "productCode": "Código de producto",

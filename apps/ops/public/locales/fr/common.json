@@ -4363,6 +4363,7 @@
                 "currentAnnualLimit": "Plafond annuel actuel",
                 "remainingAnnualLimit": "Plafond annuel restant",
                 "hypotheticalAnnualLimit": "Plafond annuel hypothétique",
+                "lastResetDate": "Date de la dernière réinitialisation",
                 "coverageType": "Type de couverture",
                 "coverageName": "Nom de la couverture",
                 "productCode": "Code produit",

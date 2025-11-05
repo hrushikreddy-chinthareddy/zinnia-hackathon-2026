@@ -4439,6 +4439,7 @@
                 "currentAnnualLimit": "Current Annual Limit",
                 "remainingAnnualLimit": "Remaining Annual Limit",
                 "hypotheticalAnnualLimit": "Hypothetical Annual Limit",
+                "lastResetDate": "Last Reset Date",
                 "coverageType": "Coverage type",
                 "coverageName": "Coverage name",
                 "productCode": "Product code",
