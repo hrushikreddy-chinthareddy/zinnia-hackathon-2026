@@ -1,5 +1,3 @@
-import { handleUnauthorizedResponse } from '@/utils/logout';
-
 import { HttpRequest } from './http';
 
 class ClientHttpRequest extends HttpRequest {
@@ -18,12 +16,7 @@ class ClientHttpRequest extends HttpRequest {
       credentials: 'include',
     };
 
-    const response = await fetch(input, requestInit);
-
-    // Handle 401 Unauthorized responses by logging out immediately
-    handleUnauthorizedResponse(response);
-
-    return response;
+    return fetch(input, requestInit);
   };
 }
 
