@@ -125,10 +125,13 @@ const TransactionAccordion = ({
                 firstName: '',
                 lastName: '',
                 middleName: null,
-                gender: 'MALE',
-                preferredCommunicationType: 'EMAIL',
-                supportingDocumentAttached: null,
+                gender: null,
+                preferredCommunicationType: null,
+                dateOfBirth: null,
+                endDate: null,
                 entityType: 'UNKNOWN',
+                prefix: null,
+                suffix: null,
                 emails: [
                     {
                         emailAddress: null,

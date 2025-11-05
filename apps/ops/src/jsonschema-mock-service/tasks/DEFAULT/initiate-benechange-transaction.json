@@ -394,7 +394,6 @@
                                                             "title": "Last name"
                                                         },
                                                         "dateOfBirth": {
-                                                            "format": "date",
                                                             "title": "Date of birth",
                                                             "type": [
                                                                 "string",
@@ -437,7 +436,6 @@
                                                             "default": null
                                                         },
                                                         "trustDate": {
-                                                            "format": "date",
                                                             "title": "Trust Date",
                                                             "type": [
                                                                 "string",
@@ -770,6 +768,9 @@
                                         ]
                                     },
                                     "ui:placeholder": "Select trust type"
+                                },
+                                "trustDate": {
+                                    "ui:widget": "NewDateWidget"
                                 },
                                 "dateOfBirth": {
                                     "ui:widget": "NewDateWidget"
