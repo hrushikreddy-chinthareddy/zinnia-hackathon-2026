@@ -39,7 +39,6 @@
         "@zinnia/api-types": "workspace:*",
         "@zinnia/bloom": "^6.0.0",
         "@zinnia/form-engine-sdk": "3.0.3",
-        "@zinnia/pom": "workspace:*",
         "@zinnia/utils": "workspace:*",
         "@zinnia/xd-components": "workspace:*",
         "ag-grid-community": "29.2.0",
