@@ -163,6 +163,7 @@ export default function UnderwritingCard({
                     <Typography variant={TypographyVariant.H2} className="mr-5">
                         {t('people.card.underwriting')}
                     </Typography>
+
                     {editable && (
                         <NavElement
                             type={NavElementType.Button}
