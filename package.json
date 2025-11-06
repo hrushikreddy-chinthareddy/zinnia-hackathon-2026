@@ -11,7 +11,7 @@
     "dev:consumer-experience": "pnpm run dev --filter consumer-experience",
     "dev:cui": "pnpm run dev --filter consumer-experience",
     "lint": "turbo run lint",
-    "clean": "find . -name '.next' -type d -prune -exec rm -rf '{}' + && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' + && find . -name '.turbo' -type d -prune -exec rm -rf '{}' +",
+    "clean": "node ./scripts/clean.mjs",
     "test": "turbo run test",
     "build-storybook": "turbo run build-storybook",
     "link-package": "node ./scripts/link-package.mjs",
@@ -23,8 +23,10 @@
   "devDependencies": {
     "@zinnia/typescript-config": "workspace:*",
     "dotenv-cli": "^7.3.0",
+    "glob": "^11.0.3",
     "husky": "^8.0.3",
     "prettier": "^3.1.1",
+    "rimraf": "^6.1.0",
     "turbo": "^2.0.4"
   },
   "packageManager": "pnpm@9.4.0",
