@@ -6259,6 +6259,7 @@ export const farmersBlueprintIU0101 = {
                                     defaultValue: [
                                         {
                                             id: '99090f2c-248f-4884-ad22-dbaef302c849',
+                                            firstColumn: 0,
                                             fromYear: 1,
                                             through: 120,
                                         },
