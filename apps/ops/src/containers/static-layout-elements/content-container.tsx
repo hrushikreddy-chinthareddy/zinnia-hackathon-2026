@@ -95,7 +95,7 @@ const ContentContainer = ({
 
     return (
         <>
-            {loading ? (
+            {loading || !planCode || !policyNumber ? (
                 <PageLoader variant={PageLoaderVariant.Center} />
             ) : (
                 <>

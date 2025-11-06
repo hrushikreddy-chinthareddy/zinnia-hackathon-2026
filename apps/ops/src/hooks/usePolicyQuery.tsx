@@ -9,8 +9,8 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 
 export const usePolicyQuery = (
-    planCode: string = '',
-    policyNumber: string = '',
+    planCode: string,
+    policyNumber: string,
     date: string,
     queryClient: QueryClient,
     enableQuery: boolean
@@ -19,8 +19,8 @@ export const usePolicyQuery = (
         queryKey: [getPolicyQueryKey, policyNumber, planCode, date],
         queryFn: () =>
             getPolicyQuery(
-                policyNumber as string,
-                planCode as string,
+                policyNumber,
+                planCode,
                 dayjs(date, DATE_PICKER_FORMAT).format('YYYY-MM-DD')
             ),
         placeholderData: () => {

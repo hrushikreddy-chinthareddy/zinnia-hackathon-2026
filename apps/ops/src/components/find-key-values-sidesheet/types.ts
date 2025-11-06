@@ -53,8 +53,8 @@ export const [Expand, Collapse] = [true, false];
 export type ExpandCollapse = typeof Expand | typeof Collapse;
 
 export interface FindAllKeyValuesSidebarProps {
-    planCode?: string;
-    policyNumber?: string;
+    planCode: string;
+    policyNumber: string;
 }
 
 export enum FormatterType {
