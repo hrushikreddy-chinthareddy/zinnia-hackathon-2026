@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-const patterns = ['.next', 'node_modules', 'dist', '.turbo'];
+const patterns = ['.next', 'node_modules', 'dist', '.turbo', 'build'];
 
 async function clean() {
   console.log('🧹 Cleaning build artifacts and dependencies...\n');
@@ -16,7 +16,7 @@ async function clean() {
   for (const pattern of patterns) {
     // For node_modules, don't ignore nested ones since we want to delete all of them
     const ignorePattern = pattern === 'node_modules' ? [] : ['**/node_modules/**'];
-    
+
     const matches = await glob(`**/${pattern}`, {
       cwd: rootDir,
       ignore: ignorePattern,
