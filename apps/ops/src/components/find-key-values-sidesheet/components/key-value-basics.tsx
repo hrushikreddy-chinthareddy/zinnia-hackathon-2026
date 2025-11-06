@@ -3,7 +3,6 @@ import { AccordionType } from '@xd/xd-components/src/components/Accordion/types'
 
 import Highlighter from '@deps/components/highlighter/highlighter';
 
-import { preparePolicy, prepareTransaction } from '../transformations';
 import { ExpandCollapse, label, NestedData } from '../types';
 import { KeyValueFieldList } from './key-value-field-list';
 
@@ -11,7 +10,6 @@ import { KeyValueFieldList } from './key-value-field-list';
  * A component that renders a list of key-value pairs based on the policyBasics
  * and searchValue.
  *
- * @param {ReturnType<typeof preparePolicy | typeof prepareTransaction>} preparedData - The details
  * @param {NestedData} policyBasics - The policy basics
  * @param {string} searchValue - The search value
  * @returns {JSX.Element} - A JSX element representing the key-value pairs
@@ -21,7 +19,6 @@ export const KeyValueBasics = ({
     searchValue,
     treeState,
 }: {
-    preparedData: ReturnType<typeof preparePolicy | typeof prepareTransaction>;
     policyBasics: NestedData;
     searchValue: string;
     treeState: ExpandCollapse;

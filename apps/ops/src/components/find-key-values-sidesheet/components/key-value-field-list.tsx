@@ -22,13 +22,17 @@ export const KeyValueFieldList = ({
 }) => {
     return (
         <div className={styles.itemsList}>
-            {fields?.map((field, i) => {
-                // If the field data is an array, render it as a
-                // subSection-in-subSection
-                const [key, data] = field as unknown[];
+            {fields
+                // If the first element of the array is not a string, it will render
+                // as subSection-in-subSection
+                ?.filter((field) => {
+                    const [key] = field as unknown[];
+                    return typeof key === 'string';
+                })
+                .map((field, i) => {
+                    const [key, data] = field as [string, unknown];
 
-                // Render key-value pairs as a DataField
-                if (typeof key === 'string') {
+                    // Render key-value pairs as a DataField
                     return (
                         <DataField
                             key={`field_${i}`}
@@ -38,8 +42,7 @@ export const KeyValueFieldList = ({
                             toolTip={(field as MetaData)?.[toolTip]}
                         />
                     );
-                }
-            })}
+                })}
             <KeyValueNestedSubSections
                 key={`subsection_`}
                 subSections={fields as NestedData[]}

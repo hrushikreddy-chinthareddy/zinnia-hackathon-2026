@@ -180,7 +180,6 @@ export const PolicySidesheetContent = ({
                     </div>
                     {basics && (
                         <KeyValueBasics
-                            preparedData={preparedPolicy}
                             policyBasics={basics as NestedData[]}
                             searchValue={searchValue}
                             treeState={treeState}

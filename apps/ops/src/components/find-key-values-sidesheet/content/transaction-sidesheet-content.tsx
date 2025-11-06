@@ -89,7 +89,6 @@ export const TransactionSidesheetContent = ({
                 </div>
                 {basics && (
                     <KeyValueBasics
-                        preparedData={preparedTransaction}
                         policyBasics={basics as NestedData[]}
                         searchValue={searchValue}
                         treeState={treeState}
