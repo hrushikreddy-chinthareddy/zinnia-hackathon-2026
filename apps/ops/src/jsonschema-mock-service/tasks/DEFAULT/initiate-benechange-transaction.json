@@ -1028,9 +1028,9 @@
                                                 "type": ["null", "string"],
                                                 "title": "Preferred Contact Method",
                                                 "enum": [
-                                                    null,
                                                     "EMAIL",
-                                                    "REGULARMAIL"
+                                                    "REGULARMAIL",
+                                                    null
                                                 ],
                                                 "default": null
                                             }
@@ -1110,9 +1110,9 @@
                                                             ],
                                                             "title": "Gender",
                                                             "enum": [
-                                                                null,
                                                                 "MALE",
-                                                                "FEMALE"
+                                                                "FEMALE",
+                                                                null
                                                             ],
                                                             "default": null
                                                         },
@@ -1195,9 +1195,9 @@
                                                                 "boolean"
                                                             ],
                                                             "enum": [
-                                                                null,
                                                                 true,
-                                                                false
+                                                                false,
+                                                                null
                                                             ],
                                                             "default": null
                                                         }
@@ -1507,9 +1507,9 @@
                                 "supportingDocumentAttached": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
-                                        "enumNames": [null, "Yes", "No"],
+                                        "enumNames": ["Yes", "No"],
                                         "inline": true,
-                                        "enumHideLabel": [null]
+                                        "allowNullValue": true
                                     }
                                 },
                                 "entityType": {
@@ -1549,8 +1549,8 @@
                                 "gender": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
-                                        "enumNames": [null, "Male", "Female"],
-                                        "enumHideLabel": [null]
+                                        "enumNames": ["Male", "Female"],
+                                        "allowNullValue": true
                                     }
                                 },
                                 "addresses": {
@@ -1738,8 +1738,8 @@
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
                                         "inline": true,
-                                        "enumNames": [null, "Email", "Mail"],
-                                        "enumHideLabel": [null]
+                                        "enumNames": ["Email", "Mail"],
+                                        "allowNullValue": true
                                     }
                                 },
                                 "dateOfBirth": {

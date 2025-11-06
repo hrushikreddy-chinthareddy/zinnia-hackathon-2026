@@ -6,7 +6,7 @@ import {
     WidgetProps,
 } from '@rjsf/utils';
 import { IconType } from '@zinnia/bloom/components';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import Radio, {
     RadioItem,
@@ -76,9 +76,20 @@ function RadioWidget<
         formContext,
         readonly,
     } = widgetProps;
-    const { enumOptions, enumDisabled, inline, enumHideLabel } = options;
-    const { customOptions, props, properties, cardType, icon, sectionTitle } =
-        getUiOptions<T, S, F>(uiSchema);
+    const { enumOptions, enumDisabled, inline } = options;
+    const {
+        customOptions,
+        props,
+        properties,
+        cardType,
+        icon,
+        sectionTitle,
+        allowNullValue,
+    } = getUiOptions(uiSchema);
+
+    useEffect(() => {
+        allowNullValue && onChange(value || null);
+    }, [allowNullValue]);
 
     const apiProps =
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -128,9 +139,6 @@ function RadioWidget<
                     label: option.label || String(option.value),
                     value: stringifyObjectValue(option.value),
                     disabled: enumDisabled?.includes(option.value) || false,
-                    hideLabel: Array.isArray(enumHideLabel)
-                        ? enumHideLabel.includes(option.value)
-                        : false,
                     subElement:
                         option.subElement &&
                         renderSubElement(
@@ -156,7 +164,6 @@ function RadioWidget<
     }, [
         currentOptions,
         enumDisabled,
-        enumHideLabel,
         properties,
         cardType,
         icon,
@@ -201,7 +208,11 @@ function RadioWidget<
         <div>
             <Radio
                 id={id}
-                items={newOptions as RadioItem[]}
+                items={
+                    newOptions.filter(
+                        (option) => option.value !== null
+                    ) as RadioItem[]
+                }
                 value={selectedValue as string}
                 disabled={disabled}
                 readonly={readonly}
