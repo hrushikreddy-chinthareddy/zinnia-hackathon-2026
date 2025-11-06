@@ -435,9 +435,6 @@ importers:
       '@zinnia/form-engine-sdk':
         specifier: 3.0.3
         version: 3.0.3(@babel/core@7.28.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.12.14(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.9.2))
-      '@zinnia/pom':
-        specifier: workspace:*
-        version: link:../../packages/pom
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
