@@ -5,28 +5,24 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g turbo@2.0.4
+RUN npm install -g turbo@2.1.3
 COPY . .
-RUN turbo prune consumer-experience --docker
+# Note: pruning disabled to copy full workspace
+# pruning doesn't build dev dependencies. Since we are building the app in the same container, we need to build dev dependencies
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
-RUN apk add --no-cache libc6-compat
+RUN apk add --update --no-cache libc6-compat make gcc g++ python3 pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev
 RUN apk update
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
-COPY .gitignore .gitignore
-COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app .
 RUN --mount=type=secret,id=npmtoken echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npmtoken)" > /root/.npmrc
 RUN npm install -g corepack && corepack enable
 ENV COREPACK_INTEGRITY_KEYS=0
 ENV COREPACK_DEFAULT_TO_LATEST=0
-RUN pnpm i
-
-# Build the project
-COPY --from=builder /app/out/full/ .
+RUN pnpm i --frozen-lockfile
 
 ARG NEXT_PUBLIC_MOCK_API_REQUEST
 ARG NEXT_PUBLIC_BACKEND_URL
