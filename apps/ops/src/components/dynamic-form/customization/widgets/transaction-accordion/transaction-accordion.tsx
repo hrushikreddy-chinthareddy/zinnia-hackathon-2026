@@ -1,4 +1,5 @@
 import { WidgetProps } from '@rjsf/utils';
+import dayjs from 'dayjs';
 import { useRef, useState, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
@@ -110,6 +111,10 @@ const TransactionAccordion = ({
         updatedList[index] = {
             ...updatedList[index],
             action: checked ? Action.DELETE : Action.NONE,
+            party: {
+                ...updatedList[index].party,
+                endDate: checked ? dayjs.utc().format('YYYY-MM-DD') : null,
+            },
         };
         onChange(updatedList);
     };

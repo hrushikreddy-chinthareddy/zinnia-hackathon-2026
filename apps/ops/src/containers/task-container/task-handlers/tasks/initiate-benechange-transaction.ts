@@ -1,4 +1,5 @@
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { IdentificationType } from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
@@ -195,7 +196,11 @@ const formatParties = (policyResponse: PolicyResponse) => {
 const formatBeneficiaries = (policyResponse: PolicyResponse) => {
     const getBeneficiariesByRole = (roleType: string) => {
         const partyIds = policyResponse.partyRoles
-            .filter((role: PartyRole) => role.partyRole === roleType)
+            .filter(
+                (role: PartyRole) =>
+                    role.partyRole === roleType &&
+                    (!role?.endDate || !isEndDated(role?.endDate))
+            )
             .map((role: PartyRole) => role.partyId);
 
         const beneData = policyResponse.parties
