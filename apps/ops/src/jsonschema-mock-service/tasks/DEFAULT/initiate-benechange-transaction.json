@@ -394,7 +394,6 @@
                                                             "title": "Last name"
                                                         },
                                                         "dateOfBirth": {
-                                                            "format": "date",
                                                             "title": "Date of birth",
                                                             "type": [
                                                                 "string",
@@ -437,7 +436,6 @@
                                                             "default": null
                                                         },
                                                         "trustDate": {
-                                                            "format": "date",
                                                             "title": "Trust Date",
                                                             "type": [
                                                                 "string",
@@ -771,6 +769,9 @@
                                     },
                                     "ui:placeholder": "Select trust type"
                                 },
+                                "trustDate": {
+                                    "ui:widget": "NewDateWidget"
+                                },
                                 "dateOfBirth": {
                                     "ui:widget": "NewDateWidget"
                                 }
@@ -1024,15 +1025,17 @@
                                                 }
                                             },
                                             "preferredCommunicationType": {
-                                                "type": "string",
+                                                "type": ["null", "string"],
                                                 "title": "Preferred Contact Method",
-                                                "enum": ["EMAIL", "REGULARMAIL"]
+                                                "enum": [
+                                                    "EMAIL",
+                                                    "REGULARMAIL",
+                                                    null
+                                                ],
+                                                "default": null
                                             }
                                         },
-                                        "required": [
-                                            "partyType",
-                                            "beneficiaryPercentage"
-                                        ],
+                                        "required": ["beneficiaryPercentage"],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -1108,11 +1111,16 @@
                                                             "title": "Gender",
                                                             "enum": [
                                                                 "MALE",
-                                                                "FEMALE"
-                                                            ]
+                                                                "FEMALE",
+                                                                null
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "dateOfBirth": {
-                                                            "type": "string",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
                                                             "title": "Date of birth"
                                                         }
                                                     },
@@ -1182,15 +1190,16 @@
                                                         },
                                                         "supportingDocumentAttached": {
                                                             "title": "Is the uploaded supporting document(s) valid and relevant?",
-                                                            "type": "boolean",
+                                                            "type": [
+                                                                "null",
+                                                                "boolean"
+                                                            ],
                                                             "enum": [
                                                                 true,
-                                                                false
+                                                                false,
+                                                                null
                                                             ],
-                                                            "enumNames": [
-                                                                "Yes",
-                                                                "No"
-                                                            ]
+                                                            "default": null
                                                         }
                                                     },
                                                     "required": [
@@ -1291,7 +1300,8 @@
                                                     "OTHER"
                                                 ]
                                             }
-                                        }
+                                        },
+                                        "required": ["relationshipToParty"]
                                     }
                                 }
                             },
@@ -1498,7 +1508,8 @@
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
                                         "enumNames": ["Yes", "No"],
-                                        "inline": true
+                                        "inline": true,
+                                        "allowNullValue": true
                                     }
                                 },
                                 "entityType": {
@@ -1538,7 +1549,8 @@
                                 "gender": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
-                                        "enumNames": ["Male", "Female"]
+                                        "enumNames": ["Male", "Female"],
+                                        "allowNullValue": true
                                     }
                                 },
                                 "addresses": {
@@ -1726,7 +1738,8 @@
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
                                         "inline": true,
-                                        "enumNames": ["Email", "Mail"]
+                                        "enumNames": ["Email", "Mail"],
+                                        "allowNullValue": true
                                     }
                                 },
                                 "dateOfBirth": {
