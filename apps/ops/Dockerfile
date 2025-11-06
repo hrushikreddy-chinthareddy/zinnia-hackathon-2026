@@ -7,7 +7,8 @@ RUN apk update
 WORKDIR /app
 RUN npm install -g turbo@2.1.3
 COPY . .
-RUN turbo prune ops --docker
+# Note: pruning disabled to copy full workspace
+# pruning doesn't build dev dependencies. Since we are building the app in the same container, we need to build dev dependencies
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -16,17 +17,12 @@ RUN apk update
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
-COPY .gitignore .gitignore
-COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app .
 RUN --mount=type=secret,id=npmtoken echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npmtoken)" > /root/.npmrc
 RUN npm install -g corepack && corepack enable
 ENV COREPACK_INTEGRITY_KEYS=0
 ENV COREPACK_DEFAULT_TO_LATEST=0
-RUN pnpm i
-
-# Build the project
-COPY --from=builder /app/out/full/ .
+RUN pnpm i --frozen-lockfile
 
 ARG NEXT_PUBLIC_BACKEND_URL
 ARG NEXT_PUBLIC_BASE_URL
