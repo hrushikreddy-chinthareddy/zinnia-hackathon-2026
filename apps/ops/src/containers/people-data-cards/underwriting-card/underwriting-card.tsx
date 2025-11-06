@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -8,10 +7,6 @@ import NavElement, {
     NavElementType,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
-import Toggle, {
-    ToggleSize,
-    ToggleVariant,
-} from '@deps/components/toggle/toggle';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -158,12 +153,6 @@ export default function UnderwritingCard({
 }: UnderwritingCardProps) {
     const { t } = useTranslation();
 
-    const showToggle = props.sexAtBirth || props.employed;
-
-    const [additional, setAdditional] = useState(false);
-    const visibility = additional
-        ? ''
-        : 'invisible [&>*:nth-child(-n+4)]:visible';
     return (
         <CardContainer
             classNames="flex w-full flex-col items-start text-gray-900"
@@ -185,29 +174,9 @@ export default function UnderwritingCard({
                         </NavElement>
                     )}
                 </div>
-                {showToggle && (
-                    <div className="mb-5 flex flex-row items-center">
-                        <Toggle
-                            size={ToggleSize.Default}
-                            variant={ToggleVariant.Default}
-                            text={
-                                t(
-                                    'people.card.underwritingInfo.showAdditional'
-                                ) as string
-                            }
-                            ariaLabel={
-                                t(
-                                    'people.card.underwritingInfo.showAdditional'
-                                ) as string
-                            }
-                            value={additional}
-                            handleToggle={setAdditional}
-                        />
-                    </div>
-                )}
             </div>
             <div
-                className={`grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-auto-4 ${visibility}`}
+                className={`grid grid-cols-auto-2 gap-x-8 gap-y-4 md:grid-cols-6`}
             >
                 <RiskClassInfo riskClass={props.riskClass} />
                 <SubstandardRatingInfo
@@ -217,8 +186,10 @@ export default function UnderwritingCard({
                     disabled={props.disabled}
                     disabilityStartDate={props.disabilityStartDate}
                 />
-                {additional && <SexAtBirthInfo sexAtBirth={props.sexAtBirth} />}
-                {additional && props.employed && (
+                {props.sexAtBirth && (
+                    <SexAtBirthInfo sexAtBirth={props.sexAtBirth} />
+                )}
+                {props.employmentStatus && (
                     <EmploymentInfo
                         employed={props.employed}
                         employmentStatus={props.employmentStatus}
