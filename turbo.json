@@ -91,10 +91,6 @@
     "@zinnia/utils#build": {
       "dependsOn": ["^build"]
     },
-    "@zinnia/pom#build": {
-      "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_BASE_URL"]
-    },
     "lint": {},
     "prettier": {},
     "check-types": {},
