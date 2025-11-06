@@ -94,7 +94,7 @@
     }
   },
   "scripts": {
-    "build": "pnpm run update-spec && pnpm run generate-types:all && tsup",
+    "build": "pnpm run update-spec && pnpm run generate-types:all && tsup --silent",
     "test": "echo ",
     "typecheck": "tsc --noEmit",
     "update-spec": "node ./src/update-type-definition.mjs",
