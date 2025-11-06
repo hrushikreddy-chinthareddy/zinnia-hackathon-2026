@@ -115,13 +115,14 @@
     "generate-types:correspondence": "npx openapi --input ./src/api-spec-correspondence.yaml --output ./src/generated-types/correspondence --exportCore false --exportServices false",
     "generate-types:aggregation": "npx openapi --input ./src/api-spec-aggregation.json --output ./src/generated-types/aggregation --exportCore false --exportServices false",
     "generate-types:pom": "npx openapi --input ./src/api-spec-pom.yaml --output ./src/generated-types/pom --exportCore false --exportServices false",
-    "generate-types:all": "rm -rf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:case-v2 && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store && pnpm run generate-types:analytics && pnpm run generate-types:contact-management && pnpm run generate-types:correspondence && pnpm run generate-types:knowledgebase && pnpm run generate-types:aggregation && pnpm run generate-types:pom ",
-    "clean": "rm -rf ./dist"
+    "generate-types:all": "rimraf ./src/generated-types && pnpm run generate-types:sor && pnpm run generate-types:search && pnpm run generate-types:documents && pnpm run generate-types:documents-v3 && pnpm run generate-types:bpm && pnpm run generate-types:funds && pnpm run generate-types:case && pnpm run generate-types:case-v2 && pnpm run generate-types:preferences && pnpm run generate-types:partyreference && pnpm run generate-types:transaction-store && pnpm run generate-types:analytics && pnpm run generate-types:contact-management && pnpm run generate-types:correspondence && pnpm run generate-types:knowledgebase && pnpm run generate-types:aggregation && pnpm run generate-types:pom ",
+    "clean": "rimraf ./dist"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
     "@zinnia/typescript-config": "workspace:*",
     "openapi-typescript-codegen": "^0.26.0",
+    "rimraf": "^6.1.0",
     "tsup": "^8.0.2",
     "typescript": "^5.3.3"
   }

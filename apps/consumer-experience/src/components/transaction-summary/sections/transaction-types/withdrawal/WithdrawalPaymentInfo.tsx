@@ -40,7 +40,7 @@ export const WithdrawalPaymentInfo: FC<WithdrawalPaymentInfoProps> = ({
         .totalPayment +
       transactionSummary.entity?.withdrawalTransaction?.withdrawalSummary
         .withdrawalCharge,
-    label: <Label>Total Deposit</Label>,
+    label: <Label>Total withdrawal</Label>,
   };
 
   return <PaymentSummaryStep transactionSummary={summaryItems} total={total} />;

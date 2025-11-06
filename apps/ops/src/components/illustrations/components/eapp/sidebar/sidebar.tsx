@@ -100,7 +100,7 @@ export const Sidebar: FC<SidebarProps> = ({
 
         const debounceTimeout = setTimeout(() => {
             onQuickQuote();
-        }, 200);
+        }, 400);
 
         return () => clearTimeout(debounceTimeout);
         // eslint-disable-next-line react-hooks/exhaustive-deps

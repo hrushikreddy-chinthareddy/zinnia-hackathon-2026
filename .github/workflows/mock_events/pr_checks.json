@@ -1,0 +1,23 @@
+{
+  "pull_request": {
+    "number": 123,
+    "title": "[DEPU-7729] Fix canvas dependency issue in consumer-experience tests",
+    "body": "### What's this PR do?\n\nFixes canvas native dependency issue preventing consumer-experience tests from running.\n\n### What are the relevant tickets?\n\nhttps://zinnia.atlassian.net/browse/DEPU-7729",
+    "head": {
+      "ref": "chore/depu-7729--update-build",
+      "sha": "abc123def456"
+    },
+    "base": {
+      "ref": "dev"
+    },
+    "user": {
+      "login": "test-user"
+    }
+  },
+  "repository": {
+    "name": "digital-experience-monorepo",
+    "owner": {
+      "login": "zinnia"
+    }
+  }
+}

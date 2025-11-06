@@ -8363,6 +8363,11 @@
             "duplicate": "Duplicate",
             "calculating": "Calculating",
             "ariaValuePerYear": "{{value}} per year",
+            "insured": {
+                "title": "Insured",
+                "issueAge": "Issue age",
+                "premiumClass": "Premium Class"
+            },
             "coverage": {
                 "title": "Coverage",
                 "faceAmount": "Face amount",
