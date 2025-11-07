@@ -1,5 +1,6 @@
 import { getSession } from '@auth0/nextjs-auth0';
 
+import { formatSSN } from '@deps/helpers/string.helpers';
 import {
     enterpriseSearchApiServerUrl,
     policyApiBaseUrl,
@@ -72,7 +73,10 @@ export default withAuthAndLogging(
                 url: searchUrl,
                 duration: performance.now() - now,
             });
-            res.json(searchResponse);
+            const sanitized = searchResponse.results.map((party) => {
+                return { ...party, ssn: formatSSN(party.ssn) };
+            });
+            res.json({ ...searchResponse, results: sanitized });
         } catch (e) {
             logWarn('policy search route handler:: something went wrong', {
                 ...loggingContext,
