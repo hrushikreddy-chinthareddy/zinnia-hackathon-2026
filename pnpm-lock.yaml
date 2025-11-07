@@ -415,7 +415,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: ^6.0.0
+        specifier: ^6.1.0
         version: 6.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.53.1)(typescript@5.9.3)(vite@6.4.1(@types/node@18.11.18)(jiti@1.21.7)(less@4.4.2)(terser@5.44.1)(yaml@2.8.1))
       '@zinnia/form-engine-sdk':
         specifier: 3.1.0
@@ -991,7 +991,7 @@ importers:
         specifier: ^3.1.1
         version: 3.2.4(@vitest/browser@3.2.4)(vitest@3.2.4)
       '@zinnia/bloom':
-        specifier: ^6.0.0
+        specifier: ^6.1.0
         version: 6.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.53.1)(typescript@5.7.3)(vite@6.4.1(@types/node@22.19.0)(jiti@2.6.1)(less@4.4.2)(terser@5.44.1)(yaml@2.8.1))
       '@zinnia/eslint-config':
         specifier: workspace:*
