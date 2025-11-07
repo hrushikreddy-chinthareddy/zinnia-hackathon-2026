@@ -4509,17 +4509,7 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporary",
                     "PERMANENT": "Permanent"
-                },
-                "remainingBenefit": "Remaining benefit",
-                "benefitPercent": "Benefit percent",
-                "annualBenefitLimit": "Annual benefit limit",
-                "payoutOption": "Payout option",
-                "currentAnnualLimit": "Current annual limit",
-                "phase": "Phase",
-                "totalBenefit": "Total benefit",
-                "remainingAnnualLimit": "Remaining annual limit",
-                "additionalBenefitUsedUp": "Additional benefit used up",
-                "hypotheticalAnnualLimit": "Hypothetical annual limit"
+                }
             },
             "coverageID": {
                 "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
