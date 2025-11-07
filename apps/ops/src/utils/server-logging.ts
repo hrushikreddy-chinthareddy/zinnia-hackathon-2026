@@ -101,7 +101,7 @@ type WithPageAuthAndLogging = (
 ) => ReturnType<WithPageAuthRequired>;
 
 export const logCompliance: LoggingFunction = (message, serializableValues) => {
-    complianceLogger.compliance(
+    complianceLogger.info(
         { ...(serializableValues || {}), isCompliance: true },
         message
     );

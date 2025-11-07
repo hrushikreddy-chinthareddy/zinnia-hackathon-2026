@@ -30,6 +30,7 @@ jest.mock('@deps/utils/pino-server', () => {
         },
         complianceLogger: {
             compliance: jest.fn(),
+            info: jest.fn(),
         },
     };
 });
@@ -98,9 +99,9 @@ describe('server-logging', () => {
     describe('logCompliance', () => {
         it('should use the appropriate pino method to log and attach isCompliance: true', () => {
             logCompliance('trace', mockLoggingContext);
-            expect(complianceLogger.compliance).toHaveBeenCalled();
+            expect(complianceLogger.info).toHaveBeenCalled();
             expect(
-                (complianceLogger.compliance as jest.Mock).mock.calls[0][0]
+                (complianceLogger.info as jest.Mock).mock.calls[0][0]
                     .isCompliance
             ).toBe(true);
         });

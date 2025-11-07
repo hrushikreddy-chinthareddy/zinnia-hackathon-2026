@@ -83,10 +83,7 @@ export const logCompliance: LoggingFunction = (
   message,
   serializableValues = {}
 ) => {
-  complianceLogger.compliance(
-    { serializableValues, isCompliance: true },
-    message
-  );
+  complianceLogger.info({ serializableValues, isCompliance: true }, message);
 };
 
 export const getUserInfoForLogging = async (
