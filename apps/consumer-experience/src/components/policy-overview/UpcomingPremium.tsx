@@ -1,4 +1,3 @@
-import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
 import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
 import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
@@ -149,11 +148,7 @@ export const UpcomingPremium = async ({
       dayjs(nextActivityDate).isSameOrAfter(dayjs(), 'day')) ||
     false;
 
-  const {
-    amount: paymentAmount,
-    caption,
-    label,
-  } = upcomingPaymentDetails({
+  const { scheduledPayment, premiumDue } = upcomingPaymentDetails({
     policyStatus,
     policyFeatures,
     upcomingPaymentAmount,
@@ -169,33 +164,52 @@ export const UpcomingPremium = async ({
           url: extended
             ? ''
             : `/coverage/policies/${planCode}/${policyNumber}/premium`, //annuities logic
-          label: 'go to premium payments page',
+          label: 'go to manage payments page',
         }}
       >
-        <div className={styles.content}>
-          <Icon type={IconType.AUTOPAY} className={styles.icon} />
-          <FieldData
-            Label={
-              <Label
-                interactiveElements={[
-                  <UpcomingPremiumPopover key="upcoming-popover" />,
-                ]}
+        <div className={styles.rowWrapper}>
+          <div className={styles.content}>
+            <Icon type={IconType.AUTOPAY} className={styles.icon} />
+            {scheduledPayment && (
+              <FieldData
+                Label={<Label>{scheduledPayment.label}</Label>}
+                caption={scheduledPayment.caption}
               >
-                {label}
-              </Label>
-            }
-            caption={caption}
-          >
-            {isNullEmptyOrUndefined(paymentAmount) ? (
-              <p className="typography-content-body-sm">
-                {DEFAULT_UNAVAILABLE_STRING}
-              </p>
-            ) : (
-              <p className="typography-content-value">
-                {formatUSDollars(paymentAmount)}
-              </p>
+                {isNullEmptyOrUndefined(scheduledPayment.amount) ? (
+                  <p className="typography-content-body-sm">--</p>
+                ) : (
+                  <p className="typography-content-value">
+                    {formatUSDollars(scheduledPayment.amount!)}
+                  </p>
+                )}
+              </FieldData>
             )}
-          </FieldData>
+            <div className={scheduledPayment ? 'ml-lg' : ''}>
+              <FieldData
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <UpcomingPremiumPopover key="upcoming-popover" />,
+                    ]}
+                  >
+                    {premiumDue.label}
+                  </Label>
+                }
+                caption={premiumDue.caption}
+              >
+                <p className="typography-content-value">
+                  {formatUSDollars(premiumDue.amount)}
+                </p>
+              </FieldData>
+            </div>
+          </div>
+          {!extended && (
+            <div className="ml-md">
+              <div className="typography-nav-links-sm mr-sm">
+                Manage Payments
+              </div>
+            </div>
+          )}
         </div>
       </ClickableCardContainer.LinkContent>
       {extended && (
@@ -238,7 +252,7 @@ export const UpcomingPremium = async ({
                   arrangementId={arrangementId}
                   disabled={!cancelAutopayEnabled}
                   frequency={frequency}
-                  paymentAmount={paymentAmount || 0}
+                  paymentAmount={scheduledPayment?.amount || 0}
                   planCode={planCode}
                   policyNumber={policyNumber}
                   nextActivityDate={nextActivityDate}
