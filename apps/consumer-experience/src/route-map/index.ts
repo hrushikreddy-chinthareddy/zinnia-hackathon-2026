@@ -97,7 +97,7 @@ export const routeMap: Record<RouteKey, RouteMap> = {
   [RouteKey.PREMIUM]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium',
     source: '/premium',
-    title: 'Premium payments',
+    title: 'Manage Payments',
   },
   [RouteKey.PREMIUM_DETAILS]: {
     destination:

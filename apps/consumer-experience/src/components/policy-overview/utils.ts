@@ -97,55 +97,59 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentAmount?: number;
   nextActivityDate: string;
   productType?: ProductType;
-}): { amount?: number; label: string; caption?: string | null } => {
-  let amount;
-  let label = 'Premium due';
-  let caption;
+}): {
+  scheduledPayment?: {
+    amount?: number;
+    label: string;
+    caption?: string | null;
+  };
+  premiumDue: { amount: number; label: string; caption?: string | null };
+} => {
+  let scheduledPayment;
+  let premiumDue;
 
   if (policyStatus === PolicyStatus.PENDINGLAPSE) {
     const pendingLapseDueDetails = policyFeatures?.find(
       item => item.featureType === FeatureType.LAPSEASSESSMENT
     );
 
-    amount = pendingLapseDueDetails?.totalMinimumRequiredAmount;
-    caption =
-      pendingLapseDueDetails?.endDate &&
-      `Due by ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`;
+    premiumDue = {
+      amount: pendingLapseDueDetails?.totalMinimumRequiredAmount ?? 0,
+      label: 'Premium due',
+      caption:
+        pendingLapseDueDetails?.endDate &&
+        `Due by ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`,
+    };
+  } else {
+    const billingFeature = policyFeatures?.find(
+      item => item.featureType === FeatureType.BILLING
+    );
 
-    return {
-      amount,
-      label,
-      caption,
+    premiumDue = {
+      amount: billingFeature?.paymentAmount ?? 0,
+      label: 'Premium due',
+      caption:
+        billingFeature?.effectiveDate &&
+        `Due by ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`,
     };
   }
 
-  if (upcomingPaymentValid) {
-    amount = upcomingPaymentAmount;
-    label = 'Scheduled premium';
-    caption =
-      nextActivityDate &&
-      `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`;
-  }
-
-  if (!upcomingPaymentValid) {
-    if (productType === ProductType.TERM) {
-      const billingFeature = policyFeatures?.find(
-        item => item.featureType === FeatureType.BILLING
-      );
-
-      amount = billingFeature?.paymentAmount;
-      label = 'Premium due';
-      caption =
-        billingFeature?.effectiveDate &&
-        `Due by ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`;
-    } else {
-      amount = 0;
-    }
+  if (
+    upcomingPaymentValid &&
+    upcomingPaymentAmount &&
+    upcomingPaymentAmount > 0
+  ) {
+    scheduledPayment = {
+      amount: upcomingPaymentAmount,
+      label: 'Next scheduled payment',
+      caption:
+        nextActivityDate &&
+        `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`,
+    };
   }
 
   return {
-    amount,
-    label,
-    caption,
+    scheduledPayment,
+    premiumDue,
   };
 };
