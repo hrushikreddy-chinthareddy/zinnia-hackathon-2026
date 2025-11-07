@@ -41,6 +41,7 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import {
     DEFAULT_DATE_FORMAT,
+    DEFAULT_ERROR_STRING,
     FIFTEEN_MINUTES_IN_MS,
     FIVE_MINUTES_IN_MS,
 } from '@deps/types/constants';
@@ -187,7 +188,9 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                         </PiiWrapper>
                     </>
                 ) : (
-                    <span className={styles.noCases}>--</span>
+                    <span className={styles.noCases}>
+                        {DEFAULT_ERROR_STRING}
+                    </span>
                 )}
             </TableCell>
             {/* Case Table Cell */}
@@ -213,7 +216,9 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                         {caseData && 'total' in caseData && caseData?.total}
                     </Link>
                 ) : (
-                    <span className={styles.noCases}>--</span>
+                    <span className={styles.noCases}>
+                        {DEFAULT_ERROR_STRING}
+                    </span>
                 )}
             </TableCell>
             {/* End Case Table Cell */}
