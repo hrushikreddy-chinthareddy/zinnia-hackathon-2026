@@ -4433,7 +4433,17 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporaire",
                     "PERMANENT": "Permanent"
-                }
+                },
+                "remainingBenefit": "Avantage restant",
+                "benefitPercent": "Pourcentage d’avantage",
+                "annualBenefitLimit": "Limite annuelle d’avantage",
+                "payoutOption": "Option de versement",
+                "currentAnnualLimit": "Limite annuelle actuelle",
+                "phase": "Phase",
+                "totalBenefit": "Avantage total",
+                "remainingAnnualLimit": "Limite annuelle restante",
+                "additionalBenefitUsedUp": "Avantage supplémentaire utilisé",
+                "hypotheticalAnnualLimit": "Limite annuelle hypothétique"
             },
             "coverageID": {
                 "Rider_ADR": "Fournit une prestation de décès supplémentaire si l'assuré décède en raison d'un accident couvert.",

@@ -4493,7 +4493,17 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporario",
                     "PERMANENT": "Permanente"
-                }
+                },
+                "remainingBenefit": "Beneficio restante",
+                "benefitPercent": "Porcentaje de beneficio",
+                "annualBenefitLimit": "Límite anual de beneficio",
+                "payoutOption": "Opción de pago",
+                "currentAnnualLimit": "Límite anual actual",
+                "phase": "Fase",
+                "totalBenefit": "Beneficio total",
+                "remainingAnnualLimit": "Límite anual restante",
+                "additionalBenefitUsedUp": "Beneficio adicional utilizado",
+                "hypotheticalAnnualLimit": "Límite anual hipotético"
             },
             "coverageID": {
                 "Rider_ADR": "Proporciona un beneficio por muerte adicional si el asegurado muere debido a un accidente cubierto.",
