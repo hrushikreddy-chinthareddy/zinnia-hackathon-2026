@@ -5,7 +5,8 @@ import {
 } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-import pino, { complianceLogger } from './pino-server';
+import pino from './pino-server';
+import logger from './pino-server';
 import {
     logError,
     logWarn,
@@ -26,9 +27,6 @@ jest.mock('@deps/utils/pino-server', () => {
             info: jest.fn(),
             warn: jest.fn(),
             error: jest.fn(),
-            compliance: jest.fn(),
-        },
-        complianceLogger: {
             compliance: jest.fn(),
         },
     };
@@ -98,10 +96,9 @@ describe('server-logging', () => {
     describe('logCompliance', () => {
         it('should use the appropriate pino method to log and attach isCompliance: true', () => {
             logCompliance('trace', mockLoggingContext);
-            expect(complianceLogger.compliance).toHaveBeenCalled();
+            expect(logger.info).toHaveBeenCalled();
             expect(
-                (complianceLogger.compliance as jest.Mock).mock.calls[0][0]
-                    .isCompliance
+                (logger.info as jest.Mock).mock.calls[0][0].isCompliance
             ).toBe(true);
         });
     });

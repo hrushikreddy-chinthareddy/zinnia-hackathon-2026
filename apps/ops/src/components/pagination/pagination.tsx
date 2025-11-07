@@ -43,7 +43,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         [currentPage, goToPage, totalPages]
     );
 
-    if (totalPages === 0) {
+    if (totalPages < 2) {
         return null;
     }
 

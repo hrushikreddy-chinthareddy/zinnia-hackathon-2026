@@ -4,8 +4,9 @@ import { v4 as uuid4 } from 'uuid';
 import { Session } from '@/types/auth';
 import { LoggingContext, UserInfo } from '@/types/logging';
 
-import pino, { complianceLogger } from './pino-server';
 import { getSession } from '../auth';
+import pino from './pino-server';
+import logger from './pino-server';
 
 export enum LoggingModule {
   SERVER_HTTP_REQUEST = 'server-http',
@@ -83,10 +84,7 @@ export const logCompliance: LoggingFunction = (
   message,
   serializableValues = {}
 ) => {
-  complianceLogger.compliance(
-    { serializableValues, isCompliance: true },
-    message
-  );
+  logger.info({ serializableValues, isCompliance: true }, message);
 };
 
 export const getUserInfoForLogging = async (
