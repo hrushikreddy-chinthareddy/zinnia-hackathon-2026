@@ -19,6 +19,7 @@ import {
     DataField,
     NestedDataTuple,
     toolTip,
+    FormatterType,
 } from './types';
 
 /**
@@ -81,12 +82,16 @@ const formatAsSentenceCase = (words: string) => {
  * @param t The translation function
  * @returns The formatted section label string
  */
-export const formatAsSectionLabel = (
-    label: string,
-    lineOfBusiness: LineOfBusiness,
-    t: TFunction
-) => {
-    const exactTranslation = t(`policy.allFields.${label}`, {
+export const formatAsSectionLabel = ({
+    label,
+    lineOfBusiness,
+    t,
+}: {
+    label: string;
+    lineOfBusiness: LineOfBusiness;
+    t: TFunction;
+}) => {
+    const exactTranslation = t(`allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -123,12 +128,16 @@ export const formatAsSectionLabel = (
  * @param {TFunction} t The translation function
  * @returns The formatted data label
  */
-export const formatAsDataLabel = (
-    label: string,
-    lineOfBusiness: LineOfBusiness,
-    t: TFunction
-) => {
-    const exactTranslation = t(`policy.allFields.${label}`, {
+export const formatAsDataLabel = ({
+    label,
+    lineOfBusiness,
+    t,
+}: {
+    label: string;
+    lineOfBusiness: LineOfBusiness;
+    t: TFunction;
+}) => {
+    const exactTranslation = t(`allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
         policyNomenclature:
             lineOfBusiness === LineOfBusiness.LIFE
@@ -177,17 +186,21 @@ export const formatAsDataLabel = (
  * @param fieldName The field name (optional)
  * @returns The formatted field data as a string
  */
-export const formatAsDataValue = (
-    fieldData: NestedData | DataField,
-    t: TFunction,
-    fieldName?: string
-) => {
+export const formatAsDataValue = ({
+    fieldData,
+    t,
+    fieldName,
+}: {
+    fieldData: NestedData | DataField;
+    t: TFunction;
+    fieldName?: string;
+}) => {
     // Empty values
     if (fieldData == null) return DEFAULT_ERROR_STRING;
 
     // Enums
     // Attempt to translate first, then process as numeric data if no translation found
-    const exactTranslation = t(`policy.enums.${fieldData}`, {
+    const exactTranslation = t(`enums.${fieldData}`, {
         defaultValue: null,
     });
     if (exactTranslation !== null) return exactTranslation;
@@ -216,16 +229,26 @@ export const formatAsDataValue = (
  * @param searchValue The search value to filter by
  * @param fieldLink The field link to filter by
  * @param fieldLinkedField The linked field to filter by
+ * @param type The
  * @returns The formatted data field tuple
  */
-export const formatDataField = (
-    tuple: NestedData | NestedDataTuple,
-    lineOfBusiness: LineOfBusiness,
-    t: TFunction,
-    searchValue?: string,
-    fieldLink?: string,
-    fieldLinkedField?: string
-): NestedData => {
+export const formatDataField = ({
+    tuple,
+    lineOfBusiness,
+    t,
+    type,
+    searchValue,
+    fieldLink,
+    fieldLinkedField,
+}: {
+    tuple: NestedData | NestedDataTuple;
+    lineOfBusiness: LineOfBusiness;
+    t: TFunction;
+    type: FormatterType;
+    searchValue?: string;
+    fieldLink?: string;
+    fieldLinkedField?: string;
+}): NestedData => {
     if (!isTuple(tuple)) {
         return null;
     }
@@ -241,22 +264,33 @@ export const formatDataField = (
         return null;
     }
 
-    const formattedLabel = formatAsDataLabel(key, lineOfBusiness, t);
-    const formattedData = formatAsDataValue(data, t, key);
+    const formattedLabel = formatAsDataLabel({ label: key, lineOfBusiness, t });
+    const formattedData = formatAsDataValue({
+        fieldData: data,
+        t,
+        fieldName: key,
+    });
 
     if (typeof formattedData === 'object' && formattedData != null) {
         const fieldTags = formattedData[tags];
-        const fieldLabel = formattedData[label];
+        const fieldLabel = formattedData[label] ?? formattedLabel;
         const fieldLink = formattedData[link];
         const fieldLinkedField = formattedData[linkedField];
-        const formattedEntries = removeExcludedAndEmptyFields(
-            Object.entries(formattedData),
+        const formattedEntries = removeExcludedAndEmptyFields({
+            tuples:
+                formattedData instanceof Array
+                    ? (formattedData.map((v, i) => [
+                          `${key} ${i + 1}`,
+                          v,
+                      ]) as NestedData)
+                    : (Object.entries<NestedData>(formattedData) as NestedData),
             lineOfBusiness,
             t,
+            type,
             fieldLink,
-            fieldLinkedField,
-            searchValue
-        );
+            linkedField: fieldLinkedField,
+            searchValue,
+        });
 
         if (formattedEntries == null) {
             return null;
@@ -288,7 +322,7 @@ export const formatDataField = (
     }
 
     dataTuple[toolTip] =
-        t(`policy.toolTips.${key}`, {
+        t(`${type}.toolTips.${key}`, {
             defaultValue: null,
             policyNomenclature:
                 lineOfBusiness === LineOfBusiness.LIFE
@@ -311,34 +345,45 @@ export const formatDataField = (
  * @param additionalFieldsToExclude Additional fields to exclude from the filtered result.
  * @returns The filtered nested data tuple.
  */
-export const removeExcludedAndEmptyFields = (
-    tuples: NestedData,
-    lineOfBusiness: LineOfBusiness,
-    t: TFunction,
-    fieldLink?: string,
-    linkedField?: string,
-    searchValue?: string,
-    additionalFieldsToExclude?: string[]
-): NestedData => {
+export const removeExcludedAndEmptyFields = ({
+    tuples,
+    lineOfBusiness,
+    t,
+    type,
+    fieldLink,
+    linkedField,
+    searchValue,
+    additionalFieldsToExclude,
+}: {
+    tuples: NestedData;
+    lineOfBusiness: LineOfBusiness;
+    t: TFunction;
+    type: FormatterType;
+    fieldLink?: string;
+    linkedField?: string;
+    searchValue?: string;
+    additionalFieldsToExclude?: string[];
+}): NestedData => {
     const filteredTuples = tuples
         ?.map((tuple) => {
             // Ensure tuple is valid
             if (!isTuple(tuple)) {
                 return null;
             }
-            tuple;
+
             return !(
                 additionalFieldsToExclude &&
                 new Set(additionalFieldsToExclude).has(tuple[0])
             )
-                ? formatDataField(
+                ? formatDataField({
                       tuple,
                       lineOfBusiness,
                       t,
+                      type,
                       searchValue,
                       fieldLink,
-                      linkedField
-                  )
+                      fieldLinkedField: linkedField,
+                  })
                 : null;
         })
         .filter((tuple) => tuple !== null);
@@ -349,4 +394,4 @@ export const isTuple = (tuple: any): tuple is NestedDataTuple =>
     tuple != null &&
     Array.isArray(tuple) &&
     tuple.length === 2 &&
-    typeof tuple[0] === 'string';
+    (typeof tuple[0] === 'string' || typeof tuple[0] === 'number');

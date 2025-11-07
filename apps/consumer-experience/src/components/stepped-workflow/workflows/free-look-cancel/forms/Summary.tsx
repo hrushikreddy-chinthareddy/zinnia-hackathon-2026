@@ -7,6 +7,7 @@ import {
 import { Icon, IconType, Label, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 
@@ -21,6 +22,7 @@ import { BankName } from '@/components/pii/BankName';
 import { FullName } from '@/components/pii/FullName';
 import { CancelDialogLink } from '@/components/stepped-workflow/common/CancelDialogLink';
 import styles from '@/components/stepped-workflow/common/Styles.module.css';
+import { useGetTransactionStepData } from '@/hooks/use-get-transaction-step-data';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
@@ -63,9 +65,11 @@ const LoadingText = () => {
 };
 
 export const Summary = () => {
+  const router = useRouter();
   const { pending } = useFormStatus();
   const { state } = useFreeLookCancel();
   const { dateStep, distributionMethodStep, payeeStep } = state;
+  const { nextStep } = useGetTransactionStepData({ stepsInfo });
   // TODO: make sure to add correlationId as query param when API is implemented
   // and redirecting to error string, see generateTransactionErrorUrl as example
 
@@ -94,6 +98,10 @@ export const Summary = () => {
       default:
         return DEFAULT_ERROR_STRING;
     }
+  };
+
+  const onSubmit = () => {
+    router.push(nextStep?.url || '');
   };
 
   return (
@@ -244,7 +252,7 @@ export const Summary = () => {
         />
       </div>
       <div className={styles.stepActions}>
-        <Button>Submit cancellation</Button>
+        <Button onClick={onSubmit}>Submit cancellation</Button>
         <CancelDialogLink />
       </div>
     </>

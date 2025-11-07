@@ -17,7 +17,7 @@
     "link-package": "node ./scripts/link-package.mjs",
     "unlink-package": "node ./scripts/unlink-packages.mjs",
     "pre-commit": ".husky/pre-commit",
-    "pre-push": "turbo run build --filter \"@zinnia/*\" && .husky/pre-push",
+    "pre-push": "turbo run build --filter \"@zinnia/*...\" && .husky/pre-push",
     "prepare": "husky install"
   },
   "devDependencies": {
