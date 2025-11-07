@@ -1,4 +1,7 @@
-import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
+import {
+    Transaction,
+    TransactionStatus,
+} from '@xd/api-types/dist/generated-types/sor';
 import {
     useCallback,
     useContext,
@@ -10,6 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 
 import EventsLoader from '@deps/components/events-loader/events-loader';
+import { FindAllKeyValuesTransactionSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-transaction-sidesheet';
 import { TransactionStatusTabGroup } from '@deps/components/history/filters/transaction-status-tab-group';
 import { TransactionTypeSelect } from '@deps/components/history/filters/transaction-type-select';
 import PageHeader from '@deps/components/page-header/page-header';
@@ -74,6 +78,19 @@ export const TransactionsWrapper = () => {
         }
     }, [filteredTransactions, limit, t, statusFilter]);
 
+    const [selectedTransaction, setSelectedTransaction] = useState<Transaction>(
+        {}
+    );
+
+    const [isSideSheetOpen, setIsSideSheetOpen] = useState(false);
+
+    const handleRowClick = (transaction: Transaction) => {
+        if (transaction) {
+            setSelectedTransaction(transaction);
+            setIsSideSheetOpen(!isSideSheetOpen);
+        }
+    };
+
     return (
         <div className={styles.transactionWrapper}>
             <PageHeader
@@ -97,6 +114,7 @@ export const TransactionsWrapper = () => {
                             status={statusFilter}
                             offset={offset}
                             limit={limit}
+                            onTableRowClick={handleRowClick}
                         />
                         <div className={styles.tableFooter}>
                             <Typography
@@ -138,6 +156,11 @@ export const TransactionsWrapper = () => {
                             />
                         </div>
                     </TransactionStatusTabGroup>
+                    <FindAllKeyValuesTransactionSidesheet
+                        transaction={selectedTransaction}
+                        open={isSideSheetOpen}
+                        onOpenChange={setIsSideSheetOpen}
+                    />
                 </>
             ) : (
                 <EventsLoader

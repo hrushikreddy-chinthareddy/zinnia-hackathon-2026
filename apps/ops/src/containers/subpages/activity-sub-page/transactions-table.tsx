@@ -24,11 +24,13 @@ export const TransactionsTable = ({
     status,
     offset,
     limit,
+    onTableRowClick,
 }: {
     transactions?: Transaction[];
     status: string;
     offset: number;
     limit: number;
+    onTableRowClick: (transaction: Transaction) => void;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: undefined,
@@ -71,8 +73,11 @@ export const TransactionsTable = ({
                 <TableBody>
                     {paginatedData.length ? (
                         <>
-                            {paginatedData.map((transaction) => (
-                                <TableRow key={transaction.transactionId}>
+                            {paginatedData.map((transaction, index) => (
+                                <TableRow
+                                    key={`${transaction.transactionId}-${index}`}
+                                    onClick={() => onTableRowClick(transaction)}
+                                >
                                     <TableCell>
                                         {t(
                                             `historyEventCard.transactionTypes.${transaction.transactionType}`
@@ -111,13 +116,18 @@ export const TransactionsTable = ({
                             ))}
                         </>
                     ) : (
-                        <TableCell className={styles.noResultsTd} colSpan={100}>
-                            <Typography variant={TypographyVariant.Body}>
-                                {t('policy.history.noTransactionsTitle', {
-                                    status: status.toLocaleLowerCase(),
-                                })}
-                            </Typography>
-                        </TableCell>
+                        <TableRow>
+                            <TableCell
+                                className={styles.noResultsTd}
+                                colSpan={100}
+                            >
+                                <Typography variant={TypographyVariant.Body}>
+                                    {t('policy.history.noTransactionsTitle', {
+                                        status: status.toLocaleLowerCase(),
+                                    })}
+                                </Typography>
+                            </TableCell>
+                        </TableRow>
                     )}
                 </TableBody>
             </Table>

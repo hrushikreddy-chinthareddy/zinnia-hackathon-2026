@@ -7,9 +7,10 @@ export const sectionTypeToSubSectionTitleFields: Record<string, string> = {
     features: 'featureType',
     policyFeatures: 'featureType',
     riders: 'riderName',
-    funds: 'fundName',
+    funds: 'fundName', // FIXME: should be keyed to combinedFunds
     loans: 'loanType',
     people: 'FIXME',
     systematicPrograms: 'arrangementType',
     loanSegments: 'segmentId',
+    taxes: 'partyId',
 };
