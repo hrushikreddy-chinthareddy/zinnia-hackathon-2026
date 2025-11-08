@@ -2,7 +2,7 @@
   "name": "digital-experience-monorepo",
   "private": true,
   "scripts": {
-    "build:all": "turbo build",
+    "build": "turbo build",
     "dev": "turbo dev",
     "dev:ops": "turbo dev --filter ops",
     "dev:cui": "turbo dev --filter cui",

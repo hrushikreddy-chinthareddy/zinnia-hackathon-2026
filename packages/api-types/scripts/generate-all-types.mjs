@@ -1,9 +1,13 @@
 #!/usr/bin/env node
 
 import fs from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { execSync } from 'child_process';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const specsDir = path.resolve(__dirname, '../src/specs');
@@ -25,7 +29,9 @@ async function findSpecFiles() {
   }
 
   const specFiles = files.filter(
-    (file) => file.endsWith('.yaml') || file.endsWith('.json')
+    (file) =>
+      (file.endsWith('.yaml') || file.endsWith('.json')) &&
+      !file.endsWith('.updated.json')
   );
 
   return specFiles.map((file) => {
@@ -35,10 +41,21 @@ async function findSpecFiles() {
     // sor.updated.json -> sor
     const name = file.replace(/\.(yaml|json)$/, '').replace('.updated', '');
 
+    // Use preprocessed version if it exists
+    let specPath = path.join(specsDir, file);
+    const updatedFile = file
+      .replace('.json', '.updated.json')
+      .replace('.yaml', '.updated.yaml');
+    const updatedPath = path.join(specsDir, updatedFile);
+
+    if (existsSync(updatedPath)) {
+      specPath = updatedPath;
+    }
+
     return {
       name,
       file,
-      path: path.join(specsDir, file),
+      path: specPath,
     };
   });
 }
@@ -88,6 +105,7 @@ async function updatePackageExports(specs) {
 }
 
 async function generateTypes() {
+  const startTime = performance.now();
   console.log('🔍 Discovering API spec files...\n');
 
   const specs = await findSpecFiles();
@@ -115,17 +133,13 @@ async function generateTypes() {
   // Generate types for each spec
   console.log('⚙️  Generating types...\n');
 
-  for (const spec of specs) {
+  const generatePromises = specs.map(async (spec) => {
     const outputDir = path.join(generatedTypesDir, spec.name);
     console.log(`  Generating types for ${spec.name}...`);
 
     try {
-      execSync(
-        `npx openapi --input ${spec.path} --output ${outputDir} --exportCore false --exportServices false`,
-        {
-          stdio: ['inherit', 'inherit', 'pipe'], // Suppress stderr warnings
-          encoding: 'utf-8',
-        }
+      await execAsync(
+        `npx openapi --input ${spec.path} --output ${outputDir} --exportCore false --exportServices false`
       );
     } catch (error) {
       console.error(`  ❌ Failed to generate types for ${spec.name}`);
@@ -134,12 +148,18 @@ async function generateTypes() {
       }
       throw error;
     }
-  }
+  });
+
+  await Promise.all(generatePromises);
 
   console.log('\n✅ All types generated successfully!');
 
   // Update package.json exports
   await updatePackageExports(specs);
+
+  const endTime = performance.now();
+  const duration = ((endTime - startTime) / 1000).toFixed(2);
+  console.log(`\n⏱️  Total generation time: ${duration}s`);
 }
 
 generateTypes().catch((error) => {
