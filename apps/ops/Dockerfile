@@ -77,7 +77,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_OPTIONS=--max-old-space-size=4096
 
 RUN pnpm turbo build --filter ops
-# RUN --mount=type=secret,id="DATADOG_API_KEY" DATADOG_API_KEY="$(cat /run/secrets/DATADOG_API_KEY)" npx @datadog/datadog-ci sourcemaps upload ./.next/static --service=zinnia-live-xd --release-version=${NEXT_PUBLIC_GIT_SHA} --minified-path-prefix=/static
+RUN --mount=type=secret,id="DATADOG_API_KEY" DATADOG_API_KEY="$(cat /run/secrets/DATADOG_API_KEY)" npx @datadog/datadog-ci sourcemaps upload ./.next/static --service=zinnia-live-xd --release-version=${NEXT_PUBLIC_GIT_SHA} --minified-path-prefix=/static
 
 FROM base AS runner
 WORKDIR /app
