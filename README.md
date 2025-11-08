@@ -95,7 +95,7 @@ pnpm run dev:ops
 To run Consumer Experience, use the following command:
 
 ```bash
-pnpm run dev:consumer-experience
+pnpm run dev:cui
 ```
 
 #### Setting up Remote Cache

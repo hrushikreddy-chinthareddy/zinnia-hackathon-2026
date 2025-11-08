@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-import { rimraf } from 'rimraf';
-import { glob } from 'glob';
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -10,23 +9,62 @@ const rootDir = path.resolve(__dirname, '..');
 
 const patterns = ['.next', 'node_modules', 'dist', '.turbo', 'build'];
 
+async function findDirectories(dir, targetName, maxDepth = 3, currentDepth = 0) {
+  if (currentDepth >= maxDepth) {
+    return [];
+  }
+
+  const results = [];
+
+  try {
+    const entries = await fs.readdir(dir, { withFileTypes: true });
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) {
+        continue;
+      }
+
+      const fullPath = path.join(dir, entry.name);
+
+      // If this matches our target, add it
+      if (entry.name === targetName) {
+        results.push(fullPath);
+        // Don't recurse into matched directories
+        continue;
+      }
+
+      // Skip node_modules when searching for other patterns
+      if (entry.name === 'node_modules' && targetName !== 'node_modules') {
+        continue;
+      }
+
+      // Recurse into subdirectories
+      const subResults = await findDirectories(fullPath, targetName, maxDepth, currentDepth + 1);
+      results.push(...subResults);
+    }
+  } catch (error) {
+    // Ignore permission errors and continue
+    if (error.code !== 'EACCES' && error.code !== 'EPERM') {
+      throw error;
+    }
+  }
+
+  return results;
+}
+
 async function clean() {
   console.log('🧹 Cleaning build artifacts and dependencies...\n');
 
   for (const pattern of patterns) {
-    // For node_modules, don't ignore nested ones since we want to delete all of them
-    const ignorePattern = pattern === 'node_modules' ? [] : ['**/node_modules/**'];
-
-    const matches = await glob(`**/${pattern}`, {
-      cwd: rootDir,
-      ignore: ignorePattern,
-      absolute: true,
-      maxDepth: 3, // Limit depth to avoid excessive scanning
-    });
+    const matches = await findDirectories(rootDir, pattern);
 
     if (matches.length > 0) {
       console.log(`Removing ${matches.length} ${pattern} director${matches.length === 1 ? 'y' : 'ies'}...`);
-      await Promise.all(matches.map((match) => rimraf(match)));
+      await Promise.all(
+        matches.map((match) =>
+          fs.rm(match, { recursive: true, force: true })
+        )
+      );
     }
   }
 

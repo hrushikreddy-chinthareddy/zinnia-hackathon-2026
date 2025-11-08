@@ -26,14 +26,15 @@ function resolveRefs(originalObj, obj, currentPath = "") {
 }
 
 try {
-  const data = fs.readFileSync("./src/api-spec-sor.json");
+  const data = fs.readFileSync("./src/specs/sor.json");
   const parsedData = JSON.parse(data);
   const spec = resolveRefs(parsedData, parsedData);
   fs.writeFileSync(
-    "./src/api-spec-sor.updated.json",
+    "./src/specs/sor.updated.json",
     JSON.stringify(spec, null, 2)
   );
+  console.log('✅ SOR spec preprocessed successfully');
 } catch (error) {
-  console.error(error);
+  console.error('❌ Failed to preprocess SOR spec:', error.message);
   throw error;
 }

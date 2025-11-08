@@ -20,7 +20,7 @@
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic",
     "pre-commit": "pnpm lint-staged",
-    "pre-push": "pnpm lint && pnpm check-types && pnpm test"
+    "pre-push": "turbo lint check-types test"
   },
   "dependencies": {
     "@datadog/browser-rum": "^5.17.1",
