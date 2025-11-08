@@ -1,3 +1,4 @@
+/* TODO: verify it's unused
 declare module '*.svg' {
     const ReactComponent: React.FC<
         React.SVGProps<SVGSVGElement> & { title?: string }
@@ -7,6 +8,7 @@ declare module '*.svg' {
     export { ReactComponent };
     export default content;
 }
+*/
 
 declare global {
     interface Window {
