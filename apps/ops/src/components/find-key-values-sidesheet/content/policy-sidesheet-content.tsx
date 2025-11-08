@@ -8,9 +8,17 @@ import {
     IconType,
     Label,
     FieldSize as BloomFieldSize,
+    FieldDateSingle,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import {
+    ChangeEvent,
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldType, FieldVariant } from '@deps/components/fields/field';
@@ -36,6 +44,7 @@ import {
 export const PolicySidesheetContent = ({
     planCode,
     policyNumber,
+    container,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
     const [treeState, setTreeState] = useState(Collapse);
@@ -62,20 +71,19 @@ export const PolicySidesheetContent = ({
         );
     };
 
-    const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // if value isnt a number, early return
-        const numberRegex = /^\d+$/;
-        if (!numberRegex.test(e.target.value)) {
+    const handleDateChange = (date?: Date) => {
+        if (date === undefined) {
             return;
         }
-        const day = dayjs(e.target.value, NUMERIC_DATE_FORMAT);
+
+        const day = dayjs(date, NUMERIC_DATE_FORMAT);
 
         if (day.isValid() && isDateAllowed(day)) {
             setDate(day.format(NUMERIC_DATE_FORMAT));
             setEnableQuery(true);
             setFieldError(false);
         } else {
-            setDate(e.target.value);
+            setDate(date.toString());
             setEnableQuery(false);
             setFieldError(true);
         }
@@ -124,7 +132,7 @@ export const PolicySidesheetContent = ({
     if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
-            <FieldDateSelect
+            {/* <FieldDateSelect
                 label={t('label.findKeyValuesDate') as string}
                 className={styles.datePicker}
                 id="start-date"
@@ -145,6 +153,18 @@ export const PolicySidesheetContent = ({
                 value={date || dayjs().format(NUMERIC_DATE_FORMAT)}
                 showMonths={true}
                 isDateAllowed={isDateAllowed}
+            /> */}
+
+            <FieldDateSingle
+                name={'select-date'}
+                label={
+                    <Label labelFor="select-date">
+                        {t('label.findKeyValuesDate') as string}
+                    </Label>
+                }
+                disableAfterDate={new Date()}
+                onDateSelect={(date) => handleDateChange(date)}
+                container={container}
             />
 
             <FieldData

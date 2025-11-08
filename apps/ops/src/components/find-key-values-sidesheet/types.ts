@@ -55,6 +55,7 @@ export type ExpandCollapse = typeof Expand | typeof Collapse;
 export interface FindAllKeyValuesSidebarProps {
     planCode: string;
     policyNumber: string;
+    container: any;
 }
 
 export enum FormatterType {
