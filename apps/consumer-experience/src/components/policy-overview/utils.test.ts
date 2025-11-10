@@ -49,9 +49,12 @@ describe('upcomingPaymentDetails', () => {
       });
 
       expect(result).toEqual({
-        amount: undefined,
-        label: 'Premium due',
-        caption: undefined,
+        scheduledPayment: undefined,
+        premiumDue: {
+          amount: 0,
+          label: 'Premium due',
+          caption: undefined,
+        },
       });
     });
 
@@ -63,9 +66,12 @@ describe('upcomingPaymentDetails', () => {
       });
 
       expect(result).toEqual({
-        amount: undefined,
-        label: 'Premium due',
-        caption: undefined,
+        scheduledPayment: undefined,
+        premiumDue: {
+          amount: 0,
+          label: 'Premium due',
+          caption: undefined,
+        },
       });
     });
   });
@@ -83,9 +89,16 @@ describe('upcomingPaymentDetails', () => {
       });
 
       expect(result).toEqual({
-        amount: upcomingPaymentAmount,
-        label: 'Scheduled premium',
-        caption: `Autopay on 11/15/2023`,
+        scheduledPayment: {
+          amount: upcomingPaymentAmount,
+          label: 'Next scheduled payment',
+          caption: `Autopay on 11/15/2023`,
+        },
+        premiumDue: {
+          amount: 0,
+          label: 'Premium due',
+          caption: undefined,
+        },
       });
     });
   });
@@ -111,9 +124,12 @@ describe('upcomingPaymentDetails', () => {
         });
 
         expect(result).toEqual({
-          amount: billingAmount,
-          label: 'Premium due',
-          caption: `Due by 12/1/2023`,
+          scheduledPayment: undefined,
+          premiumDue: {
+            amount: billingAmount,
+            label: 'Premium due',
+            caption: `Due by 12/1/2023`,
+          },
         });
       });
 
@@ -131,9 +147,12 @@ describe('upcomingPaymentDetails', () => {
         });
 
         expect(result).toEqual({
-          amount: undefined,
-          label: 'Premium due',
-          caption: undefined,
+          scheduledPayment: undefined,
+          premiumDue: {
+            amount: 0,
+            label: 'Premium due',
+            caption: undefined,
+          },
         });
       });
     });
@@ -149,9 +168,12 @@ describe('upcomingPaymentDetails', () => {
         });
 
         expect(result).toEqual({
-          amount: 0,
-          label: 'Premium due',
-          caption: undefined,
+          scheduledPayment: undefined,
+          premiumDue: {
+            amount: 0,
+            label: 'Premium due',
+            caption: undefined,
+          },
         });
       });
     });
@@ -182,9 +204,12 @@ describe('upcomingPaymentDetails', () => {
       });
 
       expect(result).toEqual({
-        amount: undefined,
-        label: 'Scheduled premium',
-        caption: `Autopay on 11/15/2023`,
+        scheduledPayment: undefined,
+        premiumDue: {
+          amount: 0,
+          label: 'Premium due',
+          caption: undefined,
+        },
       });
     });
   });
