@@ -177,7 +177,6 @@
     "scripts": {
         "build": "next build --no-lint",
         "build-storybook": "storybook build",
-        "clean": "./scripts/clean.sh",
         "cypress": "bash ./e2e/scripts/cypress-tests.sh",
         "cypress:local": "bash ./e2e/scripts/cypress-tests.sh --local",
         "dev": "next dev",

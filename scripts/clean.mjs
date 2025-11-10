@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
+import { exec } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
+import { promisify } from 'util';
 import { fileURLToPath } from 'url';
 
+const execAsync = promisify(exec);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
@@ -66,7 +69,25 @@ async function clean() {
   const startTime = performance.now();
   console.log('🧹 Cleaning build artifacts and dependencies...\n');
 
-  // Find and delete all patterns in parallel
+  // Run turbo clean for workspace packages FIRST (before deleting node_modules)
+  console.log('🔄 Running turbo clean in workspaces...\n');
+  try {
+    const { stdout, stderr } = await execAsync('pnpm turbo run clean', { cwd: rootDir });
+    if (stdout) {
+      console.log(stdout);
+    }
+    if (stderr) {
+      console.log(stderr);
+    }
+  } catch (error) {
+    // Turbo clean might fail if no packages have clean scripts
+    console.log('  ⚠️  turbo clean failed:');
+    console.log(error.stdout || '');
+    console.log(error.stderr || '');
+  }
+
+  // Then find and delete all patterns in parallel
+  console.log('\n🧹 Removing build artifacts and dependencies...\n');
   await Promise.all(
     patterns.map(async (pattern) => {
       const matches = await findDirectories(rootDir, pattern);
