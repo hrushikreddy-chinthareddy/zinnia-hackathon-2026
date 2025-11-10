@@ -1,7 +1,6 @@
 export enum FEATURE_FLAGS {
   ADD_EDIT_DELETE_BANK_ACCOUNT = 'add_edit_delete_bank_account',
   AMP_TRANSACTION_SUMMARY = 'amp_transaction_summary',
-  ANNUITY_MODE = 'annuity_mode',
   DOCUMENTS_V3 = 'documents-v3-update',
   COMMUNICATION_PREFERENCES = 'communication_preferences',
   TRANSACTION_NOTIFICATIONS = 'transaction_notifications',
