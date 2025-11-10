@@ -3,7 +3,6 @@ export enum FEATURE_FLAGS {
   AMP_TRANSACTION_SUMMARY = 'amp_transaction_summary',
   ANNUITY_MODE = 'annuity_mode',
   DOCUMENTS_V3 = 'documents-v3-update',
-  TRANSACTION_LEVEL_CODE_ADD_BANK = 'transaction_level_code_add_bank',
   COMMUNICATION_PREFERENCES = 'communication_preferences',
   TRANSACTION_NOTIFICATIONS = 'transaction_notifications',
   POLICY_OWNER_PROFILE_PARTIES = 'policy_owner_profile_parties',
