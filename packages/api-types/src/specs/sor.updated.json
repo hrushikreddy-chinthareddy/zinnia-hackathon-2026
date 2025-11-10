@@ -52,7 +52,9 @@
   "paths": {
     "/v1/carriers": {
       "get": {
-        "tags": ["Carrier"],
+        "tags": [
+          "Carrier"
+        ],
         "summary": "Fetches all carriers",
         "operationId": "getAllCarriers",
         "responses": {
@@ -98,7 +100,9 @@
     },
     "/v1/carriers/{carrierId}": {
       "get": {
-        "tags": ["Carrier"],
+        "tags": [
+          "Carrier"
+        ],
         "summary": "Fetches carrier details",
         "operationId": "getCarrier",
         "parameters": [
@@ -152,7 +156,9 @@
     },
     "/v1/thirdpartyadministrators": {
       "get": {
-        "tags": ["Third Party Administrator"],
+        "tags": [
+          "Third Party Administrator"
+        ],
         "summary": "Fetches all third party administrators",
         "operationId": "getAllThirdPartyAdministrators",
         "responses": {
@@ -198,7 +204,9 @@
     },
     "/v1/thirdpartyadministrators/{thirdPartyAdministratorId}": {
       "get": {
-        "tags": ["Third Party Administrator"],
+        "tags": [
+          "Third Party Administrator"
+        ],
         "summary": "Fetches Third Party Administrator details",
         "operationId": "getThirdPartyAdministratorDetails",
         "parameters": [
@@ -251,7 +259,9 @@
     },
     "/v1/accountentryrules": {
       "get": {
-        "tags": ["Accounting"],
+        "tags": [
+          "Accounting"
+        ],
         "summary": "Fetches all account entry rules values",
         "operationId": "getAllAccountingEntryRules",
         "parameters": [
@@ -314,7 +324,9 @@
         }
       },
       "post": {
-        "tags": ["Accounting"],
+        "tags": [
+          "Accounting"
+        ],
         "summary": "A chart Of Accounts",
         "operationId": "createAccountEntryRules",
         "requestBody": {
@@ -370,7 +382,9 @@
     },
     "/v1/chartofaccounts": {
       "get": {
-        "tags": ["Accounting"],
+        "tags": [
+          "Accounting"
+        ],
         "summary": "Fetches all chart Of Accounts",
         "operationId": "getAllChartOfAccounts",
         "parameters": [
@@ -431,7 +445,9 @@
         }
       },
       "post": {
-        "tags": ["Accounting"],
+        "tags": [
+          "Accounting"
+        ],
         "summary": "A chart Of Accounts",
         "operationId": "createChartOfAccount",
         "requestBody": {
@@ -487,7 +503,9 @@
     },
     "/v1/disbursements": {
       "get": {
-        "tags": ["Accounting"],
+        "tags": [
+          "Accounting"
+        ],
         "summary": "Disbursements from Disbursement Transaction",
         "operationId": "getAllDisbursements",
         "parameters": [
@@ -586,7 +604,9 @@
     },
     "/v1/accountingentries": {
       "get": {
-        "tags": ["Accounting"],
+        "tags": [
+          "Accounting"
+        ],
         "summary": "Fetches all accounting entry values",
         "operationId": "getAllAccountingEntries",
         "parameters": [
@@ -682,7 +702,9 @@
     },
     "/v1/events": {
       "get": {
-        "tags": ["Event"],
+        "tags": [
+          "Event"
+        ],
         "summary": "Fetches all events",
         "operationId": "getAllEvents",
         "parameters": [
@@ -775,7 +797,9 @@
     },
     "/v1/events/{eventId}": {
       "get": {
-        "tags": ["Event"],
+        "tags": [
+          "Event"
+        ],
         "summary": "Fetches data for a specific event",
         "operationId": "getEvent",
         "parameters": [
@@ -828,7 +852,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches data for a specific policy",
         "operationId": "getPolicy",
         "parameters": [
@@ -856,7 +882,10 @@
             "required": false,
             "schema": {
               "type": "boolean",
-              "enum": [true, false],
+              "enum": [
+                true,
+                false
+              ],
               "default": false
             }
           },
@@ -930,7 +959,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/versions": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches all versions for a policy",
         "operationId": "getVersionForPolicy",
         "parameters": [
@@ -1010,7 +1041,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/versions/{version}": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches data for a specific version of a policy",
         "operationId": "getPolicyForVersion",
         "parameters": [
@@ -1075,7 +1108,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/transactions": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches transactions for a policy",
         "operationId": "getTransactionsForPolicy",
         "parameters": [
@@ -1103,7 +1138,10 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["ASC", "DESC"]
+              "enum": [
+                "ASC",
+                "DESC"
+              ]
             }
           },
           {
@@ -1112,7 +1150,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["EFFECTIVEDATE", "PROCESSDATE", "REVERSALDATE"]
+              "enum": [
+                "EFFECTIVEDATE",
+                "PROCESSDATE",
+                "REVERSALDATE"
+              ]
             }
           },
           {
@@ -1174,7 +1216,10 @@
             "required": false,
             "schema": {
               "type": "boolean",
-              "enum": [true, false],
+              "enum": [
+                true,
+                false
+              ],
               "default": false
             }
           }
@@ -1227,7 +1272,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/transactions/{transactionId}": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches a policy transaction by transactionId",
         "operationId": "getPolicyTransactionById",
         "parameters": [
@@ -1292,7 +1339,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/systematicPrograms": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches Systematic Program information for a policy",
         "operationId": "getSystematicProgramsForPolicy",
         "parameters": [
@@ -1351,7 +1400,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/riders": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches riders information for a policy",
         "operationId": "getRidersForPolicy",
         "parameters": [
@@ -1410,7 +1461,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches parties information for a policy",
         "operationId": "getPartiesForPolicy",
         "parameters": [
@@ -1532,7 +1585,9 @@
         ]
       },
       "patch": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update Multiple Beneficiary/Payee based on the request",
         "operationId": "addOrUpdateOrDeletePolicyParties",
         "parameters": [
@@ -1569,7 +1624,11 @@
                         "action": {
                           "type": "string",
                           "description": "The type of action to be executed.",
-                          "enum": ["ADD", "UPDATE", "DELETE"]
+                          "enum": [
+                            "ADD",
+                            "UPDATE",
+                            "DELETE"
+                          ]
                         },
                         "partyRole": {
                           "type": "string",
@@ -1685,7 +1744,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/lpspayload": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "LPS Payload format for Illustration",
         "operationId": "getLpsPayload",
         "parameters": [
@@ -3231,7 +3292,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/features": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches Policy Feature information for a policy",
         "operationId": "getPolicyFeatureForPolicy",
         "parameters": [
@@ -3288,7 +3351,9 @@
         ]
       },
       "patch": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Feature Change Request",
         "operationId": "featureChange",
         "parameters": [
@@ -3321,7 +3386,10 @@
                     "type": "boolean",
                     "description": "A boolean flag that applies only to financial transactions. When set to true, it allows a backdated transaction to be processed. This triggers a reversal on the policy to the earliest transaction on the specified effective date, applies the new transaction, and then reprocesses all subsequent transactions (similar to (R&R) process). This ensures that the policy's financial history remains accurate and aligned with the backdated change.",
                     "default": false,
-                    "enum": [true, false]
+                    "enum": [
+                      true,
+                      false
+                    ]
                   },
                   "policyFeatures": {
                     "type": "array",
@@ -3380,7 +3448,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/distribution": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches distribution information for a policy",
         "operationId": "getDistributionForPolicy",
         "parameters": [
@@ -3448,7 +3518,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/coverage": {
       "get": {
-        "tags": ["Policy"],
+        "tags": [
+          "Policy"
+        ],
         "summary": "Fetches coverage information for a policy",
         "operationId": "getCoverageForPolicy",
         "parameters": [
@@ -3504,7 +3576,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/metrics": {
       "post": {
-        "tags": ["Policy - Transactions"],
+        "tags": [
+          "Policy - Transactions"
+        ],
         "summary": "Metric statistics for a given policy number and time period",
         "operationId": "metrics",
         "parameters": [
@@ -3571,7 +3645,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/canceltransaction": {
       "post": {
-        "tags": ["Policy - Transactions"],
+        "tags": [
+          "Policy - Transactions"
+        ],
         "summary": "Submit request for Cancel Adhoc Transaction Requests",
         "operationId": "Cancel Transaction",
         "parameters": [
@@ -3669,7 +3745,9 @@
     },
     "/v1/lifecycle/{planCode}/{policyNumber}/{scheduledTime}": {
       "post": {
-        "tags": ["Policy - Transactions"],
+        "tags": [
+          "Policy - Transactions"
+        ],
         "summary": "Lifecycle a policy",
         "operationId": "lifeCycle",
         "parameters": [
@@ -3725,7 +3803,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/reverserecreate": {
       "post": {
-        "tags": ["Policy - Transactions"],
+        "tags": [
+          "Policy - Transactions"
+        ],
         "summary": "Request to reverse a recreation request",
         "operationId": "reverseRecreate",
         "parameters": [
@@ -3825,7 +3905,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyRole}": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Add Payee/Payor/Owner/TPD/Beneficiary based on the request",
         "operationId": "addParty",
         "parameters": [
@@ -3916,7 +3998,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/{partyRole}": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date Payee/Payor/Owner/TPD/Beneficiary and Add new Payee/Payor/Owner/TPD/Beneficiary based on the request",
         "operationId": "updateParty",
         "parameters": [
@@ -4036,7 +4120,9 @@
         ]
       },
       "delete": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date Payee/Payor/Owner/TPD/Beneficiary",
         "operationId": "removeParty",
         "parameters": [
@@ -4123,7 +4209,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phone": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update phone number based on the request",
         "operationId": "addPhoneNumber",
         "parameters": [
@@ -4199,7 +4287,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phone/{phoneId}": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date phone based on phoneId and Create new phone number based on request",
         "operationId": "updatePhoneNumber",
         "parameters": [
@@ -4276,7 +4366,9 @@
         }
       },
       "delete": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date or Delete phone details based on the request",
         "operationId": "deletePhoneNumber",
         "parameters": [
@@ -4339,7 +4431,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddress": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Create new email address based on request",
         "operationId": "addNewEmailAddress",
         "parameters": [
@@ -4409,7 +4503,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddress/{emailId}": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date email address based on emailId and Create new email address based on request",
         "operationId": "updateEmailAddress",
         "parameters": [
@@ -4486,7 +4582,9 @@
         }
       },
       "delete": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date email address based on the request",
         "operationId": "deleteEmailAddress",
         "parameters": [
@@ -4549,7 +4647,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/bankaccount": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Add a new Bank Account",
         "operationId": "addBankAccount",
         "parameters": [
@@ -4619,7 +4719,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/bankaccount/{bankId}": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update bank account details",
         "operationId": "updateBankAccount",
         "parameters": [
@@ -4696,7 +4798,9 @@
         }
       },
       "delete": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date bank account based on request",
         "operationId": "endDateBankAccount",
         "parameters": [
@@ -4759,7 +4863,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/address": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Create new address based on request",
         "operationId": "addNewAddress",
         "parameters": [
@@ -4829,7 +4935,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/address/{addressId}": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date address and create new address based on request",
         "operationId": "updateAddress",
         "parameters": [
@@ -4906,7 +5014,9 @@
         }
       },
       "delete": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "End Date address based on request",
         "operationId": "deleteAddress",
         "parameters": [
@@ -4969,7 +5079,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/deliverydatesetup": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Submit request for Delivery Date",
         "operationId": "submitFinalizedDeliveryDateSetupRequest",
         "parameters": [
@@ -5036,7 +5148,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/emailaddresses": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update multiple emails",
         "operationId": "multipleEmailChange",
         "parameters": [
@@ -5125,7 +5239,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/identifiers": {
       "patch": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update Identifiers",
         "operationId": "updateIdentifiers",
         "parameters": [
@@ -5214,7 +5330,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/phones": {
       "put": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update multiple phone numbers",
         "operationId": "multiplePhoneUpdate",
         "parameters": [
@@ -5303,7 +5421,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/partyname": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update party name based on the request",
         "operationId": "addPartyName",
         "parameters": [
@@ -5373,7 +5493,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/parties/{partyId}/communicationpreference": {
       "post": {
-        "tags": ["Policy - Non-Financial Transactions"],
+        "tags": [
+          "Policy - Non-Financial Transactions"
+        ],
         "summary": "Update Communication Preference based on request",
         "operationId": "updateCommunicationPreference",
         "parameters": [
@@ -5443,7 +5565,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/initialpremium": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Initial Premium",
         "operationId": "submitFinalizedInitialPremiumRequest",
         "parameters": [
@@ -5510,7 +5634,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/freelookcancellation": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Freelook Cancellation",
         "operationId": "submitFinalizedFreeLookCancellationRequest",
         "parameters": [
@@ -5577,7 +5703,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/fundallocationschange": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Fund Default Allocaiton Change",
         "operationId": "submitFinalizedFundAllocationsChangeRequest",
         "parameters": [
@@ -5644,7 +5772,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/fundtransfer": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Fund Transfer",
         "operationId": "submitFinalizedFundTransferRequest",
         "parameters": [
@@ -5711,7 +5841,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/systematicprograms": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Systematic Program Setup",
         "operationId": "systematicProgramSetup",
         "parameters": [
@@ -5778,7 +5910,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/systematicprograms/{arrangementId}": {
       "put": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Systematic means that happens regularly on a frequency (Monthly, Annual, SemiAnnual etc) programs - like payment, withdrawal and loanrepayment.",
         "operationId": "systematicProgramUpdate",
         "parameters": [
@@ -5854,7 +5988,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Partial Withdrawal One Time",
         "operationId": "partialWithdrawalOneTime",
         "parameters": [
@@ -5921,7 +6057,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/partialwithdrawalonetime/quote": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Partial Withdrawal One Time - Quote",
         "operationId": "Partial Withdrawal One Time - Quote",
         "parameters": [
@@ -5988,7 +6126,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/onetimepremium": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for One Time Premium",
         "operationId": "submitFinalizedOneTimePremium",
         "parameters": [
@@ -6055,7 +6195,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/onetimepremium/quote": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for One Time Premium - Quote",
         "operationId": "One Time Premium - Quote",
         "parameters": [
@@ -6122,7 +6264,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/newloan": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "New Loan Request",
         "operationId": "newLoanRequest",
         "parameters": [
@@ -6189,7 +6333,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/newloan/quote": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Create a new loan request",
         "operationId": "newLoanRequestQuote",
         "parameters": [
@@ -6316,7 +6462,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Loan Repayment One Time Request",
         "operationId": "loanRepayment",
         "parameters": [
@@ -6383,7 +6531,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/loanrepaymentonetime/quote": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Loan Repayment One Time Request Quote",
         "operationId": "loanRepaymentQuote",
         "parameters": [
@@ -6450,7 +6600,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/fullsurrender": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Create new full surrender based on request",
         "operationId": "addNewFullSurrenderRequest",
         "parameters": [
@@ -6517,7 +6669,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/fullsurrender/quote": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Preview full surrender based on request",
         "operationId": "addNewFullSurrenderRequestQuote",
         "parameters": [
@@ -6584,7 +6738,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/deathclaimnotification": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Generate death claim notification",
         "operationId": "addNewDeathClaimNotification",
         "parameters": [
@@ -6651,7 +6807,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/deathclaim": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Generate death claim complete response",
         "operationId": "addNewDeathClaim",
         "parameters": [
@@ -6718,7 +6876,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/reinstatementapproved": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Create a new Reinstatement",
         "operationId": "addNewReinstatementApproval",
         "parameters": [
@@ -6785,7 +6945,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/reinstatementrequest/quote": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Create a new Reinstatement Request",
         "operationId": "newReinstatementApprovalRequest",
         "parameters": [
@@ -6852,7 +7014,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/requiredminimumdistributiononetime": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Submit request for Required Minimum Distribution One Time",
         "operationId": "requiredminimumdistributiononetime",
         "parameters": [
@@ -6919,7 +7083,9 @@
     },
     "/v1/policies/{planCode}/{policyNumber}/valueadjustment": {
       "post": {
-        "tags": ["Policy - Financial Transactions"],
+        "tags": [
+          "Policy - Financial Transactions"
+        ],
         "summary": "Create a Value adjustment request",
         "operationId": "addNewValueAdjustmentRequest",
         "parameters": [
@@ -6986,7 +7152,9 @@
     },
     "/v1/issuance": {
       "post": {
-        "tags": ["Operations"],
+        "tags": [
+          "Operations"
+        ],
         "summary": "Policy Issuance API",
         "operationId": "uploadAcordXml",
         "requestBody": {
@@ -7045,7 +7213,9 @@
     },
     "/v1/conversion": {
       "post": {
-        "tags": ["Operations"],
+        "tags": [
+          "Operations"
+        ],
         "summary": "Publish a new request for policy conversion",
         "operationId": "createNewConversionRequest",
         "requestBody": {
@@ -7098,7 +7268,9 @@
     },
     "/v1/policies": {
       "get": {
-        "tags": ["Operations"],
+        "tags": [
+          "Operations"
+        ],
         "summary": "Get all policies with a short summary",
         "operationId": "getPolicies",
         "responses": {
@@ -7146,7 +7318,9 @@
     },
     "/v1/conversion/status": {
       "get": {
-        "tags": ["Operations"],
+        "tags": [
+          "Operations"
+        ],
         "summary": "Fetches conversion status for queried policy numbers",
         "operationId": "getAllConversionStatus",
         "responses": {
@@ -7192,7 +7366,9 @@
     },
     "/v1/conversion/policies": {
       "get": {
-        "tags": ["Operations"],
+        "tags": [
+          "Operations"
+        ],
         "summary": "Fetches fast backup data based on date",
         "operationId": "getFastDataByDate",
         "parameters": [
@@ -7267,7 +7443,9 @@
     "schemas": {
       "Account": {
         "type": "string",
-        "enum": ["GENERAL"],
+        "enum": [
+          "GENERAL"
+        ],
         "description": "Account"
       },
       "AccountEntryRuleRequestFields": {
@@ -7309,12 +7487,22 @@
       },
       "AccountTypeCode": {
         "type": "string",
-        "enum": ["A", "L", "I", "B"],
+        "enum": [
+          "A",
+          "L",
+          "I",
+          "B"
+        ],
         "description": "Chart of accounts account type short form names"
       },
       "FundAccountType": {
         "type": "string",
-        "enum": ["FIXED", "INDEXED", "VARIABLE", "INTERIM"],
+        "enum": [
+          "FIXED",
+          "INDEXED",
+          "VARIABLE",
+          "INTERIM"
+        ],
         "description": "Represents the classification of a fund based on its investment strategy/flexiblity,and structure. It defines how the fund is structured and managed, such as whether it focuses on equities, fixed income, or other investment categories."
       },
       "AccountValuebyPolicyYear": {
@@ -7444,12 +7632,18 @@
           },
           "modifiedEndowmentContractAuthorization": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "MEC Authorization refers to the approval process required when a life insurance policy is classified as a Modified Endowment Contract (MEC). A MEC is a permanent life insurance policy that fails the IRS \"7-Pay Test,\" resulting in different tax treatment of policy loans and withdrawals. MEC Authorization is typically required from the policyholder before processing transactions that could convert the policy into a MEC, ensuring they understand the tax consequences."
           },
           "projectedLapseIndicator": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "The Projected Lapse Indicator is a forecast that indicates whether a life insurance policy is expected to lapse within the next policy year based on its current account value, premium payments, cost of insurance (COI), and other policy charges."
           },
           "policyGainAmount": {
@@ -7490,7 +7684,10 @@
           },
           "suppressionIndicator": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "The Suppression Indicator is a flag or marker used in policy administration systems to prevent certain actions, notifications, or transactions from being processed or displayed. It is commonly applied to billing, statements, reports, or policy updates based on specific business rules."
           },
           "interestEarned": {
@@ -7718,7 +7915,10 @@
       },
       "AccountStatus": {
         "type": "string",
-        "enum": ["ACTIVEBANKACCOUNT", "TERMINATEDBANKACCOUNT"],
+        "enum": [
+          "ACTIVEBANKACCOUNT",
+          "TERMINATEDBANKACCOUNT"
+        ],
         "description": "This indicates whether the bank account is active, inactive or had been manually suspended."
       },
       "Address": {
@@ -7809,7 +8009,10 @@
           "isPreferred": {
             "type": "boolean",
             "description": "The Preferred Address Indicator is a boolean flag or indicator associated with each address record tied to a party, used to specify whether the address is the preferred (primary) address for contact and correspondence.",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           }
         }
       },
@@ -7823,12 +8026,18 @@
           },
           "preferredAddressIndicator": {
             "type": "string",
-            "enum": ["YES", "NO"],
+            "enum": [
+              "YES",
+              "NO"
+            ],
             "description": "This field is deprecated and will be removed in a future version. Please use address.isPreferred instead."
           },
           "isPreferredAddress": {
             "type": "string",
-            "enum": ["YES", "NO"],
+            "enum": [
+              "YES",
+              "NO"
+            ],
             "description": "This field is deprecated and will be removed in a future version. Please use address.isPreferred instead."
           },
           "preferredAddressId": {
@@ -7847,7 +8056,10 @@
           },
           "isAddressSameAsOwner": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Boolean 0 = No 1 = Yes to denote if the email is the preferred"
           }
         }
@@ -8070,7 +8282,12 @@
           },
           "loanInterestType": {
             "type": "string",
-            "enum": ["FIXED", "INDEXED", "VARIABLE", "ADJUSTABLE"],
+            "enum": [
+              "FIXED",
+              "INDEXED",
+              "VARIABLE",
+              "ADJUSTABLE"
+            ],
             "description": "Type of Loan Interest Crediting - Fixed, Index etc.For LOANINTERESTTYPE : FIXED there will always be only one segment."
           }
         }
@@ -8173,7 +8390,10 @@
           },
           "taxableFlag": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Indicates whether the transaction is taxable"
           }
         }
@@ -8589,7 +8809,11 @@
       "PartyStatus": {
         "type": "string",
         "description": "Party Status refers to the claim status of current processing stage of an insurance claim submitted by a beneficiary or policyholder",
-        "enum": ["APPROVED", "NOTAPPROVED", "PROCESSED"]
+        "enum": [
+          "APPROVED",
+          "NOTAPPROVED",
+          "PROCESSED"
+        ]
       },
       "BasePolicy": {
         "type": "object",
@@ -8640,7 +8864,9 @@
           },
           "banding": {
             "type": "string",
-            "enum": ["NOPREMIUMBANDING"],
+            "enum": [
+              "NOPREMIUMBANDING"
+            ],
             "description": "Banding refers to the grouping of policy coverage amounts into different tiers or \"bands\" that impact pricing, underwriting, and premium rates. It is commonly used in life insurance pricing models to offer lower per-unit costs for higher coverage amounts."
           },
           "matchBonusVersion": {
@@ -8841,7 +9067,13 @@
       },
       "BusinessDays": {
         "type": "string",
-        "enum": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
+        "enum": [
+          "MONDAY",
+          "TUESDAY",
+          "WEDNESDAY",
+          "THURSDAY",
+          "FRIDAY"
+        ]
       },
       "BusinessSchedule": {
         "type": "object",
@@ -8863,7 +9095,13 @@
               "$ref": "#/components/schemas/BusinessDays"
             },
             "description": "TBD",
-            "example": ["MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY"]
+            "example": [
+              "MONDAY",
+              "TUESDAY",
+              "WEDNESDAY",
+              "THURSDAY",
+              "FRIDAY"
+            ]
           },
           "budgetCenter": {
             "type": "string",
@@ -9069,7 +9307,9 @@
       },
       "CarrierType": {
         "type": "string",
-        "enum": ["SB"],
+        "enum": [
+          "SB"
+        ],
         "description": "A Carrier the Policy Ties to"
       },
       "Charge": {
@@ -9090,7 +9330,10 @@
       },
       "ChargeWaiverIndicator": {
         "type": "string",
-        "enum": ["Yes", "No"],
+        "enum": [
+          "Yes",
+          "No"
+        ],
         "description": "Indicates whether the charge is waived for this transaction."
       },
       "ChartOfAccount": {
@@ -9199,13 +9442,22 @@
       },
       "ClaimStatus": {
         "type": "string",
-        "enum": ["APPROVED", "NOTAPPROVED", "PROCESSED"],
+        "enum": [
+          "APPROVED",
+          "NOTAPPROVED",
+          "PROCESSED"
+        ],
         "description": "The Claim Status refers to the current stage of a life insurance claim, indicating whether the claim has been processed, approved, denied, or is still under review. This status helps policyholders, beneficiaries, and insurers track the progress of a claim from submission to payout.",
         "example": "APPROVED"
       },
       "ChartOfAccountsAccountType": {
         "type": "string",
-        "enum": ["ASSET", "LIABILITY", "INCOME", "BENEFIT"],
+        "enum": [
+          "ASSET",
+          "LIABILITY",
+          "INCOME",
+          "BENEFIT"
+        ],
         "description": "Chart of account type"
       },
       "CommunicationType": {
@@ -9253,7 +9505,11 @@
       },
       "Contribution": {
         "type": "string",
-        "enum": ["NOTAPPLICABLE", "EMPLOYEEVOLUNTARY", "EMPLOYEEDISCRETIONARY"],
+        "enum": [
+          "NOTAPPLICABLE",
+          "EMPLOYEEVOLUNTARY",
+          "EMPLOYEEDISCRETIONARY"
+        ],
         "description": "Not applicable, Employee Voluntary and Employee Discretionary"
       },
       "ConversionCreateRequest": {
@@ -9724,7 +9980,11 @@
       },
       "CoverageBand": {
         "type": "string",
-        "enum": ["BAND1", "BAND2", "BAND3"],
+        "enum": [
+          "BAND1",
+          "BAND2",
+          "BAND3"
+        ],
         "description": "In life insurance, a band refers to a coverage range or tier that affects premium rates, underwriting guidelines, or policy benefits. Insurance companies use coverage bands to determine pricing structures, offering lower per-unit costs for higher coverage amounts"
       },
       "CoverageLayer": {
@@ -9912,17 +10172,33 @@
       },
       "Currency": {
         "type": "string",
-        "enum": ["USD", "CAD", "AUD", "NZD", "GBP", "EUR", "CHF", "JPY"],
+        "enum": [
+          "USD",
+          "CAD",
+          "AUD",
+          "NZD",
+          "GBP",
+          "EUR",
+          "CHF",
+          "JPY"
+        ],
         "description": "The Currency refers to the system of money in which a life insurance or annuity contract is denominated and transacted. It defines the monetary unit used for premium payments, policy benefits, withdrawals, and payouts."
       },
       "ClaimCode": {
         "type": "string",
-        "enum": ["DEATH", "RIDER"],
+        "enum": [
+          "DEATH",
+          "RIDER"
+        ],
         "description": "A code representing the type of claim (e.g., Death Claim, Accelerated Benefit)."
       },
       "CommissionOption": {
         "type": "string",
-        "enum": ["OPTIONA", "OPTIONB", "NOCOMMISSION"],
+        "enum": [
+          "OPTIONA",
+          "OPTIONB",
+          "NOCOMMISSION"
+        ],
         "description": "This is the commission option selected for the agent on the policy. ZSOR is just storing the selection to pass to MCS for payment of commissions aligned with selected option/schedule."
       },
       "DeathBenefit": {
@@ -10054,7 +10330,10 @@
           },
           "proofOfDeathReceived": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "TBD"
           }
         }
@@ -10271,7 +10550,10 @@
         "properties": {
           "disabled": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Any disability details of the insured"
           },
           "disabilityStartDate": {
@@ -10284,7 +10566,10 @@
       },
       "DeathBenefitInterestCalculatedFromDate": {
         "type": "string",
-        "enum": ["DATEOFDEATH", "DATEOFDEATHREPORTED"],
+        "enum": [
+          "DATEOFDEATH",
+          "DATEOFDEATHREPORTED"
+        ],
         "description": "The date from which the interest on the death benefit is calculated."
       },
       "DeathBenefitOption": {
@@ -10300,12 +10585,18 @@
       },
       "DeathBenefitOptionType": {
         "type": "string",
-        "enum": ["LEVEL", "INCREASING"],
+        "enum": [
+          "LEVEL",
+          "INCREASING"
+        ],
         "description": "The Death Benefit Option refers to the method by which the life insurance policys death benefit is paid to the beneficiary when the insured passes away. Policyholders can typically choose between two main options: Level Death Benefit (Option A) Increasing Death Benefit (Option B) Some policies may offer a third option (Option C), which includes a return of premiums paid in addition to the death benefit."
       },
       "DefinitionOfLifeInsurance": {
         "type": "string",
-        "enum": ["GPT", "CVAT"],
+        "enum": [
+          "GPT",
+          "CVAT"
+        ],
         "description": "The Definition of Life Insurance (DLI) refers to the IRS-defined criteria that a life insurance policy must meet to maintain its tax-advantaged status. Policyholders must choose between two IRS-approved tests to ensure compliance: Guideline Premium Test (GPT) Cash Value Accumulation Test (CVAT) Each test has different implications on premium limits, cash value growth, and tax treatment."
       },
       "DeliveryDateSetupRequest": {
@@ -10484,12 +10775,22 @@
       },
       "DisbursementPaymentForm": {
         "type": "string",
-        "enum": ["DTCC", "EFT", "ACH", "CHECK", "WIRE"],
+        "enum": [
+          "DTCC",
+          "EFT",
+          "ACH",
+          "CHECK",
+          "WIRE"
+        ],
         "description": "The method used for disbursement (e.g., Check, EFT)"
       },
       "DisbursementType": {
         "type": "string",
-        "enum": ["GROSS", "NET", "NETNET"],
+        "enum": [
+          "GROSS",
+          "NET",
+          "NETNET"
+        ],
         "description": "Indicates if the disbursement is processed as Gross (before deductions) or Net (after deductions-charges and withholding)."
       },
       "Details": {
@@ -10711,7 +11012,10 @@
           "isPreferred": {
             "description": "The Preferred Email Indicator is a boolean flag associated with each email address linked to a party, used to designate which email address should be treated as the primary contact for electronic communications.",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           }
         }
       },
@@ -10742,7 +11046,10 @@
           },
           "isPreferredEmail": {
             "type": "string",
-            "enum": ["YES", "NO"],
+            "enum": [
+              "YES",
+              "NO"
+            ],
             "deprecated": true,
             "description": "This field is deprecated and will be removed in a future version. Please use email.isPreferred instead."
           },
@@ -10764,7 +11071,12 @@
       },
       "EmailType": {
         "type": "string",
-        "enum": ["PERSONAL", "BUSINESS", "CUSTOMERSERVICE", "OTHER"],
+        "enum": [
+          "PERSONAL",
+          "BUSINESS",
+          "CUSTOMERSERVICE",
+          "OTHER"
+        ],
         "description": "The type of email to communicate such as personal or work"
       },
       "EmploymentStatus": {
@@ -10857,7 +11169,10 @@
             "description": "Type of event represented by combining the different event name and the status Entity - policy EventName - activation - addresschange - anniversary - bankaccountchange - Beneficiarychange - claimpayout - costofinsurance - disbursement - emailchange - expensecharge - faceamountchange - freelookcancellation - freelookexpiration - fullsurrender - paymentInitialPremium - initialpremium - interestcredit - interestcreditloan - interestcreditmatch - interestloan - lapseassessment - loananniversarytrueUp - newloan - ownerchange - partialwithdrawalonetime - payeechange - paymentsystematicloanrepayment - payorchange - phonenumberchange - policyissuance - preferredmailingaddresschange - subsequentpayment - subsequentpremium - systematicloanrepayment - systematicloanrepaymentsetup - systematicpartialwithdrawal - systematicpartialwithdrawalsetup - tpdchange - unitexpensecharge - paymentonetimepremium - onetimepremium Status - pending - completed - canceled - reversed - failed - pendingreversal"
           },
           "datacontenttype": {
-            "enum": ["application/json", "application/xml"],
+            "enum": [
+              "application/json",
+              "application/xml"
+            ],
             "description": "Defines the content type of data field"
           },
           "data": {
@@ -10992,7 +11307,10 @@
       },
       "FlatExtraType": {
         "type": "string",
-        "enum": ["TEMP", "PERM"],
+        "enum": [
+          "TEMP",
+          "PERM"
+        ],
         "description": "A Flat Extra is an additional dollar amount added to the base premium for a life insurance policy due to increased risk factors. Insurers apply Flat Extras on top of standard risk classifications (e.g., Preferred, Standard, or Substandard ratings).Flat Extras can be classified into two types \"Temporary Flat Extra\" and \"Permanent Flat Extra\"."
       },
       "FormerName": {
@@ -11731,7 +12049,11 @@
       },
       "Gender": {
         "type": "string",
-        "enum": ["MALE", "FEMALE", "UNISEX"],
+        "enum": [
+          "MALE",
+          "FEMALE",
+          "UNISEX"
+        ],
         "description": "The gender of the party"
       },
       "GetCVQ": {
@@ -11833,7 +12155,11 @@
       },
       "HoldingForm": {
         "type": "string",
-        "enum": ["INDIVIDUAL", "GROUP", "JOINTINDIVIDUAL"],
+        "enum": [
+          "INDIVIDUAL",
+          "GROUP",
+          "JOINTINDIVIDUAL"
+        ],
         "description": "The Holding Form refers to the structure in which an insurance policy or annuity contract is owned and maintained. It defines who holds legal ownership of the policy, impacting policy rights, beneficiary designations, taxation, and financial planning."
       },
       "Identification": {
@@ -12011,7 +12337,10 @@
         "properties": {
           "existingLifeInsurance": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Any existing life insurance details of the insured"
           },
           "existingLifeInsuranceAmount": {
@@ -12022,22 +12351,34 @@
           },
           "replaceLifeInsurance": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Any life insurance replacement details of the insured"
           },
           "pendingOrPlanToBuyAdditional": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Any details of pending or plan to buy additional life insurance of the insured"
           },
           "isDependent": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Any dependent details of the insured"
           },
           "employed": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Any employment details of the insured"
           },
           "employmentStatus": {
@@ -12174,7 +12515,10 @@
       },
       "InvestmentType": {
         "type": "string",
-        "enum": ["INVESTMENTFUND", "INVESTMENTMODEL"],
+        "enum": [
+          "INVESTMENTFUND",
+          "INVESTMENTMODEL"
+        ],
         "description": "Defines the methodology used to allocate investments within the policy. It determines how money is allocated based on the selected investment strategy, whether through predefined structures(models) or direct individual fund selection."
       },
       "IssueType": {
@@ -12364,12 +12708,18 @@
       },
       "LoanInterestMethod": {
         "type": "string",
-        "enum": ["ADVANCE", "ARREARS"],
+        "enum": [
+          "ADVANCE",
+          "ARREARS"
+        ],
         "description": "The Loan Interest Method defines when policy loan interest is paid—either in advance (upfront) or in arrears (at the end of the loan period). This method affects how and when interest is charged, calculated, and added to the total loan balance."
       },
       "LoanRepaymentType": {
         "type": "string",
-        "enum": ["INTERESTFIRST", "PRINCIPALFIRST"],
+        "enum": [
+          "INTERESTFIRST",
+          "PRINCIPALFIRST"
+        ],
         "description": "The Loan Repayment Type refers to how loan repayments are applied to a policy loan—whether interest is paid first or the principal is reduced first. This affects how the loan balance decreases over time and the total interest paid by the policyholder."
       },
       "LoanRepaymentOneTimeRequest": {
@@ -12465,7 +12815,12 @@
           },
           "loanInterestType": {
             "type": "string",
-            "enum": ["FIXED", "INDEXED", "VARIABLE", "ADJUSTABLE"],
+            "enum": [
+              "FIXED",
+              "INDEXED",
+              "VARIABLE",
+              "ADJUSTABLE"
+            ],
             "description": "Type of Loan Interest Crediting - Fixed, Index etc.For LOANINTERESTTYPE : FIXED there will always be only one segment."
           },
           "loanInterestDue": {
@@ -12620,7 +12975,11 @@
       },
       "LoanType": {
         "type": "string",
-        "enum": ["PREFERRED", "NONPREFERREDSTANDARDLOAN", "INDEXLOAN"],
+        "enum": [
+          "PREFERRED",
+          "NONPREFERREDSTANDARDLOAN",
+          "INDEXLOAN"
+        ],
         "description": "The type of loan within a transaction (e.g., Preferred, Non-Preferred)."
       },
       "MarketValueAdjustment": {
@@ -12628,7 +12987,10 @@
         "properties": {
           "marketValueAdjustmentIndicator": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "The MVA Indicator is a flag or marker that indicates whether a Market Value Adjustment (MVA) applies to an annuity or investment. This adjustment impacts the contract value when withdrawals or surrenders occur before the end of the contract’s term."
           },
           "marketValueAdjustmentAmount": {
@@ -12817,7 +13179,10 @@
           },
           "modifiedEndowmentContractStatus": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "The MEC Status indicates whether a life insurance policy has been classified as a Modified Endowment Contract (MEC) under IRS regulations. This status determines the tax treatment of withdrawals, loans, and distributions from the policy."
           },
           "sevenPayTestBasis": {
@@ -13230,7 +13595,10 @@
         "type": "boolean",
         "description": "The result or final status of a transaction after processed.",
         "example": true,
-        "enum": [true, false]
+        "enum": [
+          true,
+          false
+        ]
       },
       "Owner": {
         "type": "object",
@@ -13880,17 +14248,26 @@
           },
           "isPartyBeneficiaryNonNatural": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "A boolean field that indicates whether the beneficiary of a Party (when the Party is a Trust) is Non-Natural. This data point is captured for taxation purposes, as Trusts established for individuals are taxed differently from those benefiting entities"
           },
           "isIrrevocable": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "An indicator if the beneficiary is irrevocable. If yes, when doing any changes the beneficiary must also sign forms"
           },
           "isRequiredMinimumDistributionDesignated": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "An indicator if the beneficiary is designated to be included in Joint RMD calculations"
           }
         }
@@ -14119,7 +14496,12 @@
       },
       "PartyType": {
         "type": "string",
-        "enum": ["INDIVIDUAL", "ORGANIZATION", "TRUST", "CUSTODIAN"],
+        "enum": [
+          "INDIVIDUAL",
+          "ORGANIZATION",
+          "TRUST",
+          "CUSTODIAN"
+        ],
         "description": "Defines Party type example individual or Organization. For Insured this should always be Individual"
       },
       "PayeeOrBeneficiary": {
@@ -14148,7 +14530,14 @@
       },
       "PaymentForm": {
         "type": "string",
-        "enum": ["DTCC", "CREDITCARD", "ACH", "CHECK", "WIRE", "EXCHANGE"],
+        "enum": [
+          "DTCC",
+          "CREDITCARD",
+          "ACH",
+          "CHECK",
+          "WIRE",
+          "EXCHANGE"
+        ],
         "description": "Specifies the method used for making payments"
       },
       "PaymentInfo": {
@@ -14295,7 +14684,10 @@
           "isPreferred": {
             "description": "The Preferred Phone Indicator is a boolean flag or attribute assigned to each phone number associated with a party, used to identify which phone number should be used as the primary contact number for communication.",
             "type": "boolean",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           }
         }
       },
@@ -14309,7 +14701,10 @@
           },
           "isPreferredPhone": {
             "type": "string",
-            "enum": ["YES", "NO"],
+            "enum": [
+              "YES",
+              "NO"
+            ],
             "description": "This field is deprecated and will be removed in a future version. Please use phone.isPreferred instead."
           },
           "preferredPhoneId": {
@@ -15032,7 +15427,12 @@
           },
           "loanInterestType": {
             "type": "string",
-            "enum": ["FIXED", "INDEXED", "VARIABLE", "ADJUSTABLE"],
+            "enum": [
+              "FIXED",
+              "INDEXED",
+              "VARIABLE",
+              "ADJUSTABLE"
+            ],
             "description": "Type of Loan Interest Crediting - Fixed, Index etc.For LOANINTERESTTYPE : FIXED there will always be only one segment."
           },
           "imputedInterestRate": {
@@ -15462,7 +15862,10 @@
           },
           "featureIndicator": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "A Feature Indicator in life insurance and annuities refers to a binary flag (Yes/No, True/False, or Enabled/Disabled) that signifies whether a specific policy feature, rider, or benefit is included in the contract. It helps insurers, agents, and policyholders quickly identify which optional or standard benefits apply to a policy"
           },
           "featureOption": {
@@ -15488,7 +15891,10 @@
           },
           "status": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "A Feature Status in life insurance and annuities indicates the current state or activation condition of a specific feature within a policy or contract. It reflects whether a feature is active, inactive, pending, or restricted, helping insurers, agents, and policyholders track policy functionality"
           },
           "period": {
@@ -15553,7 +15959,10 @@
           },
           "underwritingDecision": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "The Reinstatement Underwriting Decision refers to the evaluation process and approval or denial of a reinstatement request for a lapsed life insurance policy or annuity contract. When a policy lapses due to non-payment, the insurer requires underwriting to determine if the policy can be reinstated based on financial, medical, and risk factors.",
             "example": true
           },
@@ -15576,7 +15985,10 @@
           },
           "featureSubType": {
             "type": "string",
-            "enum": ["MULTIPLEPOLICYDISCOUNT", "CONTROLBUSINESSINDICATOR"],
+            "enum": [
+              "MULTIPLEPOLICYDISCOUNT",
+              "CONTROLBUSINESSINDICATOR"
+            ],
             "description": "Gives the sub type of the feature type \"Custom Feature\""
           }
         }
@@ -15823,7 +16235,10 @@
           },
           "isAddressSameAsOwner": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Boolean 0 = No 1 = Yes to denote if the email is the preferred"
           }
         },
@@ -15854,7 +16269,10 @@
       },
       "RestrictStatus": {
         "type": "string",
-        "enum": ["LEGAL", "OPERATIONAL"],
+        "enum": [
+          "LEGAL",
+          "OPERATIONAL"
+        ],
         "description": "The Restrict Status refers to a legal or operational hold placed on a life insurance or annuity contract that prevents or limits certain transactions. These restrictions are typically based on legal, compliance, regulatory, or operational reasons and may block activities such as withdrawals, policy changes, or beneficiary updates."
       },
       "PolicySummary": {
@@ -15977,7 +16395,10 @@
                 "properties": {
                   "modifiedEndowmentContractStatus": {
                     "type": "boolean",
-                    "enum": [true, false],
+                    "enum": [
+                      true,
+                      false
+                    ],
                     "description": "The MEC Status indicates whether a life insurance policy has been classified as a Modified Endowment Contract (MEC) under IRS regulations. This status determines the tax treatment of withdrawals, loans, and distributions from the policy."
                   }
                 }
@@ -15986,7 +16407,10 @@
           },
           "marketValueAdjustmentProduct": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Flag to identify whether the contract is MVA product or not"
           },
           "accountValues": {
@@ -16219,7 +16643,10 @@
                 "properties": {
                   "modifiedEndowmentContractStatus": {
                     "type": "boolean",
-                    "enum": [true, false],
+                    "enum": [
+                      true,
+                      false
+                    ],
                     "description": "The MEC Status indicates whether a life insurance policy has been classified as a Modified Endowment Contract (MEC) under IRS regulations. This status determines the tax treatment of withdrawals, loans, and distributions from the policy."
                   }
                 }
@@ -16228,7 +16655,10 @@
           },
           "marketValueAdjustmentProduct": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Flag to identify whether the contract is MVA product or not"
           },
           "accountValues": {
@@ -16418,7 +16848,13 @@
       },
       "Prefix": {
         "type": "string",
-        "enum": ["MR", "MS", "MISS", "MRS", "DR"],
+        "enum": [
+          "MR",
+          "MS",
+          "MISS",
+          "MRS",
+          "DR"
+        ],
         "description": "The prefix of the party name"
       },
       "PremiumHistory": {
@@ -16501,12 +16937,19 @@
       },
       "ProgramType": {
         "type": "string",
-        "enum": ["PREMIUM", "LOANREPAYMENT", "WITHDRAWAL"],
+        "enum": [
+          "PREMIUM",
+          "LOANREPAYMENT",
+          "WITHDRAWAL"
+        ],
         "description": "Type of systematic program"
       },
       "ProofOfDeathReceived": {
         "type": "string",
-        "enum": ["Yes", "No"],
+        "enum": [
+          "Yes",
+          "No"
+        ],
         "description": "The Proof of Death Received status indicates whether the insurer has received official documentation verifying the insured's death, which is required to process a life insurance claim. This documentation typically includes a certified death certificate and, in some cases, additional supporting records."
       },
       "QualificationType": {
@@ -16771,12 +17214,18 @@
           },
           "unbornChildIndicator": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "This will be set to yes if there is no Child rider insured to support Unborn Child."
           },
           "qualifiedAdditionalBenefit": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Indicates whether the rider provides a qualified benefit under IRS or insurance regulations",
             "example": true
           },
@@ -16842,7 +17291,10 @@
           },
           "claimStatus": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "The current status of a claim filed under the rider"
           },
           "nextEvaluationDate": {
@@ -17128,7 +17580,12 @@
       },
       "Status": {
         "type": "string",
-        "enum": ["ACTIVE", "TERMINATED", "PENDING", "SUSPENDED"],
+        "enum": [
+          "ACTIVE",
+          "TERMINATED",
+          "PENDING",
+          "SUSPENDED"
+        ],
         "description": "Indicates the current state of the systematic program, such as active, suspended, or completed."
       },
       "SubStandardRating": {
@@ -17156,7 +17613,13 @@
       },
       "Suffix": {
         "type": "string",
-        "enum": ["JR", "SN", "I", "II", "III"],
+        "enum": [
+          "JR",
+          "SN",
+          "I",
+          "II",
+          "III"
+        ],
         "description": "The suffix of the party name"
       },
       "SystematicProgram": {
@@ -17247,7 +17710,10 @@
               "properties": {
                 "partyRole": {
                   "type": "string",
-                  "enum": ["PAYOR", "PAYEE"],
+                  "enum": [
+                    "PAYOR",
+                    "PAYEE"
+                  ],
                   "description": "Note -Use systematicProgram.parties.partyRole field instead of systematicProgram.party.partyRole",
                   "example": "PAYOR"
                 },
@@ -17280,7 +17746,10 @@
               "properties": {
                 "partyRole": {
                   "type": "string",
-                  "enum": ["PAYOR", "PAYEE"],
+                  "enum": [
+                    "PAYOR",
+                    "PAYEE"
+                  ],
                   "description": "Role the program is tied to ( for example for money-in ,I could be owner or payor & for money-out it could be payee or beneficiary)",
                   "example": "PAYOR"
                 },
@@ -17492,7 +17961,12 @@
       },
       "TaxWithholdingType": {
         "type": "string",
-        "enum": ["FEDERAL", "STATE", "NRA", "BACKUP"],
+        "enum": [
+          "FEDERAL",
+          "STATE",
+          "NRA",
+          "BACKUP"
+        ],
         "description": "Indicates the category of tax withholding applied to a transaction based on regulatory requirements."
       },
       "TaxWithholdingInstructions": {
@@ -17710,7 +18184,10 @@
           "systematicOrBillingChangeIndicator": {
             "type": "boolean",
             "description": "Indicates whether a transaction results in any setup, update, or modification to a systematic program or billing change. This field is set to true whenever any part of the systematic program or billing is modified, including changes to its configuration or associated fields.",
-            "enum": [true, false]
+            "enum": [
+              true,
+              false
+            ]
           },
           "requestDate": {
             "type": "string",
@@ -17898,7 +18375,10 @@
           },
           "reverseInitiator": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "A boolean flag that applies only to financial transactions. When set to true, it allows a backdated transaction to be processed. This triggers a reversal on the policy to the earliest transaction on the specified effective date, applies the new transaction, and then reprocesses all subsequent transactions (similar to (R&R) process). This ensures that the policy's financial history remains accurate and aligned with the backdated change."
           },
           "version": {
@@ -18092,7 +18572,10 @@
           },
           "modifiedEndowmentContractStatus": {
             "type": "boolean",
-            "enum": [true, false],
+            "enum": [
+              true,
+              false
+            ],
             "description": "Indicates if the original policy being exchanged is classified as MEC"
           },
           "outstandingLoanRolloverAmount": {
@@ -18327,12 +18810,18 @@
       },
       "TrustType": {
         "type": "string",
-        "enum": ["INDIVIDUALTRUST", "CORPORATETRUST"],
+        "enum": [
+          "INDIVIDUALTRUST",
+          "CORPORATETRUST"
+        ],
         "description": "The type of trust"
       },
       "UnderwritingStatus": {
         "type": "string",
-        "enum": ["APPROVED", "DECLINED"],
+        "enum": [
+          "APPROVED",
+          "DECLINED"
+        ],
         "description": "This field provides the status of the rider at underwriting level."
       },
       "Url": {
