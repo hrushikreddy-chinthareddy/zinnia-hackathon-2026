@@ -20,7 +20,7 @@
     "typecheck": "tsc --noEmit",
     "update-spec": "node ./src/update-type-definition.mjs",
     "generate-types": "node ./scripts/generate-all-types.mjs",
-    "clean": "rimraf ./dist ./src/generated-types"
+    "clean": "node ./scripts/clean.mjs"
   },
   "devDependencies": {
     "@types/node": "^20.11.24",
