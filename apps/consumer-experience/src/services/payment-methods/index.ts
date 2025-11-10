@@ -5,14 +5,11 @@ import { getSession } from '@/utils/auth';
 import { logInfo } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { transformPaymentMethods } from './transformers';
 import { aggregationBaseUrl } from '../api-config';
-import { getFeatureFlags } from '../feature-flags';
 import { getPartyReferenceData } from '../party-reference';
 import { getPolicyPartyIdByPolicyNumber } from '../party-reference/transformers';
-import { getPaymentDetails } from '../policy';
 import { ServerApi } from '../server-http';
 
 interface PaymentMethodParams {
@@ -81,60 +78,42 @@ export const getPaymentMethods = withLogging(
     params: PolicyRequestInputs,
     loggingContext: CommonLogContext
   ): Promise<PaymentMethod[]> => {
-    const flags = await getFeatureFlags();
-    // What this means is that we will be using the getPaymentDetails
-    // call for all carriers (so paymentus will not longer be called on farmers policies)
-    // and if this is not active, you will see policy payment methods returned
-    // for farmers policies
-    if (flags?.[FEATURE_FLAGS.PAYMENT_METHODS_API]) {
-      const session = await getSession();
-      const partyId = session?.user?.partyId || '';
-      const partyRefData = await getPartyReferenceData(partyId, loggingContext);
+    const session = await getSession();
+    const partyId = session?.user?.partyId || '';
+    const partyRefData = await getPartyReferenceData(partyId, loggingContext);
 
-      const policyPartyId = getPolicyPartyIdByPolicyNumber(
-        partyRefData.data!,
-        params.policyNumber
-      );
+    const policyPartyId = getPolicyPartyIdByPolicyNumber(
+      partyRefData.data!,
+      params.policyNumber
+    );
 
-      if (!policyPartyId) {
-        throw new Error('Party id was not found on policy', {
-          cause: {
-            partyId,
-            policyNumber: params.policyNumber,
-            planCode: params.planCode,
-            // TODO: need to parse out first/last name from this
-            // partyRefDataAliases: partyRefData.data?.alias,
-          },
-        });
-      }
-
-      const { data: paymentMethods, error } = await getUserPaymentMethods(
-        {
+    if (!policyPartyId) {
+      throw new Error('Party id was not found on policy', {
+        cause: {
+          partyId,
           policyNumber: params.policyNumber,
           planCode: params.planCode,
-          policyPartyId,
+          // TODO: need to parse out first/last name from this
+          // partyRefDataAliases: partyRefData.data?.alias,
         },
-        loggingContext
-      );
-
-      // TODO: what additional info should we pass here?
-      if (error) {
-        throw error;
-      }
-
-      return transformPaymentMethods(paymentMethods);
+      });
     }
 
-    const { data: bankDetails, error } = await getPaymentDetails(
-      { policyNumber: params.policyNumber, planCode: params.planCode },
+    const { data: paymentMethods, error } = await getUserPaymentMethods(
+      {
+        policyNumber: params.policyNumber,
+        planCode: params.planCode,
+        policyPartyId,
+      },
       loggingContext
     );
 
+    // TODO: what additional info should we pass here?
     if (error) {
       throw error;
     }
 
-    return transformPaymentMethods(bankDetails);
+    return transformPaymentMethods(paymentMethods);
   },
   { file: 'payment-methods', functionName: 'getPaymentMethods' }
 );
