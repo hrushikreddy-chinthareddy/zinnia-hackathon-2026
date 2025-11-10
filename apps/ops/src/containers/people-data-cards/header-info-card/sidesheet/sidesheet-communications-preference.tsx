@@ -10,6 +10,7 @@ import {
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -27,8 +28,8 @@ import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/no
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
 import {
-    ViewState,
     handleResponse,
+    ViewState,
 } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/states.helpers';
 import SuccessState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/success-state';
 import WarnState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/warn-state';
@@ -49,13 +50,14 @@ import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
     NonFinancialTransactionActions,
+    NonFinancialTransactionBody,
     NonFinancialTransactions,
     updateEDeliveryPreferenceByPlanCode,
 } from '@deps/queries/api/bpm-non-financial';
 import {
-    TransactionSuccessfulEvent,
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
+    TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 
 import { sortEmailsByType } from '../../email-card/email-card.helpers';
@@ -79,6 +81,11 @@ export const SidesheetCommunicationsPreference = ({
         keyPrefix: 'people.sideSheet.communicationpreference',
     });
     const { t: defaultT } = useTranslation();
+    const router = useRouter();
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
     const { sessionId, partyId: userId } = usePermissionsContext();
 
     const INITIAL_BODY: CommunicationPreferenceChangeRequest = {
@@ -393,6 +400,11 @@ export const SidesheetCommunicationsPreference = ({
                         setCaseDocumentOptions={setCaseDocumentOptions}
                         setCurrentErrors={setCurrentErrors}
                         setViewState={setViewState}
+                        processSubType={[
+                            Processes.CommunicationPreferenceChange,
+                        ]}
+                        correlationId={correlationIdFromRoute}
+                        body={body as NonFinancialTransactionBody}
                     />
                     <div
                         role="group"

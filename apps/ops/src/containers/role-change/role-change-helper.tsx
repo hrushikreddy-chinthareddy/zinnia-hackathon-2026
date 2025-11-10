@@ -479,6 +479,7 @@ export const buildRoleChangeRequestBody = (
         party = {},
         documents,
         caseId,
+        correlationId,
     } = roleData || {};
 
     const { partyType = PartyType.INDIVIDUAL } = party || {};
@@ -576,7 +577,7 @@ export const buildRoleChangeRequestBody = (
     return {
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         caseId,
-        correlationId: uuidV4(),
+        correlationId: correlationId || uuidV4(),
         changeReason: changeReason || null,
         signatures: signatures || [],
         beneDetailsReqInd: false,

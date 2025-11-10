@@ -16291,7 +16291,7 @@
       },
       "Prefix": {
         "type": "string",
-        "enum": ["MR", "MS", "MISS", "MRS.", "DR."],
+        "enum": ["MR", "MS", "MISS", "MRS", "DR"],
         "description": "The prefix of the party name"
       },
       "PremiumHistory": {

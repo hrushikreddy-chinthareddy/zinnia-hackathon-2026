@@ -40,6 +40,7 @@ import {
     buildSystematicProgramUpdateRequestBody,
     getSystematicInfo,
     buildSystematicWithdrawalProgramUpdateRequestBody,
+    getProcessSubTypes,
 } from './autopay.helpers';
 import Confirm from './confirm/confirm';
 import ManageSummary from './summary/manage-summary';
@@ -155,6 +156,8 @@ const AutopayContainer = ({
         systematicProgramReason == Reason.PREMIUM &&
         checkCustomPolicy(policy, CarrierCode.Farmers, FarmersPlanCodes);
 
+    const processSubType = getProcessSubTypes(parentPage);
+
     const steps: Step[] = [
         {
             component: (
@@ -187,6 +190,7 @@ const AutopayContainer = ({
                         type: transactionType,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={processSubType}
                 />
             ),
             screenReaderLabel: startLabel,

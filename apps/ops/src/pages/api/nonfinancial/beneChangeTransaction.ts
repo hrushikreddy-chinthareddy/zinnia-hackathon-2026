@@ -17,7 +17,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<any | null>, logCtx) => {
         const now = performance.now();
+
         const accessToken = (await getAccessToken(req, res)).accessToken;
+
+        logInfo('beneChangeTransaction::initial');
 
         const {
             operation,
@@ -50,6 +53,12 @@ export default withAuthAndLogging(
                 return res.status(400).json({ message: 'Unknown operation' });
         }
 
+        logInfo(`beneChangeTransaction::${policyNumber}::${operation}::entry`, {
+            ...loggingContext,
+            targetUrl,
+            duration: performance.now() - now,
+        });
+
         try {
             const policy = await getPolicyDetailsSsr(
                 policyNumber,
@@ -66,19 +75,25 @@ export default withAuthAndLogging(
 
             req.body = updatedBody || {};
 
-            logInfo(`beneChangeTransaction::${operation}::start`, {
-                ...loggingContext,
-                targetUrl,
-                duration: performance.now() - now,
-            });
+            logInfo(
+                `beneChangeTransaction::${policyNumber}::${operation}::start`,
+                {
+                    ...loggingContext,
+                    targetUrl,
+                    duration: performance.now() - now,
+                }
+            );
 
             return await requestHandler(targetUrl, req, res, loggingContext);
         } catch (error) {
-            logWarn(`beneChangeTransaction::${operation}::failure`, {
-                ...parseErrorInformation(error),
-                ...loggingContext,
-                duration: performance.now() - now,
-            });
+            logWarn(
+                `beneChangeTransaction::${policyNumber}::${operation}::failure`,
+                {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                    duration: performance.now() - now,
+                }
+            );
 
             res.status(500).json({ message: 'Internal Server Error' });
         }

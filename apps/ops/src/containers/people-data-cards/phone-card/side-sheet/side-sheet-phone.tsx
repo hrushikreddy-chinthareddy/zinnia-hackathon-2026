@@ -9,6 +9,7 @@ import {
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -100,6 +101,11 @@ export const SideSheetPhone = ({
     });
     const { t: defaultT } = useTranslation();
     const { sessionId, partyId: userId } = usePermissionsContext();
+
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
 
     const INITIAL_PHONE: Phone = {
         bestTime: 'Anytime',
@@ -334,6 +340,9 @@ export const SideSheetPhone = ({
                 setCaseDocumentOptions={setCaseDocumentOptions}
                 setCurrentErrors={setCurrentErrors}
                 setViewState={setViewState}
+                processSubType={[Processes.PhoneNumberChange]}
+                correlationId={correlationIdFromRoute}
+                body={body}
             />
 
             <div className="flex flex-col gap-8">
