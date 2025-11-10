@@ -10,7 +10,16 @@ const execAsync = promisify(exec);
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const rootDir = path.resolve(__dirname, '..');
 
-const patterns = ['.next', 'node_modules', 'dist', '.turbo', 'build'];
+// Get directory patterns to clean from command line arguments
+// Patterns are directory names to search for and delete (e.g., 'dist', 'node_modules', '.turbo')
+const patterns = process.argv.slice(2);
+
+if (patterns.length === 0) {
+  console.error('❌ Error: No clean patterns provided');
+  console.error('Usage: node clean.mjs <pattern1> <pattern2> ...');
+  console.error('Example: node clean.mjs dist .turbo node_modules');
+  process.exit(1);
+}
 
 async function findDirectories(
   dir,
@@ -72,7 +81,9 @@ async function clean() {
   // Run turbo clean for workspace packages FIRST (before deleting node_modules)
   console.log('🔄 Running turbo clean in workspaces...\n');
   try {
-    const { stdout, stderr } = await execAsync('pnpm turbo run clean', { cwd: rootDir });
+    const { stdout, stderr } = await execAsync('pnpm turbo run clean', {
+      cwd: rootDir,
+    });
     if (stdout) {
       console.log(stdout);
     }

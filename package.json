@@ -7,7 +7,7 @@
     "dev:ops": "turbo dev --filter ops",
     "dev:cui": "turbo dev --filter cui",
     "lint": "turbo lint",
-    "clean": "node ./scripts/clean.mjs",
+    "clean": "node ./scripts/clean.mjs .next node_modules dist .turbo build",
     "test": "turbo test",
     "pre-commit": ".husky/pre-commit",
     "pre-push": "turbo build --filter @zinnia/api-types && turbo build --filter @zinnia/xd-components && .husky/pre-push",
