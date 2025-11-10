@@ -5200,10 +5200,12 @@
             }
         },
         "caseDocumentSelect": {
-            "documentNumber": "Numéro de document : ",
-            "label": "Sur quel document travaillez-vous ?",
-            "noDocumentAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour Zinnia Live dossier pour vous.",
-            "processWithoutDocument": "Procéder sans document"
+            "documentNumber": "Numéro de document: ",
+            "label": "Quel est le document que vous utilisez?",
+            "noDocumentAssistiveText": "Si vous continuez sans une slection de document, nous ne pouvons pas mettre à jour le cas Zinnia Live pour vous.",
+            "processWithoutDocument": "Traiter sans document",
+            "noCaseSelection": "Sélectionner un cas ouvert pour continuer ou procéder sans en sélectionner un",
+            "caseSelectionAssistiveText": "Toutes les informations existantes sur ce cas seront mises à jour avec les détails fournis ici"
         },
         "transactionCta": {
             "checkingRules": "Nous vérifions les règles commerciales de cette police...",

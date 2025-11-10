@@ -5283,7 +5283,8 @@
             "label": "Which document are you working from?",
             "noDocumentAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
             "processWithoutDocument": "Process without a document",
-            "noCaseSelection": "Select an open case to continue or proceed without one"
+            "noCaseSelection": "Select an open case to continue or proceed without one",
+            "caseSelectionAssistiveText": "Any existing information on this case will be updated with the details provided here"
         },
         "transactionCta": {
             "checkingRules": "We're checking this policy's business rules...",
@@ -7407,7 +7408,8 @@
             "missingCaseSelection": "Select a case (or proceed without) to continue.",
             "processWithoutCaseAssistiveText": "If you continue without a case selection, we can't update Zinnia Live case for you.",
             "caseSelectionLabel": "Select a linked case, if applicable",
-            "supportingInfo": "Supporting Information"
+            "supportingInfo": "Supporting Information",
+            "caseSelectionAssistiveText": "Any existing information on this case will be updated with the details provided here"
         },
         "paymentStep": {
             "addAddress": "Add new address details",
