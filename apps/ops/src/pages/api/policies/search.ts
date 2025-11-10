@@ -11,7 +11,10 @@ import { CheckTupleResponse } from '@deps/types/fga';
 import { PolicyReferenceSearchResponse } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
-import { policySearchResponseSanitizer } from '@deps/utils/sanitizers';
+import {
+    fullyMaskPolicySearchResponse,
+    policySearchResponseSanitizer,
+} from '@deps/utils/sanitizers';
 import {
     logTrace,
     logWarn,
@@ -96,8 +99,8 @@ export default withAuthAndLogging(
 
             // Do not show full SSN if the user is not authorized to view it
             const masker = unmaskingResponse.data?.allowed
-                ? searchResponse
-                : policySearchResponseSanitizer(searchResponse);
+                ? policySearchResponseSanitizer(searchResponse)
+                : fullyMaskPolicySearchResponse(searchResponse);
 
             res.json(masker);
         } catch (e) {

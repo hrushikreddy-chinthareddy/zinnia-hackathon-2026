@@ -477,6 +477,30 @@ export const fullyMaskPolicyResponse = (
     }
 };
 
+export const fullyMaskPolicySearchResponse = (
+    policySearchResponse: PolicyReferenceSearchResponse
+): PolicyReferenceSearchResponse => {
+    try {
+        const results = policySearchResponse.results.map((party) => {
+            return { ...party, ssn: toMaskedStringOrNull(party.ssn) as string };
+        });
+        return { ...policySearchResponse, results };
+    } catch (e) {
+        logErrorWithoutContext(
+            'sanitizers::fullyMaskPolicySearchResponse::error',
+            {
+                ...parseErrorInformation(e),
+            }
+        );
+        throw new ApiError(
+            500,
+            `fullyMaskPolicySearchResponse::error masking policySearchResponse: ${
+                (e as Error).message
+            }`
+        );
+    }
+};
+
 const fullyMaskSteps = (
     steps: StepInstance[] | undefined
 ): StepInstance[] | undefined => {
