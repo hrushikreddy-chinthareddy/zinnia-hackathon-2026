@@ -15,13 +15,11 @@ import { FullName } from '@/components/pii/FullName';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
 import { PaymentProvider } from '@/types/carrier-config';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import {
   filterPayorViewParties,
   filterOutCoverageInsuredParties,
@@ -40,11 +38,8 @@ export const ProfileView = async ({
   planCode: string;
   policyNumber: string;
 }) => {
-  const flags = await getFeatureFlags();
   const commonLoggingContext = await buildCommonLogContext();
 
-  const showFarmersPaymentus =
-    flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
   const { data } = await getCarrierConfig(commonLoggingContext);
 
   const loggingContext = await buildCommonLogContext();
@@ -102,10 +97,7 @@ export const ProfileView = async ({
   };
 
   const bank = () => {
-    if (
-      data?.payment.provider === PaymentProvider.PAYMENTUS &&
-      showFarmersPaymentus
-    ) {
+    if (data?.payment.provider === PaymentProvider.PAYMENTUS) {
       return (
         <PaymentDetails
           verifyIdentityRequired={data?.payment.verifyIdentityRequired}

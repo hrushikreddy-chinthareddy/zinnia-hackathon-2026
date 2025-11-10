@@ -2,7 +2,6 @@ export enum FEATURE_FLAGS {
   AMP_TRANSACTION_SUMMARY = 'amp_transaction_summary',
   DOCUMENTS_V3 = 'documents-v3-update',
   TRANSACTION_NOTIFICATIONS = 'transaction_notifications',
-  FARMERS_PAYMENTUS = 'farmers_paymentus',
   TRANSACTION_PARTIAL_WITHDRAWAL_ONETIME = 'transaction_partial_withdrawal_onetime',
   TRANSACTION_SYSTEMATIC_PREMIUM = 'transaction_systematic_premium',
   WELLABE_AUTH_TOKENS = 'wellabe_auth_tokens',
