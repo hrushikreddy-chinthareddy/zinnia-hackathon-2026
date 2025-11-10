@@ -5,10 +5,18 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g turbo@2.1.3
-COPY . .
-# Note: pruning disabled to copy full workspace
-# pruning doesn't build dev dependencies. Since we are building the app in the same container, we need to build dev dependencies
+# Install turbo globally using the version from package.json
+COPY package.json pnpm-lock.yaml* ./
+RUN npm install -g turbo@$(node -p "require('./package.json').devDependencies.turbo")
+# Copy workspace config files
+COPY turbo.json turbo.json
+COPY pnpm-workspace.yaml pnpm-workspace.yaml
+# Copy only the ops app
+COPY apps/ops apps/ops
+# Copy shared packages (dependencies for ops)
+COPY packages packages
+# Prune the monorepo to only include ops and its dependencies
+RUN turbo prune ops --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -16,13 +24,19 @@ RUN apk add --update --no-cache libc6-compat make gcc g++ python3 pkgconfig pixm
 RUN apk update
 WORKDIR /app
 
-# First install the dependencies (as they change less often)
-COPY --from=builder /app .
+# Copy pruned lockfile and package.json files
+COPY --from=builder /app/out/json/ .
+# Use full lockfile instead of pruned one to avoid missing dependencies as this is a known issue with
+# https://github.com/vercel/turborepo/issues/2791
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=secret,id=npmtoken echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npmtoken)" > /root/.npmrc
 RUN npm install -g corepack && corepack enable
 ENV COREPACK_INTEGRITY_KEYS=0
 ENV COREPACK_DEFAULT_TO_LATEST=0
 RUN pnpm i --frozen-lockfile
+
+# Copy pruned source code
+COPY --from=builder /app/out/full/ .
 
 ARG NEXT_PUBLIC_BACKEND_URL
 ARG NEXT_PUBLIC_BASE_URL
@@ -62,8 +76,7 @@ RUN echo "NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL=${NEXT_PUBLIC_FARMERS_APEX_REDIR
 ENV NEXT_TELEMETRY_DISABLED 1
 ENV NODE_OPTIONS=--max-old-space-size=4096
 
-RUN pnpm turbo run build --filter=ops
-# RUN pnpm run build-storybook --filter=ops
+RUN pnpm turbo build --filter ops
 RUN --mount=type=secret,id="DATADOG_API_KEY" DATADOG_API_KEY="$(cat /run/secrets/DATADOG_API_KEY)" npx @datadog/datadog-ci sourcemaps upload ./.next/static --service=zinnia-live-xd --release-version=${NEXT_PUBLIC_GIT_SHA} --minified-path-prefix=/static
 
 FROM base AS runner
