@@ -218,6 +218,8 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                     actionType: 'BENE_CHANGE',
                     isRestrictedBeneficiary:
                         bene.isRestrictedBeneficiary ?? false,
+                    preferredCommunicationType:
+                        bene.preferredCommunicationType ?? null,
                     partyRole: {
                         partyRoleId: role?.partyRoleId ?? '',
                         partyRole:
@@ -231,8 +233,6 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                     party: {
                         partyId: bene.partyId ?? null,
                         partyType: bene.partyType,
-                        preferredCommunicationType:
-                            bene.preferredCommunicationType ?? null,
                         prefix: getPrefix(bene.prefix),
                         firstName: bene.firstName ?? null,
                         middleName: bene.middleName ?? null,

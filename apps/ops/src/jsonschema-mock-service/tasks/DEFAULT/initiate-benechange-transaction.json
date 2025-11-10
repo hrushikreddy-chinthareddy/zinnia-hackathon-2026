@@ -813,6 +813,12 @@
                                         "enum": [true, false],
                                         "enumNames": ["Yes", "No"]
                                     },
+                                    "preferredCommunicationType": {
+                                        "type": ["null", "string"],
+                                        "title": "Preferred Contact Method",
+                                        "enum": ["EMAIL", "REGULARMAIL", null],
+                                        "default": null
+                                    },
                                     "party": {
                                         "type": "object",
                                         "properties": {
@@ -1023,16 +1029,6 @@
                                                         }
                                                     }
                                                 }
-                                            },
-                                            "preferredCommunicationType": {
-                                                "type": ["null", "string"],
-                                                "title": "Preferred Contact Method",
-                                                "enum": [
-                                                    "EMAIL",
-                                                    "REGULARMAIL",
-                                                    null
-                                                ],
-                                                "default": null
                                             }
                                         },
                                         "required": ["beneficiaryPercentage"],
@@ -1377,6 +1373,7 @@
                                 "partyRole",
                                 "action",
                                 "party",
+                                "preferredCommunicationType",
                                 "isPerStirpes",
                                 "isIrrevocable"
                             ],
@@ -1411,6 +1408,14 @@
                                     "enumNames": ["Yes", "No"]
                                 }
                             },
+                            "preferredCommunicationType": {
+                                "ui:widget": "RadioWidget",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": ["Email", "Mail"],
+                                    "allowNullValue": true
+                                }
+                            },
                             "party": {
                                 "ui:order": [
                                     "partyType",
@@ -1427,7 +1432,6 @@
                                     "identifications",
                                     "gender",
                                     "dateOfBirth",
-                                    "preferredCommunicationType",
                                     "addresses",
                                     "phones",
                                     "emails",
@@ -1733,14 +1737,6 @@
                                         ]
                                     },
                                     "ui:placeholder": "Select suffix"
-                                },
-                                "preferredCommunicationType": {
-                                    "ui:widget": "RadioWidget",
-                                    "ui:options": {
-                                        "inline": true,
-                                        "enumNames": ["Email", "Mail"],
-                                        "allowNullValue": true
-                                    }
                                 },
                                 "dateOfBirth": {
                                     "ui:widget": "NewDateWidget"
