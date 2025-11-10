@@ -139,7 +139,7 @@ async function generateTypes() {
 
     try {
       await execAsync(
-        `npx openapi --input ${spec.path} --output ${outputDir} --exportCore false --exportServices false`
+        `npx openapi --input "${spec.path}" --output "${outputDir}" --exportCore false --exportServices false`
       );
     } catch (error) {
       console.error(`  ❌ Failed to generate types for ${spec.name}`);
