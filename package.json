@@ -10,7 +10,7 @@
     "clean": "node ./scripts/clean.mjs",
     "test": "turbo test",
     "pre-commit": ".husky/pre-commit",
-    "pre-push": ".husky/pre-push",
+    "pre-push": "turbo build --filter @zinnia/api-types && turbo build --filter @zinnia/xd-components && .husky/pre-push",
     "prepare": "husky install"
   },
   "devDependencies": {
