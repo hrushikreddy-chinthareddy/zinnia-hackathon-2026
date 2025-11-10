@@ -56,15 +56,9 @@ pnpm install
 
 ### Building the monorepo
 
-Each project in the monorepo should be built with `pnpm run build`. The `build` command is also a [`task`](https://turbo.build/repo/docs/crafting-your-repository/configuring-tasks) in the monorepo. Turbo will run `pnpm run build` for each project in the monorepo. The `build` is also setup to only build projects that have changes since the last commit.
+Each project in the monorepo should be built with `pnpm run build`. The `build` command is also a [`task`](https://turbo.build/repo/docs/crafting-your-repository/configuring-tasks) in the monorepo. Turbo will run `pnpm run build` for each project in the monorepo.
 
 To force build all projects in the monorepo ensure you are at the root of the monorepo:
-
-```bash
-pnpm run build:all
-```
-
-To build all projects in the monorepo that have changes since the last commit:
 
 ```bash
 pnpm run build
@@ -131,12 +125,6 @@ You should see a success message!
 #### Contributing
 
 - PRs should be opened off of dev and branches must use
-
-### Troubleshooting
-
-#### Error running tests due to `Cannot find module '../build/Release/canvas.node'`
-
-You may see this error when running tests (either independently or part of the git push). In order to fix you'll need to install some packages. Refer to [this article](https://flaviocopes.com/fix-node-canvas-error-pre-gyp-macos/) for steps to fix.
 
 ### Deploying the monorepo
 
