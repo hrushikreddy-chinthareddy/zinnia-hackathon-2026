@@ -15,8 +15,9 @@
       ]
     },
     "test": {
-      "outputs": ["coverage/**"],
-      "dependsOn": ["^build"]
+      "outputs": ["coverage/**", ".turbo/turbo-test.log"],
+      "dependsOn": ["^build"],
+      "cache": true
     },
     "lint": {
       "dependsOn": ["^build", "^lint"]

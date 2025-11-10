@@ -9,7 +9,12 @@ const rootDir = path.resolve(__dirname, '..');
 
 const patterns = ['.next', 'node_modules', 'dist', '.turbo', 'build'];
 
-async function findDirectories(dir, targetName, maxDepth = 3, currentDepth = 0) {
+async function findDirectories(
+  dir,
+  targetName,
+  maxDepth = 3,
+  currentDepth = 0
+) {
   if (currentDepth >= maxDepth) {
     return [];
   }
@@ -39,7 +44,12 @@ async function findDirectories(dir, targetName, maxDepth = 3, currentDepth = 0) 
       }
 
       // Recurse into subdirectories
-      const subResults = await findDirectories(fullPath, targetName, maxDepth, currentDepth + 1);
+      const subResults = await findDirectories(
+        fullPath,
+        targetName,
+        maxDepth,
+        currentDepth + 1
+      );
       results.push(...subResults);
     }
   } catch (error) {
@@ -53,22 +63,29 @@ async function findDirectories(dir, targetName, maxDepth = 3, currentDepth = 0) 
 }
 
 async function clean() {
+  const startTime = performance.now();
   console.log('🧹 Cleaning build artifacts and dependencies...\n');
 
-  for (const pattern of patterns) {
-    const matches = await findDirectories(rootDir, pattern);
+  // Find and delete all patterns in parallel
+  await Promise.all(
+    patterns.map(async (pattern) => {
+      const matches = await findDirectories(rootDir, pattern);
 
-    if (matches.length > 0) {
-      console.log(`Removing ${matches.length} ${pattern} director${matches.length === 1 ? 'y' : 'ies'}...`);
-      await Promise.all(
-        matches.map((match) =>
-          fs.rm(match, { recursive: true, force: true })
-        )
-      );
-    }
-  }
+      if (matches.length > 0) {
+        console.log(
+          `Removing ${matches.length} ${pattern} director${matches.length === 1 ? 'y' : 'ies'}...`
+        );
+        await Promise.all(
+          matches.map((match) => fs.rm(match, { recursive: true, force: true }))
+        );
+      }
+    })
+  );
 
+  const endTime = performance.now();
+  const duration = ((endTime - startTime) / 1000).toFixed(2);
   console.log('\n✅ Clean complete!');
+  console.log(`⏱️  Total time: ${duration}s`);
 }
 
 clean().catch((error) => {
