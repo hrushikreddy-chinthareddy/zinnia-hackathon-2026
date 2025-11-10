@@ -1,14 +1,17 @@
 import { getSession } from '@auth0/nextjs-auth0';
+import { AxiosResponse } from 'axios';
 
-import { formatSSN } from '@deps/helpers/string.helpers';
 import {
+    apiServerBaseUrl,
     enterpriseSearchApiServerUrl,
     policyApiBaseUrl,
 } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import { CheckTupleResponse } from '@deps/types/fga';
 import { PolicyReferenceSearchResponse } from '@deps/types/search';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { policySearchResponseSanitizer } from '@deps/utils/sanitizers';
 import {
     logTrace,
     logWarn,
@@ -31,6 +34,7 @@ export default withAuthAndLogging(
             const now = performance.now();
             const session = await getSession(req, res);
             const accessToken = session?.accessToken;
+            const { id, planCode } = req.query;
 
             const { offset = 0, limit = 5, sortBy, sortOrder } = req.query;
 
@@ -59,6 +63,21 @@ export default withAuthAndLogging(
                 ...loggingContext,
                 url: searchUrl,
             });
+
+            const unmaskingResponse = await serverApi.post<
+                any,
+                AxiosResponse<CheckTupleResponse>
+            >(
+                `${apiServerBaseUrl}/fga/v1/check`,
+                {
+                    user: `party:${session?.user?.partyId}`,
+                    relation: 'unmask_pii',
+                    object: `policy:${id}_${planCode}`,
+                },
+                { authorization: 'Bearer ' + session?.accessToken },
+                loggingContext
+            );
+
             const { data: searchResponse } =
                 await serverApi.post<PolicyReferenceSearchResponse>(
                     searchUrl,
@@ -68,15 +87,19 @@ export default withAuthAndLogging(
                     },
                     loggingContext
                 );
+
             logTrace('policySearch::complete', {
                 ...loggingContext,
                 url: searchUrl,
                 duration: performance.now() - now,
             });
-            const sanitized = searchResponse.results.map((party) => {
-                return { ...party, ssn: formatSSN(party.ssn) };
-            });
-            res.json({ ...searchResponse, results: sanitized });
+
+            // Do not show full SSN if the user is not authorized to view it
+            const masker = unmaskingResponse.data?.allowed
+                ? searchResponse
+                : policySearchResponseSanitizer(searchResponse);
+
+            res.json(masker);
         } catch (e) {
             logWarn('policy search route handler:: something went wrong', {
                 ...loggingContext,

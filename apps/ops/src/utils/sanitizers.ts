@@ -32,7 +32,10 @@ import {
     AgentEmail,
     AgentPhone,
 } from '@deps/types/agents';
-import { CaseSearchResponse } from '@deps/types/search';
+import {
+    CaseSearchResponse,
+    PolicyReferenceSearchResponse,
+} from '@deps/types/search';
 
 import {
     logErrorWithoutContext,
@@ -194,6 +197,30 @@ export const policyResponseSanitizer = (
         throw new ApiError(
             500,
             `policyResponseSanitizer::error sanitizing policyResponse: ${
+                (e as Error).message
+            }`
+        );
+    }
+};
+
+export const policySearchResponseSanitizer = (
+    policySearchResponse: PolicyReferenceSearchResponse
+): PolicyReferenceSearchResponse => {
+    try {
+        const results = policySearchResponse.results.map((party) => {
+            return { ...party, ssn: formatSSN(party.ssn) };
+        });
+        return { ...policySearchResponse, results };
+    } catch (e) {
+        logErrorWithoutContext(
+            'sanitizers::policySearchResponseSanitizer::error',
+            {
+                ...parseErrorInformation(e),
+            }
+        );
+        throw new ApiError(
+            500,
+            `policySearchResponseSanitizer::error sanitizing policySearchResponse: ${
                 (e as Error).message
             }`
         );
