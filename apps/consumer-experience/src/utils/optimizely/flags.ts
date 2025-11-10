@@ -5,7 +5,6 @@ export enum FEATURE_FLAGS {
   TRANSACTION_PARTIAL_WITHDRAWAL_ONETIME = 'transaction_partial_withdrawal_onetime',
   TRANSACTION_SYSTEMATIC_PREMIUM = 'transaction_systematic_premium',
   WELLABE_AUTH_TOKENS = 'wellabe_auth_tokens',
-  ENTERPRISE_POLICY_SEARCH = 'enterprise_policy_search',
   ENTERPRISE_CASE_SEARCH = 'enterprise_case_search',
   TRANSACTION_FULL_SURRENDER = 'transaction_full_surrender',
   EVERLY_CHILD_RIDER = 'everly_child_rider',
