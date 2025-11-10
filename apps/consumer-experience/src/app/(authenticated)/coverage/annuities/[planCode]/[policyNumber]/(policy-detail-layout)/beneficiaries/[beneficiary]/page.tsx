@@ -12,14 +12,12 @@ import { Emails } from '@/components/person-data/Emails';
 import { FullName } from '@/components/pii/FullName';
 import { Name } from '@/components/pii/Name';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { getBeneficiary } from '@/services/policy';
 import {
   isNullEmptyOrUndefined,
   filterItemsWithPastEndDate,
 } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { toSentenceCase } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARY);
@@ -47,8 +45,6 @@ export default async function Beneficiary({
   const policyNumber = params.policyNumber || '';
   const partyId = params.beneficiary || '';
 
-  const flags = await getFeatureFlags();
-  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
   const loggingContext = await buildCommonLogContext();
   const { data, error } = await getBeneficiary(
     {
@@ -82,15 +78,12 @@ export default async function Beneficiary({
             <Addresses
               addresses={currentAddresses as Address[]}
               partyId={partyId}
-              allowAddressChanges={allowAddressChanges}
             />
           </div>
         );
       }
     }
-    if (!allowAddressChanges) {
-      return null;
-    }
+
     // If there are no addresses, show the add address button and set defaultAddress to true
     return (
       <>

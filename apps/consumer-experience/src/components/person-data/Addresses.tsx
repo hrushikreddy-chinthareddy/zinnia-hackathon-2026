@@ -120,7 +120,7 @@ const AddressGroup = ({
 export const Addresses = ({
   addresses,
   partyId,
-  allowAddressChanges,
+  allowAddressChanges = true,
 }: AddressProps) => {
   const residentialAddresses = addresses?.filter(
     address => address.addressType === AddressType.RESIDENCE

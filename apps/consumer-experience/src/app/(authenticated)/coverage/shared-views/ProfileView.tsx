@@ -49,7 +49,6 @@ export const ProfileView = async ({
     flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
   const showFarmersPaymentus =
     flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
-  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
   const { data } = await getCarrierConfig(commonLoggingContext);
 
@@ -74,7 +73,6 @@ export const ProfileView = async ({
         planCode={planCode}
         policyNumber={policyNumber}
         initialProfileData={profileData}
-        allowAddressChanges={allowAddressChanges}
         lineOfBusiness={lineOfBusiness}
       />
     );
