@@ -218,6 +218,10 @@ body {
             font: var(--typography-mobile-headline-1-m);
         }
     }
+    .text-tooltip {
+        color: var(--color-base-icon-icon-action-text-link);
+    }
+
     .subtitle {
         font: var(--typography-titles-subtitle);
     }
