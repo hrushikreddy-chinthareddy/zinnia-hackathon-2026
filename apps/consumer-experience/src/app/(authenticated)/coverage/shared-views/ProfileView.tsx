@@ -45,7 +45,6 @@ export const ProfileView = async ({
 
   const showFarmersPaymentus =
     flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
-  const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
   const { data } = await getCarrierConfig(commonLoggingContext);
 
   const loggingContext = await buildCommonLogContext();
@@ -197,7 +196,7 @@ export const ProfileView = async ({
               />
             </p>
           </FieldData>
-          {showParties && parties()}
+          {parties()}
         </div>
 
         {addresses()}
