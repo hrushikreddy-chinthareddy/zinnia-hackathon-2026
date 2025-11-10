@@ -93,6 +93,10 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                         type: transactionType,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={[
+                        Processes.PartialWithdrawal,
+                        Processes.FullSurrender,
+                    ]}
                 />
             ),
             screenReaderLabel: startLabel,

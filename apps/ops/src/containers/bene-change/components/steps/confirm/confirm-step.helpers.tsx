@@ -479,7 +479,7 @@ export const buildReRegRequestBody = ({
         data = {
             ...DEFAULT_PAYLOAD,
             businessKey: document?.documentNumber,
-            correlationid: uuid4(),
+            correlationid: formData.correlationId || uuid4(),
             onbaseCaseId: document?.caseId,
             caseId: formData?.caseId ?? null,
             documentDate: document

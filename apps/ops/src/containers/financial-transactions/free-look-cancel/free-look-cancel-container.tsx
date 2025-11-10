@@ -1,4 +1,5 @@
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -39,13 +40,18 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const summaryLabel = t('withdrawals.summary.label');
     const confirmLabel = t('withdrawals.confirm.label');
 
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
+
     const steps: Step[] = [
         {
             component: (
                 <StartStep
                     parentPage={ParentPage.Withdrawals}
                     policy={policy}
-                    processType={Processes.NewBusiness}
+                    processType={Processes.Withdrawal}
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
@@ -53,6 +59,8 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                         type: TransactionType.FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={[Processes.FreeLookCancellation]}
+                    correlationId={correlationIdFromRoute}
                 />
             ),
             screenReaderLabel: startLabel,

@@ -2983,7 +2983,8 @@
                 "premium source": "Fuente de Financiamiento: {{label}}",
                 "re-illustration": "Re-Ilustración: {{label}}",
                 "linked case": "Caso vinculado: {{label}}",
-                "bene": "Notifier {{label}}"
+                "bene": "Notifier {{label}}",
+                "beneficiary": "Beneficiario {{label}}"
             },
             "reviewIssues": "Revisión",
             "suitabilityReview": "idoneidad",
@@ -5248,10 +5249,12 @@
             }
         },
         "caseDocumentSelect": {
-            "documentNumber": "Número de documento: ",
-            "label": "¿De qué documento estás trabajando?",
-            "noDocumentAssistiveText": "Si continuas sin una selección de documento, no podemos actualizar OnBase por ti.",
-            "processWithoutDocument": "Procesar sin un documento"
+            "documentNumber": "N mero de documento: ",
+            "label": "  Documento est s trabajando?",
+            "noDocumentAssistiveText": "Si contin a sin selecci n de documento, no podemos actualizar OnBase por ti.",
+            "processWithoutDocument": "Procesar sin un documento",
+            "noCaseSelection": "Seleccione un caso abierto para continuar o proceder sin uno",
+            "caseSelectionAssistiveText": "Cualquier informaci n existente en este caso se actualizar  con los detalles proporcionados aqu "
         },
         "transactionCta": {
             "checkingRules": "Estamos comprobando las reglas comerciales de esta póliza...",
