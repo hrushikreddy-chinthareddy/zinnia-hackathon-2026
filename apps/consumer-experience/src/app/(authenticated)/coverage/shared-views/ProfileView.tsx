@@ -1,4 +1,3 @@
-import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
@@ -43,28 +42,21 @@ export const ProfileView = async ({
 }) => {
   const flags = await getFeatureFlags();
   const commonLoggingContext = await buildCommonLogContext();
-  const showCommunicationPreferences =
-    flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
 
   const showFarmersPaymentus =
     flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
   const { data } = await getCarrierConfig(commonLoggingContext);
 
-  let preferencesData = [] as EDeliveryPreferenceModel[];
   const loggingContext = await buildCommonLogContext();
 
-  if (showCommunicationPreferences) {
-    const { data } = await getPreferencesByPlanCode(
-      {
-        planCode,
-        policyNumber,
-      },
-      loggingContext
-    );
-
-    preferencesData = data;
-  }
+  const { data: preferencesData } = await getPreferencesByPlanCode(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   const addresses = () => {
     return (
@@ -211,7 +203,7 @@ export const ProfileView = async ({
         {addresses()}
         {phone()}
         {email()}
-        {showCommunicationPreferences && communicationPreferences()}
+        {communicationPreferences()}
         {bank()}
       </div>
     </div>

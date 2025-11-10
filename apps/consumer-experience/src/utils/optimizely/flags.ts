@@ -1,7 +1,6 @@
 export enum FEATURE_FLAGS {
   AMP_TRANSACTION_SUMMARY = 'amp_transaction_summary',
   DOCUMENTS_V3 = 'documents-v3-update',
-  COMMUNICATION_PREFERENCES = 'communication_preferences',
   TRANSACTION_NOTIFICATIONS = 'transaction_notifications',
   POLICY_OWNER_PROFILE_PARTIES = 'policy_owner_profile_parties',
   FARMERS_PAYMENTUS = 'farmers_paymentus',
