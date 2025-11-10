@@ -45,8 +45,7 @@ export const ProfileView = async ({
   const commonLoggingContext = await buildCommonLogContext();
   const showCommunicationPreferences =
     flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
-  const allowBankingChanges =
-    flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
+
   const showFarmersPaymentus =
     flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
   const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
@@ -130,7 +129,6 @@ export const ProfileView = async ({
         <BankList
           planCode={planCode}
           policyNumber={policyNumber}
-          allowBankingChanges={allowBankingChanges}
           initialProfileData={profileData}
           lineOfBusiness={lineOfBusiness}
           verifyIdentityRequired={data?.payment.verifyIdentityRequired}
