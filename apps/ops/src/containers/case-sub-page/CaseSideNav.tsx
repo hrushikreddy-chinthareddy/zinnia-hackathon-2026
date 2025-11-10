@@ -104,12 +104,12 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
     return (
         <div className="w-full gap-2 border-gray-100 p-4">
             <div className="flex flex-row gap-2">
-                <div className="h-12 w-12 shrink-0 rounded border-2 border-gray-200">
+                <div className="flex items-center justify-center h-12 w-12 shrink-0 rounded border-2 border-gray-200">
                     <Image
                         src={imageSrc}
                         alt={`${data?.carrier} icon`}
-                        width={48}
-                        height={48}
+                        width={24}
+                        height={24}
                         role="presentation"
                         aria-hidden="true"
                     />
