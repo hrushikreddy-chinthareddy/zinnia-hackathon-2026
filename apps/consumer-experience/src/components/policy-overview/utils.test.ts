@@ -29,9 +29,12 @@ describe('upcomingPaymentDetails', () => {
       });
 
       expect(result).toEqual({
-        amount: pendingLapseAmount,
-        label: 'Premium due',
-        caption: `Due by 12/31/2023`,
+        scheduledPayment: undefined,
+        premiumDue: {
+          amount: pendingLapseAmount,
+          label: 'Premium due',
+          caption: `Due by 12/31/2023`,
+        },
       });
     });
 
@@ -188,9 +191,12 @@ describe('upcomingPaymentDetails', () => {
       });
 
       expect(result).toEqual({
-        amount: 0,
-        label: 'Premium due',
-        caption: undefined,
+        scheduledPayment: undefined,
+        premiumDue: {
+          amount: 0,
+          label: 'Premium due',
+          caption: undefined,
+        },
       });
     });
 
