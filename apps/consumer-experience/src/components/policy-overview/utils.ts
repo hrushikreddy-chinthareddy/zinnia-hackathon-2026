@@ -135,6 +135,7 @@ export const upcomingPaymentDetails = ({
   }
 
   if (
+    policyStatus !== PolicyStatus.PENDINGLAPSE &&
     upcomingPaymentValid &&
     upcomingPaymentAmount &&
     upcomingPaymentAmount > 0
