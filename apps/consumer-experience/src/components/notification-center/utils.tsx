@@ -31,10 +31,17 @@ export const acknowledgeNotifications = (
   return newNotifications;
 };
 
+const shownStatuses = [
+  CaseStatus.COMPLETED,
+  CaseStatus.CANCELED,
+  CaseStatus.EXCEPTION,
+];
+
 export const parseNotifications = (
   caseItem: CaseInstanceSummary
 ): NotificationCenterNotification | null => {
   if (!caseItem.id) return null;
+  if (!shownStatuses.includes(caseItem.caseStatus as CaseStatus)) return null;
   const id = caseItem.id;
   const dateString = caseItem.updatedAt || caseItem.createdAt;
   if (!dateString) return null;
