@@ -212,7 +212,8 @@ export function usePartyFields(
 
     const renderField = (
         field: PartyFieldConfig,
-        isFormStateReadOnly?: boolean
+        isFormStateReadOnly?: boolean,
+        ownerInfoForBene?: boolean
     ): JSX.Element | null => {
         switch (field.fieldName) {
             case PartyFields.FirstName:
@@ -264,7 +265,11 @@ export function usePartyFields(
                 return (
                     <div key={field.fieldName}>
                         {dobField({
-                            label: field.fieldLabel,
+                            label:
+                                ownerInfoForBene &&
+                                party.partyType == PartyType.TRUST
+                                    ? (t('trustDate') as string)
+                                    : field.fieldLabel,
                             isFormStateReadOnly,
                         })}
                     </div>
@@ -317,6 +322,7 @@ interface SinglePartyProps {
     onDataChange: (value: Party) => void;
     isFormStateReadOnly?: boolean;
     partyType?: PartyType;
+    ownerInfoForBene?: boolean;
 }
 
 export function SingleParty({
@@ -326,6 +332,7 @@ export function SingleParty({
     isFormStateReadOnly,
     onDataChange,
     partyType,
+    ownerInfoForBene,
 }: SinglePartyProps) {
     const { renderField, currentParty } = usePartyFields(formParty, formErrors);
 
@@ -348,7 +355,9 @@ export function SingleParty({
                     }
                     return true;
                 })
-                .map((field) => renderField(field, isFormStateReadOnly))}
+                .map((field) =>
+                    renderField(field, isFormStateReadOnly, ownerInfoForBene)
+                )}
         </div>
     );
 }

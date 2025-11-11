@@ -438,6 +438,7 @@ export default function OwnerInformation({
                                     fields={config.fields}
                                     isFormStateReadOnly={isFormStateReadOnly}
                                     formParty={party}
+                                    ownerInfoForBene={true}
                                     formErrors={{
                                         name: formErrors[
                                             `name${party?.partyRoleType}`
