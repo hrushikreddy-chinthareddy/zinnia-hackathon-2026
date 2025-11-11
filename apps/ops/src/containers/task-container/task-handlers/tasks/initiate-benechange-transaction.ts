@@ -119,8 +119,6 @@ const formatParties = (policyResponse: PolicyResponse) => {
                 : null,
         fullName: party?.fullName || null,
         dateOfBirth: party?.dateOfBirth ?? null,
-        trustDate:
-            party?.partyType === 'TRUST' ? party?.trustDate ?? null : null,
         suffix: party?.suffix ?? null,
         trustType: party?.trustType ?? null,
         addresses: getAddresses(party?.addresses ?? []),

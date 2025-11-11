@@ -435,8 +435,8 @@
                                                             ],
                                                             "default": null
                                                         },
-                                                        "trustDate": {
-                                                            "title": "Trust Date",
+                                                        "dateOfBirth": {
+                                                            "title": "Trust date",
                                                             "type": [
                                                                 "string",
                                                                 "null"
@@ -549,7 +549,6 @@
                                     "firstName",
                                     "middleName",
                                     "lastName",
-                                    "trustDate",
                                     "dateOfBirth",
                                     "identifications",
                                     "emails",
@@ -768,9 +767,6 @@
                                         ]
                                     },
                                     "ui:placeholder": "Select trust type"
-                                },
-                                "trustDate": {
-                                    "ui:widget": "NewDateWidget"
                                 },
                                 "dateOfBirth": {
                                     "ui:widget": "NewDateWidget"
