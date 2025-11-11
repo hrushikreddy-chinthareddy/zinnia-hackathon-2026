@@ -1,125 +1,46 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
   "globalEnv": ["NODE_ENV"],
   "tasks": {
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "dependsOn": ["^build"],
       "outputs": [
-        ".next/**",
-        "!.next/cache/**",
+        "build/**",
+        ".vercel/**",
         "dist/**",
-        "!.next/standalone/apps/ops/src/jsonschema-mock-service/**"
+        ".next/**",
+        "!.next/cache/**"
       ]
     },
-    "consumer-experience#build": {
-      "env": [
-        "AUTH0_AUDIENCE",
-        "AUTH0_CLIENT_ID",
-        "AUTH0_CLIENT_SECRET",
-        "AUTH0_CLIENT_ID_WELB",
-        "AUTH0_CLIENT_SECRET_WELB",
-        "AUTH0_COOKIE_DOMAIN",
-        "AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW",
-        "AUTH0_COOKIE_SECURE",
-        "AUTH0_ISSUER_BASE_URL",
-        "AUTH0_MANAGEMENT_API_AUDIENCE",
-        "AUTH0_SCOPE",
-        "AUTH0_SESSION_NAME",
-        "CHECK_SESSION_THRESHOLD_IN_MINUTES",
-        "FARMERS_API_TOKEN_SIGNING_KEY",
-        "FARMERS_IFRAME_KEY",
-        "JWT_SECRET",
-        "NEXT_PUBLIC_AUTH0_BASE_URL",
-        "NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN",
-        "NEXT_PUBLIC_AUTH0_COOKIE_DOMAIN_MYPOLICYVIEW",
-        "NEXT_PUBLIC_BACKEND_URL",
-        "NEXT_PUBLIC_BASE_URL",
-        "NEXT_PUBLIC_DATADOG_ENV",
-        "NEXT_PUBLIC_DATADOG_APPLICATION_ID",
-        "NEXT_PUBLIC_DATADOG_CLIENT_TOKEN",
-        "NEXT_PUBLIC_GIT_SHA",
-        "NEXT_PUBLIC_MOCK_API_REQUEST",
-        "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY",
-        "NEXT_PUBLIC_FARMERS_API_BASE_URL",
-        "NODE_ENV",
-        "OPTIMIZELY_SDK_KEY",
-        "PINO_LOG_LEVEL",
-        "SESSION_DURATION_IN_MINUTES",
-        "VERCEL_BRANCH_URL",
-        "NEXT_PUBLIC_SSO_FARMERS_REDIRECT_BASE_URL"
-      ],
-      "dependsOn": ["^build"]
+    "test": {
+      "outputs": ["coverage/**", ".turbo/turbo-test.log"],
+      "dependsOn": ["^build"],
+      "cache": true
     },
-    "ops#build": {
-      "env": [
-        "ACCESS_MANAGEMENT_URL",
-        "AUTH0_SECRET",
-        "AUTH0_BASE_URL",
-        "AUTH0_CLIENT_ID",
-        "AUTH0_CLIENT_SECRET",
-        "AUTH0_ISSUER_BASE_URL",
-        "AUTH0_SESSION_ROLLING_DURATION",
-        "NEXT_PUBLIC_ACCESS_MANAGEMENT_URL",
-        "NEXT_PUBLIC_APEX_URL",
-        "NEXT_PUBLIC_BACKEND_URL",
-        "NEXT_PUBLIC_BASE_URL",
-        "NEXT_PUBLIC_DATADOG_APPLICATION_ID",
-        "NEXT_PUBLIC_DATADOG_BROWSER_APPLICATION_ID",
-        "NEXT_PUBLIC_DATADOG_CLIENT_TOKEN",
-        "NEXT_PUBLIC_DATADOG_ENV",
-        "NEXT_PUBLIC_GIT_SHA",
-        "NEXT_PUBLIC_FARMERS_APEX_REDIRECT_URL",
-        "NEXT_PUBLIC_GOOGLEANALYTICS_ENV",
-        "NEXT_PUBLIC_MOCK_API_REQUEST",
-        "NEXT_PUBLIC_S3_BUCKET_BASE_URL",
-        "NEXT_PUBLIC_SE2_BACKEND_URL",
-        "NEXT_PUBLIC_AUTH0_AUDIENCE",
-        "NEXT_PUBLIC_SEGMENT_ANALYTICS_KEY",
-        "NEXT_PUBLIC_THEME",
-        "NODE_ENV",
-        "OPEN_AI_API_KEY",
-        "OPTIMIZELY_SDK_KEY",
-        "PINO_LOG_LEVEL",
-        "TOPPAN_MERRILL_POST_URL",
-        "WELLABE_TOPPAN_MERRILL_KEY",
-        "CALL_LOG_X_API_KEY",
-        "CARRIER_ROLE",
-        "NEXT_PUBLIC_FAVICON_PATH"
-      ],
-      "dependsOn": ["^build"]
+    "lint": {
+      "dependsOn": ["^build", "^lint"]
     },
-    "@zinnia/utils#build": {
-      "dependsOn": ["^build"]
+    "check-types": {
+      "dependsOn": ["^build", "^check-types"]
     },
-    "lint": {},
-    "prettier": {},
-    "check-types": {},
-    "prettier:fix": {},
-    "consumer-experience#lint": {
-      "dependsOn": ["^lint"]
+    "prettier": {
+      "dependsOn": []
+    },
+    "pre-commit": {
+      "cache": false
+    },
+    "pre-push": {
+      "cache": false
     },
     "dev": {
+      "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
     },
-    "pre-commit": {},
-    "pre-push": {},
-    "consumer-experience#dev": {
-      "dependsOn": ["^build"]
-    },
-    "@zinnia/utils#dev": {
-      "dependsOn": ["^build"]
-    },
-    "ops#test": {
-      "dependsOn": ["^build"]
-    },
-    "test": {},
-    "build-storybook": {},
-    "consumer-experience#test": {
-      "dependsOn": ["^build"]
-    },
-    "ops#dev": {
-      "dependsOn": ["^build"]
+    "clean": {
+      "cache": false
     }
   }
 }
