@@ -1,5 +1,7 @@
 import { LiteralUnion, ValueOf } from 'type-fest';
 
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
+
 import { ProductTypes } from './product';
 
 export interface IllustraionsClientCaseSearchResponse {
@@ -23,6 +25,15 @@ export interface IllustrationsClientCase {
     productTypes: string[];
     agencyId: string;
     agencyName: string;
+    originalFaceAmount?: number;
+    isMec?: boolean;
+    transactionType?: TransactionType;
+}
+
+export enum TransactionType {
+    REPLACEMENT = 'REPLACEMENT',
+    NONREPLACEMENT = 'NONREPLACEMENT',
+    CONVERSION = 'CONVERSION',
 }
 
 export interface IllustrationSummary {
@@ -53,8 +64,9 @@ export interface IllustrationInsuredDetails {
     state?: string;
     illustrateAtOlderAge?: boolean;
     issueAge?: number;
-    riskClass?: string;
+    riskClass?: string; // TODO: remove in favor of underwritingClass
     riskClassCode?: number;
+    underwritingClass?: UnderwritingClass;
 }
 
 export interface ClientCaseSearchInputs {

@@ -181,7 +181,7 @@ const SelectComponent = ({
     );
 
     const contentClasses =
-        'hide-scrollbar overflow-y-scroll rounded-lg bg-white shadow-elevation-light-16 mt-2';
+        'overflow-y-auto hide-scrollbar rounded-lg bg-white shadow-elevation-light-16 mt-2';
 
     const baseDefaultVariantClass = 'text-gray-900 ';
     const baseInactiveVariantClass =
