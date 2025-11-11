@@ -99,7 +99,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
                 },
             }),
             isConversion,
-            ...(clientCase.transactionType === TransactionType.CONVERSION && {
+            ...(isConversion && {
                 maxConversionFaceAmount: clientCase.originalFaceAmount,
                 isMec: clientCase.isMec || false,
                 preventMec: !clientCase.isMec,

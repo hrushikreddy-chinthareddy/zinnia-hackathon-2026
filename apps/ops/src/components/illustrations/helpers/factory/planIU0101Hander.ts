@@ -576,8 +576,6 @@ function createIllustrationPayload(
         },
     };
 
-    const isConversion = values.isConversion;
-
     const output = {
         calculationType: values.illustrationType,
         source: FARMERS_HARDCODED_DATA.source,
