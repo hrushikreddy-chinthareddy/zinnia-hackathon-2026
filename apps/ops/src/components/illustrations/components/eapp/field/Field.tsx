@@ -301,6 +301,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         onChange={onAnswerChangeForFieldProps}
                         fieldType={FieldDataTypes.Number}
                         fieldSize={FieldSize.Small}
+                        disabled={field.disabled}
                     />
                 </FieldContainer>
             );
@@ -323,6 +324,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         onChange={onAnswerChangeForFieldProps}
                         fieldType={FieldDataTypes.Value}
                         fieldSize={FieldSize.Small}
+                        disabled={field.disabled}
                     />
                 </FieldContainer>
             );
@@ -353,6 +355,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                 label: o.text,
                 value: o.id,
                 ariaLabel: o.text,
+                key: `${o.id}-${o.text}`,
             }));
 
             return (
