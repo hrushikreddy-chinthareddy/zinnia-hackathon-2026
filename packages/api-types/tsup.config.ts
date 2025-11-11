@@ -1,28 +1,31 @@
 import { defineConfig, type Options } from 'tsup';
+import { readdirSync, existsSync } from 'fs';
+import { join } from 'path';
+
+function getGeneratedTypeEntries() {
+  const generatedTypesDir = join(process.cwd(), 'src/generated-types');
+
+  if (!existsSync(generatedTypesDir)) {
+    return [];
+  }
+
+  const entries = readdirSync(generatedTypesDir, { withFileTypes: true });
+
+  return entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => `src/generated-types/${entry.name}`);
+}
 
 export default defineConfig((options: Options) => ({
-  entryPoints: [
-    'src/index.ts',
-    'src/generated-types/sor',
-    'src/generated-types/search',
-    'src/generated-types/documents',
-    'src/generated-types/documents-v3',
-    'src/generated-types/bpm',
-    'src/generated-types/funds',
-    'src/generated-types/case',
-    'src/generated-types/case-v2',
-    'src/generated-types/transaction-store',
-    'src/generated-types/preferences',
-    'src/generated-types/partyreference',
-    'src/generated-types/analytics',
-    'src/generated-types/contact-management',
-    'src/generated-types/knowledgebase',
-    'src/generated-types/correspondence',
-    'src/generated-types/aggregation',
-    'src/generated-types/pom',
-  ],
+  entryPoints: ['src/index.ts', ...getGeneratedTypeEntries()],
   clean: true,
   dts: true,
   format: ['cjs'],
+  splitting: false,
+  treeshake: false,
+  minify: false,
+  sourcemap: false,
+  target: 'node20',
+  skipNodeModulesBundle: true,
   ...options,
 }));
