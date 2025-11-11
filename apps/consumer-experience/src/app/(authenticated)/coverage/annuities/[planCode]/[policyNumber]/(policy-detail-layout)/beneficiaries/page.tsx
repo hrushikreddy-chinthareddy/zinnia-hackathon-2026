@@ -1,7 +1,9 @@
 import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
+import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
 import { BeneficiariesView } from '@/app/(authenticated)/coverage/shared-views/beneficiaries-view/BeneficiariesView';
+import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
@@ -25,13 +27,25 @@ export default async function Beneficiaries({
   const planCode = params.planCode || '';
   const policyNumber = params.policyNumber || '';
   const loggingContext = await buildCommonLogContext();
-  const { data } = await getBeneficiaries(
+  const { data, error } = await getBeneficiaries(
     {
       planCode,
       policyNumber,
     },
     loggingContext
   );
+
+  if (error || data?.beneficiaries?.length === 0) {
+    return (
+      <div className="space-mb-gap-lg">
+        <NoDataAvailable
+          iconType={IconType.CIRCLE_USER}
+          message="There is currently no beneficiary data available."
+          correlationId={error?.correlationId}
+        />
+      </div>
+    );
+  }
 
   const groupedBenes = data?.beneficiaries?.reduce(
     (grouped, bene) => {
