@@ -203,8 +203,14 @@ export const mapPolicyTimelineValues = (
     policy: PolicyDetails,
     t: TFunction
 ): PolicyTimelineCardData => {
-    const { policyTerm, policyYear, fixedCostPeriod, issueDate, maturityDate } =
-        policy;
+    const {
+        policyTerm,
+        policyYear,
+        fixedCostPeriod,
+        issueDate,
+        maturityDate,
+        deliveryDate,
+    } = policy;
 
     const freeLookFeature = policy.features.getFirstFeatureByType(
         FeatureType.FREELOOK
@@ -243,6 +249,7 @@ export const mapPolicyTimelineValues = (
         policyAge: toSentenceCase(policyYear?.toString()),
         policyLength,
         policyYearsLeft,
+        deliveryDate: convertKebabedDateString(deliveryDate),
     };
 };
 

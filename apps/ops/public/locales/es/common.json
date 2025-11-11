@@ -4564,7 +4564,8 @@
                 "policyTimeline": "Cronología de la póliza",
                 "freeLookEndDate": "Fecha de finalización del look gratuito",
                 "policyLength": "Duración de la póliza",
-                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado."
+                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado.",
+                "deliveryDate": "Fecha de entrega"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Correo electrónico del agente",
