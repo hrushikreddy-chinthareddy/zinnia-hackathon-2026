@@ -12,7 +12,7 @@ import {
     supportedExtensions,
 } from '@deps/models/case/document';
 import { getDocumentDownloadQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 export const isPreviewSupported = (
     document: PolicyDocument | MetadataSearchResponse

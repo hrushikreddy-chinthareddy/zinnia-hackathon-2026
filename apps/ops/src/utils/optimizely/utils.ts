@@ -3,7 +3,7 @@ import { TaskToProcessType, TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
 
 import { FEATURE_FLAGS, FeatureKeyIdentifier } from './flags';
-import { FeatureFlags } from './optimizely';
+import { FeatureFlags, FeatureFlagVariableType } from './types';
 
 export const isFormFeatureEnabled = (
     processType: ProcessType | TaskType,
@@ -38,4 +38,15 @@ export const isFastFeatureEnabled = (
 
 export const isSourceSystemLifeCad = (sourceSystem: string): boolean => {
     return sourceSystem === SorSystem.LifeCad.toLowerCase() ? true : false;
+};
+
+export const isFeatureFlagVariableActive = (
+    featureFlagVariables: FeatureFlagVariableType,
+    featureFlag: string,
+    key: string,
+    value: string
+): boolean => {
+    return (
+        featureFlagVariables?.[featureFlag]?.variables?.[key]?.[value] ?? false
+    );
 };
