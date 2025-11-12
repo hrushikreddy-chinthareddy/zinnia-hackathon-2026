@@ -2,27 +2,39 @@
 
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 
 import styles from './NotificationAlert.module.css';
+
 export const NotificationAlert: FC = () => {
   const [visible, setVisible] = useState(false);
+  const [isSticky, setIsSticky] = useState(false);
+  const [hasDismissed, setHasDimissed] = useState(false);
+  const notificationRef = useRef(null);
 
   useEffect(() => {
     setTimeout(() => {
-      setVisible(true);
+      if (!hasDismissed) {
+        setVisible(true);
+      }
     }, 5000);
-  });
+  }, [hasDismissed]);
+
+  const handleDismiss = () => {
+    setVisible(false);
+    setHasDimissed(true);
+  };
 
   return (
     <BannerAlert
+      // ref={notificationRef}
       className={clsx(styles.notificationAlert, {
         [styles.visible as string]: visible,
       })}
       icon={IconType.IN_PROGRESS}
       bodyText="This is a notification alert"
       canDismiss={true}
-      onDismiss={() => setVisible(false)}
+      onDismiss={handleDismiss}
       variant={BannerVariant.Information}
     />
   );
