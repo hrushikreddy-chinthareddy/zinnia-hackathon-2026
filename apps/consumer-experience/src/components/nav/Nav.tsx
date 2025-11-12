@@ -6,6 +6,7 @@ import styles from './Nav.module.css';
 import { NotificationIcon } from './NotificationIcon';
 import { DevMenu } from '../dev-menu/DevMenu';
 import { NavMenu } from '../nav-menu/NavMenu';
+import { NotificationAlert } from '../notification-alert/NotificationAlert';
 
 export async function Nav({
   planCode: _,
@@ -24,23 +25,28 @@ export async function Nav({
   const CarrierLogo = carrierConfig.image;
 
   return (
-    <nav className={styles.nav}>
-      <div className={styles.logoContainer}>
-        <DevMenu />
-        <Link
-          isInternal
-          prefetch
-          href={carrierConfig.homePageHref}
-          className="justify-self-start"
-          aria-label={carrierConfig.hrefAriaLabel}
-        >
-          <CarrierLogo {...carrierConfig.logoProps} data-testid="nav-logo" />
-        </Link>
+    <div style={{ position: 'relative' }}>
+      <nav className={styles.nav}>
+        <div className={styles.logoContainer}>
+          <DevMenu />
+          <Link
+            isInternal
+            prefetch
+            href={carrierConfig.homePageHref}
+            className="justify-self-start"
+            aria-label={carrierConfig.hrefAriaLabel}
+          >
+            <CarrierLogo {...carrierConfig.logoProps} data-testid="nav-logo" />
+          </Link>
+        </div>
+        <div className={styles.account}>
+          <NotificationIcon />
+          <NavMenu userName={userName} />
+        </div>
+      </nav>
+      <div className={styles.notificationAlertContainer}>
+        <NotificationAlert />
       </div>
-      <div className={styles.account}>
-        <NotificationIcon />
-        <NavMenu userName={userName} />
-      </div>
-    </nav>
+    </div>
   );
 }

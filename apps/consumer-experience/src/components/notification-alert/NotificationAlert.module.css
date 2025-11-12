@@ -1,0 +1,25 @@
+.notificationAlert {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.notificationAlert.visible {
+  opacity: 1;
+  animation: slideDown 0.5s forwards;
+}
+
+/* Keyframes for the slide-down animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
