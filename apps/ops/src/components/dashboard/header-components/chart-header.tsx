@@ -34,7 +34,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
                             <CircleInfoIcon
                                 height={'16px'}
                                 width={'16px'}
-                                className="text-tooltip"
+                                className="tooltip-primary"
                             />
                         }
                     >

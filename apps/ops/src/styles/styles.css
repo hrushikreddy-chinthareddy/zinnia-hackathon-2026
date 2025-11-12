@@ -218,7 +218,7 @@ body {
             font: var(--typography-mobile-headline-1-m);
         }
     }
-    .text-tooltip {
+    .tooltip-primary {
         color: var(--color-base-icon-icon-action-text-link);
     }
 
