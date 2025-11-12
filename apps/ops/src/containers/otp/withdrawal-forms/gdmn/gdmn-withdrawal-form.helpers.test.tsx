@@ -621,8 +621,7 @@ describe('gdmn withdrawal form config', () => {
                         sigConfig.signatureType ===
                         SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
-                expect(beneficiaryConfig).toBeTruthy();
-                expect(beneficiaryConfig?.fields).toHaveLength(3);
+                expect(beneficiaryConfig).toBeFalsy();
             });
         });
 

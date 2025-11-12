@@ -12,22 +12,13 @@ import {
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../utils';
 
 export const config = {
     api: {
         bodyParser: false,
     },
 };
-
-function sendSSE(
-    res: NextApiResponse,
-    type: SSEEventType,
-    payload: Record<string, any>
-) {
-    const data = JSON.stringify({ type, ...payload });
-    res.write(`event: message\ndata: ${data}\n\n`);
-    (res as any).flush?.();
-}
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse, loggingContext) => {
@@ -41,7 +32,7 @@ export default withAuthAndLogging(
         const { sessionId, question, clientId } = req.query;
         if (!sessionId || !question || !clientId) {
             logError(
-                'Missing sessionId, question, or clientId',
+                `Missing sessionId, question, or clientId:: sessionId=${sessionId}, question=${question}, clientId=${clientId}`,
                 loggingContext
             );
             return res
@@ -94,80 +85,39 @@ export default withAuthAndLogging(
             let full_response = '';
             let questionId = '';
             let responseId = '';
+            let definitiveAnswerFound = null;
+
+            const eventHandler = createSSEEventHandler(res, loggingContext, {
+                onToken: (content) => {
+                    full_response += content;
+                },
+                onComplete: (event) => {
+                    full_response = event.full_response;
+                    questionId = event.questionId;
+                    responseId = event.responseId;
+                    definitiveAnswerFound = event.definitiveAnswerFound;
+                },
+            });
 
             while (true) {
                 const { done, value } = await reader.read();
-                if (done) {
-                    logTrace('Upstream stream ended', loggingContext);
-                    break;
-                }
-                logTrace('Received upstream chunk', {
-                    length: value?.length,
-                    ...loggingContext,
-                });
+                if (done) break;
 
                 buffer += decoder.decode(value, { stream: true });
                 const parts = buffer.split('\n\n');
                 buffer = parts.pop() ?? '';
 
                 for (const part of parts) {
-                    const dataLine = part
-                        .split('\n')
-                        .find((line) => line.startsWith('data:'));
-                    if (!dataLine) continue;
-                    try {
-                        const jsonLine = dataLine.replace(/^data:\s*/, '');
-                        const event = JSON.parse(jsonLine);
-                        logTrace('Parsed upstream event', {
-                            type: event.type,
-                            ...loggingContext,
-                        });
-
-                        if (event.type === SSEEventType.STATUS) {
-                            sendSSE(res, SSEEventType.STATUS, {
-                                message: event.message,
-                            });
-                        } else if (event.type === SSEEventType.TOKEN) {
-                            sendSSE(res, SSEEventType.TOKEN, {
-                                content: event.content,
-                            });
-                            full_response += event.content;
-                        } else if (event.type === SSEEventType.SOURCES) {
-                            sendSSE(res, SSEEventType.SOURCES, {
-                                source_documents: event.source_documents,
-                            });
-                        } else if (event.type === SSEEventType.COMPLETE) {
-                            full_response = event.full_response;
-                            questionId = event.questionId;
-                            responseId = event.responseId;
-                            logTrace('Received COMPLETE event', loggingContext);
-                        } else if (event.type === SSEEventType.ERROR) {
-                            logError('Received ERROR event', {
-                                error: event.error,
-                                ...loggingContext,
-                            });
-                            sendSSE(res, SSEEventType.ERROR, {
-                                error: event.error,
-                            });
-                            res.end();
-                        }
-                    } catch (error) {
-                        logError('Bad upstream SSE line::chat-stream', {
-                            ...parseErrorInformation(error),
-                            ...loggingContext,
-                            raw: part,
-                        });
-                    }
+                    handleSSEChunk(part, eventHandler, loggingContext);
                 }
             }
-            logTrace('Sending final COMPLETE event', loggingContext);
             sendSSE(res, SSEEventType.COMPLETE, {
                 full_response,
                 questionId,
                 responseId,
+                definitiveAnswerFound,
             });
             res.end();
-            logTrace('Response stream ended', loggingContext);
         } catch (err: any) {
             logError('Proxy error::chat-stream', {
                 ...parseErrorInformation(err),

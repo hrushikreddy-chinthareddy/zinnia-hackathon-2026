@@ -25,6 +25,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyType } from '@deps/models/policy/sor-policy';
+import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
@@ -39,6 +40,7 @@ import {
 interface DeathClaimNotificationStepProps {
     policy: Policy;
     showNotification: boolean;
+    user: UserProfile;
 }
 
 export const checkNewPhone = (notifierPhone: any, party: any) => {
@@ -59,6 +61,7 @@ export const checkNewPhone = (notifierPhone: any, party: any) => {
 export const DeathClaimNotificationStep = ({
     policy,
     showNotification,
+    user,
 }: DeathClaimNotificationStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.deathClaimNotification',
@@ -167,7 +170,8 @@ export const DeathClaimNotificationStep = ({
             owners,
             beneficiaries,
             onbaseCaseId,
-            onbaseDocumentNumber
+            onbaseDocumentNumber,
+            user
         );
         browserLogInfo('DeathClaimNotifierStep::Submit claim payload', {
             payload,

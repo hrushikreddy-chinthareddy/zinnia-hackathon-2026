@@ -418,8 +418,8 @@ importers:
         specifier: ^6.0.0
         version: 6.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.53.1)(typescript@5.9.3)(vite@6.4.1(@types/node@18.11.18)(jiti@1.21.7)(less@4.4.2)(terser@5.44.1)(yaml@2.8.1))
       '@zinnia/form-engine-sdk':
-        specifier: 3.0.3
-        version: 3.0.3(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.5))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.9.3))
+        specifier: 3.1.0
+        version: 3.1.0(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.5))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.9.3))
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
@@ -6707,8 +6707,8 @@ packages:
       react: ^18.2.0 || ^19.0.0
       react-dom: ^18.2.0 || ^19.0.0
 
-  '@zinnia/form-engine-sdk@3.0.3':
-    resolution: {integrity: sha512-ILqK1frayzTTOJB7JRTmMt9cAcA5EBfZSsYMJLMrW2bEDSnfnWyh0o/okMhH5sH3sH9CD+ijOh9xyD4DIYMgug==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/3.0.3/4b21c06e7fdefc600af49edd6e11373fadb9dc87}
+  '@zinnia/form-engine-sdk@3.1.0':
+    resolution: {integrity: sha512-YZUPtSOa/AP/5S+aoODLM2Ert2sbQ2UxbFr7EbySmFm1hMy8GHI99fYm8EWhGLYvZKpZLAfGkpVZ8vOG2Gu1Ag==, tarball: https://npm.pkg.github.com/download/@zinnia/form-engine-sdk/3.1.0/2850a23c56effd82a293dcb4c90f2924adb59088}
 
   '@zinnia/prettier-config@0.0.1':
     resolution: {integrity: sha512-H/90EcMEPKpyeXV5MQJQMqcSaKfvNKqi9Os90sBqp6dEkSaB8vdnTMKdJ6BJUSAr6jwvu/aSXkNintZFYuwQng==, tarball: https://npm.pkg.github.com/download/@zinnia/prettier-config/0.0.1/ab3051a974dc3c08ce02fb490d620bbd5fc2e1a0}
@@ -22200,7 +22200,7 @@ snapshots:
       - typescript
       - vite
 
-  '@zinnia/form-engine-sdk@3.0.3(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.5))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.9.3))':
+  '@zinnia/form-engine-sdk@3.1.0(@babel/core@7.28.5)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(babel-jest@29.7.0(@babel/core@7.28.5))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@18.11.18)(typescript@5.9.3))':
     dependencies:
       '@jest/globals': 29.7.0
       '@types/jest': 29.5.14

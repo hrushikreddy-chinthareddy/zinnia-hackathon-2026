@@ -46,6 +46,7 @@ import {
     RestrictionOption,
     Program,
     FormParts,
+    FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
 import {
     DisbursementParts,
@@ -53,8 +54,8 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { commonOftFormValidation } from '../../oft-forms/oft-form-helpers';
 import { createDtccValidator, createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../utils/form-validator.helpers';
 
 export enum WithdrawalSelectionValues {
     GrossWithdrawal = 'grossWithdrawal',
@@ -79,6 +80,58 @@ export default function getUsaaConfig(
     qualType: string = '',
     isLC: boolean = true
 ) {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
+
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
     ): { selectedOption: string | null; amount: string | null } => {
@@ -488,6 +541,7 @@ export default function getUsaaConfig(
                     fieldName: BankingFields.Address,
                     classNames: 'col-span-3',
                     fieldType: 'address',
+                    isAddressLine2Required: true,
                 },
             ],
             generatePayloadFromSelection: ({
@@ -605,8 +659,7 @@ export default function getUsaaConfig(
     return {
         disbursementOptions,
         formPartyConfigs,
-        formValidation: (values: Partial<FormParts> = {}) =>
-            commonOftFormValidation(t, values),
+        formValidation,
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         signaturesConfig,

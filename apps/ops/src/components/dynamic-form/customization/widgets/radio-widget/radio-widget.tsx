@@ -74,8 +74,15 @@ function RadioWidget<
         readonly,
     } = widgetProps;
     const { enumOptions, enumDisabled } = options;
-    const { customOptions, props, properties, cardType, icon, sectionTitle } =
-        getUiOptions<T, S, F>(uiSchema);
+    const {
+        customOptions,
+        props,
+        properties,
+        cardType,
+        icon,
+        sectionTitle,
+        showReadOnlyCardView = false,
+    } = getUiOptions<T, S, F>(uiSchema);
 
     const apiProps =
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -181,10 +188,11 @@ function RadioWidget<
         }
     };
 
-    if (readonly)
+    if (readonly && !showReadOnlyCardView) {
         return (
             <>{enumOptions?.find((option) => option.value === value)?.label}</>
         );
+    }
 
     const selectedValue = newOptions?.find(
         (option) => option.value === stringifyObjectValue(value)

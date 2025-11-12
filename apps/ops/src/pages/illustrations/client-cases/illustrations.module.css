@@ -1,6 +1,7 @@
 .eAppContainer {
     height: calc(100vh - 130px);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
     padding: var(--measure-dimension-gap-md);
     position: relative;
     top: 100px;
@@ -15,7 +16,8 @@
     box-shadow: var(--shadow-elevation-elevation-light-md);
     background: var(--color-base-surface-surface-primary);
     border-radius: var(--measure-dimension-radius-md);
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 .pageContainer {

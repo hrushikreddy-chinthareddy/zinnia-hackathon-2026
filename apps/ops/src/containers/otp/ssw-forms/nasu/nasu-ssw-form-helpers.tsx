@@ -2,7 +2,6 @@ import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { ESignature } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { defaultDisbursmentConsent } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-parts/consent-available';
 import {
     BankingFields,
@@ -11,18 +10,12 @@ import {
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import {
-    ESignatureValidationTypeWithdrawal,
-    SignatureValidationTypeWithdrawal,
-} from '@deps/models/case/renewal/signature-validation';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
     FormValidationErrors,
@@ -50,6 +43,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function useNassauConfig(t: TFunction) {
     const formValidation = useCallback(
@@ -59,27 +53,6 @@ export default function useNassauConfig(t: TFunction) {
             formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            const ownerEsignature = formESignatureData?.eSignatures?.find(
-                (sigInfo: ESignature) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
 
             if (
                 [PaymentMethod.EFT].includes(
@@ -119,15 +92,14 @@ export default function useNassauConfig(t: TFunction) {
                 );
             }
 
-            if (
-                formESignatureData?.isFormESignaturePresent &&
-                ownerEsignature?.isSigned === null
-            ) {
-                errors[
-                    `${ESignatureValidationTypeWithdrawal.Owner}-signPresent`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-            return errors;
+            const signESignValidate = validateSignESign({
+                formSignature,
+                formESignatureData,
+                t,
+                validateDesignationPresent: false,
+            });
+
+            return { ...errors, ...signESignValidate };
         },
         [t]
     );

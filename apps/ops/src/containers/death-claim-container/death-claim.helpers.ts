@@ -12,6 +12,7 @@ import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/fi
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { UserProfile } from '@deps/models/user-profile';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {
@@ -123,7 +124,8 @@ export const buildClaimPaylod = (
     selOwners: DeceasedParty[],
     selBeneficiaries: NotificationMethod[],
     onbaseCaseId: string,
-    onbaseDocumentNumber: string
+    onbaseDocumentNumber: string,
+    user: UserProfile
 ) => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
     const ownersRec = selOwners.map((item: any) => formatBene(item));
@@ -145,6 +147,9 @@ export const buildClaimPaylod = (
         notifiers: formatNotifier(selNotifiers),
         owners: ownersRec,
         beneficiaries: selBeneficiaries,
+        submittedBy: user?.email ?? '',
+        submittedByPartyId: user?.partyId ?? '',
+        source: 'Zinnia Live',
     };
 };
 

@@ -2,11 +2,13 @@ import {
     FollowUpChainResponse,
     FollowUpResponse,
     UserResponse,
+    ClientDetailsDto,
 } from '@xd/api-types/dist/generated-types/knowledgebase';
 import axios, { AxiosResponse } from 'axios';
 
 import {
     ClientDetailsResponse,
+    COMMON_CLIENT_NAME,
     DislikeReasonsPayload,
     DocumentsDisplayType,
     FeedbackType,
@@ -25,6 +27,32 @@ import {
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
+
+export const getCommonClientId = async () => {
+    const url = `${apiServerBaseUrl}/api/v1/clients`;
+    try {
+        const { data } = await axios.get<any, AxiosResponse>(url);
+        if (data.length > 1) {
+            const commonClient = data.find((clientDetail: ClientDetailsDto) => {
+                const name =
+                    clientDetail.client?.clientName?.toLowerCase().trim() ||
+                    clientDetail.client?.title?.toLowerCase().trim() ||
+                    clientDetail.client?.acronym?.toLowerCase().trim() ||
+                    clientDetail.client?.name?.toLowerCase().trim();
+                return name?.startsWith(COMMON_CLIENT_NAME);
+            });
+            return commonClient?.client?.pageId ?? null;
+        }
+        return null;
+    } catch (error) {
+        browserLogError('knowledge-base::Failed to fetch common client id', {
+            ...parseErrorInformation(error),
+            url,
+            function: 'knowledgeBase.getCommonClientId',
+        });
+        return null;
+    }
+};
 
 export const getOpsUserDetailsSSR = async (
     email: string,

@@ -26,7 +26,7 @@ const DeathAuditFile = ({
                         docTypeView: DocumentTypeView.Correspondence,
                         carrier: carrier,
                     }}
-                    isViewButtonHiddenForEMLType={fileType === 'eml'}
+                    isViewButtonHidden={['eml', 'csv'].includes(fileType)}
                 />
             </div>
         </li>

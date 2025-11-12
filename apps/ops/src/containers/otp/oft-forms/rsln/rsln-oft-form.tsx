@@ -98,15 +98,7 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            {is403b && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
+
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -119,6 +111,10 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -128,6 +124,11 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {is403b && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

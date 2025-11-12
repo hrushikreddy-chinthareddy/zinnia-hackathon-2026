@@ -19,6 +19,7 @@ import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-c
 import { getBeneficiariesByRole } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
@@ -32,11 +33,13 @@ import {
 type NotificationMethodStepProps = {
     communicationOptions: RadioItem[];
     policy: Policy;
+    user: UserProfile;
 };
 
 const NotificationMethodStep = ({
     policy,
     communicationOptions,
+    user,
 }: NotificationMethodStepProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'deathClaims.notificationMethod',
@@ -111,7 +114,8 @@ const NotificationMethodStep = ({
             owners,
             beneficiaries,
             onbaseCaseId,
-            onbaseDocumentNumber
+            onbaseDocumentNumber,
+            user
         );
         browserLogInfo('NotificationMethodStep::Submit claim payload', {
             payload,

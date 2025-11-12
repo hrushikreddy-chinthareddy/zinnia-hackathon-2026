@@ -257,6 +257,12 @@ export enum SubStandardRating {
     NONETABLE = 'NONETABLE',
 }
 
+export enum ConversionType {
+    NONE = 'NONE',
+    STANDARD = 'STANDARD',
+    PREMIUM_CREDIT = 'PREMIUM_CREDIT',
+}
+
 const illustrationPayloadFlatExtraSchema = t.object(
     t.optionalProperty('type', t.enum(IllustrationFlatExtraTypes)),
     t.optionalProperty('amount', t.number),

@@ -2132,9 +2132,7 @@
             "fileDeletedError": "Failed to delete file {{fileName}}"
         },
         "true": "True",
-        "false": "False",
-        "email": "Email",
-        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field."
+        "false": "False"
     },
     "dashboard": {
         "h1": "Policies & Contracts",
@@ -2559,7 +2557,9 @@
             "sswRequestValidation": "Validate transaction",
             "suitabilityReview": "Validate suitability",
             "toaLetter": "Notify ceding carrier of transfer",
-            "viewDetails": "View details"
+            "viewDetails": "View details",
+            "outboundDeathScrub": "Send file to PBI Research Services - CertiDeath",
+            "inboundDeathScrub": "Received file from PBI Research Services - CertiDeath"
         },
         "steps": {
             "initiateClaims.updateDeceasedDate": "Date of Death and Date of Notification updated in Admin System",
@@ -2636,7 +2636,8 @@
             "verifyFunds.stopSystematicPrograms": "Stop Systematic Program",
             "verifyFunds.stopRMD": "Stop RMDs",
             "verifyFunds.stopSpecialPrograms": "Stop Special Programs",
-            "requestAck.receiveClaimRequest": "Death Notification Details"
+            "requestAck.receiveClaimRequest": "Death Notification Details",
+            "requestAck.outboundDeathScrub": "Send Policy Information To PBI Research Services - CertiDeath"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "When a {{subType}} document is received, it is indexed and ingested into the system.",
@@ -3093,7 +3094,8 @@
             "contactEstablished": "Contact Established",
             "beneficiaryDeceased": "Beneficiary deceased",
             "scheduledTooltip": "{{followup}} attempts remaining until escheatment process begins unless contact is established.",
-            "finalTooltip": "Last attempt remaining unless contact is established."
+            "finalTooltip": "Last attempt remaining unless contact is established.",
+            "notificationRestarted": "Notification restarted {{date}}"
         }
     },
     "caseRenewal": {
@@ -3229,6 +3231,7 @@
                 "residentialAddressTitle": "Residential Address",
                 "title": "Address Details",
                 "mailingAddress": "Address",
+                "mailingAddressLine1": "Address line 1",
                 "mailingAddressLine2": "Address line 2",
                 "mailingAddressLine3": "Address line 3",
                 "city": "City",
@@ -3464,12 +3467,14 @@
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
                     "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
+                    "isCorporateResolutionPresent": "Is corporate resolution present?",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
                     "isLoaAttached": "Is letter of acceptance attached?",
                     "validOwnerRegType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
-                    "loaSignDate": "LOA Sign Date"
+                    "loaSignDate": "LOA Sign Date",
+                    "authPersonSignPresent": "Authorized Person’s signature is present",
+                    "signDate": "Signature date"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Joint Owner/Annuitant absence on paperwork or in the contract",
@@ -3518,7 +3523,8 @@
                 "yes": "Yes",
                 "no": "No",
                 "valid": "Valid",
-                "notValid": "Not Valid"
+                "notValid": "Not Valid",
+                "selectOption": "Select"
             },
             "distributionMethod": {
                 "chooseBankingType": "Choose Banking Type",
@@ -3835,7 +3841,7 @@
                 "type": "Type",
                 "date": "Sign date",
                 "signPresent": "Sign present",
-                "auditTrial": "Audit trial",
+                "auditTrial": "Audit trail",
                 "accordForm": "Acord Form"
             },
             "employerTpaAuthorization": {
@@ -3853,6 +3859,7 @@
                 "nameIsRequired": "Name is required",
                 "signatureDesignationMustBeSelected": "Signature designation must be selected",
                 "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+                "signatureCityOptionMustBeSelected": "City/State option must be selected",
                 "signatureValidOptionMustBeSelected": "Signature valid option must be selected",
                 "signatureCommentMustBePresent": "Signature comment must be present",
                 "accountNumberDoesNotMatch": "Account number does not match",
@@ -7600,7 +7607,26 @@
             "spousalContinuation": "Settlement completed. The contract continues under Spousal Continuation (source: {{closureSource}})",
             "deathClaimPaid": "Settlement completed. Death claim benefits have been paid to the beneficiary (source: {{closureSource}})"
         },
+        "title": "title",
         "settlementInProgress": "Settlement is in progress."
+    },
+    "complianceDBUpdate": {
+        "noData": "File details not available.",
+        "loadingTransactions": "Retrieving file details...",
+        "errorGettingTransactions": "File details couldn't be retrieved.",
+        "details": "Details"
+    },
+    "receiveNewDocument": {
+        "noData": "No new document details available.",
+        "loadingTransactions": "Retrieving new document details...",
+        "errorGettingTransactions": "New document data couldn't be retrieved.",
+        "title": "Details",
+        "source": "Source:",
+        "deceasedSsn": "Deceased SSN:",
+        "deceasedFirstName": "Deceased First Name:",
+        "deceasedLastName": "Deceased Last Name:",
+        "deceasedDob": "Deceased Date of Birth:",
+        "deceasedDod": "Deceased Date of Death:"
     },
     "deathAuditFiles": {
         "noData": "File details not available.",
@@ -8201,8 +8227,22 @@
     },
     "updateNotificationMethodForBeneficiary": {
         "tabs": {
+            "contactEstablished": "Contact Established",
             "updateNotificationMethod": "Update Notification Method",
             "confirm": "Confirm"
+        },
+        "contactEstablishedStep": {
+            "title": "Contact Established",
+            "selectOption": "Select one of the following options:",
+            "contactEstablished": {
+                "contactEstablishedRestartProcess": "Contact Established – Restart Process",
+                "updateNotificationMethod": "Update Notification Method"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "contactEstablishedIsRequired": "Please select an option to continue."
+                }
+            }
         },
         "updateNotificationMethodStep": {
             "title": "Update Notification Method",
@@ -8404,6 +8444,15 @@
             "submitTask": "Submit"
         }
     },
+    "claimsDeathAuditContractMatching": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Match Death Case was submitted.",
+            "cta": "Go to death claim",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "nbPurchaseEnrichment": {
         "confirmStep": {
             "title": "Got It!",
@@ -8430,6 +8479,7 @@
             "cancel": "Cancel",
             "noChangesRequired": "No changes were required",
             "yes": "Yes",
+            "no": "No",
             "name": "Name",
             "phone": "Phone Number",
             "contactRole": "Contact Role",
@@ -8446,6 +8496,7 @@
             "newInformation": "New Information",
             "relationshipToOwner": "Relationship to Owner",
             "didYouMakeAnyChanges": "Did you make any changes to the Admin System?",
+            "wasContactEstablished": "Was contact established?",
             "addAnotherCall": "Add Another Call",
             "contactRoles": {
                 "agent": "Agent",
@@ -8460,6 +8511,7 @@
             "invalidFax": "Invalid fax",
             "contractNumber": "Contract Number",
             "callSummary": "Call Summary",
+            "contactEstablished": "Contact Established",
             "errors": {
                 "addressIsRequired": "Select an address to continue",
                 "emailIsRequired": "Email is required",
@@ -8476,12 +8528,13 @@
                 "relationshipToOwner": "Relationship to Owner is required",
                 "changeRequireRequired": "Please select option",
                 "changeTypeRequired": "Please select new information type",
-                "callSummaryRequired": "Call summary is required"
+                "callSummaryRequired": "Call summary is required",
+                "contactEstablishedRequired": "Please select option"
             }
         },
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Service Request Form was submitted.",
+            "subTitle": "Task: Beneficiary outreach was submitted.",
             "cta": "Go to case ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
@@ -8530,7 +8583,7 @@
     "day150Review": {
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Task: Operation Review was submitted.",
+            "subTitle": "Task: Final beneficiary outreach was submitted.",
             "cta": "Go to Case ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
@@ -8542,6 +8595,7 @@
             "cancel": "Cancel",
             "noChangesRequired": "No changes were required",
             "yes": "Yes",
+            "no": "No",
             "name": "Name",
             "phone": "Phone",
             "contactRole": "Contact Role",
@@ -8558,7 +8612,8 @@
             "newInformation": "New Information",
             "relationshipToDeceased": "Relationship to Deceased",
             "relationshipToOwner": "Relationship to Owner",
-            "didYouMakeAnyChanges": "Did you make any changes to the Admin System   ?",
+            "didYouMakeAnyChanges": "Did you make any changes to the Admin System?",
+            "wasContactEstablished": "Was contact established?",
             "addAnotherCall": "Add Another Call",
             "contactRoles": {
                 "agent": "Agent",
@@ -8573,6 +8628,7 @@
             "invalidFax": "Invalid fax",
             "contractNumber": "Contract Number",
             "callSummary": "Call Summary",
+            "contactEstablished": "Contact Established",
             "errors": {
                 "addressIsRequired": "Select an address to continue",
                 "emailIsRequired": "Email is required",
@@ -8589,7 +8645,8 @@
                 "relationshipToOwner": "Relationship to Owner is required",
                 "changeRequireRequired": "Please select option",
                 "changeTypeRequired": "Please select new information type",
-                "callSummaryRequired": "Call summary is required"
+                "callSummaryRequired": "Call summary is required",
+                "contactEstablishedRequired": "Please select option"
             }
         }
     },
@@ -8604,6 +8661,9 @@
             "cancel": "Cancel",
             "no": "No",
             "yes": "Yes"
+        },
+        "errors": {
+            "beneDeceased": "Please select option"
         }
     },
     "claimsMatchBeneDocument": {
@@ -8993,7 +9053,10 @@
                 }
             },
             "followUpPlaceholder": "Ask your follow up questions here...",
-            "followUpButton": "Ask your follow up questions here"
+            "followUpButton": "Ask your follow up questions here",
+            "definitiveAnswerNotFound": "I couldn’t find a definitive answer in the client-specific documents. Would you like me to check the common reference also?",
+            "yes": "Yes",
+            "no": "No"
         },
         "documents": {
             "recentlyAdded": "Recently added files",

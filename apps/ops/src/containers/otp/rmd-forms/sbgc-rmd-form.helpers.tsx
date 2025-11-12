@@ -38,41 +38,17 @@ export default function getSbgcRmdConfig(t: TFunction) {
     const { formValidation, signaturesConfig } = getSbgcConfig(t);
 
     const rmdformValidation = ({
-        formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
         formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
-            formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if (
-            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
-                formDisbursement?.paymentMethod?.text as PaymentMethod
-            )
-        ) {
-            // if (
-            //     formDisbursement?.bank[0].bankName === '' &&
-            //     formDisbursement?.bank[0].accountNumber !==
-            //         formDisbursement?.bank[0].reEnterAccountNumber
-            // ) {
-            //     errors[BankingFields.ReEnterAccountNumber] = t(
-            //         'formValidation.accountNumberDoesNotMatch'
-            //     );
-            // }
-            // if (
-            //     formDisbursement?.bank[0].bankName === '' &&
-            //     formDisbursement?.bank[0].routingNumber !==
-            //         formDisbursement?.bank[0].reEnterBankRoutingNumber
-            // ) {
-            //     errors[BankingFields.ReEnterBankRoutingNumber] = t(
-            //         'formValidation.routingNumberDoesNotMatch'
-            //     );
-            // }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t(
@@ -432,6 +408,7 @@ export default function getSbgcRmdConfig(t: TFunction) {
                     fieldName: BankingFields.Address,
                     fieldType: 'address',
                     classNames: 'col-start-1 col-span-2 w-full',
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {

@@ -99,7 +99,10 @@ const DeathAuditQualification = ({
 
             <div className="flex flex-col w-full">
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div
+                        className="col-span-2 text-[--color-base-text-text-secondary]"
+                        data-testid="idn-case-id-label"
+                    >
                         {t('deathAuditQualification.idnCaseId')}
                     </div>
                     {zlCaseId ? (
@@ -109,6 +112,7 @@ const DeathAuditQualification = ({
                             target="_blank"
                             href={`/cases/${zlCaseId}/progress`}
                             rel="noreferrer"
+                            data-testid="idn-case-id-link"
                         >
                             {zlCaseId}
                         </NavElement>
@@ -116,6 +120,7 @@ const DeathAuditQualification = ({
                         <Typography
                             variant={TypographyVariant.BodySm}
                             className="col-span-3"
+                            data-testid="no-idn-case-id"
                         >
                             {DEFAULT_ERROR_STRING}
                         </Typography>

@@ -89,4 +89,5 @@ export enum CaseSource {
     ZinniaLive = 'Zinnia Live',
     MyPolicyView = 'My Policy View',
     FarmersNewWorldLifeInsurance = "Farmer's New World Life Insurance",
+    DeathAuditScrub = 'Death Audit Scrub',
 }

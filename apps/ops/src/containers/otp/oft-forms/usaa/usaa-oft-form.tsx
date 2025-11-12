@@ -99,10 +99,6 @@ export default function UsaaOftWithdrawalForm() {
                     ) as string
                 }
             />
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -116,7 +112,10 @@ export default function UsaaOftWithdrawalForm() {
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
-
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={

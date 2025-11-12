@@ -5,27 +5,37 @@ type TransformErrorsProps = {
     t: TFunction;
 };
 
+export enum ValidationMessage {
+    OnlyDigits = '^[0-9]+$',
+    CheckNumberStartWith82000 = '^82000[0-9]*$',
+    EmptyOrOnlyDigitsStartWith82000 = '^(|82000[0-9]*)$',
+    OnlyLettersAndNumbers = '^[a-zA-Z0-9]*$',
+    LettersNumbersDashUnderscore = '^[a-zA-Z0-9-_]+$',
+    InvalidSSN = '^(|[0-9]{9})$',
+}
+
 function transformErrors({ errors, t }: TransformErrorsProps) {
     return errors.map((error: any) => {
         if (error.name === 'required') {
             error.message = t('formValidations.required');
         } else if (error.name === 'pattern') {
-            if (error.params.pattern === '^[0-9]+$') {
+            const pattern = error.params.pattern;
+            if (pattern === ValidationMessage.OnlyDigits) {
                 error.message = t('formValidations.patternDigit');
             }
             if (
-                error.params.pattern === '^82000[0-9]*$' ||
-                error.params.pattern === '^(|82000[0-9]*)$'
+                pattern === ValidationMessage.CheckNumberStartWith82000 ||
+                pattern === ValidationMessage.EmptyOrOnlyDigitsStartWith82000
             ) {
                 error.message = t('formValidations.patternNumber');
             }
-            if (error.params.pattern === '^[a-zA-Z0-9]*$') {
+            if (pattern === ValidationMessage.OnlyLettersAndNumbers) {
                 error.message = t('formValidations.patternNoSpecial');
             }
-            if (error.params.pattern === '^[a-zA-Z0-9-_]+$') {
+            if (pattern === ValidationMessage.LettersNumbersDashUnderscore) {
                 error.message = t('formValidations.patternWithSpecial');
             }
-            if (error.params.pattern === '^(|[0-9]{9})$') {
+            if (pattern === ValidationMessage.InvalidSSN) {
                 error.message = t('formValidations.patternSsn');
             }
         } else if (error.name === 'minLength') {

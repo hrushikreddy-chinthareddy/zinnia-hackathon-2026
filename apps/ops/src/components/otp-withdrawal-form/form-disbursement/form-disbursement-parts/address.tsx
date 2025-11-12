@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Address } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
 
@@ -11,6 +9,7 @@ const BankAddress = ({
     isFormStateReadOnly,
     disbursementInformation,
     onDataChange,
+    isAddressLine2Required = false,
 }: DisbursementInformation) => {
     const address = disbursementInformation?.address;
     const setAddress = (val: Address) => {
@@ -27,6 +26,7 @@ const BankAddress = ({
                 onDataChange={setAddress}
                 initialAddress={address}
                 isPayeeAddress={true}
+                isAddressLine2Required={isAddressLine2Required}
             />
         </div>
     );
