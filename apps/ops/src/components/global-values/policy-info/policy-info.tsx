@@ -102,8 +102,8 @@ export const PolicyCarrierLogo = ({
                             <div className="default-focus flex h-12 w-12 items-center justify-center rounded border-2 border-gray-100 bg-white">
                                 <Image
                                     alt={carrierName}
-                                    width={48}
-                                    height={48}
+                                    width={24}
+                                    height={24}
                                     src={getCarrierLogoByClientId(carrierId)}
                                 />
                             </div>
@@ -117,8 +117,8 @@ export const PolicyCarrierLogo = ({
                                     getCarrierNameByClientId(carrierId) ||
                                     carrierId
                                 }
-                                width={48}
-                                height={48}
+                                width={24}
+                                height={24}
                                 src={getCarrierLogoByClientId(carrierId)}
                             />
                         </div>
