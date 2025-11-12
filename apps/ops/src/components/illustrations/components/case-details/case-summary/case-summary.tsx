@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { capitalize } from '@xd/utils/src/strings';
 import {
+    AssistiveText,
+    AssistiveTextVariant,
     BodyVariant,
     Breadcrumb,
     Button,
@@ -27,7 +29,10 @@ import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { patchIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    IllustrationsClientCase,
+    TransactionType,
+} from '@deps/types/illustrations';
 
 import styles from './case-summary.module.css';
 
@@ -144,6 +149,17 @@ const IllustrationCaseSumary = ({
         closeSideSheet();
     };
 
+    const isConversion =
+        clientCase?.transactionType === TransactionType.CONVERSION;
+    const infoItems: string[] = [];
+    if (clientCase?.transactionType === TransactionType.CONVERSION) {
+        infoItems.push('Conversion');
+    }
+    if (clientCase?.isMec) {
+        infoItems.push('MEC');
+    }
+    const infoText = infoItems.join(', ');
+
     return (
         <header className={clsx(styles.header)}>
             <section>
@@ -248,6 +264,16 @@ const IllustrationCaseSumary = ({
                     </span>
                 </article>
             </section>
+            {isConversion && (
+                <section className="mt-4">
+                    <article>
+                        <AssistiveText
+                            text={infoText}
+                            variant={AssistiveTextVariant.Info}
+                        />
+                    </article>
+                </section>
+            )}
         </header>
     );
 };
