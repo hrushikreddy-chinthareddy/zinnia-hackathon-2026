@@ -31,6 +31,11 @@ export const FindAllKeyValuesPolicySidesheet: FC<
         },
         []
     );
+    const [calendarOpen, setCalendarOpen] = useState(false);
+
+    const handleCalendarOpen = (isOpen: boolean) => {
+        setCalendarOpen(isOpen);
+    };
     return (
         <SideSheet
             trigger={
@@ -57,11 +62,13 @@ export const FindAllKeyValuesPolicySidesheet: FC<
             }
             preventCloseOnOutsideClick={false}
             ref={setContainerRef}
+            preventEscKeyDownClose={calendarOpen}
         >
             <PolicySidesheetContent
                 planCode={planCode}
                 policyNumber={policyNumber}
                 container={container}
+                handleCalendarOpen={handleCalendarOpen}
             />
         </SideSheet>
     );

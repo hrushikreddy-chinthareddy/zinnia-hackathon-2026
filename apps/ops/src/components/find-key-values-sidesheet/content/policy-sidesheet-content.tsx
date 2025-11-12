@@ -9,6 +9,7 @@ import {
     Label,
     FieldSize as BloomFieldSize,
     FieldDateSingle,
+    FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import {
@@ -45,6 +46,7 @@ export const PolicySidesheetContent = ({
     planCode,
     policyNumber,
     container,
+    handleCalendarOpen,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
     const [treeState, setTreeState] = useState(Collapse);
@@ -76,13 +78,14 @@ export const PolicySidesheetContent = ({
             return;
         }
 
-        const day = dayjs(date, NUMERIC_DATE_FORMAT);
+        const day = dayjs(date);
 
         if (day.isValid() && isDateAllowed(day)) {
             setDate(day.format(NUMERIC_DATE_FORMAT));
             setEnableQuery(true);
             setFieldError(false);
         } else {
+            console.log('cheese');
             setDate(date.toString());
             setEnableQuery(false);
             setFieldError(true);
@@ -132,29 +135,6 @@ export const PolicySidesheetContent = ({
     if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
-            {/* <FieldDateSelect
-                label={t('label.findKeyValuesDate') as string}
-                className={styles.datePicker}
-                id="start-date"
-                isFutureDateDisabled={true}
-                onChange={handleDateChange}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                message={
-                    fieldError || isError
-                        ? (t('label.findKeyValuesDateError') as string)
-                        : ''
-                }
-                variant={
-                    fieldError || isError
-                        ? FieldVariant.Error
-                        : FieldVariant.Default
-                }
-                value={date || dayjs().format(NUMERIC_DATE_FORMAT)}
-                showMonths={true}
-                isDateAllowed={isDateAllowed}
-            /> */}
-
             <FieldDateSingle
                 name={'select-date'}
                 label={
@@ -163,8 +143,18 @@ export const PolicySidesheetContent = ({
                     </Label>
                 }
                 disableAfterDate={new Date()}
+                // disableBeforeDate={
+                //     new Date(policy?.policyDates?.issueDate || '')
+                // }
                 onDateSelect={(date) => handleDateChange(date)}
                 container={container}
+                givenErrorMessage={
+                    fieldError || isError
+                        ? (t('label.findKeyValuesDateError') as string)
+                        : ''
+                }
+                fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
+                handleCalendarOpen={handleCalendarOpen}
             />
 
             <FieldData
