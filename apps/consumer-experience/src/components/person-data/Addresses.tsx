@@ -28,17 +28,19 @@ const displayAddressType: { [key in AddressType]?: string } = {
 };
 
 const AddressGroup = ({
-  addresses,
+  allAddresses,
+  filteredAddresses,
   showEditButton,
   partyId,
   userOnlyHasOneAddress,
 }: {
-  addresses: AddressInterface[];
+  allAddresses: AddressInterface[];
+  filteredAddresses: AddressInterface[];
   showEditButton?: boolean;
   partyId: string;
   userOnlyHasOneAddress: boolean;
 }) => {
-  return addresses?.map((address, index) => {
+  return filteredAddresses?.map((address, index) => {
     const mailingAddressText = address.isPreferred ? 'Mailing address' : '';
 
     //Build out the addresses array by taking all the address lines and making sure we filter all the bad values out
@@ -80,7 +82,7 @@ const AddressGroup = ({
                     addressId={address.addressId}
                     fullAddressData={address}
                     disableEditingPreferredAddress={userOnlyHasOneAddress}
-                    addresses={addresses}
+                    addresses={allAddresses}
                   />,
                 ],
               })}
@@ -143,25 +145,29 @@ export const Addresses = ({
     <div className={styles.itemsRowContainer}>
       <div className={styles.itemsRow}>
         <AddressGroup
-          addresses={residentialAddresses}
+          allAddresses={addresses}
+          filteredAddresses={residentialAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
-          addresses={boxAddresses}
+          allAddresses={addresses}
+          filteredAddresses={boxAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
-          addresses={businessAddresses}
+          allAddresses={addresses}
+          filteredAddresses={businessAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
-          addresses={mailingAddresses}
+          allAddresses={addresses}
+          filteredAddresses={mailingAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}

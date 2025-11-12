@@ -116,12 +116,18 @@ export const AddEditAddressSidesheet: FC<AddEditAddressSidesheetProps> = ({
 
     const formattedAddressLines = formatAddressLines(requestValues.addresses);
     const zipCodeParts = zipCodeInParts(requestValues?.zipCode);
+    const wasPreferred = fullAddressData?.isPreferred;
+    const nextPreferredAddressId = addresses?.find(
+      address => !address.isPreferred
+    )?.addressId;
+
     const addressChangeRequest = {
       //TODO: The API needs to remove this from the required request body. This has been replaced by `isPreferred` on the address itself but
       // The API currently 500s without the indicator value.
       preferredAddressIndicator: requestValues.defaultAddress
         ? AddressChange.preferredAddressIndicator.YES
         : AddressChange.preferredAddressIndicator.NO,
+      preferredAddressId: wasPreferred ? nextPreferredAddressId : undefined,
       address: {
         ...formattedAddressLines,
         ...zipCodeParts,

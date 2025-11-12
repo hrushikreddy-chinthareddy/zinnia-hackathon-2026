@@ -108,7 +108,6 @@ export const putUpdateAddress = async (
     correlationId,
   } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`;
-
   try {
     const rawResponse = await ServerApi.put(
       url,
