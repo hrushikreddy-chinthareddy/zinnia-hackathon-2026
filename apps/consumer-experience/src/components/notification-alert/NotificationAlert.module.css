@@ -12,6 +12,13 @@
   animation: slideDown 0.5s forwards;
 }
 
+.sticky {
+  position: fixed;
+  top: 0;
+  max-width: 744px;
+  z-index: 10000;
+}
+
 /* Keyframes for the slide-down animation */
 @keyframes slideDown {
   from {
