@@ -27,28 +27,23 @@ export default withAuthAndLogging(
                 .json({ error: 'Method not allowed' });
         }
 
-        const {
-            messageId,
-            followUpQuestion,
-            parentFollowUpId = null,
-            clientId,
-        } = req.query;
-        if (!messageId || !followUpQuestion || !clientId) {
+        const { followUpId, followUpQuestion, commonClientId } = req.query;
+        if (!followUpId || !followUpQuestion || !commonClientId) {
             logError(
-                `Missing messageId, followUpQuestion, or clientId:: messageId=${messageId}, followUpQuestion=${followUpQuestion}, clientId=${clientId}`,
+                `Missing followUpId, followUpQuestion or commonClientId:: followUpId=${followUpId}, followUpQuestion=${followUpQuestion}, commonClientId=${commonClientId}`,
                 loggingContext
             );
             return res.status(HttpStatusCode.BadRequest).json({
-                error: 'Missing messageId, followUpQuestion, or clientId',
+                error: 'Missing followUpId, followUpQuestion or commonClientId',
             });
         }
 
         const accessToken = (await getAccessToken(req, res)).accessToken;
-        const url = `${apiServerBaseUrl}/api/v1/chat/messages/${messageId}/followup/stream`;
+        const url = `${apiServerBaseUrl}/api/v1/chat/follow-ups/${followUpId}/stream`;
 
         try {
             const upstream = await fetch(url, {
-                method: HttpMethod.POST.toUpperCase(),
+                method: HttpMethod.PUT.toUpperCase(),
                 headers: {
                     accept: '*/*',
                     'content-type': 'application/json',
@@ -56,8 +51,7 @@ export default withAuthAndLogging(
                 },
                 body: JSON.stringify({
                     followUpQuestion,
-                    clientId,
-                    parentFollowUpId,
+                    clientId: commonClientId,
                 }),
             });
             if (!upstream.ok || !upstream.body) {
@@ -76,8 +70,6 @@ export default withAuthAndLogging(
 
             let buffer = '';
             let full_response = '';
-            let followUpID = '';
-            let parent_FollowUpId = '';
             let definitiveAnswerFound = null;
 
             const eventHandler = createSSEEventHandler(res, loggingContext, {
@@ -86,12 +78,9 @@ export default withAuthAndLogging(
                 },
                 onComplete: (event) => {
                     full_response = event.full_response;
-                    followUpID = event.followUpID;
-                    parent_FollowUpId = event.parentFollowUpId;
                     definitiveAnswerFound = event.definitive_answer_found;
                 },
             });
-
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
@@ -99,15 +88,12 @@ export default withAuthAndLogging(
                 buffer += decoder.decode(value, { stream: true });
                 const parts = buffer.split('\n\n');
                 buffer = parts.pop() ?? '';
-
                 for (const part of parts) {
                     handleSSEChunk(part, eventHandler, loggingContext);
                 }
             }
             sendSSE(res, SSEEventType.COMPLETE, {
                 full_response,
-                followUpID,
-                parent_FollowUpId,
                 definitiveAnswerFound,
             });
             res.end();
@@ -122,7 +108,7 @@ export default withAuthAndLogging(
         }
     },
     {
-        file: 'knowledge-base/follow-up/sendFollowUpStream/index',
+        file: 'knowledge-base/follow-up/commonClientFollowUp/index',
         function: 'routeHandler',
     }
 );

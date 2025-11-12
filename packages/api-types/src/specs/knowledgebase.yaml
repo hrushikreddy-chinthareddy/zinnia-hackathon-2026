@@ -1,7 +1,9 @@
 openapi: 3.0.1
 info:
   title: Knowledge Base AI API
-  description: "API documentation for Knowledge Base AI application. APIs marked with 'hidden' tag are internal and excluded from Kong gateway."
+  description: >-
+    API documentation for Knowledge Base AI application. APIs marked with
+    'hidden' tag are internal and excluded from Kong gateway.
   contact:
     name: Zinnia
     email: support@zinnia.com
@@ -12,22 +14,17 @@ info:
 servers:
   - url: 'https://knowledgebase-staging.zinnia.com/backend'
 tags:
-  - name: clients
-    description: "Client management operations including synchronization and document management"
   - name: users
     description: User management operations
   - name: chat
     description: Chat management operations
-  - name: sharepoint
-    description: SharePoint operations
-  - name: health
-    description: Health check operations
+  - name: clients
+    description: Client management operations
 paths:
   '/api/v1/chat/sessions/{sessionId}':
     put:
       tags:
         - chat
-      description: Updates a session title.
       operationId: updateSessionTitle_v2
       parameters:
         - name: sessionId
@@ -48,11 +45,124 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponseString'
+  '/api/v1/chat/sessions/{sessionId}/messages/{messageId}':
+    put:
+      tags:
+        - chat
+      operationId: updateMessage_v2
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChatMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseChatMessageResponse'
+  '/api/v1/chat/sessions/{sessionId}/messages/{messageId}/stream':
+    put:
+      tags:
+        - chat
+      operationId: updateMessageStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChatMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
+  '/api/v1/chat/follow-ups/{followUpId}':
+    put:
+      tags:
+        - chat
+      summary: Update follow-up question
+      description: Update a follow-up question for an existing follow-up
+      operationId: updateFollowUp_v2
+      parameters:
+        - name: followUpId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseFollowUpResponse'
+  '/api/v1/chat/follow-ups/{followUpId}/stream':
+    put:
+      tags:
+        - chat
+      operationId: modifyFollowUpStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: followUpId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
   /api/v1/users/search:
     post:
       tags:
         - users
-      description: Searches for users.
       operationId: searchUsers_v2
       requestBody:
         content:
@@ -73,7 +183,6 @@ paths:
     post:
       tags:
         - users
-      description: Gets user details by email.
       operationId: getMeByEmail_v2
       requestBody:
         content:
@@ -115,12 +224,17 @@ paths:
       tags:
         - clients
       summary: Sync documents for a specific client
-      description: "Fetches and stores all documents associated with the specified client from SharePoint. This operation will update the document index for the client."
+      description: >-
+        Fetches and stores all documents associated with the specified client
+        from SharePoint. This operation will update the document index for the
+        client.
       operationId: syncClientDocuments_v2
       parameters:
         - name: clientID
           in: path
-          description: "The unique page ID of the client whose documents need to be synchronized"
+          description: >-
+            The unique page ID of the client whose documents need to be
+            synchronized
           required: true
           schema:
             type: string
@@ -145,7 +259,10 @@ paths:
       tags:
         - clients
       summary: Sync clients from CSV and SharePoint
-      description: "Reads a CSV file of clients, fetches extra information from SharePoint, and saves it to the database. This is an administrative operation that synchronizes client data."
+      description: >-
+        Reads a CSV file of clients, fetches extra information from SharePoint,
+        and saves it to the database. This is an administrative operation that
+        synchronizes client data.
       operationId: syncClients_v2
       responses:
         '200':
@@ -166,11 +283,16 @@ paths:
       tags:
         - clients
       summary: Sync documents for all processed clients
-      description: "Fetches and stores documents for all clients with PROCESSED status from SharePoint. This operation will update the document index for all processed clients and track document changes."
+      description: >-
+        Fetches and stores documents for all clients with PROCESSED status from
+        SharePoint. This operation will update the document index for all
+        processed clients and track document changes.
       operationId: syncAllProcessedClientDocuments_v2
       responses:
         '200':
-          description: "Document synchronization completed successfully for all processed clients"
+          description: >-
+            Document synchronization completed successfully for all processed
+            clients
           content:
             application/json:
               schema:
@@ -185,7 +307,6 @@ paths:
     post:
       tags:
         - chat
-      description: Creates a new chat session.
       operationId: createChatSession_v2
       requestBody:
         content:
@@ -204,7 +325,6 @@ paths:
     get:
       tags:
         - chat
-      description: Gets messages for a session.
       operationId: getSessionMessages_v2
       parameters:
         - name: sessionId
@@ -236,7 +356,6 @@ paths:
     post:
       tags:
         - chat
-      description: Sends a message to a session.
       operationId: sendMessage_v2
       parameters:
         - name: sessionId
@@ -257,11 +376,37 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponseChatMessageResponse'
+  '/api/v1/chat/sessions/{sessionId}/messages/stream':
+    post:
+      tags:
+        - chat
+      operationId: sendMessageStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
   /api/v1/chat/sessions/list:
     post:
       tags:
         - chat
-      description: Gets a list of user sessions.
       operationId: getUserSessions_v2
       requestBody:
         content:
@@ -282,7 +427,9 @@ paths:
       tags:
         - chat
       summary: Search chat questions
-      description: "Search through user's chat questions across all sessions for a specific client. Requires minimum 3 characters in search terms."
+      description: >-
+        Search through user's chat questions across all sessions for a specific
+        client. Requires minimum 3 characters in search terms.
       operationId: searchChatQuestions_v2
       requestBody:
         content:
@@ -303,7 +450,9 @@ paths:
       tags:
         - chat
       summary: Create follow-up question
-      description: "Create a follow-up question for an existing question message. Supports chaining up to 5 follow-ups."
+      description: >-
+        Create a follow-up question for an existing question message. Supports
+        chaining up to 5 follow-ups.
       operationId: createFollowUp_v2
       parameters:
         - name: messageId
@@ -324,6 +473,33 @@ paths:
             '*/*':
               schema:
                 $ref: '#/components/schemas/ApiResponseFollowUpResponse'
+  '/api/v1/chat/messages/{messageId}/followup/stream':
+    post:
+      tags:
+        - chat
+      operationId: createFollowUpStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
   '/api/v1/chat/messages/{messageId}/feedback':
     post:
       tags:
@@ -354,7 +530,6 @@ paths:
     get:
       tags:
         - users
-      description: Gets all users.
       operationId: getAllUsers_v2
       parameters:
         - name: page
@@ -409,7 +584,10 @@ paths:
       tags:
         - clients
       summary: Get all clients with their status
-      description: "Returns a list of all clients and their embedding status. This endpoint provides an overview of all clients in the system along with their current processing status."
+      description: >-
+        Returns a list of all clients and their embedding status. This endpoint
+        provides an overview of all clients in the system along with their
+        current processing status.
       operationId: getAllClients_v2
       responses:
         '200':
@@ -423,7 +601,9 @@ paths:
       tags:
         - clients
       summary: Get a client by page ID
-      description: "Returns a specific client and their embedding status by page ID. Use this endpoint to get detailed information about a specific client."
+      description: >-
+        Returns a specific client and their embedding status by page ID. Use
+        this endpoint to get detailed information about a specific client.
       operationId: getClientById_v2
       parameters:
         - name: clientID
@@ -447,7 +627,9 @@ paths:
       tags:
         - clients
       summary: Get recent updated documents
-      description: "Returns documents updated within the last 7 days for the specified client. This helps track recently modified content."
+      description: >-
+        Returns documents updated within the last 7 days for the specified
+        client. This helps track recently modified content.
       operationId: getRecentUpdatedDocuments_v2
       parameters:
         - name: clientID
@@ -471,7 +653,10 @@ paths:
       tags:
         - clients
       summary: Search documents by name with pagination
-      description: "Returns documents for the specified client that match the search term in their name. Search term must be at least 3 characters long. The search is case-insensitive and matches partial names."
+      description: >-
+        Returns documents for the specified client that match the search term in
+        their name. Search term must be at least 3 characters long. The search
+        is case-insensitive and matches partial names.
       operationId: searchDocuments_v2
       parameters:
         - name: clientID
@@ -522,7 +707,9 @@ paths:
       tags:
         - clients
       summary: Get recent created documents
-      description: "Returns documents created within the last 7 days for the specified client. This helps track newly added content."
+      description: >-
+        Returns documents created within the last 7 days for the specified
+        client. This helps track newly added content.
       operationId: getRecentCreatedDocuments_v2
       parameters:
         - name: clientID
@@ -546,7 +733,10 @@ paths:
       tags:
         - clients
       summary: Get all documents with pagination
-      description: "Returns all documents for the specified client with pagination support. Use this endpoint to browse through all documents associated with a client."
+      description: >-
+        Returns all documents for the specified client with pagination support.
+        Use this endpoint to browse through all documents associated with a
+        client.
       operationId: getAllDocuments_v2
       parameters:
         - name: clientID
@@ -588,7 +778,11 @@ paths:
       tags:
         - clients
       summary: Download document from SharePoint
-      description: "Downloads a document from SharePoint using the drive ID, item ID, and document type. The site ID is automatically taken from configuration. The document content is returned as binary data that can be viewed online by the frontend."
+      description: >-
+        Downloads a document from SharePoint using the drive ID, item ID, and
+        document type. The site ID is automatically taken from configuration.
+        The document content is returned as binary data that can be viewed
+        online by the frontend.
       operationId: downloadDocument_v2
       parameters:
         - name: driveId
@@ -630,7 +824,9 @@ paths:
       tags:
         - chat
       summary: Get follow-up chain
-      description: "Retrieve the complete follow-up conversation chain for a specific message"
+      description: >-
+        Retrieve the complete follow-up conversation chain for a specific
+        message
       operationId: getFollowUpChain_v2
       parameters:
         - name: messageId
@@ -662,6 +858,138 @@ components:
         body:
           type: string
         success:
+          type: boolean
+    UpdateChatMessageRequest:
+      type: object
+      properties:
+        question:
+          type: string
+        clientId:
+          type: string
+    ApiResponseChatMessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/ChatMessageResponse'
+        success:
+          type: boolean
+    ChatMessageResponse:
+      type: object
+      properties:
+        questionId:
+          type: string
+        responseId:
+          type: string
+        question:
+          type: string
+        response:
+          type: string
+        sourceDocuments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceDocument'
+        responseTimeMs:
+          type: integer
+          format: int64
+        questionTimestamp:
+          type: string
+          format: date-time
+        responseTimestamp:
+          type: string
+          format: date-time
+        definitiveAnswerFound:
+          type: boolean
+        hasFollowUps:
+          type: boolean
+        feedbackType:
+          type: string
+          enum:
+            - LIKE
+            - DISLIKE
+        feedbackComment:
+          type: string
+        dislikeReason:
+          $ref: '#/components/schemas/DislikeReason'
+        feedbackTimestamp:
+          type: string
+          format: date-time
+        updatedResponse:
+          type: boolean
+    DislikeReason:
+      type: object
+      properties:
+        reason:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+    SourceDocument:
+      type: object
+      properties:
+        drive_item_id:
+          type: string
+        web_url:
+          type: string
+        score:
+          type: number
+          format: double
+        file_name:
+          type: string
+    StreamingResponseBody:
+      type: object
+    UpdateFollowUpRequest:
+      required:
+        - clientId
+        - followUpQuestion
+      type: object
+      properties:
+        followUpQuestion:
+          type: string
+        clientId:
+          type: string
+    ApiResponseFollowUpResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/FollowUpResponse'
+        success:
+          type: boolean
+    FollowUpResponse:
+      type: object
+      properties:
+        followUpId:
+          type: string
+        originalMessageId:
+          type: string
+        parentFollowUpId:
+          type: string
+        followUpQuestion:
+          type: string
+        followUpAnswer:
+          type: string
+        sourceDocuments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceDocument'
+        responseTimeMs:
+          type: integer
+          format: int64
+        sequenceNumber:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        definitiveAnswerFound:
           type: boolean
     UserSearchRequest:
       type: object
@@ -772,63 +1100,6 @@ components:
         question:
           type: string
         clientId:
-          type: string
-    ApiResponseChatMessageResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        body:
-          $ref: '#/components/schemas/ChatMessageResponse'
-        success:
-          type: boolean
-    ChatMessageResponse:
-      type: object
-      properties:
-        questionId:
-          type: string
-        responseId:
-          type: string
-        question:
-          type: string
-        response:
-          type: string
-        sourceDocuments:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceDocument'
-        responseTimeMs:
-          type: integer
-          format: int64
-        questionTimestamp:
-          type: string
-          format: date-time
-        responseTimestamp:
-          type: string
-          format: date-time
-        hasFollowUps:
-          type: boolean
-        feedbackType:
-          type: string
-          enum:
-            - LIKE
-            - DISLIKE
-        feedbackComment:
-          type: string
-        feedbackTimestamp:
-          type: string
-          format: date-time
-    SourceDocument:
-      type: object
-      properties:
-        drive_item_id:
-          type: string
-        web_url:
-          type: string
-        score:
-          type: number
-          format: double
-        file_name:
           type: string
     GetUserSessionsRequest:
       type: object
@@ -972,41 +1243,6 @@ components:
           type: string
         parentFollowUpId:
           type: string
-    ApiResponseFollowUpResponse:
-      type: object
-      properties:
-        message:
-          type: string
-        body:
-          $ref: '#/components/schemas/FollowUpResponse'
-        success:
-          type: boolean
-    FollowUpResponse:
-      type: object
-      properties:
-        followUpId:
-          type: string
-        originalMessageId:
-          type: string
-        parentFollowUpId:
-          type: string
-        followUpQuestion:
-          type: string
-        followUpAnswer:
-          type: string
-        sourceDocuments:
-          type: array
-          items:
-            $ref: '#/components/schemas/SourceDocument'
-        responseTimeMs:
-          type: integer
-          format: int64
-        sequenceNumber:
-          type: integer
-          format: int32
-        createdAt:
-          type: string
-          format: date-time
     FeedbackRequest:
       type: object
       properties:
@@ -1019,6 +1255,8 @@ components:
             - DISLIKE
         comment:
           type: string
+        dislikeReason:
+          $ref: '#/components/schemas/DislikeReason'
     ApiResponseFeedbackResponse:
       type: object
       properties:
@@ -1040,6 +1278,8 @@ components:
             - DISLIKE
         feedbackComment:
           type: string
+        dislikeReason:
+          $ref: '#/components/schemas/DislikeReason'
         feedbackTimestamp:
           type: string
           format: date-time

@@ -8874,7 +8874,10 @@
                 }
             },
             "followUpPlaceholder": "Posez vos questions complémentaires ici...",
-            "followUpButton": "Posez vos questions complémentaires ici"
+            "followUpButton": "Posez vos questions complémentaires ici",
+            "definitiveAnswerNotFound": "Je n’ai pas trouvé de réponse définitive dans les documents spécifiques au client. Voulez-vous que je vérifie également la référence commune ?",
+            "yes": "Oui",
+            "no": "Non"
         },
         "documents": {
             "recentlyAdded": "Fichiers récemment ajoutés",

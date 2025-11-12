@@ -8833,7 +8833,10 @@
                 }
             },
             "followUpPlaceholder": "Haga sus preguntas de seguimiento aquí...",
-            "followUpButton": "Haga sus preguntas de seguimiento aquí"
+            "followUpButton": "Haga sus preguntas de seguimiento aquí",
+            "definitiveAnswerNotFound": "No encontré una respuesta definitiva en los documentos específicos del cliente. ¿Quieres que revise también la referencia común?",
+            "yes": "Sí",
+            "no": "No"
         },
         "documents": {
             "recentlyAdded": "Archivos añadidos recientemente",

@@ -8993,7 +8993,10 @@
                 }
             },
             "followUpPlaceholder": "Ask your follow up questions here...",
-            "followUpButton": "Ask your follow up questions here"
+            "followUpButton": "Ask your follow up questions here",
+            "definitiveAnswerNotFound": "I couldn’t find a definitive answer in the client-specific documents. Would you like me to check the common reference also?",
+            "yes": "Yes",
+            "no": "No"
         },
         "documents": {
             "recentlyAdded": "Recently added files",

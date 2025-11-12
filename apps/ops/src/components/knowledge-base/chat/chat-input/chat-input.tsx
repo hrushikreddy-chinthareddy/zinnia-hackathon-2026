@@ -1,6 +1,6 @@
 import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -10,12 +10,10 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
-import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { createNewChatSession } from '@deps/queries/api/knowledge-base';
 import { ReactComponent as SendButton } from '@deps/styles/elements/icons/knowledge-base/send.svg';
 import { ReactComponent as StopButton } from '@deps/styles/elements/icons/knowledge-base/stop.svg';
 import {
-    BOT_ERROR_MESSAGE_ID,
     KeyboardEvents,
     MessageRole,
     UserMessage,
@@ -26,10 +24,21 @@ import styles from './chat-input.module.css';
 
 type ChatInputProps = {
     opsUserData: MeResponse;
-    setIsCompleted: (isCompleted: boolean) => void;
+    sendMessage: (
+        sessionId: string,
+        question: string,
+        userMsgId: string
+    ) => void;
+    stopStreaming: () => void;
+    isStreaming: boolean;
 };
 
-const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
+const ChatInput = ({
+    opsUserData,
+    sendMessage,
+    stopStreaming,
+    isStreaming,
+}: ChatInputProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
@@ -42,59 +51,18 @@ const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
         currentMessages,
     } = useKnowledgeBaseContext();
     const [message, setMessage] = useState<string>('');
-    const [loading, setLoading] = useState<boolean>(false);
 
     const lastMessage = useRef<string | null>(null);
-    const botMsgIdRef = useRef<string | null>(null);
-
-    const {
-        response,
-        status,
-        sources,
-        isStreaming,
-        questionId,
-        responseId,
-        sendMessage,
-        stopStreaming,
-        isStreamingRef,
-    } = useChatStream(selectedClientId);
-
-    useEffect(() => {
-        if (!botMsgIdRef.current) return;
-        if (sources.length >= 1) setLoading(false);
-        setCurrentMessages((prev) =>
-            prev.map((m) =>
-                m.id === botMsgIdRef.current
-                    ? {
-                          ...m,
-                          content:
-                              (response && response.length > 0
-                                  ? response
-                                  : status) || '',
-                          sourceDocuments: sources || [],
-                          ...(questionId && { questionId }),
-                          ...(responseId && {
-                              id: responseId ?? botMsgIdRef.current,
-                          }),
-                      }
-                    : m
-            )
-        );
-    }, [response, setCurrentMessages, status, sources, questionId, responseId]);
-
-    useEffect(() => {
-        setIsCompleted(!isStreamingRef.current);
-    }, [isStreaming, setIsCompleted]);
 
     const handleMessageSend = async (message: string) => {
         if (!message.trim()) return;
-        if (isStreaming || loading) return;
+        if (isStreaming) return;
         let currentSessionId = sessionId;
-        setLoading(true);
         try {
             setMessage('');
+            const userMsgId = uuidv4();
             const userMessage: UserMessage = {
-                id: uuidv4(),
+                id: userMsgId,
                 role: MessageRole.User,
                 content: message,
             };
@@ -112,7 +80,6 @@ const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
                         email: opsUserData.email,
                         clientId: selectedClientId,
                     });
-                    setLoading(false);
                     return;
                 }
                 currentSessionId = newChatSession.sessionId;
@@ -120,40 +87,19 @@ const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
                 newSession = true;
             }
 
-            await sendMessage(currentSessionId, message);
-            const botMsgId = uuidv4();
-            botMsgIdRef.current = botMsgId;
-            setCurrentMessages((prev) => [
-                ...prev,
-                {
-                    id: botMsgId,
-                    role: MessageRole.Bot,
-                    content: '',
-                },
-            ]);
+            await sendMessage(currentSessionId, message, userMsgId);
+            setMessage('');
 
             if (newSession) {
                 setChatHistoryReloadTrigger((prev) => prev + 1);
             }
         } catch (error: any) {
             browserLogError('Error sending message::', { error });
-
-            setCurrentMessages((prev) => [
-                ...prev,
-                {
-                    id: BOT_ERROR_MESSAGE_ID,
-                    role: MessageRole.Bot,
-                    content: t('chat.errorMsg'),
-                },
-            ]);
-        } finally {
-            setLoading(false);
         }
     };
 
     const handleStopResponse = () => {
         stopStreaming();
-        setLoading(false);
     };
 
     const retryLastMessage = () => {
@@ -175,7 +121,7 @@ const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
                                 handleMessageSend(message);
                             }
                         }}
-                        disabled={isStreaming || loading}
+                        disabled={isStreaming}
                         placeholder={t('chat.inputPlaceholder') || ''}
                     ></textarea>
 
@@ -214,9 +160,7 @@ const ChatInput = ({ opsUserData, setIsCompleted }: ChatInputProps) => {
                                     >
                                         <SendButton
                                             className={`!w-[30px] transition-all duration-300 ${
-                                                isStreaming ||
-                                                loading ||
-                                                !message.trim()
+                                                isStreaming || !message.trim()
                                                     ? 'text-gray-400'
                                                     : 'text-gray-700'
                                             }`}

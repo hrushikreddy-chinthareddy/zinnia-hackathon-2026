@@ -7,9 +7,13 @@ import React, {
     useState,
 } from 'react';
 
-import { getChatHistoryBySessionId } from '@deps/queries/api/knowledge-base';
+import {
+    getChatHistoryBySessionId,
+    getCommonClientId,
+} from '@deps/queries/api/knowledge-base';
 import {
     ChatbotMessage,
+    COMMON_CLIENT_NAME,
     MessageRole,
     UserMessage,
 } from '@deps/types/knowledge-base';
@@ -20,6 +24,7 @@ type KnowledgeBaseContextState = {
     sessionId: string;
     currentMessages: (UserMessage | ChatbotMessage)[];
     chatHistoryReloadTrigger: number;
+    commonClientId?: string | null;
     setSelectedClient: (clientId: string) => void;
     setSessionId: React.Dispatch<React.SetStateAction<string>>;
     setCurrentMessages: React.Dispatch<
@@ -37,6 +42,7 @@ const KnowledgeBaseContextDefaultValues = {
     sessionId: '',
     currentMessages: [],
     chatHistoryReloadTrigger: 0,
+    commonClientId: null,
     setSelectedClient: (clientId: string) => {},
     setSessionId: noop,
     setCurrentMessages: noop,
@@ -63,6 +69,7 @@ const KnowledgeBaseProvider = ({
     const defaultClientId =
         opsUserData?.client?.find((client) => client.default === true)?.id ??
         '';
+    const [commonClientId, setCommonClientId] = useState<string | null>(null);
     const [selectedClientId, setSelectedClientId] =
         useState<string>(defaultClientId);
     const [sessionId, setSessionId] = useState<string>('');
@@ -75,6 +82,19 @@ const KnowledgeBaseProvider = ({
         setSelectedClientId(clientId);
         sessionStorage.setItem('ZinniaLive_kb_selectedClientId', clientId);
     }, []);
+
+    const initializeCommonClientId = useCallback(async () => {
+        const localCommonId = opsUserData?.client?.find((client) =>
+            client.name?.toLowerCase().startsWith(COMMON_CLIENT_NAME)
+        )?.id;
+
+        if (localCommonId) {
+            setCommonClientId(localCommonId);
+        } else {
+            const fetchedCommonId = await getCommonClientId();
+            setCommonClientId(fetchedCommonId);
+        }
+    }, [opsUserData]);
 
     const startNewChatSession = () => {
         if (sessionId) {
@@ -105,6 +125,7 @@ const KnowledgeBaseProvider = ({
                         sourceDocuments,
                         feedbackType,
                         feedbackComment,
+                        definitiveAnswerFound,
                     } = message;
                     if (responseId && response) {
                         const userMessage: UserMessage = {
@@ -117,7 +138,10 @@ const KnowledgeBaseProvider = ({
                             questionId,
                             role: MessageRole.Bot,
                             content: response,
-                            sourceDocuments: sourceDocuments,
+                            sourceDocuments:
+                                definitiveAnswerFound === false
+                                    ? []
+                                    : sourceDocuments,
                             feedbackType,
                             feedbackComment,
                         };
@@ -141,6 +165,9 @@ const KnowledgeBaseProvider = ({
     }, [sessionIdProp]);
 
     useEffect(() => {
+        if (opsUserData?.client?.length) {
+            initializeCommonClientId();
+        }
         const savedClientId = sessionStorage.getItem(
             'ZinniaLive_kb_selectedClientId'
         );
@@ -163,7 +190,7 @@ const KnowledgeBaseProvider = ({
         if (defaultClientId.length > 0) {
             setSelectedClient(defaultClientId);
         }
-    }, [opsUserData, setSelectedClient]);
+    }, [opsUserData, setSelectedClient, initializeCommonClientId]);
 
     return (
         <KnowledgeBaseContext.Provider
@@ -178,6 +205,7 @@ const KnowledgeBaseProvider = ({
                 setChatHistoryReloadTrigger,
                 startNewChatSession,
                 viewChatHistory,
+                commonClientId,
             }}
         >
             {children}

@@ -6,12 +6,13 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { SSEEventType } from '@deps/types/knowledge-base';
 import {
     logError,
+    logTrace,
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../../utils';
+import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../utils';
 
 export const config = {
     api: {
@@ -22,62 +23,68 @@ export const config = {
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse, loggingContext) => {
         if (req.method !== HttpMethod.GET.toUpperCase()) {
+            logError('Invalid method', { ...loggingContext });
             return res
                 .status(HttpStatusCode.MethodNotAllowed)
                 .json({ error: 'Method not allowed' });
         }
 
-        const {
-            messageId,
-            followUpQuestion,
-            parentFollowUpId = null,
-            clientId,
-        } = req.query;
-        if (!messageId || !followUpQuestion || !clientId) {
+        const { sessionId, question, messageId, commonClientId } = req.query;
+        if (!sessionId || !question || !messageId || !commonClientId) {
             logError(
-                `Missing messageId, followUpQuestion, or clientId:: messageId=${messageId}, followUpQuestion=${followUpQuestion}, clientId=${clientId}`,
+                `Missing sessionId, question, messageId or commonClientId:: sessionId=${sessionId}, question=${question}, messageId=${messageId}, commonClientId=${commonClientId}`,
                 loggingContext
             );
             return res.status(HttpStatusCode.BadRequest).json({
-                error: 'Missing messageId, followUpQuestion, or clientId',
+                error: 'Missing sessionId, question, messageId or commonClientId',
             });
         }
 
         const accessToken = (await getAccessToken(req, res)).accessToken;
-        const url = `${apiServerBaseUrl}/api/v1/chat/messages/${messageId}/followup/stream`;
-
+        const url = `${apiServerBaseUrl}/api/v1/chat/sessions/${sessionId}/messages/${messageId}/stream`;
         try {
+            logTrace('Sending upstream request', { ...loggingContext, url });
             const upstream = await fetch(url, {
-                method: HttpMethod.POST.toUpperCase(),
+                method: HttpMethod.PUT.toUpperCase(),
                 headers: {
-                    accept: '*/*',
+                    accept: 'text/event-stream',
                     'content-type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${accessToken} `,
                 },
-                body: JSON.stringify({
-                    followUpQuestion,
-                    clientId,
-                    parentFollowUpId,
-                }),
+                body: JSON.stringify({ question, clientId: commonClientId }),
+            });
+
+            logTrace('Upstream response received', {
+                status: upstream.status,
+                ok: upstream.ok,
+                ...loggingContext,
             });
             if (!upstream.ok || !upstream.body) {
                 const text = await upstream.text();
+                logError('Upstream returned error', {
+                    status: upstream.status,
+                    body: text,
+                    ...loggingContext,
+                });
                 return res.status(upstream.status).send(text);
             }
 
-            res.setHeader('Content-Type', 'text/event-stream');
-            res.setHeader('Cache-Control', 'no-cache');
+            res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
+            res.setHeader('Cache-Control', 'no-cache, no-transform');
             res.setHeader('Connection', 'keep-alive');
+            res.setHeader('Transfer-Encoding', 'chunked');
             res.setHeader('X-Accel-Buffering', 'no');
             res.flushHeaders?.();
+
+            logTrace('Streaming headers set', loggingContext);
 
             const reader = upstream.body.getReader();
             const decoder = new TextDecoder();
 
             let buffer = '';
             let full_response = '';
-            let followUpID = '';
-            let parent_FollowUpId = '';
+            let questionId = '';
+            let responseId = '';
             let definitiveAnswerFound = null;
 
             const eventHandler = createSSEEventHandler(res, loggingContext, {
@@ -86,9 +93,9 @@ export default withAuthAndLogging(
                 },
                 onComplete: (event) => {
                     full_response = event.full_response;
-                    followUpID = event.followUpID;
-                    parent_FollowUpId = event.parentFollowUpId;
-                    definitiveAnswerFound = event.definitive_answer_found;
+                    questionId = event.questionId;
+                    responseId = event.responseId;
+                    definitiveAnswerFound = event.definitiveAnswerFound;
                 },
             });
 
@@ -106,23 +113,23 @@ export default withAuthAndLogging(
             }
             sendSSE(res, SSEEventType.COMPLETE, {
                 full_response,
-                followUpID,
-                parent_FollowUpId,
+                questionId,
+                responseId,
                 definitiveAnswerFound,
             });
             res.end();
         } catch (err: any) {
-            logError('Proxy error::follow-up-stream', {
+            logError('Proxy error::chat-stream', {
                 ...parseErrorInformation(err),
                 ...loggingContext,
             });
             res.status(HttpStatusCode.InternalServerError).json({
-                error: 'Failed to connect to follow up chat stream',
+                error: 'Failed to connect to chat stream',
             });
         }
     },
     {
-        file: 'knowledge-base/follow-up/sendFollowUpStream/index',
+        file: 'knowledge-base/common-client-response/index',
         function: 'routeHandler',
     }
 );
