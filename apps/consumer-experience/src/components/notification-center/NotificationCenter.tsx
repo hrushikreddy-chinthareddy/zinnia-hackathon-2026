@@ -68,42 +68,6 @@ export const NotificationCenter = ({
         />
       )}
       <Pagination total={20} limit={5} offset={0} goToPage={() => {}} />
-      {/* <section
-        style={{
-          backgroundColor: clsx(
-            (isError || isLoading) &&
-              'var(--color-base-surface-surface-secondary)'
-          ),
-        }}
-        className={Styles.end}
-      >
-        {showLoader ? (
-          <Loader />
-        ) : (
-          <>
-            <Icon
-              width={32}
-              height={32}
-              color={clsx(
-                isError && 'var(--color-status-icon-status-error-icon)'
-              )}
-              type={isError ? IconType.HEX_EXCLAMATION : IconType.FLAG_GOALS}
-            />
-            <h2
-              style={{
-                color: clsx(
-                  isError && 'var(--color-status-text-status-error-text)'
-                ),
-              }}
-              className="typography-labels-label-lg"
-            >
-              {isError
-                ? 'There was a problem fetching notifications'
-                : "That's All Your Notifications From the Last 30 Days"}
-            </h2>
-          </>
-        )}
-      </section> */}
     </div>
   );
 };
