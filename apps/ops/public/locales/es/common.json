@@ -3219,7 +3219,7 @@
                     "widowed": "Viudo"
                 },
                 "ssn": "SSN",
-                "trustDate": "Fecha de fideicomiso"
+                "trustDate": "Fecha de confianza"
             },
             "jointOwner": {
                 "title": "Información del Propietario Conjunto"
