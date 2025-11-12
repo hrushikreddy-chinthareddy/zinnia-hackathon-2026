@@ -70,12 +70,15 @@ const TabGroupContent = ({
     );
 
     const sideSheet = useSideSheetContext();
-    const { diaryNotes } = useDiaryNotes(
-        policy?.policyNumber as string,
-        policy?.carrierId as string,
-        0,
-        10
-    );
+    const { diaryNotes } = useDiaryNotes({
+        policyNumber: policy?.policyNumber as string,
+        clientCode: policy?.carrierId as string,
+        offset: 0,
+        limit: 10,
+        showDiaryNotes: true,
+        planCode: '',
+        isLC: true,
+    });
     const openSideSheet = () => {
         const content = (
             <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />

@@ -93,6 +93,12 @@ export interface TransactionResponse {
     data?: any;
 }
 
+export interface TransactionSubmitResponse {
+    caseId?: string;
+    status?: string;
+    correlationId?: string;
+}
+
 export interface TransactionRequest {
     effectiveDate: string;
 }

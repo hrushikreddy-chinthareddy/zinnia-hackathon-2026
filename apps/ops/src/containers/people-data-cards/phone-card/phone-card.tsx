@@ -35,6 +35,8 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
+
+import { filterPastEndDate } from '../people-data-cards.utils';
 interface OpenSideSheet {
     phone?: Phone;
     header: SideSheetPeopleHeaderProps;
@@ -59,7 +61,7 @@ const PhoneCard = ({
 
     const { phones } = party ?? {};
     const [currentPhones, setCurrentPhones] = useState<Phone[]>(
-        sortPhonesByType({ phones })
+        sortPhonesByType({ phones: filterPastEndDate(phones) })
     );
 
     const showToggle = currentPhones.length > 4;

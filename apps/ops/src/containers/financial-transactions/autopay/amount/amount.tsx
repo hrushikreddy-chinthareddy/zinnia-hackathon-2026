@@ -233,7 +233,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     const items: RadioItem[] = [
         { label: t('monthly'), value: Frequency.MONTHLY },
         { label: t('quarterly'), value: Frequency.QUARTERLY },
-        { label: t('biAnnually'), value: Frequency.BIANNUAL },
+        { label: t('semiAnnually'), value: Frequency.SEMIANNUAL },
         { label: t('annually'), value: Frequency.ANNUAL },
     ];
 

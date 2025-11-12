@@ -236,7 +236,8 @@
                             "response": {
                                 "enum": "key",
                                 "enumNames": "value"
-                            }
+                            },
+                            "sorted": true
                         },
                         "ui:hideError": true
                     },

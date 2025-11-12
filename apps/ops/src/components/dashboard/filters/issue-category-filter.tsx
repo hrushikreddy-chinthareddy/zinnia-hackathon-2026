@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
-import { FC, useEffect, useState } from 'react';
+import { FC, useState } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FieldSize } from '@deps/components/fields/field';
@@ -22,10 +22,6 @@ export const IssueCategoryFilter: FC<IssueCategoryFilterProps> = ({
     // This function sets the category options which helps in displaying the selected options in the UI and passes the updated value to context that helps in query call
     const handleCategoryChange = (selected: string) => {
         setCategory((prev) => {
-            // Don't remove if it's the only category selected
-            if (selected in prev && Object.keys(prev).length === 1) {
-                return prev;
-            }
             // Create a new object based on the previous state
             const updated = { ...prev };
             // Toggle the selected category
@@ -63,23 +59,11 @@ export const IssueCategoryFilter: FC<IssueCategoryFilterProps> = ({
             })) ?? [],
     });
 
-    useEffect(() => {
-        if (
-            categoryFilterOptions?.length &&
-            Object.keys(category).length === 0
-        ) {
-            const initialCategories = Object.fromEntries(
-                categoryFilterOptions.map((item) => [item.value, item.value])
-            );
-            setCategory(initialCategories);
-            onChange(categoryFilterOptions.map((item) => item.value));
-        }
-    }, [categoryFilterOptions, category, onChange]);
-
     return (
         <Select
             maxContentWidth
             label="Issue category"
+            placeholder="All"
             options={categoryFilterOptions || []}
             size={FieldSize.XS}
             name="issue-category-dropdown-btn"

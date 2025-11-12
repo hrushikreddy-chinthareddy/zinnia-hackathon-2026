@@ -1,0 +1,36 @@
+.transactionWrapper {
+    background-color: var(--color-grayscale-color-white);
+    border-radius: var(--measure-dimension-radius-sm);
+    display: flex;
+    flex-direction: column;
+
+    .typeSelect {
+        padding: 0 var(--measure-dimension-padding-4xl)
+            var(--measure-dimension-padding-4xl);
+    }
+
+    .table {
+        display: flex;
+        flex-direction: column;
+        padding: 0 var(--measure-dimension-padding-4xl)
+            var(--measure-dimension-padding-4xl);
+    }
+
+    .tableFooter {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        padding: 0 var(--measure-dimension-padding-4xl)
+            var(--measure-dimension-padding-4xl);
+
+        @media (min-width: 1025px) {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    .noResultsTd {
+        padding: var(--measure-dimension-padding-4xl);
+        text-align: center;
+    }
+}

@@ -60,7 +60,9 @@ export const FieldDate = forwardRef<HTMLInputElement, FieldDateProps>(
         const [selectedDate, setSelectedDate] = useState<Date | undefined>(
             defaultDate ? new Date(defaultDate) : undefined
         );
-        const [inputVal, setInputVal] = useState(defaultDate);
+        const [inputVal, setInputVal] = useState<string | undefined>(
+            defaultDate ? new Date(defaultDate).toLocaleDateString() : undefined
+        );
 
         const inputContainer = useRef<HTMLInputElement>(null);
         const innerInputRef = useRef<HTMLInputElement>(null);

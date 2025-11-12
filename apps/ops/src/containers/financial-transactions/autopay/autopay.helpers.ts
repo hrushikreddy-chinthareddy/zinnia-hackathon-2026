@@ -10,8 +10,10 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { v4 as uuidV4 } from 'uuid';
 
+import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { ACH, Autopay } from '@deps/contexts/transactions/AutopayContext';
 import { convertAggregationAccountTypeToPaymentForm } from '@deps/helpers/transactions/payment.helpers';
+import { Processes } from '@deps/models/case/case';
 import { SystematicProgramUpdateRequestQuery } from '@deps/queries/api/bpm';
 import {
     NUMERIC_DATE_FORMAT,
@@ -34,7 +36,7 @@ export const buildSystematicProgramUpdateRequestBody = (
 
     return {
         caseId: autopay.caseId || '',
-        correlationId: uuidV4(),
+        correlationId: autopay.correlationId || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: autopay.reverseInitiator,
         externalTransactionId: '',
@@ -87,7 +89,7 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
 
     return {
         caseId: autopay.caseId || '',
-        correlationId: uuidV4(),
+        correlationId: autopay.correlationId || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: autopay.reverseInitiator,
         externalTransactionId: '',
@@ -115,4 +117,33 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
             ],
         },
     };
+};
+
+export const getProcessSubTypes = (parentPage: ParentPage) => {
+    const generalProcessSubTypes = [
+        Processes.SystematicProgramSetup,
+        Processes.SystematicProgramUpdate,
+    ];
+
+    return parentPage == ParentPage.Premiums
+        ? [
+              Processes.SetupPayment,
+              Processes.UpdatePayment,
+              ...generalProcessSubTypes,
+          ]
+        : parentPage == ParentPage.Withdrawals
+        ? [
+              Processes.SetupWithdrawal,
+              Processes.UpdateWithdrawal,
+              Processes.SetupRequiredMinimumDistribution,
+              Processes.UpdateRequiredMinimumDistribution,
+              ...generalProcessSubTypes,
+          ]
+        : parentPage == ParentPage.Loans
+        ? [
+              Processes.UpdateLoanRepayment,
+              Processes.SetupLoanRepayment,
+              ...generalProcessSubTypes,
+          ]
+        : generalProcessSubTypes;
 };

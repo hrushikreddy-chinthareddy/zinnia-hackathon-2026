@@ -158,7 +158,7 @@ describe('FollowUp', () => {
 
         const { findByRole } = render(<FollowUp {...defaultProps} />);
 
-        const textbox = await findByRole('textbox'); // waits for textarea to appear
+        const textbox = await findByRole('textbox');
         const sendButton = await findByRole('button', {
             name: /send-followup/i,
         });
@@ -180,7 +180,7 @@ describe('FollowUp', () => {
 
         const { findByRole } = render(<FollowUp {...defaultProps} />);
 
-        const textbox = await findByRole('textbox'); // waits for textarea to appear
+        const textbox = await findByRole('textbox');
         fireEvent.change(textbox, { target: { value: 'test follow up' } });
         fireEvent.keyDown(textbox, {
             key: 'Enter',

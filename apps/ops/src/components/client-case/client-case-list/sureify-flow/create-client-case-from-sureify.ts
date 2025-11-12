@@ -17,6 +17,40 @@ import { logError, LoggingContext } from '@deps/utils/server-logging';
 
 import { buildClientCaseFromNewBusiness } from './build-client-case-from-new-business';
 
+/**
+ * Entry point for handling Sureify → Illustrations deep link flow.
+ *
+ * This function receives an eAppId from Sureify and ensures the correct
+ * Client Case state exists in our system before routing the user.
+ *
+ * High-level business rules:
+ *  - If the case already exists in our system → redirect to it
+ *  - If no case exists → fetch application data from New Business API and create one
+ *  - If the external data is incomplete → return props to pre-fill the form and collect missing fields
+ *
+ * Why this logic exists:
+ *  - Prevent duplicate case creation for the same Sureify application
+ *  - Smooth internal/external hand-off between Sureify and Illustrations
+ *  - Ensure required fields exist before generating an illustration
+ *
+ * Error handling strategy:
+ *  - All failures are logged with context for traceability
+ *  - We return props with error messaging instead of throwing (SSR safe failure)
+ *
+ * Redirect scenarios:
+ *  Case already exists → go straight to illustration
+ *  Case successfully created → go to new illustration page
+ *  Missing mandatory info (e.g. sex at birth) → return props to pre-populate form
+ *  Error → return error props for UI fallback
+ *
+ * Security notes:
+ *  - Requires valid access token
+ *  - Uses server APIs only (never exposed to client)
+ *
+ * Observability:
+ *  - LoggingContext propagated throughout
+ *  - API origin tagged in typed errors for debug clarity
+ */
 export const createClientCaseFromSureify = async (
     eAppId: string,
     accessToken: string,
@@ -29,6 +63,7 @@ export const createClientCaseFromSureify = async (
             accessToken,
             loggingContext
         );
+        // In a real scenario it should only exist one client case with the eAppId assigned
         const defaultClientCaseId = first(clientCases)?.id;
 
         // Step 2: if a client case already exists, redirect to the client case
@@ -118,6 +153,7 @@ export const createClientCaseFromSureify = async (
             },
         };
     } catch (error: any) {
+        // Never throw from SSR — always return props to avoid server response crash
         logError(error.message, {
             ...loggingContext,
             error: error,

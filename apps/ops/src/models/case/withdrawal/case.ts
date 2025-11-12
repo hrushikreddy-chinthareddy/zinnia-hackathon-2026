@@ -426,7 +426,7 @@ export enum SSWType {
 }
 
 export interface RMD {
-    rmdType: null;
+    rmdType: RMDType | null;
     rmdSubType: null;
     rmdRelationship: null;
     ralationshipDate: null;
@@ -941,6 +941,7 @@ export enum ProgramSubType {
 
 export enum Program {
     OFT = 'Outgoing Transfer',
+    WITHDRAWAL = 'Withdrawal',
 }
 
 // FormProgram

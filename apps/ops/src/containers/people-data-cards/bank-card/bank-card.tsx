@@ -30,6 +30,8 @@ import {
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import { filterPastEndDate } from '../people-data-cards.utils';
+
 export interface BankCardProps {
     editable?: boolean;
     party?: Party;
@@ -60,7 +62,7 @@ export const BankCard = ({
     const { policyDetails } = useContext(PolicyData);
 
     const [currentBankAccounts, setCurrentBankAccounts] = useState(
-        party?.bankDetails?.filter((bank) => !isEndDated(bank.endDate)) ?? []
+        filterPastEndDate(party?.bankDetails)
     );
     const { featureFlags } = useOptimizely();
     const shouldShowAddBankChange =

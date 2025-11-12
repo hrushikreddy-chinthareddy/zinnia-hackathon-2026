@@ -79,6 +79,29 @@ export const API_TO_UI_ROLE: Record<ApiRoles, UiRoles | undefined> = {
 export const toUiRole = (apiRoleName: string): UiRoles | undefined =>
     API_TO_UI_ROLE[apiRoleName as ApiRoles];
 
+export const TRANSACTION_CATEGORY_DISPLAY_MAP: Record<string, string> = {
+    financial: 'Financial',
+    non_financial: 'Non-Financial',
+    policy_update: 'Policy Update',
+};
+
+// Transaction type mapping
+export const TRANSACTION_TYPE_DISPLAY_MAP: Record<string, string> = {
+    premium: 'Premium',
+    loan: 'Loan',
+    withdrawal: 'Withdrawal',
+    surrender: 'Surrender',
+    death_claim: 'Death Claim',
+    free_look: 'Free Look',
+    email: 'Email',
+    name: 'Name',
+    phone: 'Phone',
+    address: 'Address',
+    bank_info: 'Bank Info',
+    beneficiary: 'Beneficiary',
+    newloan: 'New Loan',
+};
+
 export const downloadCSV = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);

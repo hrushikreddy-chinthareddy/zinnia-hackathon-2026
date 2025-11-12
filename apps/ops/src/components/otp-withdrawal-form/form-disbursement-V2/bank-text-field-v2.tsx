@@ -30,6 +30,7 @@ interface BankTextFieldV2Props {
     value: string;
     size: FieldSize;
     type: FieldType;
+    isBankingField?: boolean;
 }
 
 const BankTextFieldV2 = ({
@@ -46,12 +47,15 @@ const BankTextFieldV2 = ({
     error,
     disableCopyPaste,
     value,
+    isBankingField = true,
 }: BankTextFieldV2Props) => {
     const realTimeValidationError =
         validator?.(
             SupportedValidationOperation.Equal,
             value,
-            defaultDisbursementInfo?.bank?.[0]
+            isBankingField
+                ? defaultDisbursementInfo?.bank?.[0]
+                : defaultDisbursementInfo
         ) || error;
 
     return (

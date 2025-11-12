@@ -1,10 +1,10 @@
-import { ApiGetProducerResponse } from '@xd/pom/src/types/get.types';
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
+import { ApiGetProducerResponse } from '@deps/types/pom/get.types';
 import {
     GetDownlineResponse,
     GetHierarchyResponse,

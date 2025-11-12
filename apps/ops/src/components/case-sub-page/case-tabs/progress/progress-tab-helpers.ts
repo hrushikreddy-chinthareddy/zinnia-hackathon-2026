@@ -408,7 +408,7 @@ export class TransformedStage {
                     ),
                 };
             })
-            .sort((a, b) => a.label.localeCompare(b.label));
+            .sort((a, b) => (a.label || '').localeCompare(b.label || ''));
         return convertedSteps.concat(convertedMultiSteps);
     };
     private processSteps() {

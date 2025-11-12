@@ -110,7 +110,7 @@ const TaskManagementQueue = ({
     };
 
     const enableClaimTask = taskDetails.every(
-        (task) => task.status === TaskStatus.Pending
+        (task) => task.status === TaskStatus.Scheduled
     );
 
     const getSafeSearchParams = (searchParams: SearchParamsPayload) => {

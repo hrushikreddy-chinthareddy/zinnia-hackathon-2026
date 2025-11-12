@@ -249,8 +249,10 @@ const CaseManagementDashboard = ({
         enabled: loadedStoredFilters,
     });
 
+    const hasResults = !!caseSearchData?.data?.length;
+
     const liveResultsMessage = useMemo(() => {
-        if (caseSearchData?.data.length) {
+        if (hasResults) {
             return t('policy.documents.xToYOfZ', {
                 x: caseManagementFilters.offset + 1,
                 y: Math.min(
@@ -472,7 +474,7 @@ const CaseManagementDashboard = ({
                         aria-live="polite"
                         aria-atomic="true"
                     >
-                        {caseSearchData
+                        {hasResults
                             ? t('policy.documents.xToYOfZ', {
                                   x: numberOfItems,
                                   y: currentIndex,

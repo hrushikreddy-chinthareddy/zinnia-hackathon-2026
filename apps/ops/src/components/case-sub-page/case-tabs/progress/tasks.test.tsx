@@ -12,7 +12,7 @@ const mockT = jest.fn((key, options) => {
     if (key === 'caseOverview.tabs.openSince') {
         return `Open since ${options.date}`;
     }
-    if (key === 'caseOverview.tabs.pendingTill') {
+    if (key === 'caseOverview.tabs.scheduledTill') {
         return `Pending till ${options.date}`;
     }
     if (key === 'caseOverview.tabs.closedOn') {
@@ -156,7 +156,7 @@ describe('Task Component', () => {
         const task = createMockTask({ status: Statuses.Pending });
         render(<Task task={task} />);
 
-        expect(mockT).toHaveBeenCalledWith('caseOverview.tabs.pendingTill', {
+        expect(mockT).toHaveBeenCalledWith('caseOverview.tabs.scheduledTill', {
             date: 'formatted-2023-05-16',
         });
     });

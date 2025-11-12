@@ -12,7 +12,7 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SOR_MAP, SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { validateTransaction } from '@deps/queries/api/web-non-financial';
+import { validateBeneChangeTransaction } from '@deps/queries/api/web-non-financial';
 import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -146,15 +146,11 @@ const BeneChangeContainer = ({
             sorSystem: SOR || SorSystem.LifeCad,
         });
 
-        const response = invokeNewBeneChangeApi
-            ? await validateTransaction(
-                  {
-                      ...requestBody,
-                      planCode,
-                  },
-                  invokeNewBeneChangeApi
-              )
-            : await validateTransaction(requestBody, invokeNewBeneChangeApi);
+        const response = await validateBeneChangeTransaction(
+            requestBody,
+            invokeNewBeneChangeApi
+        );
+
         return response;
     }, [
         document,
@@ -247,7 +243,6 @@ const BeneChangeContainer = ({
                         clientId={clientId as string}
                         parentPage={parentPage}
                         leaveTransactionLink={leaveTransactionLink}
-                        isBeneChange={true}
                     />
                 ),
                 screenReaderLabel: t('tabs.confirm'),

@@ -2,9 +2,9 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 import { FC, ReactNode } from 'react';
 
 import { Button } from '@/components/button/Button';
+import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 
 import styles from '../transaction-steps.module.css';
-import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 interface ErrorProps {
   errorTitle: string;
   errorMessage: ReactNode;

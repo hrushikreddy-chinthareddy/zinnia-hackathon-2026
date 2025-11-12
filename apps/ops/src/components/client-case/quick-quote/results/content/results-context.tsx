@@ -1,4 +1,4 @@
-import { groupBy, includes } from 'lodash';
+import { groupBy, includes, zip } from 'lodash';
 import {
     createContext,
     ReactNode,
@@ -20,7 +20,11 @@ import {
     QuickQuoteParams,
 } from '@deps/types/quickQuote';
 
-import { asNumberOrRange } from '../../helpers';
+import {
+    asNumberOrRange,
+    expandQuickQuoteVariants,
+    placeholderData,
+} from '../../helpers';
 import { useQuickQuoteQueries, VariantNotAvailableError } from '../../hooks';
 
 type QuickQuoteResultsContextState = {
@@ -56,7 +60,10 @@ export const QuickQuoteResultsProvider = ({
 }: QuickQuoteResultsProviderProps) => {
     // TODO: Get real variations based on params
     const variants = useMemo(
-        () => getQuickQuoteProductMapping(quickQuoteParams),
+        () =>
+            expandQuickQuoteVariants(
+                getQuickQuoteProductMapping(quickQuoteParams)
+            ),
         [quickQuoteParams]
     );
 
@@ -74,10 +81,17 @@ export const QuickQuoteResultsProvider = ({
         { quickQuoteParams, variants },
         useCallback(
             (results) => {
-                const items = results
-                    .map((result) => {
+                const items = zip(results, variants)
+                    .map(([result, variant]) => {
+                        if (!result || !variant) {
+                            return;
+                        }
+
                         if (result.data) {
-                            return result.data;
+                            return {
+                                ...result.data,
+                                variant,
+                            };
                         }
 
                         const { error } = result;
@@ -172,7 +186,7 @@ export const QuickQuoteResultsProvider = ({
                                         const notAvailabilityReasonField =
                                             extractNotAvailabilityReason(data);
 
-                                        if (range) {
+                                        if (range != null) {
                                             return {
                                                 termLength:
                                                     parseInt(termLength),
@@ -204,7 +218,7 @@ export const QuickQuoteResultsProvider = ({
                                         const notAvailabilityReasonField =
                                             extractNotAvailabilityReason(data);
 
-                                        if (range) {
+                                        if (range != null) {
                                             return {
                                                 termLength:
                                                     parseInt(termLength),
@@ -264,7 +278,7 @@ export const QuickQuoteResultsProvider = ({
                             item != null
                     );
             },
-            [products]
+            [products, variants]
         )
     );
 
@@ -273,7 +287,7 @@ export const QuickQuoteResultsProvider = ({
             isLoading,
             isFetching: isFetching || isFetchingProducts,
             isPending,
-            results,
+            results: results?.length ? results : placeholderData,
         }),
         [results, isLoading, isFetching, isFetchingProducts, isPending]
     );

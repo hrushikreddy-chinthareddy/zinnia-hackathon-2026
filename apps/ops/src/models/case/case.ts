@@ -68,6 +68,16 @@ export type Case = {
     updatedAt: string;
     caseResult?: string;
     caseResultDetail?: string;
+    caseProcessingDetails?: {
+        detailType: string;
+        details: {
+            performedBy?: string;
+            source?: string;
+            partyId?: string;
+            applicationType?: string;
+        };
+        eventTimeStamp: number;
+    }[];
 };
 
 // Case Type and a Case's Process are the same
@@ -110,7 +120,25 @@ export enum Processes {
     QualityAudit = 'Quality Audit',
     OwnerChange = 'Owner Change',
     PayorChange = 'Payor Change',
-    ThirdPartyDesigneeChange = 'Third Party Designee',
+    ThirdPartyDesigneeChange = 'Third Party Designee Change',
+    ExistingNameChange = 'Existing Name Change',
+    EmailChange = 'Email Change',
+    PhoneNumberChange = 'Phone Change',
+    BankChange = 'Bank Info Change',
+    CommunicationPreferenceChange = 'Communication Preference Change',
+    SystematicProgramUpdate = 'Systematic Program Update',
+    SystematicProgramSetup = 'Systematic Program Setup',
+    SetupPayment = 'Setup Payment',
+    UpdatePayment = 'Update Payment',
+    SetupWithdrawal = 'Setup Withdrawal',
+    UpdateWithdrawal = 'Update Withdrawal',
+    SetupRequiredMinimumDistribution = 'Setup Required Minimum Distribution',
+    UpdateRequiredMinimumDistribution = 'Update Required Minimum Distribution',
+    UpdateLoanRepayment = 'Update Loan Repayment',
+    SetupLoanRepayment = 'Setup Loan Repayment',
+    FreeLookCancellation = 'Free Look Cancellation',
+    PartialWithdrawal = 'Partial Withdrawal',
+    FullSurrender = 'Full Surrender',
 }
 
 export enum Actions {

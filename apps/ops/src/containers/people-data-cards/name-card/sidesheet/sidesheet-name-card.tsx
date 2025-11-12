@@ -110,7 +110,7 @@ export const SidesheetNameCard = ({
             : undefined;
     const { sessionId, partyId: userId } = usePermissionsContext();
     const INITIAL_BODY: NonFinancialTransactionBody = {
-        correlationId: correlationIdFromRoute || uuidV4(),
+        correlationId: uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: false,
     };
@@ -163,8 +163,8 @@ export const SidesheetNameCard = ({
         Prefix.MR,
         Prefix.MS,
         Prefix.MISS,
-        Prefix.DR_,
-        Prefix.MRS_,
+        Prefix.DR,
+        Prefix.MRS,
     ].map((option) => ({ label: option, value: option }));
 
     const [dateOfSignature, setDateOfSignature] = useState('');
@@ -369,7 +369,7 @@ export const SidesheetNameCard = ({
         }
 
         const nameChangePayload = {
-            correlationId: caseId ? INITIAL_BODY.correlationId : uuidV4(),
+            correlationId: body.correlationId,
             effectiveDate: INITIAL_BODY.effectiveDate,
             partyName: {
                 firstName,
@@ -655,6 +655,9 @@ export const SidesheetNameCard = ({
                         setCurrentErrors={setCurrentErrors}
                         setViewState={setViewState}
                         required={true}
+                        processSubType={[Processes.ExistingNameChange]}
+                        correlationId={correlationIdFromRoute}
+                        body={body}
                     />
 
                     {getContent()}

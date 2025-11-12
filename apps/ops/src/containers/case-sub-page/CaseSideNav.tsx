@@ -270,6 +270,9 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                         carrier={caseDetails?.carrier}
                         process={caseDetails.process}
                         applicationType={caseDetails.applicationType}
+                        caseProcessingDetails={
+                            caseDetails.caseProcessingDetails
+                        }
                     />
                     {shouldShowCaseInsights && (
                         <div className="flex w-full flex-col p-4 border-t-2 border-gray-100">

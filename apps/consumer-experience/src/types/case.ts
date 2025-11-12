@@ -1,6 +1,9 @@
 // From this doc https://zinnia.atlassian.net/wiki/spaces/ZLCM/pages/4492361733/Process+and+ProcessSubTypes+in+APIs
 
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
+import {
+  CaseInstanceSummary,
+  CaseListInstanceResponse,
+} from '@zinnia/api-types/types/case';
 
 export enum CaseTypes {
   ADDRESS_CHANGE = 'ADDRESS_CHANGE',
@@ -12,6 +15,11 @@ export enum CaseTypes {
 
 export interface CaseSummary extends CaseInstanceSummary {
   processSubType: string;
+}
+
+export interface CaseSearchResponse
+  extends Omit<CaseListInstanceResponse, 'data'> {
+  data?: Array<CaseSummary>;
 }
 
 export enum CaseStatus {

@@ -22,11 +22,13 @@ export const DocumentMatchingHandler: TaskHandler<
         if (!schema?.formSchema?.definitions) return;
 
         schema.formSchema.definitions.caseTypeEnum = {
-            enum: response.map((item) => item.key) || [DEFAULT_CASE_TYPE],
+            enum: response.map((item) => item.key).sort() || [
+                DEFAULT_CASE_TYPE,
+            ],
         };
 
         schema.uiSchema.caseType['ui:options'] = {
-            enumNames: response.map((item) => item.value),
+            enumNames: response.map((item) => item.value).sort(),
         };
     },
 };

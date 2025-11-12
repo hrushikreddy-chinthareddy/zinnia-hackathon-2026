@@ -19,7 +19,7 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { UserProfile } from '@deps/models/user-profile';
 
-import pino, { complianceLogger } from './pino-server';
+import pino from './pino-server';
 
 type UserInfo = {
     sessionId: string;
@@ -101,10 +101,7 @@ type WithPageAuthAndLogging = (
 ) => ReturnType<WithPageAuthRequired>;
 
 export const logCompliance: LoggingFunction = (message, serializableValues) => {
-    complianceLogger.compliance(
-        { ...(serializableValues || {}), isCompliance: true },
-        message
-    );
+    pino.info({ ...(serializableValues || {}), isCompliance: true }, message);
 };
 
 export const logFatal: LoggingFunction = (message, serializableValues) => {
@@ -311,7 +308,12 @@ export const withAuthAndLogging = (
             req?.query?.correlationId ||
             uuidV4();
 
+        logInfo(`authLogging::start::${correlationId}`);
+
         const baseContext = await buildNextApiLoggingContext(req, res);
+
+        logInfo(`authLogging::builded::${correlationId}`);
+
         const loggingContext = {
             correlationId: correlationId,
             ...baseContext,

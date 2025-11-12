@@ -40,6 +40,7 @@ const carrierCodes = [
     'GDMN',
     'GLAC',
     'GLCO',
+    'GILI',
     'ILIC',
     'ILNA',
     'JHLI',
@@ -56,6 +57,7 @@ const carrierCodes = [
     'SAAG',
     'SBGC',
     'SBUL',
+    'SBL',
     'SFGI',
     'SMTR',
     'THRI',
@@ -83,6 +85,7 @@ export const carrierNames: Record<CarrierCode, string> = {
     GDMN: 'Goldman Sachs',
     GLAC: 'Industrial Alliance',
     GLCO: 'GILICO',
+    GILI: 'GILICO',
     ILIC: 'Arcus',
     ILNA: 'Arcus',
     JHLI: 'John Hancock',
@@ -98,6 +101,7 @@ export const carrierNames: Record<CarrierCode, string> = {
     RSLN: 'Lincoln Benefit Life',
     SAAG: 'SunAmerica',
     SBGC: 'Security Benefit',
+    SBL: 'Security Benefit',
     SBUL: 'Security Benefit Life Insurance Company', // DEPU-2795
     SFGI: 'Sammons Financial',
     SMTR: 'Symetra',
@@ -202,6 +206,7 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
             return globalAtlantic;
         case 'GLCO':
         case 'GILICO':
+        case 'GILI':
             return guaranty;
         case 'GLAC':
             return guggenheim;
@@ -223,6 +228,7 @@ export const getCarrierLogoByClientId = (clientId: string): string => {
         case 'PICA':
             return prudential;
         case 'SBGC':
+        case 'SBL':
             return securityBenefit;
         case 'SAAG':
             return sunAmerica;

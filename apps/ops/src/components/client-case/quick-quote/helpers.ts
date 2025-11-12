@@ -7,6 +7,7 @@ import {
     CreateNewTermLineIllustrationPayload,
     TermFixedCostPeriod,
 } from '@deps/queries/api/v3/illustrations';
+import { ProductTypes } from '@deps/types/product';
 import {
     NO_PARAM_RIDERS,
     PREMIUM_FREE_RIDERS,
@@ -17,8 +18,13 @@ import {
     QuickQuoteParams,
     SerializedQuickQuoteParams,
     QuickQuoteFormState,
+    TermQuickQuoteResult,
 } from '@deps/types/quickQuote';
-import { NotAvailabilityReasonField } from '@deps/utils/quick-quotes-rules/types';
+import {
+    NotAvailabilityReasonField,
+    ProductClassResult,
+    ProductClassResultRiders,
+} from '@deps/utils/quick-quotes-rules/types';
 
 /**
  *
@@ -31,8 +37,14 @@ export type SingleTermProductQuickQuoteParams = {
     classCode: string;
     available: boolean;
     notAvailabilityReasonField: NotAvailabilityReasonField;
+    riders: ProductClassResultRiders;
 };
 
+/**
+ *
+ * Reduces an array of numbers to a single range array
+ * or to a single number if all values are "the same"
+ */
 export const asNumberOrRange = (values: (number | undefined)[]) => {
     const filtered = values.filter((v) => v != null);
 
@@ -55,6 +67,23 @@ export const asNumberOrRange = (values: (number | undefined)[]) => {
 
     return [min, max] as NumberRange;
 };
+
+export const sumNumberOrRanges = (values: NumberOrRange[]): NumberOrRange =>
+    values.reduce((result, value) => {
+        if (Array.isArray(result)) {
+            if (Array.isArray(value)) {
+                return [result[0] + value[0], result[1] + value[1]];
+            }
+
+            return result.map((x) => x + value) as NumberOrRange;
+        }
+
+        if (Array.isArray(value)) {
+            return value.map((x) => x + result) as NumberOrRange;
+        }
+
+        return result + value;
+    }, 0);
 
 const withPeriodText = (formatted: string, period: string | undefined) => {
     if (!period) {
@@ -152,35 +181,66 @@ export const buildDefaultFormStateValues = (
             ])
         ),
         riders: Object.fromEntries([
-            ...RIDERS_WITH_FACE_AMOUNT.map(
-                (riderName) => [
-                    riderName,
-                    {
-                        type: 'WITH_FACE_AMOUNT',
-                        enabled:
-                            riderName in riders ? !!riders[riderName] : false,
-                        faceAmount:
-                            typeof riders[riderName] !== 'number'
-                                ? undefined
-                                : riders[riderName] || undefined,
-                    },
-                ],
-                ...NO_PARAM_RIDERS.map((riderName) => [
-                    riderName,
-                    {
-                        type: 'NO_PARAMS',
-                        enabled:
-                            riderName in riders ? !!riders[riderName] : false,
-                    },
-                ])
-            ),
+            ...RIDERS_WITH_FACE_AMOUNT.map((riderName) => [
+                riderName,
+                {
+                    type: 'WITH_FACE_AMOUNT',
+                    enabled: riderName in riders ? !!riders[riderName] : false,
+                    faceAmount:
+                        typeof riders[riderName] !== 'number'
+                            ? undefined
+                            : riders[riderName] || undefined,
+                },
+            ]),
+            ...NO_PARAM_RIDERS.map((riderName) => [
+                riderName,
+                {
+                    type: 'NO_PARAMS',
+                    enabled: riderName in riders ? !!riders[riderName] : false,
+                },
+            ]),
         ]),
     };
 };
 
+export const expandQuickQuoteVariants = (
+    rawVariants: ProductClassResult[]
+): SingleTermProductQuickQuoteParams[] =>
+    rawVariants.flatMap(
+        ({
+            planCode,
+            termLength,
+            classCodes,
+            notAvailabilityReasonField,
+            riders,
+        }) =>
+            classCodes?.length
+                ? classCodes.map((classCode) => ({
+                      planCode,
+                      termLength,
+                      classCode,
+                      available: !notAvailabilityReasonField,
+                      notAvailabilityReasonField,
+                      riders,
+                  }))
+                : {
+                      planCode,
+                      termLength,
+                      classCode: 'None',
+                      available: false,
+                      notAvailabilityReasonField,
+                      riders,
+                  }
+    );
+
 export const buildNewTermQuickQuotePayload = (
     params: QuickQuoteParams,
-    { classCode, planCode, termLength }: SingleTermProductQuickQuoteParams
+    {
+        classCode,
+        planCode,
+        termLength,
+        riders,
+    }: SingleTermProductQuickQuoteParams
 ) => {
     const participantId = uuid4();
 
@@ -206,7 +266,8 @@ export const buildNewTermQuickQuotePayload = (
             },
 
             ...RIDERS_WITH_FACE_AMOUNT.filter(
-                (riderName) => params.riders[riderName]
+                (riderName) =>
+                    params.riders[riderName] && riders[riderName] === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 currentAmount: params.riders[riderName] as number,
@@ -219,7 +280,8 @@ export const buildNewTermQuickQuotePayload = (
                 ],
             })),
             ...NO_PARAM_RIDERS.filter(
-                (riderName) => params.riders[riderName]
+                (riderName) =>
+                    params.riders[riderName] && riders[riderName] === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 participants: [
@@ -231,7 +293,9 @@ export const buildNewTermQuickQuotePayload = (
                 ],
             })),
             ...PREMIUM_FREE_RIDERS.filter(
-                (riderName) => params.premiumFreeRiders[riderName]
+                (riderName) =>
+                    params.premiumFreeRiders[riderName] &&
+                    riders[riderName] === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 participants: [
@@ -258,3 +322,102 @@ export const buildNewTermQuickQuotePayload = (
         },
     } satisfies CreateNewTermLineIllustrationPayload;
 };
+
+export const placeholderData = [
+    {
+        productType: ProductTypes.TERM,
+        product: {
+            id: 'bf8c083ba55e436da03aa79666da69e9',
+            productId: 'ZIN-PROD-XXX',
+            carrierProductId: 'TL0101',
+            productMarketingName: 'Farmers Term Life',
+            carrier: 'FNWL',
+            productLine: 'LIFE',
+            productType: 'TERM',
+            planCode: 'TL0101',
+        },
+        data: {
+            totalPremiumRange: [
+                {
+                    termLength: 10,
+                    range: undefined,
+                },
+                {
+                    termLength: 15,
+                    range: undefined,
+                },
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            basePremiumRange: [
+                {
+                    termLength: 10,
+                    range: undefined,
+                },
+                {
+                    termLength: 15,
+                    range: undefined,
+                },
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            riders: {
+                accidentalDeathBenefit: undefined,
+                acceleratedDeathBenefitForTerminalIllness: true,
+                charitableGiving: true,
+            },
+        },
+    },
+    {
+        productType: ProductTypes.TERM,
+        product: {
+            id: 'd0a35dc2c79046fab649ea84246f35ff',
+            productId: 'ZIN-PROD-XXX',
+            carrierProductId: 'TR0101',
+            productMarketingName: 'Farmers Return of Premium Term',
+            carrier: 'FNWL',
+            productLine: 'LIFE',
+            productType: 'TERM',
+            planCode: 'TR0101',
+        },
+        data: {
+            totalPremiumRange: [
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            basePremiumRange: [
+                {
+                    termLength: 20,
+                    range: undefined,
+                },
+                {
+                    termLength: 30,
+                    range: undefined,
+                },
+            ],
+            riders: {
+                accidentalDeathBenefit: undefined,
+                acceleratedDeathBenefitForTerminalIllness: true,
+                charitableGiving: true,
+            },
+        },
+    },
+] as TermQuickQuoteResult[];

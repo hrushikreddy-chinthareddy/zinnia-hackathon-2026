@@ -10,6 +10,8 @@ import {
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
+import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../../utils';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
@@ -17,16 +19,6 @@ export const config = {
         bodyParser: false,
     },
 };
-
-function sendSSE(
-    res: NextApiResponse,
-    type: SSEEventType,
-    payload: Record<string, any>
-) {
-    const data = JSON.stringify({ type, ...payload });
-    res.write(`event: message\ndata: ${data}\n\n`);
-    (res as any).flush?.();
-}
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse, loggingContext) => {
@@ -44,7 +36,7 @@ export default withAuthAndLogging(
         } = req.query;
         if (!messageId || !followUpQuestion || !clientId) {
             logError(
-                'Missing messageId, followUpQuestion, or clientId',
+                `Missing messageId, followUpQuestion, or clientId:: messageId=${messageId}, followUpQuestion=${followUpQuestion}, clientId=${clientId}`,
                 loggingContext
             );
             return res.status(HttpStatusCode.BadRequest).json({
@@ -87,6 +79,19 @@ export default withAuthAndLogging(
             let full_response = '';
             let followUpID = '';
             let parent_FollowUpId = '';
+            let definitiveAnswerFound = null;
+
+            const eventHandler = createSSEEventHandler(res, loggingContext, {
+                onToken: (content) => {
+                    full_response += content;
+                },
+                onComplete: (event) => {
+                    full_response = event.full_response;
+                    followUpID = event.followUpID;
+                    parent_FollowUpId = event.parentFollowUpId;
+                    definitiveAnswerFound = event.definitive_answer_found;
+                },
+            });
 
             while (true) {
                 const { done, value } = await reader.read();
@@ -97,50 +102,14 @@ export default withAuthAndLogging(
                 buffer = parts.pop() ?? '';
 
                 for (const part of parts) {
-                    const dataLine = part
-                        .split('\n')
-                        .find((line) => line.startsWith('data:'));
-                    if (!dataLine) continue;
-                    try {
-                        const jsonLine = dataLine.replace(/^data:\s*/, '');
-                        const event = JSON.parse(jsonLine);
-
-                        if (event.type === SSEEventType.STATUS) {
-                            sendSSE(res, SSEEventType.STATUS, {
-                                message: event.message,
-                            });
-                        } else if (event.type === SSEEventType.TOKEN) {
-                            sendSSE(res, SSEEventType.TOKEN, {
-                                content: event.content,
-                            });
-                            full_response += event.content;
-                        } else if (event.type === SSEEventType.SOURCES) {
-                            sendSSE(res, SSEEventType.SOURCES, {
-                                source_documents: event.source_documents,
-                            });
-                        } else if (event.type === SSEEventType.COMPLETE) {
-                            full_response = event.full_response;
-                            followUpID = event.followUpID;
-                            parent_FollowUpId = event.parentFollowUpId;
-                        } else if (event.type === SSEEventType.ERROR) {
-                            sendSSE(res, SSEEventType.ERROR, {
-                                error: event.error,
-                            });
-                            res.end();
-                        }
-                    } catch (error) {
-                        logError('Bad upstream SSE line::chat-stream', {
-                            ...parseErrorInformation(error),
-                            ...loggingContext,
-                            raw: part,
-                        });
-                    }
+                    handleSSEChunk(part, eventHandler, loggingContext);
                 }
             }
             sendSSE(res, SSEEventType.COMPLETE, {
                 full_response,
                 followUpID,
                 parent_FollowUpId,
+                definitiveAnswerFound,
             });
             res.end();
         } catch (err: any) {

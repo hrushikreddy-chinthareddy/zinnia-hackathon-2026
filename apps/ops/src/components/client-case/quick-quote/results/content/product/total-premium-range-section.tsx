@@ -45,19 +45,21 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                     )}
                 </Typography>
             }
-            data={results.map((result) =>
-                !isTermResult(result)
-                    ? {
-                          value: undefined,
-                      }
-                    : {
-                          value: result.data.totalPremiumRange.find(
-                              (totalPremiumRange) =>
-                                  totalPremiumRange.termLength === termLength
-                          )?.range,
-                          period: 'mo.',
-                      }
-            )}
+            data={results.map((result) => {
+                const item = result.data.totalPremiumRange.find(
+                    (totalPremiumRange) =>
+                        totalPremiumRange.termLength === termLength
+                );
+
+                return {
+                    value: item?.range,
+                    notAvailabilityReason:
+                        item && item.range == null
+                            ? item.notAvailabilityReasonField
+                            : undefined,
+                    period: 'mo.',
+                };
+            })}
         />
     ));
 

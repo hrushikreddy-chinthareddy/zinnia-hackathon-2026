@@ -33,6 +33,7 @@ export const isAgentBusinessLabel = (
 
 /**
  * Returns an array with the readable names of missing fields of an object
+ * Validate required paths, considering external system may omit fields or return blank values
  */
 const validateRequiredFields = (
     object: any,
@@ -97,6 +98,7 @@ export const buildInsuredDetailsFromNewbusiness = (
         INSURED_PARTY_REQUIRED_FIELDS
     );
 
+    // Prevent client case creation with incomplete insured data
     if (insuredPartyMissingFields.length) {
         throwTypedError(
             `There are missing insured required fields: ${insuredPartyMissingFields.join(
@@ -106,6 +108,8 @@ export const buildInsuredDetailsFromNewbusiness = (
         );
     }
 
+    // Convert ISO date string from New Business to a UTC Date object
+    // to avoid timezone shifts during SSR and form hydration
     return {
         firstName,
         lastName,
@@ -121,7 +125,7 @@ export const buildInsuredDetailsFromNewbusiness = (
     };
 };
 
-export const buildAngentDetailsFromNewBusiness = async (
+export const buildAgentDetailsFromNewBusiness = async (
     parties: party[],
     loggingContext: LoggingContext
 ) => {
@@ -153,6 +157,7 @@ export const buildAngentDetailsFromNewBusiness = async (
 
     const { emails, preferredEmailId } = agentEmailObject;
 
+    // Determine correct agent email: prefer selected email, otherwise fallback to first listed
     const agentEmail = !emails.length
         ? null
         : (preferredEmailId &&
@@ -177,6 +182,14 @@ export const buildAngentDetailsFromNewBusiness = async (
     }
 
     // get Identifiers from newBusiness
+    // Selling code resolution strategy:
+    //
+    // Priority 1: New Business identifiers (AOR + UPN)
+    // Priority 2: PartyReference API lookup
+    //
+    // Some carriers provide both identifiers directly, others only store them in PartyReference.
+    // FMWL build selling codes based on AOR + UPN
+    // This dual path ensures support across integrations.
     let agentSellingCode: string | null = null;
 
     if (identifiers) {
@@ -214,6 +227,36 @@ export const buildAngentDetailsFromNewBusiness = async (
     };
 };
 
+/**
+ * Utility module to build a Client Case payload from a New Business object.
+ *
+ * Business Context:
+ *  - Sureify may pass an eAppId referencing a New Business application
+ *  - Our system requires a mapped Client Case record for Illustrations
+ *  - This module transforms New Business domain data → Client Case domain shape
+ *
+ * High-Level Flow:
+ *  1) Extract insured information
+ *  2) Extract agent information and selling code
+ *  3) Determine agency via selling hierarchy
+ *  4) Validate required fields exist
+ *  5) Return partial payload to initialize a Client Case
+ *
+ * Why this logic exists:
+ *  - New Business API returns raw policy + party information
+ *  - Illustrations requires normalized structure before saving
+ *  - Maintains consistency between external systems & internal case data
+ *
+ * Error Handling Strategy:
+ *  - Throws typed business errors for known missing data cases
+ *  - Prevents creation of invalid client cases
+ *  - Logging handled upstream via LoggingContext
+ *
+ * Notes:
+ *  - Date strings are normalized to UTC to avoid timezone issues
+ *  - Selling Code may originate from UPN/AOR identifiers OR PartyReference lookup
+ *  - Required fields validated both for Insured & Agent (prevents silent failures)
+ */
 export const buildClientCaseFromNewBusiness = async (
     newBusinessObject: NewBusiness,
     eAppId: string,
@@ -233,17 +276,19 @@ export const buildClientCaseFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     }
-
+    // Identify the insured party from list — New Business can contain multiple party roles
     const insuredDetails = buildInsuredDetailsFromNewbusiness(
         parties,
         newBusinessObject.policy
     );
 
-    const agentDetails = await buildAngentDetailsFromNewBusiness(
+    const agentDetails = await buildAgentDetailsFromNewBusiness(
         parties,
         loggingContext
     );
 
+    // Once selling code is known, derive agency for routing & permissions
+    // (hierarchy must exist for this agent in distribution system)
     const agencyId = await getAgencyIdFromHierarchy(
         agentDetails.sellingCode,
         loggingContext

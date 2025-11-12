@@ -20,7 +20,6 @@ import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { FgaUiEntity } from '@deps/types/fga';
-import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -145,23 +144,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const { locale = DEFAULT_LOCALE, res, req } = context;
             const user = await getUserData(context);
 
-            const hasPagePermissions = await checkTuplePage(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                `role_template:${UserPermission.AllowReadOtpRenewals}`,
-                loggingContext
-            );
-
-            const taskManagementAccess = await checkTuplePage(
-                context,
-                FgaRelation.UiAccess,
-                FgaUiEntity.ZinniaLiveTaskManagment,
-                loggingContext
-            );
-
             let accessToken;
-            let isOpsManagerView = false;
-
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
@@ -175,6 +158,20 @@ export const getServerSideProps = withPageAuthAndLogging(
             if (!accessToken) {
                 return serverSidePropsLogout();
             }
+
+            const hasPagePermissions = await checkTuplePage(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                `role_template:${UserPermission.AllowReadOtpRenewals}`,
+                loggingContext
+            );
+
+            const taskManagementAccess = await checkTuplePage(
+                context,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveTaskManagment,
+                loggingContext
+            );
 
             const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
             const userTuplesData: any = await readUserTuplesPage(
@@ -192,9 +189,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 queues: [],
             };
 
+            let isOpsManagerView = false;
             if (!isAdmin || !taskManagementAccess) {
-                browserLogError('tasks:: Permission not available');
-
+                logWarn('tasks:: Permission not available', {
+                    ...{ isAdmin, taskManagementAccess },
+                    ...loggingContext,
+                });
                 return {
                     redirect: {
                         destination: '/403',
@@ -245,8 +245,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 featureFlagDecisions?.[FEATURE_FLAGS.OPS_MANAGER_FEATURE];
 
             if (!enableTaskView || !hasPagePermissions) {
-                browserLogError('tasks:: Ops-Manager feature not enabled');
-
+                logWarn('tasks:: Ops-Manager feature not enabled', {
+                    ...{ enableTaskView, hasPagePermissions },
+                    ...loggingContext,
+                });
                 return {
                     redirect: {
                         destination: '/403',

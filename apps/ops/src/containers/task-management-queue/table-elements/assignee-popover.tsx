@@ -114,7 +114,7 @@ const AssigneePopover = ({
         TaskStatus.Completed,
         TaskStatus.Canceled,
         TaskStatus.Closed,
-        TaskStatus.Pending,
+        TaskStatus.Scheduled,
     ];
     const isPopoverAllowed = !notAllowedStatuses.includes(task.status);
 

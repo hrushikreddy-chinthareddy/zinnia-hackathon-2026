@@ -19,6 +19,7 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { ProcessType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -47,7 +48,7 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { createValidator } from '../../utils/helper-utils';
+import { createDtccValidator, createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
 import {
     commonOftFormValidation,
@@ -908,6 +909,7 @@ export default function getUsaaOftConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.onlyContractNumber'),
                     component: DisbursementFields.BankTextField,
                     maxLength: 30,
+                    validator: createDtccValidator(t, ProcessType.OFT),
                 },
             ],
             getDefaultPayload({

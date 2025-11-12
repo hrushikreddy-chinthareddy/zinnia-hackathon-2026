@@ -49,7 +49,7 @@ export const ExceptionStatusFilter = () => {
                 ...exceptionStatusMapping[issue],
             ]);
         } else {
-            return; // not allowing the user deselect all the options
+            setExceptionStatus([]);
         }
     };
 
@@ -67,6 +67,7 @@ export const ExceptionStatusFilter = () => {
         <Select
             maxContentWidth
             label="Issue status"
+            placeholder="All"
             options={ExceptionStatusOptions}
             value={convertExceptionStatusIntoValueObj}
             size={FieldSize.XS}

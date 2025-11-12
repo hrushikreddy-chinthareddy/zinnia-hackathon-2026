@@ -43,6 +43,7 @@ import NasuWithdrawalForm from '@deps/containers/otp/withdrawal-forms/nasu/nasu-
 import RslnWithdrawalForm from '@deps/containers/otp/withdrawal-forms/rsln/rsln-withdrawal-form';
 import SbgcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/sbgc-withdrawal-form';
 import UlpcWithdrawalForm from '@deps/containers/otp/withdrawal-forms/ulpc/ulpc-withdrawal-form';
+import UsaaWithdrawalForm from '@deps/containers/otp/withdrawal-forms/usaa/usaa-withdrawal-form';
 import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { CaseType } from '@deps/models/case/case';
 import { DocumentType } from '@deps/models/case/document';
@@ -76,6 +77,7 @@ export const getWithdrawalFormComponentMap = (
     [Carrier.RSLN]: <RslnWithdrawalForm />,
     [Carrier.ULPC]: <UlpcWithdrawalForm />,
     [Carrier.GLCO]: <GilicoWithdrawalForm qualType={qualType} />,
+    [Carrier.USAA]: <UsaaWithdrawalForm />,
 });
 
 export const getOFTFormComponentMap = (

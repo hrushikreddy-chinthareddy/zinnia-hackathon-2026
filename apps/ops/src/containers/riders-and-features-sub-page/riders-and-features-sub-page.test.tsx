@@ -138,7 +138,7 @@ describe('Riders and Features Helpers', () => {
                     { status: Status.PENDING },
                     { status: Status.ACTIVE },
                     { status: Status.ACTIVE },
-                    { riderElected: 'NOT ELECTED' },
+                    { riderElected: 'NOTELECTED' },
                 ] as Rider[],
                 // terminated, active, available, available, not elected
                 features: [

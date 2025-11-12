@@ -2,7 +2,6 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import clsx from 'clsx';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
-import cardStyle from '@deps/components/dynamic-form/customization/templates/card-templates/card-template.module.css';
 
 import style from './text-widget.module.css';
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
@@ -23,6 +22,7 @@ export const TextWidget = function (props: WidgetProps) {
 
     const { inline, prefix, inlinetext, dataType, type, labelStyle } =
         getUiOptions(uiSchema);
+
     if (inline) {
         return (
             <div className="text-md">
@@ -63,7 +63,7 @@ export const TextWidget = function (props: WidgetProps) {
     }
 
     return readonly ? (
-        value
+        <>{formatValueByDataType((dataType as string) || 'text', value)}</>
     ) : (
         <div className="max-w-sm flex w-full flex-col pl-1">
             <TextField

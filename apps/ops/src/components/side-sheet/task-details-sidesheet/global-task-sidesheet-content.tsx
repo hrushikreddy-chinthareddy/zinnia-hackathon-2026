@@ -42,7 +42,7 @@ import {
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { formatDateTime } from '@deps/helpers/string.helpers';
+import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import {
     includeDocumentTypeForInboundSearch,
@@ -465,7 +465,7 @@ export default function GlobalTaskSideSheet({
     let allowedTaskStatusForStartBtnDisplay = [
         TaskStatus.New,
         TaskStatus.InProgress,
-        TaskStatus.Pending,
+        TaskStatus.Scheduled,
         TaskStatus.Completed,
     ];
 
@@ -477,7 +477,7 @@ export default function GlobalTaskSideSheet({
         task.status
     );
     const statusReason =
-        task.status === TaskStatus.Pending
+        task.status === TaskStatus.Scheduled
             ? task.scheduledReason
             : task.cancellationReason;
 
@@ -506,10 +506,10 @@ export default function GlobalTaskSideSheet({
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = TaskLabel.Canceled;
             break;
-        case TaskStatus.Pending:
+        case TaskStatus.Scheduled:
             badgeIcon = <Pause height={16} width={16} />;
             badgeVariant = BadgeVariant.Error;
-            badgeLabel = TaskLabel.Pending;
+            badgeLabel = toTitleCase(TaskStatus.Scheduled);
             break;
         default:
             badgeIcon = <ClipboardIcon height={16} width={16} />;
@@ -555,7 +555,7 @@ export default function GlobalTaskSideSheet({
     };
     const statuses = [
         {
-            label: 'Pending',
+            label: TaskLabel.Scheduled,
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
                 openSideSheet();
@@ -565,7 +565,7 @@ export default function GlobalTaskSideSheet({
 
     const renderTaskStatus = (status: TaskStatus) => {
         const validTaskStatuses = [
-            TaskStatus.Pending,
+            TaskStatus.Scheduled,
             TaskStatus.Canceled,
             TaskStatus.Completed,
             TaskStatus.Closed,
@@ -581,7 +581,7 @@ export default function GlobalTaskSideSheet({
             : 'N/A';
 
         switch (status) {
-            case TaskStatus.Pending:
+            case TaskStatus.Scheduled:
                 label = t('sideSheet.task.pendinglabel');
                 timestamp = formattedPending
                     ? formatTimestamp(formattedPending, 'standard')
@@ -670,7 +670,7 @@ export default function GlobalTaskSideSheet({
                     )}
                 </div>
 
-                {((task.status === TaskStatus.Pending &&
+                {((task.status === TaskStatus.Scheduled &&
                     task.scheduledReason) ||
                     (task.status === TaskStatus.Canceled &&
                         task.cancellationReason)) &&

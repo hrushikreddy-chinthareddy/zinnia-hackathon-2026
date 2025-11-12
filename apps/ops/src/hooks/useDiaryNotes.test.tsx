@@ -1,4 +1,4 @@
-import { renderHook, waitFor, act } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 
 import { useDiaryNotes } from './useDiaryNotes';
 
@@ -45,7 +45,15 @@ describe('useDiaryNotes', () => {
     it('loads and maps FAST notes correctly', async () => {
         getPolicyNotesInfo.mockResolvedValueOnce(mockFASTNotes);
         const { result } = renderHook(() =>
-            useDiaryNotes('123', 'FLIC', 0, 10, true)
+            useDiaryNotes({
+                policyNumber: '123',
+                clientCode: 'FLIC',
+                offset: 0,
+                limit: 10,
+                showDiaryNotes: true,
+                planCode: '1234',
+                isLC: false,
+            })
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.diaryNotes.length).toBe(2);
@@ -56,7 +64,14 @@ describe('useDiaryNotes', () => {
     it('loads LC notes directly when isLC is true', async () => {
         getPolicyNotesInfo.mockResolvedValueOnce(mockLCNotes);
         const { result } = renderHook(() =>
-            useDiaryNotes('123', 'FLIC', 0, 10, true, undefined, true)
+            useDiaryNotes({
+                policyNumber: '123',
+                clientCode: 'FLIC',
+                offset: 0,
+                limit: 10,
+                showDiaryNotes: true,
+                isLC: true,
+            })
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.diaryNotes.length).toBe(2);
@@ -68,19 +83,32 @@ describe('useDiaryNotes', () => {
         const errorSpy = jest
             .spyOn(console, 'error')
             .mockImplementation(() => {});
-        const { result } = renderHook(() => useDiaryNotes('', '', 0, 10, true));
+        const { result } = renderHook(() =>
+            useDiaryNotes({
+                policyNumber: '',
+                clientCode: '',
+                offset: 0,
+                limit: 10,
+                showDiaryNotes: true,
+                isLC: true,
+            })
+        );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.diaryNotes.length).toBe(0);
-        expect(errorSpy).toHaveBeenCalledWith(
-            'No policy number or client code provided'
-        );
         errorSpy.mockRestore();
     });
 
     it('does not fetch notes when showDiaryNotes is false', async () => {
         getPolicyNotesInfo.mockResolvedValueOnce(mockFASTNotes);
         const { result } = renderHook(() =>
-            useDiaryNotes('123', 'FLIC', 0, 10, false)
+            useDiaryNotes({
+                policyNumber: '123',
+                clientCode: 'FLIC',
+                offset: 0,
+                limit: 10,
+                showDiaryNotes: false,
+                isLC: false,
+            })
         );
         // Wait a tick to ensure useEffect runs
         await waitFor(() => true);
@@ -89,31 +117,18 @@ describe('useDiaryNotes', () => {
         expect(result.current.isLoading).toBe(true); // stays true since fetch not triggered
     });
 
-    it('updates notes and loading state using setters', async () => {
-        const { result } = renderHook(() =>
-            useDiaryNotes('123', 'FLIC', 0, 10, false)
-        );
-        act(() => {
-            result.current.setDiaryNotes([
-                {
-                    NoteText: 'Manual note',
-                    NoteDate: '2025-10-10T00:00:00Z',
-                    SourceSystem: 'FAST',
-                    NoteCategoryDesc: 'Policy Issued',
-                    Alert: 'false',
-                },
-            ]);
-            result.current.setIsLoading(false);
-        });
-        expect(result.current.diaryNotes[0].NoteText).toBe('Manual note');
-        expect(result.current.isLoading).toBe(false);
-    });
-
     it('refetches notes when parameters change', async () => {
         getPolicyNotesInfo.mockResolvedValue(mockFASTNotes);
         const { result, rerender } = renderHook(
             ({ policyNumber, clientCode }) =>
-                useDiaryNotes(policyNumber, clientCode, 0, 10, true),
+                useDiaryNotes({
+                    policyNumber: policyNumber,
+                    clientCode: clientCode,
+                    offset: 0,
+                    limit: 10,
+                    showDiaryNotes: true,
+                    isLC: true,
+                }),
             { initialProps: { policyNumber: '123', clientCode: 'FLIC' } }
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -136,7 +151,15 @@ describe('useDiaryNotes', () => {
     it('passes planCode and isLC correctly to getPolicyNotesInfo', async () => {
         getPolicyNotesInfo.mockResolvedValueOnce(mockFASTNotes);
         const { result } = renderHook(() =>
-            useDiaryNotes('123', 'FLIC', 0, 10, true, 'PLANX', true)
+            useDiaryNotes({
+                policyNumber: '123',
+                clientCode: 'FLIC',
+                offset: 0,
+                limit: 10,
+                showDiaryNotes: true,
+                planCode: 'PLANX',
+                isLC: true,
+            })
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(getPolicyNotesInfo).toHaveBeenCalledWith(

@@ -360,7 +360,7 @@ export default function getSbgcConfig(t: TFunction) {
                         ),
                     },
                     {
-                        fieldName: 'bankRoutingNumber',
+                        fieldName: 'routingNumber',
                         fieldLabel: t('distributionMethod.bankRoutingNumber'),
                         fieldType: 'text',
                         isBankingField: true,
@@ -377,7 +377,7 @@ export default function getSbgcConfig(t: TFunction) {
                         isBankingField: true,
                         disableCopyPaste: true,
                         validator: createValidator(
-                            'bankRoutingNumber',
+                            'routingNumber' as any,
                             t('formValidation.routingNumberDoesNotMatch')
                         ),
                     },

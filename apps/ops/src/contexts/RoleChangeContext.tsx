@@ -70,6 +70,7 @@ export type RoleData = {
     relationshipToParty?: string;
     validationResponse?: TransactionResponse;
     documents: any;
+    correlationId?: string;
 };
 
 type RoleChangeContextType = {

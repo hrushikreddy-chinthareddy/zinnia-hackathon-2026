@@ -1,7 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ChatInput from '@deps/components/knowledge-base/chat/chat-input/chat-input';
@@ -17,6 +16,8 @@ import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE, ALL_LOCALES } from '@deps/helpers/routing.helpers';
+import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
+import { useScroll } from '@deps/hooks/useScroll';
 import { UserProfile } from '@deps/models/user-profile';
 import { getOpsUserDetailsSSR } from '@deps/queries/api/knowledge-base';
 import { BOT_ERROR_MESSAGE_ID, MessageRole } from '@deps/types/knowledge-base';
@@ -156,13 +157,11 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const { currentMessages } = useKnowledgeBaseContext();
-    const endref = useRef<HTMLDivElement | null>(null);
-    const [isCompleted, setIsCompleted] = useState(false);
-
-    useEffect(() => {
-        endref.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [currentMessages]);
+    const { currentMessages, selectedClientId } = useKnowledgeBaseContext();
+    const { isStreaming, sendMessage, stopStreaming, getCommonClientResponse } =
+        useChatStream(selectedClientId);
+    const { handleContainerScroll, scrollContainerRef, endref } =
+        useScroll(currentMessages);
 
     return (
         <div className="px-6 h-full flex flex-col justify-between">
@@ -170,7 +169,11 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
             <div className=" flex flex-col gap-2 justify-end">
                 <div className=" flex-1 flex flex-col gap-2">
                     {currentMessages.length > 0 ? (
-                        <div className="flex flex-col gap-4 my-4 max-h-[65vh] overflow-y-auto ">
+                        <div
+                            ref={scrollContainerRef}
+                            onScroll={handleContainerScroll}
+                            className="flex flex-col gap-4 my-4 max-h-[65vh] overflow-y-auto "
+                        >
                             {currentMessages.map((message, index) => {
                                 return message.role === MessageRole.User ? (
                                     <ChatQuestion
@@ -196,10 +199,17 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
                                         showFeedbackControls={
                                             message.id !== BOT_ERROR_MESSAGE_ID
                                         }
-                                        isCompleted={
+                                        definitiveAnswerFound={
+                                            message.definitiveAnswerFound ??
+                                            null
+                                        }
+                                        isStreaming={
                                             index !== currentMessages.length - 1
-                                                ? true
-                                                : isCompleted
+                                                ? false
+                                                : isStreaming
+                                        }
+                                        getCommonClientResponse={
+                                            getCommonClientResponse
                                         }
                                     />
                                 );
@@ -217,7 +227,9 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
                 </div>
                 <ChatInput
                     opsUserData={opsUserData}
-                    setIsCompleted={setIsCompleted}
+                    sendMessage={sendMessage}
+                    stopStreaming={stopStreaming}
+                    isStreaming={isStreaming}
                 />
             </div>
         </div>

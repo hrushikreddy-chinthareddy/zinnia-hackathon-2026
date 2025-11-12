@@ -21,6 +21,7 @@ const defaultProps = {
     submittedFeedbackType: null,
     submittedFeedbackComment: null,
     isCompleted: true,
+    isStreaming: false,
 };
 
 const mockBrowserLogError = jest.fn();

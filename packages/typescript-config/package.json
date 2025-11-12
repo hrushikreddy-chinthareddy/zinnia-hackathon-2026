@@ -10,10 +10,6 @@
     "access": "public",
     "registry": "https://npm.pkg.github.com"
   },
-  "scripts": {
-    "test": "echo \"no tests\" && exit 0",
-    "build": "echo \"no build\" && exit 0"
-  },
   "exports": {
     ".": "./base.json",
     "./nextjs": "./nextjs.json",

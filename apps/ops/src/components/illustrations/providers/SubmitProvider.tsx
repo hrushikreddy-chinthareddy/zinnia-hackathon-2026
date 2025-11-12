@@ -4,12 +4,18 @@ import { useRouter } from 'next/router';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { createIllustration } from '@deps/queries/api/v3/illustrations';
 import {
     editIllustrationToClientCase,
     saveIllustrationToClientCase,
 } from '@deps/queries/api/v1/client-cases';
+import { createIllustration } from '@deps/queries/api/v3/illustrations';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogTrace,
+} from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { useEapp } from './EAppProvider';
 import { useQuestionnaireEngine } from './QuestionnaireEngineProvider';
@@ -57,9 +63,12 @@ export function SubmitProvider({
     }) => {
         const mappedAnswersResult = engine.getSimpleMappingOutput();
         if (!mappedAnswersResult.success) {
-            console.log(
-                'Mapped Answers Result error',
-                mappedAnswersResult.error
+            browserLogInfo(
+                'illustrations::Eapp::SubmitProvider::getIllustrationPayload Error parsing answers',
+                {
+                    ...parseErrorInformation(mappedAnswersResult.error),
+                    clientCaseId: factoryHandler.getClientCase().id,
+                }
             );
             return Promise.reject();
         }
@@ -76,9 +85,12 @@ export function SubmitProvider({
             factoryHandler.createIllustrationPayloadFromAnswerOutput(answers);
 
         if (!createIllustrationPayload.success) {
-            console.log(
-                'SubmitProvider getIllustrationPayload  error',
-                createIllustrationPayload
+            browserLogInfo(
+                'illustrations::Eapp::SubmitProvider::getIllustrationPayload Error parsing output',
+                {
+                    ...parseErrorInformation(createIllustrationPayload.error),
+                    clientCaseId: factoryHandler.getClientCase().id,
+                }
             );
             return Promise.reject();
         }
@@ -91,33 +103,82 @@ export function SubmitProvider({
     const createIllustrationMutation = useMutation({
         mutationKey: ['saveOrderEntryAnswers'],
         mutationFn: async (engine: QuestionnaireEngine) => {
+            const logPrefix =
+                'illustrations::Eapp::SubmitProvider::createIllustrationMutation::mutationFn';
+            const clientCase = factoryHandler.getClientCase();
+            const carrierCode = factoryHandler.getCarrierCode();
             const payload = await getIllustrationPayload({
                 engine,
                 illustrationType: 'SINGLE_ILLUSTRATION',
             });
             const inputs = engine.getAnswerResolverInstance().export();
-            const createResponse = await createIllustration({
-                bodyData: payload.value,
-                path: factoryHandler.getIllustrationApiPath(),
-            });
-            const clientCase = factoryHandler.getClientCase();
-            const carrierCode = factoryHandler.getCarrierCode();
 
-            return await saveIllustrationToClientCase(
-                clientCase.id,
-                createResponse.data.id,
-                factoryHandler.generateTitle(createResponse.data, {
-                    ...payload.formInputs,
-                    illustrationType: 'SINGLE_ILLUSTRATION',
-                }),
-                factoryHandler.getPlanType(), // product type
-                factoryHandler.getPlanCode(), // carrierProductId
-                JSON.stringify(inputs), // illustration inputs
-                carrierCode
-            );
+            let createResponse;
+            try {
+                browserLogTrace(`${logPrefix} Started create illustration`, {
+                    clientCaseId: clientCase.id,
+                });
+                createResponse = await createIllustration({
+                    bodyData: payload.value,
+                    path: factoryHandler.getIllustrationApiPath(),
+                });
+                browserLogInfo(
+                    `${logPrefix} Illustration created successfully`,
+                    {
+                        clientCaseId: clientCase.id,
+                        illustrationId: createResponse.data.id,
+                        illustrationData: createResponse.data,
+                    }
+                );
+            } catch (err) {
+                browserLogError(`${logPrefix} Error creating illustration`, {
+                    clientCaseId: clientCase.id,
+                    payload: payload.value,
+                });
+                throw err;
+            }
+
+            try {
+                browserLogTrace(
+                    `${logPrefix} Started save illustration to client case`,
+                    {
+                        clientCaseId: clientCase.id,
+                        illustrationId: createResponse.data.id,
+                    }
+                );
+                return await saveIllustrationToClientCase(
+                    clientCase.id,
+                    createResponse.data.id,
+                    factoryHandler.generateTitle(createResponse.data, {
+                        ...payload.formInputs,
+                        illustrationType: 'SINGLE_ILLUSTRATION',
+                    }),
+                    factoryHandler.getPlanType(), // product type
+                    factoryHandler.getPlanCode(), // carrierProductId
+                    JSON.stringify(inputs), // illustration inputs
+                    carrierCode
+                );
+            } catch (err) {
+                browserLogError(
+                    `${logPrefix} Error saving illustration to client case`,
+                    {
+                        clientCaseId: clientCase.id,
+                        illustrationId: createResponse.data.id,
+                    }
+                );
+                throw err;
+            }
         },
         onSuccess: async ({ data }) => {
             const clientCase = factoryHandler.getClientCase();
+
+            browserLogInfo(
+                'illustrations::Eapp::SubmitProvider::createIllustrationMutation::onSuccess Illustration saved to client case successfully',
+                {
+                    illustrationId: data?.id,
+                    clientCaseId: clientCase.id,
+                }
+            );
 
             await Promise.all([
                 queryClient.invalidateQueries({
@@ -137,6 +198,15 @@ export function SubmitProvider({
 
             submitCallback?.();
             sideSheet.onClose();
+        },
+        onError: (error) => {
+            browserLogError(
+                'illustrations::Eapp::SubmitProvider::createIllustrationMutation::onError Error creating illustration',
+                {
+                    ...parseErrorInformation(error),
+                    clientCaseId: factoryHandler.getClientCase().id,
+                }
+            );
         },
     });
 
@@ -176,6 +246,15 @@ export function SubmitProvider({
         onSuccess: async ({ data }) => {
             const clientCase = factoryHandler.getClientCase();
 
+            browserLogInfo(
+                'illustrations::Eapp::SubmitProvider::editIllustrationMutation::onSuccess Illustration edited successfully',
+                {
+                    illustrationId: data?.id,
+                    clientCaseId: clientCase.id,
+                    illustrationData: data,
+                }
+            );
+
             await Promise.all([
                 queryClient.invalidateQueries({
                     queryKey: ['illustrationData', data?.id],
@@ -195,6 +274,15 @@ export function SubmitProvider({
 
             submitCallback?.();
             sideSheet.onClose();
+        },
+        onError: (error) => {
+            browserLogError(
+                'illustrations::Eapp::SubmitProvider::editIllustrationMutation::onError Error editing illustration',
+                {
+                    ...parseErrorInformation(error),
+                    clientCaseId: factoryHandler.getClientCase().id,
+                }
+            );
         },
     });
 
@@ -226,7 +314,22 @@ export function SubmitProvider({
                     illustrationType: 'QUICK_QUOTE',
                 });
 
+            browserLogTrace(
+                'illustrations::Eapp::SubmitProvider::quickQuoteIllustrationMutation::onSuccess QuickQuote',
+                {
+                    illustrationId: data?.id,
+                }
+            );
+
             onIllustrationDataChange(illustrationData);
+        },
+        onError: (error) => {
+            browserLogInfo(
+                'illustrations::Eapp::SubmitProvider::quickQuoteIllustrationMutation::onError',
+                {
+                    ...parseErrorInformation(error),
+                }
+            );
         },
     });
 
