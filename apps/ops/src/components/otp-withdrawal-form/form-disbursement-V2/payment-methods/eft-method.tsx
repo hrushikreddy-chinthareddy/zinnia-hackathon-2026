@@ -234,15 +234,19 @@ const EftMethod = ({
             case 'choose-the-bank':
                 return (
                     <div className={`${classNames}`}>
-                        <ChooseBank
-                            fieldLabel={field.fieldLabel}
-                            fieldName={field.fieldName}
-                            classNames={field.fieldLabel}
-                            isFormStateReadOnly={isFormStateReadOnly}
-                            bankOptions={bankOptions}
-                            onDataChange={handleSelectBankChange}
-                            selectedValue={bankDetails?.selectedBanking ?? ''}
-                        />
+                        {!isFormStateReadOnly && (
+                            <ChooseBank
+                                fieldLabel={field.fieldLabel}
+                                fieldName={field.fieldName}
+                                classNames={field.fieldLabel}
+                                isFormStateReadOnly={isFormStateReadOnly}
+                                bankOptions={bankOptions}
+                                onDataChange={handleSelectBankChange}
+                                selectedValue={
+                                    bankDetails?.selectedBanking ?? ''
+                                }
+                            />
+                        )}
                     </div>
                 );
 

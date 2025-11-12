@@ -3231,6 +3231,7 @@
                 "residentialAddressTitle": "Dirección Residencial",
                 "title": "Detalles de la Dirección",
                 "mailingAddress": "Dirección",
+                "mailingAddressLine1": "ínea de dirección 1",
                 "mailingAddressLine2": "Línea de dirección 2",
                 "mailingAddressLine3": "Línea de dirección 3",
                 "city": "Ciudad",
@@ -3465,12 +3466,15 @@
                     "title": "Firma de la Compañía Cedente",
                     "qualType": "Tipo de calificación",
                     "isQualTypeNotValid": "No se puede determinar el tipo de calificación",
+                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
                     "isSignatureValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "isSignatureAuthorized": "¿Es válida la firma del oficial autorizado?",
                     "isLoaAttached": "¿Está adjunta la carta de aceptación?",
                     "validOwnerRegType": "Tipo de registro/propietario válido",
                     "isTitlePresent": "¿Está presente el título?",
-                    "loaSignDate": "Fecha de Firma de LOA"
+                    "loaSignDate": "Fecha de Firma de LOA",
+                    "authPersonSignPresent": "¿Está presente la firma de la persona autorizada?",
+                    "signDate": "Fecha de la firma"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Ausencia de Propietario Conjunto/Rentista en los documentos o en el contrato",
@@ -3519,7 +3523,8 @@
                 "yes": "Sí",
                 "no": "No",
                 "valid": "Válido",
-                "notValid": "No Válido"
+                "notValid": "No Válido",
+                "select": "Seleccionar"
             },
             "distributionMethod": {
                 "chooseBankingType": "Elegir tipo de banco",
@@ -3853,6 +3858,7 @@
                 "nameIsRequired": "Se requiere el nombre",
                 "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente",
                 "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                "signatureCityOptionMustBeSelected": "Debe seleccionar la opción de ciudad/estado",
                 "signatureValidOptionMustBeSelected": "Debe seleccionarse la opción Firma válida",
                 "signatureCommentMustBePresent": "El comentario de la firma debe estar presente",
                 "accountNumberDoesNotMatch": "El número de cuenta no coincide",

@@ -116,8 +116,13 @@ const CheckMethod = ({
                         <AddressEntry
                             isFormStateReadOnly={isFormStateReadOnly}
                             onDataChange={handleAddressChange}
-                            initialAddress={defaultDisbursementInfo?.address}
+                            initialAddress={
+                                defaultDisbursementInfo?.payee?.address
+                            }
                             isPayeeAddress={true}
+                            isAddressLine2Required={
+                                field.isAddressLine2Required
+                            }
                         />
                     </div>
                 );
@@ -131,7 +136,8 @@ const CheckMethod = ({
                             isFormStateReadOnly={isFormStateReadOnly}
                             onDataChange={handleCheckBoxChange}
                             value={
-                                defaultDisbursementInfo.isDifferentPayeeOrAddress
+                                defaultDisbursementInfo
+                                    ?.isDifferentPayeeOrAddress?.text
                             }
                         />
                     </div>

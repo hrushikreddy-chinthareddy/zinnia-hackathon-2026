@@ -3229,6 +3229,7 @@
                 "residentialAddressTitle": "Residential Address",
                 "title": "Address Details",
                 "mailingAddress": "Address",
+                "mailingAddressLine1": "Address line 1",
                 "mailingAddressLine2": "Address line 2",
                 "mailingAddressLine3": "Address line 3",
                 "city": "City",
@@ -3464,12 +3465,14 @@
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
                     "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
+                    "isCorporateResolutionPresent": "Is corporate resolution present?",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
                     "isLoaAttached": "Is letter of acceptance attached?",
                     "validOwnerRegType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
-                    "loaSignDate": "LOA Sign Date"
+                    "loaSignDate": "LOA Sign Date",
+                    "authPersonSignPresent": "Authorized Person’s signature is present",
+                    "signDate": "Signature date"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Joint Owner/Annuitant absence on paperwork or in the contract",
@@ -3518,7 +3521,8 @@
                 "yes": "Yes",
                 "no": "No",
                 "valid": "Valid",
-                "notValid": "Not Valid"
+                "notValid": "Not Valid",
+                "selectOption": "Select"
             },
             "distributionMethod": {
                 "chooseBankingType": "Choose Banking Type",
@@ -3835,7 +3839,7 @@
                 "type": "Type",
                 "date": "Sign date",
                 "signPresent": "Sign present",
-                "auditTrial": "Audit trial",
+                "auditTrial": "Audit trail",
                 "accordForm": "Acord Form"
             },
             "employerTpaAuthorization": {
@@ -3853,6 +3857,7 @@
                 "nameIsRequired": "Name is required",
                 "signatureDesignationMustBeSelected": "Signature designation must be selected",
                 "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+                "signatureCityOptionMustBeSelected": "City/State option must be selected",
                 "signatureValidOptionMustBeSelected": "Signature valid option must be selected",
                 "signatureCommentMustBePresent": "Signature comment must be present",
                 "accountNumberDoesNotMatch": "Account number does not match",

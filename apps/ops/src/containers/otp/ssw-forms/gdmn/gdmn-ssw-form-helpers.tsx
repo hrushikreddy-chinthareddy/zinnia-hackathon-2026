@@ -12,16 +12,13 @@ import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import {
     SignatureBonusFields,
-    SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { statesAndTerritories } from '@deps/helpers/states.helpers';
-import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     AccountType,
@@ -47,11 +44,13 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getGdmnConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if (
@@ -79,25 +78,6 @@ export default function getGdmnConfig(t: TFunction) {
             }
         }
 
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
-
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
-
-        if (ownerSignature?.isDesignationPresent === null) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
         if (
             formDisbursement?.bank[0].accountType?.text === '' &&
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
@@ -108,7 +88,14 @@ export default function getGdmnConfig(t: TFunction) {
                 'formValidation.accountTypeMustBeSelected'
             );
         }
-        return errors;
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -592,6 +579,7 @@ export default function getGdmnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -689,31 +677,6 @@ export default function getGdmnConfig(t: TFunction) {
             shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean => {
                 return !!formParty?.parties?.find(
                     (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
-                );
-            },
-        },
-        {
-            key: `sig-val-beneficiary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
-                },
-
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-            ],
-            signatureType:
-                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return isIrrevocableBeneficiaryExistsLC(
-                    parties as LifeCadParty[]
                 );
             },
         },

@@ -12,7 +12,6 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import {
-    SignatureFieldNames,
     SignatureBonusFields,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -47,20 +46,31 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getPrdnConfig(t: TFunction) {
     const formValidation = useCallback(
         ({
             formSignature,
+            formProgram,
+            formDistribution,
             formDisbursement,
+            formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
+            const sswType = formProgram?.programSubType?.text || '';
+            const funds = formDistribution?.funds?.filter(
+                (fund) => !!fund.amount.text
             );
+            if (
+                sswType === SSWType.PercentOfAmountValue &&
+                funds?.length === 0
+            ) {
+                errors['specifyFundsRequired'] = t(
+                    'sswProgram.warnings.specifyFundsRequired'
+                );
+            }
 
             if (
                 [PaymentMethod.EFT].includes(
@@ -87,16 +97,6 @@ export default function getPrdnConfig(t: TFunction) {
                 }
             }
 
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
                 [PaymentMethod.EFT].includes(
@@ -107,40 +107,17 @@ export default function getPrdnConfig(t: TFunction) {
                     'formValidation.accountTypeMustBeSelected'
                 );
             }
+            const signESignValidate = validateSignESign({
+                formSignature,
+                formESignatureData,
+                t,
+                validateDesignationPresent: true,
+            });
 
-            if (ownerSignature?.isDesignationPresent === null) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-                ] = t('formValidation.signatureDesignationMustBeSelected');
-            }
-            return errors;
+            return { ...errors, ...signESignValidate };
         },
         [t]
     );
-
-    const sswFormValidation = ({
-        formParty,
-        formSignature,
-        formProgram,
-        formDistribution,
-        formDisbursement,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
-        const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds?.filter(
-            (fund) => !!fund.amount.text
-        );
-        if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
-            errors['specifyFundsRequired'] = t(
-                'sswProgram.warnings.specifyFundsRequired'
-            );
-        }
-        return errors;
-    };
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -474,6 +451,7 @@ export default function getPrdnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -635,7 +613,7 @@ export default function getPrdnConfig(t: TFunction) {
 
     return {
         reasonOptions,
-        formValidation: sswFormValidation,
+        formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         disbursementOptions,

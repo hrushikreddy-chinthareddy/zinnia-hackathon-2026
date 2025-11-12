@@ -16,10 +16,7 @@ import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-progr
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import { WaiverItemConfig } from '@deps/components/otp-withdrawal-form/form-waivers/form-waivers';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { SignVerificationReasonItem } from '@deps/components/otp-withdrawal-form/signature-validation/signature-verification-reason';
 import { USStates } from '@deps/constants/geography/us-states';
@@ -56,6 +53,7 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
+import { validateSignESign } from '../utils/form-validator.helpers';
 
 const getStandardYesNoOptions = (t: TFunction) => [
     {
@@ -73,6 +71,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         ({
             formSignature,
             formDisbursement,
+            formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
             if (
@@ -99,21 +98,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     );
                 }
             }
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
+            // Account type validation-- Check with Anoop
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
                 [PaymentMethod.EFT, PaymentMethod.Wire].includes(
@@ -125,12 +110,14 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 );
             }
 
-            if (ownerSignature?.isDesignationPresent === null) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-                ] = t('formValidation.signatureDesignationMustBeSelected');
-            }
-            return errors;
+            const signESignValidate = validateSignESign({
+                formSignature,
+                formESignatureData,
+                t,
+                validateDesignationPresent: true,
+            });
+
+            return { ...errors, ...signESignValidate };
         },
         [t]
     );
@@ -711,6 +698,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     fieldName: BankingFields.Address,
                     fieldLabel: '',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
                 {
                     fieldName: BankingFields.TaxId,

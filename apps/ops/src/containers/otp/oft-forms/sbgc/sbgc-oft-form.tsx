@@ -123,15 +123,7 @@ export default function SbgcOftWithdrawalForm({
                     isFormStateReadOnly={isFormStateReadOnly}
                 />
             )}
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <CedingCompanyDistribution
                 qualificationOptions={qualTypeOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -150,6 +142,10 @@ export default function SbgcOftWithdrawalForm({
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -159,6 +155,11 @@ export default function SbgcOftWithdrawalForm({
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }
