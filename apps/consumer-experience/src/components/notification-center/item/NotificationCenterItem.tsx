@@ -2,13 +2,18 @@ import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
 
 import { default as Styles } from '@/components/notification-center/NotificationCenter.module.css';
 import { NotificationCenterSidesheet } from '@/components/notification-center/side-sheet/NotificatonCenterSidesheet';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
 const today = dayjs();
 
 export type NotificationCenterNotification = {
@@ -42,14 +47,7 @@ export const NotificationCenterItem = ({
   sidesheetLinkText: string;
 }) => {
   const notificationDate = dayjs(notification.date);
-  const dateIsToday = notificationDate.isSame(today, 'day');
-  let dateText;
-  if (dateIsToday) {
-    dateText = 'Today';
-  } else {
-    const formatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short' });
-    dateText = formatter.format(notification.date);
-  }
+  const dateText = `${notificationDate.tz('America/Chicago').format(`${DEFAULT_DATE_FORMAT} [at] H:MM a`)} CST`;
 
   if (loading || !isClient) return NotificationCenterItemLoadingState;
 
@@ -58,6 +56,10 @@ export const NotificationCenterItem = ({
     'Completion Date': notificationDate.format('MM/DD/YYYY'),
     Transaction: notification.title,
   };
+
+  const description = notification.completed
+    ? `Your ${notification.title} was processed successfully.`
+    : 'There was an error processing this transaction.';
 
   return (
     <NotificationCenterSidesheet
@@ -74,23 +76,45 @@ export const NotificationCenterItem = ({
             onAcknowledge(notification.id, notification.stepsToAcknowledge);
           }
         }}
-        className={clsx(
-          Styles.item,
-          needsAcknowledgement && Styles.needsAcknowledgement
-        )}
+        className={clsx(Styles.item, Styles.needsAcknowledgement)}
       >
-        <h3 className={clsx(Styles.title, 'typography-labels-label-sm')}>
-          {needsAcknowledgement && <div className={Styles.pip}></div>}
-          {notification.title}
-        </h3>
-        <div className={clsx(Styles.date, 'typography-content-caption')}>
-          <Icon small type={IconType.CALENDAR} />
-          {dateText}
+        <div className={Styles.notificationContentWrapper}>
+          <div className={Styles.notificationHeaderSection}>
+            <div
+              className={clsx(
+                Styles.pip,
+                !needsAcknowledgement && Styles.hidden
+              )}
+            ></div>
+            <Icon height={24} width={24} type={IconType.CASH} />
+            <div className={Styles.notificationTextGroup}>
+              <h3 className="typography-labels-label-lg">
+                {notification.title}
+              </h3>
+              <span
+                className={clsx(
+                  !notification.completed ? Styles.description : '',
+                  'text-sm text-left'
+                )}
+              >
+                {description}
+              </span>
+              <div
+                className={clsx(
+                  Styles.date,
+                  'typography-content-caption text-left'
+                )}
+              >
+                {dateText}
+              </div>
+            </div>
+          </div>
+          <div className={Styles.notificationLinkSection}>
+            <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
+              {sidesheetLinkText}
+            </span>
+          </div>
         </div>
-
-        <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
-          {sidesheetLinkText}
-        </span>
       </button>
     </NotificationCenterSidesheet>
   );

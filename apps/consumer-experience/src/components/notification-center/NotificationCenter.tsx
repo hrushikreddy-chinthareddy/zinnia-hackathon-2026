@@ -1,11 +1,6 @@
 'use client';
 import { useIsClient } from '@xd/hooks/useIsClient';
-import {
-  AssistiveTextVariant,
-  Icon,
-  IconType,
-  Loader,
-} from '@zinnia/bloom/components';
+import { Icon, IconType, Pagination } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
@@ -45,16 +40,26 @@ export const NotificationCenter = ({
     isLoading ||
     isFetching;
 
+  const allNotifications = actionNeededNotifications.concat(
+    completedNotifications
+  );
+
   return (
     <div className={Styles.container}>
-      {actionNeededNotifications.length > 0 && (
+      <div className={Styles.markAllReadContainer}>
+        <Icon
+          small
+          type={IconType.CIRCLE_CHECKMARK}
+          color="rgba(0, 98, 139, 1)"
+        />
+        <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
+          Mark all as read
+        </span>
+      </div>
+      {allNotifications.length > 0 && (
         <NotificationCenterSection
           className={Styles.actionNeeded}
-          variant={AssistiveTextVariant.Error}
-          sectionHeading="Action Needed"
-          notifications={actionNeededNotifications.sort(
-            sortNotificationsByDate
-          )}
+          notifications={allNotifications.sort(sortNotificationsByDate)}
           handleAcknowledge={handleAcknowledge}
           acknowledgedNotifications={acknowledgedNotifications}
           isLoading={isLoading}
@@ -62,19 +67,8 @@ export const NotificationCenter = ({
           mutatingId={acknowledgedCaseMutation?.variables?.id}
         />
       )}
-      {completedNotifications.length > 0 && (
-        <NotificationCenterSection
-          className={Styles.completed}
-          variant={AssistiveTextVariant.Success}
-          sectionHeading="Completed"
-          notifications={completedNotifications.sort(sortNotificationsByDate)}
-          handleAcknowledge={handleAcknowledge}
-          acknowledgedNotifications={acknowledgedNotifications}
-          isLoading={isLoading}
-          isClient={isClient}
-        />
-      )}
-      <section
+      <Pagination total={20} limit={5} offset={0} goToPage={() => {}} />
+      {/* <section
         style={{
           backgroundColor: clsx(
             (isError || isLoading) &&
@@ -109,7 +103,7 @@ export const NotificationCenter = ({
             </h2>
           </>
         )}
-      </section>
+      </section> */}
     </div>
   );
 };
