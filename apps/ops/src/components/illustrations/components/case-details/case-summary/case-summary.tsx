@@ -151,13 +151,12 @@ const IllustrationCaseSumary = ({
 
     const isConversion =
         clientCase?.transactionType === TransactionType.CONVERSION;
-    const infoItems: string[] = [];
-    if (clientCase?.transactionType === TransactionType.CONVERSION) {
-        infoItems.push('Conversion');
-    }
-    if (clientCase?.isMec) {
-        infoItems.push('MEC');
-    }
+    const infoItems = isConversion
+        ? ['Conversion', clientCase?.isMec && 'MEC'].filter(
+              (item): item is string => !!item
+          )
+        : [];
+
     const infoText = infoItems.join(', ');
 
     return (
