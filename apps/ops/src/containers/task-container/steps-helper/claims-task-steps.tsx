@@ -4,29 +4,27 @@ import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
-export const getClaimStopUncashTxnSteps = ({
+
+export const getClaimsTaskSteps = ({
     taskType,
+    task,
     taskInfoLink,
     t,
     taskMetadata,
-    task,
     isContinueButtonEnabled,
 }: GetStepsProps) => {
-    const readOnly = task.status === TaskStatus.Completed;
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
         component: (
-            <div className="bg-white shadow-elevation-light-04">
-                <TaskFormStep
-                    taskInfoLink={taskInfoLink}
-                    isSubmit={readOnly ? false : true}
-                    taskMetadata={metadata}
-                    key={`step_${index}`}
-                    readonly={readOnly}
-                    isContinueButtonEnabled={isContinueButtonEnabled}
-                ></TaskFormStep>
-            </div>
+            <TaskFormStep
+                readonly={task.status === TaskStatus.Completed}
+                taskInfoLink={taskInfoLink}
+                isSubmit={task.status === TaskStatus.Completed ? false : true}
+                taskMetadata={metadata}
+                key={`step_${index}`}
+                isContinueButtonEnabled={isContinueButtonEnabled}
+            ></TaskFormStep>
         ),
         text: metadata?.title || '',
         isSubmit: true,
@@ -39,15 +37,11 @@ export const getClaimStopUncashTxnSteps = ({
         {
             isVisible: () => true,
             component: (
-                <div className="bg-white shadow-elevation-light-04 mb-5 ">
-                    {' '}
-                    <ConfirmStep
-                        taskType={taskType}
-                        taskInfoLink={taskInfoLink}
-                        isCta={true}
-                        ctaLink={`/cases/${task?.caseId}/progress`}
-                    />
-                </div>
+                <ConfirmStep
+                    taskType={taskType}
+                    taskInfoLink={taskInfoLink}
+                    isCta={true}
+                ></ConfirmStep>
             ),
             text: t('confirm'),
             index: dynamicSteps.length,

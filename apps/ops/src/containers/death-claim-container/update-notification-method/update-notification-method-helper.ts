@@ -1,4 +1,5 @@
 import { Policy } from '@zinnia/api-types/types/sor';
+import { v4 as uuid4 } from 'uuid';
 
 import {
     AddressNotificationMethod,
@@ -19,7 +20,8 @@ export const buildUpdateNotificationMethodPayload = (
     emailData: EmailNotificationMethod,
     faxData: FaxNotificationMethod,
     addressData: AddressNotificationMethod,
-    updatedNotificationMethod: ClaimCommunicationTypes | string
+    updatedNotificationMethod: ClaimCommunicationTypes | string,
+    contactEstablished: boolean | null
 ) => {
     const { correlationId, recordId, identifiers, entity } = transactionData;
     const { policyNumber, carrierId } = policy;
@@ -52,8 +54,40 @@ export const buildUpdateNotificationMethodPayload = (
             ? addressData
             : originalAddress;
 
+    const beneficiaryChangeDetail = {
+        changeRequire: true,
+        changeType: ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE,
+        notificationPreferences: {
+            notificationMethod: {
+                method: updatedNotificationMethod,
+                action:
+                    entity?.notificationPreferences?.notificationMethod
+                        ?.method !== updatedNotificationMethod
+                        ? ClaimActionTypes.UPDATE
+                        : ClaimActionTypes.NONE,
+            },
+            fax: {
+                action: faxAction,
+                faxNumber:
+                    faxAction === ClaimActionTypes.UPDATE
+                        ? faxData?.faxNumber
+                        : originalFax,
+            },
+            email: {
+                action: emailAction,
+                emailAddress:
+                    emailAction === ClaimActionTypes.UPDATE
+                        ? emailData?.emailAddress
+                        : originalEmail,
+            },
+            address: {
+                action: addressAction,
+                ...addrValue,
+            },
+        },
+    };
     const payload = {
-        correlationId,
+        correlationId: correlationId ?? uuid4(),
         zlCaseId,
         sorSystem: 'LifeCad',
         sourceSystem: 'ZLCM',
@@ -62,38 +96,10 @@ export const buildUpdateNotificationMethodPayload = (
         policyNumber,
         updateDate: new Date().toISOString().split('T')[0],
         beneficiaryRecordId: recordId,
-        beneficiaryChangeDetail: {
-            changeRequire: true,
-            changeType: ChangeTypeEnum.BENEFICIARY_NOTIFICATION_CHANGE,
-            notificationPreferences: {
-                notificationMethod: {
-                    method: updatedNotificationMethod,
-                    action:
-                        entity?.notificationPreferences?.notificationMethod
-                            ?.method !== updatedNotificationMethod
-                            ? ClaimActionTypes.UPDATE
-                            : ClaimActionTypes.NONE,
-                },
-                fax: {
-                    action: faxAction,
-                    faxNumber:
-                        faxAction === ClaimActionTypes.UPDATE
-                            ? faxData?.faxNumber
-                            : originalFax,
-                },
-                email: {
-                    action: emailAction,
-                    emailAddress:
-                        emailAction === ClaimActionTypes.UPDATE
-                            ? emailData?.emailAddress
-                            : originalEmail,
-                },
-                address: {
-                    action: addressAction,
-                    ...addrValue,
-                },
-            },
-        },
+        contactEstablished,
+        beneficiaryChangeDetail: contactEstablished
+            ? {}
+            : beneficiaryChangeDetail,
     };
 
     return payload;

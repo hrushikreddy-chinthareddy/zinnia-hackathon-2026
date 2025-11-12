@@ -19,6 +19,7 @@ import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
+import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import {
@@ -29,9 +30,10 @@ import { browserLogInfo } from '@deps/utils/browser-logging';
 
 interface ConfirmStepProps {
     policy: Policy;
+    user: UserProfile;
 }
 
-const ConfirmStep = ({ policy }: ConfirmStepProps) => {
+const ConfirmStep = ({ policy, user }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.confirmStep',
     });
@@ -59,7 +61,8 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
             owners,
             beneficiaries,
             onbaseCaseId,
-            onbaseDocumentNumber
+            onbaseDocumentNumber,
+            user
         );
         browserLogInfo('ConfirmStep::Submit claim payload', {
             payload,

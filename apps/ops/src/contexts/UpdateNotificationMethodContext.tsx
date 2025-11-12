@@ -17,6 +17,7 @@ export type UpdateNotificationFormState = {
     faxData: FaxNotificationMethod;
     addressData: AddressNotificationMethod;
     notificationMethodSelected: ClaimCommunicationTypes | string;
+    contactEstablished: boolean | null;
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,7 @@ export type UpdateNotificationFormState = {
     setNotificationMethodSelected: React.Dispatch<
         React.SetStateAction<ClaimCommunicationTypes | ''>
     >;
+    setContactEstablished: React.Dispatch<React.SetStateAction<boolean | null>>;
 };
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -42,6 +44,7 @@ export const UpdateNotificationMethodDefaultValues = {
     faxData: {} as FaxNotificationMethod,
     addressData: {} as AddressNotificationMethod,
     notificationMethodSelected: '' as string,
+    contactEstablished: null,
     setFormData: noop,
     setFormErrors: noop,
     setSubmitFailed: noop,
@@ -50,6 +53,7 @@ export const UpdateNotificationMethodDefaultValues = {
     setFaxData: noop,
     setAddressData: noop,
     setNotificationMethodSelected: noop,
+    setContactEstablished: noop,
 };
 
 export const UpdateNotificationMethodContext =
@@ -81,6 +85,9 @@ export const UpdateNotificationMethodProvider = ({
     );
     const [notificationMethodSelected, setNotificationMethodSelected] =
         useState<ClaimCommunicationTypes | ''>('');
+    const [contactEstablished, setContactEstablished] = useState<
+        boolean | null
+    >(null);
 
     return (
         <UpdateNotificationMethodContext.Provider
@@ -93,6 +100,7 @@ export const UpdateNotificationMethodProvider = ({
                 faxData,
                 addressData,
                 notificationMethodSelected,
+                contactEstablished,
                 setFormData,
                 setFormErrors,
                 setSubmitFailed,
@@ -101,6 +109,7 @@ export const UpdateNotificationMethodProvider = ({
                 setFaxData,
                 setAddressData,
                 setNotificationMethodSelected,
+                setContactEstablished,
             }}
         >
             {children}

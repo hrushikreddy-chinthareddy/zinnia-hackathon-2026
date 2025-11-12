@@ -11,6 +11,28 @@ import {
     AuditFile,
 } from './death-audit-files.types';
 
+const getInboundSummary = (files: AuditFileItem[]): DeathAuditSummaryItem => {
+    let totalRecordCount = 0;
+    let newCaseCount = 0;
+    let existingCaseCount = 0;
+    let cancelledRecordCount = 0;
+
+    files.forEach((file) => {
+        const { summary } = file;
+        totalRecordCount += summary?.totalRecordCount || 0;
+        cancelledRecordCount += summary?.cancelledRecordCount || 0;
+        existingCaseCount += summary?.existingCaseCount || 0;
+        newCaseCount += summary?.newCaseCount || 0;
+    });
+
+    return {
+        totalRecordCount,
+        cancelledRecordCount,
+        existingCaseCount,
+        newCaseCount,
+    };
+};
+
 export const getDetails = (
     details: any,
     prop: string,
@@ -31,7 +53,9 @@ export const getDetails = (
             };
         }
         case DeathAuditFileTypes.INBOUND: {
-            const summary = details?.entity?.inbound?.summary ?? {};
+            const summary = getInboundSummary(
+                details?.entity?.inbound?.files ?? []
+            );
             const keySummary = !isNullEmptyOrUndefined(key)
                 ? getSummaryByKey(summary, key)
                 : [];

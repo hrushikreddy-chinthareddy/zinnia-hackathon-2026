@@ -2187,9 +2187,7 @@
             "fileDeletedError": "Échec de la suppression du fichier {{fileName}}"
         },
         "true": "Vrai",
-        "false": "Faux",
-        "email": "E-mail",
-        "emailTooltip": "Veuillez saisir une adresse e-mail valide. Une seule adresse e-mail est autorisée dans ce champ."
+        "false": "Faux"
     },
     "dashboard": {
         "h1": "Politiques et Contrats",
@@ -2512,7 +2510,9 @@
             "sswRequestValidation": "Valider la transaction",
             "suitabilityReview": "Valider l'admissibilité",
             "toaLetter": "Informer le transporteur cédant du transfert",
-            "viewDetails": "View details"
+            "viewDetails": "View details",
+            "outboundDeathScrub": "Envoyer le fichier à PBI Research Services - CertiDeath",
+            "inboundDeathScrub": "Fichier reçu de PBI Research Services - CertiDeath"
         },
         "steps": {
             "initiateClaims.updateDeceasedDate": "Demande de décès en attente de transaction mise à jour dans le système d'administration.",
@@ -2589,7 +2589,8 @@
             "verifyFunds.stopSystematicPrograms": "Arrêter le programme systématique",
             "verifyFunds.stopRMD": "Arrêtez les RMD",
             "verifyFunds.stopSpecialPrograms": "Arrêter les programmes spéciaux",
-            "requestAck.receiveClaimRequest": "Détails de la notification de décès"
+            "requestAck.receiveClaimRequest": "Détails de la notification de décès",
+            "requestAck.outboundDeathScrub": "Envoyer les informations sur les polices d'assurance aux services de recherche PBI - CertiDeath"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "Lorsqu'un document {{subType}} est reçu, il est indexé et intégré dans le système.",
@@ -3058,7 +3059,8 @@
             "contactEstablished": "Contact établi",
             "beneficiaryDeceased": "Bénéficiaire décédé",
             "scheduledTooltip": "{{followup}} tentatives restantes avant le début du processus d'escheatment sauf si un contact est établi.",
-            "finalTooltip": "Dernière tentative restante sauf si un contact est établi."
+            "finalTooltip": "Dernière tentative restante sauf si un contact est établi.",
+            "notificationRestarted": "Notification redémarrée {{date}}"
         }
     },
     "caseRenewal": {
@@ -7496,6 +7498,24 @@
         },
         "settlementInProgress": "Le règlement est en cours."
     },
+    "complianceDBUpdate": {
+        "noData": "Détails du fichier non disponibles.",
+        "loadingTransactions": "Récupération des détails du fichier...",
+        "errorGettingTransactions": "Impossible de récupérer les détails du fichier.",
+        "details": "Détails"
+    },
+    "receiveNewDocument": {
+        "noData": "Aucun nouveau détail de document disponible.",
+        "loadingTransactions": "Récupération des détails du nouveau document...",
+        "errorGettingTransactions": "Les nouvelles données du document n'ont pas pu être récupérées.",
+        "title": "Détails",
+        "source": "Source",
+        "deceasedSsn": "Numéro de sécurité sociale du défunt:",
+        "deceasedFirstName": "Prénom du défunt:",
+        "deceasedLastName": "Nom de famille du défunt:",
+        "deceasedDob": "Date de naissance du défunt:",
+        "deceasedDod": "Date du décès:"
+    },
     "deathAuditFiles": {
         "noData": "Les détails du fichier ne sont pas disponibles.",
         "loadingTransactions": "Récupération des détails du fichier...",
@@ -8089,8 +8109,22 @@
     },
     "updateNotificationMethodForBeneficiary": {
         "tabs": {
+            "contactEstablished": "Contact établi",
             "updateNotificationMethod": "Mettre à jour la méthode de notification",
             "confirm": "Confirmer"
+        },
+        "contactEstablishedStep": {
+            "title": "Contact établi",
+            "selectOption": "Sélectionnez l'une des options suivantes :",
+            "contactEstablished": {
+                "contactEstablishedRestartProcess": "Contact établi – Processus de redémarrage",
+                "updateNotificationMethod": "Méthode de notification de mise à jour"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "contactEstablishedIsRequired": "Veuillez sélectionner une option pour continuer."
+                }
+            }
         },
         "updateNotificationMethodStep": {
             "title": "Mettre à jour la méthode de notification",
@@ -8305,6 +8339,15 @@
             "submitTask": "Soumettre"
         }
     },
+    "claimsDeathAuditContractMatching": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Tâche : Match Death Case soumises.",
+            "cta": "Aller à la demande de décès",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "claimsBeneReview": {
         "confirmStep": {
             "title": "Compris!",
@@ -8344,6 +8387,7 @@
             "cancel": "Annuler",
             "noChangesRequired": "Aucun changement requis",
             "yes": "Oui",
+            "no": "Non",
             "name": "Nom",
             "phone": "Téléphone",
             "newInformation": "Nouvelle information",
@@ -8360,6 +8404,7 @@
             "sourceOfInfo": "Source of Information",
             "relationshipToOwner": "Relation avec le défunt",
             "didYouMakeAnyChanges": "Avez-vous apporté des modifications au système d’administration ? ",
+            "wasContactEstablished": "Le contact a-t-il été établi?",
             "addAnotherCall": "Ajouter un autre appel",
             "contactRoles": {
                 "agent": "Agent",
@@ -8370,6 +8415,7 @@
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
+            "contactEstablished": "Contact établi",
             "errors": {
                 "addressIsRequired": "Sélectionnez une adresse pour continuer",
                 "emailIsRequired": "L'e-mail est obligatoire",
@@ -8386,12 +8432,13 @@
                 "relationshipToOwner": "La relation avec le propriétaire est requise",
                 "changeRequireRequired": "Veuillez sélectionner une option",
                 "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
-                "callSummaryRequired": "Le résumé de l'appel est requis"
+                "callSummaryRequired": "Le résumé de l'appel est requis",
+                "contactEstablishedRequired": "Por favor seleccione una opción"
             }
         },
         "confirmStep": {
             "title": "C'est fait !",
-            "subTitle": "Tâche : Vérification de beneficiarios de reclamación de muerte fue enviada.",
+            "subTitle": "Tâche : La demande de prise de contact avec les bénéficiaires a été soumise.",
             "cta": "Ir al expediente de reclamación",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
@@ -8418,7 +8465,7 @@
     "day150Review": {
         "confirmStep": {
             "title": "Compris!",
-            "subTitle": "Tâche : Opération Review a été soumise.",
+            "subTitle": "Tâche : La dernière demande de prise de contact avec les bénéficiaires a été soumise.",
             "cta": "Aller au cas",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
@@ -8430,6 +8477,7 @@
             "cancel": "Cancelar",
             "noChangesRequired": "No se requirieron cambios",
             "yes": "Sí",
+            "no": "Non",
             "name": "Nom",
             "phone": "Télefono",
             "contactRole": "Role de contacto",
@@ -8447,6 +8495,7 @@
             "relationshipToDeceased": "Relation avec le propriétaire",
             "relationshipToOwner": "Relación con el fallecido",
             "didYouMakeAnyChanges": "Avez-vous apporté des modifications au système d’administration ?",
+            "wasContactEstablished": "Le contact a-t-il été établi?",
             "addAnotherCall": "Agregar otra llamada",
             "contactRoles": {
                 "agent": "Agente",
@@ -8457,6 +8506,7 @@
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
+            "contactEstablished": "Contact établi",
             "invalidEmail": "E-mail invalide",
             "invalidFax": "Fax invalide",
             "errors": {
@@ -8475,7 +8525,8 @@
                 "relationshipToOwner": "La relation avec le propriétaire est requise",
                 "changeRequireRequired": "Veuillez sélectionner une option",
                 "changeTypeRequired": "Veuillez sélectionner un type de nouvelle information",
-                "callSummaryRequired": "Le résumé de l'appel est requis"
+                "callSummaryRequired": "Le résumé de l'appel est requis",
+                "contactEstablishedRequired": "Por favor seleccione una opción"
             }
         },
         "invalidEmail": "E-mail invalide",
@@ -8492,6 +8543,9 @@
             "cancel": "Annuler",
             "no": "Non",
             "yes": "Oui"
+        },
+        "errors": {
+            "beneDeceased": "Veuillez sélectionner une option"
         }
     },
     "claimsMatchBeneDocument": {

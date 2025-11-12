@@ -10,6 +10,7 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { ProcessType } from '@deps/models/case/enums';
+import { UserProfile } from '@deps/models/user-profile';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { initialDeathClaimExistsSsr } from '@deps/queries/api/web-non-financial';
@@ -29,13 +30,17 @@ import nextI18nextConfig from 'next-i18next.config';
 
 interface DeathClaimNotificationProps {
     policy: Policy;
+    user: UserProfile;
 }
 
-const DeathClaimNotification = ({ policy }: DeathClaimNotificationProps) => {
+const DeathClaimNotification = ({
+    policy,
+    user,
+}: DeathClaimNotificationProps) => {
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
             <DeathClaimProvider>
-                <DeathClaimContainer policy={policy} />
+                <DeathClaimContainer policy={policy} user={user} />
             </DeathClaimProvider>
         </div>
     );
@@ -45,6 +50,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
+
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
                     user.sub,

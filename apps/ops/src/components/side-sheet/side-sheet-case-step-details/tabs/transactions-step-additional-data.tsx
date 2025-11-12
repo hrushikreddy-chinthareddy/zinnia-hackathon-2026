@@ -1,5 +1,6 @@
 import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 
+import ComplianceDbUpdate from './bene-notification-tab/compliance-db-update/compliance-db-update';
 import ClaimsFundRelease from './claims-fund-release/claims-fund-release';
 import DeathAuditFiles from './death-audit-files/death-audit-files';
 import DeathAuditFilesTab from './death-audit-files/death-audit-files-tab';
@@ -9,6 +10,7 @@ import {
 } from './death-audit-files/death-audit-files.types';
 import DeathAuditQualification from './death-audit-qualification/detah-audit-qualification';
 import DeathNotificationSidesheet from './death-notification';
+import ReceiveNewDocument from './receive-new-document/receive-new-document';
 import {
     StepProgramTypes,
     TransactionsAdditionalDataStepIds,
@@ -93,7 +95,18 @@ export const TransactionsStepAdditionalData = ({
                 return (
                     <DeathAuditFilesTab
                         stepAdditionalData={stepAdditionalData}
-                        prop={DeathAuditFileTypes.INBOUND}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.receiveNewDocument:
+                return (
+                    <ReceiveNewDocument
+                        stepAdditionalData={stepAdditionalData}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.complianceDbUpdate:
+                return (
+                    <ComplianceDbUpdate
+                        stepAdditionalData={stepAdditionalData}
                     />
                 );
             default:
