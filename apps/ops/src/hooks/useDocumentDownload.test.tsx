@@ -24,7 +24,7 @@ jest.mock('@deps/contexts/OptimizelyContext', () => ({
     },
 }));
 
-jest.mock('@deps/utils/optimizely/optimizely', () => ({
+jest.mock('@deps/utils/optimizely/utils', () => ({
     isFeatureFlagVariableActive: jest.fn(() => true),
 }));
 
@@ -39,9 +39,8 @@ describe('useDocumentDownload', () => {
     const mockBlob = new Blob(['test']);
     const mockGetDocumentDownloadQuery = getDocumentDownloadQuery as jest.Mock;
     const mockSaveAs = saveAs as jest.MockedFunction<typeof saveAs>;
-    const isFeatureFlagVariableActive =
-        require('@deps/utils/optimizely/optimizely')
-            .isFeatureFlagVariableActive as jest.Mock;
+    const isFeatureFlagVariableActive = require('@deps/utils/optimizely/utils')
+        .isFeatureFlagVariableActive as jest.Mock;
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
         <QueryClientProvider client={new QueryClient()}>

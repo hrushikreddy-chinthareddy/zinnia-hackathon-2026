@@ -34,10 +34,8 @@ import {
     renderTiffPagesToContainer,
     ViewerState,
 } from '@deps/utils/fileviewer/tiffUtils';
-import {
-    isFeatureFlagVariableActive,
-    optimizelyService,
-} from '@deps/utils/optimizely/optimizely';
+import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     logWarn,
