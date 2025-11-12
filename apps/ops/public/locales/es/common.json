@@ -7316,13 +7316,23 @@
                 "matchDocument": "Coincidir Documento",
                 "beneficiaryStatus": "Estado del Beneficiario",
                 "addressChange": "Cambio de Dirección",
-                "call": "Llamar"
+                "call": "Llamar",
+                "formReview": "Revisión del formulario"
             }
         },
         "formErrors": {
             "caseNotFound": "Caso no encontrado",
             "correlationIdNotFount": "ID de correlación no encontrado",
             "transactionNotFound": "Transacción no encontrada"
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entiendo!",
+            "subTitle": "Tarea: Se envió la entrada de datos de cambio de beneficiario.",
+            "cta": "Ir al caso",
+            "secondaryCta": "De vuelta a casa",
+            "submitTask": "Entregar"
         }
     },
     "purchaseDocumentMatching": {

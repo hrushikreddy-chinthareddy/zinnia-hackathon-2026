@@ -7357,8 +7357,18 @@
                 "summary": "Résumé",
                 "beneficiaryStatus": "Statut du bénéficiaire",
                 "addressChange": "Changement d'adresse",
-                "call": "Appel"
+                "call": "Appel",
+                "formReview": "Examen du formulaire"
             }
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La saisie des données de modification des bénéficiaires a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à la maison",
+            "submitTask": "Soumettre"
         }
     },
     "purchaseDocumentMatching": {
