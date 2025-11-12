@@ -29,32 +29,35 @@ interface MapDataToPeopleProps {
 }
 
 const tagsToBeneficiaryType = (tags: TagKey[]) => {
-    const isPrimary = tags.filter(
-        (tag) => tag.text?.toLocaleLowerCase().indexOf('primary') !== -1
-    )?.length;
-    const isContigent = tags.filter(
-        (tag) => tag.text?.toLocaleLowerCase().indexOf('contigent') !== -1
-    )?.length;
-    const isPrimaryAgent = tags.filter(
-        (tag) => tag.text?.toLocaleLowerCase().indexOf('agent of record') !== -1
-    )?.length;
-    const isAgent = tags.filter(
-        (tag) =>
-            tag.text?.toLocaleLowerCase().indexOf('agent') ||
-            tag.text?.toLocaleLowerCase().indexOf('servicing agent') !== -1
-    )?.length;
+    // Check for most specific matches first to avoid false positives
+    const hasAgentOfRecord = tags.some((tag) =>
+        tag.text?.toLowerCase().includes('agent of record')
+    );
+    const hasServicingAgent = tags.some((tag) =>
+        tag.text?.toLowerCase().includes('servicing agent')
+    );
+    const hasContingent = tags.some((tag) =>
+        tag.text?.toLowerCase().includes('contingent')
+    );
+    const hasPrimary = tags.some((tag) =>
+        tag.text?.toLowerCase().includes('primary')
+    );
+    const hasAgent = tags.some((tag) =>
+        tag.text?.toLowerCase().includes('agent')
+    );
 
-    if (isPrimary) {
-        return BeneficiaryType.PRIMARY;
-    }
-    if (isContigent) {
-        return BeneficiaryType.CONTIGENT;
-    }
-    if (isPrimaryAgent) {
+    // Check in order of specificity to avoid false matches
+    if (hasAgentOfRecord) {
         return AgentType.PRIMARY;
     }
-    if (isAgent) {
+    if (hasServicingAgent || (hasAgent && !hasPrimary && !hasContingent)) {
         return AgentType.AGENT;
+    }
+    if (hasContingent) {
+        return BeneficiaryType.CONTINGENT;
+    }
+    if (hasPrimary) {
+        return BeneficiaryType.PRIMARY;
     }
 
     return BeneficiaryType.NONE;
@@ -79,6 +82,7 @@ const mapDataToPeopleCard = ({
         agentPercentage,
         producerType,
         producerName,
+        isIrrevocable,
     } = party;
     const {
         selectedTagList,
@@ -162,6 +166,7 @@ const mapDataToPeopleCard = ({
             }}
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
+            isIrrevocable={isIrrevocable}
         />
     );
 };

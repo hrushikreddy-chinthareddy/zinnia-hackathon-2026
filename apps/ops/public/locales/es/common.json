@@ -6145,7 +6145,8 @@
         "cardDisableTooltip": "Seguimos trabajando en esta página. Por ahora, dirígete directamente a MCS para ver la información de contacto y los datos de identificación del agente.",
         "other": "Otro",
         "otherTooltip": "Otros agentes de la póliza no ganan comisión, pero también pueden estar autorizados a realizar cambios o discutir esta póliza. Por ejemplo, el agente de servicio de la póliza es el agente que trabaja directamente con el propietario ahora que la póliza está activa.",
-        "managePeople": "Gestionar personas"
+        "managePeople": "Gestionar personas",
+        "irrevocable": "Irrevocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",

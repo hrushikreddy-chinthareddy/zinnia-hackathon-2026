@@ -6193,7 +6193,8 @@
         "cardDisableTooltip": "We're still working on this page. For now, head to MCS directly to see agent contact information and identification details.",
         "other": "Other",
         "otherTooltip": "Other agents on the policy don't earn commission, but may also be authorized to make changes or discuss this policy. For example, the servicing agent on the policy is the agent who works directly with the owner now that the policy is active.",
-        "managePeople": "Manage people"
+        "managePeople": "Manage people",
+        "irrevocable": "Irrevocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
