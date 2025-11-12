@@ -12,6 +12,12 @@ export interface IllustraionsClientCaseSearchResponse {
     count: number;
 }
 
+export enum TransactionType {
+    REPLACEMENT = 'REPLACEMENT',
+    NONREPLACEMENT = 'NONREPLACEMENT',
+    CONVERSION = 'CONVERSION',
+}
+
 export interface IllustrationsClientCase {
     id: string;
     title?: string;
@@ -28,12 +34,6 @@ export interface IllustrationsClientCase {
     originalFaceAmount?: number;
     isMec?: boolean;
     transactionType?: TransactionType;
-}
-
-export enum TransactionType {
-    REPLACEMENT = 'REPLACEMENT',
-    NONREPLACEMENT = 'NONREPLACEMENT',
-    CONVERSION = 'CONVERSION',
 }
 
 export interface IllustrationSummary {
@@ -64,8 +64,6 @@ export interface IllustrationInsuredDetails {
     state?: string;
     illustrateAtOlderAge?: boolean;
     issueAge?: number;
-    riskClass?: string; // TODO: remove in favor of underwritingClass
-    riskClassCode?: number;
     underwritingClass?: UnderwritingClass;
 }
 
@@ -83,17 +81,6 @@ export interface ClientCaseSearchInputs {
 }
 
 export type SexAtBirth = 'Male' | 'Female'; /// this willchange to a a full upper case on enum for BE.
-export type RiskClass =
-    | 'platinum'
-    | 'platinumChoice'
-    | 'platinumPlus'
-    | 'platinumElite'
-    | 'platinumSubstandard'
-    | 'gold'
-    | 'goldPlus'
-    | 'goldSubstandard'
-    | 'juvenile'
-    | 'juvenileSubstandard';
 
 export enum IllustrationStatuses {
     SUBMITTED = 'SUBMITTED',
