@@ -91,21 +91,21 @@ export const NotificationCenterItem = ({
               <h3 className="typography-labels-label-lg">
                 {notification.title}
               </h3>
-              <span
+              <p
                 className={clsx(
                   !notification.completed ? Styles.description : '',
                   'text-sm text-left'
                 )}
               >
                 {description}
-              </span>
+              </p>
               <div
                 className={clsx(
                   Styles.date,
                   'typography-content-caption text-left'
                 )}
               >
-                {dateText}
+                <p>{dateText}</p>
               </div>
             </div>
           </div>
