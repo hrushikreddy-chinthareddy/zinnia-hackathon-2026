@@ -5,7 +5,10 @@ import { Result } from 'typegate';
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
-import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    IllustrationsClientCase,
+    TransactionType,
+} from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
 import {
@@ -65,23 +68,42 @@ export abstract class IllustrationHandler<TOutputEntities> {
 
         function getPremiumClass(
             age: number | undefined,
-            isNicotineUser: boolean | undefined
+            isNicotineUser: boolean | undefined,
+            underwritingClass: UnderwritingClass | undefined
         ): string | null {
             if (age && age < 18) {
                 return 'juvenile';
             } else if (isNicotineUser) {
                 return UnderwritingClass.STANDARDTOBACCO;
+            } else if (underwritingClass !== undefined) {
+                return underwritingClass;
             }
             return null;
         }
+
+        const isConversion =
+            clientCase.transactionType === TransactionType.CONVERSION;
 
         // get the premium class default based on client case details
         // if null, the default will be set by the blueprint
         const premiumClass = getPremiumClass(
             insuredAge,
-            clientCase.insuredDetails?.nicotineUser
+            clientCase.insuredDetails?.nicotineUser,
+            clientCase.insuredDetails?.underwritingClass
         );
+
         return {
+            ...(clientCase.originalFaceAmount && {
+                baseCoverage: {
+                    currentAmount: clientCase.originalFaceAmount,
+                },
+            }),
+            isConversion,
+            ...(isConversion && {
+                maxConversionFaceAmount: clientCase.originalFaceAmount,
+                isMec: clientCase.isMec || false,
+                preventMec: !clientCase.isMec,
+            }),
             ...(premiumClass && {
                 premiumClass: premiumClass,
             }),

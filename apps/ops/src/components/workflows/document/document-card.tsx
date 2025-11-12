@@ -15,12 +15,12 @@ interface IDocumentCard {
         docTypeView?: DocumentTypeView;
         carrier: string;
     };
-    isViewButtonHiddenForEMLType?: boolean;
+    isViewButtonHidden?: boolean;
 }
 
 const DocumentCard: React.FC<IDocumentCard> = (props) => {
     const { t } = useTranslation();
-    const { document, cardClass, isViewButtonHiddenForEMLType } = props;
+    const { document, cardClass, isViewButtonHidden } = props;
     return (
         <div
             className={`flex rounded border border-gray-100 p-[12px] ${
@@ -31,12 +31,12 @@ const DocumentCard: React.FC<IDocumentCard> = (props) => {
                 <DOCUMENT_TEXT_ICON width={25} height={25} />
             </div>
             <div className="grow">
-                {document.displayName && (
+                {document?.displayName && (
                     <div className="text-sm font-bold break-all">
                         <PiiWrapper>{document.displayName}</PiiWrapper>
                     </div>
                 )}
-                <div className="flex items-center text-sm font-normal text-gray-300">
+                <div className="flex items-center text-sm font-normal text-gray-600">
                     <PiiWrapper>
                         {t('caseOverview.sidesheet.documentId', {
                             documentId: document.documentId,
@@ -47,7 +47,7 @@ const DocumentCard: React.FC<IDocumentCard> = (props) => {
             <DocumentActions
                 t={t}
                 document={document}
-                isViewButtonHiddenForEMLType={isViewButtonHiddenForEMLType}
+                isViewButtonHidden={isViewButtonHidden}
             />
         </div>
     );

@@ -11,7 +11,8 @@
     display: flex;
     position: relative;
     top: var(--measure-dimension-stroke-sm);
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: auto;
 }
 .sidebarSection {
     display: flex;

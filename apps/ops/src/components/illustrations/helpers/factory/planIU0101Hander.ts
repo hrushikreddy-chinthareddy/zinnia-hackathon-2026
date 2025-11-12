@@ -17,6 +17,7 @@ import {
 } from './illustrationsHandlerAbstractClass';
 import { farmersBlueprintIU0101 } from '../farmers/farmersBlueprintIU0101';
 import {
+    ConversionType,
     CreateIllustrationPayload,
     CreateIllustrationPayloadParsingError,
     createIllustrationPayloadSchema,
@@ -293,7 +294,9 @@ const farmersEntitiesSchema = t.object(
         t.union(t.array(t.string), t.undefined)
     ),
     t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
-    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined))
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined)),
+    t.optionalProperty('isConversion', t.union(t.boolean, t.undefined)),
+    t.optionalProperty('isMec', t.union(t.boolean, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -767,6 +770,12 @@ function createIllustrationPayload(
                     loanInterestOption: values.loanInterestOption,
                 },
             }),
+        ...(values.isConversion && {
+            conversion: {
+                conversionType: ConversionType.STANDARD,
+                isSourceMEC: values.isMec,
+            },
+        }),
     };
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);

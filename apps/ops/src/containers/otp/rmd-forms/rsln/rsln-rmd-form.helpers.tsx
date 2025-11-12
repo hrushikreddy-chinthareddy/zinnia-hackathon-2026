@@ -42,6 +42,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 const spousalSignatureStateCodes = [
     statesAndTerritories.ARIZONA,
@@ -205,10 +206,11 @@ export default function getRslnRmdConfig(t: TFunction) {
         },
     ];
 
-    const rmdFormValidation = ({
+    const formValidation = ({
         formSignature,
         formDisbursement,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -236,11 +238,6 @@ export default function getRslnRmdConfig(t: TFunction) {
                 );
             }
         }
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
 
         const jointOwnerSignature = formSignature?.signatures?.find(
             (sigInfo) =>
@@ -266,29 +263,6 @@ export default function getRslnRmdConfig(t: TFunction) {
             errors['rmdMinimumRequiredProgram'] = t(
                 'rmdMethod.rmdWarnings.minimumRequiredProgram'
             );
-        }
-
-        // No choice made for signature
-        if (
-            ownerSignature &&
-            ownerSignature?.isSigned !== false &&
-            !ownerSignature?.isSigned
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
-
-        // No choice made for signature valid
-        if (
-            ownerSignature &&
-            ownerSignature?.isSigned &&
-            !ownerSignature?.isSignatureValid &&
-            ownerSignature?.isSignatureValid !== false
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.IsSignatureValid}`
-            ] = t('formValidation.signatureValidOptionMustBeSelected');
         }
 
         if (
@@ -324,17 +298,6 @@ export default function getRslnRmdConfig(t: TFunction) {
             ] = t('formValidation.signatureValidOptionMustBeSelected');
         }
 
-        // No signature comment added
-        if (
-            ownerSignature &&
-            ownerSignature?.isSignatureValid &&
-            !ownerSignature?.signatureComment
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
-            ] = t('formValidation.signatureCommentMustBePresent');
-        }
-
         if (
             jointOwnerSignature &&
             jointOwnerSignature?.isSignatureValid &&
@@ -365,7 +328,15 @@ export default function getRslnRmdConfig(t: TFunction) {
             ] = t('formValidation.signatureCommentMustBePresent');
         }
 
-        return errors;
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+            validateComment: true,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -647,6 +618,7 @@ export default function getRslnRmdConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -717,7 +689,7 @@ export default function getRslnRmdConfig(t: TFunction) {
         w4pSignaturesConfig,
         disbursementOptions,
         signaturesConfig,
-        formValidation: rmdFormValidation,
+        formValidation,
         eSignatureFieldConfig,
     };
 }

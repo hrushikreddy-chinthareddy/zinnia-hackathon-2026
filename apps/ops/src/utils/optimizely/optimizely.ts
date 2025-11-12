@@ -26,17 +26,6 @@ export type FeatureFlagVariableType = {
     };
 };
 
-export const isFeatureFlagVariableActive = (
-    featureFlagVariables: FeatureFlagVariableType,
-    featureFlag: string,
-    key: string,
-    value: string
-): boolean => {
-    return (
-        featureFlagVariables?.[featureFlag]?.variables?.[key]?.[value] ?? false
-    );
-};
-
 export const getFeatureFlagByKey = async (
     featureFlag: string,
     variableKey: string,

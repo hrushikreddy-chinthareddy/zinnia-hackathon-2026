@@ -1,7 +1,25 @@
+import { useContext } from 'react';
+
 import Autocomplete from '@deps/components/autocomplete/autocomplete';
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
-import { ParticipantCompanies } from '@deps/models/case/withdrawal/case';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { TaskType } from '@deps/models/case/task';
+import {
+    Carrier,
+    ParticipantCompanies,
+} from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
+
+type FilterParticipantIdRules = {
+    clients: Carrier;
+    taskType: TaskType;
+    excludeParticipantCodes: string[];
+};
+
+type SelectedParticipantId = {
+    code: string;
+    companyName: string;
+};
 
 const SelectParticipantId = ({
     fieldLabel,
@@ -10,13 +28,39 @@ const SelectParticipantId = ({
     isFormStateReadOnly,
     onDataChange,
 }: DisbursementInformation) => {
+    const { initialForm } = useContext(FormDataContext);
     const value = disbursementInformation.participantId ?? '';
-    const participantIdOptions = ParticipantCompanies.map((company) => {
-        return {
-            label: `${company.companyName}`,
-            value: company.code,
-        };
-    });
+
+    const filterParticipantIdRules: FilterParticipantIdRules[] = [
+        {
+            clients: Carrier.FLIC,
+            taskType: TaskType.OFT,
+            excludeParticipantCodes: ['0226'],
+        },
+    ];
+
+    const participantIdOptions = () => {
+        const matchedRule = filterParticipantIdRules.find(
+            (rule: FilterParticipantIdRules) =>
+                rule.clients === initialForm?.carrier &&
+                rule.taskType === initialForm?.taskType
+        );
+
+        return matchedRule
+            ? ParticipantCompanies.filter(
+                  (p: { code: string }) =>
+                      !matchedRule.excludeParticipantCodes.includes(p.code)
+              ).map((participantId: SelectedParticipantId) => ({
+                  label: `${participantId.companyName}`,
+                  value: participantId.code,
+              }))
+            : ParticipantCompanies.map(
+                  (participantId: SelectedParticipantId) => ({
+                      label: `${participantId.companyName}`,
+                      value: participantId.code,
+                  })
+              );
+    };
 
     const setDataChange = (val: string) => {
         onDataChange((ogData) => ({
@@ -29,7 +73,7 @@ const SelectParticipantId = ({
         <Autocomplete
             className="max-w-lg"
             label={fieldLabel}
-            options={participantIdOptions}
+            options={participantIdOptions()}
             onChange={(val: string) => setDataChange(val)}
             size={FieldSize.Small}
             value={value}

@@ -24,6 +24,7 @@ type AddressProps = {
     combinedAddress?: string;
     className?: string;
     capitalize?: boolean;
+    isAddressLine2Required?: boolean;
 };
 
 export const DEFAULT_ADDRESS = {
@@ -52,6 +53,7 @@ export default function AddressEntry({
     combinedAddress = '',
     className = '',
     capitalize = true,
+    isAddressLine2Required = false,
 }: AddressProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.addressDetails',
@@ -106,11 +108,15 @@ export default function AddressEntry({
         return capitalize ? xss(value?.toUpperCase()) : xss(value);
     };
 
+    const mailingAddressLine1Label = isAddressLine2Required
+        ? t(`mailingAddressLine1`)
+        : t(`mailingAddress`);
+
     return (
         <div className={className}>
             <div className="max-w-lg">
                 <Field
-                    label={t(`mailingAddress`) as string}
+                    label={mailingAddressLine1Label}
                     message={errors.addressLine1}
                     onChange={(e) =>
                         setAddressLine1(format(e.target.value ?? ''))
@@ -128,7 +134,8 @@ export default function AddressEntry({
                 />
             </div>
             {((!isOL4753 && initialAddress.addressLine2) ||
-                showAddressLines) && (
+                showAddressLines ||
+                isAddressLine2Required) && (
                 <div className="my-4 max-w-lg">
                     <Field
                         label={t(`mailingAddressLine2`) as string}
