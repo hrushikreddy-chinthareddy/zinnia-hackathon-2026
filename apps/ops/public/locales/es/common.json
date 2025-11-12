@@ -1403,7 +1403,7 @@
                 "beneficiaryInformation": {
                     "title": "Información del beneficiario",
                     "perStirpes": "Por estirpe",
-                    "irrevocable": "Irevocable"
+                    "irrevocable": "Irrevocable"
                 }
             },
             "confirm": {
