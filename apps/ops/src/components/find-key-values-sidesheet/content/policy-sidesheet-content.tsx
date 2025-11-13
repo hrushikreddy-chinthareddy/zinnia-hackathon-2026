@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     FieldData,
-    FieldSize,
     FieldTypes,
     Icon,
     IconType,
@@ -12,18 +11,11 @@ import {
     FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import {
-    ChangeEvent,
-    SetStateAction,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from 'react';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -41,6 +33,8 @@ import {
     FindAllKeyValuesSidebarProps,
     NestedData,
 } from '../types';
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -56,12 +50,14 @@ export const PolicySidesheetContent = ({
     const [enableQuery, setEnableQuery] = useState(false);
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
-
     const {
         data: policy,
         isFetching,
         isError,
     } = usePolicyQuery(planCode, policyNumber, date, queryClient, enableQuery);
+    const rangeErrorMsg = `${t('allFields.selectDateInRange')} ${dayjs(
+        policy?.policyDates?.issueDate
+    ).format('L')} - ${dayjs().format('L')}`;
 
     const isDateAllowed = (date: Dayjs) => {
         const policyIssuanceDate = dayjs(
@@ -85,7 +81,6 @@ export const PolicySidesheetContent = ({
             setEnableQuery(true);
             setFieldError(false);
         } else {
-            console.log('cheese');
             setDate(date.toString());
             setEnableQuery(false);
             setFieldError(true);
@@ -139,24 +134,20 @@ export const PolicySidesheetContent = ({
                 name={'select-date'}
                 label={
                     <Label labelFor="select-date">
-                        {t('label.findKeyValuesDate') as string}
+                        {t('label.findKeyValuesDate') || ''}
                     </Label>
                 }
                 disableAfterDate={new Date()}
-                // disableBeforeDate={
-                //     new Date(policy?.policyDates?.issueDate || '')
-                // }
+                disableBeforeDate={
+                    new Date(policy?.policyDates?.issueDate || '')
+                }
                 onDateSelect={(date) => handleDateChange(date)}
                 container={container}
-                givenErrorMessage={
-                    fieldError || isError
-                        ? (t('label.findKeyValuesDateError') as string)
-                        : ''
-                }
                 fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
+                formatErrorMsg={t('allFields.invalidDateFormat') || ''}
+                rangeErrorMsg={rangeErrorMsg}
                 handleCalendarOpen={handleCalendarOpen}
             />
-
             <FieldData
                 onChange={(e) => setSearchValue(e.target.value)}
                 handleClear={() => setSearchValue('')}
@@ -165,7 +156,6 @@ export const PolicySidesheetContent = ({
                 fieldSize={BloomFieldSize.Small}
                 placeholder="Search"
             />
-
             <BlurOverlayLoader loading={fieldError || isFetching || isError}>
                 <div className={styles.container}>
                     <div className={styles.treeControl}>

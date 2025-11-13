@@ -456,7 +456,9 @@
         "disbursementAmount": "Disbursement amount",
         "payeeGrossAmount": "Payee gross amount",
         "timeline": "Timeline",
-        "taxes": "Taxes"
+        "taxes": "Taxes",
+        "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
+        "selectDateInRange": "Please select a date within range:"
     },
     "enums": {
         "LIFE": "Life",
