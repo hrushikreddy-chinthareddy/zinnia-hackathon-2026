@@ -185,6 +185,7 @@ export const Nav = ({
             className={styles.toggleButton}
             onClick={handleNavToggle}
             aria-label={isExpanded ? collapseText : expandText}
+            tabIndex={isExpanded ? undefined : -1}
           >
             <Icon
               type={IconType.CHEVRON_DOUBLE}
