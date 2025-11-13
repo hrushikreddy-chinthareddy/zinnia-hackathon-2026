@@ -10,6 +10,7 @@ import {
 } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
+import { sortByAndThenBy } from './sort.helpers';
 import { replacePlaceholders } from './value-placement.helpers';
 const baseUrl = baseAppUrl + '/api/';
 
@@ -155,17 +156,19 @@ export const csrApiHelper = async (
                 ? replacePlaceholders(responseData, data)
                 : data;
 
+            const sortedData = sorted
+                ? sortByAndThenBy(filteredApiData, response?.enum || '')
+                : filteredApiData;
+
             if (response) {
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach((key) => {
-                    let values =
-                        filteredApiData?.map((item: any) => {
+                    const values =
+                        sortedData?.map((item: any) => {
                             const filteredItem = item[(response as any)?.[key]];
                             return filteredItem ? filteredItem : item;
                         }) || [];
-                    if (sorted) {
-                        values = values.sort();
-                    }
+
                     mapDataToKeys[key] = values;
                 });
 
