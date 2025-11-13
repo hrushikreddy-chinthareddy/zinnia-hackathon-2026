@@ -41,8 +41,6 @@ export const getPageTitleByPathPart = ({
   if (pathPart === policyNumber) {
     return toTitleCase(overviewTitle);
     // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
-  } else if (pathPart === beneficiaryKey) {
-    return getPageTitle(RouteKey.BENEFICIARY);
   } else {
     return getPageTitle(`/${pathPart}` as RouteKey, lineOfBusiness);
   }
