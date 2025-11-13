@@ -1,4 +1,5 @@
 import { ApiResponse } from '@/services';
+import { CaseSearchCriteriaWithLimit } from '@/services/case';
 import { TransformedCaseSearchResponse } from '@/services/case/transformers';
 import { ClientApi } from '@/services/client-http';
 import {
@@ -7,20 +8,16 @@ import {
 } from '@/services/terms-and-conditions';
 
 export const searchCasesByPolicyNumber = async (
-  policyNumber: string,
-  planCode?: string
+  body: CaseSearchCriteriaWithLimit
 ) => {
   const response: ApiResponse<TransformedCaseSearchResponse> = await (
-    await ClientApi.post(
-      `/api/case/search`,
-      JSON.stringify({ policyNumber, planCode })
-    )
+    await ClientApi.post(`/api/case/search`, JSON.stringify(body))
   ).json();
   if (response.error || !response) {
     throw response.error;
   }
 
-  return response.data.data;
+  return response.data;
 };
 
 export const getCaseDetails = async (caseId: string) => {
