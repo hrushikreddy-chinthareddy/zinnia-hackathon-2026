@@ -15,7 +15,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
-import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
+import { buildClaimPayload } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { getBeneficiariesByRole } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -34,12 +34,14 @@ type NotificationMethodStepProps = {
     communicationOptions: RadioItem[];
     policy: Policy;
     user: UserProfile;
+    correlationId: string;
 };
 
 const NotificationMethodStep = ({
     policy,
     communicationOptions,
     user,
+    correlationId,
 }: NotificationMethodStepProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'deathClaims.notificationMethod',
@@ -107,16 +109,18 @@ const NotificationMethodStep = ({
 
     const submit = async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(
-            policy,
-            null,
-            notifiers,
-            owners,
-            beneficiaries,
-            onbaseCaseId,
-            onbaseDocumentNumber,
-            user
-        );
+        const payload = buildClaimPayload({
+            policy: policy,
+            document: null,
+            selNotifiers: notifiers,
+            selOwners: owners,
+            selBeneficiaries: beneficiaries,
+            onbaseCaseId: onbaseCaseId,
+            onbaseDocumentNumber: onbaseDocumentNumber,
+            user: user,
+            correlationId: correlationId,
+        });
+
         browserLogInfo('NotificationMethodStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
