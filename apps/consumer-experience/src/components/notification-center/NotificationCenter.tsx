@@ -1,7 +1,6 @@
 'use client';
 import { useIsClient } from '@xd/hooks/useIsClient';
-import { Icon, IconType, Pagination } from '@zinnia/bloom/components';
-import clsx from 'clsx';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
 import { useAcknowledgeCases } from '@/hooks/use-acknowledge-cases';
@@ -46,17 +45,7 @@ export const NotificationCenter = ({
 
   return (
     <div className={Styles.container}>
-      <div className={Styles.markAllReadContainer}>
-        <Icon
-          small
-          type={IconType.CIRCLE_CHECKMARK}
-          color="rgba(0, 98, 139, 1)"
-        />
-        <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
-          Mark all as read
-        </span>
-      </div>
-      {allNotifications.length > 0 && (
+      {allNotifications.length > 0 ? (
         <NotificationCenterSection
           className={Styles.actionNeeded}
           notifications={allNotifications.sort(sortNotificationsByDate)}
@@ -66,8 +55,16 @@ export const NotificationCenter = ({
           isClient={isClient}
           mutatingId={acknowledgedCaseMutation?.variables?.id}
         />
+      ) : (
+        <div className={Styles.emptyState}>
+          <div className={Styles.alertIcon}>
+            <Icon type={IconType.ALERT} />
+          </div>
+          <h3 className="typography-labels-label-lg">
+            You have no new notifications
+          </h3>
+        </div>
       )}
-      <Pagination total={20} limit={5} offset={0} goToPage={() => {}} />
     </div>
   );
 };
