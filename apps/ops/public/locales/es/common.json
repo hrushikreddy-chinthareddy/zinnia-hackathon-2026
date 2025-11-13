@@ -6315,7 +6315,9 @@
         "email": "Correo Electrónico",
         "fax": "Fax",
         "socialSecurityNumber": "Número de seguro social",
-        "nationalProducerNumber": "Número Nacional de Productor"
+        "nationalProducerNumber": "Número Nacional de Productor",
+        "estimatedCompletion": "Finalización estimada",
+        "estimatedCompletionToolTip": "Predicción generada por IA basada en los tiempos de finalización históricos de casos similares. La estimación se establece cuando se crea el caso y no cambia a medida que el caso avanza."
     },
     "bannerAlert": {
         "close": "Cerrar"

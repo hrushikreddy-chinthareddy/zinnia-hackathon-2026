@@ -32,7 +32,6 @@ import { getSideNavData } from './case-helpers';
 import { PartiesProps } from './CaseSideNavParties';
 import CaseSideNavTabs from './CaseSideNavTabs';
 import Transactions from './CaseSideNavTransactions';
-
 export interface CaseSideNavProps {
     data: {
         carrier: string;
@@ -43,6 +42,7 @@ export interface CaseSideNavProps {
         productName: string;
         status: string;
         updatedDate: string;
+        estimatedCompletionAt?: string | null;
     };
 }
 
@@ -219,7 +219,13 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
 // #endregion
 
 // #region Case Side Nav
-const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
+const CaseSideNav = ({
+    caseDetails,
+    estimatedCompletionAt,
+}: {
+    caseDetails: Case;
+    estimatedCompletionAt?: string | null;
+}) => {
     const { t } = useTranslation();
     const caseActivityContext = useCaseActivityContext();
     const [aiSummary, setAiSummary] = useState<string | null>(null);
@@ -270,6 +276,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                         carrier={caseDetails?.carrier}
                         process={caseDetails.process}
                         applicationType={caseDetails.applicationType}
+                        estimatedCompletionAt={estimatedCompletionAt}
                         caseProcessingDetails={
                             caseDetails.caseProcessingDetails
                         }

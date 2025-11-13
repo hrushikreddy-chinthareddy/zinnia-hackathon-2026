@@ -6363,7 +6363,9 @@
         "fax": "Fax",
         "name": "Name",
         "socialSecurityNumber": "Social Security Number",
-        "nationalProducerNumber": "National Producer Number"
+        "nationalProducerNumber": "National Producer Number",
+        "estimatedCompletion": "Estimated Completion",
+        "estimatedCompletionToolTip": "AI-generated prediction based on historical completion times for similar cases. The estimate is set when the case is created and does not change as the case progresses."
     },
     "bannerAlert": {
         "close": "Close"

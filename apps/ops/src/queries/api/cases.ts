@@ -1,6 +1,8 @@
 import {
     CaseCountInput,
     CaseCountOutput,
+    CaseTimePredictInput,
+    CaseTimePredictOutput,
     CompletedCaseTimeInput,
     CompletedCaseTimeOutput,
     CompletedCaseTimeOutputLevel1,
@@ -286,6 +288,26 @@ export const getCaseDetailsSSR = async (
             file: 'queries/api/cases',
             function: 'getCaseDetailsSSR',
         });
+        return null;
+    }
+};
+
+export const getCaseTimePredict = async (
+    query: CaseTimePredictInput
+): Promise<CaseTimePredictOutput | null> => {
+    try {
+        const { data } = await client.post<
+            CaseTimePredictInput,
+            AxiosResponse<CaseTimePredictOutput>
+        >(`${baseAppUrl}/api/analytics/case-time-predict`, query);
+
+        return data;
+    } catch (error: any) {
+        console.error(
+            'getCaseTimePredict::An error occurred while getting case time prediction',
+            error
+        );
+
         return null;
     }
 };

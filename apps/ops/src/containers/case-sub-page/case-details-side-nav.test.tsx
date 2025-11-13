@@ -72,4 +72,76 @@ describe('Case Details Side Nav Component', () => {
             ).not.toBeInTheDocument();
         });
     });
+
+    describe('Estimated Completion field', () => {
+        it('should display estimated completion when valid timestamp is provided', () => {
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{}}
+                    process={Processes.NewBusiness}
+                    applicationType="Electronic"
+                    estimatedCompletionAt="2025-10-26T18:26:51.588417Z"
+                />
+            );
+
+            expect(
+                screen.getByText('sidenav.estimatedCompletion')
+            ).toBeInTheDocument();
+            // The formatted date will depend on the user's timezone
+            // Just verify the field exists
+            expect(
+                screen.getByText(/\d{1,2}\/\d{1,2}\/\d{4}/)
+            ).toBeInTheDocument();
+        });
+
+        it('should not display estimated completion field when value is null', () => {
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{}}
+                    process={Processes.NewBusiness}
+                    applicationType="Electronic"
+                    estimatedCompletionAt={null}
+                />
+            );
+
+            expect(
+                screen.queryByText('sidenav.estimatedCompletion')
+            ).not.toBeInTheDocument();
+        });
+
+        it('should not display estimated completion field when value is undefined', () => {
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{}}
+                    process={Processes.NewBusiness}
+                    applicationType="Electronic"
+                />
+            );
+
+            expect(
+                screen.queryByText('sidenav.estimatedCompletion')
+            ).not.toBeInTheDocument();
+        });
+
+        it('should handle invalid date strings gracefully', () => {
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{}}
+                    process={Processes.NewBusiness}
+                    applicationType="Electronic"
+                    estimatedCompletionAt="invalid-date-string"
+                />
+            );
+
+            // Even with invalid date, the field should render because formatTimestamp
+            // handles invalid dates by returning DEFAULT_ERROR_STRING
+            expect(
+                screen.getByText('sidenav.estimatedCompletion')
+            ).toBeInTheDocument();
+        });
+    });
 });
