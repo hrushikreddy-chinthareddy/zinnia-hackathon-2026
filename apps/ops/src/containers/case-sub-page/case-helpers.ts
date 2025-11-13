@@ -1,3 +1,4 @@
+import { CaseTimePredictOutput } from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -315,4 +316,17 @@ export const getStartAndEndDates = (timeframe: AgingTimeRangesKeysExtended) => {
                 ),
             };
     }
+};
+export const getEstimatedCompletionAt = (
+    caseTimePrediction: CaseTimePredictOutput | undefined,
+    createdAt: string | undefined
+): string | null => {
+    if (!caseTimePrediction?.secondsIGO || !createdAt) {
+        return null;
+    }
+
+    const createdTime = new Date(createdAt).getTime();
+    const estimatedTime = createdTime + caseTimePrediction.secondsIGO * 1000;
+
+    return new Date(estimatedTime).toISOString();
 };

@@ -1,5 +1,9 @@
 import { Policy } from '@zinnia/api-types/types/sor';
-import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState, useEffect } from 'react';
 
@@ -62,6 +66,7 @@ const UpdateNotificationMethodStep = ({
         setCaseId,
         setSubmitFailed,
         notificationMethodSelected,
+        contactEstablished,
         setNotificationMethodSelected,
     } = useUpdateNotificationMethod();
     const [address, setAddress] = useState<
@@ -79,7 +84,7 @@ const UpdateNotificationMethodStep = ({
         CaseIdentifier.ZlCaseId
     );
 
-    const validateForm = () => {
+    const validateForm = useCallback(() => {
         switch (notificationMethodSelected) {
             case ClaimCommunicationTypes.Email: {
                 const emailError = validateEmail(email);
@@ -121,7 +126,7 @@ const UpdateNotificationMethodStep = ({
                 return true;
             }
         }
-    };
+    }, [address, email, errors, fax, notificationMethodSelected, t]);
 
     const submit = useCallback(async () => {
         setIsLoading(true);
@@ -131,7 +136,8 @@ const UpdateNotificationMethodStep = ({
             emailData,
             faxData,
             addressData,
-            notificationMethodSelected
+            notificationMethodSelected,
+            contactEstablished
         );
 
         const successfulSubmit = await updateNotificationMethod(payload);
@@ -151,11 +157,12 @@ const UpdateNotificationMethodStep = ({
         faxData,
         addressData,
         notificationMethodSelected,
+        contactEstablished,
         setCaseId,
         setSubmitFailed,
     ]);
 
-    const handleStepContinue = async () => {
+    const handleStepContinue = useCallback(async () => {
         const isValid = validateForm();
         if (isValid) {
             await submit();
@@ -163,7 +170,7 @@ const UpdateNotificationMethodStep = ({
         } else {
             return;
         }
-    };
+    }, [validateForm, submit, goToNext]);
 
     const handleChangeRadio = (e: any) => {
         setNotificationMethodSelected(e.target.value);
@@ -317,6 +324,11 @@ const UpdateNotificationMethodStep = ({
             }
         >
             <div>
+                {isLoading && (
+                    <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                        <Loader />
+                    </div>
+                )}
                 <Typography variant={TypographyVariant.H3}>
                     {transactionData?.entity?.party?.fullName}
                 </Typography>

@@ -29,9 +29,11 @@ export type ChatbotMessage = {
     sourceDocuments?: SourceDocument[];
     feedbackType?: FeedbackType | null;
     feedbackComment?: string | null;
+    definitiveAnswerFound?: boolean | null;
 };
 
 export const BOT_ERROR_MESSAGE_ID = 'bot_error';
+export const COMMON_CLIENT_NAME = 'common';
 
 export enum KeyboardEvents {
     Enter = 'Enter',

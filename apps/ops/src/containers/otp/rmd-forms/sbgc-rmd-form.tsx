@@ -75,8 +75,8 @@ export default function SbgcRmdWithdrawalForm() {
             },
         });
 
-        const newRMDFormType = {
-            ...formProgram,
+        setFormProgram((prev) => ({
+            ...prev,
             program: {
                 text:
                     rmdFormType === RmdFormType.QCD
@@ -89,10 +89,8 @@ export default function SbgcRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: formProgram.qcd ? [...formProgram.qcd] : [],
-        };
-
-        setFormProgram(newRMDFormType);
+            qcd: prev.qcd ? [...prev.qcd] : [],
+        }));
     }, [initialForm, rmdFormType]);
 
     const hasTpaAuthorization =
@@ -178,11 +176,7 @@ export default function SbgcRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
             />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -192,6 +186,11 @@ export default function SbgcRmdWithdrawalForm() {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

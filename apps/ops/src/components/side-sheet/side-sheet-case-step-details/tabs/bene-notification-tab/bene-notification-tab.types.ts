@@ -41,6 +41,10 @@ export interface FollowUpLetter {
     fileType?: string;
 }
 
+export enum FollowUpStatusReason {
+    CONTACT_WAS_ESTABLISHED = 'Contact was established',
+}
+
 export interface INotification {
     notificationName: string;
     followupScheduleId: number;
@@ -61,6 +65,7 @@ export interface INotification {
     receive?: boolean;
     dueToResend?: boolean;
     dueToReset?: boolean;
+    followupStatusReason?: string;
 }
 
 export type NotificationsTransactionIdentifier = {

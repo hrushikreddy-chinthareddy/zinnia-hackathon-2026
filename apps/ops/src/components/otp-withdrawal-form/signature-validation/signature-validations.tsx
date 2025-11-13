@@ -104,6 +104,10 @@ export default function SignatureValidations({
                 formDataContext.formErrors[
                     `${signatureType}${SignatureFieldNames.IsSignatureValid}`
                 ],
+            [SignatureFieldNames.SignatureCityProvided]:
+                formDataContext.formErrors[
+                    `${signatureType}${SignatureFieldNames.SignatureCityProvided}`
+                ],
             [SignatureFieldNames.SignatureComment]:
                 formDataContext.formErrors[
                     `${signatureType}${SignatureFieldNames.SignatureComment}`
@@ -169,7 +173,7 @@ export default function SignatureValidations({
     return (
         <CardContainer
             classNames="w-full"
-            containerClassNames="border-b-2 border-gray-100"
+            containerClassNames="border-gray-100"
         >
             <Typography variant={TypographyVariant.H3} className="mb-4">
                 {t(headerTranslationKey)}

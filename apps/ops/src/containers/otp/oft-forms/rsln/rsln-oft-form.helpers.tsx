@@ -47,16 +47,10 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import {
-    commonOftFormValidation,
-    getQualTypeOptions,
-} from '../oft-form-helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import { getQualTypeOptions } from '../oft-form-helpers';
 
 export default function getRSLNOftConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) =>
-        commonOftFormValidation(t, values);
-
     const signaturesConfig: SignatureValidationConfig[] = [
         {
             key: `sig-val-owner`,
@@ -160,16 +154,47 @@ export default function getRSLNOftConfig(t: TFunction) {
         },
     ];
 
-    const oftFormValidation = ({
-        formParty,
+    const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
 
         // fbo details required
         if (
@@ -178,12 +203,6 @@ export default function getRSLNOftConfig(t: TFunction) {
         ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
-
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
 
         const jointOwnerSignature = formSignature?.signatures?.find(
             (sigInfo) =>
@@ -196,18 +215,6 @@ export default function getRSLNOftConfig(t: TFunction) {
                 sigInfo?.signType?.text ===
                 SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
         );
-
-        // No choice made for signature valid
-        if (
-            ownerSignature &&
-            ownerSignature?.isSigned &&
-            !ownerSignature?.isSignatureValid &&
-            ownerSignature?.isSignatureValid !== false
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.IsSignatureValid}`
-            ] = t('formValidation.signatureValidOptionMustBeSelected');
-        }
 
         if (
             jointOwnerSignature &&
@@ -231,17 +238,6 @@ export default function getRSLNOftConfig(t: TFunction) {
             ] = t('formValidation.signatureValidOptionMustBeSelected');
         }
 
-        // No signature comment added
-        if (
-            ownerSignature &&
-            ownerSignature?.isSignatureValid &&
-            !ownerSignature?.signatureComment
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
-            ] = t('formValidation.signatureCommentMustBePresent');
-        }
-
         if (
             jointOwnerSignature &&
             jointOwnerSignature?.isSignatureValid &&
@@ -262,7 +258,14 @@ export default function getRSLNOftConfig(t: TFunction) {
             ] = t('formValidation.signatureCommentMustBePresent');
         }
 
-        return errors;
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -1041,7 +1044,7 @@ export default function getRSLNOftConfig(t: TFunction) {
     return {
         signaturesConfig,
         formPartyConfigs,
-        formValidation: oftFormValidation,
+        formValidation,
         disbursementOptions,
         surrenderingInstructionsOptions,
         identifySelectedFormProgramOption,

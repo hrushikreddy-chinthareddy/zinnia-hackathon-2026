@@ -16,7 +16,6 @@ import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext'
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FundWithdrawnMethod,
-    FormParts,
     AmountType,
     PaymentMethod,
     PaymentMailType,
@@ -26,6 +25,8 @@ import {
     AddressTypes,
     SSWType,
     Frequency,
+    FormParts,
+    FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -35,10 +36,29 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { commonOftFormValidation } from '../../oft-forms/oft-form-helpers';
 import { createValidator } from '../../utils/helper-utils';
+import getGilicoConfig, {
+    FormSubtype,
+} from '../../withdrawal-forms/gilico/gilico-withdrawal-form.helpers';
 
 export default function getGlcoConfig(t: TFunction) {
+    const { formValidation } = getGilicoConfig(t, '' as FormSubtype, '');
+
+    const sswFormValidation = ({
+        formParty,
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = formValidation({
+            formParty,
+            formSignature,
+            formDisbursement,
+            formESignatureData,
+        });
+
+        return errors;
+    };
     const fundWithdrawnMethodOptions = [
         {
             label: t('distributionInstruction.prorata'),
@@ -561,6 +581,7 @@ export default function getGlcoConfig(t: TFunction) {
             },
         }),
     });
+
     const systematicWithdrawalOptions = [
         {
             label: t('sswProgram.sswOptions.fixedDollar'),
@@ -600,6 +621,7 @@ export default function getGlcoConfig(t: TFunction) {
                 generateSSWPayload(val, SSWType.JointLifetimeIncomeOption),
         },
     ];
+
     const w4pSignaturesConfig = [
         {
             component: SignatureFields.SignatureType,
@@ -614,6 +636,7 @@ export default function getGlcoConfig(t: TFunction) {
             key: 'w4p-signature-sign-date',
         },
     ];
+
     const jointCoveredPlanCodes = ['772'];
 
     const eSignatureFieldConfig = {
@@ -626,8 +649,7 @@ export default function getGlcoConfig(t: TFunction) {
     return {
         disbursementOptions,
         formPartyConfigs,
-        formValidation: (values: Partial<FormParts> = {}) =>
-            commonOftFormValidation(t, values),
+        formValidation: sswFormValidation,
         fundWithdrawnMethodOptions,
         signaturesConfig,
         w4pSignaturesConfig,

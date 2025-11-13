@@ -43,7 +43,7 @@ export default function SignatureCityProvided({
 
     return (
         <SelectSimple
-            data-testid={`${signType?.text}-signature-present`}
+            data-testid={`${signType?.text}-signature-city-present`}
             label={t('signatureCityProvided') as string}
             message={errors[SignatureFieldNames.SignatureCityProvided]}
             onChange={(val) => setSignatureCityProvided(val as SignPresent)}
@@ -53,7 +53,7 @@ export default function SignatureCityProvided({
             value={signatureCityProvided as string}
             name={`${signType?.text}-signature-city-provided`}
             variant={
-                errors[SignatureFieldNames.SignaturePresent]
+                errors[SignatureFieldNames.SignatureCityProvided]
                     ? FieldVariant.Error
                     : FieldVariant.Default
             }

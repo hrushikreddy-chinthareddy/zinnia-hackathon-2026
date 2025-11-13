@@ -308,7 +308,12 @@ export const withAuthAndLogging = (
             req?.query?.correlationId ||
             uuidV4();
 
+        logInfo(`authLogging::start::${correlationId}`);
+
         const baseContext = await buildNextApiLoggingContext(req, res);
+
+        logInfo(`authLogging::builded::${correlationId}`);
+
         const loggingContext = {
             correlationId: correlationId,
             ...baseContext,

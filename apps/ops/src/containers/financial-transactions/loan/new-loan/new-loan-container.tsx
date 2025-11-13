@@ -25,6 +25,7 @@ import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
 import { buildNewLoanRequestBody } from './new-loan.helpers';
 import Summary from './summary/summary';
+import { getProcessSubTypes } from '../../autopay/autopay.helpers';
 
 type NewLoanContainerProps = {
     policy: Policy;

@@ -44,6 +44,7 @@ export interface Autopay
         ReverseInitiatorType,
         AutopayDynamicProps {
     caseId?: string;
+    correlationId?: string;
 }
 
 type AutopayContextType = {

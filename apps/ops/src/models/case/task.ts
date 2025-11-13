@@ -69,6 +69,7 @@ export enum TaskType {
     Quality_Audit_Rework = 'QUALITY_AUDIT_REWORK',
     Quality_Rework_Audit_Review = 'QUALITY_REWORK_AUDIT_REVIEW',
     Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
+    Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
 }
 
 export enum EarlyTaskType {

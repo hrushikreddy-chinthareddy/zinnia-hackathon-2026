@@ -81,6 +81,7 @@ const QcdPaymentDetails: React.FC<QcdPaymentDetailsProps> = ({
                     className="my-2"
                     isFormStateReadOnly={isFormStateReadOnly}
                     isPayeeAddress={true}
+                    isAddressLine2Required={true}
                 />
             </div>
             <div>

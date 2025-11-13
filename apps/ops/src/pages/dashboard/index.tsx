@@ -41,6 +41,7 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
+import { TasksVolumeContainer } from '@deps/containers/dashboard/tasks-volume/tasks-volume';
 
 interface DashboardPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -93,6 +94,9 @@ const DashboardPage = ({
                         </TabContent>
                         <TabContent value={DashboardTabs.NIGO_ANALYSIS}>
                             <NIGOAnalysis />
+                        </TabContent>
+                        <TabContent value={DashboardTabs.TASKS_VOLUME}>
+                            <TasksVolumeContainer />
                         </TabContent>
                     </div>
                 </DashboardTabNav>
