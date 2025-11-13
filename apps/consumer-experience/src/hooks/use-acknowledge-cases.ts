@@ -59,8 +59,8 @@ export const useAcknowledgeCases = ({
     isFetching,
   } = useQuery({
     ...notificationQueryOptions({ planCode, policyNumber }),
-
-    select: data => selectNotifications(data),
+    ...(initialNotifications && { initialData: initialNotifications }),
+    select: selectNotifications,
     enabled: shouldFetchClientSideNotifications,
   });
 
