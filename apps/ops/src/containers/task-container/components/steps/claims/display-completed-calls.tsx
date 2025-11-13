@@ -2,7 +2,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Field, { FieldVariant } from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
 import { formatPhone } from '@deps/helpers/string.helpers';
-import { NOOP } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING, NOOP } from '@deps/types/constants';
 
 import { CallLog, ContactRole, DynamicKey } from './claims.type';
 
@@ -121,15 +121,33 @@ export const DisplayCompletedCalls = ({
                             )}
                         </div>
                         <div className="flex w-full flex-col justify-between flex-row mt-4">
+                            <FieldLabel
+                                variant={FieldVariant.Inactive}
+                                label={t('callSummary') as string}
+                            />
+                            <Content
+                                variant={ContentVariant.BodySm}
+                                className="text-gray-600"
+                                details={log.callSummary}
+                                pii={true}
+                            />
+                        </div>
+                        <div className="grid grid-cols-5 gap-4 mt-4">
                             <div>
                                 <FieldLabel
                                     variant={FieldVariant.Inactive}
-                                    label={t('callSummary') as string}
+                                    label={t('contactEstablished') as string}
                                 />
                                 <Content
                                     variant={ContentVariant.BodySm}
                                     className="text-gray-600"
-                                    details={log.callSummary}
+                                    details={
+                                        log.contactEstablished === true
+                                            ? 'Yes'
+                                            : log.contactEstablished === false
+                                            ? 'No'
+                                            : DEFAULT_ERROR_STRING
+                                    }
                                     pii={true}
                                 />
                             </div>

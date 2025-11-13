@@ -15,14 +15,14 @@ export enum TaskStatus {
     'Completed' = 'COMPLETED',
     'New' = 'NEW',
     'InProgress' = 'INPROGRESS',
-    'Pending' = 'SCHEDULED',
+    'Scheduled' = 'SCHEDULED',
     'Canceled' = 'CANCELED',
 }
 
 export enum TaskLabel {
     'New' = 'To do',
     'Completed' = 'Completed',
-    'Pending' = 'Pending',
+    'Scheduled' = 'Scheduled',
     'Canceled' = 'Canceled',
     'InProgress' = 'In Progress',
     'Closed' = 'Closed',

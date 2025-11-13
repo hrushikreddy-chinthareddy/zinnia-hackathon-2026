@@ -106,6 +106,9 @@ const AlternatePayeeMethod = ({
                             onDataChange={handleAddressChange}
                             initialAddress={defaultDisbursementInfo?.address}
                             isPayeeAddress={true}
+                            isAddressLine2Required={
+                                field.isAddressLine2Required
+                            }
                         />
                     </div>
                 );

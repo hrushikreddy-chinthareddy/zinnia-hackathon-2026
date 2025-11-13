@@ -46,9 +46,6 @@ export const getCarrierConfig = withLogging(
           enabled: false,
         },
       },
-      freeLookCancel: {
-        enabled: false,
-      },
       systematicPremium: {
         enabled: false,
       },
@@ -95,9 +92,6 @@ export const getCarrierConfig = withLogging(
             partialOneTimeWithdrawal: {
               enabled: true,
             },
-          },
-          freeLookCancel: {
-            enabled: true,
           },
           systematicPremium: {
             enabled: true,

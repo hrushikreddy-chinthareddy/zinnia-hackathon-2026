@@ -28,6 +28,7 @@ import { PolicyBadgeStatus } from '@deps/components/global-values/policy-info/po
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import { formatSSN } from '@deps/helpers/string.helpers';
@@ -40,6 +41,7 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import {
     DEFAULT_DATE_FORMAT,
+    DEFAULT_ERROR_STRING,
     FIFTEEN_MINUTES_IN_MS,
     FIVE_MINUTES_IN_MS,
 } from '@deps/types/constants';
@@ -94,19 +96,24 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
     const policyOwner = useMemo(() => {
         // get policy owner id
         const policyOwnerId = policyData?.partyRoles?.find(
-            (pr) => pr.partyRole === PartyRole.OWNER
+            (pr) => pr.partyRole === PartyRole.OWNER && !isEndDated(pr.endDate)
         )?.partyId;
 
         //use ID to find the policy owner data
         const policyOwner = policyData?.parties?.find(
             (party) => party.partyId === policyOwnerId
         );
-        if (policyOwner?.fullName) {
-            return toSentenceCase(policyOwner.fullName);
+
+        if (policyOwner) {
+            if (policyOwner?.fullName) {
+                return toSentenceCase(policyOwner.fullName);
+            } else {
+                return `${toSentenceCase(item.firstName)} ${toSentenceCase(
+                    item.lastName
+                )}`;
+            }
         } else {
-            return `${toSentenceCase(item.firstName)} ${toSentenceCase(
-                item.lastName
-            )}`;
+            return undefined;
         }
     }, [item.firstName, item.lastName, policyData]);
 
@@ -138,8 +145,8 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                                     src={imageSrc}
                                     alt={`${carrierName} icon`}
                                     role="presentation"
-                                    height={24}
-                                    width={24}
+                                    height={14}
+                                    width={14}
                                 />
                                 <span className="sr-only">
                                     {carrierName} icon
@@ -171,12 +178,20 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                 />
             </TableCell>
             <TableCell>
-                <PiiWrapper className={styles.ownerCell}>
-                    {policyOwner}
-                </PiiWrapper>
-                <PiiWrapper className="typography-content-body-sm text-[--color-base-text-text-secondary] block">
-                    {formatSSN(item.ssn)}
-                </PiiWrapper>
+                {policyOwner ? (
+                    <>
+                        <PiiWrapper className={styles.ownerCell}>
+                            {policyOwner}
+                        </PiiWrapper>
+                        <PiiWrapper className="typography-content-body-sm text-[--color-base-text-text-secondary] block">
+                            {formatSSN(item.ssn)}
+                        </PiiWrapper>
+                    </>
+                ) : (
+                    <span className={styles.noCases}>
+                        {DEFAULT_ERROR_STRING}
+                    </span>
+                )}
             </TableCell>
             {/* Case Table Cell */}
             <TableCell
@@ -201,7 +216,9 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                         {caseData && 'total' in caseData && caseData?.total}
                     </Link>
                 ) : (
-                    <span className={styles.noCases}>--</span>
+                    <span className={styles.noCases}>
+                        {DEFAULT_ERROR_STRING}
+                    </span>
                 )}
             </TableCell>
             {/* End Case Table Cell */}

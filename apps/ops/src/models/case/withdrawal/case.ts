@@ -941,6 +941,7 @@ export enum ProgramSubType {
 
 export enum Program {
     OFT = 'Outgoing Transfer',
+    WITHDRAWAL = 'Withdrawal',
 }
 
 // FormProgram

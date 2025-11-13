@@ -406,6 +406,7 @@ const DeathNotificationSidesheet = ({
                                         <Typography
                                             variant={TypographyVariant.BodySm}
                                             className="col-span-3"
+                                            asTag="div"
                                         >
                                             {bene.notificationMethod ===
                                                 ClaimCommunicationTypes.Email &&

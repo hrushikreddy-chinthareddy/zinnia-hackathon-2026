@@ -5,7 +5,11 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { NumberOrRange, RIDERS_WITH_FACE_AMOUNT } from '@deps/types/quickQuote';
+import {
+    NO_PARAM_RIDERS,
+    NumberOrRange,
+    RIDERS_WITH_FACE_AMOUNT,
+} from '@deps/types/quickQuote';
 
 import { sumNumberOrRanges } from '../../../helpers';
 import { QuickQuoteRangeCellText } from '../base/range-cell-text';
@@ -24,12 +28,15 @@ export const QuickQuoteRiderSubtotalRow = () => {
     return (
         <QuickQuoteResultTableRow>
             {results.map((result, idx) => {
-                const riderRanges = RIDERS_WITH_FACE_AMOUNT.map(
-                    (riderName) => result.data.riders[riderName]
-                ).filter(
-                    (value): value is NumberOrRange =>
-                        value != null && typeof value !== 'boolean'
-                );
+                const riderRanges = [
+                    ...RIDERS_WITH_FACE_AMOUNT,
+                    ...NO_PARAM_RIDERS,
+                ]
+                    .map((riderName) => result.data.riders[riderName])
+                    .filter(
+                        (value): value is NumberOrRange =>
+                            value != null && typeof value !== 'boolean'
+                    );
 
                 const subtotal = sumNumberOrRanges(riderRanges);
 

@@ -322,8 +322,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                     src={imageSrc}
                                     alt={`${singleCase.carrier} icon`}
                                     role="presentation"
-                                    height={24}
-                                    width={24}
+                                    height={14}
+                                    width={14}
                                 />
                                 <span className="sr-only">
                                     {singleCase.carrier} icon

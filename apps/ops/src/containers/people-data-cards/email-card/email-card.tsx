@@ -32,6 +32,7 @@ import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/a
 
 import { Emails, sortEmailsByType } from './email-card.helpers';
 import { PersonCardProps } from '../people-data-card-props';
+import { filterPastEndDate } from '../people-data-cards.utils';
 import SideSheetEmail from './side-sheet/side-sheet-email';
 
 interface OpenSideSheet {
@@ -58,7 +59,7 @@ const EmailCard = ({
 
     const { emails } = party ?? {};
     const [currentEmails, setCurrentEmails] = useState<Email[]>(
-        sortEmailsByType({ emails })
+        sortEmailsByType({ emails: filterPastEndDate(emails) })
     );
 
     const showAdditionalToggle = currentEmails.length > 4;

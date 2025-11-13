@@ -10,6 +10,7 @@ export type EAppData = {
     solveFor?: string;
     targetPremium?: number;
     mecPremium?: number;
+    guidelineLevelPremium?: number;
     faceAmount?: number;
     initialPremium?: number;
     initialModalPremium?: number;

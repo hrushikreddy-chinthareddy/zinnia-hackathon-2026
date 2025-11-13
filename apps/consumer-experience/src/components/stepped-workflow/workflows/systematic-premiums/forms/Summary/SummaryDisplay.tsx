@@ -36,7 +36,10 @@ export const SummaryDisplay = ({
 
   return (
     <div
-      className={clsx(commonStyles.paymentSummaryDetails, commonStyles.mobile)}
+      className={clsx(
+        commonStyles.comparisonTableSummaryDetails,
+        commonStyles.mobile
+      )}
     >
       <div className={clsx(commonStyles.list, commonStyles.new)}>
         <h3>New Premium Autopay Details</h3>

@@ -99,10 +99,6 @@ export default function GlcoOftWithdrawalForm() {
                     ) as string
                 }
             />
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
 
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
@@ -115,6 +111,10 @@ export default function GlcoOftWithdrawalForm() {
                     t('distributionMethod.cedingCompanyDistribution') as string
                 }
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}

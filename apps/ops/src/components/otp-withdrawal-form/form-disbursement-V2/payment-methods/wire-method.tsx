@@ -182,15 +182,19 @@ const WireMethod = ({
             case 'choose-the-bank':
                 return (
                     <div className={`${classNames}`}>
-                        <ChooseBank
-                            fieldLabel={field.fieldLabel}
-                            fieldName={field.fieldName}
-                            classNames={field.fieldLabel}
-                            isFormStateReadOnly={isFormStateReadOnly}
-                            bankOptions={bankOptions}
-                            onDataChange={handleChooseBankChange}
-                            selectedValue={bankDetails?.selectedBanking ?? ''}
-                        />
+                        {!isFormStateReadOnly && (
+                            <ChooseBank
+                                fieldLabel={field.fieldLabel}
+                                fieldName={field.fieldName}
+                                classNames={field.fieldLabel}
+                                isFormStateReadOnly={isFormStateReadOnly}
+                                bankOptions={bankOptions}
+                                onDataChange={handleChooseBankChange}
+                                selectedValue={
+                                    bankDetails?.selectedBanking ?? ''
+                                }
+                            />
+                        )}
                     </div>
                 );
 

@@ -10,6 +10,7 @@ import {
 } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
+import { sortByAndThenBy } from './sort.helpers';
 import { replacePlaceholders } from './value-placement.helpers';
 const baseUrl = baseAppUrl + '/api/';
 
@@ -71,7 +72,8 @@ export const csrApiHelper = async (
     formData: any,
     strigify = false
 ) => {
-    const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
+    const { apiUrl, apiMethod, apiPayload, responseData, response, sorted } =
+        props;
     browserLogInfo('csrApiHelper:: fetching data', {
         apiUrl,
         apiMethod,
@@ -154,14 +156,22 @@ export const csrApiHelper = async (
                 ? replacePlaceholders(responseData, data)
                 : data;
 
+            const sortedData = sorted
+                ? sortByAndThenBy(filteredApiData, response?.enum || '')
+                : filteredApiData;
+
             if (response) {
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach((key) => {
-                    mapDataToKeys[key] = filteredApiData?.map((item: any) => {
-                        const filteredItem = item[(response as any)?.[key]];
-                        return filteredItem ? filteredItem : item;
-                    });
+                    const values =
+                        sortedData?.map((item: any) => {
+                            const filteredItem = item[(response as any)?.[key]];
+                            return filteredItem ? filteredItem : item;
+                        }) || [];
+
+                    mapDataToKeys[key] = values;
                 });
+
                 return mapDataToKeys;
             }
             return filteredApiData;

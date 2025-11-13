@@ -1,6 +1,7 @@
 import { Client, createInstance } from '@optimizely/optimizely-sdk';
 
 import { OptimizelyService } from './optimizely';
+import { getThemeCookies } from '../theme';
 
 jest.mock('../logging/log-fns', () => ({
   logError: jest.fn(),
@@ -14,6 +15,10 @@ jest.mock('@optimizely/optimizely-sdk', () => ({
   },
 }));
 
+jest.mock('../theme', () => ({
+  getThemeCookies: jest.fn().mockResolvedValue('everly'),
+}));
+
 describe('OptimizelyService', () => {
   let mockClient: jest.Mocked<Client>;
 
@@ -22,8 +27,8 @@ describe('OptimizelyService', () => {
       onReady: jest.fn().mockResolvedValue({ success: true }),
       createUserContext: jest.fn().mockReturnValue({
         decideAll: jest.fn().mockReturnValue({
-          flag1: { enabled: true },
-          flag2: { enabled: false },
+          flag1: { enabled: true, variables: {} },
+          flag2: { enabled: false, variables: {} },
         }),
       }),
     } as unknown as jest.Mocked<Client>;
@@ -96,5 +101,112 @@ describe('OptimizelyService', () => {
     const userId = 'user123';
     const flags = await service.getFeatureFlagDecisions(userId);
     expect(flags).toEqual({});
+  });
+
+  it('should prioritize theme variables over enabled flag when variables exist', async () => {
+    // Mock client with variables in the response
+    mockClient = {
+      onReady: jest.fn().mockResolvedValue({ success: true }),
+      createUserContext: jest.fn().mockReturnValue({
+        decideAll: jest.fn().mockReturnValue({
+          flag1: {
+            enabled: true,
+            variables: {
+              everly: false, // Variable is false while enabled is true
+            },
+          },
+          flag2: {
+            enabled: false,
+            variables: {},
+          },
+        }),
+      }),
+    } as unknown as jest.Mocked<Client>;
+
+    // Mock theme to match the variable key
+    (getThemeCookies as jest.Mock).mockResolvedValue('everly');
+
+    const service = new OptimizelyService('sdk_key', mockClient);
+    const userId = 'user123';
+    const flags = await service.getFeatureFlagDecisions(userId);
+
+    // Should use the variable value (false) instead of the enabled value (true)
+    expect(flags).toEqual({
+      flag1: false,
+      flag2: false,
+    });
+  });
+
+  it('should use enabled value when theme variable does not exist', async () => {
+    // Mock client with variables for a different theme
+    mockClient = {
+      onReady: jest.fn().mockResolvedValue({ success: true }),
+      createUserContext: jest.fn().mockReturnValue({
+        decideAll: jest.fn().mockReturnValue({
+          flag1: {
+            enabled: true,
+            variables: {
+              otherTheme: false, // Variable exists but for different theme
+            },
+          },
+          flag2: {
+            enabled: true,
+            variables: {
+              everly: true, // This one matches our theme
+            },
+          },
+        }),
+      }),
+    } as unknown as jest.Mocked<Client>;
+
+    // Mock theme
+    (getThemeCookies as jest.Mock).mockResolvedValue('everly');
+
+    const service = new OptimizelyService('sdk_key', mockClient);
+    const userId = 'user123';
+    const flags = await service.getFeatureFlagDecisions(userId);
+
+    // flag1 should use enabled value, flag2 should use variable value
+    expect(flags).toEqual({
+      flag1: true,
+      flag2: true,
+    });
+  });
+
+  it('should handle undefined theme by using enabled values', async () => {
+    // Mock client with variables
+    mockClient = {
+      onReady: jest.fn().mockResolvedValue({ success: true }),
+      createUserContext: jest.fn().mockReturnValue({
+        decideAll: jest.fn().mockReturnValue({
+          flag1: {
+            enabled: true,
+            variables: {
+              everly: false,
+              default: true,
+            },
+          },
+          flag2: {
+            enabled: true,
+            variables: {
+              everly: true,
+            },
+          },
+        }),
+      }),
+    } as unknown as jest.Mocked<Client>;
+
+    // Mock theme as undefined
+    (getThemeCookies as jest.Mock).mockResolvedValue(undefined);
+
+    const service = new OptimizelyService('sdk_key', mockClient);
+    const userId = 'user123';
+    const flags = await service.getFeatureFlagDecisions(userId);
+
+    // Should use enabled values since theme is undefined
+    expect(flags).toEqual({
+      flag1: true,
+      flag2: true,
+    });
   });
 });

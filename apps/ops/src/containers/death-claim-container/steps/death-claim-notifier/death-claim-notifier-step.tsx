@@ -13,7 +13,7 @@ import TransactionNavigationButtons, {
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import {
-    buildClaimPaylod,
+    buildClaimPayload,
     validateOtherNotifier,
 } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { getPolicyOwnersByRole } from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
@@ -25,6 +25,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { PartyType } from '@deps/models/policy/sor-policy';
+import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
@@ -39,6 +40,8 @@ import {
 interface DeathClaimNotificationStepProps {
     policy: Policy;
     showNotification: boolean;
+    user: UserProfile;
+    correlationId: string;
 }
 
 export const checkNewPhone = (notifierPhone: any, party: any) => {
@@ -59,6 +62,8 @@ export const checkNewPhone = (notifierPhone: any, party: any) => {
 export const DeathClaimNotificationStep = ({
     policy,
     showNotification,
+    user,
+    correlationId,
 }: DeathClaimNotificationStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.deathClaimNotification',
@@ -160,15 +165,18 @@ export const DeathClaimNotificationStep = ({
 
     const submit = async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(
-            policy,
-            null,
-            notifiers,
-            owners,
-            beneficiaries,
-            onbaseCaseId,
-            onbaseDocumentNumber
-        );
+        const payload = buildClaimPayload({
+            policy: policy,
+            document: null,
+            selNotifiers: notifiers,
+            selOwners: owners,
+            selBeneficiaries: beneficiaries,
+            onbaseCaseId: onbaseCaseId,
+            onbaseDocumentNumber: onbaseDocumentNumber,
+            user: user,
+            correlationId: correlationId,
+        });
+
         browserLogInfo('DeathClaimNotifierStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,

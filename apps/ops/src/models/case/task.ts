@@ -70,6 +70,7 @@ export enum TaskType {
     Quality_Rework_Audit_Review = 'QUALITY_REWORK_AUDIT_REVIEW',
     Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
     Initiate_BeneChange_Transaction = 'INITIATE_BENECHANGE_TRANSACTION',
+    Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
 }
 
 export enum EarlyTaskType {
@@ -228,6 +229,7 @@ export type ApiProps = {
         enumNames: string;
     };
     responseType: ApiResponseTypes;
+    sorted?: boolean;
 };
 
 export enum EventType {

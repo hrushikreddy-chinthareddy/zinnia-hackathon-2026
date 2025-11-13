@@ -11,7 +11,6 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
     SignatureBonusFields,
-    SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
@@ -44,12 +43,14 @@ import {
     FormSubtype,
     spousalSignatureStateCodes,
 } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
     const rmdFormValidation = ({
         formSignature,
         formDisbursement,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -77,11 +78,6 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                 );
             }
         }
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
 
         const rmds = formProgram?.rmd?.rmdPrograms;
 
@@ -90,19 +86,14 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                 'rmdMethod.rmdWarnings.minimumRequiredProgram'
             );
         }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
 
-        // No choice made for signature
-        if (
-            ownerSignature &&
-            ownerSignature?.isSigned !== false &&
-            !ownerSignature?.isSigned
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
-
-        return errors;
+        return { ...errors, ...signESignValidate };
     };
 
     const disbursementOptions: PaymentMethodOption[] = [
@@ -245,6 +236,7 @@ export default function getUsaaRmdWithdrawalConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({

@@ -4,10 +4,11 @@ import { CorrelationId } from '@/components/correlation-id/CorrelationId';
 import { Link } from '@/components/link/Link';
 
 import styles from './Styles.module.css';
+import { TransactionType } from '../types';
 
 type PaymentErrorProps = {
   goToUrl: string;
-  transactionType: string;
+  transactionType: TransactionType;
   correlationId?: string;
 };
 

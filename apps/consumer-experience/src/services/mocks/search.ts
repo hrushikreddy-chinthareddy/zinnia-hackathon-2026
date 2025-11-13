@@ -2,6 +2,7 @@ import { PolicySearchResponse } from '@zinnia/api-types/types/search';
 
 export const mockPolicySearchResponse: PolicySearchResponse = {
   count: 1,
+  total: 1,
   next: '/policy/v1/policies/search?offset=5&limit=5',
   previous: '',
   results: [

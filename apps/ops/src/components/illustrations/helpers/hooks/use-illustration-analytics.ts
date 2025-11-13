@@ -62,7 +62,6 @@ export const useIllustrationAnalytics = () => {
 
     const sendAddProductToIllustrateEvent = useCallback(
         (carrier: string) => {
-            console.log('🚀 ~ useIllustrationAnalytics ~ carrier:', carrier);
             segmentAnalyticsTrackEvent<IllustrationAddProductClickedEvent>(
                 IllustrationsSegmentTrackedEventName.addProductToIllustrate,
                 {

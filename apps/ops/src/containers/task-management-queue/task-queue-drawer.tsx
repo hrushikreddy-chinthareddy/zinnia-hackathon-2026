@@ -109,7 +109,7 @@ function TaskQueueDrawer({
     };
 
     const handleClose = () => {
-        router.back();
+        sideSheet.onClose();
     };
     const updateTaskStatus = async () => {
         if (isSupportTicketRaised && !notes) {
@@ -155,7 +155,7 @@ function TaskQueueDrawer({
 
             const body = {
                 ...taskData,
-                status: TaskStatus.Pending,
+                status: TaskStatus.Scheduled,
                 source: TaskSource.ZinniaTaskManagement,
                 scheduledReason: pendingReason,
                 scheduledDate: formattedDate,

@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
+import React from 'react';
 
 import Typography, {
     TypographyVariant,
@@ -98,9 +99,9 @@ const DeathAuditFiles = ({
     ) => {
         return (
             <div className="grid grid-cols-2 my-4 gap-y-2">
-                {summaryData?.map((summaryItem: AuditSummaryItem) => {
+                {summaryData?.map((summaryItem: AuditSummaryItem, index) => {
                     return (
-                        <>
+                        <React.Fragment key={`summary-item-${index}`}>
                             <Typography
                                 variant={TypographyVariant.BodySm}
                                 className="text-[--color-base-text-text-secondary]"
@@ -110,7 +111,7 @@ const DeathAuditFiles = ({
                             <Typography variant={TypographyVariant.BodySm}>
                                 {summaryItem.value}
                             </Typography>
-                        </>
+                        </React.Fragment>
                     );
                 })}
             </div>
@@ -124,8 +125,8 @@ const DeathAuditFiles = ({
             </Typography>
             {displaySummarySection(summary, t)}
             <hr className="my-4 h-0.5 border-none bg-gray-100" />
-            <ul className="mt-2">
-                {files?.map((fileItem) => {
+            <div className="mt-2">
+                {files?.map((fileItem, key) => {
                     const file = getFileSection(fileItem, prop, objectKey);
                     if (!file) {
                         return;
@@ -134,7 +135,7 @@ const DeathAuditFiles = ({
                         file?.receivedTimestamp ?? file?.createdTimestamp;
 
                     return (
-                        <>
+                        <React.Fragment key={key}>
                             <div>
                                 <Typography variant={TypographyVariant.BodySm}>
                                     {fileDate &&
@@ -144,14 +145,14 @@ const DeathAuditFiles = ({
                                 </Typography>
                             </div>
                             <DeathAuditFile
-                                key={file?.documentId}
+                                key={`file-${prop}-${file?.documentId}`}
                                 file={file}
                                 carrier={carrier}
                             />
-                        </>
+                        </React.Fragment>
                     );
                 })}
-            </ul>
+            </div>
         </div>
     );
 };

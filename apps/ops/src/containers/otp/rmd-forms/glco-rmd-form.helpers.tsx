@@ -31,11 +31,12 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../utils/helper-utils';
-import getGlcoConfig from '../withdrawal-forms/flic-withdrawal-form.helpers';
+import getGilicoConfig, {
+    FormSubtype,
+} from '../withdrawal-forms/gilico/gilico-withdrawal-form.helpers';
 
 export default function getGlcoRmdConfig(t: TFunction) {
-    // importing base configuration from GLCO form helper.
-    const { irsSignatureConfig, formValidation } = getGlcoConfig(t);
+    const { formValidation } = getGilicoConfig(t, '' as FormSubtype, '');
 
     // CMW-13796 remove further credit info
     const disbursementOptions: PaymentMethodOption[] = [
@@ -181,6 +182,17 @@ export default function getGlcoRmdConfig(t: TFunction) {
         },
     ];
 
+    const irsSignatureConfig = [
+        {
+            component: SignatureFields.SignaturePresent,
+            key: 'irs-signature-sign-present',
+        },
+        {
+            component: SignatureFields.SignatureDate,
+            key: 'irs-signature-sign-date',
+        },
+    ];
+
     const signaturesConfig: SignatureValidationConfig[] = [
         {
             key: `sig-val-owner`,
@@ -213,41 +225,17 @@ export default function getGlcoRmdConfig(t: TFunction) {
     ];
 
     const rmdformValidation = ({
-        formParty,
-        formDisbursement,
         formSignature,
+        formDisbursement,
+        formESignatureData,
         formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
-            formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if (
-            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
-                formDisbursement?.paymentMethod?.text as PaymentMethod
-            )
-        ) {
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !==
-                    formDisbursement?.bank[0].reEnterAccountNumber
-            ) {
-                errors[BankingFields.ReEnterAccountNumber] = t(
-                    'formValidation.accountNumberDoesNotMatch'
-                );
-            }
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !==
-                    formDisbursement?.bank[0].reEnterBankRoutingNumber
-            ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                    'formValidation.routingNumberDoesNotMatch'
-                );
-            }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t(

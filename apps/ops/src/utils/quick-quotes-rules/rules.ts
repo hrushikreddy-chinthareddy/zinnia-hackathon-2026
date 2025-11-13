@@ -1,6 +1,23 @@
 import { RulesModel } from './types';
 
+/**
+ * RULES_MODEL
+ *
+ * Defines the complete business rule set used by the QuickQuote engine.
+ * Each product specifies:
+ *  - Available insurance classes and their eligibility criteria.
+ *  - Riders (optional benefits) and their applicable ranges.
+ *
+ * The `QuickQuoteProducts` class consumes this model to determine
+ * product and rider eligibility for a given QuickQuote input.
+ */
 export const RULES_MODEL: RulesModel = {
+    /**
+     * Hierarchical order of insurance classes. This is here fir reference and debug
+     *
+     * The engine uses this order to determine the lowest and highest
+     * class available for a product (min and max class range).
+     */
     classOrder: [
         'Gold (Nicotine)',
         'Gold Plus (Nicotine)',
@@ -9,11 +26,30 @@ export const RULES_MODEL: RulesModel = {
         'Platinum Plus (Non-Nicotine)',
         'Platinum Elite (Non-Nicotine)',
     ],
+    /**
+     * Complete list of products available.
+     * Each product defines:
+     *  - planCode: product/plan identifier for the carrier.
+     *  - termLength: policy duration in years.
+     *  - classes: all available classes and their eligibility rules.
+     *  - riders: all optional riders and their applicability criteria.
+     */
     products: [
         {
             productName: 'Term Life 10 Yr',
             planCode: 'TL0101',
             termLength: 10,
+            /**
+             * Each class entry defines:
+             *  - className: human-readable label for debug.
+             *  - classCode: class identifier for the carrier.
+             *  - alternatives: criteria used for eligibility.
+             *
+             * Eligibility criteria:
+             *  - nicotine: 'Y' (smoker) or 'N' (non-smoker).
+             *  - ageMin / ageMax: allowed age range.
+             *  - faceMin / faceMax: allowed face amount range.
+             */
             classes: [
                 {
                     className: 'Gold (Nicotine)',
@@ -39,7 +75,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -82,6 +118,13 @@ export const RULES_MODEL: RulesModel = {
                     },
                 },
             ],
+            /**
+             * Riders associated with the product.
+             * Each defines:
+             *  - riderName: human-readable label for debug.
+             *  - riderCode: rider identifier for the carrier.
+             *  - alternatives: age and/or face amount limits for applicability.
+             */
             riders: [
                 {
                     riderName: 'Accidental Death Benefit Rider',
@@ -159,7 +202,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -279,7 +322,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -399,7 +442,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -491,7 +534,7 @@ export const RULES_MODEL: RulesModel = {
             ],
         },
         {
-            productName: 'Return of Premium Term Life 20 Yr', // Excek shows Life 20 Yr, prodcut aPI returns 10 and 30  as term length for ROP
+            productName: 'Return of Premium Term Life 20 Yr',
             planCode: 'TR0101',
             termLength: 20,
             classes: [
@@ -519,7 +562,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -639,7 +682,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: 'STANDARDNONTOBACCO',
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,

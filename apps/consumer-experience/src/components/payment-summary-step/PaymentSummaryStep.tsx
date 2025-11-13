@@ -13,7 +13,7 @@ export interface TransactionSummaryItem {
 
 export interface PaymentSummaryStepProps {
   className?: string;
-  transactionSummary: TransactionSummaryItem[];
+  transactionSummary?: TransactionSummaryItem[];
   total: {
     deposit: number;
     label: React.ReactElement<LabelProps>;
@@ -27,9 +27,9 @@ export const PaymentSummaryStep = ({
 }: PaymentSummaryStepProps) => {
   return (
     <div className={clsx(styles.paymentSummaryStepContainer, className)}>
-      {transactionSummary.length > 0 && (
+      {transactionSummary && transactionSummary?.length > 0 && (
         <div className={styles.paymentSummaryValues}>
-          {transactionSummary.map(({ label, value }, index) => (
+          {transactionSummary?.map(({ label, value }, index) => (
             <div key={index} className={styles.paymentSummarySection}>
               <div className={styles.paymentSummaryLabel}>{label}</div>
               <p
