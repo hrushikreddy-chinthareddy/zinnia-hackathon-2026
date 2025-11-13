@@ -1,11 +1,10 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
-import { CaseStatus } from '@/types/case';
+import { CaseStatus, CaseSummary } from '@/types/case';
 
 import { NotificationCenter } from './NotificationCenter';
 
-const notifications: CaseInstanceSummary[] = [
+const notifications: CaseSummary[] = [
   {
     id: '123251-55843',
     process: 'Payment failed',
@@ -31,30 +30,6 @@ const notifications: CaseInstanceSummary[] = [
         id: '123251-55843',
       },
     ],
-  },
-  {
-    id: '659989-32647',
-    process: 'Address removed',
-    updatedAt: new Date(2025, 1, 14).toDateString(),
-    caseStatus: 'COMPLETED',
-  },
-  {
-    id: '659989-32648',
-    process: 'Address added',
-    updatedAt: new Date(2025, 0, 25).toDateString(),
-    caseStatus: 'COMPLETED',
-  },
-  {
-    id: '659989-32649',
-    process: 'Premium processed',
-    updatedAt: new Date(2025, 0, 14).toDateString(),
-    caseStatus: 'COMPLETED',
-  },
-  {
-    id: '659989-32650',
-    process: 'Premium processed',
-    updatedAt: new Date(2025, 0, 7).toDateString(),
-    caseStatus: 'COMPLETED',
   },
 ];
 
