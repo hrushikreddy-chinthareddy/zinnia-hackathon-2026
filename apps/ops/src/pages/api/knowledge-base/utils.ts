@@ -1,3 +1,5 @@
+import { NextApiResponse } from 'next';
+
 import { SSEEventType } from '@deps/types/knowledge-base';
 import {
     logError,
@@ -5,7 +7,6 @@ import {
     logInfo,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
-import { NextApiResponse } from 'next';
 
 export function sendSSE(
     res: NextApiResponse,
