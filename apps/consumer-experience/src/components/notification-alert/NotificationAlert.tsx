@@ -6,8 +6,8 @@ import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { FC, useEffect, useState } from 'react';
 
-import { notificationQueryOptions } from '@/queries/query-options';
-import { CaseStatus, CaseSummary } from '@/types/case';
+import { caseQueryOptions } from '@/queries/query-options';
+import { CaseStatus } from '@/types/case';
 
 import styles from './NotificationAlert.module.css';
 
@@ -22,15 +22,12 @@ export const NotificationAlert: FC = () => {
   const [hasDismissed, setHasDimissed] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
 
-  const selectInProgressCount = (notifications: CaseSummary[]) => {
-    console.log({ notifications });
-    return notifications.filter(n => n.caseStatus === CaseStatus.IN_PROGRESS)
-      .length;
-  };
-
   const { data: notificationCount = [] } = useQuery({
-    ...notificationQueryOptions({ planCode, policyNumber }),
-    select: selectInProgressCount,
+    ...caseQueryOptions({
+      policyNumber,
+      caseStatus: [CaseStatus.IN_PROGRESS],
+    }),
+    select: data => data.count,
     enabled: !!planCode && !!policyNumber,
   });
 
