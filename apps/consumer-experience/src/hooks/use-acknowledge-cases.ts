@@ -10,8 +10,9 @@ import { acknowledgeCase } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import {
   acknowledgedCasesOptions,
-  notificationQueryOptions,
+  caseQueryOptions,
 } from '@/queries/query-options';
+import { TransformedCaseSearchResponse } from '@/services/case/transformers';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
 import { CaseSummary } from '@/types/case';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -44,8 +45,8 @@ export const useAcknowledgeCases = ({
     !!fetchNotificationsFlag && isClient;
 
   const selectNotifications = useCallback(
-    (data: CaseSummary[] | null | undefined) => {
-      return (data || [])
+    (data: TransformedCaseSearchResponse | null | undefined) => {
+      return (data?.data || [])
         .map(parseNotifications)
         .filter(notification => !!notification);
     },
@@ -58,8 +59,7 @@ export const useAcknowledgeCases = ({
     isError,
     isFetching,
   } = useQuery({
-    ...notificationQueryOptions({ planCode, policyNumber }),
-    ...(initialNotifications && { initialData: initialNotifications }),
+    ...caseQueryOptions({ policyNumber }),
     select: selectNotifications,
     enabled: shouldFetchClientSideNotifications,
   });
