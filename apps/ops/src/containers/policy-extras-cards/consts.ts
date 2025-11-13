@@ -1,1 +1,1 @@
-export const RIDER_NOT_ELECTED = 'NOT ELECTED';
+export const RIDER_NOT_ELECTED = 'NOTELECTED';

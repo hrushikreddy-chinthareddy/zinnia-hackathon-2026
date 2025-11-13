@@ -34,6 +34,8 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
+
+import { filterPastEndDate } from '../people-data-cards.utils';
 interface OpenSideSheet {
     address?: Address;
     header: SideSheetPeopleHeaderProps;
@@ -57,7 +59,10 @@ const AddressCard = ({
 
     const { addresses, preferredAddressIndicator } = party ?? {};
     const [currentAddresses, setCurrentAddresses] = useState<Address[]>(
-        sortAddressesByType({ addresses, preferredAddressIndicator })
+        sortAddressesByType({
+            addresses: filterPastEndDate(addresses),
+            preferredAddressIndicator,
+        })
     );
 
     const showToggle = currentAddresses.length > 4;

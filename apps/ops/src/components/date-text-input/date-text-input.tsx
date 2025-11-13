@@ -6,11 +6,16 @@ import styles from './date-text-input.module.css';
 interface DateTextInputProps {
     onChange: (args0: any) => void;
     defaultDate?: string | undefined;
+    disabled?: boolean;
 }
 
 const REGEXP_PATTERN_DATE = 'd{2}/d{2}/d{4}';
 
-const DateTextInput = ({ onChange, defaultDate = '' }: DateTextInputProps) => {
+const DateTextInput = ({
+    onChange,
+    defaultDate = '',
+    disabled = false,
+}: DateTextInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState(defaultDate);
 
@@ -53,6 +58,7 @@ const DateTextInput = ({ onChange, defaultDate = '' }: DateTextInputProps) => {
                 maxLength={10}
                 pattern={REGEXP_PATTERN_DATE}
                 placeholder="mm/dd/yyyy"
+                disabled={disabled}
             />
             <Icon type={IconType.CALENDAR} />
         </div>

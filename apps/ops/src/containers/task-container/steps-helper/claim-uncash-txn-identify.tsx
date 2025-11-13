@@ -38,7 +38,6 @@ export const getClaimUncashTxnIdentifySteps = ({
     const staticSteps: Step[] = [
         {
             isVisible: () => true,
-
             component: (
                 <div className="bg-white shadow-elevation-light-04 mb-5 ">
                     {' '}
@@ -50,7 +49,6 @@ export const getClaimUncashTxnIdentifySteps = ({
                     />
                 </div>
             ),
-
             text: t('confirm'),
             index: dynamicSteps.length,
             screenReaderLabel: t('confirm'),

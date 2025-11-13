@@ -8,6 +8,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import {
     IllustrationHandler,
@@ -15,6 +17,7 @@ import {
 } from './illustrationsHandlerAbstractClass';
 import { farmersBlueprintIU0101 } from '../farmers/farmersBlueprintIU0101';
 import {
+    ConversionType,
     CreateIllustrationPayload,
     CreateIllustrationPayloadParsingError,
     createIllustrationPayloadSchema,
@@ -291,7 +294,9 @@ const farmersEntitiesSchema = t.object(
         t.union(t.array(t.string), t.undefined)
     ),
     t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
-    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined))
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined)),
+    t.optionalProperty('isConversion', t.union(t.boolean, t.undefined)),
+    t.optionalProperty('isMec', t.union(t.boolean, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -339,7 +344,13 @@ function createIllustrationPayload(
 > {
     const parseResult = farmersEntitiesSchema.parse(answerOutputData);
     if (!parseResult.success) {
-        console.log('Blueprint parseResult: ', parseResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::IU0101::createIllustrationPayload Error parsing input data',
+            {
+                ...parseErrorInformation(parseResult.error),
+                answersData: answerOutputData,
+            }
+        );
         return failure(new OutputDataParsingError());
     }
 
@@ -759,12 +770,23 @@ function createIllustrationPayload(
                     loanInterestOption: values.loanInterestOption,
                 },
             }),
+        ...(values.isConversion && {
+            conversion: {
+                conversionType: ConversionType.STANDARD,
+                isSourceMEC: values.isMec,
+            },
+        }),
     };
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
-        console.log('pre-parsed output', output);
-        console.log('parseOutputResult', parseOutputResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::IU0101::createIllustrationPayload Error parsing output',
+            {
+                ...parseErrorInformation(parseOutputResult.error),
+                outputData: output,
+            }
+        );
         return failure(
             new CreateIllustrationPayloadParsingError(parseOutputResult.error)
         );
@@ -857,6 +879,9 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
             data?.assumed?.initial?.targetPremiumAmount || DEFAULT_ERROR_STRING,
         mecPremium:
             data?.assumed?.initial?.modifiedEndowmentPremium ||
+            DEFAULT_ERROR_STRING,
+        guidelineLevelPremium:
+            data?.assumed?.initial?.guidelineLevelPremium ||
             DEFAULT_ERROR_STRING,
         ...netSurrenderValue,
     };

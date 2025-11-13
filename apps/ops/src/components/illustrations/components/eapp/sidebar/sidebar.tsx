@@ -18,7 +18,11 @@ const dataToTitleMap: Record<
 > = {
     solveFor: { label: 'Solve for', type: 'string' },
     targetPremium: { label: 'Target annual premium', type: 'money' },
-    mecPremium: { label: 'MEC annual premium', type: 'money' },
+    mecPremium: { label: '7-Pay annual premium', type: 'money' },
+    guidelineLevelPremium: {
+        label: 'Guideline level annual premium',
+        type: 'money',
+    },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
     initialModalPremium: { label: 'Initial modal premium', type: 'money' },
@@ -96,7 +100,7 @@ export const Sidebar: FC<SidebarProps> = ({
 
         const debounceTimeout = setTimeout(() => {
             onQuickQuote();
-        }, 200);
+        }, 400);
 
         return () => clearTimeout(debounceTimeout);
         // eslint-disable-next-line react-hooks/exhaustive-deps

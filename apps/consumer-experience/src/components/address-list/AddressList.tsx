@@ -77,7 +77,9 @@ export const AddressList: FC<AddressListProps> = ({
 
   return (
     <div>
-      <h2 className="mb-lg">Address</h2>
+      <h2 className="mb-lg" id="addAddressSection">
+        Address
+      </h2>
       {allowAddressChanges && (
         <OpenTransactionCaseDetails
           cases={initialCaseData}

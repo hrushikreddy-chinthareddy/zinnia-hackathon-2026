@@ -43,9 +43,33 @@ export interface DeathAuditSummaryItem {
     newCaseCount?: number;
 }
 
+export interface InboundFileComplianceData {
+    fileName: string;
+    fileReceivedDate: string;
+}
+
 export interface AuditFileItem {
     file?: AuditFile;
     matchedCasesFile?: AuditFile;
+    inboundFileComplianceData?: InboundFileComplianceData;
     cancelledCasesFile?: AuditFile;
-    inboundFileData?: AuditFile;
+    inboundFileData?: InboundFileData;
+    fileProcessingStatus?: string;
+    inboundCasesFile?: AuditFile;
+    inboundRecordId?: string;
+    summary?: DeathAuditSummaryItem;
+    fileRecords?: any[]; // Its a dump from 3rd party system, structure unknown
+}
+
+export interface InboundFileData {
+    ChildEventEndId: string;
+    ChildEventStartId: string;
+    correlationid: string;
+    documentId: string;
+    failedRecords: string;
+    fileBatchId: string;
+    fileName: string;
+    fileReceivedDate: string;
+    successfulRecords: string;
+    totalRecords: string;
 }

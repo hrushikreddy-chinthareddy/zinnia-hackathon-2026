@@ -51,11 +51,13 @@ export default function useSbgcConfig(t: TFunction) {
         formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
 
         return errors;
@@ -250,6 +252,7 @@ export default function useSbgcConfig(t: TFunction) {
                     fieldName: BankingFields.Address,
                     fieldType: 'address',
                     classNames: 'col-start-1 col-span-2 w-full',
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {

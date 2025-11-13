@@ -32,7 +32,6 @@ import {
     FundWithdrawnMethod,
     ProgramType,
     WithdrawalType,
-    FormParts,
     AmountType,
     PaymentMethod,
     PaymentMailType,
@@ -46,6 +45,8 @@ import {
     RestrictionOption,
     QualTypes,
     FASTQualTypes,
+    FormParts,
+    FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -56,8 +57,8 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 import { PartyRole, PartyType } from '@deps/models/policy/sor-policy';
 
-import { commonOftFormValidation } from '../../oft-forms/oft-form-helpers';
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../utils/form-validator.helpers';
 
 export enum FormSubtype {
     FullWithdrawal = 'Full',
@@ -87,6 +88,59 @@ export default function getGilicoConfig(
     formSubtype: FormSubtype,
     qualType: QualTypes | FASTQualTypes | ''
 ) {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+            validateCityProvided: true,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
+
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
     ): { selectedOption: string | null; amount: string | null } => {
@@ -851,8 +905,7 @@ export default function getGilicoConfig(
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
-        formValidation: (values: Partial<FormParts> = {}) =>
-            commonOftFormValidation(t, values),
+        formValidation,
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

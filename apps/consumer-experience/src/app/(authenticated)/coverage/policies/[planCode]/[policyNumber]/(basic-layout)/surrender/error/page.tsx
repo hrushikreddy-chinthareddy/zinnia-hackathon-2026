@@ -1,4 +1,5 @@
 import { TransactionError } from '@/components/stepped-workflow/common/TransactionError';
+import { TransactionType } from '@/components/stepped-workflow/types';
 import { PolicyRequestInputsParams } from '@/types/policy';
 
 const ErrorPage = (
@@ -8,7 +9,7 @@ const ErrorPage = (
   const goToUrl = `/coverage/policies/${params.planCode}/${params.policyNumber}/`;
   return (
     <TransactionError
-      transactionType="surrender"
+      transactionType={TransactionType.SURRENDER}
       goToUrl={goToUrl}
       correlationId={searchParams?.correlationId}
     />

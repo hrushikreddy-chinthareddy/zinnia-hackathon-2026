@@ -118,11 +118,7 @@ const UsaaRmdWithdrawalForm = () => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
             />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -132,6 +128,11 @@ const UsaaRmdWithdrawalForm = () => {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 };

@@ -1,6 +1,6 @@
 import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
 
-import { CaseSummary } from '@/types/case';
+import { CaseSearchResponse, CaseSummary } from '@/types/case';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
@@ -13,15 +13,7 @@ import {
 } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
 import { getFeatureFlags } from '../feature-flags';
-
-type CaseSearchServiceResponse = {
-  data: CaseSummary[] | null;
-  error: {
-    message: string;
-    status: number;
-    name: string;
-  } | null;
-};
+import { transformCaseSearchResponse } from './transformers';
 
 const FILE_NAME = '/src/services/case/index.ts';
 
@@ -133,10 +125,7 @@ const fetchCaseLegacy = withLogging(
 );
 
 export const searchCases = withLogging(
-  async (
-    searchData: CaseSearchCriteria,
-    loggingCtx: CommonLogContext
-  ): Promise<CaseSearchServiceResponse> => {
+  async (searchData: CaseSearchCriteria, loggingCtx: CommonLogContext) => {
     // TODO: remove this when https://zinnia.atlassian.net/browse/ZC-1524 is complete
     // to always use enterpriseCaseSearchBaseUrl
     // const url = `${enterpriseCaseSearchBaseUrl}/search`;
@@ -156,7 +145,7 @@ export const searchCases = withLogging(
       loggingCtx
     );
 
-    const response = await parseAPIResponse(rawResponse);
+    const response: CaseSearchResponse = await parseAPIResponse(rawResponse);
 
     if (!rawResponse?.ok) {
       throw new Error('Error calling search case', {
@@ -169,8 +158,8 @@ export const searchCases = withLogging(
         },
       });
     }
-
-    return response;
+    // Transformer to return only the fields we need for comparing to acknowledged cases.
+    return transformCaseSearchResponse(response);
   },
   {
     file: FILE_NAME,

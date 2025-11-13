@@ -251,8 +251,8 @@ export const updateTask = async (
     const statusLabel =
         status == TaskStatus.InProgress
             ? TaskLabel.InProgress
-            : status == TaskStatus.Pending
-            ? TaskLabel.Pending
+            : status == TaskStatus.Scheduled
+            ? TaskLabel.Scheduled
             : TaskLabel.Completed;
 
     try {

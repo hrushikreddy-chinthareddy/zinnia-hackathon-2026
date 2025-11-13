@@ -2,33 +2,30 @@
   "name": "digital-experience-monorepo",
   "private": true,
   "scripts": {
-    "build": "turbo run build --filter=\"[HEAD^1]\"",
-    "build:all": "turbo run build",
-    "dev": "dotenv -- turbo run dev",
-    "dev:ops": "pnpm run dev --filter ops",
-    "test:ops": "turbo run test --filter ops",
-    "cypress:ops": "npm --prefix apps/ops run cypress:local",
-    "dev:consumer-experience": "pnpm run dev --filter consumer-experience",
-    "dev:cui": "pnpm run dev --filter consumer-experience",
-    "lint": "turbo run lint",
-    "clean": "find . -name '.next' -type d -prune -exec rm -rf '{}' + && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' + && find . -name 'dist' -type d -prune -exec rm -rf '{}' + && find . -name '.turbo' -type d -prune -exec rm -rf '{}' +",
-    "test": "turbo run test",
-    "build-storybook": "turbo run build-storybook",
-    "link-package": "node ./scripts/link-package.mjs",
-    "unlink-package": "node ./scripts/unlink-packages.mjs",
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:ops": "turbo dev --filter ops",
+    "dev:cui": "turbo dev --filter consumer-experience",
+    "lint": "turbo lint",
+    "clean": "node ./scripts/clean.mjs .next node_modules dist .turbo build",
+    "test": "turbo test",
     "pre-commit": ".husky/pre-commit",
-    "pre-push": "turbo run build --filter \"@zinnia/*\" && .husky/pre-push",
+    "pre-push": ".husky/pre-push",
     "prepare": "husky install"
   },
   "devDependencies": {
     "@zinnia/typescript-config": "workspace:*",
-    "dotenv-cli": "^7.3.0",
     "husky": "^8.0.3",
     "prettier": "^3.1.1",
-    "turbo": "^2.0.4"
+    "turbo": "^2.6.0"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@10.20.0",
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
+  },
+  "pnpm": {
+    "overrides": {
+      "canvas": "npm:empty-npm-package@1.0.0"
+    }
   }
 }

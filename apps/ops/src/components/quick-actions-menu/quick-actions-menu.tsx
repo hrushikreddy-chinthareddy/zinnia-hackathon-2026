@@ -16,10 +16,7 @@ import {
 } from '@deps/components/popover/popover.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -48,9 +45,7 @@ import {
 } from '@deps/types/segment-analytics';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import styles from './quick-actions-menu.module.css';
 
@@ -106,14 +101,7 @@ export const MenuContextualContent = ({
     const offset = 0;
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
 
-    const { featureFlags, featureFlagVariables } = useOptimizely();
-
-    const shouldShowServiceRequestForm = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.SERVICE_REQUEST,
-        OptimizelyVariableKey.Clients,
-        policy?.carrierId?.toLowerCase() || ''
-    );
+    const { featureFlags } = useOptimizely();
 
     const freeLookEnabled =
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
@@ -149,7 +137,6 @@ export const MenuContextualContent = ({
     });
 
     const serviceRequestFormEnabled =
-        shouldShowServiceRequestForm &&
         policyReference?.[0]?.source === Source.ZAHARA;
 
     const sendCorrespondenceEnabled =

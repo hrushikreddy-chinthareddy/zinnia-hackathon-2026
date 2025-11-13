@@ -34,6 +34,9 @@ export enum SegmentPageName {
     Dashboard = 'Dashboard',
     CommissionsStatements = 'Commissions Statements',
     Usage = 'Usage',
+    IllustrationsClientCase = 'Client Case Table',
+    IllustrationsNewClientCase = 'New Client Case Form',
+    IllustrationsDetails = 'Client Case Illustrations',
 }
 /*
     Per Analytics Team: event names should not be customized to use case;

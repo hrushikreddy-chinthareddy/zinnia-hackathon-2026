@@ -18,11 +18,12 @@ export const buildfundTransferRequestBody = (
         effectiveDate,
         reverseInitiator,
         transactionAmounts,
+        correlationId,
     } = fundTransfer;
 
     return {
         caseId,
-        correlationId: uuidV4(),
+        correlationId: correlationId || uuidV4(),
         effectiveDate: dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(
             ZAHARA_API_DATE_FORMAT
         ),

@@ -110,7 +110,7 @@
                             "enum": ["Check", "Wire"]
                         },
                         "processCompanyCodeEnum": {
-                            "enum": ["WELB"]
+                            "enum": ["WELB", "SBL", "GILI"]
                         }
                     }
                 },

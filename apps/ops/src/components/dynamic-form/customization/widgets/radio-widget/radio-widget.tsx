@@ -85,7 +85,8 @@ function RadioWidget<
         icon,
         sectionTitle,
         allowNullValue,
-    } = getUiOptions(uiSchema);
+        showReadOnlyCardView = false,
+    } = getUiOptions<T, S, F>(uiSchema);
 
     useEffect(() => {
         allowNullValue && onChange(value || null);
@@ -195,10 +196,11 @@ function RadioWidget<
         }
     };
 
-    if (readonly)
+    if (readonly && !showReadOnlyCardView) {
         return (
             <>{enumOptions?.find((option) => option.value === value)?.label}</>
         );
+    }
 
     const selectedValue = newOptions?.find(
         (option) => option.value === stringifyObjectValue(value)

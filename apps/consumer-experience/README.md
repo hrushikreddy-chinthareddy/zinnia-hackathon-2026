@@ -106,7 +106,7 @@ TODO: add this to it's own doc and include in developer onboarding
 
 See [this chart](apps/consumer-experience/src/app/documentation/adding-a-new-enviornment-variable.md)
 
-Also add them to `turbo.json` and `environment.d.ts` to get the intellisense.
+Also add them to `environment.d.ts` to get the intellisense.
 
 _Anything in `build-args` in the `deploy-action.yml` needs to be added to the Dockerfile_
 

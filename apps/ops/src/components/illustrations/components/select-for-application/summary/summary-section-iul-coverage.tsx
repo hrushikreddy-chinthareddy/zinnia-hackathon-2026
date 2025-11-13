@@ -11,13 +11,23 @@ import { useTranslation } from 'next-i18next';
 import { useIllustrationDetail } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    IllustrationsClientCase,
+    TransactionType,
+} from '@deps/types/illustrations';
 
 import ContentEntry from './content-entry';
 import ContentSection from './content-section';
 import styles from './summary.module.css';
 import { formatIllustrationDetailCurrency } from '../../details/content/illustration-details-helpers';
 
-export default function IllustrationSelectForApplicationSectionIulCoverage() {
+type IllustrationSelectForApplicationSectionIulCoverageProps = {
+    clientCase: IllustrationsClientCase;
+};
+
+export default function IllustrationSelectForApplicationSectionIulCoverage({
+    clientCase,
+}: IllustrationSelectForApplicationSectionIulCoverageProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const illustration = useIllustrationDetail();
 
@@ -44,9 +54,18 @@ export default function IllustrationSelectForApplicationSectionIulCoverage() {
             }
         );
 
+    const isConversion =
+        clientCase?.transactionType === TransactionType.CONVERSION;
+    const indicators = isConversion
+        ? ['Conversion', clientCase?.isMec && 'MEC'].filter(
+              (item): item is string => !!item
+          )
+        : [];
+
     return (
         <ContentSection
             className={styles.coverageSection}
+            indicators={indicators}
             title={t('clientCase.illustrationDetails.coverage.title')}
         >
             <dl className={styles.contentSectionContainer}>

@@ -136,11 +136,7 @@ export default function SbgcWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
             />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -150,6 +146,11 @@ export default function SbgcWithdrawalForm() {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

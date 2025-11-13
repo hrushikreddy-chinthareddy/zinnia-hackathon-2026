@@ -50,20 +50,32 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getRslnConfig(t: TFunction) {
     const formValidation = useCallback(
         ({
             formSignature,
             formDisbursement,
+            formProgram,
+            formDistribution,
+            formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
+            const sswType = formProgram?.programSubType?.text || '';
+            const funds = formDistribution?.funds?.filter(
+                (fund) => !!fund.amount.text
             );
+
+            if (
+                sswType === SSWType.PercentOfAmountValue &&
+                funds?.length === 0
+            ) {
+                errors['specifyFundsRequired'] = t(
+                    'sswProgram.warnings.specifyFundsRequired'
+                );
+            }
 
             const jointOwnerSignature = formSignature?.signatures?.find(
                 (sigInfo) =>
@@ -108,28 +120,6 @@ export default function getRslnConfig(t: TFunction) {
                 }
             }
 
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-
-            // No choice made for signature valid
-            if (
-                ownerSignature &&
-                ownerSignature?.isSigned &&
-                !ownerSignature?.isSignatureValid &&
-                ownerSignature?.isSignatureValid !== false
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.IsSignatureValid}`
-                ] = t('formValidation.signatureValidOptionMustBeSelected');
-            }
-
             if (
                 jointOwnerSignature &&
                 jointOwnerSignature?.isSigned &&
@@ -161,17 +151,6 @@ export default function getRslnConfig(t: TFunction) {
                 errors[
                     `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.IsSignatureValid}`
                 ] = t('formValidation.signatureValidOptionMustBeSelected');
-            }
-
-            // No signature comment added
-            if (
-                ownerSignature &&
-                ownerSignature?.isSignatureValid &&
-                !ownerSignature?.signatureComment
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
-                ] = t('formValidation.signatureCommentMustBePresent');
             }
 
             if (
@@ -214,35 +193,18 @@ export default function getRslnConfig(t: TFunction) {
                     'formValidation.accountTypeMustBeSelected'
                 );
             }
-            return errors;
+            const signESignValidate = validateSignESign({
+                formSignature,
+                formESignatureData,
+                t,
+                validateDesignationPresent: false,
+                validateComment: true,
+            });
+
+            return { ...errors, ...signESignValidate };
         },
         [t]
     );
-
-    const sswFormValidation = ({
-        formParty,
-        formSignature,
-        formProgram,
-        formDistribution,
-        formDisbursement,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
-        const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds?.filter(
-            (fund) => !!fund.amount.text
-        );
-
-        if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
-            errors['specifyFundsRequired'] = t(
-                'sswProgram.warnings.specifyFundsRequired'
-            );
-        }
-        return errors;
-    };
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -589,6 +551,7 @@ export default function getRslnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -815,7 +778,7 @@ export default function getRslnConfig(t: TFunction) {
 
     return {
         reasonOptions,
-        formValidation: sswFormValidation,
+        formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         disbursementOptions,

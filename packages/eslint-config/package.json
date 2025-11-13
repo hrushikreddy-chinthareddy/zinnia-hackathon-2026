@@ -12,10 +12,6 @@
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
   },
-  "scripts": {
-    "test": "echo \"no tests\" && exit 0",
-    "build": "echo \"no build\" && exit 0"
-  },
   "exports": {
     ".": "./basic.js",
     "./*.js": "./*.js",

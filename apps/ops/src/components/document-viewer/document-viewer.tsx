@@ -24,7 +24,7 @@ import {
 } from '@deps/models/case/document';
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';

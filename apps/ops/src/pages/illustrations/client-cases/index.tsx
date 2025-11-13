@@ -21,8 +21,13 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -46,13 +51,13 @@ export enum ErrorOrigin {
     Internal = 'internal-error',
 }
 
-type IllustrationsPageProps = {
+interface IllustrationsPageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     additionalData: additionalDataProps;
     fetchingErrorMessage: string;
     fetchingErrorOrigin: ErrorOrigin;
     clientCase?: IllustrationsClientCase;
-};
+}
 
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
 const NEW_QUICK_QUOTE_URL = '/illustrations/client-cases/quick-quote';
@@ -63,6 +68,7 @@ const EXTERNAL_ERROR_LABEL =
 export default function Illustrations({
     fetchingErrorMessage,
     fetchingErrorOrigin,
+    additionalData,
 }: IllustrationsPageProps) {
     const [bannerText, setBannerText] = useState('');
 
@@ -76,6 +82,10 @@ export default function Illustrations({
     } = usePermissionsContext();
     const { sendNewClientCaseClicked } = useIllustrationAnalytics();
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
+    useSegmentPageTracker(
+        additionalData.user,
+        SegmentPageName.IllustrationsClientCase
+    );
 
     const isAgent = aliases?.length ?? 0 > 0;
     const illustrationsQuickQuoteEnabled =

@@ -137,6 +137,13 @@ export function useIllustrationPremiumData(): PremiumEntry[] {
                 },
                 {
                     label: t(
+                        'clientCase.illustrationDetails.premium.guidelineLevelPremium'
+                    ),
+                    value: iulAssumed.initial.guidelineLevelPremium,
+                    type: 'currency',
+                },
+                {
+                    label: t(
                         'clientCase.illustrationDetails.premium.initialModal'
                     ),
                     value: iulAssumed.initial.totalModalPremium,

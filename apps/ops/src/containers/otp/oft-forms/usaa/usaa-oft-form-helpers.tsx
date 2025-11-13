@@ -19,6 +19,7 @@ import {
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { ProcessType } from '@deps/models/case/enums';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
@@ -47,17 +48,73 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { createValidator } from '../../utils/helper-utils';
+import { createDtccValidator, createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
-import {
-    commonOftFormValidation,
-    getQualTypeOptions,
-} from '../oft-form-helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import { getQualTypeOptions } from '../oft-form-helpers';
 
 export default function getUsaaOftConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) =>
-        commonOftFormValidation(t, values);
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+        // FORM DISBURSEMENT VALIDATIONS
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+        // fbo details required
+        if (
+            ![PaymentMethod.DTCC].includes(
+                formDisbursement?.paymentMethod.text as PaymentMethod
+            ) &&
+            formDisbursement?.paymentMethod.text &&
+            !formDisbursement?.payee?.fboDetails?.text
+        ) {
+            errors['fboDetails'] = t('formValidation.fboDetails');
+        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
 
     const signaturesConfig: SignatureValidationConfig[] = [
         {
@@ -151,30 +208,6 @@ export default function getUsaaOftConfig(t: TFunction) {
             signatureType: SignatureValidationTypeWithdrawal.Spouse,
         },
     ];
-
-    const oftFormValidation = ({
-        formParty,
-        formSignature,
-        formDisbursement,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
-
-        // fbo details required
-        if (
-            ![PaymentMethod.DTCC].includes(
-                formDisbursement?.paymentMethod.text as PaymentMethod
-            ) &&
-            formDisbursement?.paymentMethod.text &&
-            !formDisbursement?.payee?.fboDetails?.text
-        ) {
-            errors['fboDetails'] = t('formValidation.fboDetails');
-        }
-        return errors;
-    };
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -908,6 +941,7 @@ export default function getUsaaOftConfig(t: TFunction) {
                     fieldLabel: t('distributionMethod.onlyContractNumber'),
                     component: DisbursementFields.BankTextField,
                     maxLength: 30,
+                    validator: createDtccValidator(t, ProcessType.OFT),
                 },
             ],
             getDefaultPayload({
@@ -994,7 +1028,7 @@ export default function getUsaaOftConfig(t: TFunction) {
     };
 
     return {
-        formValidation: oftFormValidation,
+        formValidation,
         formPartyConfigs,
         surrenderingInstructionsOptions,
         signaturesConfig,

@@ -95,15 +95,7 @@ export default function NasuOftWithdrawalForm() {
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -117,6 +109,10 @@ export default function NasuOftWithdrawalForm() {
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
 
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -127,6 +123,11 @@ export default function NasuOftWithdrawalForm() {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

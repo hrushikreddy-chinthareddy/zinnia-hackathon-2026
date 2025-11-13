@@ -1,10 +1,10 @@
 // BPB note: this is being loosely typed from a QA response as the  API doesn't have a spec
 
 import { PhoneType } from '@xd/api-types/dist/generated-types/sor';
-import { ProducerType } from '@xd/pom/src/types';
 
 import { CarrierCode } from '@deps/constants/policy';
 
+import { ProducerType } from './pom';
 import { AgencyRole } from './producers';
 
 // certain string values may be enumerated, and the unknowns I just couldn't infer or didnt' need for now

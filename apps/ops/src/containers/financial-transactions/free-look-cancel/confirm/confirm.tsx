@@ -1,5 +1,4 @@
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
-import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -37,8 +36,6 @@ const Confirm = ({ policy }: ConfirmProps) => {
     });
     const { t: defaultT } = useTranslation();
     const { featureFlags } = useOptimizely();
-    const router = useRouter();
-    const correlationId = router.query.correlationId as string | undefined;
 
     const wireCheckPaymentsEnabled =
         featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
@@ -55,8 +52,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
     const submit = useCallback(async () => {
         const requestBody = buildFreeLookCancelRequestBody(
             withdrawal,
-            wireCheckPaymentsEnabled,
-            correlationId
+            wireCheckPaymentsEnabled
         );
         const response = await submitFreeLookCancel(
             policy.product?.planCode,
@@ -99,14 +95,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         }
 
         setIsLoading(false);
-    }, [
-        policy,
-        withdrawal,
-        sessionId,
-        partyId,
-        wireCheckPaymentsEnabled,
-        correlationId,
-    ]);
+    }, [policy, withdrawal, sessionId, partyId, wireCheckPaymentsEnabled]);
 
     const hasAutoSubmittedRef = useRef<unknown>(null);
 

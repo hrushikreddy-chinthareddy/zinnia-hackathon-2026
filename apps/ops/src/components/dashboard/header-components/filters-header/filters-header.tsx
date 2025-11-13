@@ -1,5 +1,5 @@
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
-import { areObjectsEqual } from '@zinnia/utils';
+import { areObjectsEqual, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { forwardRef, useEffect, useMemo, useState } from 'react';
@@ -104,7 +104,11 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         const [placeholderSelectedBrokerDealers, setSelectedBrokerDealers] =
             useState<CarrierListItem>(
                 brokerDealers?.length === 1
-                    ? { [brokerDealers[0].key]: brokerDealers[0].name }
+                    ? {
+                          [brokerDealers[0].name]: toTitleCase(
+                              brokerDealers[0].name
+                          ),
+                      }
                     : {}
             );
 
@@ -116,7 +120,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         useEffect(() => {
             if (brokerDealers.length === 1) {
                 updateSelectedBrokerDealers({
-                    [brokerDealers[0].key]: brokerDealers[0].name,
+                    [brokerDealers[0].name]: toTitleCase(brokerDealers[0].name),
                 });
             }
         }, [brokerDealers, updateSelectedBrokerDealers]);

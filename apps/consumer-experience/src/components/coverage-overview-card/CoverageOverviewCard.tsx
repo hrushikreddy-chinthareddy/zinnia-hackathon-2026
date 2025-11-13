@@ -56,37 +56,6 @@ export const CoverageOverviewCard = ({
             summary={{ ...policy }}
           />
           <div className={styles.policyCardPolicyValues}>
-            {componentVisibility?.[
-              ComponentName.OVERVIEW_ACCOUNT_VALUE_CARD
-            ] && (
-              <FieldData
-                className="mr-3xl typography-content-body-sm-bold"
-                Label={
-                  <Label
-                    interactiveElements={[
-                      <AccountValuePopover
-                        key="account-value-popover"
-                        // Date of last policy transaction, when policy value was last updated
-                        // the frequency of transactions is a lot higher on life products, so the
-                        // effective date shows when the last transaction occurred
-                        // for annuity products, we just show current date
-                        // (decision documented in CUI-512)
-                        dataTimestamp={
-                          policy.lineOfBusiness === LineOfBusiness.ANNUITY
-                            ? new Date().toISOString()
-                            : policy.effectiveDate
-                        }
-                        lineOfBusiness={policy.lineOfBusiness}
-                      />,
-                    ]}
-                  >
-                    Account value
-                  </Label>
-                }
-              >
-                {formatUSDollars(policy.endingAccountValue)}
-              </FieldData>
-            )}
             {policy.lineOfBusiness === LineOfBusiness.LIFE &&
               componentVisibility?.[ComponentName.OVERVIEW_COVERAGE_CARD] && (
                 <FieldData
@@ -128,6 +97,37 @@ export const CoverageOverviewCard = ({
                 }
               >
                 {formatUSDollars(policy.cumulativeGrossDeathBenefitAmount)}
+              </FieldData>
+            )}
+            {componentVisibility?.[
+              ComponentName.OVERVIEW_ACCOUNT_VALUE_CARD
+            ] && (
+              <FieldData
+                className="typography-content-body-sm-bold"
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <AccountValuePopover
+                        key="account-value-popover"
+                        // Date of last policy transaction, when policy value was last updated
+                        // the frequency of transactions is a lot higher on life products, so the
+                        // effective date shows when the last transaction occurred
+                        // for annuity products, we just show current date
+                        // (decision documented in CUI-512)
+                        dataTimestamp={
+                          policy.lineOfBusiness === LineOfBusiness.ANNUITY
+                            ? new Date().toISOString()
+                            : policy.effectiveDate
+                        }
+                        lineOfBusiness={policy.lineOfBusiness}
+                      />,
+                    ]}
+                  >
+                    Account value
+                  </Label>
+                }
+              >
+                {formatUSDollars(policy.endingAccountValue)}
               </FieldData>
             )}
           </div>

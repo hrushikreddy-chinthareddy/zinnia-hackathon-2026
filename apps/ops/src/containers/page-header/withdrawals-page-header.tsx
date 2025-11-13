@@ -13,9 +13,7 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, {
-    isStillInactive,
-} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';

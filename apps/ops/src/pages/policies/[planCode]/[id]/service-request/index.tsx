@@ -8,7 +8,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import DefaultCaseContainer from '@deps/containers/default-case/default-case-container';
 import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
 import { DefaultCaseProvider } from '@deps/contexts/DefaultCaseContext';
-import { OptimizelyVariableKey } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -28,11 +27,8 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
-import { getFeatureFlagByKey } from '@deps/utils/optimizely/optimizely';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     logError,
-    logInfo,
     logWarn,
     parseErrorInformation,
     withPageAuthAndLogging,
@@ -107,34 +103,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext,
                     true
                 );
-                const carrierId = policy?.carrierId?.toLowerCase() || '';
                 const limit = 1;
                 const offset = 0;
-
-                const shouldShowDefaultCase = await getFeatureFlagByKey(
-                    FEATURE_FLAG_VARIABLES.SERVICE_REQUEST,
-                    OptimizelyVariableKey.Clients,
-                    carrierId,
-                    user.sub,
-                    loggingContext
-                );
-
-                if (!shouldShowDefaultCase) {
-                    logError('policies/service-request::403 redirect', {
-                        partyId: user?.partyId,
-                        requestStatus: 403,
-                        featureFlagEnabled: shouldShowDefaultCase,
-                        requestPath: context.resolvedUrl,
-                        ...loggingContext,
-                    });
-
-                    return {
-                        redirect: {
-                            destination: '/403',
-                            permanent: false,
-                        },
-                    };
-                }
 
                 const [taskMetadata, policyReference, translations] =
                     await Promise.all([
@@ -163,7 +133,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ]);
 
                 if (!policy || policyReference?.[0]?.source !== Source.ZAHARA) {
-                    logInfo('service-request/policy-not-found', {
+                    logError('service-request/policy-not-found', {
                         ...loggingContext,
                         policyNumber: policyNumber,
                         planCode: planCode,

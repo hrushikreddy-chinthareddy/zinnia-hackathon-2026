@@ -194,6 +194,8 @@ const WorkflowContainer = ({
       />
       <div className={styles.form}>{children}</div>
       <div className={styles.actions}>
+        {/* TODO: this is working accidentally, most of the time currentStep actions
+        are undefined and so !== null is true and displaying the button */}
         {currentStep && currentStep?.actions?.primary !== null && (
           <Button {...nextButtonProps} />
         )}

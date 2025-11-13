@@ -647,10 +647,19 @@ export const getTranslationValues = (basePath: string) => (value: string) => {
     return t(`${basePath}.${value}`) || value;
 };
 
+const convertElectionStatus = (value: 'NOTELECTED' | 'ELECTED') => {
+    const { t } = i18n as I18n;
+    if (value === 'NOTELECTED') {
+        return t(`general.false`);
+    }
+
+    return t(`general.true`);
+};
+
 const RiderFormatConfig = {
     type: convertToString,
     riderName: convertToString,
-    riderElected: formatBooleanToString,
+    riderElected: convertElectionStatus,
     underwritingStatus: getTranslationValues(
         'policy.extras.riders.underwritingStatusValues'
     ), //enum

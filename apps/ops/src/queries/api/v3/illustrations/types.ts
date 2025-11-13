@@ -123,6 +123,7 @@ export type IllustrationInputsBase = {
     jurisdiction: USStates;
     planCode: string;
     options: Options;
+    coverages: Coverage[];
 };
 
 export interface TermLifeScenario extends BaseScenario {

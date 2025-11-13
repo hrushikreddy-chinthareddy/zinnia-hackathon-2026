@@ -63,9 +63,6 @@ export interface CarrierConfig {
   systematicPremium: {
     enabled: boolean;
   };
-  freeLookCancel: {
-    enabled: boolean;
-  };
   riders: {
     showUnbornChildRider: boolean;
   };
