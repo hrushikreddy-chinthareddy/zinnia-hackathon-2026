@@ -11,7 +11,7 @@ type ReducedCaseInstanceSummary = Pick<
   | 'processSubType'
 >;
 
-type TransformedCaseSearchResponse = {
+export type TransformedCaseSearchResponse = {
   data: ReducedCaseInstanceSummary[];
 } & CaseSearchResponse;
 
