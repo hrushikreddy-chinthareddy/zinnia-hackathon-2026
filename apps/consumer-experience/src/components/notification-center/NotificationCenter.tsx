@@ -14,7 +14,6 @@ import { default as Styles } from './NotificationCenter.module.css';
 import { NotificationCenterProps } from './types';
 import { sortNotificationsByDate } from './utils';
 import { Button } from '../button/Button';
-import clsx from 'clsx';
 
 export const NotificationCenter = ({
   policyNumber,
@@ -73,9 +72,9 @@ export const NotificationCenter = ({
           type={IconType.CIRCLE_CHECKMARK}
           color="rgba(0, 98, 139, 1)"
         />
-
         <Button
-          className={clsx(Styles.link, 'typography-nav-links-sm')}
+          mode="link"
+          size="small"
           onClick={() => {
             markAllAsRead();
           }}
