@@ -8842,6 +8842,31 @@
             }
         }
     },
+    "caseStats": {
+        "tabs": {
+            "issue": "Problèmes",
+            "tasks": "Tâches"
+        },
+        "tasks": {
+            "title": "Volume de tâches",
+            "description": "Volume de tâches créées sur une période sélectionnée, regroupées par type de dossier et par tâche.",
+            "filters": {
+                "status": {
+                    "label": "Statut",
+                    "placeholder": "Tous"
+                }
+            },
+            "table": {
+                "headers": {
+                    "caseType": "Type de dossier",
+                    "task": "Tâche",
+                    "totalTasks": "Nombre total de tâches"
+                },
+                "allTasks": "Toutes les tâches",
+                "exportCSV": "Exporter en CSV"
+            }
+        }
+    },
     "usage": {
         "date": "Date",
         "exportToCSV": "Exporter au format CSV",

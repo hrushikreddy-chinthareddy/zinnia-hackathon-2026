@@ -8534,6 +8534,31 @@
             "submitTask": "Enviar"
         }
     },
+    "caseStats": {
+        "tabs": {
+            "issue": "Problemas",
+            "tasks": "Tareas"
+        },
+        "tasks": {
+            "title": "Volumen de tareas",
+            "description": "Volumen de tareas creadas durante un período seleccionado, agrupadas por tipo de caso y por tarea.",
+            "filters": {
+                "status": {
+                    "label": "Estado",
+                    "placeholder": "Todas"
+                }
+            },
+            "table": {
+                "headers": {
+                    "caseType": "Tipo de caso",
+                    "task": "Tarea",
+                    "totalTasks": "Total de tareas"
+                },
+                "allTasks": "Todas las tareas",
+                "exportCSV": "Exportar a CSV"
+            }
+        }
+    },
     "usage": {
         "date": "Fecha",
         "exportToCSV": "Exportar a CSV",

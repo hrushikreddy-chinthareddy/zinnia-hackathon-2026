@@ -8725,6 +8725,31 @@
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
+    "caseStats": {
+        "tabs": {
+            "issue": "Issues",
+            "tasks": "Tasks"
+        },
+        "tasks": {
+            "title": "Task Volume",
+            "description": "Volume of tasks created over a selected time range, grouped by case type and task.",
+            "filters": {
+                "status": {
+                    "label": "Status",
+                    "placeholder": "All"
+                }
+            },
+            "table": {
+                "headers": {
+                    "caseType": "Case type",
+                    "task": "Task",
+                    "totalTasks": "Total tasks"
+                },
+                "allTasks": "All tasks",
+                "exportCSV": "Export to CSV"
+            }
+        }
+    },
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
