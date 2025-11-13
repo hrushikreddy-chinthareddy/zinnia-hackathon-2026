@@ -40,8 +40,8 @@ export const OpenTransactionCaseDetails = ({
 
   const { data: caseData, isPending } = useQuery({
     queryKey: [QueryKeys.CASES_FOR_POLICY, policyNumber],
-    queryFn: () => searchCasesByPolicyNumber(policyNumber),
-    select: data => {
+    queryFn: () => searchCasesByPolicyNumber({ policyNumber }),
+    select: ({ data }) => {
       return {
         hasInProgressCase: data?.find(
           item =>
