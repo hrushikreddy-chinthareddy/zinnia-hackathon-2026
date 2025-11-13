@@ -21,8 +21,9 @@ export const NotificationAlert: FC = () => {
   const [visible, setVisible] = useState(false);
   const [hasDismissed, setHasDimissed] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [localCount, setLocalCount] = useState(0);
 
-  const { data: notificationCount = [] } = useQuery({
+  const { data: notificationCount = 0 } = useQuery({
     ...caseQueryOptions({
       policyNumber,
       caseStatus: [CaseStatus.IN_PROGRESS],
@@ -47,16 +48,17 @@ export const NotificationAlert: FC = () => {
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (!hasDismissed) {
-        setVisible(true);
-      }
-    }, 5000);
+    if (!hasDismissed && notificationCount > 0) {
+      setVisible(true);
+    }
 
-    return () => clearTimeout(timer);
-  }, [hasDismissed]);
+    if (hasDismissed && notificationCount > localCount) {
+      setVisible(true);
+    }
+  }, [hasDismissed, notificationCount, localCount]);
 
   const handleDismiss = () => {
+    setLocalCount(notificationCount);
     setVisible(false);
     setHasDimissed(true);
   };
