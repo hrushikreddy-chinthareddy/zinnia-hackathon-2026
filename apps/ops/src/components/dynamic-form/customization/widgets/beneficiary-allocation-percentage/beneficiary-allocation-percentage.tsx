@@ -7,32 +7,36 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 
-const validatePercentage = (actionData: any) => {
-    const primaryBene = actionData?.filter(
-        (bene: any) =>
-            bene.action !== 'DELETE' &&
-            bene.partyRole.partyRole === 'PRIMARYBENEFICIARY'
-    );
-    const primaryBeneTotal = primaryBene?.reduce(
-        (acc: number, bene: any) =>
-            acc + Number(bene.party.beneficiaryPercentage || 0),
-        0
-    );
-    const isPrimaryBeneValid =
-        primaryBene?.length === 0 || primaryBeneTotal === 100;
+// TODO: make this widget generic and reusable for other transactions
 
-    const contingentBene = actionData?.filter(
+const allocationPercentageValidationError =
+    'Please make sure allocation is equal to 100%';
+
+const getFilteredBene = (actionData: any, beneType: string) => {
+    return actionData?.filter(
         (bene: any) =>
-            bene.action !== 'DELETE' &&
-            bene.partyRole.partyRole === 'CONTINGENTBENEFICIARY'
+            bene.action !== 'DELETE' && bene.partyRole.partyRole === beneType
     );
-    const contingentBeneTotal = contingentBene?.reduce(
+};
+
+const getBeneTotalAllocation = (beneData: any) => {
+    return beneData?.reduce(
         (acc: number, bene: any) =>
             acc + Number(bene.party.beneficiaryPercentage || 0),
         0
     );
-    const isContingentBeneValid =
-        contingentBene?.length === 0 || contingentBeneTotal === 100;
+};
+
+const isBeneValid = (beneData: any) => {
+    return beneData?.length === 0 || getBeneTotalAllocation(beneData) === 100;
+};
+
+const validatePercentage = (actionData: any) => {
+    const primaryBene = getFilteredBene(actionData, 'PRIMARYBENEFICIARY');
+    const isPrimaryBeneValid = isBeneValid(primaryBene);
+
+    const contingentBene = getFilteredBene(actionData, 'CONTINGENTBENEFICIARY');
+    const isContingentBeneValid = isBeneValid(contingentBene);
 
     return isPrimaryBeneValid && isContingentBeneValid;
 };
@@ -74,11 +78,7 @@ const PercentageWidget = ({
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 variant={!validate ? FieldVariant.Error : FieldVariant.Default}
-                message={
-                    !validate
-                        ? 'Please make sure allocation is equal to 100%'
-                        : ''
-                }
+                message={!validate ? allocationPercentageValidationError : ''}
             />
         </div>
     );
