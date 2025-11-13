@@ -11,8 +11,9 @@ import {
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../utils';
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
     api: {
