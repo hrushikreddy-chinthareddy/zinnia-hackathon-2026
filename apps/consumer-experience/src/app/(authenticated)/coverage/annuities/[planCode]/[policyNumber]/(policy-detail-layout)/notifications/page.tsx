@@ -1,4 +1,3 @@
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -6,6 +5,7 @@ import { NotificationCenter } from '@/components/notification-center/Notificatio
 import { getPageTitle, RouteKey } from '@/route-map';
 import { searchCases } from '@/services/case';
 import { getFeatureFlags } from '@/services/feature-flags';
+import { CaseSummary } from '@/types/case';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
@@ -25,7 +25,7 @@ interface Props {
 export default async function NotificationsPage({ params }: Props) {
   const flags = await getFeatureFlags();
   const loggingCtx = await buildCommonLogContext();
-  let initialNotifications: Array<CaseInstanceSummary> | undefined;
+  let initialNotifications: Array<CaseSummary> | undefined;
   const notificationViewEnabled =
     flags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
 

@@ -47,3 +47,12 @@ export const acknowledgedCasesOptions = ({
     queryKey: [QueryKeys.NOTIFICATIONS, QueryKeys.NOTIFICATION_ACKNOWLEDGMENT],
     queryFn: () => getAcknowledgedCases({ planCode, policyNumber }),
   });
+
+export const notificationQueryOptions = ({
+  planCode,
+  policyNumber,
+}: AcknowledgedCasesOptions) =>
+  queryOptions({
+    queryKey: [QueryKeys.NOTIFICATIONS, policyNumber, planCode],
+    queryFn: () => searchCasesByPolicyNumber(policyNumber, planCode),
+  });

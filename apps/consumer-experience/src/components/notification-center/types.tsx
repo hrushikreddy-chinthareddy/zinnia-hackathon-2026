@@ -1,6 +1,5 @@
-import { CaseInstanceSummary } from '@xd/api-types/dist/generated-types/case';
-
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import { CaseSummary } from '@/types/case';
 
 export type NotificationCenterNotification = {
   id: string;
@@ -11,7 +10,7 @@ export type NotificationCenterNotification = {
 };
 
 export type NotificationCenterProps = {
-  initialNotifications?: Array<CaseInstanceSummary> | null;
+  initialNotifications?: Array<CaseSummary> | null;
   initialAcknowledgedNotifications?: Array<CaseAcknowledgmentItem>;
   policyNumber: string;
   planCode: string;

@@ -1,18 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CaseInstanceSummary } from '@xd/api-types/dist/generated-types/case';
 import { useIsClient } from '@xd/xd-components/src/hooks/useIsClient';
+import { useCallback } from 'react';
 
 import {
   parseNotifications,
   transformNotifications,
 } from '@/components/notification-center/utils';
-import {
-  acknowledgeCase,
-  searchCasesByPolicyNumber,
-} from '@/queries/case-queries';
+import { acknowledgeCase } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { acknowledgedCasesOptions } from '@/queries/query-options';
+import {
+  acknowledgedCasesOptions,
+  notificationQueryOptions,
+} from '@/queries/query-options';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import { CaseSummary } from '@/types/case';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { useFeatureFlagsFor } from './use-feature-flags';
@@ -21,7 +22,7 @@ interface UseAcknowledgeCasesParams {
   planCode: string;
   policyNumber: string;
   fetchNotificationsFlagEnabled?: boolean;
-  initialNotifications?: CaseInstanceSummary[] | null;
+  initialNotifications?: CaseSummary[] | null;
   initialAcknowledgedNotifications?: CaseAcknowledgmentItem[];
 }
 
@@ -42,27 +43,24 @@ export const useAcknowledgeCases = ({
   const shouldFetchClientSideNotifications =
     !!fetchNotificationsFlag && isClient;
 
+  const selectNotifications = useCallback(
+    (data: CaseSummary[] | null | undefined) => {
+      return (data || [])
+        .map(parseNotifications)
+        .filter(notification => !!notification);
+    },
+    []
+  );
+
   const {
     data: notifications = [],
     isLoading,
     isError,
     isFetching,
   } = useQuery({
-    queryKey: [
-      QueryKeys.NOTIFICATIONS,
-      policyNumber,
-      planCode,
-      initialNotifications,
-    ],
-    queryFn: () => {
-      return searchCasesByPolicyNumber(policyNumber, planCode);
-    },
-    select: data => {
-      return (data || [])
-        .map(parseNotifications)
-        .filter(notification => !!notification);
-    },
-    initialData: initialNotifications,
+    ...notificationQueryOptions({ planCode, policyNumber }),
+    ...(initialNotifications && { initialData: initialNotifications }),
+    select: selectNotifications,
     enabled: shouldFetchClientSideNotifications,
   });
 
