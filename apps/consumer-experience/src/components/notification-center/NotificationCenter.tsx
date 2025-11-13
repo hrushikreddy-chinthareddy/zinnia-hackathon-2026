@@ -137,6 +137,7 @@ export const NotificationCenter = ({
 
   return (
     <div className={Styles.container}>
+<<<<<<< HEAD
       <div className={Styles.markAllReadContainer}>
         <Icon
           small
@@ -148,6 +149,9 @@ export const NotificationCenter = ({
         </Button>
       </div>
       {allNotifications.length > 0 && (
+=======
+      {allNotifications.length > 0 ? (
+>>>>>>> bd49c190a7 (Addressed PR comments)
         <NotificationCenterSection
           className={Styles.actionNeeded}
           notifications={allNotifications.sort(sortNotificationsByDate)}
