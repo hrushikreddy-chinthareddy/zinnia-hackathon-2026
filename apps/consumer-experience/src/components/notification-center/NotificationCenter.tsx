@@ -3,11 +3,18 @@ import { useIsClient } from '@xd/hooks/useIsClient';
 import { Icon, IconType } from '@zinnia/bloom/components';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
-import { useAcknowledgeCases } from '@/hooks/use-acknowledge-cases';
+import {
+  useAcknowledgedCases,
+  useMarkAsRead,
+  useNotifications,
+  useMarkAllAsRead,
+} from '@/hooks/use-acknowledge-cases';
 
 import { default as Styles } from './NotificationCenter.module.css';
 import { NotificationCenterProps } from './types';
 import { sortNotificationsByDate } from './utils';
+import { Button } from '../button/Button';
+import clsx from 'clsx';
 
 export const NotificationCenter = ({
   policyNumber,
@@ -15,37 +22,68 @@ export const NotificationCenter = ({
 }: NotificationCenterProps) => {
   const isClient = useIsClient();
 
-  const {
-    acknowledgedNotifications,
-    acknowledgedNotificationsLoading,
-    acknowledgedCaseMutation,
-    actionNeededNotifications,
-    completedNotifications,
-    notificationsLoading: isLoading,
-    notificationsError: isError,
-    notificationsFetching: isFetching,
-  } = useAcknowledgeCases({
+  // fetch acknowledged notifications
+  const { data: acknowledgedNotifications = [] } = useAcknowledgedCases({
     planCode,
     policyNumber,
   });
 
-  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) =>
+  // fetch all notifications (the ones that need an action and the completed cases)
+  const {
+    data: notifications = {
+      completedNotifications: [],
+      actionNeededNotifications: [],
+      allNotifications: [],
+    },
+    isLoading,
+  } = useNotifications({
+    planCode,
+    policyNumber,
+    initialNotifications,
+  });
+
+  // all notifications includes both completed and action needed notifications
+  const { allNotifications } = notifications;
+
+  // mutation to acknowledge all notifications
+  const { mutate: markAllAsRead } = useMarkAllAsRead({
+    planCode,
+    policyNumber,
+    notifications: allNotifications.map(notification => ({
+      id: notification.id,
+      stepsToAcknowledge: notification.stepsToAcknowledge ?? [],
+    })),
+  });
+
+  // mutation to mark a specific notification as read
+  const acknowledgedCaseMutation = useMarkAsRead({
+    planCode,
+    policyNumber,
+  });
+
+  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) => {
     acknowledgedCaseMutation.mutate({ id, stepsToAcknowledge });
-
-  const showLoader =
-    acknowledgedNotificationsLoading ||
-    acknowledgedCaseMutation.isPending ||
-    !isClient ||
-    isLoading ||
-    isFetching;
-
-  const allNotifications = actionNeededNotifications.concat(
-    completedNotifications
-  );
+  };
 
   return (
     <div className={Styles.container}>
-      {allNotifications.length > 0 ? (
+      <div className={Styles.markAllReadContainer}>
+        <Icon
+          small
+          type={IconType.CIRCLE_CHECKMARK}
+          color="rgba(0, 98, 139, 1)"
+        />
+
+        <Button
+          className={clsx(Styles.link, 'typography-nav-links-sm')}
+          onClick={() => {
+            markAllAsRead();
+          }}
+        >
+          Mark all as read
+        </Button>
+      </div>
+      {allNotifications.length > 0 && (
         <NotificationCenterSection
           className={Styles.actionNeeded}
           notifications={allNotifications.sort(sortNotificationsByDate)}

@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useIsClient } from '@xd/xd-components/src/hooks/useIsClient';
-import { useCallback } from 'react';
+import { CaseInstanceSummary } from '@xd/api-types/dist/generated-types/case';
 
 import {
   parseNotifications,
@@ -8,11 +7,7 @@ import {
 } from '@/components/notification-center/utils';
 import { acknowledgeCase } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import {
-  acknowledgedCasesOptions,
-  caseQueryOptions,
-} from '@/queries/query-options';
-import { TransformedCaseSearchResponse } from '@/services/case/types';
+import { acknowledgedCasesOptions } from '@/queries/query-options';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { useFeatureFlagsFor } from './use-feature-flags';
@@ -23,53 +18,78 @@ interface UseAcknowledgeCasesParams {
   fetchNotificationsFlagEnabled?: boolean;
 }
 
-export const useAcknowledgeCases = ({
+export const useNotifications = ({
   planCode,
   policyNumber,
-  fetchNotificationsFlagEnabled = false,
-}: UseAcknowledgeCasesParams) => {
-  const isClient = useIsClient();
-  const queryClient = useQueryClient();
-
+  initialNotifications,
+}: {
+  planCode: string;
+  policyNumber: string;
+  initialNotifications?: CaseInstanceSummary[] | null;
+}) => {
   const { data: fetchNotificationsFlag } = useFeatureFlagsFor(
     FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS
   );
 
-  const shouldFetchClientSideNotifications =
-    !!fetchNotificationsFlag && isClient;
-
-  const selectNotifications = useCallback(
-    (data: TransformedCaseSearchResponse | null | undefined) => {
-      return (data?.data || [])
-        .map(parseNotifications)
-        .filter(notification => !!notification);
+  return useQuery({
+    queryKey: [
+      QueryKeys.NOTIFICATIONS,
+      policyNumber,
+      planCode,
+      initialNotifications,
+    ],
+    queryFn: async () => {
+      const data = await searchCasesByPolicyNumber(policyNumber, planCode);
+      console.log('data', data);
+      return data;
     },
-    []
-  );
+    select: data => {
+      const { completedNotifications, actionNeededNotifications } = (data || [])
+        .map(parseNotifications)
+        .filter(notification => !!notification)
+        .reduce(transformNotifications, {
+          completedNotifications: [],
+          actionNeededNotifications: [],
+        });
 
-  const {
-    data: notifications = [],
-    isLoading,
-    isError,
-    isFetching,
-  } = useQuery({
-    ...caseQueryOptions({ policyNumber }),
-    select: selectNotifications,
-    enabled: shouldFetchClientSideNotifications,
+      return {
+        completedNotifications,
+        actionNeededNotifications,
+        allNotifications: [
+          ...completedNotifications,
+          ...actionNeededNotifications,
+        ],
+      };
+    },
+    initialData: initialNotifications,
+    enabled: !!fetchNotificationsFlag,
   });
+};
 
-  const {
-    data: acknowledgedNotifications = [],
-    isLoading: acknowledgedNotificationsLoading,
-  } = useQuery({
+export const useAcknowledgedCases = ({
+  planCode,
+  policyNumber,
+  fetchNotificationsFlagEnabled = false,
+  initialAcknowledgedNotifications,
+}: UseAcknowledgeCasesParams) => {
+  return useQuery({
     ...acknowledgedCasesOptions({ planCode, policyNumber }),
     enabled:
       fetchNotificationsFlagEnabled &&
       !!policyNumber.length &&
       !!planCode.length,
   });
+};
 
-  const mutation = useMutation({
+export const useMarkAsRead = ({
+  planCode,
+  policyNumber,
+}: {
+  planCode: string;
+  policyNumber: string;
+}) => {
+  const queryClient = useQueryClient();
+  return useMutation({
     mutationFn: ({
       id,
       stepsToAcknowledge,
@@ -90,21 +110,37 @@ export const useAcknowledgeCases = ({
       });
     },
   });
+};
 
-  const { completedNotifications, actionNeededNotifications } =
-    notifications.reduce(transformNotifications, {
-      completedNotifications: [],
-      actionNeededNotifications: [],
-    });
+export const useMarkAllAsRead = ({
+  planCode,
+  policyNumber,
+  notifications,
+}: {
+  planCode: string;
+  policyNumber: string;
+  notifications: { id: string; stepsToAcknowledge: string[] }[];
+}) => {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: () =>
+      Promise.all(
+        notifications.map(notification =>
+          acknowledgeCase({
+            acknowledgedIds: notification.stepsToAcknowledge,
+            caseId: notification.id,
+            planCode,
+            policyNumber,
+          })
+        )
+      ),
+    onSuccess: () => {
+      // refetch the notifications to get the updated list
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.NOTIFICATIONS],
+      });
+    },
+  });
 
-  return {
-    acknowledgedNotifications,
-    acknowledgedNotificationsLoading,
-    acknowledgedCaseMutation: mutation,
-    completedNotifications,
-    actionNeededNotifications,
-    notificationsLoading: isLoading,
-    notificationsError: isError,
-    notificationsFetching: isFetching,
-  };
+  return mutation;
 };

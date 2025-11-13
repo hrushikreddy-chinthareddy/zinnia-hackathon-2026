@@ -8,7 +8,10 @@ export const transformNotifications = (
     actionNeededNotifications: NotificationCenterNotification[];
   },
   notification: NotificationCenterNotification
-) => {
+): {
+  completedNotifications: NotificationCenterNotification[];
+  actionNeededNotifications: NotificationCenterNotification[];
+} => {
   if (notification.completed) {
     acc.completedNotifications.push(notification);
   } else {
