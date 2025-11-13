@@ -26,10 +26,10 @@ import { useSystematicPremiums } from '../provider/useSystematicPremiums';
 import { default as styles } from '../SystematicPremiums.module.css';
 
 const AddBankInTransaction = ({
-  addBankEnabled,
+  addBankInlineEnabled,
   onAddPaymentMethod,
 }: {
-  addBankEnabled: boolean;
+  addBankInlineEnabled: boolean;
   onAddPaymentMethod: () => void;
 }) => {
   const router = useRouter();
@@ -38,7 +38,7 @@ const AddBankInTransaction = ({
   return (
     <div>
       {' '}
-      {addBankEnabled ? (
+      {addBankInlineEnabled ? (
         <div className={styles.addBank}>
           <PaymentusAddPaymentMethod
             policyNumber={policyNumber}
@@ -71,11 +71,11 @@ const AddBankInTransaction = ({
 
 export const SelectBank = ({
   activeBanks,
-  addBankEnabled = false,
+  addBankInlineEnabled = false,
   onAddPaymentMethod,
 }: {
   activeBanks: PaymentMethod[];
-  addBankEnabled?: boolean;
+  addBankInlineEnabled?: boolean;
   onAddPaymentMethod: () => void;
 }) => {
   const { dispatch, state } = useSystematicPremiums();
@@ -128,7 +128,7 @@ export const SelectBank = ({
           </NoDataAvailable>
         </div>
         <AddBankInTransaction
-          addBankEnabled={addBankEnabled}
+          addBankInlineEnabled={addBankInlineEnabled}
           onAddPaymentMethod={onAddPaymentMethod}
         />
       </>
@@ -233,7 +233,7 @@ export const SelectBank = ({
         </div>
       </form>
       <AddBankInTransaction
-        addBankEnabled={addBankEnabled}
+        addBankInlineEnabled={addBankInlineEnabled}
         onAddPaymentMethod={onAddPaymentMethod}
       />
     </>
