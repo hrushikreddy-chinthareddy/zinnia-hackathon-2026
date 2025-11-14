@@ -75,7 +75,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     const toggleLabels = (t: TFunction): LabelValue<WithdrawalType>[] => [
         {
             label: `${t('surrender')} (${numberFormatify(
-                policy.withdrawalValues?.maximumWithdrawalAmount || 0
+                policy.accountValues?.surrenderValue || 0
             )})`,
             value: WithdrawalType.Surrender,
             testId: WithdrawalType.Surrender,
@@ -142,7 +142,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
         isPartial,
         withdrawal.withdrawalAmount,
         withdrawal.withdrawalCustomAmount,
-        policy.withdrawalValues?.maximumWithdrawalAmount,
+        policy.accountValues?.surrenderValue,
         effectiveDate,
         goToNext,
         incompleteError,
@@ -165,9 +165,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
             setWithdrawal((prevState) => ({
                 ...prevState,
                 amount: parseFloat(
-                    (
-                        policy.withdrawalValues?.maximumWithdrawalAmount || 0
-                    ).toFixed(2)
+                    (policy.accountValues?.surrenderValue || 0).toFixed(2)
                 ),
             }));
         } else {
@@ -190,7 +188,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
             }));
         }
     }, [
-        policy.withdrawalValues?.maximumWithdrawalAmount,
+        policy.accountValues?.surrenderValue,
         setWithdrawal,
         withdrawal.withdrawalAmount,
         withdrawal.withdrawalCustomAmount,
