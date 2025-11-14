@@ -52,7 +52,7 @@ export const NotificationAlert: FC = () => {
       setVisible(true);
     }
 
-    if (hasDismissed && notificationCount > localCount) {
+    if (hasDismissed && notificationCount !== localCount) {
       setVisible(true);
     }
   }, [hasDismissed, notificationCount, localCount]);
