@@ -2,19 +2,13 @@ import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
-import timezone from 'dayjs/plugin/timezone';
-import utc from 'dayjs/plugin/utc';
 
 import { default as Styles } from '@/components/notification-center/NotificationCenter.module.css';
 import { NotificationCenterSidesheet } from '@/components/notification-center/side-sheet/NotificatonCenterSidesheet';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
-import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { formatDateWithUserTimezone } from '@/utils/dates';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
-const today = dayjs();
 
 export type NotificationCenterNotification = {
   id: string;
@@ -47,7 +41,7 @@ export const NotificationCenterItem = ({
   sidesheetLinkText: string;
 }) => {
   const notificationDate = dayjs(notification.date);
-  const dateText = `${notificationDate.tz('America/Chicago').format(`${DEFAULT_DATE_FORMAT} [at] H:MM a`)} CST`;
+  const dateText = formatDateWithUserTimezone(notification.date);
 
   if (loading || !isClient) return NotificationCenterItemLoadingState;
 
@@ -58,7 +52,7 @@ export const NotificationCenterItem = ({
   };
 
   const description = notification.completed
-    ? `Your ${notification.title} was processed successfully.`
+    ? `Processing Complete`
     : 'There was an error processing this transaction.';
 
   return (
@@ -83,6 +77,7 @@ export const NotificationCenterItem = ({
             <div
               className={clsx(
                 Styles.pip,
+                'mt-sm',
                 !needsAcknowledgement && Styles.hidden
               )}
             ></div>

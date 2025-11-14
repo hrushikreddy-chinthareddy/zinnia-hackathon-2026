@@ -16,8 +16,7 @@ export const searchCasesByPolicyNumber = async (
   if (response.error || !response) {
     throw response.error;
   }
-
-  return response.data;
+  return response.data?.data;
 };
 
 export const getCaseDetails = async (caseId: string) => {
