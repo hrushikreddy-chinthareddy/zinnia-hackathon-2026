@@ -162,11 +162,8 @@ const CardPeople = ({
                 )}
             </div>
             <div className="mt-2">
-                <Typography
-                    variant={TypographyVariant.Body}
-                    className="min-h-[1.5rem]"
-                >
-                    {showIrrevocable ? t('people.irrevocable') : ''}
+                <Typography variant={TypographyVariant.Body}>
+                    {showIrrevocable ? t('people.irrevocable') : '\u00A0'}
                 </Typography>
             </div>
         </ClickContainer>

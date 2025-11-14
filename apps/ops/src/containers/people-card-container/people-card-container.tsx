@@ -6,9 +6,9 @@ import CardPeople from '@deps/components/card/card-people/card-people';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { goTo } from '@deps/helpers/routing.helpers';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
-import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
+import { tagsToBeneficiaryType } from './people-card-container.helpers';
 import {
     BeneficiaryType,
     PeopleCardContainerProps,
@@ -27,42 +27,6 @@ interface MapDataToPeopleProps {
     cardDisableTooltip?: string;
     type?: BeneficiaryType | AgentType;
 }
-
-const tagsToBeneficiaryType = (tags: TagKey[]) => {
-    // Check for most specific matches first to avoid false positives
-    const hasAgentOfRecord = tags.some((tag) =>
-        tag.text?.toLowerCase().includes('agent of record')
-    );
-    const hasServicingAgent = tags.some((tag) =>
-        tag.text?.toLowerCase().includes('servicing agent')
-    );
-    const hasContingent = tags.some((tag) =>
-        tag.text?.toLowerCase().includes('contingent')
-    );
-    const hasPrimary = tags.some((tag) =>
-        tag.text?.toLowerCase().includes('primary')
-    );
-    const hasAgent = tags.some((tag) =>
-        tag.text?.toLowerCase().includes('agent')
-    );
-
-    // Check in order of specificity to avoid false matches
-    if (hasAgentOfRecord) {
-        return AgentType.PRIMARY;
-    }
-    if (hasServicingAgent || (hasAgent && !hasPrimary && !hasContingent)) {
-        return AgentType.AGENT;
-    }
-    if (hasContingent) {
-        return BeneficiaryType.CONTINGENT;
-    }
-    if (hasPrimary) {
-        return BeneficiaryType.PRIMARY;
-    }
-
-    return BeneficiaryType.NONE;
-};
-
 const mapDataToPeopleCard = ({
     chipEntered,
     index,

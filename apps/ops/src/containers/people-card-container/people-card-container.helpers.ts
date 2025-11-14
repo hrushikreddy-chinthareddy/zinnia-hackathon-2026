@@ -1,3 +1,7 @@
+import { TagKey } from '@deps/types/components';
+
+import { BeneficiaryType, AgentType } from './people-card-container.types';
+
 export const getBeneficiaryColor = (index: number) => {
     if (index === 9) {
         return 'bg-lime-300';
@@ -36,4 +40,39 @@ export const getContigentColor = (index: number) => {
     } else {
         return 'bg-yellow-300';
     }
+};
+
+export const tagsToBeneficiaryType = (tags: TagKey[]) => {
+    const tagHasText = (query: string) =>
+        tags.some((tag) => tag.text?.toLowerCase().includes(query));
+    const queries = [
+        'agent of record',
+        'servicing agent',
+        'contingent',
+        'primary',
+        'agent',
+    ];
+    const [
+        hasAgentOfRecord,
+        hasServicingAgent,
+        hasContingent,
+        hasPrimary,
+        hasAgent,
+    ] = queries.map(tagHasText);
+
+    // Check in order of specificity to avoid false matches
+    if (hasAgentOfRecord) {
+        return AgentType.PRIMARY;
+    }
+    if (hasServicingAgent || (hasAgent && !hasPrimary && !hasContingent)) {
+        return AgentType.AGENT;
+    }
+    if (hasContingent) {
+        return BeneficiaryType.CONTINGENT;
+    }
+    if (hasPrimary) {
+        return BeneficiaryType.PRIMARY;
+    }
+
+    return BeneficiaryType.NONE;
 };
