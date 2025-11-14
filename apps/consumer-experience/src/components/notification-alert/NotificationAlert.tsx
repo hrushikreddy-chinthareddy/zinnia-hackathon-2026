@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useParams, usePathname } from 'next/navigation';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { caseQueryOptions } from '@/queries/query-options';
 import { CaseStatus } from '@/types/case';
@@ -35,7 +35,6 @@ export const NotificationAlert: FC = () => {
   const [localNotificationIds, setLocalNotificationIds] = useState(
     () => new Set<string>()
   );
-  const [hasDismissed, setHasDismissed] = useState(false);
   const [hasHydrated, setHasHydrated] = useState(false);
 
   // Fetch new cases
@@ -61,7 +60,6 @@ export const NotificationAlert: FC = () => {
     const dismissedIds = getNotificationAlertDismissedIds(storageKey);
     if (dismissedIds.length > 0) {
       setLocalNotificationIds(new Set(dismissedIds));
-      setHasDismissed(true);
     }
 
     setHasHydrated(true);
@@ -71,15 +69,6 @@ export const NotificationAlert: FC = () => {
   useEffect(() => {
     refetch();
   }, [pathName, refetch]);
-
-  // Check if there are brand new notifications by testing them against the currently stored IDs in the set
-  const areNotificationsNew = useCallback(() => {
-    // If any current notification ID is not in the locally stored set,
-    // we consider the notifications "new" relative to the last dismiss
-    return notifications.some(
-      notification => !localNotificationIds.has(notification)
-    );
-  }, [notifications, localNotificationIds]);
 
   // Make the notification sticky if it scrolls down past the header
   useEffect(() => {
@@ -98,6 +87,8 @@ export const NotificationAlert: FC = () => {
   }, []);
 
   // Show the notification alert if there are new notifications
+  // We need to wait for hydration to ensure we have the correct dismissed IDs
+  // and we don't show the alert when we should be hidden
   useEffect(() => {
     if (!hasHydrated) {
       return;
@@ -108,6 +99,8 @@ export const NotificationAlert: FC = () => {
       return;
     }
 
+    const hasDismissed = localNotificationIds.size > 0;
+
     // If the user has never dismissed, show whenever there are notifications
     if (!hasDismissed) {
       setVisible(true);
@@ -115,12 +108,12 @@ export const NotificationAlert: FC = () => {
     }
 
     // If the user has dismissed before, only show when there are new IDs
-    if (areNotificationsNew()) {
-      setVisible(true);
-    } else {
-      setVisible(false);
-    }
-  }, [hasHydrated, hasDismissed, notifications, areNotificationsNew]);
+    const hasNewIds = notifications.some(
+      notification => !localNotificationIds.has(notification)
+    );
+
+    setVisible(hasNewIds);
+  }, [hasHydrated, notifications, localNotificationIds]);
 
   // Dismiss the notification alert
   const handleDismiss = () => {
@@ -128,7 +121,6 @@ export const NotificationAlert: FC = () => {
     // future notifications against this snapshot
     setLocalNotificationIds(new Set(notifications));
     setVisible(false);
-    setHasDismissed(true);
 
     // Persist the dismissed notification IDs for this policy in session storage
     if (storageKey) {
