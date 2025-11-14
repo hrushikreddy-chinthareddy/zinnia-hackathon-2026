@@ -9,6 +9,7 @@ import { toTitleCase } from '@zinnia/utils';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -17,6 +18,7 @@ export enum DashboardTabs {
     ACTIVE_APPLICATIONS = 'active-applications',
     CLOSED_TRANSACTIONS = 'closed-transactions',
     NIGO_ANALYSIS = 'nigo-analysis',
+    TASKS_VOLUME = 'tasks-volume',
 }
 const DEFAULT_TAB = DashboardTabs.ACTIVE_APPLICATIONS;
 
@@ -37,6 +39,7 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
             shallow: true,
         });
     }
+    const { t } = useTranslation();
 
     return (
         <TabGroup
@@ -79,9 +82,18 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
                             height={24}
                             className="hidden lg:block"
                         />{' '}
-                        Issues
+                        {String(t('caseStats.tabs.issue') ?? '')}
                     </TabTrigger>
                 )}
+                <TabTrigger value={DashboardTabs.TASKS_VOLUME}>
+                    <Icon
+                        type={IconType.CLIPBOARD_LIST}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />{' '}
+                    {String(t('caseStats.tabs.tasks') ?? '')}
+                </TabTrigger>
             </TabList>
             {children}
         </TabGroup>

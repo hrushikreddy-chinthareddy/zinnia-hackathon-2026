@@ -4840,6 +4840,25 @@
                 "tierOneCriticalRiderPaymentAmount": "Tier one payment amount",
                 "tierTwoCriticalRiderPaymentDate": "Tier two payment date",
                 "tierTwoCriticalRiderPaymentAmount": "Tier two payment amount",
+                "remainingBenefit": "Remaining benefit",
+                "additionalBenefitUsedUp": "Additional benefit used up",
+                "payoutOption": "Payout option",
+                "benefitPercent": "Benefit percent",
+                "annualBenefitLimit": "Annual benefit limit",
+                "currentAnnualLimit": "Current annual limit",
+                "remainingAnnualLimit": "Remaining annual limit",
+                "hypotheticalAnnualLimit": "Hypothetical annual limit",
+                "lastResetDate": "Last reset date",
+                "totalBenefit": "Total benefit",
+                "phase": "Phase",
+                "base_currentBase": "Current base",
+                "base_ratchetBase": "Ratchet base",
+                "base_growthBase": "Growth base",
+                "base_deferralBonus": "Base deferral bonus",
+                "base_deferralBonusBase": "Base deferral bonus base",
+                "base_simpleInterestBase": "Base simple interest base",
+                "charge_riderExerciseCharge": "Charge rider exercise charge",
+                "charge_riderExerciseChargeRate": "Charge rider exercise charge rate",
                 "coverageType": "Coverage type",
                 "coverageName": "Coverage name",
                 "productCode": "Product code",
@@ -4895,17 +4914,7 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporary",
                     "PERMANENT": "Permanent"
-                },
-                "remainingBenefit": "Remaining benefit",
-                "benefitPercent": "Benefit percent",
-                "annualBenefitLimit": "Annual benefit limit",
-                "payoutOption": "Payout option",
-                "currentAnnualLimit": "Current annual limit",
-                "phase": "Phase",
-                "totalBenefit": "Total benefit",
-                "remainingAnnualLimit": "Remaining annual limit",
-                "additionalBenefitUsedUp": "Additional benefit used up",
-                "hypotheticalAnnualLimit": "Hypothetical annual limit"
+                }
             },
             "coverageID": {
                 "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
@@ -6363,7 +6372,9 @@
         "fax": "Fax",
         "name": "Name",
         "socialSecurityNumber": "Social Security Number",
-        "nationalProducerNumber": "National Producer Number"
+        "nationalProducerNumber": "National Producer Number",
+        "estimatedCompletion": "Estimated Completion",
+        "estimatedCompletionToolTip": "AI-generated prediction based on historical completion times for similar cases. The estimate is set when the case is created and does not change as the case progresses."
     },
     "bannerAlert": {
         "close": "Close"
@@ -8722,6 +8733,31 @@
         "preFundTransactionsInstruction": "Manually issue checks for pre-fund transactions as needed. ",
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
+    },
+    "caseStats": {
+        "tabs": {
+            "issue": "Issues",
+            "tasks": "Tasks"
+        },
+        "tasks": {
+            "title": "Task Volume",
+            "description": "Volume of tasks created over a selected time range, grouped by case type and task.",
+            "filters": {
+                "status": {
+                    "label": "Status",
+                    "placeholder": "All"
+                }
+            },
+            "table": {
+                "headers": {
+                    "caseType": "Case type",
+                    "task": "Task",
+                    "totalTasks": "Total tasks"
+                },
+                "allTasks": "All tasks",
+                "exportCSV": "Export to CSV"
+            }
+        }
     },
     "usage": {
         "date": "Date",

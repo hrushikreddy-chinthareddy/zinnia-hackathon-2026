@@ -26,7 +26,7 @@ import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search'
 import { getCorrespondenceDocsV2 } from '@deps/queries/api/documents';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 

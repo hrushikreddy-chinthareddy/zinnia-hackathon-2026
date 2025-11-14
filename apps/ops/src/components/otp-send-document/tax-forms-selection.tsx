@@ -22,7 +22,7 @@ import {
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';

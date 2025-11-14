@@ -3,6 +3,7 @@ import {
     CaseCountInputFilter,
     CaseCountOutputLevel1,
     ExceptionCountGroupByEnum,
+    TaskCountGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
@@ -282,7 +283,7 @@ export const generateCaseLink = ({
 };
 
 export const friendlyGroupByName: Record<
-    CaseCountGroupByEnum | ExceptionCountGroupByEnum,
+    CaseCountGroupByEnum | ExceptionCountGroupByEnum | TaskCountGroupByEnum,
     string
 > = {
     [CaseCountGroupByEnum.APPLICATION_TYPE]: 'Application type',
@@ -301,6 +302,11 @@ export const friendlyGroupByName: Record<
     [ExceptionCountGroupByEnum.EXCEPTION_CREATED_DAY]: 'Exception created date',
     [ExceptionCountGroupByEnum.EXCEPTION_UPDATED_DAY]: 'Exception updated date',
     [CaseCountGroupByEnum.CASE_RESULT]: '',
+    [TaskCountGroupByEnum.TASK_CATEGORY]: 'Task category',
+    [TaskCountGroupByEnum.TASK_NAME]: 'Task name',
+    [TaskCountGroupByEnum.TASK_STATUS]: 'Task status',
+    [TaskCountGroupByEnum.TASK_CREATED_DAY]: 'Task created date',
+    [TaskCountGroupByEnum.TASK_UPDATED_DAY]: 'Task updated date',
 };
 
 /**

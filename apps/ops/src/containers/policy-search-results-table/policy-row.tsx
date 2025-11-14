@@ -145,8 +145,8 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                                     src={imageSrc}
                                     alt={`${carrierName} icon`}
                                     role="presentation"
-                                    height={24}
-                                    width={24}
+                                    height={14}
+                                    width={14}
                                 />
                                 <span className="sr-only">
                                     {carrierName} icon

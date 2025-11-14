@@ -82,7 +82,7 @@ export function CallForInformationFunctions({
             label: t('contactRoles.agent'),
 
             textValue: t('contactRoles.agent'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
+            disabled: !task?.data?.details?.[dynamicKey]?.callLogs?.some(
                 (log: CallLog) => log.partyRoleCategory === ContactRole.AGENT
             ),
         },
@@ -92,7 +92,7 @@ export function CallForInformationFunctions({
             label: t('contactRoles.beneficiary'),
 
             textValue: t('contactRoles.beneficiary'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
+            disabled: !task?.data?.details?.[dynamicKey]?.callLogs?.some(
                 (log: CallLog) =>
                     log.partyRole === ContactRole.PRIMARYBENEFICIARY
             ),
