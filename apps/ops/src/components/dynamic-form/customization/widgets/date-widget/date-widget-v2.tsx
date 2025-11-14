@@ -14,7 +14,8 @@ import {
     FieldVariant,
 } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+
+const DATE_FORMAT = 'YYYY-MM-DD';
 
 export default function NewDateWidget<
     T = any,
@@ -29,7 +30,7 @@ export default function NewDateWidget<
         const raw = input.trim();
 
         const possibleFormats = [
-            ZAHARA_API_DATE_FORMAT,
+            DATE_FORMAT,
             'MMDDYYYY',
             'MM/DD/YYYY',
             'DD/MM/YYYY',
@@ -40,7 +41,7 @@ export default function NewDateWidget<
         let parsed = dayjs(raw, possibleFormats, true);
         if (!parsed.isValid()) parsed = dayjs(raw, possibleFormats, false);
 
-        return parsed.isValid() ? parsed.format(ZAHARA_API_DATE_FORMAT) : null;
+        return parsed.isValid() ? parsed.format(DATE_FORMAT) : null;
     };
 
     const _onSelectDate = (event: React.ChangeEvent<HTMLInputElement>) => {

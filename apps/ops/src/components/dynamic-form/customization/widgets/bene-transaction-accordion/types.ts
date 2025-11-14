@@ -9,14 +9,9 @@ export enum TabTitle {
 }
 
 export enum BeneficiaryRole {
+    OWNER = 'Owner',
+    JOINTOWNER = 'Joint Owner',
     PRIMARYBENEFICIARY = 'Primary Beneficiary',
     CONTINGENTBENEFICIARY = 'Contingent Beneficiary',
     IRREVOCABLEBENEFICIARY = 'Irrevocable Beneficiary',
-}
-
-export enum Action {
-    ADD = 'ADD',
-    DELETE = 'DELETE',
-    UPDATE = 'UPDATE',
-    NONE = 'NONE',
 }

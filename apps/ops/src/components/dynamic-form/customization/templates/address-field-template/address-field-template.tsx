@@ -23,11 +23,8 @@ export default function AddressFieldTemplate({
     properties,
     uiSchema = {},
     title,
-    formData,
 }: ObjectFieldTemplateProps): JSX.Element {
-    const { backgroundColor, helpText, classes, showDynamicTitle } =
-        getUiOptions(uiSchema);
-    const { addressType } = formData;
+    const { backgroundColor, helpText, classes } = getUiOptions(uiSchema);
     const DEFAULT_BACKGROUND_COLOR = 'bg-gray-100';
     const DEFAULT_PADDING = 'p-6';
     const bgColor = backgroundColor ?? DEFAULT_BACKGROUND_COLOR;
@@ -42,9 +39,6 @@ export default function AddressFieldTemplate({
                     <div className={styles.text}>{title} </div>
                     {helpInformation((helpText as string) ?? '')}
                 </div>
-            )}
-            {showDynamicTitle && (
-                <div className={styles.labelRequired}>{addressType}</div>
             )}
             <div className="flex flex-wrap gap-2">
                 {properties

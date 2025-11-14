@@ -14,7 +14,12 @@ import {
     MultiselectOption,
     SimpleOption,
 } from '@deps/components/select/select.helpers';
-import { csrApiHelper } from '@deps/helpers/csr-api-helpers';
+import {
+    csrApiHelper,
+    parseJsonValue,
+    isString,
+    stringifyObjectValue,
+} from '@deps/helpers/csr-api-helpers';
 import {
     ApiProps,
     ApiResponseTypes,
@@ -22,26 +27,16 @@ import {
     TaskEventProps,
 } from '@deps/models/case/task';
 
-function normalizeValue(value: any): any {
-    if (value === 'true') return true;
-    if (value === 'false') return false;
-    if (typeof value === 'string' && !isNaN(Number(value)))
-        return Number(value);
-    return value;
-}
-
 function getValue(
     isSelected: boolean,
-    value: any,
+    value: string,
     enumOptions: EnumOptionsType[] | undefined,
     selectedIndexes?: string[] | string,
     multiple?: boolean
 ): string | string[] {
     if (!enumOptions) return multiple ? [] : '';
 
-    const index = enumOptions.findIndex(
-        (option) => normalizeValue(option.value) === normalizeValue(value)
-    );
+    const index = enumOptions.findIndex((option) => option.value === value);
 
     if (multiple) {
         if (index !== -1 && Array.isArray(selectedIndexes)) {
@@ -91,7 +86,7 @@ function SelectWidget<
 
     const selectOptions =
         enumOptions?.map((option: any) => ({
-            value: normalizeValue(option.value),
+            value: stringifyObjectValue(option.value),
             label: option.label,
             displayText: option.label,
             description: option.description,
@@ -115,11 +110,7 @@ function SelectWidget<
                 (index) =>
                     index !==
                     selectOptions
-                        ?.findIndex(
-                            (option) =>
-                                normalizeValue(option.value) ===
-                                normalizeValue(value)
-                        )
+                        ?.findIndex((option) => option.value === value)
                         .toString()
             );
         }
@@ -138,8 +129,8 @@ function SelectWidget<
         );
 
         if (finalValue) {
-            const parsedValue = finalValue.map((val: any) =>
-                normalizeValue(val)
+            const parsedValue = finalValue?.map((value: any) =>
+                parseJsonValue(value)
             );
             onChange(parsedValue);
         }
@@ -154,8 +145,8 @@ function SelectWidget<
             multiple
         );
         eventProps?.forEach((eventProp) => {
-            if (eventProp?.taskEventType === EventType.onChange) {
-                const parsedValue = normalizeValue(value);
+            if (eventProp?.taskEventType == EventType.onChange) {
+                const parsedValue = parseJsonValue(value);
                 formData?.setCustomData &&
                     formData.setCustomData({
                         [eventProp?.dataKey]:
@@ -168,8 +159,7 @@ function SelectWidget<
             selectOptions,
             optEmptyVal
         );
-
-        if (!apiProps.apiUrl) return onChange(normalizeValue(finalValue));
+        if (!apiProps.apiUrl) return onChange(parseJsonValue(finalValue));
         await fetchDetails(value, newValue);
     };
 
@@ -179,9 +169,9 @@ function SelectWidget<
             selectOptions,
             optEmptyVal
         );
-        onChange(normalizeValue(finalValue));
+        onChange(parseJsonValue(finalValue));
 
-        const parsedValue = normalizeValue(value);
+        const parsedValue = parseJsonValue(value);
 
         csrApiHelper(
             apiProps,
@@ -200,9 +190,10 @@ function SelectWidget<
 
     const showPlaceholderOption = !multiple && schema.default === undefined;
     const normalizedValue = Array.isArray(value)
-        ? value.map((v) => normalizeValue(v))
-        : normalizeValue(value);
-
+        ? value.map((v) => (isString(v) ? v : stringifyObjectValue(v)))
+        : isString(value)
+        ? value
+        : stringifyObjectValue(value);
     let selectedIndexes = enumOptionsIndexForValue<S>(
         normalizedValue,
         selectOptions,
@@ -213,14 +204,14 @@ function SelectWidget<
         ? selectOptions?.reduce(
               (acc: { [key: string]: string }, option, index) => {
                   if (selectedIndexes?.includes(index.toString())) {
-                      acc[String(option.value)] = option.label;
+                      acc[option.value as string] = option.label;
                   }
                   return acc;
               },
               {}
           ) ?? {}
         : selectOptions?.find(
-              (option) => normalizeValue(option.value) === normalizeValue(value)
+              (option) => option.value === stringifyObjectValue(value)
           )?.value ?? '';
 
     if (options.placeholder) {
@@ -232,11 +223,8 @@ function SelectWidget<
             <>
                 {multiple
                     ? Object.values(selectedValues).join(', ')
-                    : enumOptions?.find(
-                          (option) =>
-                              normalizeValue(option.value) ===
-                              normalizeValue(value)
-                      )?.label}
+                    : enumOptions?.find((option) => option.value === value)
+                          ?.label}
             </>
         );
 
@@ -291,7 +279,6 @@ function SelectWidget<
                         options={selectOptions as SimpleOption[]}
                         placeholder={placeholder}
                         className="max-w-sm"
-                        allowEmptyValue={uiSchema?.['ui:allowEmptyValue']}
                     />
                 )}
             </label>

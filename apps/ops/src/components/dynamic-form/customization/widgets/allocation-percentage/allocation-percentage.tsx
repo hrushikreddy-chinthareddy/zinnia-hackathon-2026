@@ -7,8 +7,6 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 
-// TODO: make this widget generic and reusable for other transactions
-
 const allocationPercentageValidationError =
     'Please make sure allocation is equal to 100%';
 

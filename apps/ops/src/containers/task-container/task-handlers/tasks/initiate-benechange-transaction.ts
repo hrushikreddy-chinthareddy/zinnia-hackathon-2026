@@ -1,7 +1,7 @@
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { IdentificationType } from '@deps/models/policy/sor-policy';
+import { IdentificationType, PartyType } from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { LoggingContext } from '@deps/utils/server-logging';
@@ -108,13 +108,15 @@ const formatParties = (policyResponse: PolicyResponse) => {
         partyType: party?.partyType,
         prefix: party?.prefix ?? null,
         firstName:
-            party?.partyType === 'INDIVIDUAL' ? party?.firstName || null : null,
+            party?.partyType === PartyType.INDIVIDUAL
+                ? party?.firstName || null
+                : null,
         lastName:
-            party?.partyType === 'INDIVIDUAL'
+            party?.partyType === PartyType.INDIVIDUAL
                 ? party?.lastName || null
                 : party?.fullName || null,
         middleName:
-            party?.partyType === 'INDIVIDUAL'
+            party?.partyType === PartyType.INDIVIDUAL
                 ? party?.middleName || null
                 : null,
         fullName: party?.fullName || null,

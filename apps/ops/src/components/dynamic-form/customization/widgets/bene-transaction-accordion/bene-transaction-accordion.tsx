@@ -3,9 +3,20 @@ import dayjs from 'dayjs';
 import { useRef, useState, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import { Action, EntityTypeValue, Roles } from '@deps/constants/policy';
+import {
+    AddressType,
+    EmailType,
+    IdentificationType,
+    PartyRole,
+    PartyType,
+    PhoneType,
+    RelationshipToInsured,
+} from '@deps/models/policy/sor-policy';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
-import styles from './transaction-accordion.module.css';
-import { Action, PanelHeights, TabTitle } from './types';
+import styles from './bene-transaction-accordion.module.css';
+import { BeneficiaryRole, PanelHeights, TabTitle } from './types';
 
 const TransactionAccordion = ({
     schema,
@@ -30,13 +41,13 @@ const TransactionAccordion = ({
 
     const isJointOwnerPresent =
         formContext?.customData?.contractInfo?.parties?.some(
-            (party: any) => party.partyRole === 'JOINTOWNER'
+            (party: any) => party.partyRole === Roles.JOINTOWNER
         );
     if (formContext?.customData?.signatureData) {
         formContext.customData.signatureData.signatures = isJointOwnerPresent
             ? formContext.customData.signatureData.signatures
             : formContext.customData.signatureData.signatures?.filter(
-                  (signature: any) => signature.signType !== 'JOINT_OWNER'
+                  (signature: any) => signature.signType !== Roles.JOINT_OWNER
               );
     }
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
@@ -58,17 +69,17 @@ const TransactionAccordion = ({
         const originalItem = originalDataRef?.current?.[index];
         const hasChanged = !deepEqual(originalItem, updatedItem);
 
-        if (updatedItem.party?.partyType === 'TRUST') {
+        if (updatedItem.party?.partyType === PartyType.TRUST) {
             updatedItem.party.supportingDocumentAttached =
                 updatedItem.party.supportingDocumentAttached ?? null;
             updatedItem.party.dateOfBirth = null;
         }
 
-        if (updatedItem.party?.partyType === 'INDIVIDUAL') {
+        if (updatedItem.party?.partyType === PartyType.INDIVIDUAL) {
             updatedItem.party.trustDate = null;
         }
 
-        if (updatedItem.party?.partyType === 'ORGANIZATION') {
+        if (updatedItem.party?.partyType === PartyType.ORGANIZATION) {
             updatedItem.party.dateOfBirth = null;
             updatedItem.party.trustDate = null;
         }
@@ -83,12 +94,12 @@ const TransactionAccordion = ({
             party: {
                 ...updatedItem.party,
                 firstName:
-                    updatedItem.party?.partyType === 'INDIVIDUAL'
+                    updatedItem.party?.partyType === PartyType.INDIVIDUAL
                         ? updatedItem.party?.firstName || null
                         : null,
                 lastName: updatedItem.party?.lastName || null,
                 middleName:
-                    updatedItem.party?.partyType === 'INDIVIDUAL'
+                    updatedItem.party?.partyType === PartyType.INDIVIDUAL
                         ? updatedItem.party?.middleName || null
                         : null,
                 fullName: [
@@ -113,7 +124,9 @@ const TransactionAccordion = ({
             action: checked ? Action.DELETE : Action.NONE,
             party: {
                 ...updatedList[index].party,
-                endDate: checked ? dayjs.utc().format('YYYY-MM-DD') : null,
+                endDate: checked
+                    ? dayjs.utc().format(ZAHARA_API_DATE_FORMAT)
+                    : null,
             },
         };
         onChange(updatedList);
@@ -127,31 +140,31 @@ const TransactionAccordion = ({
             isPerStirpes: false,
             preferredCommunicationType: null,
             party: {
-                partyType: 'INDIVIDUAL',
+                partyType: PartyType.INDIVIDUAL,
                 firstName: '',
                 lastName: '',
                 middleName: null,
                 gender: null,
                 dateOfBirth: null,
                 endDate: null,
-                entityType: 'UNKNOWN',
+                entityType: EntityTypeValue.Other,
                 prefix: null,
                 suffix: null,
                 emails: [
                     {
                         emailAddress: null,
-                        emailType: 'PERSONAL',
+                        emailType: EmailType.PERSONAL,
                     },
                 ],
                 phones: [
                     {
                         dialNumber: null,
-                        phoneType: 'HOME',
+                        phoneType: PhoneType.HOME,
                     },
                 ],
                 addresses: [
                     {
-                        addressType: 'RESIDENCE',
+                        addressType: AddressType.RESIDENCE,
                         addressLine1: '',
                         addressLine2: null,
                         city: '',
@@ -163,13 +176,13 @@ const TransactionAccordion = ({
                 identifications: [
                     {
                         identificationValue: null,
-                        identificationType: 'SSN',
+                        identificationType: IdentificationType.SSN,
                     },
                 ],
             },
             partyRole: {
-                partyRole: 'PRIMARYBENEFICIARY',
-                relationshipToParty: 'OTHER',
+                partyRole: PartyRole.PRIMARYBENEFICIARY,
+                relationshipToParty: RelationshipToInsured.OTHER,
             },
         };
 
@@ -181,19 +194,22 @@ const TransactionAccordion = ({
     const setTitle = (item: any, index: number) => {
         let title = `Item ${index + 1}`;
         if (tabTitle == TabTitle.OwnerDetails) {
-            title = item.partyRole == 'OWNER' ? 'Owner' : 'Joint Owner';
+            title =
+                item.partyRole == PartyRole.OWNER
+                    ? BeneficiaryRole.OWNER
+                    : BeneficiaryRole.JOINTOWNER;
         } else if (tabTitle == TabTitle.BeneficiaryDetails) {
             title =
-                item.partyRole.partyRole === 'PRIMARYBENEFICIARY'
-                    ? 'Primary Beneficiary'
-                    : 'Contingent Beneficiary';
+                item.partyRole.partyRole === PartyRole.PRIMARYBENEFICIARY
+                    ? BeneficiaryRole.PRIMARYBENEFICIARY
+                    : BeneficiaryRole.CONTINGENTBENEFICIARY;
         } else if (tabTitle == TabTitle.Signature) {
             title =
-                item.signType === 'OWNER'
-                    ? 'Owner'
-                    : item.signType === 'JOINT_OWNER'
-                    ? 'Joint Owner'
-                    : 'Irrevocable Beneficiary';
+                item.signType === PartyRole.OWNER
+                    ? BeneficiaryRole.OWNER
+                    : item.signType === Roles.JOINT_OWNER
+                    ? BeneficiaryRole.JOINTOWNER
+                    : BeneficiaryRole.IRREVOCABLEBENEFICIARY;
         }
         return title;
     };
@@ -208,7 +224,7 @@ const TransactionAccordion = ({
     const getConditionalUiSchema = (role: string, title: string) => {
         let currentUiSchema = JSON.parse(JSON.stringify(uiSchema.items));
 
-        if (role === 'JOINTOWNER') {
+        if (role === PartyRole.JOINTOWNER) {
             currentUiSchema = {
                 ...currentUiSchema,
                 phones: {
@@ -268,7 +284,7 @@ const TransactionAccordion = ({
                 const isMarkedForRemoval = item?.action === Action.DELETE;
                 const isBeneAddition = item?.action === Action.ADD;
                 const hideIrrevocableSignType =
-                    item.signType === 'IRREVOCABLE' && !isIrrevocableBene;
+                    item.signType === Roles.IRREVOCABLE && !isIrrevocableBene;
                 const updatedUiSchema = getConditionalUiSchema(
                     item?.partyRole,
                     title

@@ -599,7 +599,10 @@
                                             "nobackground": true
                                         },
                                         "identificationValue": {
-                                            "ui:widget": "SSNWidget"
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "###-##-####",
+                                            "pattern": "^(\\d{3}-\\d{2}-\\d{4}|\\d{9})$",
+                                            "errorMessage": "Please enter a valid SSN (XXX-XX-XXXX or 9 digits)"
                                         }
                                     }
                                 },
@@ -643,7 +646,8 @@
                                                 "label": false
                                             },
                                             "ui:widget": "NumbersWidget",
-                                            "format": "+### (###) ###-####"
+                                            "format": "+### (###) ###-####",
+                                            "errorMessage": "Please enter valid phone number"
                                         }
                                     }
                                 },
@@ -676,7 +680,6 @@
                                         },
                                         "state": {
                                             "ui:widget": "SelectWidget",
-                                            "ui:allowEmptyValue": true,
                                             "ui:options": {
                                                 "enumNames": [
                                                     "Select state",
@@ -746,18 +749,19 @@
                                         "zipCode": {
                                             "ui:widget": "NumbersWidget",
                                             "pattern": "^[0-9]{5}$",
-                                            "format": "#####"
+                                            "format": "#####",
+                                            "errorMessage": "Please enter valid zip code (5 digits)"
                                         },
                                         "zipCodeExtension": {
                                             "ui:widget": "NumbersWidget",
                                             "pattern": "^[0-9]{4}$",
-                                            "format": "####"
+                                            "format": "####",
+                                            "errorMessage": "Please enter valid zip code extension (4 digits)"
                                         }
                                     }
                                 },
                                 "trustType": {
                                     "ui:widget": "SelectWidget",
-                                    "ui:allowEmptyValue": true,
                                     "ui:options": {
                                         "enumNames": [
                                             "Select trust type",
@@ -769,7 +773,7 @@
                                     "ui:placeholder": "Select trust type"
                                 },
                                 "dateOfBirth": {
-                                    "ui:widget": "NewDateWidget"
+                                    "ui:widget": "DateWidgetV2"
                                 }
                             }
                         }
@@ -1454,7 +1458,6 @@
                                 "trustType": {
                                     "ui:options": {
                                         "ui:widget": "SelectWidget",
-                                        "ui:allowEmptyValue": true,
                                         "enumNames": [
                                             "Select trust type",
                                             "Individual Trust",
@@ -1542,7 +1545,10 @@
                                             "nobackground": true
                                         },
                                         "identificationValue": {
-                                            "ui:widget": "SSNWidget"
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "###-##-####",
+                                            "pattern": "^(\\d{3}-\\d{2}-\\d{4}|\\d{9})$",
+                                            "errorMessage": "Please enter a valid SSN (XXX-XX-XXXX or 9 digits)"
                                         }
                                     }
                                 },
@@ -1646,12 +1652,14 @@
                                         "zipCode": {
                                             "ui:widget": "NumbersWidget",
                                             "pattern": "^[0-9]{5}$",
-                                            "format": "#####"
+                                            "format": "#####",
+                                            "errorMessage": "Please enter valid zip code (5 digits)"
                                         },
                                         "zipCodeExtension": {
                                             "ui:widget": "NumbersWidget",
                                             "pattern": "^[0-9]{4}$",
-                                            "format": "####"
+                                            "format": "####",
+                                            "errorMessage": "Please enter valid zip code extension (4 digits)"
                                         }
                                     }
                                 },
@@ -1685,7 +1693,8 @@
                                         },
                                         "dialNumber": {
                                             "ui:widget": "NumbersWidget",
-                                            "format": "+### (###) ###-####"
+                                            "format": "+### (###) ###-####",
+                                            "errorMessage": "Please enter valid phone number"
                                         }
                                     }
                                 },
@@ -1707,7 +1716,6 @@
                                 },
                                 "prefix": {
                                     "ui:widget": "SelectWidget",
-                                    "ui:allowEmptyValue": true,
                                     "ui:options": {
                                         "enumNames": [
                                             "Select prefix",
@@ -1721,7 +1729,6 @@
                                 },
                                 "suffix": {
                                     "ui:widget": "SelectWidget",
-                                    "ui:allowEmptyValue": true,
                                     "ui:options": {
                                         "enumNames": [
                                             "Select suffix",
@@ -1735,10 +1742,10 @@
                                     "ui:placeholder": "Select suffix"
                                 },
                                 "dateOfBirth": {
-                                    "ui:widget": "NewDateWidget"
+                                    "ui:widget": "DateWidgetV2"
                                 },
                                 "trustDate": {
-                                    "ui:widget": "NewDateWidget"
+                                    "ui:widget": "DateWidgetV2"
                                 }
                             },
                             "partyRole": {
@@ -1827,7 +1834,9 @@
                                             },
                                             "isSignedPresent": {
                                                 "title": "Signed present",
-                                                "type": "boolean"
+                                                "type": "boolean",
+                                                "enum": [true, false],
+                                                "default": false
                                             },
                                             "signDesignation": {
                                                 "type": ["string", "null"],
@@ -1927,12 +1936,9 @@
                                     }
                                 },
                                 "isSignedPresent": {
-                                    "ui:widget": "select",
+                                    "ui:widget": "SelectWidget",
                                     "ui:options": {
-                                        "enumOptions": [
-                                            { "label": "Yes", "value": true },
-                                            { "label": "No", "value": false }
-                                        ]
+                                        "enumNames": ["Yes", "No"]
                                     }
                                 },
                                 "signDesignation": {
@@ -1952,7 +1958,7 @@
                                     "ui:placeholder": "Select designation"
                                 },
                                 "signDate": {
-                                    "ui:widget": "NewDateWidget"
+                                    "ui:widget": "DateWidgetV2"
                                 }
                             }
                         }

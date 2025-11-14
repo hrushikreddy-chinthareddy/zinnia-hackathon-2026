@@ -1,10 +1,10 @@
 import {
-    WidgetProps,
+    FormContextType,
     RJSFSchema,
     StrictRJSFSchema,
-    FormContextType,
+    WidgetProps,
 } from '@rjsf/utils';
-import React from 'react';
+import { useEffect, useState } from 'react';
 
 import Field, {
     FieldSize,
@@ -18,33 +18,24 @@ export type NumbersWidgetProps<
     F extends FormContextType = any
 > = WidgetProps<T, S, F>;
 
+const validatePattern = (value?: string, pattern?: string) => {
+    if (!pattern || !value) return false;
+    const patternRegex = new RegExp(pattern);
+    return !patternRegex.test(value);
+};
+
 function NumbersWidget<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
->(props: NumbersWidgetProps<T, S, F>) {
-    const {
-        value,
-        onChange,
-        disabled,
-        readonly,
-        rawErrors = [],
-        uiSchema,
-    } = props;
-    const { pattern, format } = uiSchema || {};
+>({ value, onChange, readonly, uiSchema }: NumbersWidgetProps<T, S, F>) {
+    const { pattern, format, errorMessage = '' } = uiSchema || {};
+    const [validate, setValidate] = useState(validatePattern(value, pattern));
+    const numberFormat = format ? { format: format as string } : undefined;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value;
-
-        if (pattern || /^\+?\d*$/.test(val)) {
-            onChange(val);
-        }
-    };
-    const numberFormat = format
-        ? {
-              format: format as string,
-          }
-        : undefined;
+    useEffect(() => {
+        setValidate(validatePattern(value, pattern));
+    }, [value, pattern]);
 
     return readonly ? (
         value
@@ -52,17 +43,13 @@ function NumbersWidget<
         <div className="max-w-sm flex w-full flex-col pl-1">
             <Field
                 value={value || ''}
-                onChange={handleChange}
+                onChange={(e) => onChange(e.target.value)}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 readOnly={readonly}
                 formatOptions={numberFormat}
-                variant={
-                    readonly || disabled
-                        ? FieldVariant.Inactive
-                        : FieldVariant.Default
-                }
-                message={rawErrors.join(', ')}
+                variant={validate ? FieldVariant.Error : FieldVariant.Default}
+                message={validate ? errorMessage : ''}
             />
         </div>
     );
