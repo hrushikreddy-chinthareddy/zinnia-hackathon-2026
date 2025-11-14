@@ -3,7 +3,7 @@ import { PolicyProfile } from '@/types/policy';
 
 import { refetchHandler, shouldStopPolling } from './transactions';
 
-const POLL_LIMIT = 5;
+const POLL_LIMIT = 10;
 const POLL_INTERVAL = 1000;
 jest.mock('./transactions', () => ({
   ...jest.requireActual('./transactions'),
