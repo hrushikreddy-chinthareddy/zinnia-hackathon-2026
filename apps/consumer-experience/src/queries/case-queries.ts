@@ -13,6 +13,7 @@ export const searchCasesByPolicyNumber = async (
   const response: ApiResponse<TransformedCaseSearchResponse> = await (
     await ClientApi.post(`/api/case/search`, JSON.stringify(body))
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }
@@ -23,6 +24,7 @@ export const getCaseDetails = async (caseId: string) => {
   const response: ApiResponse<TransformedCaseSearchResponse> = await (
     await ClientApi.get(`/api/case/search/${caseId}`)
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }
