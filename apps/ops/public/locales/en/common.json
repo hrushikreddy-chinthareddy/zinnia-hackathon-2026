@@ -8748,6 +8748,22 @@
                 "allTasks": "All tasks",
                 "exportCSV": "Export to CSV"
             }
+        },
+        "completedTaskTimes": {
+            "title": "Median Processing Times",
+            "description": "Median processing times for tasks over a selected time range.",
+            "table": {
+                "headers": {
+                    "caseType": "Case type",
+                    "medianTime": "Median processing time",
+                    "maxTime": "Max processing time",
+                    "minTime": "Min. processing time",
+                    "task": "Task",
+                    "totalTasks": "Total tasks"
+                },
+                "allTasks": "All tasks",
+                "exportCSV": "Export to CSV"
+            }
         }
     },
     "usage": {

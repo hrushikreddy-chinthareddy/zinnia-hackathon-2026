@@ -8557,6 +8557,22 @@
                 "allTasks": "Todas las tareas",
                 "exportCSV": "Exportar a CSV"
             }
+        },
+        "completedTaskTimes": {
+            "title": "Mediana del Tiempo de Procesamiento",
+            "description": "Mediana del tiempo de procesamiento de tareas durante el range de tiempo seleccionado.",
+            "table": {
+                "headers": {
+                    "caseType": "Tipo de caso",
+                    "medianTime": "Mediana del tiempo de procesamiento",
+                    "maxTime": "Máx. tiempo de procesamiento",
+                    "minTime": "Min. tiempo de procesamiento",
+                    "task": "Tarea",
+                    "totalTasks": "Total de tareas"
+                },
+                "allTasks": "Todas las tareas",
+                "exportCSV": "Exportar a CSV"
+            }
         }
     },
     "usage": {

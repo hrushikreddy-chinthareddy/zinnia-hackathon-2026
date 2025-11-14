@@ -307,6 +307,7 @@ export const friendlyGroupByName: Record<
     [TaskCountGroupByEnum.TASK_STATUS]: 'Task status',
     [TaskCountGroupByEnum.TASK_CREATED_DAY]: 'Task created date',
     [TaskCountGroupByEnum.TASK_UPDATED_DAY]: 'Task updated date',
+    [TaskCountGroupByEnum.TASK_TYPE]: 'Task type',
 };
 
 /**

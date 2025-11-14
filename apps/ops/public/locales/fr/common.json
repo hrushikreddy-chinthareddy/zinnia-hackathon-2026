@@ -8865,6 +8865,22 @@
                 "allTasks": "Toutes les tâches",
                 "exportCSV": "Exporter en CSV"
             }
+        },
+        "completedTaskTimes": {
+            "title": "Temps de traitement médian",
+            "description": "Temps de traitement médian pour les tâches sur une période selectionée.",
+            "table": {
+                "headers": {
+                    "caseType": "Type de dossier",
+                    "medianTime": "Temps de traitement médian",
+                    "maxTime": "Temps de traitement maximal",
+                    "minTime": "Temps de traitement minimal",
+                    "task": "Tâche",
+                    "totalTasks": "Toutes les tâches"
+                },
+                "allTasks": "All tasks",
+                "exportCSV": "Exporter en CSV"
+            }
         }
     },
     "usage": {
