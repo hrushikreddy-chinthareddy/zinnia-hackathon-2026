@@ -228,6 +228,7 @@ export const transformPolicyForProfile = (
     emails: partyInfo?.emails || [],
     phones: partyInfo?.phones || [],
     parties: parties || [],
+    partyRoles: policy?.partyRoles || [],
   };
 };
 
