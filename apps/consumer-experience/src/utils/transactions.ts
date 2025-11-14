@@ -4,7 +4,7 @@ import { ActionTypes, BpmAction, PropertyKeys } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
 
 const POLL_INTERVAL = 1000;
-const POLL_LIMIT = 5;
+const POLL_LIMIT = 10;
 
 interface RefetchArgs {
   data: PolicyProfile[keyof PolicyProfile];

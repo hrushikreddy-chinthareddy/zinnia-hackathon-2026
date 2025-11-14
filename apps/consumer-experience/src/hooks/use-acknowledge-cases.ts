@@ -31,7 +31,6 @@ export const useAcknowledgeCases = ({
   planCode,
   policyNumber,
   fetchNotificationsFlagEnabled = false,
-  initialNotifications,
   initialAcknowledgedNotifications,
 }: UseAcknowledgeCasesParams) => {
   const isClient = useIsClient();

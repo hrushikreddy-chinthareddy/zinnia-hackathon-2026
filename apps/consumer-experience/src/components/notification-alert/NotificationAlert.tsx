@@ -3,8 +3,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { useParams } from 'next/navigation';
-import { FC, useEffect, useState } from 'react';
+import { useParams, usePathname } from 'next/navigation';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { caseQueryOptions } from '@/queries/query-options';
 import { CaseStatus } from '@/types/case';
@@ -18,20 +18,37 @@ export const NotificationAlert: FC = () => {
     planCode: string;
     policyNumber: string;
   }>();
+  const pathName = usePathname();
   const [visible, setVisible] = useState(false);
   const [hasDismissed, setHasDimissed] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
-  const [localCount, setLocalCount] = useState(0);
+  const [localNotificationIds, setLocalNotificationIds] = useState(
+    new Set<string | undefined>()
+  );
 
-  const { data: notificationCount = 0 } = useQuery({
+  // Fetch new cases
+  const { data: notifications = [], refetch } = useQuery({
     ...caseQueryOptions({
       policyNumber,
       caseStatus: [CaseStatus.IN_PROGRESS],
     }),
-    select: data => data.count,
+    select: data => data.data.map(item => item.id),
     enabled: !!planCode && !!policyNumber,
   });
 
+  // refetch on route change
+  useEffect(() => {
+    refetch();
+  }, [pathName]);
+
+  // Check if there are brand new notifications by testing them against the currently stored IDs in the set
+  const areNotificationsNew = useCallback(() => {
+    return notifications.some(
+      notification => !localNotificationIds.has(notification)
+    );
+  }, [notifications, localNotificationIds]);
+
+  // Make the notification sticky if it scrolls down past the header
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > HEADER_HEIGHT) {
@@ -47,18 +64,24 @@ export const NotificationAlert: FC = () => {
     };
   }, []);
 
+  // Show the notification alert if there are new notifications
   useEffect(() => {
-    if (!hasDismissed && notificationCount > 0) {
+    if (!hasDismissed && notifications.length > 0) {
       setVisible(true);
     }
 
-    if (hasDismissed && notificationCount !== localCount) {
+    if (hasDismissed && areNotificationsNew()) {
       setVisible(true);
     }
-  }, [hasDismissed, notificationCount, localCount]);
 
+    if (notifications.length === 0) {
+      setVisible(false);
+    }
+  }, [hasDismissed, notifications.length, areNotificationsNew()]);
+
+  // Dismiss the notification alert
   const handleDismiss = () => {
-    setLocalCount(notificationCount);
+    setLocalNotificationIds(new Set(notifications));
     setVisible(false);
     setHasDimissed(true);
   };
@@ -70,7 +93,7 @@ export const NotificationAlert: FC = () => {
         [styles.sticky as string]: isSticky,
       })}
       icon={IconType.IN_PROGRESS}
-      bodyText={`We're still processing ${notificationCount} recent request(s).`}
+      bodyText={`We're still processing ${notifications.length} recent request(s).`}
       canDismiss={true}
       onDismiss={handleDismiss}
       variant={BannerVariant.Information}
