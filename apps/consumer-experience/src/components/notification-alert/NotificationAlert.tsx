@@ -25,7 +25,7 @@ export const NotificationAlert: FC = () => {
   const pathName = usePathname();
   const [isSticky, setIsSticky] = useState(false);
   const [localNotificationIds, setLocalNotificationIds] = useState(
-    () => new Set<string>()
+    () => new Set<string>() //Why local state? Performance reasons mainly. Its way faster to do this than try to read it from storage each time
   );
   const [hasHydrated, setHasHydrated] = useState(false);
 
@@ -105,10 +105,7 @@ export const NotificationAlert: FC = () => {
   const visible =
     hasHydrated &&
     notifications.length > 0 &&
-    (localNotificationIds.size === 0 ||
-      notifications.some(
-        notification => !localNotificationIds.has(notification)
-      ));
+    notifications.some(notification => !localNotificationIds.has(notification));
 
   return (
     <div
