@@ -5058,6 +5058,26 @@ export const farmersBlueprintIU0101 = {
                                                 fr: '',
                                             },
                                         },
+                                        {
+                                            id: '299b18ca-16cf-4496-ac27-8bcaa5608f9e',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 1,
+                                                        targetNodeId:
+                                                            'long-term-holding-account-current-illustrated-rate',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Future Interest Rate must be greater than or equal to 1%.',
+                                                fr: '',
+                                            },
+                                        },
                                     ],
                                     isCustom: true,
                                 },
