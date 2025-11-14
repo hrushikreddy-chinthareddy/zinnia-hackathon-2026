@@ -45,7 +45,7 @@ const UsageHeaderLayout = ({
                                 <CircleInfoIcon
                                     height={'16px'}
                                     width={'16px'}
-                                    className="text-secondary"
+                                    className="tooltip-secondary"
                                 />
                             }
                         >
