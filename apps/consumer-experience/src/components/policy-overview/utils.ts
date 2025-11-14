@@ -118,7 +118,7 @@ export const upcomingPaymentDetails = ({
       label: 'Premium due',
       caption:
         pendingLapseDueDetails?.endDate &&
-        `Due by ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`,
+        `Due: ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`,
     };
   } else {
     const billingFeature = policyFeatures?.find(
@@ -130,7 +130,7 @@ export const upcomingPaymentDetails = ({
       label: 'Premium due',
       caption:
         billingFeature?.effectiveDate &&
-        `Due by ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`,
+        `Due: ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`,
     };
   }
 
