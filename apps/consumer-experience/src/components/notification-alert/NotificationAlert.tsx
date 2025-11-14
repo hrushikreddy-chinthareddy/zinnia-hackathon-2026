@@ -29,19 +29,18 @@ export const NotificationAlert: FC = () => {
   );
   const [hasHydrated, setHasHydrated] = useState(false);
 
-  // Persist dismiss state per policy by using a scoped storage key
+  // Persist caseIds per policy by using a scoped storage key
   const storageKey =
     planCode && policyNumber
       ? `notificationAlertDismissed:${planCode}:${policyNumber}`
       : undefined;
 
-  // Fetch new cases
+  // Fetch new cases and extract the IDs
   const { data: notifications = [], refetch } = useQuery({
     ...caseQueryOptions({
       policyNumber,
       caseStatus: [CaseStatus.IN_PROGRESS],
     }),
-    // Store only the notification IDs; these are used for comparison and persistence
     select: data => data.data.map(item => item.id as string),
     enabled: !!planCode && !!policyNumber,
   });
@@ -63,7 +62,7 @@ export const NotificationAlert: FC = () => {
     setHasHydrated(true);
   }, [storageKey]);
 
-  // refetch on route change
+  // refetch on route change to keep data fresh
   useEffect(() => {
     refetch();
   }, [pathName, refetch]);
