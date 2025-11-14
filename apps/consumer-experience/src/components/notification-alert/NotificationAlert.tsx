@@ -23,19 +23,17 @@ export const NotificationAlert: FC = () => {
     policyNumber: string;
   }>();
   const pathName = usePathname();
-  const [visible, setVisible] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  const [localNotificationIds, setLocalNotificationIds] = useState(
+    () => new Set<string>()
+  );
+  const [hasHydrated, setHasHydrated] = useState(false);
 
   // Persist dismiss state per policy by using a scoped storage key
   const storageKey =
     planCode && policyNumber
       ? `notificationAlertDismissed:${planCode}:${policyNumber}`
       : undefined;
-
-  const [localNotificationIds, setLocalNotificationIds] = useState(
-    () => new Set<string>()
-  );
-  const [hasHydrated, setHasHydrated] = useState(false);
 
   // Fetch new cases
   const { data: notifications = [], refetch } = useQuery({
@@ -86,41 +84,11 @@ export const NotificationAlert: FC = () => {
     };
   }, []);
 
-  // Show the notification alert if there are new notifications
-  // We need to wait for hydration to ensure we have the correct dismissed IDs
-  // and we don't show the alert when we should be hidden
-  useEffect(() => {
-    if (!hasHydrated) {
-      return;
-    }
-
-    if (notifications.length === 0) {
-      setVisible(false);
-      return;
-    }
-
-    const hasDismissed = localNotificationIds.size > 0;
-
-    // If the user has never dismissed, show whenever there are notifications
-    if (!hasDismissed) {
-      setVisible(true);
-      return;
-    }
-
-    // If the user has dismissed before, only show when there are new IDs
-    const hasNewIds = notifications.some(
-      notification => !localNotificationIds.has(notification)
-    );
-
-    setVisible(hasNewIds);
-  }, [hasHydrated, notifications, localNotificationIds]);
-
   // Dismiss the notification alert
   const handleDismiss = () => {
     // Capture the current set of notification IDs so we can compare
     // future notifications against this snapshot
     setLocalNotificationIds(new Set(notifications));
-    setVisible(false);
 
     // Persist the dismissed notification IDs for this policy in session storage
     if (storageKey) {
@@ -131,6 +99,17 @@ export const NotificationAlert: FC = () => {
   if (!planCode || !policyNumber) {
     return null;
   }
+
+  // Show the notification alert if there are new notifications
+  // We need to wait for hydration to ensure we have the correct dismissed IDs
+  // and we don't show the alert when we should be hidden
+  const visible =
+    hasHydrated &&
+    notifications.length > 0 &&
+    (localNotificationIds.size === 0 ||
+      notifications.some(
+        notification => !localNotificationIds.has(notification)
+      ));
 
   return (
     <div
