@@ -64,7 +64,7 @@ export const PolicySidesheetContent = ({
             policy?.policyDates?.issueDate as string
         );
         return (
-            date.isAfter(policyIssuanceDate) &&
+            date.isAfter(dayjs(policyIssuanceDate).subtract(1, 'day')) &&
             date.isBefore(dayjs().add(1, 'day'))
         );
     };
