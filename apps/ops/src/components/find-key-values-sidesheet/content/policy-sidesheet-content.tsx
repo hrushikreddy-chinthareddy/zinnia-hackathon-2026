@@ -12,6 +12,7 @@ import {
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import isBetween from 'dayjs/plugin/isBetween';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +36,7 @@ import {
 } from '../types';
 dayjs.extend(localizedFormat);
 dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -63,10 +65,7 @@ export const PolicySidesheetContent = ({
         const policyIssuanceDate = dayjs(
             policy?.policyDates?.issueDate as string
         );
-        return (
-            date.isAfter(dayjs(policyIssuanceDate).subtract(1, 'day')) &&
-            date.isBefore(dayjs().add(1, 'day'))
-        );
+        return date.isBetween(dayjs(policyIssuanceDate), dayjs(), 'day', '[]');
     };
 
     const handleDateChange = (date?: Date) => {
