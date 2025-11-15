@@ -9,7 +9,6 @@ import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 import { usePathname } from 'next/navigation';
 
 import { Link } from '@/components/link/Link';
-import { useCarrierConfig } from '@/hooks/use-carrier-config';
 import { useFeatureFlagsFor } from '@/hooks/use-feature-flags';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
@@ -37,13 +36,11 @@ export const PolicyStatusAlertBanner = ({
   lineOfBusiness = LineOfBusiness.LIFE,
 }: PolicyStatusAlertBannerProps) => {
   const pathName = usePathname();
-  const { data: carrierConfigData } = useCarrierConfig();
   const { data: freeLookCancelEnabled } = useFeatureFlagsFor(
     FEATURE_FLAGS.TRANSACTION_FREE_LOOK_CANCEL
   );
 
-  const showFreelookCancelLink =
-    freeLookCancelEnabled && carrierConfigData?.freeLookCancel?.enabled;
+  const showFreelookCancelLink = freeLookCancelEnabled;
 
   const showFreelookBannerPaths = new Set([
     `/coverage/policies/${planCode}/${policyNumber}`,

@@ -67,5 +67,9 @@ export const dateFields = new Set([
     'matchVestingDate',
     'dob',
     'timestamp',
-    'timestamp',
+    'requestDate',
+    'processDate',
+    'reversalDate',
+    'exchangeDate',
+    'lifecycleDate',
 ]);

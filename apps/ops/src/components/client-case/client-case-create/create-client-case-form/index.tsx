@@ -34,6 +34,7 @@ import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
     IllustrationsClientCase,
+    TransactionType,
 } from '@deps/types/illustrations';
 
 import styles from './create-client-case-form.module.css';
@@ -121,6 +122,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         mainAlias: loggedInUserMainAlias,
         mainSellingCode: loggedInUserMainSellingCode,
     } = getMainIdentyfiers(aliasesWithSellingCodes);
+
+    const canEditInsuredDetails =
+        clientCase?.transactionType !== TransactionType.CONVERSION;
 
     const firstAgencyKey = 0;
 
@@ -573,6 +577,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.firstName}
+                    disabled={!canEditInsuredDetails}
                 />
                 <FieldData
                     className={styles.inputItem}
@@ -585,6 +590,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.lastName}
+                    disabled={!canEditInsuredDetails}
                 />
                 <ButtonGroup
                     id="sexAtBirth"
@@ -624,6 +630,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.sexAtBirth}
+                    inactive={!canEditInsuredDetails}
                 />
                 <div className={styles.datePickerContainer}>
                     <div className={styles.datePicker}>
@@ -641,6 +648,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )
                                 ),
                             })}
+                            disabled={!canEditInsuredDetails}
                         />
                     </div>
                     {clientCaseData.insuredDetails?.dateOfBirth !== null && (
@@ -696,6 +704,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 ? 'Nicotine'
                                 : 'Non-Nicotine'
                         }
+                        inactive={!canEditInsuredDetails}
                     />
                 )}
                 <div className={styles.clientState}>
@@ -714,6 +723,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         }}
                         value={clientCaseData.insuredDetails?.state}
                         defaultValue={clientCaseData.insuredDetails?.state}
+                        disabled={!canEditInsuredDetails}
                     />
                 </div>
             </section>

@@ -103,6 +103,7 @@ export const getWithdrawalFormData = (
             };
             break;
         case Carrier.DLIC:
+        case Carrier.USAA:
             formData = {
                 formExtName: `${carrier}_REDEMPTION_DIGITAL_FORM`,
                 metaData: {

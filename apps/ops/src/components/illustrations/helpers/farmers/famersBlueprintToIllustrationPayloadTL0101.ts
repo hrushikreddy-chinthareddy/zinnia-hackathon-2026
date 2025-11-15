@@ -2,6 +2,8 @@ import { t, Result, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { OutputDataParsingError } from '../factory/illustrationsHandlerAbstractClass';
 import {
@@ -147,7 +149,13 @@ export function getFarmersCreateIllustrationPayload(
 > {
     const parseResult = farmersEntitiesSchema.parse(answerOutputData);
     if (!parseResult.success) {
-        console.log('Blueprint parseResult: ', parseResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::TL0101::getFarmersCreateIllustrationPayload Error parsing input data ',
+            {
+                ...parseErrorInformation(parseResult.error),
+                answersData: answerOutputData,
+            }
+        );
         return failure(new OutputDataParsingError());
     }
 
@@ -309,7 +317,13 @@ export function getFarmersCreateIllustrationPayload(
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
-        console.log('parseOutputResult', parseOutputResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::TL0101::getFarmersCreateIllustrationPayload Error parsing output',
+            {
+                ...parseErrorInformation(parseOutputResult.error),
+                outputData: output,
+            }
+        );
         return failure(
             new CreateIllustrationPayloadParsingError(parseOutputResult.error)
         );

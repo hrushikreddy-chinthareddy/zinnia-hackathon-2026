@@ -41,15 +41,16 @@ export const DiaryNotesProvider = ({
 }: DiaryNotesProviderProps) => {
     const [areDiaryNotesViewed, setAreDiaryNotesViewed] = useState(true);
     const { diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs } =
-        useDiaryNotes(
-            caseDetails?.policyNum || caseDetails?.policyNumber || '',
-            caseDetails?.clientId || caseDetails?.carrierId || '',
-            0,
-            10,
-            undefined,
-            planCode,
-            isLC
-        );
+        useDiaryNotes({
+            policyNumber:
+                caseDetails?.policyNum || caseDetails?.policyNumber || '',
+            clientCode: caseDetails?.clientId || caseDetails?.carrierId || '',
+            offset: 0,
+            limit: 10,
+            showDiaryNotes: true,
+            planCode: planCode,
+            isLC: isLC,
+        });
 
     useEffect(() => {
         if (Array.isArray(diaryNotes) && diaryNotes.length >= 1) {

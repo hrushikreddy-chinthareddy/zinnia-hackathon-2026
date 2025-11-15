@@ -88,6 +88,9 @@ export const getEvents = (eventFilter?: EventFilters) => {
                 default:
                     return peopleTransactions.all;
             }
+        case EventFilterKeys.All: {
+            return allTransactionTypes;
+        }
 
         default:
             return allTransactions.all;

@@ -46,6 +46,7 @@ type TabGroupContainerProps = {
     documentData: DocumentData;
     policyNumber: string;
     clientCode: string;
+    isLC?: boolean;
 };
 
 const TabGroupContent = ({
@@ -57,6 +58,7 @@ const TabGroupContent = ({
     documentData,
     policyNumber,
     clientCode,
+    isLC,
 }: TabGroupContainerProps) => {
     const { featureFlags } = useOptimizely();
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({
@@ -187,10 +189,19 @@ const TabGroupContent = ({
         setAreAttachmentsViewed(true);
     };
 
-    const { diaryNotes } = useDiaryNotes(policyNumber, clientCode, 0, 10);
+    const { diaryNotes } = useDiaryNotes({
+        policyNumber: policy?.policyNumber as string,
+        clientCode: policy?.carrierId as string,
+        offset: 0,
+        limit: 10,
+        showDiaryNotes: true,
+        planCode: policy?.product?.planCode,
+        isLC: isLC,
+    });
+
     const opeDiaryNotes = () => {
         const content = (
-            <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />
+            <DiaryNotesContent notesData={{ diaryNotes: diaryNotes }} />
         );
         sideSheet.changeSideSheetContent(
             t('site.navLinks.diaryNotes.text'),
@@ -330,9 +341,14 @@ const TabGroupContainer = ({
     clientCode,
 }: TabGroupContainerProps) => {
     const caseDetails = { policyNumber, carrierId: clientCode };
+    const { isLC } = useNigoEntry();
 
     return (
-        <DiaryNotesProvider caseDetails={caseDetails as any} isLC={true}>
+        <DiaryNotesProvider
+            caseDetails={caseDetails}
+            isLC={isLC}
+            planCode={policy?.product?.planCode}
+        >
             <WorkflowProvider>
                 <TabGroupContent
                     steps={steps}
@@ -343,6 +359,7 @@ const TabGroupContainer = ({
                     documentData={documentData}
                     policyNumber={policyNumber}
                     clientCode={clientCode}
+                    isLC={isLC}
                 />
             </WorkflowProvider>
         </DiaryNotesProvider>

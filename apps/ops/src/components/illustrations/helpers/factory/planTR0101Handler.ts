@@ -7,6 +7,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import {
     IllustrationHandler,
@@ -157,7 +159,13 @@ export function getFarmersCreateIllustrationPayload(
 > {
     const parseResult = farmersEntitiesSchema.parse(answerOutputData);
     if (!parseResult.success) {
-        console.log('Blueprint parseResult: ', parseResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::TR0101::getFarmersCreateIllustrationPayload Error parsing input data',
+            {
+                ...parseErrorInformation(parseResult.error),
+                answersData: answerOutputData,
+            }
+        );
         return failure(new OutputDataParsingError());
     }
 
@@ -319,7 +327,13 @@ export function getFarmersCreateIllustrationPayload(
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
-        console.log('parseOutputResult', parseOutputResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::IU0101::getFarmersCreateIllustrationPayload Error parsing output',
+            {
+                ...parseErrorInformation(parseOutputResult.error),
+                outputData: output,
+            }
+        );
         return failure(
             new CreateIllustrationPayloadParsingError(parseOutputResult.error)
         );

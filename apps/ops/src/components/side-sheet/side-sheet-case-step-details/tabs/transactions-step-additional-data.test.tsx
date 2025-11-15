@@ -17,6 +17,12 @@ jest.mock('@tanstack/react-query', () => ({
     useQuery: jest.fn(),
 }));
 
+jest.mock('@optimizely/optimizely-sdk', () => ({
+    createInstance: jest.fn(() => ({
+        // mock methods as needed
+    })),
+}));
+
 const mockStepAdditionalData = {
     id: 'e9f0b68e-bd31-4879-a773-a40fbb5ed0c8',
     label: 'PaymentRecordId',
@@ -221,19 +227,26 @@ const mockProgramResponse = {
 
 describe('##TransactionsStepAdditionalData', () => {
     let consoleErrorSpy: jest.SpyInstance;
+    let consoleWarnSpy: jest.SpyInstance;
 
     beforeAll(() => {
         consoleErrorSpy = jest
             .spyOn(console, 'error')
             .mockImplementation(() => {});
+
+        consoleWarnSpy = jest
+            .spyOn(console, 'warn')
+            .mockImplementation(() => {});
     });
 
     afterAll(() => {
         consoleErrorSpy.mockRestore();
+        consoleWarnSpy.mockRestore();
     });
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+    afterEach(() => {
+        consoleErrorSpy.mockClear();
+        consoleWarnSpy.mockClear();
     });
 
     it('#should render the error message when error occurred while fetching programs', () => {

@@ -1,3 +1,11 @@
+import {
+    Party,
+    Policy,
+    ProductType,
+    Transaction,
+} from '@xd/api-types/dist/generated-types/sor';
+import { TFunction } from 'next-i18next';
+
 export type DataField = string | number | boolean | null;
 
 export type DataTuple = [string, DataField];
@@ -27,7 +35,7 @@ export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
 export const toolTip = Symbol('toolTip');
 
-export type PolicySection = [
+export type Section = [
     string,
     {
         fields?: NestedData;
@@ -35,6 +43,61 @@ export type PolicySection = [
     }
 ];
 
+export type ToSections = {
+    basics: NestedData[] | null;
+    sections: Section[];
+};
+
 export const [Expand, Collapse] = [true, false];
 
 export type ExpandCollapse = typeof Expand | typeof Collapse;
+
+export interface FindAllKeyValuesSidebarProps {
+    planCode: string;
+    policyNumber: string;
+}
+
+export enum FormatterType {
+    POLICY = 'policy',
+    TRANSACTION = 'transaction',
+}
+
+export type ToSectionsProps = {
+    policy: Policy;
+    t: TFunction;
+    searchValue?: string;
+    planCode?: string;
+    productType?: ProductType;
+    allPartiesById?: Record<string, Party>;
+    config: TransformationsConfig;
+} & (ToPolicySectionsProps | ToTransactionSectionsProps);
+
+export type ToPolicySectionsProps = {
+    type: FormatterType.POLICY;
+};
+
+export type ToTransactionSectionsProps = {
+    type: FormatterType.TRANSACTION;
+    transaction: Transaction;
+};
+
+export type TransformationsConfig = {
+    labels: { [key: string]: string };
+    parseTitles?: ({
+        sectionTitle,
+        acc,
+        currentVal,
+        currentKey,
+    }: {
+        sectionTitle: keyof Policy;
+        acc: ToSections;
+        currentVal: object;
+        currentKey: string;
+    }) => ToSections;
+    showSection?: (
+        sectionTitle: string,
+        policy?: Policy,
+        planCode?: string,
+        productType?: ProductType
+    ) => boolean | undefined;
+};

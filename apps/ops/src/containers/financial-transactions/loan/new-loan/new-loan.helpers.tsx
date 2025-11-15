@@ -26,7 +26,7 @@ export const buildNewLoanRequestBody = (
     if (wireCheckPaymentsEnabled) {
         return {
             caseId: newLoan.caseId || '',
-            correlationId: uuidV4(),
+            correlationId: newLoan.correlationId || uuidV4(),
             effectiveDate: getUtcDate(newLoan.effectiveDate),
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
@@ -79,7 +79,7 @@ export const buildNewLoanRequestBody = (
 
     return {
         caseId: newLoan.caseId || '',
-        correlationId: uuidV4(),
+        correlationId: newLoan.correlationId || uuidV4(),
         effectiveDate: getUtcDate(newLoan.effectiveDate),
         payeeOrBeneficiary: [
             {

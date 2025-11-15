@@ -33,9 +33,6 @@ describe('#CedingCompanyDistribution component', () => {
             screen.getByText('cedingCompanySignature.isQualTypeNotValid')
         ).toBeInTheDocument();
         expect(
-            screen.getByText('cedingCompanySignature.isSignatureValid')
-        ).toBeInTheDocument();
-        expect(
             screen.getByText('cedingCompanySignature.isLoaAttached')
         ).toBeInTheDocument();
         expect(

@@ -1,4 +1,17 @@
-.paymentSummaryDetails {
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+}
+
+.stepActions {
+  display: flex;
+  gap: var(--measure-dimension-gap-2xl);
+  margin-top: var(--measure-dimension-gap-xl);
+  margin-bottom: var(--measure-dimension-gap-md);
+}
+
+.comparisonTableSummaryDetails {
   .list {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -49,4 +62,55 @@
   align-items: center;
   text-align: center;
   padding: var(--measure-dimension-gap-2xl);
+}
+
+.intro {
+  > :first-child {
+    margin-bottom: var(--measure-dimension-gap-xl);
+  }
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+
+    li {
+      display: flex;
+      gap: var(--measure-dimension-gap-md);
+    }
+  }
+}
+
+/* TODO: should be able to remove this because this is now in the Selectable.module.css styles */
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-lg);
+}
+
+/* This is for the summary container that does not include a comparison table */
+.standardSummaryContainer {
+  background-color: var(--color-base-surface-surface-secondary);
+  padding: var(--measure-dimension-padding-3xl);
+  border-radius: var(--measure-dimension-radius-sm);
+}
+
+.standardSummaryDetails {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  gap: var(--measure-dimension-gap-xl);
+  padding-bottom: var(--measure-dimension-padding-3xl);
+  border-bottom: 2px solid var(--color-base-border-border-light);
+
+  @media (width < 768px) {
+    grid-template-columns: repeat(2, max-content);
+  }
+
+  @media (width < 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.standardSummaryStepContainer {
+  padding-top: var(--measure-dimension-padding-3xl);
 }

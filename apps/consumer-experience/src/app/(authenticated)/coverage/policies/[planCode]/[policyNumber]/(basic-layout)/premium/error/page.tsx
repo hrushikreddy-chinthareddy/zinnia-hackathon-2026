@@ -3,6 +3,7 @@ import { TransactionInvalid } from '@/components/stepped-workflow/common/Transac
 import {
   TRANSACTION_ERROR_QUERY_PARAM,
   TransactionErrorType,
+  TransactionType,
 } from '@/components/stepped-workflow/types';
 import { PolicyRequestInputs } from '@/types/policy';
 
@@ -32,7 +33,7 @@ const ErrorPage = ({
 
   return (
     <TransactionError
-      transactionType="one-time-premium"
+      transactionType={TransactionType.ONE_TIME_PREMIUM}
       goToUrl={goToUrl}
       correlationId={searchParams?.correlationId}
     />

@@ -23,7 +23,12 @@ import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
-import { filterPayorViewParties, formatPartyRoles } from '@/utils/party';
+import {
+  filterPayorViewParties,
+  filterOutCoverageInsuredParties,
+  formatPartyRoles,
+  filterOutEndDatedParties,
+} from '@/utils/party';
 
 export const ProfileView = async ({
   lineOfBusiness,
@@ -137,7 +142,7 @@ export const ProfileView = async ({
   };
 
   const parties = async () => {
-    const { parties } = profileData;
+    const { parties, partyRoles } = profileData;
     const loggingCtx = await buildCommonLogContext();
     const { data: visibility } = await getComponentVisibility(
       { policyNumber, planCode },
@@ -150,9 +155,19 @@ export const ProfileView = async ({
       return null;
     }
 
-    const filteredParties = hasPayorView
+    // If payor view is enabled, only show parties with PAYOR, OWNER, or JOINTOWNER roles
+    const initialFiltered = hasPayorView
       ? filterPayorViewParties(parties)
       : parties;
+
+    // Filter out parties on the basis of their partyRole endDate
+    const activeParties = filterOutEndDatedParties(
+      initialFiltered,
+      partyRoles || []
+    );
+
+    // Remove parties that only have COVERAGEINSURED role (or filter out COVERAGEINSURED from mixed roles)
+    const filteredParties = filterOutCoverageInsuredParties(activeParties);
 
     return (
       <AccordionDetails

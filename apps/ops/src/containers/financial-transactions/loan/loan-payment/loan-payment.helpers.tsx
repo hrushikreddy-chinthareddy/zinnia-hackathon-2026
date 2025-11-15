@@ -11,7 +11,7 @@ export const buildLoanPaymentRequestBody = (
 ): LoanRepaymentOneTimeRequestQuery => {
     return {
         caseId: loanPayment.caseId || '',
-        correlationId: uuidV4(),
+        correlationId: loanPayment.correlationId || uuidV4(),
         effectiveDate: dayjs(loanPayment.effectiveDate, 'MMDDYYYY').format(
             ZAHARA_API_DATE_FORMAT
         ),

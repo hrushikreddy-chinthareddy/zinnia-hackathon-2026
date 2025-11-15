@@ -1,5 +1,7 @@
 import { LiteralUnion, ValueOf } from 'type-fest';
 
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
+
 import { ProductTypes } from './product';
 
 export interface IllustraionsClientCaseSearchResponse {
@@ -8,6 +10,12 @@ export interface IllustraionsClientCaseSearchResponse {
     results: IllustrationsClientCase[];
     total: number;
     count: number;
+}
+
+export enum TransactionType {
+    REPLACEMENT = 'REPLACEMENT',
+    NONREPLACEMENT = 'NONREPLACEMENT',
+    CONVERSION = 'CONVERSION',
 }
 
 export interface IllustrationsClientCase {
@@ -23,6 +31,9 @@ export interface IllustrationsClientCase {
     productTypes: string[];
     agencyId: string;
     agencyName: string;
+    originalFaceAmount?: number;
+    isMec?: boolean;
+    transactionType?: TransactionType;
 }
 
 export interface IllustrationSummary {
@@ -53,8 +64,7 @@ export interface IllustrationInsuredDetails {
     state?: string;
     illustrateAtOlderAge?: boolean;
     issueAge?: number;
-    riskClass?: string;
-    riskClassCode?: number;
+    underwritingClass?: UnderwritingClass;
 }
 
 export interface ClientCaseSearchInputs {
@@ -71,17 +81,6 @@ export interface ClientCaseSearchInputs {
 }
 
 export type SexAtBirth = 'Male' | 'Female'; /// this willchange to a a full upper case on enum for BE.
-export type RiskClass =
-    | 'platinum'
-    | 'platinumChoice'
-    | 'platinumPlus'
-    | 'platinumElite'
-    | 'platinumSubstandard'
-    | 'gold'
-    | 'goldPlus'
-    | 'goldSubstandard'
-    | 'juvenile'
-    | 'juvenileSubstandard';
 
 export enum IllustrationStatuses {
     SUBMITTED = 'SUBMITTED',

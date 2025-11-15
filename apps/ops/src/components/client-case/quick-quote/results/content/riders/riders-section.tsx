@@ -9,6 +9,7 @@ import {
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
 import { useQuickQuoteResults } from '../results-context';
 import { QuickQuoteRiderRow } from './rider-row';
+import { QuickQuoteRiderSubtotalRow } from './rider-subtotal-row';
 
 export const QuickQuoteRidersSection = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -27,17 +28,8 @@ export const QuickQuoteRidersSection = () => {
                     <QuickQuoteRiderRow key={riderName} riderName={riderName} />
                 )
             )}
-            {/*
-            <QuickQuoteResultTableRow>
-                {results.map((result, idx) => {
-                    if (idx === 0) {
-                        return;
-                    }
 
-                    return <QuickQuoteRangeCell value={} />;
-                })}
-            </QuickQuoteResultTableRow>
-          */}
+            <QuickQuoteRiderSubtotalRow />
         </QuickQuoteResultTableSection>
     );
 };

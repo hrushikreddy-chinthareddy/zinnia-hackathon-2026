@@ -4,7 +4,6 @@ import {
     PartyType,
 } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
 import NavElement, {
@@ -13,10 +12,6 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Toggle, {
-    ToggleSize,
-    ToggleVariant,
-} from '@deps/components/toggle/toggle';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -139,8 +134,6 @@ const IdentificationCard = ({
         fullName,
     } = selectedPolicyParty ?? {};
 
-    const [showAdditional, setShowAdditional] = useState(false);
-
     const isUSCitizenText = isUSCitizen ? t('yes') : t('no');
 
     const isOrganization = partyType === PartyType.ORGANIZATION;
@@ -186,22 +179,6 @@ const IdentificationCard = ({
                             </NavElement>
                         )}
                     </div>
-                    {!!identifications?.length && (
-                        <div className="mb-5 flex flex-row items-center">
-                            <Toggle
-                                size={ToggleSize.Default}
-                                variant={
-                                    additionalIdentifications?.length
-                                        ? ToggleVariant.Default
-                                        : ToggleVariant.Inactive
-                                }
-                                text={t('showAdditional') as string}
-                                ariaLabel={t('showAdditional') as string}
-                                value={showAdditional}
-                                handleToggle={setShowAdditional}
-                            />
-                        </div>
-                    )}
                 </div>
 
                 {identifications?.length === 0 ? (
@@ -275,13 +252,12 @@ const IdentificationCard = ({
                                 </FieldData>
                             </>
                         )}
-                        {showAdditional &&
-                            additionalIdentifications.map((identification) => (
-                                <IdentificationDisplay
-                                    key={identification.identificationType}
-                                    identification={identification}
-                                />
-                            ))}
+                        {additionalIdentifications.map((identification) => (
+                            <IdentificationDisplay
+                                key={identification.identificationType}
+                                identification={identification}
+                            />
+                        ))}
                     </div>
                 )}
             </div>

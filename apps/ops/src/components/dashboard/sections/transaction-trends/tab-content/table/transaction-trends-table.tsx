@@ -194,7 +194,10 @@ export const TransactionTrendsTable = () => {
                                         carrierOrProductName: item.name,
                                         updatedDateStart: timerange.from,
                                         updatedDateEnd: timerange.to,
-                                        status: [Statuses.Completed],
+                                        status: [
+                                            Statuses.Completed,
+                                            Statuses.Canceled,
+                                        ],
                                         groupBy,
                                         carrier: filter.carrier,
                                         brokerDealer: filter.brokerDealerName,

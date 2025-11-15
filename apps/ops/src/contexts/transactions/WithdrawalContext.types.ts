@@ -13,4 +13,5 @@ export interface Withdrawal
         PayeesType,
         PaymentMethodType {
     caseId?: string;
+    correlationId?: string;
 }

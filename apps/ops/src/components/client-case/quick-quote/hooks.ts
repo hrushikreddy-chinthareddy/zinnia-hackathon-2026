@@ -11,7 +11,6 @@ import {
     CreateNewTermLifeIllustrationResponse,
 } from '@deps/queries/api/v3/illustrations';
 import { QuickQuoteParams } from '@deps/types/quickQuote';
-import { ProductClassResult } from '@deps/utils/quick-quotes-rules/types';
 
 import {
     buildNewTermQuickQuotePayload,
@@ -59,41 +58,25 @@ export const buildNewTermQuickQuoteOptions = (
 
             return createNewTermLifeIllustration(payload);
         },
-        enabled: !variantParams?.notAvailabilityReasonField,
+        staleTime: 600_000,
     });
 
 export const useQuickQuoteQueries = <MT>(
     {
         quickQuoteParams,
-        variants: rawVariants,
+        variants,
     }: {
         quickQuoteParams: QuickQuoteParams;
-        variants: ProductClassResult[];
+        variants: SingleTermProductQuickQuoteParams[];
     },
     combine: (
         results: UseQueryResult<CreateNewTermLifeIllustrationResponse>[]
     ) => MT
 ) =>
     useQueries({
-        queries: rawVariants
-            .flatMap(
-                ({
-                    planCode,
-                    termLength,
-                    classCodes,
-                    notAvailabilityReasonField,
-                }) =>
-                    classCodes.map((classCode) => ({
-                        planCode,
-                        termLength,
-                        classCode,
-                        available: !notAvailabilityReasonField,
-                        notAvailabilityReasonField,
-                    }))
-            )
-            .map((variantParams) =>
-                buildNewTermQuickQuoteOptions(quickQuoteParams, variantParams)
-            ),
+        queries: variants.map((variant) =>
+            buildNewTermQuickQuoteOptions(quickQuoteParams, variant)
+        ),
         combine: useCallback(
             (
                 results: UseQueryResult<CreateNewTermLifeIllustrationResponse>[]

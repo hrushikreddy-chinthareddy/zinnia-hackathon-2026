@@ -1,6 +1,6 @@
 import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
 
-// StepIds with an stepadditionalData sidesheet
+// StepIds with an stepAdditionalData side sheet
 export enum TransactionsAdditionalDataStepIds {
     receiveClaimRequest = 'requestAck.receiveClaimRequest',
     stopSystematicPrograms = 'verifyFunds.stopSystematicPrograms',
@@ -8,6 +8,12 @@ export enum TransactionsAdditionalDataStepIds {
     stopSpecialPrograms = 'verifyFunds.stopSpecialPrograms',
     stopUncashedTransactions = 'verifyFunds.stopUncashedTransactions',
     claimsFundRelease = 'claims.fundRelease',
+    outboundDeathScrub = 'requestAck.outboundDeathScrub',
+    inboundDeathScrub = 'requestAck.inboundDeathScrub',
+    performDAFileCaseMatch = 'matchDoc.performDAFileCaseMatch',
+    matchDocPerformMatch = 'matchDoc.performMatch',
+    receiveNewDocument = 'requestAck.createQualificationCase',
+    complianceDbUpdate = 'requestAck.complianceDbUpdate',
 }
 
 export enum BeneNotification {

@@ -26,6 +26,7 @@ export interface LoanPayment
         PayorType,
         ReverseInitiatorType {
     caseId?: string;
+    correlationId?: string;
 }
 
 type LoanPaymentContextType = {

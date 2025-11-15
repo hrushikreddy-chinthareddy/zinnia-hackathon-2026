@@ -1,7 +1,8 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
+import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from '@/types/policy';
 
+import { isEndDated } from './dates';
 import { logTrace } from './logging/log-fns';
 import { toTitleCase } from './strings';
 
@@ -76,9 +77,45 @@ export const formatPartyRoles = (partyRoles: PartyRole[] | undefined) => {
 };
 
 export const filterPayorViewParties = (parties: PolicyParty[]) => {
-  return parties?.filter(party =>
+  return parties.filter(party =>
     [PartyRole.PAYOR, PartyRole.OWNER, PartyRole.JOINTOWNER].some(role =>
       party.partyRoles?.includes(role)
     )
   );
+};
+
+export const filterOutCoverageInsuredParties = (parties: PolicyParty[]) => {
+  const result: PolicyParty[] = [];
+
+  for (const party of parties) {
+    if (!party.partyRoles?.includes(PartyRole.COVERAGEINSURED)) {
+      result.push(party);
+    } else if (party.partyRoles.length > 1) {
+      result.push({
+        ...party,
+        partyRoles: party.partyRoles.filter(
+          role => role !== PartyRole.COVERAGEINSURED
+        ),
+      });
+    }
+  }
+
+  return result;
+};
+
+export const filterOutEndDatedParties = (
+  parties: PolicyParty[],
+  partyRoles: PolicyPartyRoles[]
+) => {
+  return parties.filter(party => {
+    const rolesForParty = partyRoles.filter(
+      role => role?.partyId === party.partyId
+    );
+    if (!rolesForParty.length) return true;
+
+    return rolesForParty.some(role => {
+      const isEndDatedParty = isEndDated(role?.endDate);
+      return !isEndDatedParty;
+    });
+  });
 };

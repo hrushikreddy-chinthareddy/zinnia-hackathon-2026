@@ -64,6 +64,7 @@ export const ProgressStep = ({
 export const ProgressBarSteps = ({
   className,
   totalSteps,
+  // TODO: update this component to take in the current 0-index step and only add teh +1 visually
   currentStep,
   description,
 }: ProgressBarStepsProps) => {

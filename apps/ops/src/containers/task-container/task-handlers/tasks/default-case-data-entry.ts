@@ -7,6 +7,7 @@ import { LoggingContext } from '@deps/utils/server-logging';
 import { TaskHandler } from '../types';
 
 const DEFAULT_CASE_TYPE = 'SERVICE REQUEST';
+const DESCRIPTION = 'DESCRIPTION';
 
 export const processReferenceDataAdapter = async (
     caseDataType: string,
@@ -53,7 +54,10 @@ const DefaultCaseDataEntryHandler: TaskHandler<
                     return {
                         label: reason.value,
                         value: reason.key,
-                        description: reason.child?.[0]?.value || '',
+                        description:
+                            reason?.child?.find(
+                                (child) => child.type === DESCRIPTION
+                            )?.value || '',
                     };
                 })
                 .sort((a, b) => a.label.localeCompare(b.label));

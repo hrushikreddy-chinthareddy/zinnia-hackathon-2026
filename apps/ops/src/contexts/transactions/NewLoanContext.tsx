@@ -22,6 +22,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 export interface NewLoan extends AmountType, PayeesType, PaymentMethodType {
     caseId?: string;
     taxWithholdingInstructions: TaxWithholdingInstructions[];
+    correlationId?: string;
 }
 
 type NewLoanContextType = {

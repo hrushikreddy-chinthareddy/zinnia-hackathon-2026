@@ -3,7 +3,6 @@ import { TFunction } from 'next-i18next';
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
     BankingFields,
-    DisbursementFields,
     getDefaultFormDisbursementValues,
     updateBankingDetails,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
@@ -13,10 +12,7 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { Description } from '@deps/components/otp-withdrawal-form/form-restriction/description';
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -44,6 +40,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../utils/helper-utils';
+import { validateSignESign } from './utils/form-validator.helpers';
 
 export default function getSbgcConfig(t: TFunction) {
     const signaturesConfig = [
@@ -124,15 +121,15 @@ export default function getSbgcConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
+        // TODO: DEPU-7616
         if (
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
                 formDisbursement?.paymentMethod?.text as PaymentMethod
             )
-            // &&
-            // bankDetails?.selectedBanking === SelectedBanking.New
         ) {
             if (
                 formDisbursement?.bank[0].bankName === '' &&
@@ -154,38 +151,25 @@ export default function getSbgcConfig(t: TFunction) {
             }
         }
 
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
-
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
-
-        if (ownerSignature?.isDesignationPresent === null) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
         if (
             formDisbursement?.bank[0].accountType?.text === '' &&
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
                 formDisbursement?.paymentMethod?.text as PaymentMethod
             )
-            // &&
-            // bankDetails?.selectedBanking === SelectedBanking.New
         ) {
             errors[BankingFields.AccountType] = t(
                 'formValidation.accountTypeMustBeSelected'
             );
         }
-        return errors;
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: true,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const disbursementOptions = (withdrawalType: string) => {
@@ -360,7 +344,7 @@ export default function getSbgcConfig(t: TFunction) {
                         ),
                     },
                     {
-                        fieldName: 'bankRoutingNumber',
+                        fieldName: 'routingNumber',
                         fieldLabel: t('distributionMethod.bankRoutingNumber'),
                         fieldType: 'text',
                         isBankingField: true,
@@ -377,7 +361,7 @@ export default function getSbgcConfig(t: TFunction) {
                         isBankingField: true,
                         disableCopyPaste: true,
                         validator: createValidator(
-                            'bankRoutingNumber',
+                            'routingNumber' as any,
                             t('formValidation.routingNumberDoesNotMatch')
                         ),
                     },
@@ -484,14 +468,12 @@ export default function getSbgcConfig(t: TFunction) {
                     {
                         fieldName: BankingFields.Address,
                         fieldLabel: '',
-                        component: DisbursementFields.BankAddress,
                         fieldType: 'address',
                         classNames: 'col-start-1 col-span-2 w-full',
                     },
                     {
                         fieldName: BankingFields.AcordAttached,
                         fieldLabel: t('distributionMethod.acordFormReceived'),
-                        component: DisbursementFields.BankCheckboxField,
                         classNames: 'col-start-1',
                         fieldType: 'checkbox',
                     },
@@ -554,6 +536,7 @@ export default function getSbgcConfig(t: TFunction) {
                               fieldName: BankingFields.Address,
                               fieldType: 'address',
                               classNames: 'col-start-1 col-span-2 w-full',
+                              isAddressLine2Required: true,
                           },
                       ],
                       getDefaultPayload({

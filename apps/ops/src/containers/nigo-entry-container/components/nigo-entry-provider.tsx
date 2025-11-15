@@ -16,6 +16,7 @@ import { SelOptionType } from './steps/service-form-review/service-form-review';
 type NigoEntryProviderProps = {
     children: React.ReactNode;
     relatedDocCount: number;
+    isLC?: boolean;
 };
 
 const INITIAL_FORM_DATA: any = {};
@@ -23,6 +24,7 @@ const INITIAL_FORM_DATA: any = {};
 export const NigoEntryProvider = ({
     children,
     relatedDocCount,
+    isLC,
 }: NigoEntryProviderProps) => {
     const [formData, setFormData] = useState(INITIAL_FORM_DATA);
     const [sectionOption, setSectionOption] = useState<SelOptionType>(
@@ -64,6 +66,7 @@ export const NigoEntryProvider = ({
                 formComment,
                 initRelatedDocCount,
                 areAttachmentsViewed,
+                isLC,
                 setAreAttachmentsViewed,
                 setFormData,
                 setSectionOption,

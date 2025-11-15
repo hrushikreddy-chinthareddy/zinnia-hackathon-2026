@@ -59,20 +59,28 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
+import { validateSignESign } from '../utils/form-validator.helpers';
 
 export default function useNasuConfig(t: TFunction) {
     const formValidation = useCallback(
         ({
             formSignature,
             formDisbursement,
+            formESignatureData,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
 
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
+            if (
+                formDisbursement?.bank[0].accountType?.text === '' &&
+                [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                    formDisbursement?.paymentMethod?.text as PaymentMethod
+                ) &&
+                formDisbursement?.bank[0].isDirectDeposit?.text
+            ) {
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
+            }
 
             const jointOwnerSignature = formSignature?.signatures?.find(
                 (sigInfo) =>
@@ -85,17 +93,6 @@ export default function useNasuConfig(t: TFunction) {
                     sigInfo?.signType?.text ===
                     SignatureValidationTypeWithdrawal.Annuitant
             );
-
-            // No choice made for signature
-            if (
-                ownerSignature &&
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
 
             if (
                 jointOwnerSignature &&
@@ -116,19 +113,14 @@ export default function useNasuConfig(t: TFunction) {
                 ] = t('formValidation.signaturePresentOptionMustBeSelected');
             }
 
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT, PaymentMethod.Wire].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                ) &&
-                formDisbursement?.bank[0].isDirectDeposit?.text
-            ) {
-                errors[BankingFields.AccountType] = t(
-                    'formValidation.accountTypeMustBeSelected'
-                );
-            }
+            const signESignValidate = validateSignESign({
+                formSignature,
+                formESignatureData,
+                t,
+                validateDesignationPresent: false,
+            });
 
-            return errors;
+            return { ...errors, ...signESignValidate };
         },
         [t]
     );
@@ -593,6 +585,7 @@ export default function useNasuConfig(t: TFunction) {
                     fieldName: BankingFields.Address,
                     fieldLabel: '',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
                 {
                     fieldName: BankingFields.TaxId,

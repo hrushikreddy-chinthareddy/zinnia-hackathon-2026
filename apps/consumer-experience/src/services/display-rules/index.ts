@@ -123,6 +123,7 @@ export const evaluateRouteRules = (
     [RouteKey.RIDERS]: () => isNotPayor && !isCancelled,
     [RouteKey.SURRENDER]: () => isNotPayor && !isCancelled,
     [RouteKey.WITHDRAWALS]: () => isNotPayor && !isCancelled,
+    [RouteKey.TRANSACTION_SUMMARY]: () => isNotPayor && !isCancelled,
   };
 };
 

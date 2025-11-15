@@ -133,3 +133,19 @@ export const sortByDate = (
       ? -1
       : 1;
 };
+/**
+ * Checks whether a given end date is in the past or undefined.
+ *
+ * @param endDate - The end date string to evaluate.
+ * @returns `true` if the date is before today, otherwise `false`.
+ *
+ * @example
+ * ```ts
+ * isEndDated('2024-12-01'); // true if that date is in the past
+ * isEndDated(undefined); // false
+ * ```
+ */
+export function isEndDated(endDate: string | undefined): boolean {
+  if (!endDate || dayjs(endDate).isAfter(dayjs())) return false;
+  return true;
+}

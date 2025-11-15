@@ -1,0 +1,36 @@
+.quickQuoteFormContainer {
+    display: flex;
+    margin: var(--measure-dimension-gap-2xl) 0;
+    gap: var(--measure-dimension-gap-lg, 16px);
+
+    .productTypeSelect {
+        width: 204px;
+    }
+
+    .ageInput {
+        width: 64px;
+    }
+
+    .buttonGroup {
+        width: 124px;
+    }
+
+    .stateInput {
+        width: 89px;
+    }
+
+    .faceAmountInput {
+        width: 165px;
+    }
+    .updateQuoteButton {
+        align-self: self-end;
+
+        width: 124px;
+        height: 36px;
+    }
+
+    .errorMsg {
+        color: var(--color-status-text-status-error-text, #db004f);
+        font: var(--typography-content-caption-selected);
+    }
+}

@@ -1,11 +1,16 @@
 import { Dispatch, SetStateAction, useContext } from 'react';
 
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { PaymentMethod } from '@deps/models/case/withdrawal/case';
+import {
+    PaymentMailType,
+    PaymentMethod,
+} from '@deps/models/case/withdrawal/case';
 import { DisbursementConfig } from '@deps/models/case/withdrawal/disbursement-types';
 
 import AlternatePayeeMethod from './payment-methods/alternate-payee-method';
 import BrokerageMethod from './payment-methods/brokerage-acc-method';
+import CheckMethod from './payment-methods/check-method';
+import DtccMethod from './payment-methods/dtcc-method';
 import EftMethod from './payment-methods/eft-method';
 import WireMethod from './payment-methods/wire-method';
 
@@ -88,6 +93,24 @@ const FormDisbursementSectionV2 = ({
             case PaymentMethod.AlternatePayeeAddress:
                 return (
                     <AlternatePayeeMethod
+                        config={fieldConfig}
+                        defaultDisbursementInfo={defaultDisbursementInfo}
+                        setDefaultDisbursementInfo={setDefaultDisbursementInfo}
+                        isFormStateReadOnly={isFormStateReadOnly}
+                    />
+                );
+            case PaymentMailType.Check:
+                return (
+                    <CheckMethod
+                        config={fieldConfig}
+                        defaultDisbursementInfo={defaultDisbursementInfo}
+                        setDefaultDisbursementInfo={setDefaultDisbursementInfo}
+                        isFormStateReadOnly={isFormStateReadOnly}
+                    />
+                );
+            case PaymentMethod.DTCC:
+                return (
+                    <DtccMethod
                         config={fieldConfig}
                         defaultDisbursementInfo={defaultDisbursementInfo}
                         setDefaultDisbursementInfo={setDefaultDisbursementInfo}

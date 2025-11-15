@@ -1,22 +1,10 @@
-import { notFound } from 'next/navigation';
-
-import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { Intro } from '@/components/stepped-workflow/workflows/free-look-cancel/forms/Intro';
+import { getCarrierConfig } from '@/services/carrier-config';
+import { buildCommonLogContext } from '@/utils/logging/server-logging';
 
 export default async function FreeLookCancelInformation() {
-  const { featureFlags: flags, carrierConfig } =
-    await getFeatureFlagsWithCarrierConfig();
+  const loggingContext = await buildCommonLogContext();
+  const { data: carrierConfig } = await getCarrierConfig(loggingContext);
 
-  if (
-    !flags?.[FEATURE_FLAGS.TRANSACTION_FREE_LOOK_CANCEL] ||
-    !carrierConfig?.freeLookCancel?.enabled
-  ) {
-    notFound();
-  }
-
-  return (
-    <div>
-      <h1>Are you sure you want to cancel? </h1>
-    </div>
-  );
+  return <Intro paymentProvider={carrierConfig?.payment?.provider} />;
 }

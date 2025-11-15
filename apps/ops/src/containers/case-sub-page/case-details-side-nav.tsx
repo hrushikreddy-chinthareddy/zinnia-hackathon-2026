@@ -1,4 +1,5 @@
-import { toSentenceCase } from '@zinnia/utils';
+import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { formatTimestamp, toSentenceCase } from '@zinnia/utils';
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
@@ -25,12 +26,25 @@ import {
 } from '@deps/models/case/additional-data-instance';
 import { Processes } from '@deps/models/case/case';
 import { TransactionTypes } from '@deps/models/case/correspondence';
+import { CaseSource } from '@deps/models/case/enums';
+import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;
     carrier: string;
     process?: Processes;
     applicationType?: string;
+    estimatedCompletionAt?: string | null;
+    caseProcessingDetails?: {
+        detailType: string;
+        details: {
+            performedBy?: string;
+            source?: string;
+            partyId?: string;
+            applicationType?: string;
+        };
+        eventTimeStamp: number;
+    }[];
 };
 
 const parentCaseDetailsKeys: string[] = [
@@ -38,14 +52,16 @@ const parentCaseDetailsKeys: string[] = [
     'caseTransactionType',
     'caseCompletionDate',
 ];
-
 const CaseDetailsSideNav = ({
     CaseAdditionalDetails,
     carrier,
     process,
+    estimatedCompletionAt,
     applicationType,
+    caseProcessingDetails,
 }: CaseDetailsSideNavProps) => {
     const { t } = useTranslation();
+    const submissionDetails = caseProcessingDetails?.[0]?.details;
     const { agentFirstName, agentLastName, agentNPN, agentSSN } =
         CaseAdditionalDetails;
     const displayAgentDetails = !!(
@@ -71,6 +87,10 @@ const CaseDetailsSideNav = ({
         setCookie('carrierCode', carrier);
     };
 
+    const showSubmissionDetails = Object.values(CaseSource).includes(
+        submissionDetails?.source as CaseSource
+    );
+
     const url =
         CaseAdditionalDetails[CaseAdditionalDataKeys.requestSubType] !==
         TransactionTypes.Statements
@@ -90,6 +110,9 @@ const CaseDetailsSideNav = ({
         appTypeLowerCase === 'digital' || appTypeLowerCase === 'electronic'
             ? t('sidenav.electronic')
             : t(`sidenav.${appTypeLowerCase}`);
+    const formattedEstimatedCompletion = estimatedCompletionAt
+        ? formatTimestamp(estimatedCompletionAt, 'dateTimeWithTZ')
+        : null;
 
     return (
         <>
@@ -128,6 +151,39 @@ const CaseDetailsSideNav = ({
                             </Typography>
                             <Content
                                 details={toSentenceCase(submissionType)}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
+
+                    {showSubmissionDetails && submissionDetails?.source && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.submissionSource')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(
+                                    submissionDetails?.source
+                                )}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
+                    {showSubmissionDetails && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.submittedBy')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(
+                                    submissionDetails?.performedBy || ''
+                                )}
                                 variant={ContentVariant.BodySm}
                             />
                         </>
@@ -247,8 +303,39 @@ const CaseDetailsSideNav = ({
                                 </React.Fragment>
                             )
                         )}
+                    {estimatedCompletionAt && (
+                        <>
+                            <div className="flex items-center gap-1">
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className="text-[--color-base-text-text-secondary]"
+                                >
+                                    {t('sidenav.estimatedCompletion')}
+                                </Typography>
+                                <Tooltip
+                                    trigger={
+                                        <CircleInfoIcon
+                                            height={'16px'}
+                                            width={'16px'}
+                                            className="text-primary"
+                                        />
+                                    }
+                                    placement={TooltipPlacement.TopRight}
+                                >
+                                    {t('sidenav.estimatedCompletionToolTip')}
+                                </Tooltip>
+                            </div>
+                            <Content
+                                details={
+                                    formattedEstimatedCompletion || undefined
+                                }
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
                 </div>
             </div>
+
             {displayAgentDetails && (
                 <div className="flex w-full flex-col px-4 pb-4">
                     <Title className="mb-2" variant={TitleVariant.SubTitle}>

@@ -96,13 +96,10 @@ export default function FlicOftWithdrawalForm({
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
+                renderAuthPersonSignPresent={true}
             />
             <FormDisbursement
                 options={disbursementOptions}
@@ -111,6 +108,10 @@ export default function FlicOftWithdrawalForm({
                     t('distributionMethod.cedingCompanyDistribution') as string
                 }
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}

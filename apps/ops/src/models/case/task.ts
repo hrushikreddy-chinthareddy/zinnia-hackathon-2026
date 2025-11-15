@@ -56,6 +56,7 @@ export enum TaskType {
     Purchase_enrichment = 'NB_PURCHASE_ENRICHMENT',
     Cost_Basis_Review = 'NB_COST_BASIS_REVIEW',
     Claims_Fi_Escheatment_Task = 'CLAIMS_FI_ESCHEATMENT_TASK',
+    Claims_Ops_To_Finance_Escheatment_Trigger = 'CLAIMS_OPS_TO_FINANCE_ESCHEATMENT_TRIGGER',
     Bene_Address_Verification = 'BENE_ADDRESS_VERIFICATION',
     Claims_Bene_Review = 'CLAIMS_BENE_REVIEW',
     Day_150_Review = 'DAY_150_REVIEW',
@@ -68,6 +69,7 @@ export enum TaskType {
     Quality_Audit_Rework = 'QUALITY_AUDIT_REWORK',
     Quality_Rework_Audit_Review = 'QUALITY_REWORK_AUDIT_REVIEW',
     Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
+    Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
 }
 
 export enum EarlyTaskType {
@@ -226,6 +228,7 @@ export type ApiProps = {
         enumNames: string;
     };
     responseType: ApiResponseTypes;
+    sorted?: boolean;
 };
 
 export enum EventType {
@@ -239,6 +242,7 @@ export type TaskEventProps = {
     dataKey: string;
     responseType: ApiResponseTypes;
 };
+
 export enum DataFormattingTypes {
     SSN = 'ssn',
     Date = 'date',
@@ -250,6 +254,7 @@ export enum DataFormattingTypes {
     Percentage = 'percentage',
     Phone = 'phone',
     DateTime = 'dateTime',
+    String = 'string',
 }
 
 export interface AddressFormFields {

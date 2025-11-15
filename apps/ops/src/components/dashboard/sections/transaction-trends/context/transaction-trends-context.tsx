@@ -99,7 +99,7 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
         updatedDateStart: timerange.from,
         updatedDateEnd: startOfTomorrowLocalIso(timerange.to),
         process: formatProcessFilter(selectedProcess),
-        caseStatus: [Statuses.Completed],
+        caseStatus: [Statuses.Completed, Statuses.Canceled],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
     };

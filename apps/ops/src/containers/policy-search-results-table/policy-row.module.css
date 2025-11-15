@@ -22,6 +22,11 @@
     border: 1px solid rgb(var(--color-100-gray));
     margin-right: 0.5rem;
     margin-top: 0.25rem;
+    height: 26px;
+    width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .policyLink {
@@ -66,6 +71,17 @@
     align-items: center;
 }
 
-.infoColor {
-    color: rgb(var(--color-semantic-information));
+.casesCount {
+    color: var(--color-semantics-color-semantic-information);
+    /* necessary for WCAG minimum touch target of 44x44 */
+    padding: var(--measure-dimension-padding-xl);
+}
+
+.infoIcon {
+    margin-right: var(--measure-dimension-padding-xs, 0.125rem);
+    padding-bottom: var(--measure-dimension-padding-xs, 0.125rem);
+}
+
+.noCases {
+    padding: var(--measure-dimension-padding-3xl);
 }

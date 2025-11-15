@@ -44,19 +44,21 @@ export const QuickQuoteBasePremiumRangeSection = () => {
                     )}
                 </Typography>
             }
-            data={results.map((result) =>
-                !isTermResult(result)
-                    ? {
-                          value: undefined,
-                      }
-                    : {
-                          value: result.data.basePremiumRange.find(
-                              (basePremiumRange) =>
-                                  basePremiumRange.termLength === termLength
-                          )?.range,
-                          period: 'mon.',
-                      }
-            )}
+            data={results.map((result) => {
+                const item = result.data.basePremiumRange.find(
+                    (basePremiumRange) =>
+                        basePremiumRange.termLength === termLength
+                );
+
+                return {
+                    value: item?.range,
+                    notAvailabilityReason:
+                        item && item.range == null
+                            ? item.notAvailabilityReasonField
+                            : undefined,
+                    period: 'mo.',
+                };
+            })}
         />
     ));
 

@@ -50,40 +50,26 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
       TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      NODE_OPTIONS: --max-old-space-size=4096
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
       - uses: actions/setup-node@v4
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           node-version-file: '.nvmrc'
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@zinnia'
           cache: 'pnpm'
-      - name: Configure npm auth
-        run: echo "//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
-      - name: Clean monorepo deps
-        run: rm -rf node_modules apps/*/node_modules
       - name: Install monorepo deps
         run: pnpm install --frozen-lockfile
-      - name: Run prettier
-        run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          npx turbo prettier
-      - name: Build dependent workspace packages
-        run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          pnpm --filter '!./apps/ops' --filter '!./apps/consumer-experience' build
-      - name: Run type checks
-        run: npx turbo check-types
-      - name: Build ops dependencies
-        run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          pnpm --filter './apps/ops' --filter './apps/consumer-experience' build
-      - name: Run lint
-        run: |
-          npx turbo lint
+      - name: Build packages
+        run: npx turbo build --filter='./packages/**'
+      - name: Run prettier, type checks, and lint
+        run: npx turbo prettier check-types lint
 
   test:
     name: Test All Apps
@@ -104,7 +90,6 @@ jobs:
           registry-url: 'https://npm.pkg.github.com/'
           scope: '@zinnia'
           cache: 'pnpm'
-      - name: install packages for compiling canvas-node
-        run: sudo apt-get update && sudo apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-      - run: pnpm install
+      - name: Install monorepo deps
+        run: pnpm install --frozen-lockfile
       - run: npx turbo test

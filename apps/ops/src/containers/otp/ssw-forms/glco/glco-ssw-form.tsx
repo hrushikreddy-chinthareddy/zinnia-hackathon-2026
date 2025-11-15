@@ -115,11 +115,7 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
             />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -129,6 +125,11 @@ export function GlcoSSWForm({ planCode }: GlcoSSWFormProps) {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

@@ -12,11 +12,15 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { Case } from '@deps/models/case/case';
 import { baseAppUrl } from '@deps/queries/api-config';
-import { getCaseDetailsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import {
+    getCaseDetailsQuery,
+    getCaseTimePredictQuery,
+} from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import { getEstimatedCompletionAt } from './case-helpers';
 import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
 import styles from './styles.module.css';
@@ -45,6 +49,20 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
                 ? 5000
                 : false,
     });
+
+    const { data: caseTimePrediction } = useQuery({
+        queryKey: ['caseTimePredict', caseDetails?.id],
+        queryFn: () => getCaseTimePredictQuery(caseDetails?.id),
+        enabled:
+            !!caseDetails?.id &&
+            featureFlags[FEATURE_FLAGS.CASE_ESTIMATED_COMPLETION],
+        staleTime: 5 * 60 * 1000, // 5 minutes - predictions don't change
+    });
+
+    const estimatedCompletionAt = getEstimatedCompletionAt(
+        caseTimePrediction,
+        caseDetailsModel?.createdAt
+    );
 
     const handleTabChange = (val: string) => {
         // We do not want to send the user to a new page, just update the URL in response to a user action
@@ -99,7 +117,10 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
                 statusVariant={statusDetails.statusVariant as BadgeVariant}
             />
             <div className="flex w-full flex-col justify-between gap-2 pt-2 lg:flex-row">
-                <CaseSideNav caseDetails={caseDetailsModel} />
+                <CaseSideNav
+                    caseDetails={caseDetailsModel}
+                    estimatedCompletionAt={estimatedCompletionAt}
+                />
                 <CaseSubPage
                     caseDetails={caseDetailsModel}
                     tab={tabVal}

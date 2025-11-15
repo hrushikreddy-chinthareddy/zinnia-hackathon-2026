@@ -8,6 +8,10 @@
         var(--color-base-border-border-subtle, #ccc);
 }
 
+.contentSubtitle {
+    margin-bottom: var(--measure-dimension-gap-lg, 16px);
+}
+
 .contentSection,
 .contentSubtable,
 .contentTableSection,
@@ -82,12 +86,17 @@
     border-right: unset;
 }
 
-.contentDataCell {
+.contentDataCell,
+.notAvailableReasonCell {
     display: flex;
     align-items: center;
 
     padding: var(--measure-dimension-padding-lg, 8px)
         var(--measure-dimension-padding-3xl, 24px);
+}
+
+.fullDataCell {
+    grid-column: 2 / -1;
 }
 
 .notAvailableText {
@@ -138,6 +147,16 @@
 
 .riderRowHeaderInput {
     width: 124px;
+}
+
+.riderSubtotalCell {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+}
+
+.riderSubtotalCellText {
+    grid-row-start: 2;
 }
 
 .premiumFreeRiderContent {

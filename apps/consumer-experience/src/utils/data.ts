@@ -154,7 +154,7 @@ export const getFrequency = (
     case Frequency.DAILY:
       return 'Daily';
     case Frequency.EVERYTWOWEEKS:
-      return 'Bi-annual';
+      return 'Bi-weekly';
     case Frequency.MONTHLY:
       return 'Monthly';
     case Frequency.SEMIANNUAL:

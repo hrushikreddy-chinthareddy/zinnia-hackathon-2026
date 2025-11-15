@@ -383,29 +383,7 @@ export default function getFlicRmdConfig(t: TFunction) {
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
-        {
-            key: `sig-val-beneficiary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
-                },
-                {
-                    component: SignatureFields.SignatureDesignation,
-                    key: 'beneficiary-designation',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-            ],
-            signatureType:
-                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-        },
+
         {
             key: `sig-val-spouse`,
             bonusField: SignatureBonusFields.SpousalConsent,
@@ -438,41 +416,17 @@ export default function getFlicRmdConfig(t: TFunction) {
     ];
 
     const rmdformValidation = ({
-        formParty,
         formDisbursement,
         formSignature,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
-            formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if (
-            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
-                formDisbursement?.paymentMethod?.text as PaymentMethod
-            )
-        ) {
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !==
-                    formDisbursement?.bank[0].reEnterAccountNumber
-            ) {
-                errors[BankingFields.ReEnterAccountNumber] = t(
-                    'formValidation.accountNumberDoesNotMatch'
-                );
-            }
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !==
-                    formDisbursement?.bank[0].reEnterBankRoutingNumber
-            ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                    'formValidation.routingNumberDoesNotMatch'
-                );
-            }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t(

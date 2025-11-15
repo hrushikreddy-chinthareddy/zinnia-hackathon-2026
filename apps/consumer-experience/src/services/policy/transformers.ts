@@ -65,15 +65,15 @@ export const allBeneficiaries = (policy: Policy) => {
   ];
 
   policy.parties?.forEach((party: Party) => {
-    const correspondingRole = policy.partyRoles?.find(
-      role => role.partyId === party.partyId
+    // find the beneficiary role in the policy.partyRoles array that corresponds to the party
+    const beneficiaryRole = policy.partyRoles?.find(
+      role =>
+        role.partyId === party.partyId &&
+        role.partyRole &&
+        beneRoles.includes(role.partyRole)
     );
 
-    if (
-      correspondingRole &&
-      correspondingRole.partyRole &&
-      beneRoles.includes(correspondingRole.partyRole)
-    ) {
+    if (beneficiaryRole) {
       benesWithRoles.push({
         firstName: party.firstName,
         lastName: party.lastName,
@@ -84,8 +84,8 @@ export const allBeneficiaries = (policy: Policy) => {
         addresses: party.addresses,
         emails: party.emails,
         phones: party.phones,
-        partyRole: correspondingRole.partyRole,
-        relationshipToInsured: correspondingRole.relationshipToInsured,
+        partyRole: beneficiaryRole.partyRole,
+        relationshipToInsured: beneficiaryRole.relationshipToInsured,
       } as Beneficiary);
     }
   });
@@ -228,6 +228,7 @@ export const transformPolicyForProfile = (
     emails: partyInfo?.emails || [],
     phones: partyInfo?.phones || [],
     parties: parties || [],
+    partyRoles: policy?.partyRoles || [],
   };
 };
 

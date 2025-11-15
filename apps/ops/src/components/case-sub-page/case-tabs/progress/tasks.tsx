@@ -6,6 +6,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import { TaskView } from './progress-tab-types';
@@ -41,8 +42,8 @@ export function Task({ task }: { task: TaskView }) {
     const statusConfig: StatusConfigItem[] = [
         {
             check: (status: Statuses) =>
-                [Statuses.Pending, 'SCHEDULED'].includes(status),
-            key: 'caseOverview.tabs.pendingTill',
+                [Statuses.Pending, TaskStatus.Scheduled].includes(status),
+            key: 'caseOverview.tabs.scheduledTill',
             dateField: 'updatedAt',
         },
         {
@@ -53,6 +54,7 @@ export function Task({ task }: { task: TaskView }) {
                     'OPEN',
                     Statuses.NotStarted,
                     Statuses.Inprogress,
+                    TaskStatus.Scheduled,
                 ].includes(status),
             key: 'caseOverview.tabs.openSince',
             dateField: 'createdAt',

@@ -6,7 +6,6 @@ const levelToStatus = {
     10: 'trace',
     20: 'debug',
     30: 'info',
-    39: 'compliance',
     40: 'warn',
     50: 'error',
     60: 'fatal',
@@ -79,29 +78,11 @@ const logger = pino({
     browser: browserWriter,
     // adds a status for datadog
     formatters,
-    customLevels: {
-        compliance: 39,
-    },
     redact,
     // level of logs to display. trace|debug|info|warn|error|fatal
     level: isNonProductionEnvironment()
         ? process.env.PINO_LOG_LEVEL || 'trace'
         : 'trace',
-}).child({
-    service: 'zinnia-live-xd',
-    env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',
-    version: process.env.NEXT_PUBLIC_GIT_SHA || '',
-});
-
-// used to ensure compliance logs are sent to datadog even if the logging level is set to only warn or error
-export const complianceLogger = pino({
-    browser: browserWriter,
-    formatters,
-    customLevels: {
-        compliance: 39,
-    },
-    redact,
-    level: 'trace',
 }).child({
     service: 'zinnia-live-xd',
     env: process.env.NEXT_PUBLIC_DATADOG_ENV || '',

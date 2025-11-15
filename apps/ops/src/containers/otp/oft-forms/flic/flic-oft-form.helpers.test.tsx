@@ -379,8 +379,7 @@ describe('FLIC Form Specific component', () => {
                         sigConfig.signatureType ===
                         SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
                 );
-                expect(beneficiaryConfig).toBeTruthy();
-                expect(beneficiaryConfig?.fields).toHaveLength(4);
+                expect(beneficiaryConfig).toBeFalsy();
             });
         });
 

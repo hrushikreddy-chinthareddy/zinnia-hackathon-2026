@@ -13,7 +13,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { stepsInfo } from '@/components/stepped-workflow/workflows/one-time-premium/steps';
 import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
-import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { getUpcomingPremium } from '@/services/policy';
 import { getPolicyFeatures } from '@/services/policy/features';
 import { formatUSDollars } from '@/utils/currency';
@@ -40,11 +40,10 @@ export const UpcomingPremium = async ({
   extended?: boolean;
 }) => {
   const loggingContext = await buildCommonLogContext();
-  const { featureFlags, carrierConfig } =
-    await getFeatureFlagsWithCarrierConfig();
+  const featureFlags = await getFeatureFlags();
+
   const systematicPremiumFeatureFlag =
-    featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM] &&
-    carrierConfig?.systematicPremium.enabled;
+    featureFlags?.[FEATURE_FLAGS.TRANSACTION_SYSTEMATIC_PREMIUM];
 
   const [
     systematicUpcomingResult,

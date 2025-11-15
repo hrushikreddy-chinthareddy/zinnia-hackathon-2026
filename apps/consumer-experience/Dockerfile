@@ -5,27 +5,37 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm install -g turbo@2.0.4
-COPY . .
+# Install turbo globally using the version from package.json
+COPY package.json pnpm-lock.yaml* ./
+RUN npm install -g turbo@$(node -p "require('./package.json').devDependencies.turbo")
+# Copy workspace config files
+COPY turbo.json turbo.json
+COPY pnpm-workspace.yaml pnpm-workspace.yaml
+# Copy the consumer-experience app only
+COPY apps/consumer-experience apps/consumer-experience
+# Copy shared packages (dependencies for consumer-experience)
+COPY packages packages
+# Prune the monorepo to only include consumer-experience and its dependencies
 RUN turbo prune consumer-experience --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
-RUN apk add --no-cache libc6-compat
+RUN apk add --update --no-cache libc6-compat make gcc g++ python3 pkgconfig pixman-dev cairo-dev pango-dev libjpeg-turbo-dev
 RUN apk update
 WORKDIR /app
 
-# First install the dependencies (as they change less often)
-COPY .gitignore .gitignore
+# Copy pruned lockfile and package.json files
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+# Use full lockfile instead of pruned one to avoid missing dependencies as this is a known issue with
+# https://github.com/vercel/turborepo/issues/2791
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=secret,id=npmtoken echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npmtoken)" > /root/.npmrc
 RUN npm install -g corepack && corepack enable
 ENV COREPACK_INTEGRITY_KEYS=0
 ENV COREPACK_DEFAULT_TO_LATEST=0
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
-# Build the project
+# Copy pruned source code
 COPY --from=builder /app/out/full/ .
 
 ARG NEXT_PUBLIC_MOCK_API_REQUEST
@@ -53,7 +63,7 @@ ENV NEXT_PUBLIC_MOCK_API_REQUEST=$NEXT_PUBLIC_MOCK_API_REQUEST \
     NEXT_PUBLIC_FARMERS_API_BASE_URL=$NEXT_PUBLIC_FARMERS_API_BASE_URL
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN pnpm turbo run build --filter=consumer-experience
+RUN pnpm turbo build --filter consumer-experience
 
 FROM base AS runner
 WORKDIR /app

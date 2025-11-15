@@ -80,14 +80,21 @@ export const useAgencyOptions = (
             ?.map(({ sellingCode }) => {
                 const agentData = clientCaseAgentAliases?.find(
                     (item) => item.sellingCode === sellingCode
-                )!;
+                );
+
+                // This hierarchy does not match the agent selling codes
+                // We are reading stale data
+                if (!agentData) {
+                    return;
+                }
 
                 return {
                     value: sellingCode,
                     textValue: agentData.fullName,
                     agentSellingCode: sellingCode,
                 } as AgencyOption;
-            });
+            })
+            ?.filter((item): item is AgencyOption => item != null);
 
         if (rootAgencyOptions?.length) {
             return rootAgencyOptions;

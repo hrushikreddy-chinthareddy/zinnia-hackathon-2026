@@ -135,9 +135,7 @@ describe('getRslnRmdConfig', () => {
                 ],
             },
         });
-        expect(errors).toHaveProperty(
-            `${SignatureValidationTypeWithdrawal.Owner}IsSignatureValid`
-        );
+        expect(errors).toStrictEqual({});
     });
 
     it('should return error if owner signature comment is missing when valid', () => {

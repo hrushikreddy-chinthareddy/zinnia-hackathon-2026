@@ -132,7 +132,7 @@ export const Addresses = ({
                             <AssistiveText
                                 className="mt-1"
                                 text={t(
-                                    'people.card.address.general.mailingAddress'
+                                    'people.card.address.general.preferredMailingAddress'
                                 )}
                                 variant={AssistiveTextVariant.Success}
                             />

@@ -2,7 +2,6 @@ import { ConditionalExcept, Simplify, TupleToUnion, ValueOf } from 'type-fest';
 import { Infer, t } from 'typegate';
 
 import { USStates } from '@deps/constants/geography/us-states';
-import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
 import { RIDER_NAMES, RiderName } from '@deps/types/illustrations';
 import { Product, ProductTypes } from '@deps/types/product';
 

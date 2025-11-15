@@ -36,7 +36,7 @@ export const useShowNotificationAlertBasedOn = ({
         .map(parseNotifications)
         .filter(notification => !!notification && !notification.completed);
     },
-    enabled: fetchNotificationsFlagEnabled && !!policyNumber && !!planCode,
+    enabled: !!fetchNotificationsFlagEnabled && !!policyNumber && !!planCode,
   });
 
   const {

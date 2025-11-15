@@ -22,6 +22,7 @@ import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
 import { buildLoanPaymentRequestBody } from './loan-payment.helpers';
 import Summary from './summary/summary';
+import { getProcessSubTypes } from '../../autopay/autopay.helpers';
 
 export type LoanPaymentContainerProps = {
     policy: Policy;
@@ -65,6 +66,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                         type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={getProcessSubTypes(ParentPage.Loans)}
                 />
             ),
             screenReaderLabel: startLabel,

@@ -19,6 +19,7 @@ import {
   TransactionAmounts,
   Policy,
   Product,
+  PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -107,6 +108,7 @@ export interface PolicyProfile {
   emails: Email[];
   bankDetails: BankDetail[];
   parties: PolicyParty[];
+  partyRoles?: PolicyPartyRoles[];
 }
 
 export type PolicyReferenceData = Pick<

@@ -14,7 +14,7 @@ import { useSelectedIllustration } from '../../providers/SelectedIllustrationPro
 
 export default function IllustrationSelectForApplication() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const { selectedIllustration } = useSelectedIllustration();
+    const { selectedIllustration, clientCase } = useSelectedIllustration();
     const { product, illustration: illustrationSummary } =
         selectedIllustration ?? {};
 
@@ -25,7 +25,13 @@ export default function IllustrationSelectForApplication() {
         )
     );
 
-    if (isLoading || !product || !illustrationSummary || !illustration) {
+    if (
+        isLoading ||
+        !product ||
+        !illustrationSummary ||
+        !illustration ||
+        !clientCase
+    ) {
         return;
     }
 
@@ -38,7 +44,9 @@ export default function IllustrationSelectForApplication() {
                     {t('clientCase.illustrationSelectForApplication.subtitle')}
                 </p>
 
-                <SelectForApplicationSummary product={product} title={title} />
+                <SelectForApplicationSummary
+                    {...{ clientCase, product, title }}
+                />
 
                 <div className="flex-1 flex flex-col">
                     <div className="flex-1" />

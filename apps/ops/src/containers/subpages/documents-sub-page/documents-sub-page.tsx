@@ -37,7 +37,7 @@ import {
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import DocumentResultsPagination from './documents-results-pagination';

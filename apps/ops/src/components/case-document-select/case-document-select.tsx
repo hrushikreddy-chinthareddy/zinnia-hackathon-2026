@@ -1,5 +1,6 @@
 import { TFunction, useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect } from 'react';
+import { v4 as uuidV4 } from 'uuid';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -10,12 +11,14 @@ import { ViewState } from '@deps/components/side-sheet/side-sheet-transaction/no
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
+import { NonFinancialTransactionBody } from '@deps/queries/api/bpm-non-financial';
 import { getCases } from '@deps/queries/api/cases';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 export const PROCESS_WITHOUT_CASE_DOCUMENT = '';
 
-type CaseId = { caseId?: string } | undefined;
+type CaseId = { caseId?: string; correlationId?: string } | undefined;
 export type SetStateCaseId = Dispatch<SetStateAction<CaseId>>;
 type SetStateCaseDocumentOptions = Dispatch<
     SetStateAction<CaseDocumentOption[]>
@@ -33,6 +36,9 @@ export interface CaseDocumentSelectProps {
     setCurrentErrors: SetStateCaseId;
     setViewState: SetStateViewState;
     required?: boolean;
+    processSubType?: Processes[];
+    correlationId?: string;
+    body?: NonFinancialTransactionBody;
 }
 
 export interface CaseDocumentOption {
@@ -40,6 +46,7 @@ export interface CaseDocumentOption {
     caseId: string;
     tag?: string;
     value: string;
+    correlationId?: string;
 }
 
 interface GetAssistiveText {
@@ -55,6 +62,9 @@ interface GetCaseDocumentOptions {
     setViewState: SetStateViewState;
     t: TFunction;
     featureFlags: FeatureFlags;
+    processSubType?: Processes[];
+    correlationId?: string;
+    setBody?: SetStateCaseId;
 }
 
 const getAssistiveText = ({ caseId, currentErrors, t }: GetAssistiveText) => {
@@ -72,6 +82,15 @@ const getAssistiveText = ({ caseId, currentErrors, t }: GetAssistiveText) => {
         };
     }
 
+    if (caseId) {
+        return {
+            text: t(
+                'transactions.caseDocumentSelect.caseSelectionAssistiveText'
+            ),
+            variant: AssistiveTextVariant.Info,
+        };
+    }
+
     return null;
 };
 
@@ -82,6 +101,9 @@ const getCaseDocumentOptions = async ({
     setViewState,
     t,
     featureFlags,
+    processSubType,
+    correlationId,
+    setBody,
 }: GetCaseDocumentOptions) => {
     if (!policyNumber) return;
 
@@ -101,6 +123,7 @@ const getCaseDocumentOptions = async ({
             notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
             policyNumber,
             process: [processType],
+            requestSubType: processSubType,
         },
         featureFlags
     );
@@ -117,9 +140,23 @@ const getCaseDocumentOptions = async ({
                     caseId: caseItem.id,
                     tag: `${caseItem.process} - ${caseItem.processSubType}`,
                     value: caseItem.id,
+                    correlationId: caseItem.correlationId,
                 };
             })
             .filter(Boolean) as CaseDocumentOption[];
+
+        const selectedDefaultCase =
+            correlationId &&
+            mappedCaseOptions.find(
+                (option) => option.correlationId === correlationId
+            );
+        if (selectedDefaultCase && setBody) {
+            setBody((prevState) => ({
+                ...prevState,
+                caseId: selectedDefaultCase.caseId,
+                correlationId: selectedDefaultCase.correlationId,
+            }));
+        }
 
         setCaseDocumentOptions([...mappedCaseOptions, noDocument]);
         setViewState(ViewState.Default);
@@ -127,7 +164,7 @@ const getCaseDocumentOptions = async ({
         setCaseDocumentOptions([noDocument]);
         setViewState(ViewState.Default);
 
-        throw new Error(
+        browserLogError(
             response?.data?.err ? response.data.err : 'Error fetching cases'
         );
     }
@@ -144,6 +181,9 @@ const CaseDocumentSelect = ({
     setCurrentErrors,
     setViewState,
     required = false,
+    processSubType,
+    correlationId,
+    body,
 }: CaseDocumentSelectProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -160,6 +200,9 @@ const CaseDocumentSelect = ({
                 setViewState,
                 t,
                 featureFlags,
+                processSubType,
+                correlationId,
+                setBody,
             });
         }
     }, [
@@ -170,6 +213,7 @@ const CaseDocumentSelect = ({
         setCaseDocumentOptions,
         setViewState,
         t,
+        processSubType,
     ]);
 
     return (
@@ -185,7 +229,13 @@ const CaseDocumentSelect = ({
                 )}
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div
+                className={`flex flex-col gap-2 ${
+                    correlationId && body?.correlationId == correlationId
+                        ? 'opacity-50 pointer-events-none'
+                        : ''
+                }`}
+            >
                 {caseDocumentOptions.map((caseDocumentOption) => (
                     <CardCaseDocument
                         caseDocumentOption={caseDocumentOption}
@@ -199,6 +249,9 @@ const CaseDocumentSelect = ({
                             setBody((prevState) => ({
                                 ...prevState,
                                 caseId: value,
+                                correlationId:
+                                    caseDocumentOption.correlationId ||
+                                    uuidV4(),
                             }));
                         }}
                     />

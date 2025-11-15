@@ -10,6 +10,7 @@ import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
 import { getDay150ReviewSteps } from './claims-day-150-review';
 import { getClaimReverseUncashTxnSteps } from './claims-reverse-uncashed-transactions';
 import { getClaimStopUncashTxnSteps } from './claims-stop-uncashed-transactions';
+import { getClaimsTaskSteps } from './claims-task-steps';
 import getDefaultTaskSteps from './default-task-steps';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
 import { getQualityAuditSteps } from './quality-audit-steps';
@@ -56,12 +57,9 @@ export const getFormSteps = (
         case TaskType.Purchase_enrichment:
         case TaskType.Duplicate_Review:
         case TaskType.Cost_Basis_Review:
-        case TaskType.Claims_Match_Bene_Document:
-        case TaskType.Claims_Fi_Escheatment_Task:
         case TaskType.Policyupdate_Partydetails_Review:
             steps = getAgentNigoSteps(props);
             break;
-
         case TaskType.Agent_Review:
             steps = getAgentReviewSteps(props);
             break;
@@ -73,6 +71,12 @@ export const getFormSteps = (
         case TaskType.Ops_Nigo:
         case TaskType.Ops_Review:
             steps = getTOANigoSteps(props);
+            break;
+        case TaskType.Claims_Match_Bene_Document:
+        case TaskType.Claims_Fi_Escheatment_Task:
+        case TaskType.Claims_Ops_To_Finance_Escheatment_Trigger:
+        case TaskType.Claims_Death_Audit_Contract_Matching:
+            steps = getClaimsTaskSteps(props);
             break;
         case TaskType.Claims_Identify_Uncashed_Transactions:
             steps = getClaimUncashTxnIdentifySteps(props);

@@ -158,17 +158,6 @@ export const commonOftFormValidation = (
             );
         }
     }
-    const ownerSignature = formSignature?.signatures?.find(
-        (sigInfo) =>
-            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
-    );
-
-    // No choice made for signature
-    if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-        ] = t('formValidation.signaturePresentOptionMustBeSelected');
-    }
 
     if (
         formDisbursement?.bank[0].accountType?.text === '' &&
@@ -179,6 +168,18 @@ export const commonOftFormValidation = (
         errors[BankingFields.AccountType] = t(
             'formValidation.accountTypeMustBeSelected'
         );
+    }
+
+    const ownerSignature = formSignature?.signatures?.find(
+        (sigInfo) =>
+            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+    );
+
+    // No choice made for signature
+    if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        errors[
+            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+        ] = t('formValidation.signaturePresentOptionMustBeSelected');
     }
 
     return errors;

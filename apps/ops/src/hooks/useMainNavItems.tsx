@@ -73,6 +73,12 @@ export const useMainNavItems = (): NavGroup[] => {
         });
     };
 
+    const handleClick = (linkText: string) => {
+        // always focus on 'main content' nav button
+        document.getElementById('main-layout')?.focus();
+        handleAnalytics(linkText);
+    };
+
     const homeLink = {
         id: homeLinkHref,
         display: homeLinkText,
@@ -81,7 +87,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={homeLinkHref}
-                onClick={() => handleAnalytics(homeLinkText)}
+                onClick={() => handleClick(homeLinkText)}
             />
         ),
     };
@@ -94,7 +100,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={taskManagementHref}
-                onClick={() => handleAnalytics(taskManagementText)}
+                onClick={() => handleClick(taskManagementText)}
             />
         ),
     };
@@ -107,7 +113,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={caseLinkHref}
-                onClick={() => handleAnalytics(caseLinkText)}
+                onClick={() => handleClick(caseLinkText)}
             />
         ),
     };
@@ -119,8 +125,8 @@ export const useMainNavItems = (): NavGroup[] => {
         renderComponent: (
             <NavLink
                 type={NavElementType.Link}
-                href={policySearchHref}
-                onClick={() => handleAnalytics(policySearchText)}
+                href={`${policySearchHref}#policySearch`}
+                onClick={() => handleClick(policySearchText)}
             />
         ),
     };
@@ -133,7 +139,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={'/illustrations/client-cases'}
-                onClick={() => handleAnalytics(illustrationsText)}
+                onClick={() => handleClick(illustrationsText)}
             />
         ),
     };
@@ -147,7 +153,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={'/zinnia-ai-assistant/chat'}
-                onClick={() => handleAnalytics(aiAssistantText)}
+                onClick={() => handleClick(aiAssistantText)}
                 target="_blank"
             ></NavLink>
         ),
@@ -161,7 +167,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={transactionOpsSuiteHref}
-                onClick={() => handleAnalytics(transactionOpsSuiteText)}
+                onClick={() => handleClick(transactionOpsSuiteText)}
             />
         ),
     };
@@ -174,7 +180,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={dashboardHref}
-                onClick={() => handleAnalytics(dashboardText)}
+                onClick={() => handleClick(dashboardText)}
             />
         ),
     };
@@ -188,7 +194,7 @@ export const useMainNavItems = (): NavGroup[] => {
                 type={NavElementType.Link}
                 href={marketingStorefrontHref}
                 target="_blank"
-                onClick={() => handleAnalytics(marketingStorefrontText)}
+                onClick={() => handleClick(marketingStorefrontText)}
             />
         ),
     };
@@ -201,7 +207,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={'/test-harness'}
-                onClick={() => handleAnalytics('Test Harness Click')}
+                onClick={() => handleClick('Test Harness Click')}
             />
         ),
     };
@@ -214,7 +220,7 @@ export const useMainNavItems = (): NavGroup[] => {
             <NavLink
                 type={NavElementType.Link}
                 href={process.env.NEXT_PUBLIC_ACCESS_MANAGEMENT_URL}
-                onClick={() => handleAnalytics(accessManagement)}
+                onClick={() => handleClick(accessManagement)}
             />
         ),
     };

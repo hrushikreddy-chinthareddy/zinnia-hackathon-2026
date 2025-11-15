@@ -8,7 +8,6 @@ import {
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Toast, ToastVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
@@ -119,29 +118,6 @@ export function FilesInfo<
     );
 }
 
-function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-    return dataURLs.reduce((acc, dataURL) => {
-        if (!dataURL) {
-            return acc;
-        }
-        try {
-            const { blob, name } = dataURItoBlob(dataURL);
-            return [
-                ...acc,
-                {
-                    dataURL,
-                    name: name,
-                    size: blob.size,
-                    type: blob.type,
-                },
-            ];
-        } catch (e) {
-            // Invalid dataURI, so just ignore it.
-            return acc;
-        }
-    }, [] as FileInfoType[]);
-}
-
 function FileWidget(widgetProps: WidgetProps) {
     const { multiple, onChange, value, formContext } = widgetProps;
 
@@ -224,8 +200,6 @@ function FileUploadComponent({
                         sourceFileName: name,
                         documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                         fileType: getFileSubtype(blob),
-                        docClassification:
-                            SearchRequest.documentClassification.INBOUND,
                         sourceSystem: SourceSystem.ZL,
                         zinniaLiveCaseId: formContext?.customData?.caseId,
                         parentCarrierCode:
@@ -247,6 +221,7 @@ function FileUploadComponent({
                                 documentId: response.documentId,
                                 documentCategory: metaData?.docCategory,
                                 documentType: metaData?.documentType,
+                                docClassification: metaData?.docClassification,
                                 documentExt: metaData?.fileType,
                                 documentName:
                                     metaData?.documentTypeDescription ||

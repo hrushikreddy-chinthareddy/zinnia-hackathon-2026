@@ -2,7 +2,6 @@ import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
-import { ESignature } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import {
     BankingFields,
     DisbursementFields,
@@ -12,7 +11,6 @@ import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/for
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
-    SignatureFieldNames,
     SignatureBonusFields,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -20,10 +18,7 @@ import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import {
-    ESignatureValidationTypeWithdrawal,
-    SignatureValidationTypeWithdrawal,
-} from '@deps/models/case/renewal/signature-validation';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
     FormValidationErrors,
@@ -50,6 +45,7 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function useFlicSSWConfig(t: TFunction) {
     const formValidation = useCallback(
@@ -57,20 +53,10 @@ export default function useFlicSSWConfig(t: TFunction) {
             formSignature,
             formDisbursement,
             formESignatureData,
+            formProgram,
+            formDistribution,
         }: Partial<FormParts> = {}): FormValidationErrors => {
             const errors = {} as FormValidationErrors;
-
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            const ownerEsignature = formESignatureData?.eSignatures?.find(
-                (sigInfo: ESignature) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
 
             if (
                 [PaymentMethod.EFT].includes(
@@ -97,16 +83,6 @@ export default function useFlicSSWConfig(t: TFunction) {
                 }
             }
 
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-
             if (
                 formDisbursement?.bank[0].accountType?.text === '' &&
                 [PaymentMethod.EFT].includes(
@@ -118,49 +94,30 @@ export default function useFlicSSWConfig(t: TFunction) {
                 );
             }
 
-            if (
-                formESignatureData?.isFormESignaturePresent &&
-                ownerEsignature?.isSigned === null
-            ) {
-                errors[
-                    `${ESignatureValidationTypeWithdrawal.Owner}-signPresent`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
+            const sswType = formProgram?.programSubType?.text || '';
+            const funds = formDistribution?.funds?.filter(
+                (fund) => !!fund.amount.text
+            );
 
-            if (ownerSignature?.isDesignationPresent === null) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-                ] = t('formValidation.signatureDesignationMustBeSelected');
+            if (
+                sswType === SSWType.PercentOfAmountValue &&
+                funds?.length === 0
+            ) {
+                errors['specifyFundsRequired'] = t(
+                    'sswProgram.warnings.specifyFundsRequired'
+                );
             }
-            return errors;
+            const signESignValidate = validateSignESign({
+                formSignature,
+                formESignatureData,
+                t,
+                validateDesignationPresent: true,
+            });
+
+            return { ...errors, ...signESignValidate };
         },
         [t]
     );
-
-    const sswFormValidation = ({
-        formParty,
-        formSignature,
-        formProgram,
-        formDistribution,
-        formDisbursement,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
-        const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds?.filter(
-            (fund) => !!fund.amount.text
-        );
-
-        if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
-            errors['specifyFundsRequired'] = t(
-                'sswProgram.warnings.specifyFundsRequired'
-            );
-        }
-        return errors;
-    };
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -716,7 +673,7 @@ export default function useFlicSSWConfig(t: TFunction) {
     };
 
     return {
-        formValidation: sswFormValidation,
+        formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         fundWithdrawnMethodOptions,

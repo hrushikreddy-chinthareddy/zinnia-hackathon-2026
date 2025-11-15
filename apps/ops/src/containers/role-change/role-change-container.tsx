@@ -75,7 +75,10 @@ const RoleChangeContainer = ({
     const getProcessSubType = () => {
         if (role === PolicyRole.PAYOR) {
             return [Processes.PayorChange];
-        } else if (role === PolicyRole.OWNER) {
+        } else if (
+            role === PolicyRole.OWNER ||
+            role === PolicyRole.JOINTOWNER
+        ) {
             return [Processes.OwnerChange];
         } else if (role === PolicyRole.THIRDPARTYDESIGNEE) {
             return [Processes.ThirdPartyDesigneeChange];

@@ -160,7 +160,10 @@ const NigoEntry = ({
                     featureFlagDecisions={featureFlagDecisions as FeatureFlags}
                     isLC={isLC}
                 >
-                    <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
+                    <NigoEntryProvider
+                        relatedDocCount={relatedDoc?.length}
+                        isLC={isLC}
+                    >
                         <NigoEntryContainer
                             documentNumber={documentNumber}
                             policyNumber={document?.contract}
@@ -187,7 +190,10 @@ const NigoEntry = ({
                     systematicPrograms={systematicPrograms}
                     isLC={isLC}
                 >
-                    <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
+                    <NigoEntryProvider
+                        relatedDocCount={relatedDoc?.length}
+                        isLC={isLC}
+                    >
                         <NigoEntryContainer
                             documentNumber={documentNumber}
                             policyNumber={policyNumber}
