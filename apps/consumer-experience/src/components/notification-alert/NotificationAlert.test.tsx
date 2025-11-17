@@ -14,7 +14,10 @@ jest.mock('@tanstack/react-query', () => {
   const actual = jest.requireActual('@tanstack/react-query');
   return {
     ...actual,
-    useQuery: jest.fn(() => ({ data: [], refetch: refetchMock })),
+    useQuery: jest.fn(() => ({
+      data: { data: [], total: 0 },
+      refetch: refetchMock,
+    })),
   };
 });
 
@@ -53,7 +56,10 @@ describe('NotificationAlert', () => {
     (getDismissedIdsMock as jest.Mock).mockReturnValue([]);
 
     const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
-    useQuery.mockReturnValue({ data: ['id-1'], refetch: refetchMock });
+    useQuery.mockReturnValue({
+      data: { data: ['id-1'], total: 1 },
+      refetch: refetchMock,
+    });
 
     render(<NotificationAlert />);
 
@@ -66,7 +72,10 @@ describe('NotificationAlert', () => {
     (getDismissedIdsMock as jest.Mock).mockReturnValue([]);
 
     const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
-    useQuery.mockReturnValue({ data: ['id-1', 'id-2'], refetch: refetchMock });
+    useQuery.mockReturnValue({
+      data: { data: ['id-1', 'id-2'], total: 2 },
+      refetch: refetchMock,
+    });
 
     render(<NotificationAlert />);
 
@@ -90,7 +99,10 @@ describe('NotificationAlert', () => {
     (getDismissedIdsMock as jest.Mock).mockReturnValue(['id-1']);
 
     const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
-    useQuery.mockReturnValue({ data: ['id-1'], refetch: refetchMock });
+    useQuery.mockReturnValue({
+      data: { data: ['id-1'], total: 1 },
+      refetch: refetchMock,
+    });
 
     render(<NotificationAlert />);
 
@@ -103,7 +115,10 @@ describe('NotificationAlert', () => {
     (getDismissedIdsMock as jest.Mock).mockReturnValue(['id-1']);
 
     const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
-    useQuery.mockReturnValue({ data: ['id-1', 'id-2'], refetch: refetchMock });
+    useQuery.mockReturnValue({
+      data: { data: ['id-1', 'id-2'], total: 2 },
+      refetch: refetchMock,
+    });
 
     render(<NotificationAlert />);
 
