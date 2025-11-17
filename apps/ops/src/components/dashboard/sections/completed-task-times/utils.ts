@@ -28,6 +28,16 @@ export interface CompletedTaskTimeData {
     totalTasks: number;
 }
 
+// Formatted data structure for CSV export
+export interface FormattedCompletedTaskTimeData {
+    caseType: string;
+    secondMedian: string;
+    secondHigh: string;
+    secondLow: string;
+    taskName: string;
+    count: number;
+}
+
 // CSV column definitions for processing times export
 export const CSV_COLUMNS: {
     label: string;
@@ -55,7 +65,12 @@ export const getCarrierName = (selectedCarriers: {
     return 'All Carriers';
 };
 
-export const formatTaskTime = (ms: number): string => {
+/**
+ * Converts a duration expressed in seconds into a human-readable string
+ * @param duration Duration in seconds.
+ * @returns A normalized, human-readable duration string.
+ */
+export const formatTaskTime = (duration: number): string => {
     const ONE_MINUTE = 60;
     const ONE_HOUR = 60 * ONE_MINUTE;
     const ONE_DAY = 24 * ONE_HOUR;
@@ -70,20 +85,42 @@ export const formatTaskTime = (ms: number): string => {
         return `${displayValue} ${unitLabel}`;
     };
 
-    if (ms < ONE_HOUR) {
-        return format(ms / ONE_MINUTE, 'minute');
+    if (duration < ONE_HOUR) {
+        return format(duration / ONE_MINUTE, 'minute');
     }
 
-    if (ms < ONE_DAY) {
-        return format(ms / ONE_HOUR, 'hour');
+    if (duration < ONE_DAY) {
+        return format(duration / ONE_HOUR, 'hour');
     }
 
-    return format(ms / ONE_DAY, 'day');
+    return format(duration / ONE_DAY, 'day');
 };
 
 /**
- * Flatten task volume data for CSV export
- * @param taskVolumeData - Nested task volume data from context
+ * Formats completed task time stats
+ * @param FlattenedCompletedTaskTimeData - Flattened completed task time data from context
+ * @returns Array with stats values converted into a human-readble string
+ */
+export const formatTaskTimeFromArray = (
+    processingTimesData: FlattenedCompletedTaskTimeData[]
+): FormattedCompletedTaskTimeData[] => {
+    if (!processingTimesData) return [];
+
+    return processingTimesData.map((caseType) => {
+        return {
+            caseType: caseType.caseType,
+            secondMedian: formatTaskTime(caseType.secondMedian),
+            secondHigh: formatTaskTime(caseType.secondHigh),
+            secondLow: formatTaskTime(caseType.secondLow),
+            taskName: caseType.taskName,
+            count: caseType.count,
+        };
+    });
+};
+
+/**
+ * Flatten completed task time data for CSV export
+ * @param CompletedTaskTimeData - Nested completed task time data from context
  * @returns Flattened array with "All tasks" rows and individual task rows
  */
 export const flattenCompletedTaskTimeData = (
@@ -117,7 +154,7 @@ export const flattenCompletedTaskTimeData = (
 };
 
 /**
- * Generate CSV filename for task volume export
+ * Generate CSV filename for completed task times export
  * @param carrierName - Carrier name or "All Carriers"
  * @param timerange - Date range object with from and to dates
  * @returns Formatted filename with .csv extension

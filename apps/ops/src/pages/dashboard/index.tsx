@@ -16,6 +16,7 @@ import { ActiveApplications } from '@deps/containers/dashboard/active-applicatio
 import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { NIGOAnalysis } from '@deps/containers/dashboard/nigo-analysis/nigo-analysis';
+import { TasksAnalysis } from '@deps/containers/dashboard/tasks-analysis/tasks-analysis';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -41,7 +42,6 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './Dashboard.module.css';
-import { TasksVolumeContainer } from '@deps/containers/dashboard/tasks-volume/tasks-volume';
 
 interface DashboardPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -96,7 +96,7 @@ const DashboardPage = ({
                             <NIGOAnalysis />
                         </TabContent>
                         <TabContent value={DashboardTabs.TASKS_VOLUME}>
-                            <TasksVolumeContainer />
+                            <TasksAnalysis />
                         </TabContent>
                     </div>
                 </DashboardTabNav>

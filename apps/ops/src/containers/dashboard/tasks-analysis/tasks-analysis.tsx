@@ -5,7 +5,7 @@ import { CompletedTaskTime } from '@deps/components/dashboard/sections/completed
 import { TasksVolume } from '@deps/components/dashboard/sections/tasks-volume/tasks-volume';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 
-export const TasksVolumeContainer = () => {
+export const TasksAnalysis = () => {
     return (
         <div className={styles.container}>
             <div

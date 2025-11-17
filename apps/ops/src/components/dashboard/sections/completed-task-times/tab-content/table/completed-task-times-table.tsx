@@ -32,6 +32,7 @@ import {
     getCarrierName,
     flattenCompletedTaskTimeData,
     formatTaskTime,
+    formatTaskTimeFromArray,
 } from '../../utils';
 import { CompletedTaskTimesFilters } from '../shared/completed-task-times-filters';
 import { CompletedTaskTimesHeader } from '../shared/completed-task-times-header';
@@ -64,7 +65,10 @@ export const CompletedTaskTimesTable = () => {
     );
 
     const flattenedData = useMemo(
-        () => flattenCompletedTaskTimeData(completedTaskTimeData),
+        () =>
+            formatTaskTimeFromArray(
+                flattenCompletedTaskTimeData(completedTaskTimeData)
+            ),
         [completedTaskTimeData]
     );
 

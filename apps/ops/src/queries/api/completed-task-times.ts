@@ -19,7 +19,6 @@ export const getCompletedTaskTimeData = async (
 
         return {
             data: response.data,
-            totalElements: response.totalElements,
         };
     } catch (error: any) {
         console.error(

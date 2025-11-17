@@ -4,6 +4,7 @@ import {
     generateTasksCSVFilename,
     CompletedTaskTimeData,
     formatTaskTime,
+    formatTaskTimeFromArray,
 } from './utils';
 
 const ONE_MINUTE = 60;
@@ -59,6 +60,48 @@ describe('Completed Task Time Utils', () => {
 
         it('formats 0ms as 0 minutes', () => {
             expect(formatTaskTime(0)).toBe('0 minutes');
+        });
+    });
+
+    describe('formatTaskTimeFromArray', () => {
+        it('formats a flattened completed task array', () => {
+            const array = [
+                {
+                    caseType: 'New Business',
+                    secondMedian: 1896,
+                    secondHigh: 423360,
+                    secondLow: 216,
+                    taskName: 'All tasks',
+                    count: 150,
+                },
+                {
+                    caseType: 'New Business',
+                    secondMedian: 1800,
+                    secondHigh: 423360,
+                    secondLow: 216,
+                    taskName: 'Data Entry',
+                    count: 100,
+                },
+            ];
+
+            expect(formatTaskTimeFromArray(array)).toEqual([
+                {
+                    caseType: 'New Business',
+                    secondMedian: '31.6 minutes',
+                    secondHigh: '4.9 days',
+                    secondLow: '3.6 minutes',
+                    taskName: 'All tasks',
+                    count: 150,
+                },
+                {
+                    caseType: 'New Business',
+                    secondMedian: '30 minutes',
+                    secondHigh: '4.9 days',
+                    secondLow: '3.6 minutes',
+                    taskName: 'Data Entry',
+                    count: 100,
+                },
+            ]);
         });
     });
 
