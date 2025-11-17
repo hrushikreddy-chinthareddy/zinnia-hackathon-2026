@@ -12,6 +12,7 @@ export enum TransactionsAdditionalDataStepIds {
     inboundDeathScrub = 'requestAck.inboundDeathScrub',
     performDAFileCaseMatch = 'matchDoc.performDAFileCaseMatch',
     matchDocPerformMatch = 'matchDoc.performMatch',
+    requestBillingPartner = 'requestAck.requestBillingPartner',
     receiveNewDocument = 'requestAck.createQualificationCase',
     complianceDbUpdate = 'requestAck.complianceDbUpdate',
 }
