@@ -35,12 +35,17 @@ export const NotificationAlert: FC = () => {
       : undefined;
 
   // Fetch new cases and extract the IDs
-  const { data: notifications = [], refetch } = useQuery({
+  const { data: notificationsResponse, refetch } = useQuery({
     ...caseQueryOptions({
       policyNumber,
       caseStatus: [CaseStatus.IN_PROGRESS],
     }),
-    select: data => data.data.map(item => item.id as string), // also return total
+    select: response => {
+      return {
+        data: response.data.map(item => item.id as string),
+        total: response.total,
+      };
+    }, // also return total
     enabled: !!planCode && !!policyNumber,
   });
 
@@ -83,11 +88,14 @@ export const NotificationAlert: FC = () => {
   const handleDismiss = () => {
     // Capture the current set of notification IDs so we can compare
     // future notifications against this snapshot
-    setLocalNotificationIds(new Set(notifications));
+    setLocalNotificationIds(new Set(notificationsResponse?.data || []));
 
     // Persist the dismissed notification IDs for this policy in session storage
     if (storageKey) {
-      setNotificationAlertDismissedIds(storageKey, notifications);
+      setNotificationAlertDismissedIds(
+        storageKey,
+        notificationsResponse?.data || []
+      );
     }
   };
 
@@ -97,8 +105,11 @@ export const NotificationAlert: FC = () => {
 
   // Show the notification alert if there are new notifications
   const visible =
-    notifications.length > 0 &&
-    notifications.some(notification => !localNotificationIds.has(notification));
+    notificationsResponse?.data &&
+    notificationsResponse?.data.length > 0 &&
+    notificationsResponse?.data.some(
+      notification => !localNotificationIds.has(notification)
+    );
 
   return (
     <div
@@ -111,7 +122,7 @@ export const NotificationAlert: FC = () => {
     >
       <BannerAlert
         icon={IconType.IN_PROGRESS}
-        bodyText={`We're still processing ${notifications.length} recent request(s).`} //Change this to count
+        bodyText={`We're still processing ${notificationsResponse?.total} recent request(s).`} //Change this to count
         canDismiss={true}
         onDismiss={handleDismiss}
         variant={BannerVariant.Information}
