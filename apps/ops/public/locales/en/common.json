@@ -2327,6 +2327,7 @@
         "assigned": "Assigned",
         "queue": "Queue",
         "lastUpdated": "Last Updated",
+        "prioritized": " Prioritized",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
             "setTaskAsPending": "Set Task as Scheduled",
@@ -2452,7 +2453,12 @@
             "requestSubtype": "Case types",
             "taskStatus": "Task Status",
             "group": "Group",
-            "assignee": "Assignee"
+            "assignee": "Assignee",
+            "priority": "Priority",
+            "selectPriority": "Select priority",
+            "onlyPrioritized": "Only Prioritized",
+            "any": "Any",
+            "notPrioritized": "Not Prioritized"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -2473,6 +2479,11 @@
                 "Withdrawal": "Withdrawals",
                 "New Business": "New Business",
                 "Renewal": "Renewals"
+            },
+            "escalated": {
+                "true": "Only Prioritized",
+                "false": "Not Prioritized",
+                "any": "Any"
             }
         },
         "selectStatus": "Select status",
@@ -2848,6 +2859,22 @@
     },
     "caseOverview": {
         "headerText": "Case Overview",
+        "prioritizeCase": {
+            "prioritized": "Prioritized",
+            "quickActions": "Quick Actions",
+            "title": "Prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A prioritized case will be moved up as a work item for expedited processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Case ID: {{caseId}} was prioritized",
+            "simpleTooltipBody": "This case is prioritized.",
+            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
+        },
         "navDrawer": {
             "topStatus": "Top Status",
             "stage": "Stage",

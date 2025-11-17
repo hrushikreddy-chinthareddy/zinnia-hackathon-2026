@@ -2331,6 +2331,7 @@
         "assigned": "Asignado",
         "queue": "Cola",
         "lastUpdated": "Última actualización",
+        "prioritized": "Priorizado",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Actualizar Estado de la Tarea",
             "setTaskAsPending": "Establecer la tarea como programada",
@@ -2456,7 +2457,12 @@
             "requestSubtype": "Tipos de caso",
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
-            "assignee": "Cesionario"
+            "assignee": "Cesionario",
+            "priority": "Prioridad",
+            "selectPriority": "Seleccionar prioridad",
+            "onlyPrioritized": "Seulement priorité",
+            "any": "Tout",
+            "notPrioritized": "Non priorisé"
         },
         "refineResultsErrors": {
             "caseType": "Por favor, seleccione al menos un tipo de caso",
@@ -2477,6 +2483,11 @@
                 "Withdrawal": "Retiros",
                 "New Business": "Nuevo negocio",
                 "Renewal": "Renovaciones"
+            },
+            "escalated": {
+                "true": "Solo priorizado",
+                "false": "No priorizado",
+                "any": "Cualquiera"
             }
         },
         "selectStatus": "Seleccionar estado",
@@ -2850,6 +2861,22 @@
     },
     "caseOverview": {
         "headerText": "Resumen del Caso",
+        "prioritizeCase": {
+            "title": "Priorizar Caso",
+            "quickActions": "Acciones rápidas",
+            "Prioritized": "Priorizado",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso priorizado será movido como un elemento de trabajo para procesamiento acelerado.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} priorizado exitosamente",
+            "simpleTooltipBody": "Este caso está priorizado.",
+            "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
+        },
         "navDrawer": {
             "topStatus": "Estado Principal",
             "stage": "Etapa",

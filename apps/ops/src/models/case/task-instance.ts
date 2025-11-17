@@ -166,6 +166,7 @@ export interface TaskQueueDrawerProps {
 export type UnassignedTask<T = TaskStatus> = {
     id: string;
     caseId: string;
+    escalated: boolean;
     process: string;
     queue?: string;
     carrier: string;

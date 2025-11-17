@@ -1319,6 +1319,7 @@
         "assigned": "Attribué",
         "queue": "File d'attente",
         "lastUpdated": "Dernière mise à jour",
+        "prioritized": "Priorisé",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
             "setTaskAsPending": "Définir la tâche comme planifiée",
@@ -2405,7 +2406,12 @@
             "requestSubtype": "Catégories de dossier.",
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
-            "assignee": "Cessionnaire"
+            "assignee": "Cessionnaire",
+            "priority": "Priorité",
+            "selectPriority": "Sélectionner la priorité",
+            "onlyPrioritized": "Seulement priorisé",
+            "any": "Tout",
+            "notPrioritized": "Non priorisé"
         },
         "refineResultsErrors": {
             "caseType": "Veuillez sélectionner un type de dossier",
@@ -2426,6 +2432,11 @@
                 "Withdrawal": "Retraits",
                 "New Business": "Nouvelle affaire",
                 "Renewal": "Renouvellements"
+            },
+            "escalated": {
+                "true": "Seulement priorisé",
+                "false": "Non priorisé",
+                "any": "Tout"
             }
         },
         "selectStatus": "Sélectionner le statut",
@@ -2805,6 +2816,22 @@
     },
     "caseOverview": {
         "headerText": "Aperçu du Dossier",
+        "prioritizeCase": {
+            "quickActions": "Actions rapides",
+            "prioritize": "Priorisé",
+            "title": "Prioriser le Dossier",
+            "detailsHeader": "Détails",
+            "detailsBody": "Un dossier priorisé sera déplacé en tant qu'élément de travail pour un traitement accéléré.",
+            "cancel": "Annuler",
+            "submit": "Soumettre",
+            "successMessage": "Dossier ID: {{caseId}} priorisé avec succès",
+            "errorMessage": "Échec de la priorisation du dossier",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "simpleTooltipBody": "Ce dossier est priorisé.",
+            "tooltipBody": "Ce dossier a été priorisé le {{date}} par {{userName}} pour traitement."
+        },
         "navDrawer": {
             "topStatus": "Statut supérieur",
             "stage": "Organiser",

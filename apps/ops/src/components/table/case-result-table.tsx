@@ -270,6 +270,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <CaseDetailField
                         text={singleCase.id}
                         className={styles.detail}
+                        escalated={singleCase.escalated ?? false}
                         highlights={
                             searchValues?.caseId ? [searchValues.caseId] : null
                         }
