@@ -5,6 +5,7 @@ import {
     WidgetProps,
     getUiOptions,
 } from '@rjsf/utils';
+import { ENTERPRISE_DATE_FORMAT } from '@xd/utils/src/dates';
 import dayjs from 'dayjs';
 import React from 'react';
 
@@ -14,8 +15,6 @@ import {
     FieldVariant,
 } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
-
-const DATE_FORMAT = 'YYYY-MM-DD';
 
 export default function NewDateWidget<
     T = any,
@@ -30,7 +29,7 @@ export default function NewDateWidget<
         const raw = input.trim();
 
         const possibleFormats = [
-            DATE_FORMAT,
+            ENTERPRISE_DATE_FORMAT,
             'MMDDYYYY',
             'MM/DD/YYYY',
             'DD/MM/YYYY',
@@ -41,7 +40,7 @@ export default function NewDateWidget<
         let parsed = dayjs(raw, possibleFormats, true);
         if (!parsed.isValid()) parsed = dayjs(raw, possibleFormats, false);
 
-        return parsed.isValid() ? parsed.format(DATE_FORMAT) : null;
+        return parsed.isValid() ? parsed.format(ENTERPRISE_DATE_FORMAT) : null;
     };
 
     const _onSelectDate = (event: React.ChangeEvent<HTMLInputElement>) => {
