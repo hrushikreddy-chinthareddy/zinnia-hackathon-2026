@@ -1,7 +1,7 @@
 import {
   DisbursementPaymentForm,
   TaxRateToUse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 import z from 'zod';
 
 export enum SurrenderSteps {

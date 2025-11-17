@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
+import { LineOfBusiness } from '@zinnia/api-types/types/bpm';
 import { Suspense } from 'react';
 
 import { DocumentsView } from '@/app/(authenticated)/coverage/shared-views/documents-view/DocumentsView';

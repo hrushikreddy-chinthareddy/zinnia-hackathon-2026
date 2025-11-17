@@ -1,9 +1,9 @@
 'use client';
-import { DisbursementPaymentForm } from '@xd/api-types/dist/generated-types/bpm';
+import { DisbursementPaymentForm } from '@zinnia/api-types/types/bpm';
 import {
   BankAccount,
   Address as AddressSOR,
-} from '@xd/api-types/dist/generated-types/sor';
+} from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Label, Loader } from '@zinnia/bloom/components';
 import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';

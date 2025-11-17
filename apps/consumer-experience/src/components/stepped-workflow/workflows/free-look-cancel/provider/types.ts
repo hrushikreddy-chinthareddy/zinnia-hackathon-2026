@@ -1,5 +1,5 @@
-import { DisbursementPaymentForm } from '@xd/api-types/dist/generated-types/bpm';
-import { Address, BankAccount } from '@xd/api-types/dist/generated-types/sor';
+import { DisbursementPaymentForm } from '@zinnia/api-types/types/bpm';
+import { Address, BankAccount } from '@zinnia/api-types/types/sor';
 import z from 'zod';
 
 import { PolicyParty } from '@/types/policy';

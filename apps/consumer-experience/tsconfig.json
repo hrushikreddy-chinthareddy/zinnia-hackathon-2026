@@ -1,18 +1,28 @@
 {
-  "extends": "@zinnia/typescript-config/nextjs",
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Next.js",
   "compilerOptions": {
-    "paths": {
-      "@/*": ["./src/*"],
-      "@xd/*": ["../../packages/*"],
-      "@xd-components/*": ["../../packages/xd-components/src/*"],
-      "@xd/components/*": ["../../packages/xd-components/src/components/*"],
-      "@xd/hooks/*": ["../../packages/xd-components/src/hooks/*"],
-    },
+    "target": "ES2015",
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": true,
+    "jsx": "preserve",
+    "noEmit": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "skipLibCheck": true,
+    "strict": false,
+    "incremental": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
   "include": [
     "next-env.d.ts",

@@ -1,6 +1,6 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
 
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';

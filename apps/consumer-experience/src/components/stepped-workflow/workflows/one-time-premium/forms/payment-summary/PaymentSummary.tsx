@@ -1,6 +1,6 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
+import { TransactionFailureResponse } from '@zinnia/api-types/types/bpm';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,

@@ -1,6 +1,6 @@
 'use client';
 
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';

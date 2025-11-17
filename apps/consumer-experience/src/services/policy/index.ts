@@ -109,7 +109,6 @@ const getPolicyReferencesByCarrierEnterprise = withLogging(
     const partyId = session?.user?.partyId;
 
     if (isTestPoliciesEnabled()) {
-      // @ts-expect-error specs aren't updated in developer portal yet
       searchFilter['carrier'] = CarrierId.SBUL;
     }
 

@@ -1,4 +1,4 @@
-import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';

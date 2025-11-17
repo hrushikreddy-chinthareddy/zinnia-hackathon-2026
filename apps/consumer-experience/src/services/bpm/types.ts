@@ -1,4 +1,4 @@
-import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
+import { Frequency } from '@zinnia/api-types/types/bpm';
 export interface BpmSuccessResponse {
   correlationId: string;
   caseId: string;

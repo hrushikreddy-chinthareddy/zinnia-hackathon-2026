@@ -57,7 +57,7 @@ export const Link = (props: Props): React.ReactElement => {
         return internalLinkText;
       }
 
-      return props.text;
+      return internalLinkText;
     };
 
     analytics.track('link_clicked', {
@@ -89,7 +89,16 @@ export const Link = (props: Props): React.ReactElement => {
     );
   }
 
-  const { isInternal: _, isNativeAnchorTag: __, className, ...rest } = props;
+  const {
+    isInternal: _,
+    isNativeAnchorTag: __,
+    className,
+    ...rest
+  } = props as CommonProps &
+    BloomLinkProps & {
+      isInternal?: false | null;
+      isNativeAnchorTag?: false | null;
+    };
   return (
     <BloomLink
       className={clsx(styles.link, className)}

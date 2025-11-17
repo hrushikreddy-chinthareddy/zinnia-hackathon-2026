@@ -1,6 +1,6 @@
 'use client';
 
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
+import { LineOfBusiness } from '@zinnia/api-types/types/bpm';
 import { useRouter } from 'next/navigation';
 
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';

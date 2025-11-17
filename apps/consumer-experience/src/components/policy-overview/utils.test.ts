@@ -3,7 +3,7 @@ import {
   PolicyFeature,
   PolicyStatus,
   ProductType,
-} from '@xd/api-types/dist/generated-types/sor';
+} from '@zinnia/api-types/types/sor';
 
 import { upcomingPaymentDetails } from './utils';
 

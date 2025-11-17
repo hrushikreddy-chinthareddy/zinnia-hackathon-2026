@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
   DisbursementPaymentForm,
   TransactionFailureResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,

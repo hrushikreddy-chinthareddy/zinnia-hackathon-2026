@@ -5,7 +5,7 @@ import {
   DisbursementType,
   TaxWithholdingType,
   FilingStatus,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 
 import { SurrenderState } from '@/components/stepped-workflow/workflows/surrender/provider/types';

@@ -1,15 +1,11 @@
 'use client';
-import {
-  Address,
-  LineOfBusiness,
-} from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils/dist';
-import { countryCodeToName } from '@xd/xd-components/src/utils/Adresses';
+import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   IconType,
   Label,
   Address as AddressComponent,
 } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { useFormContext } from 'react-hook-form';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
@@ -17,6 +13,7 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
+import { countryCodeToName } from '@/utils/address';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 
 import styles from './Selectable.module.css';

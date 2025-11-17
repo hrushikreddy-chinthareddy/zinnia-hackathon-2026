@@ -7,10 +7,10 @@ import {
   SystematicProgramUpdateRequest,
   Frequency,
   PartyRole,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
+} from '@zinnia/api-types/types/bpm';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import { Button, SideSheet } from '@zinnia/bloom/components';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 

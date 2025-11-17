@@ -1,4 +1,4 @@
-import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';

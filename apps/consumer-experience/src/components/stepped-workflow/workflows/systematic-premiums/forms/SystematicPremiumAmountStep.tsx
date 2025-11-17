@@ -1,7 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@xd/utils/dist';
+import { Frequency } from '@zinnia/api-types/types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -12,6 +11,7 @@ import {
   Popover,
   Radio,
 } from '@zinnia/bloom/components';
+import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';

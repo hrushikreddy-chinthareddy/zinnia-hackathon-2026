@@ -1,4 +1,4 @@
-import { ProductType } from '@xd/api-types/dist/generated-types/sor';
+import { ProductType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { DEFAULT_UNAVAILABLE_STRING, yearsLeft } from '@zinnia/utils';
 import { Metadata } from 'next';

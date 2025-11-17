@@ -1,4 +1,4 @@
-import { PolicyFeature } from '@xd/api-types/dist/generated-types/sor';
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 
 import { ApiResponse } from '@/services';
 import { policyApiBaseUrl } from '@/services/api-config';

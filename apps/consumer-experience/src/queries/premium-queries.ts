@@ -1,7 +1,7 @@
 import {
   TransactionAcceptedResponse,
   TransactionFailureResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 
 import { ApiResponse } from '@/services';
 import { OneTimePremiumBPMResponse } from '@/services/bpm/one-time-premium-payment';

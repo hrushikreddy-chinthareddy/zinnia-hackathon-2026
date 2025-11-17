@@ -1,12 +1,11 @@
-import { TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   FeatureType,
   PolicyFeature,
   PolicyStatus,
   ProductType,
-  Transaction,
-} from '@xd/api-types/dist/generated-types/sor';
-import { standardDateMonthDayYear } from '@xd/utils/dist';
+} from '@zinnia/api-types/types/sor';
+import { standardDateMonthDayYear } from '@zinnia/utils';
 
 import {
   getAddSystematicProgramEligibility,

@@ -1,4 +1,4 @@
-import { PartyRole, ProductType } from '@xd/api-types/dist/generated-types/sor';
+import { PartyRole, ProductType } from '@zinnia/api-types/types/sor';
 
 import { RouteKey } from '@/route-map';
 import { UserInfo } from '@/types/logging';

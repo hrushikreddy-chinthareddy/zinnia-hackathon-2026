@@ -1,7 +1,7 @@
 import {
   TransactionFailureResponse,
   TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';

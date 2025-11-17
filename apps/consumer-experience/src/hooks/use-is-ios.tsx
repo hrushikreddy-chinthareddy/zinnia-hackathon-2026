@@ -1,5 +1,6 @@
-import { useIsClient } from '@xd/xd-components/src/hooks/useIsClient';
 import { useEffect, useState } from 'react';
+
+import { useIsClient } from './use-is-client';
 
 function iOS() {
   return (

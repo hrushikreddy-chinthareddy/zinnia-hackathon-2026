@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { SelectDistribution } from '@/components/stepped-workflow/workflows/free-look-cancel/forms/SelectDistribution';
 import { getPolicyProfileData } from '@/services';

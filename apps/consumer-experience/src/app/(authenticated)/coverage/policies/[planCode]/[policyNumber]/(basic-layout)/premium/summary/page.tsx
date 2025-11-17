@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { PaymentSummary } from '@/components/stepped-workflow/workflows/one-time-premium/forms/payment-summary/PaymentSummary';
 import { OneTimePremium } from '@/components/stepped-workflow/workflows/one-time-premium/OneTimePremium';

@@ -3,10 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   DisbursementPaymentForm,
   PaymentForm,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { Address } from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils/dist';
-import { countryCodeToName } from '@xd/xd-components/src/utils/Adresses';
+} from '@zinnia/api-types/types/bpm';
+import { Address } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -15,6 +13,7 @@ import {
   Label,
   Address as AddressComponent,
 } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -38,6 +37,7 @@ import {
 import { useSurrender } from '@/components/stepped-workflow/workflows/surrender/provider/useSurrender';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
+import { countryCodeToName } from '@/utils/address';
 
 import { default as styles } from '../Surrender.module.css';
 
@@ -64,7 +64,9 @@ export const SelectBank = ({
   const form = useForm<z.infer<typeof distributionMethodStepSchema>>({
     resolver: zodResolver(distributionMethodStepSchema),
     defaultValues: {
-      distributionType: state.distributionMethodStep.distributionType || 'ACH',
+      distributionType:
+        state.distributionMethodStep.distributionType ||
+        DisbursementPaymentForm.ACH,
     },
   });
   const distributionMethod = form.watch('distributionType');

@@ -1,8 +1,5 @@
 'use client';
-import {
-  PolicyFeature,
-  SystematicProgram,
-} from '@xd/api-types/dist/generated-types/sor';
+import { PolicyFeature, SystematicProgram } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
 import z from 'zod';

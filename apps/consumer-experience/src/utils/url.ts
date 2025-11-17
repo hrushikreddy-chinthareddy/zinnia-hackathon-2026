@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { lineOfBusinessUrlPath } from './data';
 import { COOKIE_DOMAIN } from '../../constants';

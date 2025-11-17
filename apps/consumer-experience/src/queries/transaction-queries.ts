@@ -1,4 +1,4 @@
-import { SystematicProgramUpdateRequest } from '@xd/api-types/dist/generated-types/bpm';
+import { SystematicProgramUpdateRequest } from '@zinnia/api-types/types/bpm';
 
 import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
 import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';

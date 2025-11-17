@@ -1,6 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AllocationOption } from '@xd/api-types/dist/generated-types/bpm';
+import { AllocationOption } from '@zinnia/api-types/types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,

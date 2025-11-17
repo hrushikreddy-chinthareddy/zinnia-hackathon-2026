@@ -1,6 +1,6 @@
 'use client';
 
-import { AccountType } from '@xd/api-types/dist/generated-types/sor';
+import { AccountType } from '@zinnia/api-types/types/sor';
 
 import { PaymentusAccountType } from '@/types/paymentus';
 import { PiiProps } from '@/types/pii';

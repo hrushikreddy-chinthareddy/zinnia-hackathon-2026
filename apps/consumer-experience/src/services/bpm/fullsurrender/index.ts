@@ -6,7 +6,7 @@ import {
   TransactionAcceptedResponse,
   TransactionFailureResponse,
   TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 
 import { transactionApiBaseUrl } from '@/services/api-config';
 import { transformEligibility } from '@/services/bpm/transformers';

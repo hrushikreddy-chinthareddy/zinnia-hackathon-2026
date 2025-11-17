@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { SelectBank } from '@/components/stepped-workflow/workflows/withdrawals/forms/SelectBank';
 import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';

@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Suspense } from 'react';
 
 import { DocumentsView } from '@/app/(authenticated)/coverage/shared-views/documents-view/DocumentsView';

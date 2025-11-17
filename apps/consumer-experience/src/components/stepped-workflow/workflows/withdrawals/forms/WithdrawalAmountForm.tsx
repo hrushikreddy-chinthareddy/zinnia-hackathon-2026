@@ -1,10 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  AmountType,
-  DisbursementType,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
+import { AmountType, DisbursementType } from '@zinnia/api-types/types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -14,6 +10,7 @@ import {
   Label,
   Radio,
 } from '@zinnia/bloom/components';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -44,7 +41,8 @@ export const WithdrawalAmountForm = () => {
     defaultValues: {
       amountType: state.withdrawalAmountStep?.amountType || AmountType.MAX,
       paymentAmount: maxAmount,
-      withdrawalType: state.withdrawalAmountStep?.withdrawalType || 'GROSS',
+      withdrawalType:
+        state.withdrawalAmountStep?.withdrawalType || DisbursementType.GROSS,
       effectiveDate:
         state.withdrawalAmountStep?.effectiveDate ||
         dayjs().format(DEFAULT_DATE_FORMAT),

@@ -1,4 +1,4 @@
-import { Frequency, PaymentForm } from '@xd/api-types/dist/generated-types/bpm';
+import { Frequency, PaymentForm } from '@zinnia/api-types/types/bpm';
 
 import { PaymentMethod } from '@/types/payment';
 import { PolicyParty } from '@/types/policy';

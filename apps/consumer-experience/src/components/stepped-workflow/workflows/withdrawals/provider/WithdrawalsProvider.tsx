@@ -7,8 +7,8 @@ import {
   FilingStatus,
   PartyRole,
   TaxRateToUse,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
+} from '@zinnia/api-types/types/bpm';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
 

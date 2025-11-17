@@ -1,4 +1,4 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 

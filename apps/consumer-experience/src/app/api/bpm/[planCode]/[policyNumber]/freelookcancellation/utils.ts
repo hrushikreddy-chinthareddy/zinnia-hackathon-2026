@@ -2,8 +2,8 @@ import {
   DisbursementPaymentForm,
   PaymentForm,
   DisbursementType,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { BankAccount, Address } from '@xd/api-types/dist/generated-types/sor';
+} from '@zinnia/api-types/types/bpm';
+import { BankAccount, Address } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { FreeLookCancelState } from '@/components/stepped-workflow/workflows/free-look-cancel/provider/types';

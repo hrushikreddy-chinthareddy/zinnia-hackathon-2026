@@ -5,7 +5,7 @@ import {
   TransactionAcceptedResponse,
   TransactionFailureResponse,
   TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import { CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH } from 'next/dist/shared/lib/constants';
 

@@ -1,12 +1,12 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
-import { ComparisonTable } from '@xd-components/components/ComparisonTable/ComparisonTable';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 
+import { ComparisonTable } from '@/components/comparison-table/ComparisonTable';
 import { Name } from '@/components/pii/Name';
 import commonStyles from '@/components/stepped-workflow/common/Styles.module.css';
 import { useUser } from '@/hooks/use-user';

@@ -3,7 +3,7 @@ import {
   Policy,
   PolicyStatus,
   ProductType,
-} from '@xd/api-types/dist/generated-types/sor';
+} from '@zinnia/api-types/types/sor';
 
 import { RouteKey } from '@/route-map';
 import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';

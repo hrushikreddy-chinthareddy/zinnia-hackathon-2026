@@ -51,7 +51,7 @@ const AddressGroup = ({
         address.addressLine2 && { addressVal: address.addressLine2 },
         address.addressLine3 && { addressVal: address.addressLine3 },
       ]
-        .filter(val => val != undefined && val !== '')
+        .filter(val => val != undefined && val.addressVal !== '')
         .map(val => val as AddressObj) || undefined;
 
     const editValues: AddressFormFields = {

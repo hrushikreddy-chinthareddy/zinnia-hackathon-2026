@@ -1,4 +1,4 @@
-import { Party, PartyRole } from '@xd/api-types/dist/generated-types/sor';
+import { Party, PartyRole } from '@zinnia/api-types/types/sor';
 
 export enum getLoggedInUserPolicyAndPartyDataErrors {
   NO_POLICY_FOUND = 'No policy found: getPolicyPartyIdByPolicyNumber',

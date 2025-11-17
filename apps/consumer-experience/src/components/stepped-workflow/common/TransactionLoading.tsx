@@ -1,5 +1,5 @@
-import { toSentenceCase } from '@xd/utils/dist';
 import { Loader } from '@zinnia/bloom/components';
+import { toSentenceCase } from '@zinnia/utils';
 import { useEffect, useState } from 'react';
 
 // TODO: UPDATE COPY!!!!

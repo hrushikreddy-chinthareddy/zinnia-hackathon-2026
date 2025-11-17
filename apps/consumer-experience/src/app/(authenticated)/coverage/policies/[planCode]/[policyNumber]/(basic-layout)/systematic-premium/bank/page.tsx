@@ -1,4 +1,4 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
+import { LineOfBusiness } from '@zinnia/api-types/types/bpm';
 
 import { SelectBankWrapper } from '@/components/stepped-workflow/workflows/systematic-premiums/forms/SelectBankWrapper';
 import { SystematicPremiums } from '@/components/stepped-workflow/workflows/systematic-premiums/SystematicPremiums';

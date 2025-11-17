@@ -3,7 +3,7 @@ import {
   PaymentForm,
   TransactionFailureResponse,
   TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isMockErrorEnabled, transactionsAPIUrl } from '@/services/api-config';

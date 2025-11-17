@@ -1,6 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PartyRole } from '@xd/api-types/dist/generated-types/bpm';
+import { PartyRole } from '@zinnia/api-types/types/bpm';
 import { Label, Radio } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';

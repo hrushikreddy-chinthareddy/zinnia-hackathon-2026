@@ -1,6 +1,6 @@
 'use client';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import { Label } from '@zinnia/bloom/components';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';

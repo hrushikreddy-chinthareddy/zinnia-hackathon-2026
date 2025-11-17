@@ -1,6 +1,6 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
+import { TransactionFailureResponse } from '@zinnia/api-types/types/bpm';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';

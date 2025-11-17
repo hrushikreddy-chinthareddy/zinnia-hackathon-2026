@@ -1,7 +1,6 @@
-import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
-import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
 import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
+import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
@@ -21,6 +20,7 @@ import { getUpcomingPremium, getPolicyTransactions } from '@/services/policy';
 import { getPolicyFeatures } from '@/services/policy/features';
 import { PendingPremiumTransactionType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 

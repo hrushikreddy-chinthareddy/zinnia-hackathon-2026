@@ -1,6 +1,6 @@
 'use client';
-import { DisbursementPaymentForm } from '@xd/api-types/dist/generated-types/sor';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
+import { DisbursementPaymentForm } from '@zinnia/api-types/types/sor';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
 

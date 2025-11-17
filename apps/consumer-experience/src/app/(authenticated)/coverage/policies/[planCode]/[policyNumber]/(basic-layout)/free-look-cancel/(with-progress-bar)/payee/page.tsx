@@ -1,4 +1,4 @@
-import { PartyRole } from '@xd/api-types/dist/generated-types/sor';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 import { notFound } from 'next/navigation';
 
 import { SelectPayee } from '@/components/stepped-workflow/workflows/free-look-cancel/forms/SelectPayee';

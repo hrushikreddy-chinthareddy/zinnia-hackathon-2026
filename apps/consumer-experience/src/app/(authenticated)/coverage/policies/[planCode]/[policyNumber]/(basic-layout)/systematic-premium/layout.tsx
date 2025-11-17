@@ -1,8 +1,4 @@
-import {
-  FeatureType,
-  ProductType,
-  Reason,
-} from '@xd/api-types/dist/generated-types/sor';
+import { FeatureType, ProductType, Reason } from '@zinnia/api-types/types/sor';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 

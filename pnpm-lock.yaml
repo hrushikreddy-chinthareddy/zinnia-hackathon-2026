@@ -77,9 +77,6 @@ importers:
       '@zinnia/utils':
         specifier: workspace:*
         version: link:../../packages/utils
-      '@zinnia/xd-components':
-        specifier: workspace:*
-        version: link:../../packages/xd-components
       clsx:
         specifier: ^2.1.0
         version: 2.1.1
@@ -201,18 +198,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.21.0
         version: 6.21.0(eslint@8.57.1)(typescript@5.9.3)
-      '@zinnia/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@zinnia/jest-presets':
-        specifier: workspace:*
-        version: link:../../packages/jest-presets
-      '@zinnia/prettier-config':
-        specifier: workspace:*
-        version: link:../../packages/prettier-config
-      '@zinnia/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       autoprefixer:
         specifier: ^10.0.1
         version: 10.4.21(postcss@8.5.6)

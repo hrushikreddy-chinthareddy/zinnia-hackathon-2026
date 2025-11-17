@@ -4,7 +4,7 @@ import {
   TransactionAcceptedResponse,
   TransactionFailureResponse,
   TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
+} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 
 import { transactionApiBaseUrl } from '@/services/api-config';

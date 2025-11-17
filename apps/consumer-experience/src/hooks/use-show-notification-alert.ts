@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { parseNotifications } from '@/components/notification-center/utils';
 import {

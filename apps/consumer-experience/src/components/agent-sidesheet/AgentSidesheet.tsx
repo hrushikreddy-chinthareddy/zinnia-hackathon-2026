@@ -1,5 +1,5 @@
 'use client';
-import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
+import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import { Address, Button, Label, SideSheet } from '@zinnia/bloom/components';
 import { formatPhoneNumber, toTitleCase } from '@zinnia/utils';
 

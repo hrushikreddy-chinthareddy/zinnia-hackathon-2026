@@ -88,8 +88,13 @@ export const Party = ({ party }: { party: PolicyParty }) => {
   const fileteredPhones = filterItemsWithPastEndDate(phones);
   const filteredEmails = filterItemsWithPastEndDate(emails);
 
-  const name =
-    partyType === PartyType.INDIVIDUAL ? { firstName, lastName } : { fullName };
+  const renderFullName = () => {
+    if (partyType === PartyType.INDIVIDUAL) {
+      return <FullName firstName={firstName} lastName={lastName} />;
+    }
+
+    return <FullName fullName={fullName} />;
+  };
 
   // Only display the icon if partyRoles include either OWNER or JOINTOWNER
   const shouldDisplayIcon =
@@ -108,7 +113,7 @@ export const Party = ({ party }: { party: PolicyParty }) => {
         trigger={
           <div className={styles.trigger}>
             <Button mode="link" size="small">
-              <FullName {...name} />
+              {renderFullName()}
             </Button>
             {shouldDisplayIcon && (
               <Icon type={IconType.USERS} small className={styles.icon} />
@@ -126,9 +131,7 @@ export const Party = ({ party }: { party: PolicyParty }) => {
         >
           <div className={styles.name}>
             <h2 className="mb-lg">Name</h2>
-            <div>
-              <FullName {...name} />
-            </div>
+            <div>{renderFullName()}</div>
             <span className={`${styles.role} typography-content-body-sm`}>
               {roles}
             </span>

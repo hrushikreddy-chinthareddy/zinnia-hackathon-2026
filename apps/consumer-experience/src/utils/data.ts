@@ -1,7 +1,3 @@
-import {
-  DEFAULT_ERROR_STRING,
-  toSentenceCase,
-} from '@xd-components/utils/Strings';
 import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   AccountType,
@@ -18,7 +14,11 @@ import {
   ProductType,
   LineOfBusiness,
 } from '@zinnia/api-types/types/sor';
-import { policyOwner } from '@zinnia/utils';
+import {
+  DEFAULT_ERROR_STRING,
+  policyOwner,
+  toSentenceCase,
+} from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';

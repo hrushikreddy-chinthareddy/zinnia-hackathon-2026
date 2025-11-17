@@ -1,4 +1,4 @@
-import { PartyRole } from '@xd/api-types/dist/generated-types/sor';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import { PayeeStep } from '@/components/stepped-workflow/workflows/surrender/forms/PayeeStep';
 import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';

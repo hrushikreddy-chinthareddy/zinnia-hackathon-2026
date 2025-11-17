@@ -1,5 +1,5 @@
-import { PaymentForm } from '@xd/api-types/dist/generated-types/bpm';
-import { AccountType } from '@xd/api-types/dist/generated-types/sor';
+import { PaymentForm } from '@zinnia/api-types/types/bpm';
+import { AccountType } from '@zinnia/api-types/types/sor';
 
 import { PaymentusAccountType } from '@/types/paymentus';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';

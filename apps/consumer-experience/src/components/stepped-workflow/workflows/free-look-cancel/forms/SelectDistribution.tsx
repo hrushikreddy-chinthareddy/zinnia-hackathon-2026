@@ -5,7 +5,7 @@ import {
   BankAccount,
   DisbursementPaymentForm,
   LineOfBusiness,
-} from '@xd/api-types/dist/generated-types/sor';
+} from '@zinnia/api-types/types/sor';
 import { Label, Loader, Radio } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
