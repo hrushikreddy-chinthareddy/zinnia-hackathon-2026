@@ -1,10 +1,14 @@
 import { PartyStatus } from '@zinnia/api-types/types/sor';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import ClickContainer from '@deps/components/click-container/click-container';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Title, { TitleVariant } from '@deps/components/title/title';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import {
     getBeneficiaryColor,
     getContigentColor,
@@ -31,6 +35,7 @@ export interface CardPeopleProps {
     //TODO: remove the optional for testId, but for now we'll keep it optional for backwards compatibility
     testId?: string;
     partyStatus?: PartyStatus;
+    isIrrevocable?: boolean | null;
 }
 
 const PREFERRED_TAG_ORDER = {
@@ -83,6 +88,7 @@ const CardPeople = ({
     isSelected = false,
     testId,
     partyStatus,
+    isIrrevocable,
 }: CardPeopleProps) => {
     const hasAllocation = !isNullEmptyOrUndefined(allocation || '');
     const allocationBgClasses = hasAllocation
@@ -90,6 +96,7 @@ const CardPeople = ({
         : '';
 
     const ref = useRef<HTMLDivElement>(null);
+    const { t } = useTranslation();
 
     useEffect(() => {
         if (shouldFocus && ref.current) {
@@ -98,6 +105,10 @@ const CardPeople = ({
     }, [shouldFocus]);
 
     const sortedTags = sortTags(tags as TagKey[]);
+    const showIrrevocable =
+        isIrrevocable &&
+        (beneficiaryType === BeneficiaryType.PRIMARY ||
+            beneficiaryType === BeneficiaryType.CONTINGENT);
 
     return (
         <ClickContainer
@@ -149,6 +160,11 @@ const CardPeople = ({
                         </p>
                     </div>
                 )}
+            </div>
+            <div className="mt-2">
+                <Typography variant={TypographyVariant.Body}>
+                    {showIrrevocable ? t('people.irrevocable') : '\u00A0'}
+                </Typography>
             </div>
         </ClickContainer>
     );

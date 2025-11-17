@@ -6150,7 +6150,8 @@
         "cardDisableTooltip": "Nous travaillons encore sur cette page. Pour l'instant, rendez-vous directement sur MCS pour consulter les coordonnées et les informations d'identification des agents.",
         "other": "Autre",
         "otherTooltip": "Les autres agents participant à la police ne gagnent pas de commission, mais peuvent également être autorisés à apporter des modifications ou à discuter de cette politique. Par exemple, l'agent de gestion de la politique est l'agent qui travaille directement avec le propriétaire maintenant que la politique est active.",
-        "managePeople": "Gérer les gens"
+        "managePeople": "Gérer les gens",
+        "irrevocable": "Irrévocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",

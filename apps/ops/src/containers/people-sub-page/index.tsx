@@ -299,7 +299,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                     />
                                     {beneficiaryDataByType(
                                         filteredNameTags,
-                                        BeneficiaryType.CONTIGENT
+                                        BeneficiaryType.CONTINGENT
                                     )?.length ? (
                                         <BeneficiaryCardContainer
                                             title={t(
@@ -308,9 +308,9 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                             peopleCardData={peopleCardData}
                                             filteredData={beneficiaryDataByType(
                                                 filteredNameTags,
-                                                BeneficiaryType.CONTIGENT
+                                                BeneficiaryType.CONTINGENT
                                             )}
-                                            type={BeneficiaryType.CONTIGENT}
+                                            type={BeneficiaryType.CONTINGENT}
                                             openAllocationSideSheet={
                                                 openSidesheet
                                             }
