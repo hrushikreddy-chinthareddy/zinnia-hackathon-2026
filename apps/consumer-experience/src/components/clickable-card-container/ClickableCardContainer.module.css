@@ -67,6 +67,7 @@ ave top radius and last card should have bottom radius */
   align-items: center;
 }
 
+/* expands click area from anchor across whole card */
 .primaryAction::before {
   content: '';
   position: absolute;
@@ -74,10 +75,14 @@ ave top radius and last card should have bottom radius */
   z-index: 1;
 }
 
-/* expands click area from anchor across whole card */
 .linkArrow {
   transform: rotate(-90deg);
   color: var(--color-base-icon-icon-action);
+}
+
+/* If clickable card includes text next to chevron*/
+.linkText {
+  color: var(--color-base-text-text-link);
 }
 
 .listItem {

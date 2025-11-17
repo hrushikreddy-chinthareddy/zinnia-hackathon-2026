@@ -165,6 +165,8 @@ export const UpcomingPremium = async ({
             ? ''
             : `/coverage/policies/${planCode}/${policyNumber}/premium`, //annuities logic
           label: 'go to manage payments page',
+          ctaText: 'Manage payments',
+          showArrow: true,
         }}
       >
         <div className={styles.rowWrapper}>
@@ -184,7 +186,7 @@ export const UpcomingPremium = async ({
                 )}
               </FieldData>
             )}
-            <div className={scheduledPayment ? 'ml-lg' : ''}>
+            <div className={scheduledPayment ? 'ml-xl' : ''}>
               <FieldData
                 Label={
                   <Label
