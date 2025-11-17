@@ -7953,7 +7953,8 @@
                 "matchDocument": "Match Document",
                 "beneficiaryStatus": "Beneficiary Status",
                 "addressChange": "Address Change",
-                "call": "Call"
+                "call": "Call",
+                "formReview": "Form Review"
             },
             "nextTask": "Continue to Next Task"
         },
@@ -8393,6 +8394,15 @@
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",
             "cta": "Go to incoming transfer ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Beneficary Change Data Entry was submitted.",
+            "cta": "Go to Case",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
