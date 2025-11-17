@@ -25,7 +25,8 @@ export async function Nav({
   const CarrierLogo = carrierConfig.image;
 
   return (
-    <div style={{ position: 'relative' }}>
+    <>
+      {' '}
       <nav className={styles.nav}>
         <div className={styles.logoContainer}>
           <DevMenu />
@@ -47,6 +48,6 @@ export async function Nav({
       <div className={styles.notificationAlertContainer}>
         <NotificationAlert />
       </div>
-    </div>
+    </>
   );
 }
