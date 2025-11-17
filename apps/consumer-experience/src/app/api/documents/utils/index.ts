@@ -4,7 +4,7 @@ export const b64ToBlob = (b64data: string): Blob | null => {
     const chunkSize = 1024;
     const byteChars = atob(b64data);
 
-    const chunks: Uint8Array[] = [];
+    const chunks: Uint8Array<ArrayBuffer>[] = [];
 
     for (let i = 0; i < byteChars.length; i += chunkSize) {
       const chunk = byteChars.slice(i, i + chunkSize);

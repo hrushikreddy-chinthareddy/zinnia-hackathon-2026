@@ -18,19 +18,13 @@ i18n.use(initReactI18next).init({
     interpolation: { escapeValue: false },
 });
 
-const uiSchema = {
-    'ui:options': {
-        label: false,
-    },
-};
-
 describe('Email Widget', () => {
-    it('should render email field with label', () => {
+    it('should render Email Widget with default input value', () => {
         render(
             <EmailWidget
                 value="abc@mail.com"
-                label="Email"
-                uiSchema={uiSchema}
+                label="Email Address"
+                uiSchema={{}}
                 formContext={{}}
                 schema={{}}
                 disabled={false}
@@ -46,18 +40,45 @@ describe('Email Widget', () => {
                 registry={widgetRegistryMock}
             />
         );
-        expect(screen.getByText('Email')).toBeInTheDocument();
+        const input = screen
+            .getByTestId('field-input-test-id')
+            .querySelector('input');
+        expect(input).toHaveValue('abc@mail.com');
     });
 
-    it('should display tooltip on click of email tooltip button', () => {
+    it('should display email value in readonly view', () => {
         render(
             <EmailWidget
                 value="abc@mail.com"
-                label="Email"
-                uiSchema={uiSchema}
+                label="Email Address"
+                uiSchema={{}}
                 formContext={{}}
                 schema={{}}
                 disabled={false}
+                readonly={true}
+                onChange={jest.fn()}
+                onBlur={jest.fn()}
+                onFocus={jest.fn()}
+                id="test"
+                options={{}}
+                required={false}
+                rawErrors={[]}
+                name={''}
+                registry={widgetRegistryMock}
+            />
+        );
+        expect(screen.getByText('abc@mail.com')).toBeInTheDocument();
+    });
+
+    it('should disable Email widget when "disabled" prop is true', () => {
+        render(
+            <EmailWidget
+                value="abc@mail.com"
+                label="Email Address"
+                uiSchema={{}}
+                formContext={{}}
+                schema={{}}
+                disabled={true}
                 readonly={false}
                 onChange={jest.fn()}
                 onBlur={jest.fn()}
@@ -70,20 +91,17 @@ describe('Email Widget', () => {
                 registry={widgetRegistryMock}
             />
         );
-        const tooltipBtn = screen.getByRole('button');
-        fireEvent.click(tooltipBtn);
-
-        expect(screen.getByText('general.email')).toBeInTheDocument();
-        expect(screen.getByText('general.emailTooltip')).toBeInTheDocument();
+        const emailInput = screen.getByTestId('field-input-test-id');
+        expect(emailInput).toHaveClass('bg-gray-100 pointer-events-none');
     });
 
     it('should trigger handleChange on input change', () => {
         const handleChange = jest.fn();
         render(
             <EmailWidget
-                value="abc@mail.com"
+                value=""
                 label="Email"
-                uiSchema={uiSchema}
+                uiSchema={{}}
                 formContext={{}}
                 schema={{}}
                 disabled={false}
@@ -99,9 +117,15 @@ describe('Email Widget', () => {
                 registry={widgetRegistryMock}
             />
         );
-        const emailInput = screen.getByLabelText('Email') as HTMLInputElement;
-        fireEvent.change(emailInput, { target: { value: 'xyz@mail.com' } });
+        const emailInput = screen
+            .getByTestId('field-input-test-id')
+            .querySelector('input') as HTMLInputElement;
+        expect(emailInput).toHaveValue('');
 
+        fireEvent.change(emailInput, { target: { value: 'xyz@mail.com' } });
         expect(handleChange).toHaveBeenCalledTimes(1);
+
+        fireEvent.change(emailInput, { target: { value: ' ' } });
+        expect(handleChange).toHaveBeenCalledTimes(2);
     });
 });

@@ -121,10 +121,8 @@ const CaseManagementDashboard = ({
         currentSearchValue,
         setCurrentSearchValue,
     ] = useCaseFilterQueryStore();
-
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
-
     const handleCreatedBySort = useCallback(
         (key: 'createdAt') => {
             setCaseManagementFilters((prevFilters) => {
@@ -221,7 +219,6 @@ const CaseManagementDashboard = ({
                 ...advisorsExcelParams,
             };
         }
-
         return {
             ...svo,
             ...additionalFilters,
@@ -237,6 +234,8 @@ const CaseManagementDashboard = ({
         caseManagementFilters.offset,
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
+        isAdvisorsExcel,
+        enableAdditionalAdvisorsExcelCarriers,
     ]);
 
     const {
@@ -294,6 +293,8 @@ const CaseManagementDashboard = ({
                     requestSubType: Array.from(
                         caseManagementFilters.additionalFilters.requestSubType
                     ),
+                    escalated:
+                        caseManagementFilters.additionalFilters.escalated,
                 },
             });
         }
@@ -386,7 +387,6 @@ const CaseManagementDashboard = ({
         },
         [setCaseManagementFilters, user.sid, user.partyId]
     );
-
     const handleClear = useCallback(
         (searchField: PolicySearchKeys | undefined) => {
             if (searchField) {
@@ -456,7 +456,6 @@ const CaseManagementDashboard = ({
         const total = `${caseSearchData?.total?.toLocaleString() ?? '0'}${
             caseSearchData?.total === 10000 ? '+' : ''
         }`;
-
         return (
             <>
                 <CaseResultTable
@@ -642,7 +641,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT
                 ]
             ) {
-                console.log('case management feature flag enabled');
                 const doesUserHasPagePermissions = featureFlagDecisions?.[
                     FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
                 ]

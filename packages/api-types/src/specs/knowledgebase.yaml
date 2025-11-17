@@ -1,0 +1,1488 @@
+openapi: 3.0.1
+info:
+  title: Knowledge Base AI API
+  description: >-
+    API documentation for Knowledge Base AI application. APIs marked with
+    'hidden' tag are internal and excluded from Kong gateway.
+  contact:
+    name: Zinnia
+    email: support@zinnia.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: '1.0'
+servers:
+  - url: 'https://knowledgebase-staging.zinnia.com/backend'
+tags:
+  - name: users
+    description: User management operations
+  - name: chat
+    description: Chat management operations
+  - name: clients
+    description: Client management operations
+paths:
+  '/api/v1/chat/sessions/{sessionId}':
+    put:
+      tags:
+        - chat
+      operationId: updateSessionTitle_v2
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSessionTitleRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseString'
+  '/api/v1/chat/sessions/{sessionId}/messages/{messageId}':
+    put:
+      tags:
+        - chat
+      operationId: updateMessage_v2
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChatMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseChatMessageResponse'
+  '/api/v1/chat/sessions/{sessionId}/messages/{messageId}/stream':
+    put:
+      tags:
+        - chat
+      operationId: updateMessageStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateChatMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
+  '/api/v1/chat/follow-ups/{followUpId}':
+    put:
+      tags:
+        - chat
+      summary: Update follow-up question
+      description: Update a follow-up question for an existing follow-up
+      operationId: updateFollowUp_v2
+      parameters:
+        - name: followUpId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseFollowUpResponse'
+  '/api/v1/chat/follow-ups/{followUpId}/stream':
+    put:
+      tags:
+        - chat
+      operationId: modifyFollowUpStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: followUpId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
+  /api/v1/users/search:
+    post:
+      tags:
+        - users
+      operationId: searchUsers_v2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserSearchRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+  /api/v1/users/details:
+    post:
+      tags:
+        - users
+      operationId: getMeByEmail_v2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/MeResponse'
+  '/api/v1/sharepoint/pages/{pageId}/embed':
+    post:
+      tags:
+        - sharepoint
+      summary: Embed SharePoint page
+      description: Internal API to embed a specific SharePoint page
+      operationId: embedPage_v2
+      parameters:
+        - name: pageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: object
+  '/api/v1/clients/{clientID}/documents/sync':
+    post:
+      tags:
+        - clients
+      summary: Sync documents for a specific client
+      description: >-
+        Fetches and stores all documents associated with the specified client
+        from SharePoint. This operation will update the document index for the
+        client.
+      operationId: syncClientDocuments_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: >-
+            The unique page ID of the client whose documents need to be
+            synchronized
+          required: true
+          schema:
+            type: string
+          example: '12345'
+      responses:
+        '200':
+          description: Document synchronization completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - synchronization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Client not found
+  /api/v1/clients/sync:
+    post:
+      tags:
+        - clients
+      summary: Sync clients from CSV and SharePoint
+      description: >-
+        Reads a CSV file of clients, fetches extra information from SharePoint,
+        and saves it to the database. This is an administrative operation that
+        synchronizes client data.
+      operationId: syncClients_v2
+      responses:
+        '200':
+          description: Client synchronization started successfully
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Client synchronization started.
+        '500':
+          description: Internal server error during synchronization
+          content:
+            application/json:
+              schema:
+                type: string
+  /api/v1/clients/documents/sync-all-processed:
+    post:
+      tags:
+        - clients
+      summary: Sync documents for all processed clients
+      description: >-
+        Fetches and stores documents for all clients with PROCESSED status from
+        SharePoint. This operation will update the document index for all
+        processed clients and track document changes.
+      operationId: syncAllProcessedClientDocuments_v2
+      responses:
+        '200':
+          description: >-
+            Document synchronization completed successfully for all processed
+            clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '400':
+          description: Bad request - synchronization failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+  /api/v1/chat/sessions:
+    post:
+      tags:
+        - chat
+      operationId: createChatSession_v2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChatSessionRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseChatSessionResponse'
+  '/api/v1/chat/sessions/{sessionId}/messages':
+    get:
+      tags:
+        - chat
+      operationId: getSessionMessages_v2
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseSessionMessagesResponse'
+    post:
+      tags:
+        - chat
+      operationId: sendMessage_v2
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseChatMessageResponse'
+  '/api/v1/chat/sessions/{sessionId}/messages/stream':
+    post:
+      tags:
+        - chat
+      operationId: sendMessageStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
+  /api/v1/chat/sessions/list:
+    post:
+      tags:
+        - chat
+      operationId: getUserSessions_v2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetUserSessionsRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  #/components/schemas/ApiResponsePaginatedResponseChatSessionResponse
+  /api/v1/chat/search:
+    post:
+      tags:
+        - chat
+      summary: Search chat questions
+      description: >-
+        Search through user's chat questions across all sessions for a specific
+        client. Requires minimum 3 characters in search terms.
+      operationId: searchChatQuestions_v2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatSearchRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: >-
+                  #/components/schemas/ApiResponsePaginatedResponseChatSearchResponse
+  '/api/v1/chat/messages/{messageId}/followup':
+    post:
+      tags:
+        - chat
+      summary: Create follow-up question
+      description: >-
+        Create a follow-up question for an existing question message. Supports
+        chaining up to 5 follow-ups.
+      operationId: createFollowUp_v2
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseFollowUpResponse'
+  '/api/v1/chat/messages/{messageId}/followup/stream':
+    post:
+      tags:
+        - chat
+      operationId: createFollowUpStream_v2
+      x-kong-route-defaults:
+        request_buffering: false
+        response_buffering: false
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFollowUpRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StreamingResponseBody'
+  '/api/v1/chat/messages/{messageId}/feedback':
+    post:
+      tags:
+        - chat
+      summary: Submit feedback for a chat response
+      description: Allows users to like/dislike a response and optionally add a comment
+      operationId: submitFeedback_v2
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedbackRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseFeedbackResponse'
+  /api/v1/users/all:
+    get:
+      tags:
+        - users
+      operationId: getAllUsers_v2
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+        - name: size
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            default: createdAt
+        - name: sortDirection
+          in: query
+          required: false
+          schema:
+            type: string
+            default: desc
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PaginatedResponseUserResponse'
+  /api/v1/health:
+    get:
+      tags:
+        - health
+      summary: Health check
+      description: Check if the application is up and running
+      operationId: healthCheck_v2
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /api/v1/clients:
+    get:
+      tags:
+        - clients
+      summary: Get all clients with their status
+      description: >-
+        Returns a list of all clients and their embedding status. This endpoint
+        provides an overview of all clients in the system along with their
+        current processing status.
+      operationId: getAllClients_v2
+      responses:
+        '200':
+          description: Successfully retrieved all clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDetailsDto'
+  '/api/v1/clients/{clientID}':
+    get:
+      tags:
+        - clients
+      summary: Get a client by page ID
+      description: >-
+        Returns a specific client and their embedding status by page ID. Use
+        this endpoint to get detailed information about a specific client.
+      operationId: getClientById_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: '12345'
+      responses:
+        '200':
+          description: Successfully retrieved client details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDetailsDto'
+        '404':
+          description: Client not found
+  '/api/v1/clients/{clientID}/documents/updated':
+    get:
+      tags:
+        - clients
+      summary: Get recent updated documents
+      description: >-
+        Returns documents updated within the last 7 days for the specified
+        client. This helps track recently modified content.
+      operationId: getRecentUpdatedDocuments_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: '12345'
+      responses:
+        '200':
+          description: Successfully retrieved recent updated documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDocumentDto'
+        '404':
+          description: Client not found
+  '/api/v1/clients/{clientID}/documents/search':
+    get:
+      tags:
+        - clients
+      summary: Search documents by name with pagination
+      description: >-
+        Returns documents for the specified client that match the search term in
+        their name. Search term must be at least 3 characters long. The search
+        is case-insensitive and matches partial names.
+      operationId: searchDocuments_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: '12345'
+        - name: searchTerm
+          in: query
+          description: Search term to filter documents by name (minimum 3 characters)
+          required: true
+          schema:
+            type: string
+          example: report
+        - name: page
+          in: query
+          description: Page number for pagination (0-based)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+          example: 0
+        - name: size
+          in: query
+          description: Number of documents per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+          example: 20
+      responses:
+        '200':
+          description: Successfully retrieved search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '400':
+          description: Bad request - search term must be at least 3 characters
+        '404':
+          description: Client not found
+  '/api/v1/clients/{clientID}/documents/recent':
+    get:
+      tags:
+        - clients
+      summary: Get recent created documents
+      description: >-
+        Returns documents created within the last 7 days for the specified
+        client. This helps track newly added content.
+      operationId: getRecentCreatedDocuments_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: '12345'
+      responses:
+        '200':
+          description: Successfully retrieved recent created documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDocumentDto'
+        '404':
+          description: Client not found
+  '/api/v1/clients/{clientID}/documents/all':
+    get:
+      tags:
+        - clients
+      summary: Get all documents with pagination
+      description: >-
+        Returns all documents for the specified client with pagination support.
+        Use this endpoint to browse through all documents associated with a
+        client.
+      operationId: getAllDocuments_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: '12345'
+        - name: page
+          in: query
+          description: Page number for pagination (0-based)
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+          example: 0
+        - name: size
+          in: query
+          description: Number of documents per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 20
+          example: 20
+      responses:
+        '200':
+          description: Successfully retrieved paginated documents
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedResponse'
+        '404':
+          description: Client not found
+  /api/v1/clients/documents/download:
+    get:
+      tags:
+        - clients
+      summary: Download document from SharePoint
+      description: >-
+        Downloads a document from SharePoint using the drive ID, item ID, and
+        document type. The site ID is automatically taken from configuration.
+        The document content is returned as binary data that can be viewed
+        online by the frontend.
+      operationId: downloadDocument_v2
+      parameters:
+        - name: driveId
+          in: query
+          description: The SharePoint drive ID
+          required: true
+          schema:
+            type: string
+          example: b!XSKB4jF4aUuzETTHj0B0NMrH0cCBF3ZMpZJ2PWgcXSbDrb6f88sMS4jHcGXEoxnO
+        - name: itemId
+          in: query
+          description: The SharePoint item ID
+          required: true
+          schema:
+            type: string
+          example: 01UMWQ3VJXW26GSHZL7ZFKVJ3R23GM4VYF
+        - name: documentType
+          in: query
+          description: The document type
+          required: true
+          schema:
+            type: string
+          example: pdf
+      responses:
+        '200':
+          description: Document downloaded successfully
+          content:
+            application/octet-stream: {}
+        '400':
+          description: Failed to download document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponse'
+        '404':
+          description: Document not found
+  '/api/v1/chat/messages/{messageId}/followups':
+    get:
+      tags:
+        - chat
+      summary: Get follow-up chain
+      description: >-
+        Retrieve the complete follow-up conversation chain for a specific
+        message
+      operationId: getFollowUpChain_v2
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ApiResponseFollowUpChainResponse'
+components:
+  schemas:
+    UpdateSessionTitleRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        sessionTitle:
+          type: string
+    ApiResponseString:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          type: string
+        success:
+          type: boolean
+    UpdateChatMessageRequest:
+      type: object
+      properties:
+        question:
+          type: string
+        clientId:
+          type: string
+    ApiResponseChatMessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/ChatMessageResponse'
+        success:
+          type: boolean
+    ChatMessageResponse:
+      type: object
+      properties:
+        questionId:
+          type: string
+        responseId:
+          type: string
+        question:
+          type: string
+        response:
+          type: string
+        sourceDocuments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceDocument'
+        responseTimeMs:
+          type: integer
+          format: int64
+        questionTimestamp:
+          type: string
+          format: date-time
+        responseTimestamp:
+          type: string
+          format: date-time
+        definitiveAnswerFound:
+          type: boolean
+        hasFollowUps:
+          type: boolean
+        feedbackType:
+          type: string
+          enum:
+            - LIKE
+            - DISLIKE
+        feedbackComment:
+          type: string
+        dislikeReason:
+          $ref: '#/components/schemas/DislikeReason'
+        feedbackTimestamp:
+          type: string
+          format: date-time
+        updatedResponse:
+          type: boolean
+    DislikeReason:
+      type: object
+      properties:
+        reason:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: object
+    SourceDocument:
+      type: object
+      properties:
+        drive_item_id:
+          type: string
+        web_url:
+          type: string
+        score:
+          type: number
+          format: double
+        file_name:
+          type: string
+    StreamingResponseBody:
+      type: object
+    UpdateFollowUpRequest:
+      required:
+        - clientId
+        - followUpQuestion
+      type: object
+      properties:
+        followUpQuestion:
+          type: string
+        clientId:
+          type: string
+    ApiResponseFollowUpResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/FollowUpResponse'
+        success:
+          type: boolean
+    FollowUpResponse:
+      type: object
+      properties:
+        followUpId:
+          type: string
+        originalMessageId:
+          type: string
+        parentFollowUpId:
+          type: string
+        followUpQuestion:
+          type: string
+        followUpAnswer:
+          type: string
+        sourceDocuments:
+          type: array
+          items:
+            $ref: '#/components/schemas/SourceDocument'
+        responseTimeMs:
+          type: integer
+          format: int64
+        sequenceNumber:
+          type: integer
+          format: int32
+        createdAt:
+          type: string
+          format: date-time
+        definitiveAnswerFound:
+          type: boolean
+    UserSearchRequest:
+      type: object
+      properties:
+        searchTerm:
+          type: string
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - ASSOCIATE
+        conductorOneUserId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    ClientInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+        allowed:
+          type: boolean
+        default:
+          type: boolean
+    MeResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
+        role:
+          type: string
+          enum:
+            - ADMIN
+            - ASSOCIATE
+        client:
+          type: array
+          items:
+            $ref: '#/components/schemas/ClientInfo'
+    ApiResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          type: object
+        success:
+          type: boolean
+    CreateChatSessionRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        clientId:
+          type: string
+        sessionTitle:
+          type: string
+    ApiResponseChatSessionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/ChatSessionResponse'
+        success:
+          type: boolean
+    ChatSessionResponse:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        clientId:
+          type: string
+        sessionTitle:
+          type: string
+        messageCount:
+          type: integer
+          format: int32
+        lastActivity:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+    SendMessageRequest:
+      type: object
+      properties:
+        question:
+          type: string
+        clientId:
+          type: string
+    GetUserSessionsRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        clientId:
+          type: string
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        sortBy:
+          type: string
+        sortDirection:
+          type: string
+    ApiResponsePaginatedResponseChatSessionResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/PaginatedResponseChatSessionResponse'
+        success:
+          type: boolean
+    PaginatedResponseChatSessionResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatSessionResponse'
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    ChatSearchRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        clientId:
+          type: string
+        searchTerms:
+          type: string
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        sortBy:
+          type: string
+        sortDirection:
+          type: string
+    ApiResponsePaginatedResponseChatSearchResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/PaginatedResponseChatSearchResponse'
+        success:
+          type: boolean
+    ChatSearchResponse:
+      type: object
+      properties:
+        messageId:
+          type: string
+        sessionId:
+          type: string
+        clientId:
+          type: string
+        sessionTitle:
+          type: string
+        question:
+          type: string
+        sequenceNumber:
+          type: integer
+          format: int32
+        isActive:
+          type: boolean
+        hasFollowUps:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        lastActivity:
+          type: string
+          format: date-time
+    PaginatedResponseChatSearchResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatSearchResponse'
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    CreateFollowUpRequest:
+      required:
+        - clientId
+        - followUpQuestion
+      type: object
+      properties:
+        followUpQuestion:
+          type: string
+        clientId:
+          type: string
+        parentFollowUpId:
+          type: string
+    FeedbackRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        feedbackType:
+          type: string
+          enum:
+            - LIKE
+            - DISLIKE
+        comment:
+          type: string
+        dislikeReason:
+          $ref: '#/components/schemas/DislikeReason'
+    ApiResponseFeedbackResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/FeedbackResponse'
+        success:
+          type: boolean
+    FeedbackResponse:
+      type: object
+      properties:
+        messageId:
+          type: string
+        feedbackType:
+          type: string
+          enum:
+            - LIKE
+            - DISLIKE
+        feedbackComment:
+          type: string
+        dislikeReason:
+          $ref: '#/components/schemas/DislikeReason'
+        feedbackTimestamp:
+          type: string
+          format: date-time
+    PaginatedResponseUserResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserResponse'
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    Client:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        id:
+          type: string
+        acronym:
+          type: string
+        clientName:
+          type: string
+        sharepointName:
+          type: string
+        conductorOneAccessId:
+          type: string
+        notes:
+          type: string
+        conductorOneEntitlementId:
+          type: string
+        pageId:
+          type: string
+        name:
+          type: string
+        webUrl:
+          type: string
+        title:
+          type: string
+        thumbnailWebUrl:
+          type: string
+        createdDateTime:
+          type: string
+        lastModifiedDateTime:
+          type: string
+        createdByUser:
+          type: string
+        createdByUserEmail:
+          type: string
+        lastModifiedByUser:
+          type: string
+        lastModifiedByUserEmail:
+          type: string
+    ClientDetailsDto:
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/Client'
+        status:
+          type: string
+          enum:
+            - PENDING
+            - PROCESSING
+            - PROCESSED
+    ClientDocumentDto:
+      type: object
+      properties:
+        name:
+          type: string
+        webUrl:
+          type: string
+        itemId:
+          type: string
+        driveId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    PaginatedResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            type: object
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    ApiResponseSessionMessagesResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/SessionMessagesResponse'
+        success:
+          type: boolean
+    PaginatedResponseChatMessageResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageResponse'
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    SessionInfo:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        sessionTitle:
+          type: string
+        clientId:
+          type: string
+    SessionMessagesResponse:
+      type: object
+      properties:
+        sessionInfo:
+          $ref: '#/components/schemas/SessionInfo'
+        messages:
+          $ref: '#/components/schemas/PaginatedResponseChatMessageResponse'
+    ApiResponseFollowUpChainResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        body:
+          $ref: '#/components/schemas/FollowUpChainResponse'
+        success:
+          type: boolean
+    FollowUpChainResponse:
+      type: object
+      properties:
+        originalMessageId:
+          type: string
+        originalQuestionContent:
+          type: string
+        originalResponseContent:
+          type: string
+        followUpChain:
+          type: array
+          items:
+            $ref: '#/components/schemas/FollowUpResponse'
+        totalFollowUps:
+          type: integer
+          format: int32
+        maxFollowUpsAllowed:
+          type: integer
+          format: int32
+        canAddMore:
+          type: boolean

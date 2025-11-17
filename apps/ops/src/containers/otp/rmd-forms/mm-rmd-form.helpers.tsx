@@ -287,6 +287,7 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                     fieldName: BankingFields.Address,
                     component: DisbursementFields.BankAddress,
                     fieldLabel: '',
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload({ paymentMethod, payee }: FormDisbursement) {
@@ -473,42 +474,17 @@ export default function useMassMutualRmdConfig(t: TFunction) {
     ];
 
     const rmdformValidation = ({
-        formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
         formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
-            formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
-
-        if (
-            [PaymentMethod.EFT].includes(
-                formDisbursement?.paymentMethod?.text as PaymentMethod
-            )
-        ) {
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !==
-                    formDisbursement?.bank[0].reEnterAccountNumber
-            ) {
-                errors[BankingFields.ReEnterAccountNumber] = t(
-                    'formValidation.accountNumberDoesNotMatch'
-                );
-            }
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !==
-                    formDisbursement?.bank[0].reEnterBankRoutingNumber
-            ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                    'formValidation.routingNumberDoesNotMatch'
-                );
-            }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t(

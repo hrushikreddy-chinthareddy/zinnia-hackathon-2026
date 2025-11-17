@@ -48,15 +48,10 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
-import {
-    commonOftFormValidation,
-    getQualTypeOptions,
-} from '../oft-form-helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import { getQualTypeOptions } from '../oft-form-helpers';
 
 export default function getGlcoOftConfig(t: TFunction) {
-    const formValidation = (values: Partial<FormParts> = {}) =>
-        commonOftFormValidation(t, values);
-
     const signaturesConfig: SignatureValidationConfig[] = [
         {
             key: `sig-val-owner`,
@@ -157,17 +152,48 @@ export default function getGlcoOftConfig(t: TFunction) {
         },
     ];
 
-    const oftFormValidation = ({
-        formParty,
+    const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
+        // FORM DISBURSEMENT VALIDATIONS
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
 
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
         // fbo details required
         if (
             ![PaymentMethod.DTCC].includes(
@@ -178,7 +204,14 @@ export default function getGlcoOftConfig(t: TFunction) {
         ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
-        return errors;
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -332,110 +365,6 @@ export default function getGlcoOftConfig(t: TFunction) {
     };
 
     const disbursementOptions: PaymentMethodOption[] = [
-        // {
-        //     label: t('distributionMethod.eft'),
-        //     value: FormDisbursementSelections.EFT,
-        //     fields: [
-        //         {
-        //             fieldName: BankingFields.AccountType,
-        //             fieldLabel: t('distributionMethod.accountType'),
-        //             component: DisbursementFields.AccountTypes,
-        //             classNames: 'col-span-2 w-full',
-        //             maxLength: 40,
-        //             isBankingField: true,
-        //         },
-        //         {
-        //             fieldName: BankingFields.AccountNumber,
-        //             fieldLabel: t('distributionMethod.accountNumber'),
-        //             component: DisbursementFields.BankTextField,
-        //             maskOnBlur: true,
-        //             disableCopyPaste: true,
-        //             isBankingField: true,
-        //         },
-        //         {
-        //             fieldName: BankingFields.BankName,
-        //             fieldLabel: t('distributionMethod.bankName'),
-        //             component: DisbursementFields.BankTextField,
-        //         },
-
-        //         {
-        //             fieldName: BankingFields.BankRoutingNumber,
-        //             fieldLabel: t('distributionMethod.bankRoutingNumber'),
-        //             component: DisbursementFields.BankTextField,
-        //             maskOnBlur: true,
-        //             disableCopyPaste: true,
-        //             isBankingField: true,
-        //         },
-
-        //         {
-        //             fieldName: BankingFields.BankFurtherCreditName,
-        //             fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-        //             component: DisbursementFields.BankTextField,
-        //         },
-        //     ],
-        //     getDefaultPayload({ paymentMethod, bank, payee }: FormDisbursement) {
-        //         if (paymentMethod.text !== PaymentMethod.EFT) {
-        //             return DEFAULT_DISBURSEMENT_UPDATE;
-        //         }
-        //         const selectedBank = bank[0];
-        //         return {
-        //             ...DEFAULT_DISBURSEMENT_UPDATE,
-        //             accountNumber: selectedBank?.accountNumber ?? '',
-        //             accountType: selectedBank?.accountType?.text ?? AccountType.Checking,
-        //             bankName: selectedBank?.bankName ?? '',
-        //             bankRoutingNumber: selectedBank?.routingNumber ?? '',
-        //             bankFurtherCreditName: selectedBank?.bankFurtherCreditName ?? '',
-        //             bankFurtherCreditAccount: selectedBank?.bankFurtherCreditAccount ?? '',
-        //             payeeName: payee?.name?.text ?? '',
-        //             fboDetails: payee?.fboDetails?.text || '',
-        //             contractNumber: payee?.contractNumber.text ?? '',
-        //             address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-        //         };
-        //     },
-        //     generatePayloadFromSelection: ({
-        //         accountNumber,
-        //         accountType,
-        //         bankName,
-        //         accountHolder,
-        //         bankFurtherCreditAccount,
-        //         bankFurtherCreditName,
-        //         bankRoutingNumber,
-        //         payeeName,
-        //         reEnterAccountNumber,
-        //         reEnterBankRoutingNumber,
-        //         fboDetails,
-        //         contractNumber,
-        //         address,
-        //     }: DisbursementParts) => {
-        //         return {
-        //             ...getDefaultFormDisbursementValues(),
-        //             paymentMethod: { text: PaymentMethod.EFT },
-        //             paymentMailType: { text: null },
-        //             bank: [
-        //                 {
-        //                     ...DEFAULT_BANK_DETAILS,
-        //                     accountNumber,
-        //                     accountType: {
-        //                         text: accountType,
-        //                     },
-        //                     bankName,
-        //                     nameOnBankAccount: accountHolder ?? '',
-        //                     routingNumber: bankRoutingNumber,
-        //                     bankFurtherCreditAccount,
-        //                     bankFurtherCreditName,
-        //                     reEnterAccountNumber,
-        //                     reEnterBankRoutingNumber,
-        //                 },
-        //             ],
-        //             payee: {
-        //                 name: { text: payeeName ?? null },
-        //                 fboDetails: { text: fboDetails ?? null },
-        //                 addresses: [address || DEFAULT_ADDRESS],
-        //                 contractNumber: { text: contractNumber ?? null },
-        //             },
-        //         };
-        //     },
-        // },
         {
             label: t('distributionMethod.wire'),
             value: FormDisbursementSelections.Wire,
@@ -834,7 +763,7 @@ export default function getGlcoOftConfig(t: TFunction) {
     return {
         signaturesConfig,
         formPartyConfigs,
-        formValidation: oftFormValidation,
+        formValidation,
         disbursementOptions,
         surrenderingInstructionsOptions,
         identifySelectedFormProgramOption,

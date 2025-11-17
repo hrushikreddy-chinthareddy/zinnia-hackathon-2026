@@ -47,6 +47,7 @@ import {
 } from '@deps/queries/api/v1/task-admin';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
+import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
@@ -64,7 +65,6 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import AssigneePopover from './table-elements/assignee-popover';
 import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
-
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -581,6 +581,26 @@ const TaskQueueTableRow = ({
                                     details={'-'}
                                     variant={ContentVariant.BodySm}
                                 />
+                            )}
+                            {task.escalated && (
+                                <div>
+                                    <Tooltip
+                                        placement={TooltipPlacement.TopRight}
+                                        tooltipClassName="!w-auto"
+                                        triggerClassName="!z-10  justify-end"
+                                        trigger={
+                                            <Warning
+                                                height={16}
+                                                width={16}
+                                                className="ml-2"
+                                            />
+                                        }
+                                    >
+                                        <span className="text-md">
+                                            {t('prioritized')}
+                                        </span>
+                                    </Tooltip>
+                                </div>
                             )}
                         </div>
                     </div>

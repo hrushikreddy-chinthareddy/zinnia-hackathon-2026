@@ -32,7 +32,6 @@ import { getSideNavData } from './case-helpers';
 import { PartiesProps } from './CaseSideNavParties';
 import CaseSideNavTabs from './CaseSideNavTabs';
 import Transactions from './CaseSideNavTransactions';
-
 export interface CaseSideNavProps {
     data: {
         carrier: string;
@@ -43,6 +42,7 @@ export interface CaseSideNavProps {
         productName: string;
         status: string;
         updatedDate: string;
+        estimatedCompletionAt?: string | null;
     };
 }
 
@@ -104,12 +104,12 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
     return (
         <div className="w-full gap-2 border-gray-100 p-4">
             <div className="flex flex-row gap-2">
-                <div className="h-12 w-12 shrink-0 rounded border-2 border-gray-200">
+                <div className="flex items-center justify-center h-12 w-12 shrink-0 rounded border-2 border-gray-200">
                     <Image
                         src={imageSrc}
                         alt={`${data?.carrier} icon`}
-                        width={48}
-                        height={48}
+                        width={24}
+                        height={24}
                         role="presentation"
                         aria-hidden="true"
                     />
@@ -219,7 +219,13 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
 // #endregion
 
 // #region Case Side Nav
-const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
+const CaseSideNav = ({
+    caseDetails,
+    estimatedCompletionAt,
+}: {
+    caseDetails: Case;
+    estimatedCompletionAt?: string | null;
+}) => {
     const { t } = useTranslation();
     const caseActivityContext = useCaseActivityContext();
     const [aiSummary, setAiSummary] = useState<string | null>(null);
@@ -270,6 +276,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                         carrier={caseDetails?.carrier}
                         process={caseDetails.process}
                         applicationType={caseDetails.applicationType}
+                        estimatedCompletionAt={estimatedCompletionAt}
                         caseProcessingDetails={
                             caseDetails.caseProcessingDetails
                         }

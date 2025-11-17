@@ -52,3 +52,6 @@ cached-package-json/
 
 # tokens script output
 tokens-diff-*.txt
+
+# npm token
+.npmtoken

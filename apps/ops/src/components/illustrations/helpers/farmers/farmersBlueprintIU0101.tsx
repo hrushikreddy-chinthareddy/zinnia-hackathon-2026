@@ -32,6 +32,98 @@ export const farmersBlueprintIU0101 = {
                             isCustom: true,
                             fields: [
                                 {
+                                    fieldType: 'radio',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Is this a conversion',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'is-conversion',
+                                    outputPath: 'isConversion',
+                                    renderOn: [],
+                                    platforms: ['consumer'],
+                                    copyable: 'none',
+                                    optional: false,
+                                    triggerStepNavigation: false,
+                                    layout: {},
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: 'eff17a99-11c4-462e-8309-ff9d67d0b6b2',
+                                    partName:
+                                        'custom-4b626be5-96ba-4c85-aa52-df2c5e6b7436',
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: true,
+                                            text: {
+                                                en: 'Yes',
+                                            },
+                                            isCustom: true,
+                                        },
+                                        {
+                                            value: false,
+                                            text: {
+                                                en: 'No',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    disabled: true,
+                                },
+                                {
+                                    fieldType: 'radio',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Is MEC',
+                                        fr: '',
+                                    },
+                                    answerNodeId: 'isMec',
+                                    outputPath: 'isMec',
+                                    renderOn: [],
+                                    platforms: ['consumer'],
+                                    copyable: 'none',
+                                    optional: true,
+                                    triggerStepNavigation: false,
+                                    layout: {},
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    id: '27d13bc0-a1a1-4a2d-99fb-9821ddf3fbc8',
+                                    partName:
+                                        'custom-e5783eca-478f-4a9c-8d9c-8774dc2e0100',
+                                    validateAs: 'string',
+                                    selectOptions: [
+                                        {
+                                            value: true,
+                                            text: {
+                                                en: 'Yes',
+                                            },
+                                            isCustom: true,
+                                        },
+                                        {
+                                            value: false,
+                                            text: {
+                                                en: 'No',
+                                            },
+                                            isCustom: true,
+                                        },
+                                    ],
+                                    disabled: true,
+                                },
+                                {
                                     fieldType: 'input',
                                     text: {
                                         en: '',
@@ -338,6 +430,17 @@ export const farmersBlueprintIU0101 = {
                                             },
                                         },
                                     ],
+                                    disabled: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: true,
+                                                targetNodeId: 'is-conversion',
+                                                isEqual: true,
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'input',
@@ -1148,6 +1251,17 @@ export const farmersBlueprintIU0101 = {
                                     id: '8547480e-81a4-4778-b71d-870dfc0a3e5b',
                                     partName:
                                         'custom-39bf8d14-b635-4116-8f0f-9894409d6af8',
+                                    disabled: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: true,
+                                                targetNodeId: 'is-conversion',
+                                                isEqual: true,
+                                            },
+                                        ],
+                                    },
                                     selectOptions: [
                                         {
                                             value: 'STANDARDNONTOBACCO',
@@ -2367,6 +2481,18 @@ export const farmersBlueprintIU0101 = {
                                             },
                                             isCustom: true,
                                             orderingIndex: 1,
+                                            visible: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: false,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
+                                                ],
+                                            },
                                         },
                                         {
                                             value: 'NO_SOLVE',
@@ -2433,10 +2559,11 @@ export const farmersBlueprintIU0101 = {
                                     renderOn: [],
                                     platforms: [],
                                     copyable: 'none',
-                                    optional: false,
+                                    optional: true,
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2444,17 +2571,38 @@ export const farmersBlueprintIU0101 = {
                                         en: '',
                                         fr: '',
                                     },
-                                    id: 'ffe36498-ba95-44b5-b92b-ba2b287e7d5d',
+                                    id: '6707c95e-c0fe-486b-bde5-f002409f23c0',
                                     partName:
-                                        'custom-277fd087-f4e5-44c9-9604-7b44de7a1606',
+                                        'custom-fcca616f-7803-41e5-96c7-862c1c3d6f46',
                                     validateAs: 'integer',
                                     isCustom: true,
+                                    defaultValue: 50000,
                                     valid: [
                                         {
-                                            id: '20d83fdc-3c0a-4367-af1a-d15b450fc775',
+                                            id: 'afc950cb-b349-4be9-a584-dff7fb36a5d4',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: true,
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'is-conversion',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 50000,
+                                                                targetNodeId:
+                                                                    'max-conversion-face-amount',
+                                                                operator:
+                                                                    'lessThan',
+                                                            },
+                                                        ],
+                                                    },
                                                     {
                                                         type: 'numberComparisonCondition',
                                                         value: 50000,
@@ -2466,14 +2614,14 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Minimum face amount for this product is $50,000',
+                                                en: 'Minimum face amount for this product is $50,000.',
                                                 fr: '',
                                             },
                                         },
                                         {
-                                            id: '99be23c5-caec-4b64-8b73-9c8c784ba33e',
+                                            id: 'a078189c-db75-4d0e-b62c-c2449acf367f',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
@@ -2483,15 +2631,130 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'lessThanOrEqual',
                                                     },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: true,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
                                                 ],
                                             },
                                             message: {
-                                                en: 'Maximum face amount for this product is $10,000,000',
+                                                en: 'Maximum face amount for this product is $10,000,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '635b3595-e7a2-4c86-af3d-87bcb94a6030',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: false,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                        nodeIdOfValue:
+                                                            'max-conversion-face-amount',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'This value must be less than or equal to the original policy face amount.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '4a54bbc8-d4a1-4e06-b8d5-76c21599fbe2',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: true,
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'is-conversion',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 50000,
+                                                                targetNodeId:
+                                                                    'max-conversion-face-amount',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: false,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator: 'equal',
+                                                        nodeIdOfValue:
+                                                            'max-conversion-face-amount',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The face amount must match the original policy face amount.',
                                                 fr: '',
                                             },
                                         },
                                     ],
-                                    defaultValue: 50000,
+                                    referenceLabel: 'test',
+                                },
+                                {
+                                    fieldType: 'money',
+                                    id: '105ba9fd-2a76-4e0e-a2bf-a903143fb4d3',
+                                    partName:
+                                        'custom-80fefec2-1605-4b3c-ae3b-49316b27c362',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Original Policy Face Amount',
+                                        fr: '',
+                                    },
+                                    platforms: ['consumer'],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    answerNodeId: 'max-conversion-face-amount',
+                                    outputPath: 'maxConversionFaceAmount',
+                                    optional: false,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'integer',
+                                    isCustom: true,
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'money',
@@ -2784,6 +3047,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2796,12 +3060,33 @@ export const farmersBlueprintIU0101 = {
                                         'custom-60b49b51-5e22-4094-b69f-f3e1a14091c7',
                                     validateAs: 'integer',
                                     isCustom: true,
+                                    defaultValue: 50000,
                                     valid: [
                                         {
                                             id: 'afc950cb-b349-4be9-a584-dff7fb36a5d4',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: true,
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'is-conversion',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 50000,
+                                                                targetNodeId:
+                                                                    'max-conversion-face-amount',
+                                                                operator:
+                                                                    'lessThan',
+                                                            },
+                                                        ],
+                                                    },
                                                     {
                                                         type: 'numberComparisonCondition',
                                                         value: 50000,
@@ -2820,7 +3105,7 @@ export const farmersBlueprintIU0101 = {
                                         {
                                             id: 'a078189c-db75-4d0e-b62c-c2449acf367f',
                                             conditions: {
-                                                booleanOperator: 'and',
+                                                booleanOperator: 'or',
                                                 conditions: [
                                                     {
                                                         type: 'numberComparisonCondition',
@@ -2830,6 +3115,13 @@ export const farmersBlueprintIU0101 = {
                                                         operator:
                                                             'lessThanOrEqual',
                                                     },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: true,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
                                                 ],
                                             },
                                             message: {
@@ -2837,7 +3129,114 @@ export const farmersBlueprintIU0101 = {
                                                 fr: '',
                                             },
                                         },
+                                        {
+                                            id: '635b3595-e7a2-4c86-af3d-87bcb94a6030',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: false,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                        nodeIdOfValue:
+                                                            'max-conversion-face-amount',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'This value must be less than or equal to the original policy face amount.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '4a54bbc8-d4a1-4e06-b8d5-76c21599fbe2',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                value: true,
+                                                                isEqual: true,
+                                                                targetNodeId:
+                                                                    'is-conversion',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 50000,
+                                                                targetNodeId:
+                                                                    'max-conversion-face-amount',
+                                                                operator:
+                                                                    'greaterThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        type: 'equalityCondition',
+                                                        value: false,
+                                                        isEqual: true,
+                                                        targetNodeId:
+                                                            'is-conversion',
+                                                    },
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator: 'equal',
+                                                        nodeIdOfValue:
+                                                            'max-conversion-face-amount',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'The face amount must match the original policy face amount.',
+                                                fr: '',
+                                            },
+                                        },
                                     ],
+                                },
+                                {
+                                    fieldType: 'money',
+                                    id: '675095ed-2bcb-474c-9572-6450775cb36a',
+                                    partName:
+                                        'custom-38090d53-f638-4963-b759-9ce7091fea16',
+                                    text: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    title: {
+                                        en: 'Original Policy Face Amount',
+                                        fr: '',
+                                    },
+                                    platforms: ['consumer'],
+                                    renderOn: [],
+                                    copyable: 'none',
+                                    answerNodeId: 'max-conversion-face-amount',
+                                    outputPath: 'maxConversionFaceAmount',
+                                    optional: false,
+                                    placeholder: {
+                                        en: '',
+                                        fr: '',
+                                    },
+                                    triggerStepNavigation: false,
+                                    layout: {
+                                        size: 6,
+                                    },
+                                    displayInCardPreview: false,
+                                    applicationModes: ['digital', 'paper'],
+                                    validateAs: 'integer',
+                                    disabled: true,
                                 },
                                 {
                                     fieldType: 'dropdown',
@@ -2858,6 +3257,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -4473,6 +4873,17 @@ export const farmersBlueprintIU0101 = {
                                     ],
                                     validateAs: 'boolean',
                                     defaultValue: true,
+                                    disabled: {
+                                        booleanOperator: 'or',
+                                        conditions: [
+                                            {
+                                                type: 'equalityCondition',
+                                                value: true,
+                                                targetNodeId: 'is-conversion',
+                                                isEqual: true,
+                                            },
+                                        ],
+                                    },
                                 },
                                 {
                                     fieldType: 'custom',
@@ -4647,6 +5058,26 @@ export const farmersBlueprintIU0101 = {
                                                 fr: '',
                                             },
                                         },
+                                        {
+                                            id: '299b18ca-16cf-4496-ac27-8bcaa5608f9e',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 1,
+                                                        targetNodeId:
+                                                            'long-term-holding-account-current-illustrated-rate',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Future Interest Rate must be greater than or equal to 1%.',
+                                                fr: '',
+                                            },
+                                        },
                                     ],
                                     isCustom: true,
                                 },
@@ -4759,7 +5190,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: `Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.`,
+                                                en: 'Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.',
                                                 fr: '',
                                             },
                                         },
@@ -4877,7 +5308,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: `Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.`,
+                                                en: 'Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.',
                                                 fr: '',
                                             },
                                         },

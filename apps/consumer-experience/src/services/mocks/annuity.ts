@@ -653,7 +653,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: '6217026',
       formerName: {
         firstName: null,
         middleName: null,
@@ -720,7 +719,6 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6217026',
-          preferredAddress: true,
         },
       ],
       phones: [
@@ -791,7 +789,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: null,
       formerName: {
         firstName: null,
         middleName: null,
@@ -858,7 +855,6 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6217026',
-          preferredAddress: false,
         },
       ],
       phones: [
@@ -929,7 +925,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: '6216859',
       formerName: {
         firstName: null,
         middleName: null,
@@ -996,7 +991,6 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6216859',
-          preferredAddress: true,
         },
       ],
       phones: [
@@ -1067,7 +1061,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: '6217026',
       formerName: {
         firstName: null,
         middleName: null,
@@ -1134,7 +1127,6 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6217026',
-          preferredAddress: true,
         },
       ],
       phones: [
@@ -1205,7 +1197,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: null,
       formerName: {
         firstName: null,
         middleName: null,
@@ -1327,7 +1318,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: '6216927',
       formerName: {
         firstName: null,
         middleName: null,
@@ -1394,7 +1384,6 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6216927',
-          preferredAddress: true,
         },
       ],
       phones: [
@@ -1465,7 +1454,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: '6216927',
       formerName: {
         firstName: null,
         middleName: null,
@@ -1532,7 +1520,6 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6216927',
-          preferredAddress: true,
         },
       ],
       phones: [
@@ -1603,7 +1590,6 @@ export const mockAnnuityResponse: Policy = {
       trustTitle: null,
       trustAccessCode: null,
       preferredCommunicationType: 'REGULARMAIL',
-      preferredAddressIndicator: '6216859',
       formerName: {
         firstName: null,
         middleName: null,
@@ -1670,7 +1656,7 @@ export const mockAnnuityResponse: Policy = {
           zipCodeExtension: null,
           country: 'USA',
           addressId: '6216859',
-          preferredAddress: true,
+          isPreferred: true,
         },
       ],
       phones: [

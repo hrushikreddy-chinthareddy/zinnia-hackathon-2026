@@ -13,21 +13,10 @@ const TaxPage = async ({ params }: PolicyRequestInputsParams) => {
     },
     loggingContext
   );
-  const preferredAddressIndicator =
-    policyDetails?.data?.preferredAddressIndicator;
-  let preferredAddress = undefined;
-  let preferredAddressState = '';
-
-  if (preferredAddressIndicator?.length) {
-    preferredAddress = policyDetails?.data?.addresses?.find(
-      address => address.addressId === preferredAddressIndicator
-    );
-  } else {
-    preferredAddress = policyDetails?.data?.addresses[0];
-  }
-  if (preferredAddress?.state?.length) {
-    preferredAddressState = preferredAddress.state;
-  }
+  const preferredAddress =
+    policyDetails?.data?.addresses?.find(address => address.isPreferred) ||
+    policyDetails?.data?.addresses[0];
+  const preferredAddressState = preferredAddress?.state;
 
   return (
     <>

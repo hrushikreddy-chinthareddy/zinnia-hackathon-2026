@@ -426,7 +426,7 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
 export const DocumentActions = ({
     document,
     t,
-    isViewButtonHiddenForEMLType = false,
+    isViewButtonHidden = false,
 }: any) => {
     const docId =
         document.documentId ||
@@ -451,7 +451,7 @@ export const DocumentActions = ({
 
     return (
         <>
-            {!isViewButtonHiddenForEMLType && (
+            {!isViewButtonHidden && (
                 <div className="px-4">
                     <DocumentPreviewer
                         className="flex max-w-[234px] pt-1"

@@ -32,11 +32,10 @@ describe('refetchHandler', () => {
         },
       ],
       addresses: [
-        { addressId: 'abc', addressLine1: '123 Main St' },
+        { addressId: 'abc', addressLine1: '123 Main St', isPreferred: true },
         { addressId: 'def', addressLine2: '456 Elm St' },
       ],
       phones: [],
-      preferredAddressIndicator: '123',
       name: {
         firstName: 'Joe',
         lastName: 'Schmo',
@@ -152,11 +151,10 @@ describe('shouldStopPolling', () => {
         },
       ],
       addresses: [
-        { addressId: 'abc', addressLine1: '123 Main St' },
+        { addressId: 'abc', addressLine1: '123 Main St', isPreferred: true },
         { addressId: 'def', addressLine2: '456 Elm St' },
       ],
       phones: [],
-      preferredAddressIndicator: '123',
       name: {
         firstName: 'Joe',
         lastName: 'Schmo',

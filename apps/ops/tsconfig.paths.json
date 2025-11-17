@@ -5,9 +5,10 @@
             "@deps/*": ["./src/*"],
             "@xd/*": ["../../packages/*"],
             "@xd-components/*": ["../../packages/xd-components/src/*"],
-            "@xd/components/*": ["../../packages/xd-components/src/components/*"],
+            "@xd/components/*": [
+                "../../packages/xd-components/src/components/*"
+            ],
             "@xd/hooks/*": ["../../packages/xd-components/src/hooks/*"],
-            "@pom/*": ["../../packages/pom/src/*"],
             "components/*": ["./src/components/*"],
             "models/*": ["./src/models/*"],
             "utils/*": ["./src/utils/*"],

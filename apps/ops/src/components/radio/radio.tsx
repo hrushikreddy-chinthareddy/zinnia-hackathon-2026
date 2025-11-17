@@ -123,14 +123,16 @@ export default function Radio({
                             <input
                                 type="radio"
                                 value={item.value}
-                                className={`${classes} ${disabledClass}${readonlyClass}`}
+                                className={`${classes} ${disabledClass} ${readonlyClass}`}
                                 tabIndex={0}
                                 checked={value === item.value}
                                 data-testid={dataTestId}
                                 name={name || label}
                                 id={`radio-${label}-${index}-${id}`}
                                 onChange={() => undefined}
-                                disabled={item?.disabled ?? disabled}
+                                disabled={
+                                    readonly || (item?.disabled ?? disabled)
+                                }
                                 onClick={() => {
                                     onChange(
                                         createRadioChangeEvent(
@@ -154,7 +156,9 @@ export default function Radio({
                                 className={labelClasses}
                                 aria-label={`Select ${item.value}`}
                                 htmlFor={`radio-${label}-${index}-${id}`}
-                                {...(disabled && { 'aria-disabled': 'true' })}
+                                {...(disabled && {
+                                    'aria-disabled': 'true',
+                                })}
                             >
                                 {item.label}
                             </label>

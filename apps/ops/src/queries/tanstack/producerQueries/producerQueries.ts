@@ -1,11 +1,10 @@
-import { ApiGetProducerResponse } from '@xd/pom/src/types/get.types';
-
 import {
     getDownlineBySellingCode,
     getHierarchyBySellingCode,
     getProducerById,
     getProducersByNameAndCarrier,
 } from '@deps/queries/api/v1/producers';
+import { ApiGetProducerResponse } from '@deps/types/pom/get.types';
 import {
     GetDownlineResponse,
     GetHierarchyResponse,

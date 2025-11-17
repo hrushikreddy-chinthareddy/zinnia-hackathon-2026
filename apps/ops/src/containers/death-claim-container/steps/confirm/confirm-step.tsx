@@ -14,11 +14,12 @@ import PageLoader, {
 } from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
+import { buildClaimPayload } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
+import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import {
@@ -29,9 +30,11 @@ import { browserLogInfo } from '@deps/utils/browser-logging';
 
 interface ConfirmStepProps {
     policy: Policy;
+    user: UserProfile;
+    correlationId: string;
 }
 
-const ConfirmStep = ({ policy }: ConfirmStepProps) => {
+const ConfirmStep = ({ policy, user, correlationId }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.confirmStep',
     });
@@ -52,15 +55,18 @@ const ConfirmStep = ({ policy }: ConfirmStepProps) => {
 
     const submit = async () => {
         setIsLoading(true);
-        const payload = buildClaimPaylod(
-            policy,
-            null,
-            notifiers,
-            owners,
-            beneficiaries,
-            onbaseCaseId,
-            onbaseDocumentNumber
-        );
+        const payload = buildClaimPayload({
+            policy: policy,
+            document: null,
+            selNotifiers: notifiers,
+            selOwners: owners,
+            selBeneficiaries: beneficiaries,
+            onbaseCaseId: onbaseCaseId,
+            onbaseDocumentNumber: onbaseDocumentNumber,
+            user: user,
+            correlationId: correlationId,
+        });
+
         browserLogInfo('ConfirmStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,

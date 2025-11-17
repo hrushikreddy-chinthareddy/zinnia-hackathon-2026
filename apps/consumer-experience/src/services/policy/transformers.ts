@@ -217,7 +217,6 @@ export const transformPolicyForProfile = (
   const parties = policyParties(policy);
 
   return {
-    preferredAddressIndicator: partyInfo?.preferredAddressIndicator || '',
     partyId: partyInfo?.partyId || '',
     name: {
       firstName: partyInfo?.firstName || '',
@@ -228,6 +227,7 @@ export const transformPolicyForProfile = (
     emails: partyInfo?.emails || [],
     phones: partyInfo?.phones || [],
     parties: parties || [],
+    partyRoles: policy?.partyRoles || [],
   };
 };
 

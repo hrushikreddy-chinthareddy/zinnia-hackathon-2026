@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
@@ -8,6 +9,7 @@ import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
+import useDynamicSideSheet from '@deps/components/side-sheet/dynamic-side-sheet';
 import StepSideSheetContent, {
     doesStepHaveSidesheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/case-side-sheet';
@@ -17,6 +19,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
+import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
@@ -184,6 +187,22 @@ const Step = ({
     const sideSheet = useSideSheetContext();
     const hasSidesheet = doesStepHaveSidesheet(step);
 
+    const stepAdditional = step.stepAdditionalData?.[0];
+    const entityId = stepAdditional ? stepAdditional.value : undefined;
+
+    const {
+        data: transactionEntity,
+        isLoading,
+        isError,
+    } = useQuery({
+        queryKey: ['requestInitiateWithBillingPartner', entityId],
+        queryFn: () => getTransactionEntityQuery(entityId),
+    });
+
+    const openDynamicSideSheetWithTabs = useDynamicSideSheet(
+        transactionEntity ? transactionEntity.entity : undefined
+    );
+
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H3}>{step.name}</Typography>,
@@ -193,6 +212,14 @@ const Step = ({
     };
 
     const hasPii = step.parentStage.id === ParentStageIds.AgentValidation;
+
+    const handleClick = () => {
+        if (transactionEntity?.entity?.tabs) {
+            openDynamicSideSheetWithTabs();
+        } else {
+            openSidesheet();
+        }
+    };
 
     return (
         <li
@@ -234,7 +261,7 @@ const Step = ({
                         <NavElement
                             type={NavElementType.Button}
                             size={NavElementSize.Small}
-                            onClick={openSidesheet}
+                            onClick={handleClick}
                         >
                             {t('caseOverview.tabs.viewDetails')}
                         </NavElement>

@@ -9,7 +9,11 @@ import {
     validateEmail,
     validateFax,
 } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import {
+    deStringifyTrueFalseNull,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import {
@@ -27,11 +31,13 @@ interface CallForInformationProps {
     name: string;
     phone: Phone;
     callSummary: string;
+    contactEstablished: string;
     setTask: React.Dispatch<React.SetStateAction<any>>;
     setName: React.Dispatch<React.SetStateAction<string>>;
     setPhone: React.Dispatch<React.SetStateAction<Phone>>;
     setContactRole: React.Dispatch<React.SetStateAction<string>>;
     setCallSummary: React.Dispatch<React.SetStateAction<string>>;
+    setContactEstablished: React.Dispatch<React.SetStateAction<string>>;
     relationshipToOwner: string;
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
     dynamicKey: string;
@@ -53,6 +59,7 @@ export function CallForInformationFunctions({
     setName,
     phone,
     callSummary,
+    contactEstablished,
     setPhone,
     setContactRole,
     relationshipToOwner,
@@ -66,6 +73,7 @@ export function CallForInformationFunctions({
     dynamicKey,
     addressSelected,
     setCallSummary,
+    setContactEstablished,
 }: CallForInformationProps) {
     const contactRoleOptions = [
         {
@@ -74,7 +82,7 @@ export function CallForInformationFunctions({
             label: t('contactRoles.agent'),
 
             textValue: t('contactRoles.agent'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
+            disabled: !task?.data?.details?.[dynamicKey]?.callLogs?.some(
                 (log: CallLog) => log.partyRoleCategory === ContactRole.AGENT
             ),
         },
@@ -84,7 +92,7 @@ export function CallForInformationFunctions({
             label: t('contactRoles.beneficiary'),
 
             textValue: t('contactRoles.beneficiary'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
+            disabled: !task?.data?.details?.[dynamicKey]?.callLogs?.some(
                 (log: CallLog) =>
                     log.partyRole === ContactRole.PRIMARYBENEFICIARY
             ),
@@ -124,7 +132,8 @@ export function CallForInformationFunctions({
             phone,
             country,
             relationshipToOwner,
-            callSummary
+            callSummary,
+            contactEstablished
         );
         setTask(updatedTask);
         setCallEntries((prev) => [
@@ -138,6 +147,7 @@ export function CallForInformationFunctions({
                 name: '',
                 phone: {} as Phone,
                 callSummary: '',
+                contactEstablished: '',
             },
         ]);
         setBeneficiary((prev: UpdatedBeneficiaryRecord) => ({
@@ -148,7 +158,9 @@ export function CallForInformationFunctions({
         setName('');
         setPhone({} as Phone);
         setCallSummary('');
+        setContactEstablished('');
     };
+
     const updateCurrentCallEntry = useCallback(() => {
         if (contactRole && name) {
             setCallEntries((prev) => {
@@ -161,24 +173,44 @@ export function CallForInformationFunctions({
                         name,
                         phone,
                         callSummary,
+                        contactEstablished,
                     },
                 ];
             });
         }
-    }, [contactRole, name, phone, setCallEntries, callSummary]);
+    }, [
+        contactRole,
+        name,
+        phone,
+        setCallEntries,
+        callSummary,
+        contactEstablished,
+    ]);
 
     const shouldRenderChangeRequire = () => {
+        if (task.status === TaskStatus.Completed) {
+            const latestCallLog =
+                task.data?.details?.[dynamicKey]?.callLogs?.at(-1);
+
+            // Check if this is a legacy task created before the 'contactEstablished' was introduced
+            if (!Object.hasOwn(latestCallLog, 'contactEstablished')) {
+                return true;
+            }
+            return latestCallLog.contactEstablished;
+        }
+
+        const showChangeRequireField =
+            name &&
+            phone.dialNumber &&
+            contactRole &&
+            callSummary &&
+            deStringifyTrueFalseNull(contactEstablished);
         switch (contactRole === ContactRole.OTHER) {
             case true: {
-                return (
-                    name &&
-                    phone.dialNumber &&
-                    relationshipToOwner &&
-                    contactRole
-                );
+                return showChangeRequireField && relationshipToOwner;
             }
             case false: {
-                return name && phone.dialNumber && contactRole;
+                return showChangeRequireField;
             }
         }
     };
@@ -192,7 +224,8 @@ export function CallForInformationFunctions({
         phone: Phone,
         country: keyof typeof countries,
         relationshipToOwner: string,
-        callSummary: string
+        callSummary: string,
+        contactEstablished: string
     ) {
         const updatedTask = { ...task };
 
@@ -216,6 +249,8 @@ export function CallForInformationFunctions({
                 callSequence: callEntriesLength,
                 callSummary: callSummary,
                 callDone: true,
+                contactEstablished:
+                    deStringifyTrueFalseNull(contactEstablished),
             };
         } else {
             if (contactRole === ContactRole.OTHER) {
@@ -227,6 +262,8 @@ export function CallForInformationFunctions({
                     partyRoleCategory: contactRole,
                     relationshipToInsured: relationshipToOwner,
                     callSummary: callSummary,
+                    contactEstablished:
+                        deStringifyTrueFalseNull(contactEstablished),
                     callDone: true,
                 });
             }
@@ -277,7 +314,18 @@ export function CallForInformationFunctions({
             errors['callSummaryRequired'] = '';
         }
 
-        if (isNullEmptyOrUndefined(beneficiary.changeRequire)) {
+        if (isNullEmptyOrUndefined(contactEstablished)) {
+            errors['contactEstablishedRequired'] = t(
+                'errors.contactEstablishedRequired'
+            ) as string;
+        } else {
+            errors['contactEstablishedRequired'] = '';
+        }
+
+        if (
+            deStringifyTrueFalseNull(contactEstablished) &&
+            isNullEmptyOrUndefined(beneficiary.changeRequire)
+        ) {
             errors['changeRequireRequired'] = t(
                 'errors.changeRequireRequired'
             ) as string;

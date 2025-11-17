@@ -38,4 +38,8 @@
             font-size: 14px;
         }
     }
+
+    &:has(.input:read-only) {
+        background-color: var(--color-states-inactive-surface-inactive-fill);
+    }
 }
