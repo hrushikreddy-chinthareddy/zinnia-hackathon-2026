@@ -1,4 +1,4 @@
-import { CaseStatus, CaseSummary, StageStatus } from '@/types/case';
+import { CaseSummary, CaseStatus, StageStatus } from '@/types/case';
 
 import { NotificationCenterNotification } from './types';
 
@@ -83,4 +83,20 @@ export const sortNotificationsByDate = (
   b: NotificationCenterNotification
 ) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime();
+};
+
+export const selectNotifications = (data: CaseSummary[]) => {
+  const { completedNotifications, actionNeededNotifications } = (data || [])
+    .map(parseNotifications)
+    .filter(notification => !!notification)
+    .reduce(transformNotifications, {
+      completedNotifications: [],
+      actionNeededNotifications: [],
+    });
+
+  return {
+    completedNotifications,
+    actionNeededNotifications,
+    allNotifications: [...completedNotifications, ...actionNeededNotifications],
+  };
 };

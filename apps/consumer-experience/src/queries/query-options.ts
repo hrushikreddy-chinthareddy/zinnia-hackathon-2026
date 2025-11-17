@@ -4,6 +4,7 @@ import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { CaseSearchCriteriaWithLimit } from '@/services/case';
 
 import {
+  acknowledgeCase,
   getAcknowledgedCases,
   searchCasesByPolicyNumber,
 } from './case-queries';
@@ -62,3 +63,52 @@ export const caseQueryOptions = ({
     queryFn: () =>
       searchCasesByPolicyNumber({ policyNumber, limit, caseStatus }),
   });
+
+type MarkAsReadOptions = {
+  planCode: string;
+  policyNumber: string;
+};
+
+export const markAsReadMutationOptions = ({
+  planCode,
+  policyNumber,
+}: MarkAsReadOptions) => ({
+  mutationFn: ({
+    id,
+    stepsToAcknowledge,
+  }: {
+    id: string;
+    stepsToAcknowledge: string[];
+  }) =>
+    acknowledgeCase({
+      acknowledgedIds: stepsToAcknowledge,
+      caseId: id,
+      planCode,
+      policyNumber,
+    }),
+  mutationKey: ['acknowledgeCase', planCode, policyNumber],
+});
+
+type MarkAllAsReadOptions = {
+  planCode: string;
+  policyNumber: string;
+  notifications: { id: string; stepsToAcknowledge: string[] }[];
+};
+export const markAllAsReadMutationOptions = ({
+  planCode,
+  policyNumber,
+  notifications,
+}: MarkAllAsReadOptions) => ({
+  mutationFn: () =>
+    Promise.all(
+      notifications.map(notification =>
+        acknowledgeCase({
+          acknowledgedIds: notification.stepsToAcknowledge,
+          caseId: notification.id,
+          planCode,
+          policyNumber,
+        })
+      )
+    ),
+  mutationKey: ['acknowledgeAllCases', planCode, policyNumber],
+});

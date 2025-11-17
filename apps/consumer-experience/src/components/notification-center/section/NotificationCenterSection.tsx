@@ -25,16 +25,12 @@ export type NotificationCenterProps = {
 
 export const NotificationCenterSection = ({
   notifications: items,
-  isClient,
   acknowledgedNotifications,
   isLoading,
   handleAcknowledge,
   className,
-  mutatingId = '',
 }: {
-  mutatingId?: string;
   notifications: NotificationCenterNotification[];
-  isClient: boolean;
   acknowledgedNotifications: Array<CaseAcknowledgmentItem> | null;
   isLoading: boolean;
   className?: string;
@@ -49,10 +45,6 @@ export const NotificationCenterSection = ({
             !notification.completed &&
             // there are steps to acknowledge
             !!notification.stepsToAcknowledge?.length &&
-            // if currently mutating
-            // don't show pip since we assume
-            // the acknowledgment call will return a success
-            mutatingId !== notification.id &&
             // if the notification is not already acknowledged
             // from the case acknowledgment api
             !acknowledgedNotifications?.find(
@@ -64,7 +56,6 @@ export const NotificationCenterSection = ({
               fallback={NotificationCenterItemLoadingState}
             >
               <NotificationCenterItem
-                isClient={isClient}
                 onAcknowledge={handleAcknowledge}
                 notification={notification}
                 loading={isLoading}
