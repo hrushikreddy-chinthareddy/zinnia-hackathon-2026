@@ -5,9 +5,7 @@ import { NotificationCenter } from '@/components/notification-center/Notificatio
 import { getPageTitle, RouteKey } from '@/route-map';
 import { searchCases } from '@/services/case';
 import { getFeatureFlags } from '@/services/feature-flags';
-import { CaseSummary } from '@/types/case';
 import { PolicyRequestInputs } from '@/types/policy';
-import { logError } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
@@ -25,7 +23,6 @@ interface Props {
 export default async function NotificationsPage({ params }: Props) {
   const flags = await getFeatureFlags();
   const loggingCtx = await buildCommonLogContext();
-  let initialNotifications: Array<CaseSummary> | undefined;
   const notificationViewEnabled =
     flags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
 
@@ -38,21 +35,10 @@ export default async function NotificationsPage({ params }: Props) {
     loggingCtx
   );
 
-  if (cases?.data && cases.data.length > 0) {
-    initialNotifications = cases.data;
-  }
-
-  //TODO: Do we need an error state?
-  if (error) {
-    logError('Error fetching notifications', error);
-    initialNotifications = undefined;
-  }
-
   return (
     <NotificationCenter
       policyNumber={params.policyNumber}
       planCode={params.planCode}
-      initialNotifications={initialNotifications}
     />
   );
 }

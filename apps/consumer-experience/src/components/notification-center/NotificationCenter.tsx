@@ -16,7 +16,6 @@ import { NotificationCenterProps } from './types';
 import { sortNotificationsByDate } from './utils';
 
 export const NotificationCenter = ({
-  initialNotifications,
   policyNumber,
   planCode,
 }: NotificationCenterProps) => {
@@ -34,7 +33,6 @@ export const NotificationCenter = ({
   } = useAcknowledgeCases({
     planCode,
     policyNumber,
-    initialNotifications,
   });
 
   const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) =>

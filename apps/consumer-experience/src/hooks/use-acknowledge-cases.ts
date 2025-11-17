@@ -13,8 +13,6 @@ import {
   caseQueryOptions,
 } from '@/queries/query-options';
 import { TransformedCaseSearchResponse } from '@/services/case/types';
-import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
-import { CaseSummary } from '@/types/case';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { useFeatureFlagsFor } from './use-feature-flags';
@@ -23,15 +21,12 @@ interface UseAcknowledgeCasesParams {
   planCode: string;
   policyNumber: string;
   fetchNotificationsFlagEnabled?: boolean;
-  initialNotifications?: CaseSummary[] | null;
-  initialAcknowledgedNotifications?: CaseAcknowledgmentItem[];
 }
 
 export const useAcknowledgeCases = ({
   planCode,
   policyNumber,
   fetchNotificationsFlagEnabled = false,
-  initialAcknowledgedNotifications,
 }: UseAcknowledgeCasesParams) => {
   const isClient = useIsClient();
   const queryClient = useQueryClient();
@@ -68,7 +63,6 @@ export const useAcknowledgeCases = ({
     isLoading: acknowledgedNotificationsLoading,
   } = useQuery({
     ...acknowledgedCasesOptions({ planCode, policyNumber }),
-    initialData: initialAcknowledgedNotifications,
     enabled:
       fetchNotificationsFlagEnabled &&
       !!policyNumber.length &&
