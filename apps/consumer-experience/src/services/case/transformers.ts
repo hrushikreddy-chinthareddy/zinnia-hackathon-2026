@@ -17,6 +17,7 @@ export function transformCaseSearchResponse(
       stages: c.stages,
       process: c.process,
       processSubType: c?.processSubType,
+      caseGroup: c?.caseGroup,
     })),
   };
 }
