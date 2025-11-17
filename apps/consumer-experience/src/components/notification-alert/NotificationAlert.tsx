@@ -27,7 +27,6 @@ export const NotificationAlert: FC = () => {
   const [localNotificationIds, setLocalNotificationIds] = useState(
     () => new Set<string>() //Why local state? Performance reasons mainly. Its way faster to do this than try to read it from storage each time
   );
-  const [hasHydrated, setHasHydrated] = useState(false);
 
   // Persist caseIds per policy by using a scoped storage key
   const storageKey =
@@ -45,12 +44,11 @@ export const NotificationAlert: FC = () => {
     enabled: !!planCode && !!policyNumber,
   });
 
-  // On mount (and when the policy changes), hydrate dismissed IDs from storage.
+  // On mount (and when the policy changes), get dismissed IDs from storage.
   // If we have dismissed IDs, treat the alert as already dismissed for this policy
   // until a new notification ID appears.
   useEffect(() => {
     if (!storageKey) {
-      setHasHydrated(true);
       return;
     }
 
@@ -58,8 +56,6 @@ export const NotificationAlert: FC = () => {
     if (dismissedIds.length > 0) {
       setLocalNotificationIds(new Set(dismissedIds));
     }
-
-    setHasHydrated(true);
   }, [storageKey]);
 
   // refetch on route change to keep data fresh
@@ -100,10 +96,7 @@ export const NotificationAlert: FC = () => {
   }
 
   // Show the notification alert if there are new notifications
-  // We need to wait for hydration to ensure we have the correct dismissed IDs
-  // and we don't show the alert when we should be hidden
   const visible =
-    hasHydrated &&
     notifications.length > 0 &&
     notifications.some(notification => !localNotificationIds.has(notification));
 
