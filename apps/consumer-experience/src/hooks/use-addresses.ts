@@ -10,7 +10,7 @@ import { filterItemsWithPastEndDate } from '@/utils/data';
 import { refetchHandler } from '@/utils/transactions';
 
 export const POLL_INTERVAL = 1000;
-export const POLL_LIMIT = 5;
+export const POLL_LIMIT = 10;
 export const useAddresses = (
   planCode: string,
   policyNumber: string,

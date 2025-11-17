@@ -23,7 +23,7 @@ import { OpenTransactionCaseDetails } from '../open-transaction-case-details/Ope
 import { BankDetail } from '../person-data/types';
 
 const POLL_INTERVAL = 1000;
-const POLL_LIMIT = 5;
+const POLL_LIMIT = 10;
 
 interface BankListProps {
   planCode: string;
