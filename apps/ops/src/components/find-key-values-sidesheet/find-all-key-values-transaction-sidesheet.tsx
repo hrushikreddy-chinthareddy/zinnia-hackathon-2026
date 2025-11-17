@@ -32,7 +32,9 @@ export const FindAllKeyValuesTransactionSidesheet = ({
             trigger={null}
             header={
                 <span className="typography-desktop-headline-2-d">
-                    {t('label.transactionDetails')}
+                    {t(
+                        `historyEventCard.transactionTypes.${transaction.transactionType}`
+                    )}
                 </span>
             }
             open={open}
