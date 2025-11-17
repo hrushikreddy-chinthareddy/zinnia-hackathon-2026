@@ -128,6 +128,34 @@ export const validateBeneChangeTransaction = async (
     }
 };
 
+export const validateAgentTransaction = async (body: any): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    const validateAgentUrl = `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/multi-agent/validation`;
+    try {
+        browserLogInfo('AgentChange::Validating a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAgentUrl,
+            function: 'webnonfinancial.validateAgentTransaction',
+        });
+        const { data } = await client.post<any, AxiosResponse>(
+            validateAgentUrl,
+            body
+        );
+
+        return data;
+    } catch (error: any) {
+        browserLogError('AgentChange::Failed to validate transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAgentUrl,
+            function: 'webnonfinancial.validateAgentTransaction',
+        });
+        return error;
+    }
+};
+
 export const initialDeathClaimExists = async (
     contractNumber: string | undefined,
     clientId: string | undefined

@@ -8407,6 +8407,35 @@
             "submitTask": "Submit"
         }
     },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Agent updates were submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        },
+        "summary": {
+            "agentType": "Agent type",
+            "allocation": "Allocation",
+            "externalId": "External ID",
+            "bpm500Error": "BPM 500 error",
+            "header": "Summary",
+            "reviewMessage": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "tag": {
+                "new": "Added",
+                "none": "None",
+                "removed": "Removed",
+                "updated": "Updated"
+            },
+            "validation": "Validation API is Running...."
+        },
+        "agentDetails": {
+            "allocationErr": "Allocations must equal 100%"
+        }
+    },
     "fundAllocation": {
         "submitted": "Submitted!",
         "editAllocationNigoSummary1": "We submitted this request for ",

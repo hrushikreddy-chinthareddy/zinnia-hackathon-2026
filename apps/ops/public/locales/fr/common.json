@@ -8293,6 +8293,35 @@
             "submitTask": "Soumettre"
         }
     },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Les mises à jour de l’agent ont été soumises.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l’accueil",
+            "submitTask": "Soumettre"
+        },
+        "summary": {
+            "agentType": "Type d’agent",
+            "allocation": "Allocation",
+            "externalId": "ID externe",
+            "bpm500Error": "Erreur BPM 500",
+            "header": "Résumé",
+            "reviewMessage": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Consultez l’erreur ci-dessous.",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l’équipe concernée assure le suivi.",
+            "tag": {
+                "new": "Ajouté",
+                "none": "Aucun",
+                "removed": "Supprimé",
+                "updated": "Mis à jour"
+            },
+            "validation": "L’API de validation est en cours d’exécution..."
+        },
+        "agentDetails": {
+            "allocationErr": "Les allocations doivent être égales à 100 %"
+        }
+    },
     "fundAllocation": {
         "submitted": "Soumis!",
         "editAllocationNigoSummary1": "Nous avons soumis cette demande pour",
