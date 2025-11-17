@@ -36,14 +36,6 @@ export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
 export const toolTip = Symbol('toolTip');
 
-export type Section = [
-    string,
-    {
-        fields?: NestedData;
-        subSections?: NestedData;
-    }
-];
-
 export type ToSections = {
     basics: NestedData[] | null;
     sections: Section[];
@@ -104,3 +96,38 @@ export type TransformationsConfig = {
         productType?: ProductType
     ) => boolean | undefined;
 };
+
+const FIELD = Symbol('FIELD');
+const SECTION = Symbol('SECTION');
+const LIST = Symbol('LIST');
+
+export const FieldType = {
+    field: FIELD,
+    section: SECTION,
+    list: LIST,
+} as const;
+
+type Field = {
+    type: typeof FieldType.field;
+    label: string;
+    value: string;
+    link?: string;
+    toolTip?: string;
+};
+
+type Section = {
+    type: typeof FieldType.section;
+    label: string;
+    children: Node[];
+    tags?: string[];
+};
+
+type FieldGroup = Field[];
+type List = {
+    type: typeof FieldType.list;
+    children: FieldGroup[];
+};
+
+type Node = Field | Section | List;
+
+export type RenderData = Node[];
