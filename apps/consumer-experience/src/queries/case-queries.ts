@@ -28,7 +28,7 @@ export const getCaseDetails = async (caseId: string) => {
     throw response.error;
   }
 
-  return response.data.data;
+  return response.data;
 };
 
 export const getAcknowledgedCases = async ({
