@@ -5,7 +5,6 @@ import {
   Label,
   Address as AddressComponent,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/xd-utils';
 import { useFormContext } from 'react-hook-form';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
@@ -15,6 +14,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
 import { countryCodeToName } from '@/utils/address';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { toSentenceCase } from '@/utils/strings';
 
 import styles from './Selectable.module.css';
 

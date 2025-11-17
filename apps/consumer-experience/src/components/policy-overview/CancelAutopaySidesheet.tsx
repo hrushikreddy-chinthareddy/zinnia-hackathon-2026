@@ -10,7 +10,6 @@ import {
 } from '@zinnia/api-types/types/bpm';
 import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import { Button, SideSheet } from '@zinnia/bloom/components';
-import { DEFAULT_DATE_FORMAT } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
 
@@ -23,7 +22,7 @@ import { cancelSystematicPremium } from '@/queries/transaction-queries';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FormSteps } from '@/types/transactions';
 import { formatUSDollars } from '@/utils/currency';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 import { Confirm } from '../transaction-steps/confirm/Confirm';
 import { Error } from '../transaction-steps/error/Error';

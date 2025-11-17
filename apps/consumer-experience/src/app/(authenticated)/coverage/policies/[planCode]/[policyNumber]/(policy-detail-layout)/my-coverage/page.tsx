@@ -1,6 +1,5 @@
 import { ProductType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
-import { DEFAULT_UNAVAILABLE_STRING, yearsLeft } from '@zinnia/xd-utils';
 import { Metadata } from 'next';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Coverage.module.css';
@@ -11,8 +10,9 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { RouteKey, getPageTitle } from '@/route-map';
 import { getCoverage } from '@/services/policy';
 import { formatUSDollars } from '@/utils/currency';
-import { standardDateMonthDayYear } from '@/utils/dates';
+import { standardDateMonthDayYear, yearsLeft } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.MY_COVERAGE);
 // disable because NextJS needs this to be exported from this file

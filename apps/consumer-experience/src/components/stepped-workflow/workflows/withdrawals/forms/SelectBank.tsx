@@ -15,7 +15,6 @@ import {
   Radio,
   Label,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/xd-utils';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -36,6 +35,7 @@ import { useSteppedWorkflowContext } from '@/components/stepped-workflow/Stepped
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PolicyParty } from '@/types/policy';
 import { countryCodeToName } from '@/utils/address';
+import { toSentenceCase } from '@/utils/strings';
 
 import {
   distributionMethodStepSchema,

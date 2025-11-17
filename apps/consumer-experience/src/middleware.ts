@@ -5,7 +5,6 @@
 // prefetched pages also hit middleware by default!!
 
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import { CarrierName } from '@zinnia/bloom/components';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { RouteKey } from '@/route-map';
@@ -24,7 +23,7 @@ import { ROOT_URL_PATH } from './types';
 import { COOKIE_DOMAIN } from '../constants';
 import { CARRIER_REDIRECT_URLS } from './carrier-config/urls';
 import { TermsAndConditionApiResponse } from './types/auth';
-import { Subdomains } from './types/carriers';
+import { CompanyName, Subdomains } from './types/carriers';
 import {
   deleteCookie,
   deleteSession,
@@ -120,7 +119,7 @@ export async function middleware(req: NextRequest) {
   // TODO: use the carrier config with `requiresSSO` property and `redirectAfterLogout`
   if (!session && currentSubDomain === Subdomains.FARMERS) {
     return NextResponse.redirect(
-      CARRIER_REDIRECT_URLS[CarrierName.FARMERS].POLICY_SUMMARY
+      CARRIER_REDIRECT_URLS[CompanyName.FARMERS].POLICY_SUMMARY
     );
   }
 

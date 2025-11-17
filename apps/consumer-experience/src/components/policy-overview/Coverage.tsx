@@ -1,6 +1,5 @@
 import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
-import { yearsLeft } from '@zinnia/xd-utils';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { FieldData } from '@/components/field-data/FieldData';
@@ -8,7 +7,7 @@ import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined, lineOfBusinessUrlPath } from '@/utils/data';
-import { standardDateMonthDayYear } from '@/utils/dates';
+import { standardDateMonthDayYear, yearsLeft } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
 

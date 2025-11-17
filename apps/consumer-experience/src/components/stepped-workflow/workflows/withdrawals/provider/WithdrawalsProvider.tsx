@@ -8,9 +8,10 @@ import {
   PartyRole,
   TaxRateToUse,
 } from '@zinnia/api-types/types/bpm';
-import { DEFAULT_DATE_FORMAT } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
+
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import {
   Action,

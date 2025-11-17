@@ -1,15 +1,15 @@
 'use client';
 import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import { Address, Button, Label, SideSheet } from '@zinnia/bloom/components';
-import { formatPhoneNumber, toTitleCase } from '@zinnia/xd-utils';
 
+import { Email } from '@/components/pii/Email';
+import { FullName } from '@/components/pii/FullName';
+import { PiiWrapper } from '@/components/pii/PiiWrapper';
 import { FilteredPomAgentData } from '@/services/pom/distributors/v1/producers/search/transformers';
+import { formatPhoneNumber, toTitleCase } from '@/utils/strings';
 
 import styles from './AgentSidesheet.module.css';
 import { FieldData } from '../field-data/FieldData';
-import { Email } from '../pii/Email';
-import { FullName } from '../pii/FullName';
-import { PiiWrapper } from '../pii/PiiWrapper';
 
 export const AgentSidesheet = ({
   agentData,

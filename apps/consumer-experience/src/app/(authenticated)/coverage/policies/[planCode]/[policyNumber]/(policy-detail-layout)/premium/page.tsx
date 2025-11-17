@@ -1,4 +1,3 @@
-import { toSentenceCase } from '@zinnia/xd-utils';
 import { Metadata } from 'next';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -6,6 +5,7 @@ import { UpcomingPremium } from '@/components/policy-overview/UpcomingPremium';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';
 import { PolicyRequestInputs } from '@/types/policy';
+import { toSentenceCase } from '@/utils/strings';
 
 const pageTitle = getPageTitle(RouteKey.PREMIUM);
 // disable because NextJS needs this to be exported from this file

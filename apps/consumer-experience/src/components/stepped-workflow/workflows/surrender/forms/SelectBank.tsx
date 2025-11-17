@@ -13,7 +13,6 @@ import {
   Label,
   Address as AddressComponent,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/xd-utils';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -38,6 +37,7 @@ import { useSurrender } from '@/components/stepped-workflow/workflows/surrender/
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
 import { countryCodeToName } from '@/utils/address';
+import { toSentenceCase } from '@/utils/strings';
 
 import { default as styles } from '../Surrender.module.css';
 

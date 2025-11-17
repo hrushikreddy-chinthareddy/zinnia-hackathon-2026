@@ -1,7 +1,6 @@
-import { toTitleCase } from '@zinnia/xd-utils';
-
 import { getPageTitle, RouteKey } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';
+import { toTitleCase } from '@/utils/strings';
 
 export interface Breadcrumb {
   url: string;

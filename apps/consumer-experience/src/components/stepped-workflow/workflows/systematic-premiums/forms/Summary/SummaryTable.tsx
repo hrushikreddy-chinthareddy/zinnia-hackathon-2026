@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_DATE_FORMAT } from '@zinnia/xd-utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -14,6 +13,7 @@ import { getPaymentMethods } from '@/queries/payment-queries';
 import { getPolicyParties } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { formatUSDollars } from '@/utils/currency';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { BankDisplay } from './BankDisplay';
 import { SummaryDisplay } from './SummaryDisplay';

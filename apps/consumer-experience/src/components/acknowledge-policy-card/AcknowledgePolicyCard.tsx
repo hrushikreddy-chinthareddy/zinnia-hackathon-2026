@@ -7,7 +7,6 @@ import {
   Icon,
   IconType,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/xd-utils';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
@@ -23,6 +22,7 @@ import {
   lineOfBusinessUrlPath,
 } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { toSentenceCase } from '@/utils/strings';
 
 import {
   AcknowledgeInputs,

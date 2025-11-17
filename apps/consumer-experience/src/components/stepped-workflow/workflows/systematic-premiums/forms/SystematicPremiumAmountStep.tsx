@@ -11,7 +11,6 @@ import {
   Popover,
   Radio,
 } from '@zinnia/bloom/components';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -19,6 +18,8 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { FieldDate } from '@/components/field/date/FieldDate';
 import { FieldValue } from '@/components/field/value/FieldValue';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 import {
   SPAmountStepSchema,

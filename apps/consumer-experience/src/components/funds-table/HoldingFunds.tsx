@@ -10,12 +10,12 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/xd-utils';
 import { useWindowSize } from 'react-use';
 
 import { Fund } from '@/services/funds/types';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
+import { toSentenceCase } from '@/utils/strings';
 
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';

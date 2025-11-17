@@ -1,9 +1,9 @@
 'use client';
 
-import { DEFAULT_DATE_FORMAT } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 
 import { formatUSDollars } from '@/utils/currency';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { useSystematicPremiums } from '../provider/useSystematicPremiums';
 import { paymentFrequencyDisplay } from '../utils';

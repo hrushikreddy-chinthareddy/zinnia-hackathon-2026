@@ -5,13 +5,13 @@ import {
   PolicyStatus,
   ProductType,
 } from '@zinnia/api-types/types/sor';
-import { standardDateMonthDayYear } from '@zinnia/xd-utils';
 
 import {
   getAddSystematicProgramEligibility,
   getUpdateSystematicProgramEligibility,
 } from '@/services/bpm/systematic-programs';
 import { PaymentMethod } from '@/types/payment';
+import { standardDateMonthDayYear } from '@/utils/dates';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 
 import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';

@@ -5,7 +5,6 @@ import {
   Address as AddressSOR,
 } from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Label, Loader } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -24,7 +23,7 @@ import { CancelDialogLink } from '@/components/stepped-workflow/common/CancelDia
 import styles from '@/components/stepped-workflow/common/Styles.module.css';
 import { useGetTransactionStepData } from '@/hooks/use-get-transaction-step-data';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
-import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { toSentenceCase, DEFAULT_ERROR_STRING } from '@/utils/strings';
 
 import { FreeLookCancelUrlPaths } from '../provider/types';
 import { useFreeLookCancel } from '../provider/useFreeLookCancel';

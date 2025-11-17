@@ -15,11 +15,12 @@ import {
   LineOfBusiness,
   Party,
 } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING, toSentenceCase } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';
 import { LineOfBusinessPath } from '@/types';
+
+import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
