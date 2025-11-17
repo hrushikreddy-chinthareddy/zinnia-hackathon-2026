@@ -1,6 +1,6 @@
 import { ApiResponse } from '@/services';
 import { CaseSearchCriteriaWithLimit } from '@/services/case';
-import { TransformedCaseSearchResponse } from '@/services/case/transformers';
+import { TransformedCaseSearchResponse } from '@/services/case/types';
 import { ClientApi } from '@/services/client-http';
 import {
   AcknowledgeCaseDTO,

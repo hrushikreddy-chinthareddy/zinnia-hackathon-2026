@@ -40,7 +40,7 @@ export const NotificationAlert: FC = () => {
       policyNumber,
       caseStatus: [CaseStatus.IN_PROGRESS],
     }),
-    select: data => data.data.map(item => item.id as string),
+    select: data => data.data.map(item => item.id as string), // also return total
     enabled: !!planCode && !!policyNumber,
   });
 
@@ -111,7 +111,7 @@ export const NotificationAlert: FC = () => {
     >
       <BannerAlert
         icon={IconType.IN_PROGRESS}
-        bodyText={`We're still processing ${notifications.length} recent request(s).`}
+        bodyText={`We're still processing ${notifications.length} recent request(s).`} //Change this to count
         canDismiss={true}
         onDismiss={handleDismiss}
         variant={BannerVariant.Information}

@@ -26,7 +26,6 @@ export async function Nav({
 
   return (
     <>
-      {' '}
       <nav className={styles.nav}>
         <div className={styles.logoContainer}>
           <DevMenu />

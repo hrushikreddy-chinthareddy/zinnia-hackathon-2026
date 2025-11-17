@@ -1,19 +1,6 @@
-import { CaseSearchResponse, CaseSummary } from '@/types/case';
+import { CaseSearchResponse } from '@/types/case';
 
-type ReducedCaseInstanceSummary = Pick<
-  CaseSummary,
-  | 'id'
-  | 'createdAt'
-  | 'updatedAt'
-  | 'caseStatus'
-  | 'stages'
-  | 'process'
-  | 'processSubType'
->;
-
-export type TransformedCaseSearchResponse = {
-  data: ReducedCaseInstanceSummary[];
-} & CaseSearchResponse;
+import { TransformedCaseSearchResponse } from './types';
 
 export function transformCaseSearchResponse(
   response: CaseSearchResponse

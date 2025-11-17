@@ -12,7 +12,7 @@ import {
   acknowledgedCasesOptions,
   caseQueryOptions,
 } from '@/queries/query-options';
-import { TransformedCaseSearchResponse } from '@/services/case/transformers';
+import { TransformedCaseSearchResponse } from '@/services/case/types';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
 import { CaseSummary } from '@/types/case';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
