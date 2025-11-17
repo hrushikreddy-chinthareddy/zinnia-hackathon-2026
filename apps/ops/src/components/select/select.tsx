@@ -38,42 +38,40 @@ const SingleSelectOptions = ({
 }: Omit<SimpleSelectProps, 'onChange' | 'isMultiselect'>) => {
     return (
         <Select.Viewport>
-            {options
-                .filter((option) => option.value !== '')
-                .map((option: SimpleOption, index: number) => (
-                    <Select.Item
-                        disabled={option.disabled}
-                        value={option.value}
-                        key={`option-${option.value}`}
-                        className={getItemClasses(
-                            option,
-                            index,
-                            options.length,
-                            option.value === value
-                        )}
-                        aria-label={`Button ${option.label}`}
-                    >
-                        <Select.ItemText>
+            {options.map((option: SimpleOption, index: number) => (
+                <Select.Item
+                    disabled={option.disabled}
+                    value={option.value}
+                    key={`option-${option.value}`}
+                    className={getItemClasses(
+                        option,
+                        index,
+                        options.length,
+                        option.value === value
+                    )}
+                    aria-label={`Button ${option.label}`}
+                >
+                    <Select.ItemText>
+                        <Typography
+                            variant={
+                                value === option.value
+                                    ? TypographyVariant.BodySmBold
+                                    : TypographyVariant.BodySm
+                            }
+                        >
+                            {option.label}
+                        </Typography>
+                        {option.description && (
                             <Typography
-                                variant={
-                                    value === option.value
-                                        ? TypographyVariant.BodySmBold
-                                        : TypographyVariant.BodySm
-                                }
+                                variant={TypographyVariant.BodySm}
+                                className="text-gray-500"
                             >
-                                {option.label}
+                                {option.description}
                             </Typography>
-                            {option.description && (
-                                <Typography
-                                    variant={TypographyVariant.BodySm}
-                                    className="text-gray-500"
-                                >
-                                    {option.description}
-                                </Typography>
-                            )}
-                        </Select.ItemText>
-                    </Select.Item>
-                ))}
+                        )}
+                    </Select.ItemText>
+                </Select.Item>
+            ))}
         </Select.Viewport>
     );
 };
