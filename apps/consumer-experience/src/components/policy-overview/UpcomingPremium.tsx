@@ -1,6 +1,6 @@
 import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
-import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/utils';
+import { DEFAULT_UNAVAILABLE_STRING } from '@zinnia/xd-utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';

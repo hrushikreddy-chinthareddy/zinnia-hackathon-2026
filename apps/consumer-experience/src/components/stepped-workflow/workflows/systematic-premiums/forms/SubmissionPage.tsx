@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
+import { DEFAULT_DATE_FORMAT } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 
 import { formatUSDollars } from '@/utils/currency';

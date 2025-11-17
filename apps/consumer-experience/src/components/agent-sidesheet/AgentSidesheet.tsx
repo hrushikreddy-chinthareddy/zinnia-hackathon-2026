@@ -1,7 +1,7 @@
 'use client';
 import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import { Address, Button, Label, SideSheet } from '@zinnia/bloom/components';
-import { formatPhoneNumber, toTitleCase } from '@zinnia/utils';
+import { formatPhoneNumber, toTitleCase } from '@zinnia/xd-utils';
 
 import { FilteredPomAgentData } from '@/services/pom/distributors/v1/producers/search/transformers';
 

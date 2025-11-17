@@ -72,11 +72,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: 6.5.0
+        specifier: ^6.5.0
         version: 6.5.0(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.53.1)(typescript@5.9.3)(vite@6.4.1(@types/node@20.19.24)(jiti@2.6.1)(less@4.4.2)(terser@5.44.1)(yaml@2.8.1))
-      '@zinnia/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
+      '@zinnia/xd-utils':
+        specifier: ^1.0.0
+        version: 1.0.0
       clsx:
         specifier: ^2.1.0
         version: 2.1.1
@@ -6703,6 +6703,14 @@ packages:
 
   '@zinnia/typescript-config@0.0.11':
     resolution: {integrity: sha512-7tO5B/p+lJ8bqsuGJlkL+rEHwvLI/fCbhn8wTYJP8G5ZfHwhKgQS7mpq0SdoxZ7tuZSOX6QRNiM5XGpGvEpujA==, tarball: https://npm.pkg.github.com/download/@zinnia/typescript-config/0.0.11/20f693f3d049ca98239e222bb7113887b6379c98}
+
+  '@zinnia/xd-types@1.3.0':
+    resolution: {integrity: sha512-EyIpFSL/RlxtS3/PPyD4vil3b7TSeMnvUPNUWyz7Y04kRHVF1MsQCXtvE6mtmVRwWl12XOla0CbDp0CsHuhkBw==, tarball: https://npm.pkg.github.com/download/@zinnia/xd-types/1.3.0/33a1aa556115a4aaea6b4ae2e1446a405c4e73a4}
+    engines: {node: '>=20.11.1'}
+
+  '@zinnia/xd-utils@1.0.0':
+    resolution: {integrity: sha512-GC0HGhvMMG5T9JbjPemexitWSZi9n7QVvTLOyq5NuSFmkrjXEh+O8fvrcV6hhByzStyLnyXaXCZnNCaG1Nd8CA==, tarball: https://npm.pkg.github.com/download/@zinnia/xd-utils/1.0.0/f7a53547f1703fd140066ab9d64cc8403a2d6299}
+    engines: {node: '>=20.11.1'}
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -22292,6 +22300,13 @@ snapshots:
   '@zinnia/prettier-config@0.0.1': {}
 
   '@zinnia/typescript-config@0.0.11': {}
+
+  '@zinnia/xd-types@1.3.0': {}
+
+  '@zinnia/xd-utils@1.0.0':
+    dependencies:
+      '@zinnia/xd-types': 1.3.0
+      dayjs: 1.11.19
 
   abab@2.0.6: {}
 

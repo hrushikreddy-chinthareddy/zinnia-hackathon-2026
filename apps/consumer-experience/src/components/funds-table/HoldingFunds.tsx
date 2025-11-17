@@ -10,7 +10,7 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import { useWindowSize } from 'react-use';
 
 import { Fund } from '@/services/funds/types';

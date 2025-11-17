@@ -15,7 +15,7 @@ import {
   Radio,
   Label,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';

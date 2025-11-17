@@ -1,6 +1,6 @@
 import { ProductType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
-import { DEFAULT_UNAVAILABLE_STRING, yearsLeft } from '@zinnia/utils';
+import { DEFAULT_UNAVAILABLE_STRING, yearsLeft } from '@zinnia/xd-utils';
 import { Metadata } from 'next';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Coverage.module.css';

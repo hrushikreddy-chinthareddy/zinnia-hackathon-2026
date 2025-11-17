@@ -1,4 +1,4 @@
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import timezone from 'dayjs/plugin/timezone';

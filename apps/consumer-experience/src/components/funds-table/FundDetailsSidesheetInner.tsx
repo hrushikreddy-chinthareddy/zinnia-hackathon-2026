@@ -2,7 +2,7 @@
 import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import { ReactNode } from 'react';
 import { z } from 'zod';
 

@@ -5,7 +5,7 @@ import {
   Address as AddressSOR,
 } from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Label, Loader } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';

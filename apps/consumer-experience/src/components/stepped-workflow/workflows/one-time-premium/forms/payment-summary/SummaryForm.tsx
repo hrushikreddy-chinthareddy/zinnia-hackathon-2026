@@ -1,6 +1,6 @@
 'use client';
 import { Label, LabelProps, Loader } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';

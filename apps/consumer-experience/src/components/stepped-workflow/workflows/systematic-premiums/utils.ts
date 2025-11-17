@@ -4,7 +4,7 @@
  */
 import { Frequency } from '@zinnia/api-types/types/bpm';
 import { Frequency as BPMFrequency } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING } from '@zinnia/xd-utils';
 
 import { SPPaymentFrequency } from './provider/types';
 

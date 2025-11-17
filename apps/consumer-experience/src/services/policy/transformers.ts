@@ -14,7 +14,6 @@ import {
   LineOfBusiness,
   Frequency,
 } from '@zinnia/api-types/types/sor';
-import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -50,6 +49,7 @@ import {
   allPolicyOwnerBanks,
   isEndDatedAndEndDateUpcoming,
   banksByPartyId,
+  policyOwner,
 } from '@/utils/data';
 import { logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';

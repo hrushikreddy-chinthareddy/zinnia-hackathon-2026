@@ -7,7 +7,6 @@ import {
   PolicyStatus,
   BankAccount,
 } from '@zinnia/api-types/types/sor';
-import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
@@ -81,6 +80,7 @@ import {
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getSession } from '@/utils/auth';
+import { policyOwner } from '@/utils/data';
 import { logError, logInfo } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';

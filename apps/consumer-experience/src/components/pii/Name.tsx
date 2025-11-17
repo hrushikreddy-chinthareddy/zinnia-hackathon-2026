@@ -1,6 +1,6 @@
 'use client';
 
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING } from '@zinnia/xd-utils';
 
 import { PiiProps } from '@/types/pii';
 

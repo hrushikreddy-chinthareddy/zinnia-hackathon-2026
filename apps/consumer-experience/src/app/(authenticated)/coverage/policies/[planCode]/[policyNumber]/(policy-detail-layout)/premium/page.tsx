@@ -1,4 +1,4 @@
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import { Metadata } from 'next';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';

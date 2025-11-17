@@ -6,7 +6,7 @@ import {
   AssistiveTextVariant,
   Label,
 } from '@zinnia/bloom/components';
-import { DEFAULT_ERROR_STRING, toSentenceCase } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@zinnia/xd-utils';
 
 import { FieldData } from '@/components/field-data/FieldData';
 import { useFeatureFlagsFor } from '@/hooks/use-feature-flags';

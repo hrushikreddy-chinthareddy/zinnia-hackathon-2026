@@ -1,7 +1,7 @@
 'use client';
 import { PayeeOrBeneficiary } from '@zinnia/api-types/types/sor';
 import { Label, Radio } from '@zinnia/bloom/components';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import { DEFAULT_ERROR_STRING } from '@zinnia/xd-utils';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 

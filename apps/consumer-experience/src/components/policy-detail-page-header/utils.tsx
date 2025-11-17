@@ -1,4 +1,4 @@
-import { toTitleCase } from '@zinnia/utils';
+import { toTitleCase } from '@zinnia/xd-utils';
 
 import { getPageTitle, RouteKey } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';

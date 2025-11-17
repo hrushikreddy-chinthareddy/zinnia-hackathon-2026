@@ -5,7 +5,7 @@ import {
   Label,
   Address as AddressComponent,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import { useFormContext } from 'react-hook-form';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';

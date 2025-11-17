@@ -1,7 +1,7 @@
 'use client';
 
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 
 import { Link } from '@/components/link/Link';
 import { default as commonStyles } from '@/components/stepped-workflow/common/Styles.module.css';

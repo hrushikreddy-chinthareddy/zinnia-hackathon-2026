@@ -5,7 +5,7 @@ import {
   PolicyStatus,
   ProductType,
 } from '@zinnia/api-types/types/sor';
-import { standardDateMonthDayYear } from '@zinnia/utils';
+import { standardDateMonthDayYear } from '@zinnia/xd-utils';
 
 import {
   getAddSystematicProgramEligibility,

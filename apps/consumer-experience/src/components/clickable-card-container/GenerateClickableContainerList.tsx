@@ -1,5 +1,5 @@
 import { IconType, Icon } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+import { toSentenceCase } from '@zinnia/xd-utils';
 import { FC } from 'react';
 
 import { ClickableCardContainer } from './ClickableCardContainer';
