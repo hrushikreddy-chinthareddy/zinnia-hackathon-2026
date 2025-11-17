@@ -42,7 +42,7 @@ function NumbersWidget<
     ) : (
         <div className="max-w-sm flex w-full flex-col pl-1">
             <Field
-                value={value || ''}
+                value={value ? value.replace(/\D/g, '') : ''}
                 onChange={(e) => onChange(e.target.value)}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
