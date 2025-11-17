@@ -17,7 +17,6 @@ export const profileData: PolicyProfile = {
     firstName: 'Michael',
     lastName: 'Williams',
   },
-  preferredAddressIndicator: '1',
   partyId: '1',
   addresses: [
     {
@@ -33,6 +32,7 @@ export const profileData: PolicyProfile = {
       zipCode: '67846',
       // zipCodeExtension: null,
       country: 'US' as Country,
+      isPreferred: true,
     },
     {
       addressId: '1',

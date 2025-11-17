@@ -91,9 +91,6 @@ export const AddressList: FC<AddressListProps> = ({
       )}
       <Addresses
         addresses={addresses as Address[]}
-        preferredAddressIndicator={
-          initialProfileData?.preferredAddressIndicator || ''
-        }
         partyId={initialProfileData?.partyId || ''}
         allowAddressChanges={allowAddressChanges}
       />
@@ -101,6 +98,7 @@ export const AddressList: FC<AddressListProps> = ({
         <AddEditAddressSidesheet
           partyId={initialProfileData?.partyId || ''}
           actionType={FormActionType.ADD}
+          addresses={addresses as Address[]}
         />
       )}
     </div>

@@ -19,9 +19,20 @@ export interface BankRequest extends NonFinancialTransactionParameters {
   correlationId?: string;
 }
 
+//TODO: Temporarily do this. Trying to pull in the latest BPM spec led to a ton of type issues throughout the site.
+type AddressChangeType = AddressChangeRequest['address'];
+
+//TODO: Temporarily do this. Trying to pull in the latest BPM spec led to a ton of type issues throughout the site.
+interface AddressChangeRequestExt extends AddressChangeRequest {
+  address: AddressChangeType & {
+    isPreferred?: boolean;
+  };
+  preferredAddressId?: string;
+}
+
 export interface AddressRequest extends NonFinancialTransactionParameters {
   addressId?: string;
-  addressChangeRequest: AddressChangeRequest;
+  addressChangeRequest: AddressChangeRequestExt; //Replace with AddressChangeRequest when BPM spec is updated
   deleteRequest?: boolean;
   correlationId?: string;
 }

@@ -100,7 +100,6 @@ export interface PolicyParty {
 }
 
 export interface PolicyProfile {
-  preferredAddressIndicator: string;
   name: { firstName?: string; lastName?: string; fullName?: string };
   partyId: string;
   addresses: Address[];
