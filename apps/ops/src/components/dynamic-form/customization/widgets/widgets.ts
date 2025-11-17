@@ -1,25 +1,24 @@
 import { RegistryWidgetsType } from '@rjsf/utils';
 
+import AllocationPercentageWidget from './allocation-percentage/allocation-percentage';
 import ArithmeticOperationWidget from './arithmetic-operation-widget/arithmetic-operation-widget';
+import BeneTransactionAccordion from './bene-transaction-accordion/bene-transaction-accordion';
 import CheckboxWidget from './checkbox-widget/checkbox-widget';
 import CheckBoxesSelectWidget from './checkboxes-select-widget/checkboxes-select-widget';
 import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
 import DateWidget from './date-widget/date-widget';
-import NewDateWidget from './date-widget/new-date-widget';
+import DateWidgetV2 from './date-widget/date-widget-v2';
 import EmailWidget from './email-widget/email-widget';
 import AttachmentWidget from './file-widget/attachment-widget';
 import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
 import NotesWidget from './notes-widget/notes-widget';
 import NumbersWidget from './numbers/numbers';
-import PercentageWidget from './percentage-widget/percentage-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
-import SSNWidget from './ssn-widget/ssn-widget';
 import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
 import TextareaWidget from './textarea-widget/textarea-widget';
-import TransactionAccordion from './transaction-accordion/transaction-accordion';
 import TitleWidget from './title-widget/titile-widget';
 
 export function generateWidgets(): RegistryWidgetsType {
@@ -38,12 +37,11 @@ export function generateWidgets(): RegistryWidgetsType {
         NotesWidget,
         AttachmentWidget,
         ArithmeticOperationWidget,
-        TransactionAccordion,
-        PercentageWidget,
+        BeneTransactionAccordion,
+        AllocationPercentageWidget,
         EmailWidget,
         NumbersWidget,
-        NewDateWidget,
-        SSNWidget,
+        DateWidgetV2,
         TitleWidget,
     };
 }

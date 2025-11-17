@@ -27,6 +27,7 @@ export const getBeneChangeSteps = ({
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}
+                overrideTitle={true}
             ></TaskFormStep>
         ),
         text: metadata?.title || '',
