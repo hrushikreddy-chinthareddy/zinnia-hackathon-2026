@@ -29,7 +29,6 @@ export default function AddressFieldTemplate({
     const DEFAULT_PADDING = 'p-6';
     const bgColor = backgroundColor ?? DEFAULT_BACKGROUND_COLOR;
     const customClasses = classes ?? DEFAULT_PADDING;
-
     return (
         <div
             className={`w-full max-w-[800px] rounded-md ${bgColor} ${customClasses}`}
