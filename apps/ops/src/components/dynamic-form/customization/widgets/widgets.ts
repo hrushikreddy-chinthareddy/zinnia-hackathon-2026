@@ -1,8 +1,8 @@
 import { RegistryWidgetsType } from '@rjsf/utils';
 
-import PercentageWidget from './allocation-percentage/allocation-percentage';
+import AllocationPercentageWidget from './allocation-percentage/allocation-percentage';
 import ArithmeticOperationWidget from './arithmetic-operation-widget/arithmetic-operation-widget';
-import TransactionAccordion from './bene-transaction-accordion/bene-transaction-accordion';
+import BeneTransactionAccordion from './bene-transaction-accordion/bene-transaction-accordion';
 import CheckboxWidget from './checkbox-widget/checkbox-widget';
 import CheckBoxesSelectWidget from './checkboxes-select-widget/checkboxes-select-widget';
 import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
@@ -37,8 +37,8 @@ export function generateWidgets(): RegistryWidgetsType {
         NotesWidget,
         AttachmentWidget,
         ArithmeticOperationWidget,
-        TransactionAccordion,
-        PercentageWidget,
+        BeneTransactionAccordion,
+        AllocationPercentageWidget,
         EmailWidget,
         NumbersWidget,
         DateWidgetV2,

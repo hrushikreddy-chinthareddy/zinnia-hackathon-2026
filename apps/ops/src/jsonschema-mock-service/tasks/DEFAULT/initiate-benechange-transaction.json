@@ -534,7 +534,7 @@
                             "label": false
                         },
                         "parties": {
-                            "ui:widget": "TransactionAccordion",
+                            "ui:widget": "BeneTransactionAccordion",
                             "ui:options": {
                                 "addable": false,
                                 "orderable": false,
@@ -1358,7 +1358,7 @@
                         "norender": true
                     },
                     "actionData": {
-                        "ui:widget": "TransactionAccordion",
+                        "ui:widget": "BeneTransactionAccordion",
                         "ui:options": {
                             "label": false,
                             "addable": true,
@@ -1443,7 +1443,7 @@
                                     "label": false
                                 },
                                 "beneficiaryPercentage": {
-                                    "ui:widget": "PercentageWidget"
+                                    "ui:widget": "AllocationPercentageWidget"
                                 },
                                 "partyType": {
                                     "ui:widget": "radio",
@@ -1907,7 +1907,7 @@
                             }
                         },
                         "signatures": {
-                            "ui:widget": "TransactionAccordion",
+                            "ui:widget": "BeneTransactionAccordion",
                             "ui:options": {
                                 "addable": false,
                                 "orderable": false,

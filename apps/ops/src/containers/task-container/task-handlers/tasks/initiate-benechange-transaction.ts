@@ -1,7 +1,14 @@
+import { Action, EntityTypeValue } from '@deps/constants/policy';
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { IdentificationType, PartyType } from '@deps/models/policy/sor-policy';
+import {
+    EmailType,
+    IdentificationType,
+    PartyType,
+    PhoneType,
+    RelationshipToInsured,
+} from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { LoggingContext } from '@deps/utils/server-logging';
@@ -129,12 +136,12 @@ const formatParties = (policyResponse: PolicyResponse) => {
             party.emails.length > 0
                 ? party.emails.map((email: any) => ({
                       emailAddress: email.emailAddress ?? null,
-                      emailType: email.emailType ?? 'PERSONAL',
+                      emailType: email.emailType ?? EmailType.PERSONAL,
                   }))
                 : [
                       {
                           emailAddress: null,
-                          emailType: 'PERSONAL',
+                          emailType: EmailType.PERSONAL,
                       },
                   ],
         phones:
@@ -148,7 +155,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
                       extension: phone?.extension ?? null,
                       isPreferred: phone?.isPreferred ?? false,
                       phoneId: phone?.phoneId ?? null,
-                      phoneType: phone?.phoneType ?? 'HOME',
+                      phoneType: phone?.phoneType ?? PhoneType.HOME,
                       startDate: phone?.startDate ?? null,
                       timezone: phone?.timezone ?? null,
                   }))
@@ -162,7 +169,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
                           extension: null,
                           isPreferred: false,
                           phoneId: null,
-                          phoneType: 'HOME',
+                          phoneType: PhoneType.HOME,
                           startDate: null,
                           timezone: null,
                       },
@@ -214,7 +221,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                 return {
                     isPerStirpes: bene.isPerStirpes ?? false,
                     isIrrevocable: bene.isIrrevocable ?? false,
-                    action: bene.action ?? 'NONE',
+                    action: bene.action ?? Action.NONE,
                     actionType: 'BENE_CHANGE',
                     isRestrictedBeneficiary:
                         bene.isRestrictedBeneficiary ?? false,
@@ -228,7 +235,8 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                 : PartyRoleType.CONTINGENTBENEFICIARY,
                         partyId: bene.partyId ?? '',
                         relationshipToParty:
-                            role?.relationshipToParty ?? 'OTHER',
+                            role?.relationshipToParty ??
+                            RelationshipToInsured.OTHER,
                     },
                     party: {
                         partyId: bene.partyId ?? null,
@@ -238,14 +246,14 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         middleName: bene.middleName ?? null,
                         lastName:
                             bene.lastName ||
-                            (bene.partyType !== 'INDIVIDUAL'
+                            (bene.partyType !== PartyType.INDIVIDUAL
                                 ? bene.fullName
                                 : null) ||
                             null,
                         suffix: bene.suffix ?? null,
                         trustType: bene.trustType ?? null,
                         trustDate: bene.trustDate ?? null,
-                        entityType: bene.entityType ?? 'UNKNOWN',
+                        entityType: bene.entityType ?? EntityTypeValue.Other,
                         gender: bene.gender ?? null,
                         dateOfBirth: bene.dateOfBirth ?? null,
                         documents: bene.documents ?? [],
@@ -266,7 +274,8 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                 ? bene.emails.map((email: any) => ({
                                       emailAddress: email.emailAddress ?? null,
                                       emailId: email.emailId ?? null,
-                                      emailType: email.emailType ?? 'PERSONAL',
+                                      emailType:
+                                          email.emailType ?? EmailType.PERSONAL,
                                       endDate: email.endDate ?? null,
                                       isPreferred: email.isPreferred ?? false,
                                       startDate: email.startDate ?? null,
@@ -275,7 +284,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                       {
                                           emailAddress: null,
                                           emailId: null,
-                                          emailType: 'PERSONAL',
+                                          emailType: EmailType.PERSONAL,
                                           endDate: null,
                                           isPreferred: false,
                                           startDate: null,
@@ -292,13 +301,14 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                       extension: phone.extension ?? null,
                                       isPreferred: phone.isPreferred ?? false,
                                       phoneId: phone.phoneId ?? null,
-                                      phoneType: phone.phoneType ?? 'HOME',
+                                      phoneType:
+                                          phone.phoneType ?? PhoneType.HOME,
                                       startDate: phone.startDate ?? null,
                                       timezone: phone.timezone ?? null,
                                   }))
                                 : [
                                       {
-                                          phoneType: 'HOME',
+                                          phoneType: PhoneType.HOME,
                                           areaCode: null,
                                           bestTime: null,
                                           countryCode: 'USA',
@@ -321,7 +331,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                           addressId: address.addressId ?? null,
                                           addressType:
                                               address?.addressType ??
-                                              'RESIDENCE',
+                                              AddressType.RESIDENCE,
                                           addressLine1:
                                               address?.addressLine1 ?? null,
                                           addressLine2:
@@ -342,7 +352,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                   )
                                 : [
                                       {
-                                          addressType: 'RESIDENCE',
+                                          addressType: AddressType.RESIDENCE,
                                           addressLine1: '',
                                           addressLine2: null,
                                           city: '',
