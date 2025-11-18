@@ -46,7 +46,7 @@ export const QuickQuoteResultTableSection = ({
                             <CircleInfoIcon
                                 height={'16px'}
                                 width={'16px'}
-                                className="text-primary"
+                                className="tooltip-primary"
                             />
                         }
                     >
