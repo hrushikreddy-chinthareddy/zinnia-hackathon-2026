@@ -478,3 +478,10 @@ export const createQueryString = (obj: Record<string, unknown>) =>
     Object.entries(obj)
         .map(([key, value]) => `${key}=${value}`)
         .join('&');
+
+export function capitalizeAfterPeriod(text: string): string {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .replace(/(^\s*\w|\. \w)/g, (match) => match.toUpperCase());
+}

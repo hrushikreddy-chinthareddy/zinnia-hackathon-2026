@@ -33,7 +33,10 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import Tooltip from '@deps/components/tooltip/tooltip';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { toSentenceCase } from '@deps/helpers/string.helpers';
+import {
+    capitalizeAfterPeriod,
+    toSentenceCase,
+} from '@deps/helpers/string.helpers';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -346,10 +349,10 @@ export const IssueCountsByStatusTable = () => {
                                             <TableCell>
                                                 <Tooltip
                                                     body={
-                                                        toSentenceCase(
+                                                        capitalizeAfterPeriod(
                                                             item.details
                                                         ) ||
-                                                        toSentenceCase(
+                                                        capitalizeAfterPeriod(
                                                             item.reason
                                                         )
                                                     }
@@ -359,10 +362,10 @@ export const IssueCountsByStatusTable = () => {
                                                 >
                                                     {
                                                         <div className="text-left">
-                                                            {toSentenceCase(
+                                                            {capitalizeAfterPeriod(
                                                                 item.details
                                                             ) ||
-                                                                toSentenceCase(
+                                                                capitalizeAfterPeriod(
                                                                     item.reason
                                                                 )}
                                                         </div>
