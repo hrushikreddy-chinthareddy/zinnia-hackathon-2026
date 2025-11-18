@@ -1945,7 +1945,7 @@ export const farmersTermBlueprintTL0101 = {
                                     id: '55ebb606-92ee-4ddc-a0b4-ecc7e9acd5d8',
                                     partName:
                                         'custom-6b0d4bee-65ad-4156-91ec-4c19f480f275',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     valid: [
                                         {
                                             id: '6d18b6e2-a9e2-4c00-bdd0-14d07174ef6d',
@@ -2029,7 +2029,7 @@ export const farmersTermBlueprintTL0101 = {
                                     id: 'b1a3682f-2b2a-435c-9b60-7434631bd358',
                                     partName:
                                         'custom-928186e2-d4cc-4a7d-be74-06d6487c68b6',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -2452,7 +2452,7 @@ export const farmersTermBlueprintTL0101 = {
                                     id: '35f713f1-e857-4a91-ac32-9e75ffe9fdb9',
                                     partName:
                                         'custom-73695d64-bff2-41eb-a581-bebebb2b0001',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -2713,7 +2713,7 @@ export const farmersTermBlueprintTL0101 = {
                                     id: '5e080533-1769-489e-ba38-7b7dfc9c509a',
                                     partName:
                                         'custom-da961adc-7b66-4d12-8022-b6973b5a102c',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
