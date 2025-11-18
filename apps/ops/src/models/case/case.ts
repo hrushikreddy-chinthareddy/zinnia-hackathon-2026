@@ -331,3 +331,9 @@ export enum AgingTimeRanges {
 
 export type AgingTimeRangesKeys = keyof typeof AgingTimeRanges;
 export type AgingTimeRangesKeysExtended = keyof typeof AgingTimeRanges | 'All';
+
+export enum LOADING_TIME_CONFIG {
+    NO_MESSAGE_THRESHOLD = 500,
+    GATHERING_THRESHOLD = 2000,
+    ORGANIZING_THRESHOLD = 5000,
+}

@@ -14,10 +14,6 @@ import {
     useEffect,
 } from 'react';
 
-import {
-    PageLoader,
-    PageLoaderVariant,
-} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
@@ -43,15 +39,15 @@ import {
     getSearchValueObject,
     toggleLabels,
 } from '@deps/helpers/case-management';
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import {
     doesUserHavePagePermissions,
     getUserData,
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
+import { useLoadingTime } from '@deps/hooks/useLoadingTime';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { Statuses } from '@deps/models/case/case';
+import { LOADING_TIME_CONFIG, Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
@@ -119,6 +115,7 @@ const CaseManagementDashboard = ({
     ] = useCaseFilterQueryStore();
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
+
     const handleCreatedBySort = useCallback(
         (key: 'createdAt') => {
             setCaseManagementFilters((prevFilters) => {
@@ -243,10 +240,34 @@ const CaseManagementDashboard = ({
         queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
         enabled: loadedStoredFilters,
     });
+    const loadingTime = useLoadingTime(caseSearchLoading, {
+        incrementInterval: 100,
+        noMessageThreshold: LOADING_TIME_CONFIG.NO_MESSAGE_THRESHOLD,
+        gatheringThreshold: LOADING_TIME_CONFIG.GATHERING_THRESHOLD,
+        organizingThreshold: LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD,
+    });
+
+    const loadingMessage = useMemo(() => {
+        if (loadingTime < LOADING_TIME_CONFIG.NO_MESSAGE_THRESHOLD) return '';
+        if (loadingTime < LOADING_TIME_CONFIG.GATHERING_THRESHOLD)
+            return t(
+                'caseManagementDashboard.loadingMessage.gatheringYourResults'
+            );
+        if (loadingTime < LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD)
+            return t(
+                'caseManagementDashboard.loadingMessage.organizingYourResults'
+            );
+        return t(
+            'caseManagementDashboard.loadingMessage.takingLongerThanUsual'
+        );
+    }, [loadingTime, t]);
 
     const hasResults = !!caseSearchData?.data?.length;
 
     const liveResultsMessage = useMemo(() => {
+        if (caseSearchLoading) {
+            return loadingMessage;
+        }
         if (hasResults) {
             return t('policy.documents.xToYOfZ', {
                 x: caseManagementFilters.offset + 1,
@@ -259,9 +280,7 @@ const CaseManagementDashboard = ({
                 }`,
             });
         } else {
-            return !isEmptyObject(caseManagementFilters.searchValue)
-                ? t('caseManagementDashboard.search.empty.title')
-                : t('caseManagementDashboard.search.empty.titleFilters');
+            return t('caseManagementDashboard.search.empty.title');
         }
     }, [
         caseSearchData,
@@ -440,8 +459,6 @@ const CaseManagementDashboard = ({
     ]);
 
     const tableContent = useMemo(() => {
-        if (caseSearchLoading)
-            return <PageLoader variant={PageLoaderVariant.Center} />;
         if (caseSearchError) return <SearchResultsErrorCard />;
 
         const numberOfItems = caseManagementFilters.offset + 1;
@@ -460,6 +477,8 @@ const CaseManagementDashboard = ({
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
                     sortBy={caseManagementFilters.sortBy}
+                    caseSearchLoading={caseSearchLoading}
+                    loadingMessage={loadingMessage}
                 />
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography

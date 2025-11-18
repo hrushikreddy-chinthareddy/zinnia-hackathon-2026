@@ -2406,6 +2406,11 @@
     "caseManagementDashboard": {
         "h1": "Cases",
         "h2": "Search Results",
+        "loadingMessage": {
+            "gatheringYourResults": "Gathering your results…",
+            "organizingYourResults": "Organizing your results…",
+            "takingLongerThanUsual": "This is taking longer than usual. Try adjusting your filters."
+        },
         "case": {
             "createdAt": "Created",
             "updatedAt": "Updated",
@@ -2515,8 +2520,7 @@
                 }
             },
             "empty": {
-                "title": "We couldn't find a case that matches your search.",
-                "titleFilters": "We couldn't find a case that matches your filters.",
+                "title": "Nothing to show.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",

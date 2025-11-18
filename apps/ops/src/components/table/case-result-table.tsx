@@ -387,10 +387,24 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     );
 };
 
+interface CaseResultTableProps {
+    cases: Case[];
+    searchValues?: SearchViewQuery;
+    handleSort: (key: 'createdAt') => void;
+    sortDirection: 'asc' | 'desc';
+    sortBy: string | null;
+    caseSearchLoading: boolean;
+    loadingMessage: string;
+}
+
 const NoResultsRow = ({
     searchValues,
+    loadingMessage,
+    caseSearchLoading,
 }: {
     searchValues: SearchViewQuery | undefined;
+    loadingMessage: string;
+    caseSearchLoading: boolean;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const hasSearchValue = !isEmptyObject(searchValues);
@@ -399,33 +413,25 @@ const NoResultsRow = ({
         <TableRow>
             <TableCell colSpan={7} className="text-center">
                 <Typography variant={TypographyVariant.BodySm} className="my-4">
-                    {hasSearchValue
-                        ? t('caseManagementDashboard.search.empty.title')
-                        : t(
-                              'caseManagementDashboard.search.empty.titleFilters'
-                          )}
+                    {caseSearchLoading
+                        ? loadingMessage
+                        : t('caseManagementDashboard.search.empty.title')}
                 </Typography>
             </TableCell>
         </TableRow>
     );
 };
-
-interface CaseResultTableProps {
-    cases: Case[];
-    searchValues?: SearchViewQuery;
-    handleSort: (key: 'createdAt') => void;
-    sortDirection: 'asc' | 'desc';
-    sortBy: string | null;
-}
-
 export const CaseResultTable = ({
     cases,
     searchValues,
     handleSort,
     sortDirection,
     sortBy,
+    caseSearchLoading,
+    loadingMessage,
 }: CaseResultTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+
     return (
         <Table className={styles.tableContainer}>
             <TableHeader>
@@ -511,7 +517,11 @@ export const CaseResultTable = ({
                         />
                     ))
                 ) : (
-                    <NoResultsRow searchValues={searchValues} />
+                    <NoResultsRow
+                        searchValues={searchValues}
+                        caseSearchLoading={caseSearchLoading}
+                        loadingMessage={loadingMessage}
+                    />
                 )}
             </TableBody>
         </Table>

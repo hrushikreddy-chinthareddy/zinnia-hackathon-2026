@@ -2359,6 +2359,11 @@
     "caseManagementDashboard": {
         "h1": "Dossiers",
         "h2": "Résultats de recherche",
+        "loadingMessage": {
+            "gatheringYourResults": "Collecte de vos résultats…",
+            "organizingYourResults": "Organisation de vos résultats…",
+            "takingLongerThanUsual": "Cette opération prend plus de temps que d'habitude. Veuillez ajuster vos filtres."
+        },
         "case": {
             "createdAt": "Créé",
             "updatedAt": "Mis à jour",
@@ -2468,8 +2473,7 @@
                 }
             },
             "empty": {
-                "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
-                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
+                "title": "Rien à montrer.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",

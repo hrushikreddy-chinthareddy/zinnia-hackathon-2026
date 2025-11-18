@@ -2410,6 +2410,12 @@
     "caseManagementDashboard": {
         "h1": "Casos",
         "h2": "Resultados de Búsqueda",
+        "loadingMessage": {
+            "gatheringYourResults": "Recopilando tus resultados…",
+            "organizingYourResults": "Organizando tus resultados…",
+            "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
+        },
+
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -2519,8 +2525,7 @@
                 }
             },
             "empty": {
-                "title": "No pudimos encontrar un caso que coincida con su búsqueda.",
-                "titleFilters": "No pudimos encontrar un caso que coincida con sus filtros.",
+                "title": "Nada que mostrar.",
                 "paragraph": "No se preocupe, probablemente sea solo un error tipográfico. Verifique su entrada y vuelva a intentarlo.",
                 "action": {
                     "text": "¿Sigue teniendo problemas?",
@@ -8259,35 +8264,34 @@
         }
     },
     "agentChangeDetail": {
-    "confirmStep": {
-        "title": "¡Entendido!",
-        "subTitle": "Las actualizaciones del agente fueron enviadas.",
-        "cta": "Ir al caso",
-        "secondaryCta": "Volver al inicio",
-        "submitTask": "Enviar"
-    },
-    "summary": {
-        "agentType": "Tipo de agente",
-        "allocation": "Asignación",
-        "externalId": "ID externo",
-        "bpm500Error": "Error BPM 500",
-        "header": "Resumen",
-        "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
-        "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
-        "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
-        "tag": {
-            "new": "Agregado",
-            "none": "Ninguno",
-            "removed": "Eliminado",
-            "updated": "Actualizado"
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Las actualizaciones del agente fueron enviadas.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
         },
-        "validation": "La API de validación está ejecutándose..."
+        "summary": {
+            "agentType": "Tipo de agente",
+            "allocation": "Asignación",
+            "externalId": "ID externo",
+            "bpm500Error": "Error BPM 500",
+            "header": "Resumen",
+            "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
+            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
+            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "tag": {
+                "new": "Agregado",
+                "none": "Ninguno",
+                "removed": "Eliminado",
+                "updated": "Actualizado"
+            },
+            "validation": "La API de validación está ejecutándose..."
+        },
+        "agentDetails": {
+            "allocationErr": "Las asignaciones deben ser iguales al 100%"
+        }
     },
-    "agentDetails": {
-        "allocationErr": "Las asignaciones deben ser iguales al 100%"
-    }
-}
-,
     "fundAllocation": {
         "submitted": "¡Enviado!",
         "editAllocationNigoSummary1": "Hemos enviado esta solicitud para ",
