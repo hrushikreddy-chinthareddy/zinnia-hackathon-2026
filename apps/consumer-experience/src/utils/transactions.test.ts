@@ -1,10 +1,13 @@
 import { ActionTypes, BpmAction, PropertyKeys } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
 
-import { refetchHandler, shouldStopPolling } from './transactions';
+import {
+  refetchHandler,
+  shouldStopPolling,
+  POLL_LIMIT,
+  POLL_INTERVAL,
+} from './transactions';
 
-const POLL_LIMIT = 10;
-const POLL_INTERVAL = 1000;
 jest.mock('./transactions', () => ({
   ...jest.requireActual('./transactions'),
 }));
