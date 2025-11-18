@@ -2431,6 +2431,7 @@
         "results": "Results",
         "refineResults": "Refine results",
         "addFilters": "Add filters",
+        "filters": "Filters",
         "refineResultsOptions": {
             "carrier": "Carriers",
             "caseType": "Case type",

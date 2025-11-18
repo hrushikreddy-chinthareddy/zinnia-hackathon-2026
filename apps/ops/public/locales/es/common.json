@@ -2435,6 +2435,7 @@
         "results": "Resultados",
         "refineResults": "Refinar resultados",
         "addFilters": "Agregar filtros",
+        "filters": "Filtros",
         "refineResultsOptions": {
             "carrier": "Operadoras",
             "caseType": "Tipo de caso",

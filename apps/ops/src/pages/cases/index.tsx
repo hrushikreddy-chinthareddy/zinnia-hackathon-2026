@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { FgaRoles } from '@xd/utils';
+import { Button, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -13,11 +14,6 @@ import {
     useEffect,
 } from 'react';
 
-import FilterButton from '@deps/components/filter-button/filter-button';
-import NavElement, {
-    NavElementSize,
-    NavElementType,
-} from '@deps/components/nav-element/nav-element';
 import {
     PageLoader,
     PageLoaderVariant,
@@ -81,7 +77,7 @@ import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
-
+import styles from './index.module.css';
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(
     () =>
@@ -534,15 +530,36 @@ const CaseManagementDashboard = ({
                 {t('caseManagementDashboard.h1')}
             </Typography>
             <>
-                <SearchBar
-                    searchValue={caseManagementFilters.searchValue}
-                    onSearch={handleSearch}
-                    toggleLabels={toggleLabels(featureFlags)}
-                    initialToggleValue={caseManagementFilters.toggleValue}
-                    onToggle={handleToggle}
-                    onClear={handleClear}
-                    onChangeCallback={handleSearchInputChange}
-                />
+                <div className={styles.searchContainer}>
+                    <SearchBar
+                        searchValue={caseManagementFilters.searchValue}
+                        onSearch={handleSearch}
+                        toggleLabels={toggleLabels(featureFlags)}
+                        initialToggleValue={caseManagementFilters.toggleValue}
+                        onToggle={handleToggle}
+                        onClear={handleClear}
+                        onChangeCallback={handleSearchInputChange}
+                    />
+                    <div className={styles.searchActions}>
+                        <Button
+                            type="button"
+                            onClick={openRefineResultsSidesheet}
+                            tabIndex={0}
+                            size={'small'}
+                            mode="secondary"
+                            iconPosition="start"
+                            iconType={IconType.FILTER}
+                            aria-label={
+                                t('ariaLabel.openRefineResultsButton') as string
+                            }
+                            onKeyDown={() => handleKeyDown}
+                        >
+                            {t('caseManagementDashboard.filters')}
+                        </Button>
+                        <div></div> {/* to add date range picker here */}
+                    </div>
+                </div>
+
                 <fieldset form="search-form">
                     <legend>
                         <label
@@ -552,7 +569,7 @@ const CaseManagementDashboard = ({
                             {t('caseOverview.tasks.status')}
                         </label>
                     </legend>
-                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <div className={styles.statusRow}>
                         <StatusFilter
                             caseTotals={caseTotals}
                             onChange={(vals) =>
@@ -586,20 +603,6 @@ const CaseManagementDashboard = ({
                                     .caseStatus
                             }
                         />
-                        <NavElement
-                            tabIndex={0}
-                            size={NavElementSize.Small}
-                            type={NavElementType.Button}
-                            startIcon={<FilterButton />}
-                            className="flex items-center whitespace-nowrap"
-                            aria-label={
-                                t('ariaLabel.openRefineResultsButton') as string
-                            }
-                            onClick={openRefineResultsSidesheet}
-                            onKeyDown={handleKeyDown}
-                        >
-                            {t('caseManagementDashboard.addFilters')}
-                        </NavElement>
                         <ActiveFilters
                             authorizedCarriers={authorizedCarriers}
                             filters={caseManagementFilters.additionalFilters}

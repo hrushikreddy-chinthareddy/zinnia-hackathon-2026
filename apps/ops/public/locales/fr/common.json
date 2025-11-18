@@ -2384,6 +2384,7 @@
         "results": "Résultats",
         "refineResults": "Affiner les résultats",
         "addFilters": "Ajouter des filtres",
+        "filters": "Filtres",
         "refineResultsOptions": {
             "carriers": "Assureur",
             "caseType": "Type de dossier",
