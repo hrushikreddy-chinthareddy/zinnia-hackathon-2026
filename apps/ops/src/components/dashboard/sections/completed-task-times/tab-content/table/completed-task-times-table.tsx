@@ -101,26 +101,23 @@ export const CompletedTaskTimesTable = () => {
     }, [goToPage, sortedData]);
 
     // Generate expandable content for each case type showing individual tasks
-    const generateExpandableContent = useCallback(
-        (
-            caseType: string,
-            tasks: {
-                secondMedian: number;
-                taskName: string;
-                count: number;
-            }[]
-        ) => {
-            return tasks.map((task) => (
-                <TableRow key={`${caseType}-${task.taskName}`}>
-                    <TableCell aria-label={caseType}></TableCell>
-                    <TableCell>{formatTaskTime(task.secondMedian)}</TableCell>
-                    <TableCell>{task.taskName}</TableCell>
-                    <TableCell>{task.count.toLocaleString()}</TableCell>
-                </TableRow>
-            ));
-        },
-        []
-    );
+    const generateExpandableContent = (
+        caseType: string,
+        tasks: {
+            secondMedian: number;
+            taskName: string;
+            count: number;
+        }[]
+    ) => {
+        return tasks.map((task) => (
+            <TableRow key={`${caseType}-${task.taskName}`}>
+                <TableCell aria-label={caseType}></TableCell>
+                <TableCell>{formatTaskTime(task.secondMedian)}</TableCell>
+                <TableCell>{task.taskName}</TableCell>
+                <TableCell>{task.count.toLocaleString()}</TableCell>
+            </TableRow>
+        ));
+    };
 
     const handleExportCSV = useCallback(() => {
         downloadCSV(flattenedData, csvFileName, CSV_COLUMNS);
