@@ -1,6 +1,8 @@
 import { navCarrierConfig } from '@/carrier-config/nav';
 import { Link } from '@/components/link/Link';
+import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import styles from './Nav.module.css';
 import { NotificationIcon } from './NotificationIcon';
@@ -19,6 +21,7 @@ export async function Nav({
   userName: { firstName?: string; lastName?: string };
   themeCookie: CompanyName;
 }) {
+  const flags = await getFeatureFlags();
   const carrierConfig =
     navCarrierConfig[themeCookie] ?? navCarrierConfig[CompanyName.ZINNIA];
 
@@ -44,9 +47,11 @@ export async function Nav({
           <NavMenu userName={userName} />
         </div>
       </nav>
-      <div className={styles.notificationAlertContainer}>
-        <NotificationAlert />
-      </div>
+      {flags[FEATURE_FLAGS.NOTIFICATION_ALERT_BANNER] && (
+        <div className={styles.notificationAlertContainer}>
+          <NotificationAlert />
+        </div>
+      )}
     </>
   );
 }
