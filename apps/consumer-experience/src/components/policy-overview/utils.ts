@@ -4,6 +4,7 @@ import {
   PolicyFeature,
   PolicyStatus,
   ProductType,
+  Transaction,
 } from '@xd/api-types/dist/generated-types/sor';
 import { standardDateMonthDayYear } from '@xd/utils/dist';
 
@@ -11,7 +12,10 @@ import {
   getAddSystematicProgramEligibility,
   getUpdateSystematicProgramEligibility,
 } from '@/services/bpm/systematic-programs';
+import { PaymentMethod } from '@/types/payment';
 import { CommonLogContext } from '@/utils/logging/server-logging';
+
+import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';
 
 export enum AutopayStatus {
   MANAGE = 'manage',
@@ -90,6 +94,9 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentAmount,
   nextActivityDate,
   productType,
+  transactions,
+  paymentMethods,
+  hasActiveAutopay,
 }: {
   policyStatus: PolicyStatus;
   policyFeatures?: PolicyFeature[] | null;
@@ -97,6 +104,9 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentAmount?: number;
   nextActivityDate: string;
   productType?: ProductType;
+  transactions?: Transaction[];
+  paymentMethods?: PaymentMethod[];
+  hasActiveAutopay?: boolean;
 }): {
   scheduledPayment?: {
     amount?: number;
@@ -140,12 +150,26 @@ export const upcomingPaymentDetails = ({
     upcomingPaymentAmount &&
     upcomingPaymentAmount > 0
   ) {
+    let paymentCaption =
+      nextActivityDate &&
+      `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`;
+
+    if (transactions && paymentMethods) {
+      const paymentInfo = getMostRecentTransactionPaymentInfo(
+        transactions,
+        paymentMethods,
+        hasActiveAutopay
+      );
+
+      if (paymentInfo?.paymentDescription) {
+        paymentCaption = paymentInfo.paymentDescription;
+      }
+    }
+
     scheduledPayment = {
       amount: upcomingPaymentAmount,
       label: 'Next scheduled payment',
-      caption:
-        nextActivityDate &&
-        `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`,
+      caption: paymentCaption,
     };
   }
 

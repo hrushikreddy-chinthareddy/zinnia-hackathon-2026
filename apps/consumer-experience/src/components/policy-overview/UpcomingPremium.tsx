@@ -13,8 +13,10 @@ import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPre
 import { stepsInfo } from '@/components/stepped-workflow/workflows/one-time-premium/steps';
 import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
 import { getFeatureFlags } from '@/services/feature-flags';
-import { getUpcomingPremium } from '@/services/policy';
+import { getPaymentMethods } from '@/services/payment-methods';
+import { getUpcomingPremium, getPolicyTransactions } from '@/services/policy';
 import { getPolicyFeatures } from '@/services/policy/features';
+import { PendingPremiumTransactionType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
@@ -75,6 +77,36 @@ export const UpcomingPremium = async ({
   const policyFeatures =
     policyFeaturesResult?.status === 'fulfilled'
       ? policyFeaturesResult.value?.data?.data
+      : [];
+
+  const pendingTransactionTypes = Object.values(
+    PendingPremiumTransactionType
+  ).map(String);
+
+  const [transactionsResult, paymentMethodsResult] = await Promise.allSettled([
+    getPolicyTransactions(
+      {
+        transactionTypes: pendingTransactionTypes,
+        policyNumber,
+        planCode,
+        status: 'Pending',
+        limit: 10,
+        offset: 0,
+        order: 'DESC',
+      },
+      loggingContext
+    ),
+    getPaymentMethods({ planCode, policyNumber }, loggingContext),
+  ]);
+
+  const transactionData =
+    transactionsResult.status === 'fulfilled' && transactionsResult.value?.data
+      ? transactionsResult.value.data
+      : [];
+  const paymentMethodsData =
+    paymentMethodsResult.status === 'fulfilled' &&
+    paymentMethodsResult.value?.data
+      ? paymentMethodsResult.value.data
       : [];
 
   const { data, error } =
@@ -155,6 +187,9 @@ export const UpcomingPremium = async ({
     upcomingPaymentValid,
     nextActivityDate,
     productType,
+    transactions: transactionData,
+    paymentMethods: paymentMethodsData,
+    hasActiveAutopay: !!arrangementId, // If there's an arrangementId, autopay is active
   });
 
   return (
@@ -173,18 +208,20 @@ export const UpcomingPremium = async ({
           <div className={styles.content}>
             <Icon type={IconType.AUTOPAY} className={styles.icon} />
             {scheduledPayment && (
-              <FieldData
-                Label={<Label>{scheduledPayment.label}</Label>}
-                caption={scheduledPayment.caption}
-              >
-                {isNullEmptyOrUndefined(scheduledPayment.amount) ? (
-                  <p className="typography-content-body-sm">--</p>
-                ) : (
-                  <p className="typography-content-value">
-                    {formatUSDollars(scheduledPayment.amount!)}
-                  </p>
-                )}
-              </FieldData>
+              <div className={styles.maxWidth50}>
+                <FieldData
+                  Label={<Label>{scheduledPayment.label}</Label>}
+                  caption={scheduledPayment.caption}
+                >
+                  {isNullEmptyOrUndefined(scheduledPayment.amount) ? (
+                    <p className="typography-content-body-sm">--</p>
+                  ) : (
+                    <p className="typography-content-value">
+                      {formatUSDollars(scheduledPayment.amount!)}
+                    </p>
+                  )}
+                </FieldData>
+              </div>
             )}
             <div className={scheduledPayment ? 'ml-xl' : ''}>
               <FieldData
@@ -205,13 +242,6 @@ export const UpcomingPremium = async ({
               </FieldData>
             </div>
           </div>
-          {!extended && (
-            <div className="ml-md">
-              <div className="typography-nav-links-sm mr-sm">
-                Manage Payments
-              </div>
-            </div>
-          )}
         </div>
       </ClickableCardContainer.LinkContent>
       {extended && (

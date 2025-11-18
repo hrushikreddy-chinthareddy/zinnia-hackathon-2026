@@ -3,10 +3,10 @@
 .icon {
   flex-shrink: 0;
   margin-right: 0.5rem;
+  align-self: center;
 }
 
 .content {
-  align-items: center;
   display: flex;
 }
 
@@ -53,6 +53,10 @@
 .disabledTransaction {
   color: var(--color-states-inactive-text-inactive-text-link);
   pointer-events: none;
+}
+
+.maxWidth50 {
+  max-width: 50%;
 }
 
 @media (width > 767px) {
