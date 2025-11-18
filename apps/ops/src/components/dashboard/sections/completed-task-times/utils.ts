@@ -9,8 +9,6 @@ import { defaultDateFormat } from '../../utils';
 export interface FlattenedCompletedTaskTimeData {
     caseType: string;
     secondMedian: number | string;
-    secondHigh: number | string;
-    secondLow: number | string;
     taskName: string;
     count: number;
 }
@@ -19,13 +17,9 @@ export interface FlattenedCompletedTaskTimeData {
 export interface CompletedTaskTimeData {
     caseType: string;
     secondMedian: number;
-    secondHigh: number;
-    secondLow: number;
     tasks: {
         taskName: string;
         secondMedian: number;
-        secondHigh: number;
-        secondLow: number;
         count: number;
     }[];
     totalTasks: number;
@@ -40,8 +34,6 @@ export const CSV_COLUMNS: {
 }[] = [
     { label: 'Case type', key: 'caseType' },
     { label: 'Median processing time', key: 'secondMedian' },
-    { label: 'Max processing time', key: 'secondHigh' },
-    { label: 'Min. processing time', key: 'secondLow' },
     { label: 'Task', key: 'taskName' },
     { label: 'Total tasks', key: 'count' },
 ];
@@ -113,8 +105,6 @@ export const formatTaskTimeFromArray = (
         return {
             caseType: caseType.caseType,
             secondMedian: formatTaskTime(caseType.secondMedian),
-            secondHigh: formatTaskTime(caseType.secondHigh),
-            secondLow: formatTaskTime(caseType.secondLow),
             taskName: caseType.taskName,
             count: caseType.count,
         };
@@ -136,8 +126,6 @@ export const flattenCompletedTaskTimeData = (
         flattened.push({
             caseType: caseType.caseType,
             secondMedian: caseType.secondMedian,
-            secondHigh: caseType.secondHigh,
-            secondLow: caseType.secondLow,
             taskName: 'All tasks',
             count: caseType.totalTasks,
         });
@@ -145,8 +133,6 @@ export const flattenCompletedTaskTimeData = (
             flattened.push({
                 caseType: caseType.caseType,
                 secondMedian: task.secondMedian,
-                secondHigh: task.secondHigh,
-                secondLow: task.secondLow,
                 taskName: task.taskName,
                 count: task.count,
             });

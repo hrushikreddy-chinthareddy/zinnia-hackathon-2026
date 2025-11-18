@@ -106,8 +106,6 @@ export const CompletedTaskTimesTable = () => {
             caseType: string,
             tasks: {
                 secondMedian: number;
-                secondHigh: number;
-                secondLow: number;
                 taskName: string;
                 count: number;
             }[]
@@ -116,8 +114,6 @@ export const CompletedTaskTimesTable = () => {
                 <TableRow key={`${caseType}-${task.taskName}`}>
                     <TableCell aria-label={caseType}></TableCell>
                     <TableCell>{formatTaskTime(task.secondMedian)}</TableCell>
-                    <TableCell>{formatTaskTime(task.secondHigh)}</TableCell>
-                    <TableCell>{formatTaskTime(task.secondLow)}</TableCell>
                     <TableCell>{task.taskName}</TableCell>
                     <TableCell>{task.count.toLocaleString()}</TableCell>
                 </TableRow>
@@ -198,41 +194,7 @@ export const CompletedTaskTimesTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.MAX_TIME)
-                                        }
-                                        sortable
-                                    >
-                                        {t(
-                                            'caseStats.completedTaskTimes.table.headers.maxTime'
-                                        )}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color={ICON_COLOR}
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.MIN_TIME)
-                                        }
-                                        sortable
-                                    >
-                                        {t(
-                                            'caseStats.completedTaskTimes.table.headers.minTime'
-                                        )}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color={ICON_COLOR}
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell>
+                                    <TableHeaderCell width={256}>
                                         {t(
                                             'caseStats.completedTaskTimes.table.headers.task'
                                         )}
@@ -277,14 +239,6 @@ export const CompletedTaskTimesTable = () => {
                                                 {formatTaskTime(
                                                     item.secondMedian
                                                 )}
-                                            </TableCell>
-                                            <TableCell>
-                                                {formatTaskTime(
-                                                    item.secondHigh
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                {formatTaskTime(item.secondLow)}
                                             </TableCell>
                                             <TableCell>
                                                 {t(

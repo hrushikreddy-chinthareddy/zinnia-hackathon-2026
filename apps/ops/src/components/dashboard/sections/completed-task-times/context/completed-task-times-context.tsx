@@ -66,13 +66,9 @@ const transformCompletedTaskTimeData = (
     return apiData.map((process) => ({
         caseType: process.name,
         secondMedian: process.secondMedian,
-        secondHigh: process.secondHigh,
-        secondLow: process.secondLow,
         tasks: (process.values || []).map((task) => ({
             taskName: task.name,
             secondMedian: task.secondMedian,
-            secondHigh: task.secondHigh,
-            secondLow: task.secondLow,
             count: task.count,
         })),
         totalTasks: process.count,

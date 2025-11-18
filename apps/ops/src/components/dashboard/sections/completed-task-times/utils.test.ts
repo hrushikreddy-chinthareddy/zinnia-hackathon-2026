@@ -69,16 +69,12 @@ describe('Completed Task Time Utils', () => {
                 {
                     caseType: 'New Business',
                     secondMedian: 1896,
-                    secondHigh: 423360,
-                    secondLow: 216,
                     taskName: 'All tasks',
                     count: 150,
                 },
                 {
                     caseType: 'New Business',
                     secondMedian: 1800,
-                    secondHigh: 423360,
-                    secondLow: 216,
                     taskName: 'Data Entry',
                     count: 100,
                 },
@@ -88,16 +84,12 @@ describe('Completed Task Time Utils', () => {
                 {
                     caseType: 'New Business',
                     secondMedian: '31.6 minutes',
-                    secondHigh: '4.9 days',
-                    secondLow: '3.6 minutes',
                     taskName: 'All tasks',
                     count: 150,
                 },
                 {
                     caseType: 'New Business',
                     secondMedian: '30 minutes',
-                    secondHigh: '4.9 days',
-                    secondLow: '3.6 minutes',
                     taskName: 'Data Entry',
                     count: 100,
                 },
@@ -116,20 +108,14 @@ describe('Completed Task Time Utils', () => {
                 {
                     caseType: 'New Business',
                     secondMedian: 1896000,
-                    secondHigh: 423360000,
-                    secondLow: 216000,
                     tasks: [
                         {
                             secondMedian: 1800000,
-                            secondHigh: 423360000,
-                            secondLow: 216000,
                             taskName: 'Data Entry',
                             count: 100,
                         },
                         {
                             secondMedian: 1200000,
-                            secondHigh: 345600000,
-                            secondLow: 180000,
                             taskName: 'Review',
                             count: 50,
                         },
@@ -144,24 +130,18 @@ describe('Completed Task Time Utils', () => {
                 {
                     caseType: 'New Business',
                     secondMedian: 1896000,
-                    secondHigh: 423360000,
-                    secondLow: 216000,
                     taskName: 'All tasks',
                     count: 150,
                 },
                 {
                     caseType: 'New Business',
                     secondMedian: 1800000,
-                    secondHigh: 423360000,
-                    secondLow: 216000,
                     taskName: 'Data Entry',
                     count: 100,
                 },
                 {
                     caseType: 'New Business',
                     secondMedian: 1200000,
-                    secondHigh: 345600000,
-                    secondLow: 180000,
                     taskName: 'Review',
                     count: 50,
                 },
@@ -173,13 +153,9 @@ describe('Completed Task Time Utils', () => {
                 {
                     caseType: 'New Business',
                     secondMedian: 1896000,
-                    secondHigh: 423360000,
-                    secondLow: 216000,
                     tasks: [
                         {
                             secondMedian: 1896000,
-                            secondHigh: 423360000,
-                            secondLow: 216000,
                             taskName: 'Data Entry',
                             count: 100,
                         },
@@ -189,13 +165,9 @@ describe('Completed Task Time Utils', () => {
                 {
                     caseType: 'Claims',
                     secondMedian: 2400000,
-                    secondHigh: 432000000,
-                    secondLow: 240000,
                     tasks: [
                         {
                             secondMedian: 2400000,
-                            secondHigh: 432000000,
-                            secondLow: 240000,
                             taskName: 'Review',
                             count: 50,
                         },
@@ -210,16 +182,12 @@ describe('Completed Task Time Utils', () => {
             expect(result[0]).toEqual({
                 caseType: 'New Business',
                 secondMedian: 1896000,
-                secondHigh: 423360000,
-                secondLow: 216000,
                 taskName: 'All tasks',
                 count: 100,
             });
             expect(result[2]).toEqual({
                 caseType: 'Claims',
                 secondMedian: 2400000,
-                secondHigh: 432000000,
-                secondLow: 240000,
                 taskName: 'All tasks',
                 count: 50,
             });

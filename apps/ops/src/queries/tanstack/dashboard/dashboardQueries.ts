@@ -193,7 +193,15 @@ export const getCompletedTaskTimeQuery = async (
                     });
             }
 
-            return item;
+            // Sort tasks by total
+            const sortedItem = {
+                ...item,
+                values: item?.values
+                    ? [...item.values].sort((a, b) => b.count - a.count)
+                    : [],
+            };
+
+            return sortedItem;
         });
 
     return completedTaskTimesResponse;
