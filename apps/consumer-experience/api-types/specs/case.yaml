@@ -1,0 +1,3169 @@
+openapi: 3.0.3
+info:
+  title: Case Management API
+  description: Maintains cases and tasks apis related to the policy lifecycle.
+  version: 1.0.0
+servers:
+  - url: https://dev.api.zinnia.io/
+    description: 'Dev Environment'
+  - url: https://qa.api.zinnia.io/
+    description: 'QA Environment'
+  - url: https://uat.api.zinnia.io/
+    description: 'UAT Environment'
+  - url: https://api.zinnia.io/
+    description: 'PROD Environment'
+tags:
+  - name: Case Instance
+    description: Manages cases for all processes
+  - name: Task Instance (Legacy)
+    description: Legacy - Manages tasks based on cases. Used for Withdrawal/Renewal. No further changes accepted.
+  - name: Task Instance (Task Management)
+    description: Manages tasks based on cases. Implemented using Zinnia live Task management framework.
+  - name: Reference data
+    description: Reference data applicable for cases
+
+paths:
+  /case/v1/cases/search:
+    post:
+      summary: Search cases
+      tags:
+        - Case Instance
+      description: Get list of available case instances
+      operationId: getCaseInstanceList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CasePageSearchCriteria'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseListInstanceResponse'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/stats:
+    post:
+      summary: Case stats
+      tags:
+        - Case Instance
+      description: Get Stats for available cases
+      operationId: getCaseInstanceStats
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseStatsSearchCriteria'
+      responses:
+        '200':
+          description: Case stats retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseStatsSearchResponse'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}:
+    get:
+      summary: Get Case Detail
+      tags:
+        - Case Instance
+      description: Get case instance detail
+      operationId: getCaseInstanceById
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Case details retreived
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/taskLink:
+    get:
+      summary: Get task links
+      tags:
+        - Case Instance
+      description: Get list of available task instances for caseId
+      operationId: getTaskInstanceByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: task link retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskLinkInstanceList'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/note:
+    get:
+      summary: Get notes
+      tags:
+        - Case Instance
+      description: Get list of available note instances for caseId
+      operationId: getNoteInstanceByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: notes retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoteListInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/stage:
+    get:
+      summary: Get case stages
+      tags:
+        - Case Instance
+      description: Get list of available stage instances for caseId
+      operationId: getStageInstanceByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: stages retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StageListInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/document:
+    get:
+      summary: Get case documents
+      tags:
+        - Case Instance
+      description: Get list of available document instances for caseId
+      operationId: getDocumentInstanceByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: documents retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentListInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/exception:
+    get:
+      summary: Get case exceptions
+      tags:
+        - Case Instance
+      description: Get list of available exception instances for caseid
+      operationId: getExceptionInstanceByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: exceptions retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionListInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/event:
+    get:
+      summary: Get case events
+      tags:
+        - Case Instance
+      description: Get list of available event instances for caseid
+      operationId: getEventTimeLineInstanceByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+        - name: fromTs
+          in: query
+          description: From time
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: toTs
+          in: query
+          description: To time
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - name: source
+          in: query
+          description: source
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: case events retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventTimeLineInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/event/{eventId}:
+    get:
+      summary: Get event details
+      tags:
+        - Case Instance
+      description: Get detail of event including payload
+      operationId: getEventDetailByEventId
+      parameters:
+        - name: eventId
+          in: path
+          description: Event Id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: event details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDetailInstance'
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases:
+    post:
+      tags:
+        - Case Instance
+      summary: Create Case
+      description: Create case through provided input
+      operationId: CreateCase
+      requestBody:
+        description: Case details for creation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaseCreateRequest'
+            examples:
+              Renewal:
+                value:
+                  carrier: MASS
+                  process: Renewal
+                  identifiers:
+                    - identifier: policyNumber
+                      value: AU42046202
+              Withdrawal:
+                value:
+                  carrier: SBGC
+                  process: Withdrawal
+                  identifiers:
+                    - identifier: documentNumber
+                      value: 20230714-EM-479402
+
+        required: true
+      responses:
+        '201':
+          description: Case Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CaseInstanceSummary'
+              examples:
+                Renewal:
+                  value:
+                    templateId: cde717c9-5f7e-4c63-953c-ef50e44c021a
+                    carrier: MASS
+                    process: Correspondence
+                Withdrawal:
+                  value:
+                    templateId: cde717c9-5f7e-4c63-953c-ef50e44c021a
+                    carrier: SBGC
+                    process: Correspondence
+                    caseStatus: IN_PROGRESS
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+
+      security:
+        - Auth0:
+            - write:case
+
+  /case/v1/cases/{caseId}/tasks:
+    post:
+      tags:
+        - Task Instance (Legacy)
+      summary: Create Task for case
+      description: Create task and associate with a case
+      deprecated: true
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+      operationId: CreateTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreateRequest'
+            examples:
+              Renewal:
+                value:
+                  taskType: RenewalTask
+                  carrier: MASS
+              Withdrawal:
+                value:
+                  taskType: WithdrawalTask
+                  carrier: SBGC
+        required: true
+      responses:
+        '201':
+          description: Renewal task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskSummary'
+              examples:
+                Renewal:
+                  value:
+                    taskId: string
+                    caseId: string
+                    taskType: RenewalTask
+                Withdrawal:
+                  value:
+                    taskId: string
+                    caseId: string
+                    taskType: WithdrawalTask
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+
+      security:
+        - Auth0:
+            - write:task
+
+    get:
+      tags:
+        - Task Instance (Legacy)
+      summary: Get Tasks
+      description: Get list of tasks for a case id
+      operationId: GetTasksForCaseId
+      deprecated: true
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: task instance retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskSummaryList'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+        '404':
+          description: Not found
+
+        '500':
+          description: Error in task submit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+
+      security:
+        - Auth0:
+            - 'read:task'
+
+  /case/v1/cases/{caseId}/tasks/{taskId}:
+    put:
+      tags:
+        - Task Instance (Legacy)
+      summary: Update Task
+      description: Updates task for a given case
+      deprecated: true
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          description: Task instance id
+          required: true
+          schema:
+            type: string
+      operationId: UpdateTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+
+        required: true
+      responses:
+        '200':
+          description: Renewal task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskSummary'
+
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+
+      security:
+        - Auth0:
+            - 'write:task'
+    get:
+      tags:
+        - Task Instance (Legacy)
+      summary: Get Task details
+      description: Get Task details from a case with task id
+      operationId: GetTaskForTaskIdForCase
+      deprecated: true
+      parameters:
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          description: Task instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: task details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskInstance'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+        '404':
+          description: Not found
+
+        '500':
+          description: Error in retreiving task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+
+      security:
+        - Auth0:
+            - read:task
+
+  /case/v1/tasks/{taskId}:
+    get:
+      tags:
+        - Task Instance (Legacy)
+      summary: Get Task
+      description: Get Task
+      operationId: GetTaskById
+      deprecated: true
+      parameters:
+        - name: taskId
+          in: path
+          description: Task instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: task instance retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskInstance'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+        '404':
+          description: Not found
+
+        '500':
+          description: Error in task submit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+
+      security:
+        - Auth0:
+            - read:task
+
+  /case/v1/cases/{caseId}/metadata:
+    get:
+      summary: Get case metadata
+      tags:
+        - Case Instance
+      description: Get metadata from the template for the provided caseid
+      operationId: getMetadataByCaseId
+      parameters:
+        - name: caseId
+          in: path
+          description: Case Id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: case metadata retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateMetadataModel'
+              examples:
+                NewBusiness:
+                  value:
+                    stages:
+                      requestAck:
+                        steps:
+                          requestAck.nbRequestReceived:
+                            info: New Application has been received to ETP
+                          requestAck.nbRequestValidation: {}
+                          requestAck.draftContractCreation:
+                            info: CTL will create the contract in the Admin System
+                          requestAck.caseProcessing:
+                            info: Case gets created in the OnBase
+        '400':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+        '404':
+          description: Invalid case id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidCaseResponse'
+      security:
+        - Auth0:
+            - 'read:case'
+  /case/v1/refdata:
+    post:
+      tags:
+        - Reference data
+      summary: Get reference data
+      description: Get Reference data keys for the cases based on criteria
+      operationId: GetReferenceDataForKeys
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefDataSearchCriteria'
+      responses:
+        '200':
+          description: reference data for provided keys retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReferenceDataResponse'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+        '404':
+          description: Not found
+        '500':
+          description: Error in fetching reference data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServerErrorResponse'
+      security:
+        - Auth0:
+            - read:task
+
+  /case/v1/tasks/search:
+    post:
+      summary: Task Management - Search tasks
+      tags:
+        - Task Instance (Task Management)
+      description: Search tasks by case id for provided criteria
+      operationId: getTaskInstanceListForTask
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskListSearchCriteria'
+      responses:
+        '200':
+          description: tasks retrieved for provided search criterias
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+        '404':
+          description: Resource Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v2/tasks/{taskId}:
+    get:
+      tags:
+        - Task Instance (Task Management)
+      summary: Task Management - Get Task details
+      description: Get Task details
+      operationId: GetTaskDetailsById
+
+      parameters:
+        - name: taskId
+          in: path
+          description: Task instance id
+          required: true
+          schema:
+            type: string
+        - name: includeSchema
+          in: query
+          description: Whether schema should be included or not
+          required: false
+          schema:
+            type: boolean
+            default: false
+
+      responses:
+        '200':
+          description: task details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskDetailById'
+
+        '404':
+          description: Resource Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/cases/{caseId}/tasks/{taskId}/exceptions:
+    get:
+      tags:
+        - Task Instance (Task Management)
+      summary: Task Management - Get Exceptions
+      description: Get exception details by task id
+      operationId: GetExceptionByTaskId
+
+      parameters:
+        - name: taskId
+          in: path
+          description: Task instance id
+          required: true
+          schema:
+            type: string
+        - name: caseId
+          in: path
+          description: Case instance id
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: exceptions for provided case and task retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExceptionListInstance'
+        '404':
+          description: Resource Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundResponse'
+
+        '401':
+          description: Authentication failed
+
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+
+      security:
+        - Auth0:
+            - read:case
+
+  /case/v1/tasks/schema/{taskType}:
+    get:
+      summary: Task Management - Get schema
+      tags:
+        - Task Instance (Task Management)
+      description: Get schema for taskType
+      operationId: getSchemaForTaskType
+      parameters:
+        - name: taskType
+          in: path
+          description: Task type
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: schema for provided task type
+          content:
+            application/json:
+              schema:
+                type: object
+
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessDeniedResponse'
+        '404':
+          description: Invalid task type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourceNotFoundResponse'
+      security:
+        - Auth0:
+            - 'read:case'
+
+components:
+  schemas:
+    CaseInstance:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+        templateId:
+          type: string
+          example: cde717c9-5f7e-4c63-953c-ef50e44c021a
+        carrier:
+          type: string
+          example: MASS
+        process:
+          type: string
+          example: Correspondence
+        caseStatus:
+          type: string
+          example: IN_PROGRESS
+        parentInstanceId:
+          type: string
+          example: 15ea7582-262f-4dfe-8a60-1e8b8e763fb1
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/DocumentInstance'
+        exceptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExceptionInstance'
+        notes:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoteInstance'
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskLinkInstance'
+        mappedTasks:
+          type: array
+          items:
+            type: string
+            example: CL12345
+        mappedExceptions:
+          type: array
+          items:
+            type: string
+            example: NIGO123
+        mappedNotes:
+          type: array
+          items:
+            type: string
+            example: IN4567
+        mappedDocuments:
+          type: array
+          items:
+            type: string
+            example: DL8976
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventInstance'
+        parties:
+          type: array
+          items:
+            type: object
+            properties:
+              partyRole:
+                type: string
+                example: Owner, Primary
+                enum:
+                  [
+                    'Annuitant / Insured, Primary',
+                    'Owner, Primary',
+                    'Beneficiary, Primary',
+                    'Servicing Agent',
+                    'Agent',
+                  ]
+              partyType:
+                type: string
+                example: Individual
+              firstName:
+                type: string
+                example: Utkarsh
+              middleName:
+                type: string
+                example: Kr
+              lastName:
+                type: string
+                example: Jain
+              fullName:
+                type: string
+                example: Utkarsh Kr Jain
+              prefix:
+                type: string
+                example: Mr.
+              suffix:
+                type: string
+                example: 1
+              gender:
+                type: string
+                example: M
+              ssn:
+                type: string
+                example: 123456789
+              percent:
+                type: string
+                example: 100
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifierInstance'
+        additionalData:
+          oneOf:
+            - $ref: '#/components/schemas/CaseAdditionalDataNB'
+            - $ref: '#/components/schemas/CaseAdditionalDataWD'
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/StageInstance'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    TaskDetailById:
+      allOf:
+        - $ref: '#/components/schemas/TaskListSummary'
+      type: object
+      properties:
+        schema:
+          type: object
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/SuitabilityDetails'
+            - $ref: '#/components/schemas/AgentInformationDetails'
+
+    DocumentInstance:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 12345
+        name:
+          type: string
+          example: Identity_Document.pdf
+        source:
+          type: string
+          example: onbase
+        url:
+          type: string
+          example: http://dev.onbase.com/document/12345
+        updatedAt:
+          type: string
+          example: 09-April-2023
+        additionalData:
+          $ref: '#/components/schemas/AdditionalDataInstance'
+        eventRef:
+          type: array
+          items:
+            type: string
+            example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+
+    ExceptionInstanceForTask:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 12324
+        status:
+          type: string
+          example: New
+        category:
+          type: string
+          example: Agent
+        reason:
+          type: string
+          example: Suitability requested
+        detailedReason:
+          type: string
+          example: Suitability requested from External client
+        updatedAt:
+          type: string
+          example: 09-April-2023
+
+    ExceptionInstance:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 12324
+        status:
+          type: string
+          example: New
+        category:
+          type: string
+          example: Agent
+        reason:
+          type: string
+          example: Suitability requested
+        detailedReason:
+          type: string
+          example: Suitability requested from External client
+        updatedAt:
+          type: string
+          example: 09-April-2023
+        additionalData:
+          $ref: '#/components/schemas/AdditionalDataInstance'
+        eventRef:
+          type: array
+          items:
+            type: string
+            example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+
+    NoteInstance:
+      type: object
+      properties:
+        id:
+          type: string
+          example: NT123
+        note:
+          type: string
+          example: Test Note
+        author:
+          type: string
+          example: suresh.singh
+        updatedAt:
+          type: string
+          example: 09-April-2023
+        additionalData:
+          $ref: '#/components/schemas/AdditionalDataInstance'
+        eventRef:
+          type: array
+          items:
+            type: string
+            example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+
+    TaskLinkInstance:
+      type: object
+      properties:
+        label:
+          type: string
+          example: Case Level Task
+        id:
+          type: string
+          example: CL12345
+        assignee:
+          type: string
+          example: sunil.sharma
+        status:
+          type: string
+          example: InProgress
+        updatedAt:
+          type: string
+          example: 09-April-2023
+        additionalData:
+          $ref: '#/components/schemas/AdditionalDataInstance'
+        eventRef:
+          type: array
+          items:
+            type: string
+            example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+
+    AdditionalDataInstance:
+      type: object
+      additionalProperties:
+        type: string
+
+    StageInstance:
+      type: object
+      properties:
+        id:
+          type: string
+          example: REQUEST_ACK_ID
+        label:
+          type: string
+          example: Request Acknowledgement
+        stageStatus:
+          type: string
+          example: COMPLETED
+        mappedTasks:
+          type: array
+          items:
+            type: string
+            example: SL12345
+        mappedNotes:
+          type: array
+          items:
+            type: string
+            example: IN4567
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/StepInstance'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    StepInstance:
+      type: object
+      properties:
+        label:
+          type: string
+          example: Request Received
+        stepStatus:
+          type: string
+          example: COMPLETED
+        eventRef:
+          type: array
+          items:
+            type: string
+            example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+        mappedTasks:
+          type: array
+          items:
+            type: string
+            example: ST12345
+        mappedNotes:
+          type: array
+          items:
+            type: string
+            example: IN4567
+        additionalData:
+          $ref: '#/components/schemas/AdditionalDataInstance'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ValidationResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 400
+        timestamp:
+          type: string
+          format: date-time
+        errorId:
+          type: string
+          example: a4a57ed0-2c1b-4922-9959-3b85dd8a96d3
+        message:
+          type: string
+          example: Template validation fails with errors
+        error:
+          type: array
+          items:
+            type: string
+            example: Stage [0] Step [1] mandatory attribute label missing
+
+    ResourceNotFoundResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 404
+        timestamp:
+          type: string
+          format: date-time
+        errorId:
+          type: string
+          example: a4a57ed0-2c1b-4922-9959-3b85dd8a96d3
+        message:
+          type: string
+          example: resource not found
+        error:
+          type: array
+          items:
+            type: string
+            example: resource not found for provided input
+
+    AccessDeniedResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 403
+        timestamp:
+          type: integer
+          format: int64
+          example: 1681395423438
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: 'User is not authorized for the carrier : SBGC'
+
+    CaseInstanceSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 15ea7582-262f-4dfe-8a60-1e8b8e763fd4
+        templateId:
+          type: string
+          example: cde717c9-5f7e-4c63-953c-ef50e44c021a
+        carrier:
+          type: string
+          example: MASS
+        process:
+          type: string
+          example: Correspondence
+        parentInstanceId:
+          type: string
+          example: 15ea7582-262f-4dfe-8a60-1e8b8e763fb1
+        caseStatus:
+          type: string
+          example: IN_PROGRESS
+        stages:
+          type: array
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                example: 15ea7582-262f-4dfe-8a60-1e8b8e763fb2
+              label:
+                type: string
+                example: Agent Validation
+              stageStatus:
+                type: string
+                example: IN_PROGRESS
+              createdAt:
+                type: string
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time
+        exceptions:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 123456
+              status:
+                type: string
+                example: InProgress
+              category:
+                type: string
+                example: Agent
+              reason:
+                type: string
+                example: reason
+              detailedReason:
+                type: string
+                example: detailed status
+              createdAt:
+                type: string
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time
+
+        parties:
+          type: array
+          items:
+            type: object
+            properties:
+              partyRole:
+                type: string
+                example: Owner, Primary
+                enum:
+                  [
+                    'Annuitant / Insured, Primary',
+                    'Owner, Primary',
+                    'Beneficiary, Primary',
+                    'Servicing Agent',
+                    'Agent',
+                  ]
+              partyType:
+                type: string
+                example: Individual
+              firstName:
+                type: string
+                example: Utkarsh
+              middleName:
+                type: string
+                example: Kr
+              lastName:
+                type: string
+                example: Jain
+              fullName:
+                type: string
+                example: Utkarsh Kr Jain
+              prefix:
+                type: string
+                example: Mr.
+              suffix:
+                type: string
+                example: 1
+              gender:
+                type: string
+                example: M
+              ssn:
+                type: string
+                example: 123456789
+              percent:
+                type: string
+                example: 100
+
+        additionalData:
+          oneOf:
+            - $ref: '#/components/schemas/CaseAdditionalDataNB'
+            - $ref: '#/components/schemas/CaseAdditionalDataWD'
+        identifiers:
+          type: array
+          items:
+            type: object
+            properties:
+              identifier:
+                type: string
+                example: policyNumber
+              value:
+                type: string
+                example: AU42046202
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    TaskListResponse:
+      type: object
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskListSummary'
+        count:
+          type: integer
+          format: int32
+          example: 5
+        offset:
+          type: integer
+          format: int32
+          example: 4
+        limit:
+          type: integer
+          format: int32
+          example: 5
+        total:
+          type: integer
+          format: int32
+          example: 13
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Successfully retrieved data!
+
+    TaskListSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          example: TA000000000033
+        taskType:
+          type: string
+          example: Suitabilty
+        caseId:
+          type: string
+          example: CA0000042426
+        carrier:
+          type: string
+          example: MASS
+        status:
+          type: string
+          example: NEW
+        process:
+          type: string
+          example: New Business
+        assignedTo:
+          type: string
+          default: ''
+          example: anurag.chaudhary@zinnia.com
+        queue:
+          type: string
+          default: ''
+          example: ADMIN_QUEUE
+        createdAt:
+          type: string
+          example: '2023-08-08T11:27:19.232Z'
+        updatedAt:
+          type: string
+          example: '2023-08-08T11:27:19.232Z'
+
+    SuitabilityDetails:
+      type: object
+      properties:
+        suitabiltyQuestion:
+          type: string
+          example: Suitability question
+        suitabilityStatus:
+          type: string
+          example: Accepted
+        followUpDate:
+          type: string
+          example: '2023-08-08T11:27:19.232Z'
+        specialInstructions:
+          type: array
+          items:
+            type: object
+            properties:
+              userName:
+                type: string
+                example: SBDQ16
+              submissionDate:
+                type: string
+                example: '8/24/2023 2:49'
+              comment:
+                type: string
+                example: 'Some comment'
+
+    AgentInformationDetails:
+      type: object
+      properties:
+        transmittalInformation:
+          type: array
+          items:
+            type: object
+            properties:
+              representativeName:
+                type: string
+                example: Sean Battin
+              brokerName:
+                type: string
+                example: Lincoln
+              representativeExternalIdNumber:
+                type: integer
+                example: 8068116963
+              dateWritten:
+                type: string
+                example: 10/20/2021
+              clientName:
+                type: string
+                example: Thomas Little
+              stateWritten:
+                type: string
+                example: Pennsylvania
+
+        specialInstructions:
+          type: array
+          items:
+            type: object
+            properties:
+              userName:
+                type: string
+                example: CONAEHA
+              submissionDate:
+                type: string
+                example: '8/24/2023 2:49'
+              comment:
+                type: string
+                example: 'Pa appointment approved in mcs'
+
+    CaseListInstanceResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CaseInstanceSummary'
+        count:
+          type: integer
+          format: int32
+          example: 5
+        offset:
+          type: integer
+          format: int32
+          example: 4
+        limit:
+          type: integer
+          format: int32
+          example: 5
+        total:
+          type: integer
+          format: int32
+          example: 13
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          type: string
+          example: Successfully retrieved data!
+
+    CaseAdditionalDataNB:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          example: 12345678
+
+        requestSubType:
+          type: string
+          example: 'NB Purchase w APP'
+        owners:
+          type: array
+          items:
+            type: object
+            properties:
+              firstName:
+                type: string
+                example: Utkarsh
+              lastName:
+                type: string
+                example: Jain
+              middleName:
+                type: string
+                example: Kumar
+              fullName:
+                type: string
+                example: Utkarsh Kumar Jain
+              ssn:
+                type: string
+                example: 045678387
+
+    CaseAdditionalDataWD:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          example: 12345678
+        ownerName:
+          type: string
+          example: 'John'
+        ssn:
+          type: string
+          example: 'xxxx-xxx-1245'
+
+    TaskLinkInstanceList:
+      type: array
+      items:
+        $ref: '#/components/schemas/TaskLinkInstance'
+
+    ExceptionListInstance:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExceptionInstance'
+
+    ExceptionListInstanceForTask:
+      type: array
+      items:
+        $ref: '#/components/schemas/ExceptionInstanceForTask'
+
+    DocumentListInstance:
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentInstance'
+
+    StageListInstance:
+      type: array
+      items:
+        $ref: '#/components/schemas/StageInstance'
+
+    NoteListInstance:
+      type: array
+      items:
+        $ref: '#/components/schemas/NoteInstance'
+
+    EventTimeLineInstance:
+      type: array
+      items:
+        $ref: '#/components/schemas/EventInstance'
+
+    EventInstance:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 1dbfd010-9470-4412-a5a3-6a8aa1015297
+        source:
+          type: string
+          example: Correspondence
+        eventName:
+          type: string
+          example: correspondence.attributesGenerated
+        eventTs:
+          type: string
+          format: date-time
+        correlationId:
+          type: string
+          example: 89fa2749-2723-4fbd-be43-53c67e05530c
+        identifiers:
+          type: array
+          items:
+            type: object
+            properties:
+              identifier:
+                type: string
+                example: policyNumber
+              value:
+                type: string
+                example: AU42046202
+
+    IdentifierInstance:
+      type: object
+      properties:
+        identifier:
+          type: string
+          example: policyNumber
+        value:
+          type: string
+          example: AU42046202
+
+    TaskListSearchCriteria:
+      allOf:
+        - $ref: '#/components/schemas/TaskSearchCriteria'
+        - type: object
+          properties:
+            sortBy:
+              type: string
+              enum: [updatedAt, createdAt]
+              example: createdAt
+
+            sortDirection:
+              type: string
+              enum: [asc, desc]
+            offset:
+              type: integer
+              format: int32
+              example: 2
+            limit:
+              type: integer
+              format: int32
+              example: 20
+
+    TaskSearchCriteria:
+      type: object
+      properties:
+        caseId:
+          type: string
+          example: CA0000042426
+
+    CasePageSearchCriteria:
+      allOf:
+        - $ref: '#/components/schemas/CaseSearchCriteria'
+        - type: object
+          properties:
+            sortBy:
+              type: string
+              enum: [updatedAt, createdAt, carrier, process, caseStatus]
+              example: createdAt
+
+            sortDirection:
+              type: string
+              enum: [asc, desc]
+            offset:
+              type: integer
+              format: int32
+              example: 2
+            limit:
+              type: integer
+              format: int32
+              example: 20
+
+    CaseSearchCriteria:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          example: AU7654098
+        ssn:
+          type: string
+          example: SSN-UTK-0078
+        ownerFirstName:
+          type: string
+          example: Utkarsh
+        ownerLastName:
+          type: string
+          example: Jain
+        caseIds:
+          type: array
+          items:
+            type: string
+          example: [NB-12345678]
+        process:
+          type: array
+          items:
+            type: string
+          example: [New Business]
+        carrier:
+          type: string
+          example: MASS
+        requestSubType:
+          type: array
+          items:
+            type: string
+          example: [INTERNAL CONVERSION]
+        productName:
+          type: array
+          items:
+            type: string
+          example: [TOTAL INTEREST ANUITY APPLICATION]
+        caseStatus:
+          type: array
+          items:
+            type: string
+          example: [Exception]
+        notInCaseStatus:
+          type: array
+          items:
+            type: string
+          example: [Exception]
+        createdDateStart:
+          type: string
+          format: date-time
+        createdDateEnd:
+          type: string
+          format: date-time
+        updatedDateStart:
+          type: string
+          format: date-time
+        updatedDateEnd:
+          type: string
+          format: date-time
+
+    CaseStatsSearchCriteria:
+      allOf:
+        - $ref: '#/components/schemas/CaseSearchCriteria'
+        - type: object
+          properties:
+            groupBy:
+              type: array
+              items:
+                type: string
+                enum: [caseStatus, process]
+    RefDataSearchCriteria:
+      allOf:
+        - $ref: '#/components/schemas/CaseSearchCriteria'
+        - type: object
+          properties:
+            keys:
+              type: array
+              items:
+                type: string
+                enum: [requestSubType, productName]
+
+    CaseStatsSearchResponse:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int32
+          example: 120
+        stats:
+          type: array
+          items:
+            type: object
+            properties:
+              attribute:
+                type: string
+                example: caseType
+              counts:
+                type: object
+                properties:
+                  label:
+                    type: string
+                    example: New Business
+                  value:
+                    type: integer
+                    format: int32
+                    example: 32
+
+    EventDetailInstance:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 2ad51ecf-9923-437f-a6f0-70968e464cdb
+        correlationid:
+          type: string
+          example: 20230314-M-101161
+        source:
+          type: string
+          example: ONBASE
+        specversion:
+          type: string
+          example: V1
+        type:
+          type: string
+          example: AckNBApplicationValidation
+        carrier:
+          type: string
+          example: MASS
+        datacontenttype:
+          type: string
+          example: application/json
+        time:
+          type: string
+          format: date-time
+        data:
+          type: string
+          example: '{"businessKey":"20230314-M-101161","contractNum":"573005409","user":"ECMagent","CheckReceived":"Success","receivedDateTime":"2023-03-14T11:06:34.6979232-05:00","CorrelationID":"f3e98d05-1d9e-433f-b315-3b1eb0d03ed3"}'
+        identifier:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: string
+
+    CaseCreateRequest:
+      type: object
+      properties:
+        carrier:
+          type: string
+          example: MASS
+        process:
+          type: string
+          example: Renewal
+        identifiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/IdentifierInstance'
+
+    RenewalTaskData:
+      type: object
+      properties:
+        documentNumber:
+          type: string
+          example: 20230405-M-350385
+        source:
+          type: string
+          example: SupportTool
+        contractNum:
+          type: string
+          example: 571016565
+        userId:
+          type: string
+          example: abc121243
+        onbaseCaseId:
+          type: string
+          example: 9280926
+        productName:
+          type: string
+          example: MASSMUTUAL STABLE VOYAGE
+        clientCode:
+          type: string
+          example: MASS
+        taskType:
+          type: string
+          example: RenewalTransfer
+        subsequentGuaranteePeriod:
+          type: string
+          example: 3Year
+        goodOrderDate:
+          type: string
+          format: date-time
+        renewalRequestSignDate:
+          type: string
+          format: date-time
+        ownerInformation:
+          type: array
+          items:
+            $ref: '#/components/schemas/OwnerInformation'
+        documentReceivedDate:
+          type: string
+          format: date-time
+
+    WithdrawalTaskData:
+      type: object
+      properties:
+        documentNumber:
+          type: string
+          example: 20230405-M-350385
+        source:
+          type: string
+          example: DigitalPortal
+        contractNum:
+          type: string
+          example: 571016565
+        userId:
+          type: string
+          example: abc121243
+        onbaseCaseId:
+          type: string
+          example: 9280926
+        clientCode:
+          type: string
+          example: SBGC
+        incomingFaxNumber:
+          type: string
+          example: ''
+        sysMailFromAddress:
+          type: string
+          example: ''
+        agentEmailAddress:
+          type: string
+          example: ''
+        taskType:
+          type: string
+          example: WithdrawalTask
+        formRequest:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormRequest'
+    FormRequest:
+      type: object
+      properties:
+        formSource:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormSource'
+        formData:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormData'
+        formProgram:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormProgram'
+        formParty:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormParty'
+        formDistribution:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormDistribution'
+        formDisbursement:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormDisbursement'
+        formRestriction:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormRestriction'
+        formTaxWithholding:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormTaxWithholding'
+        formTpaAuthorization:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormTpaAuthorization'
+        formFullSurrenderAck:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormFullSurrenderAck'
+        formTaxIdCertificate:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormTaxIdCertificate'
+        formSignature:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormSignature'
+        formLoan:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormLoan'
+        formSpecialInstruction:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormSpecialInstruction'
+        formIrsData:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/FormIrsData'
+
+    FormSource:
+      type: object
+      properties:
+        businessKey:
+          type: string
+          example: 20230712-EM-786626
+        channel:
+          type: object
+          properties:
+            text:
+              type: string
+              example: EMAIL
+              enum: ['MAIL', 'FAX', 'MAVRO', 'EMAIL', 'EXL', 'UNIFIED_WEB']
+        cutOffTimeExpireInd:
+          type: boolean
+          example: true
+        formsDBId:
+          type: string
+          example: abc121243
+        receivedDate:
+          type: string
+          example: 2023-07-12
+        receivedDateTime:
+          type: string
+          example: 2023-07-11T16:51:19-05:00
+        sourceSysId:
+          type: string
+          example: ONBASE
+        unstructuredFormInd:
+          type: boolean
+          example: true
+
+    FormData:
+      type: object
+      properties:
+        formExtName:
+          type: string
+          example: ANNUITY CONTRACT DIGITAL WD V1
+        metaData:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/MetaData'
+
+    FormProgram:
+      type: object
+      properties:
+        clientCode:
+          type: string
+          example: SBGC
+        contractNumber:
+          type: string
+          example: 5450009139
+        withdrawType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: NET
+              enum: ['GROSS', 'NET']
+        amountQualifierType:
+          type: string
+          example: null
+          enum: ['GROSS', 'NET']
+        program:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Withdrawal
+              enum: ['Withdrawal', 'Systematic Withdrawal']
+        programType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Full Surrender
+              enum:
+                [
+                  'impossible',
+                  'Full',
+                  'Partial',
+                  'Total Free Amt',
+                  'GMWB',
+                  'RMD',
+                  'SSW',
+                  'Full Surrender',
+                  'Withdrawal',
+                  'TotalFreeAmt',
+                  'GrossWithdrawal',
+                  'NetWithdrawal',
+                  'LAP',
+                ]
+        programSubType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+              enum:
+                [
+                  'Default',
+                  'Specific',
+                  'Dollar',
+                  'Percentage',
+                  'Earning Only',
+                  'Prorata',
+                  'MaxFree',
+                  'Maximum Free',
+                  'Renewal_GuaranteeWD',
+                  'Pre Tax,After Tax',
+                  'FixDollar',
+                  'AnnualFree',
+                  'Total Free Withdrawal',
+                  'PercentofAcctValue',
+                  'InterestEarningDividendsGains',
+                  'Pecking Order',
+                  'FixPeriod',
+                  'GMWB',
+                  'IRC72TorQ',
+                  'Dollar Liquidity Last',
+                  'Auto',
+                  'Percent Liquidity First',
+                  'Dollar Liquidity First',
+                  'Percent Liquidity Last',
+                  'Prorata New Money',
+                ]
+        programFrequency:
+          type: string
+          example: Default, Annually, BiMonthly, Monthly, QUARTERLY, SemiAnnually
+          enum: [Default, Annually, BiMonthly, Monthly, QUARTERLY, SemiAnnually]
+        rollover:
+          type: string
+          example: PayMe, Partial, Entire, None
+          enum: [PayMe, Partial, Entire, None]
+        rmd:
+          type: string
+          example: CustomerProvideAmt, IRCJointLifeNonRecalc, IRCJointLifeAgeRecalc, IRCSingleLifeNonRecalc
+          enum:
+            [
+              CustomerProvideAmt,
+              IRCJointLifeNonRecalc,
+              IRCJointLifeAgeRecalc,
+              IRCSingleLifeNonRecalc,
+            ]
+        programAmount:
+          type: object
+          properties:
+            text:
+              type: string
+              example: 100
+            amountType:
+              type: string
+              example: DOLLAR
+              enum: ['DOLLAR', 'PERCENT']
+        partialAmount:
+          type: object
+          properties:
+            text:
+              type: string
+              example: ''
+            amountType:
+              type: string
+              example: DOLLAR
+              enum: ['DOLLAR', 'PERCENT']
+        partialPercent:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+            amountType:
+              type: string
+              example: PERCENT
+              enum: ['DOLLAR', 'PERCENT']
+        partialGrossAmount:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+            amountType:
+              type: string
+              example: DOLLAR
+              enum: ['DOLLAR', 'PERCENT']
+        partialNetAmount:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+            amountType:
+              type: string
+              example: DOLLAR
+              enum: ['DOLLAR', 'PERCENT']
+        processRequestType:
+          type: string
+          example: IMMED, NOCDSC, AS_OF_DATE
+          enum: [IMMED, NOCDSC, AS_OF_DATE]
+        isValidAsOfDate:
+          type: boolean
+          example: true
+        accountCloseReason:
+          type: object
+          properties:
+            text:
+              type: string
+              example: SURRENDER, CONTRACT_ATTACH, CONTRACT_LOST
+              enum: [SURRENDER, CONTRACT_ATTACH, CONTRACT_LOST]
+        programSubTypeOptions:
+          type: string
+          example: null
+        asOfDate:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+
+    FormParty:
+      type: object
+      properties:
+        parties:
+          type: array
+          items:
+            $ref: '#/components/schemas/Party'
+
+    FormDistribution:
+      type: object
+      properties:
+        moneyType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Prorata
+        distributionType:
+          type: string
+          example: null
+        oneYearRenewalGurantee:
+          type: string
+          example: null
+        funds:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Fund'
+
+    FormDisbursement:
+      type: object
+      properties:
+        paymentMethod:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Check
+        paymentMailType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        bank:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Bank'
+        paymentToBrokerageAccount:
+          type: boolean
+          example: true
+        payeeType:
+          type: string
+          example: OWNER
+
+    FormRestriction:
+      type: object
+      properties:
+        restrictions:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        hardship:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        emergency:
+          type: string
+          example: null
+
+    FormTaxWithholding:
+      type: object
+      properties:
+        taxWithholding:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxWithholding'
+
+    FormTpaAuthorization:
+      type: object
+      properties:
+        isAuthorization:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        isAgreementAttached:
+          type: object
+          properties:
+            text:
+              type: string
+              example: No
+        signOf:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        signature:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Sign'
+
+    FormFullSurrenderAck:
+      type: object
+      properties:
+        isFinancialProfessionAck:
+          type: object
+          properties:
+            text:
+              type: string
+              example: ''
+        signature:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sign'
+
+    FormTaxIdCertificate:
+      type: object
+      properties:
+        signatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sign'
+
+    FormSignature:
+      type: object
+      properties:
+        isSpousalConsentRequired:
+          type: boolean
+          example: true
+        signatures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Sign'
+
+    FormLoan:
+      type: object
+      properties:
+        isLoanAck:
+          type: object
+          properties:
+            text:
+              type: string
+              example: false
+
+    FormSpecialInstruction:
+      type: object
+      properties:
+        specialInstructionPresent:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+
+    FormIrsData:
+      type: object
+      properties:
+        irsApplicable:
+          type: boolean
+          example: true
+        irsSpecified:
+          type: boolean
+          example: true
+        formParty:
+          type: object
+          oneOf:
+            - $ref: '#/components/schemas/Party'
+        irsTaxWithholding:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaxWithholding'
+        irsSignature:
+          type: boolean
+          example: true
+    TaxWithholding:
+      type: object
+      properties:
+        place:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Federal
+        type:
+          type: object
+          properties:
+            text:
+              type: string
+              example: No Tax Withholding
+        amount:
+          type: object
+          properties:
+            text:
+              type: string
+              example: 0
+            amountType:
+              type: string
+              example: null
+              enum: ['DOLLAR', 'PERCENT']
+        filingStatus:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        exemption:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+
+    Party:
+      type: object
+      properties:
+        partyRoleType:
+          type: string
+          example: OWNER
+          enum: ['OWNER', 'ANNUITANT', 'ROLLOVER_PAYEE', 'PAYEE', 'JOINT_OWNER']
+        firstName:
+          type: string
+          example: JAMES
+        middleName:
+          type: string
+          example: C
+        lastName:
+          type: string
+          example: FORD
+        fullName:
+          type: string
+          example: JAMES C FORD
+        suffix:
+          type: string
+          example: 1
+        dob:
+          type: string
+          example: null
+        taxId:
+          type: string
+          example: 572621420
+        email:
+          type: string
+          example: null
+        employer:
+          type: string
+          example: null
+        maritalStatus:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Single, Married, Widowed
+              enum: [Single, Married, Widowed]
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/Address'
+        phones:
+          type: array
+          items:
+            $ref: '#/components/schemas/Phone'
+    Address:
+      type: object
+      properties:
+        addressLine1:
+          type: string
+          example: 560 calle de la sierra
+        addressLine2:
+          type: string
+          example: null
+        addressLine3:
+          type: string
+          example: null
+        addressLine4:
+          type: string
+          example: null
+        addressType:
+          type: string
+          example: Default,
+          enum: ['Default', 'Mailing', 'SADD', 'HADD', 'BADD']
+        city:
+          type: string
+          example: el cajon
+        country:
+          type: string
+          example: null
+        state:
+          type: string
+          example: CA
+        zip:
+          type: string
+          example: 92019-1241
+        zipPlusFour:
+          type: string
+          example: null
+    Phone:
+      type: object
+      properties:
+        phoneCountry:
+          type: string
+          example: US
+        phoneNumber:
+          type: string
+          example: 6192001466
+        phoneTypeDesc:
+          type: string
+          example: Default
+        phoneType:
+          properties:
+            text:
+              type: string
+              example: Owner_Phone_Day, Owner_Phone_Home
+              enum: [Owner_Phone_Day, Owner_Phone_Home]
+    OwnerInformation:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: TestLast
+        type:
+          type: string
+          example: Owner
+        mail:
+          type: string
+          example: abc@test.com
+        signature:
+          $ref: '#/components/schemas/Signature'
+
+    Signature:
+      type: object
+      properties:
+        signaturePresent:
+          type: string
+          example: Yes
+        type:
+          type: string
+          example: Owner
+        isValidDate:
+          type: boolean
+          example: true
+        signDate:
+          type: string
+          format: date
+        name:
+          type: string
+          example: TestLast
+        title:
+          type: string
+          example: Trustee
+    Bank:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          example: ''
+        accountType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: Checking
+        bankContactPerson:
+          type: string
+          example: ''
+        bankFurtherCreditAccount:
+          type: string
+          example: ''
+        bankFurtherCreditName:
+          type: string
+          example: DEFAULT
+        bankInfoCompleteInd:
+          type: string
+          example: ''
+        bankLocation:
+          type: string
+          example: ''
+        bankName:
+          type: string
+          example: ''
+        bankPhone:
+          type: string
+          example: ''
+        nameOnBankAccount:
+          type: string
+          example: ''
+        routingNumber:
+          type: string
+          example: ''
+    Sign:
+      type: object
+      properties:
+        isSigned:
+          type: boolean
+          example: true
+        signDate:
+          type: object
+          properties:
+            text:
+              type: string
+              example: 2023-05-25
+        signExtension:
+          type: object
+        signName:
+          type: string
+          example: null
+        signOtherTitle:
+          type: string
+          example: null
+        signTitle:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+        signTitles:
+          type: array
+          items:
+            type: object
+            properties:
+              text:
+                type: string
+                example: null
+        signType:
+          type: object
+          properties:
+            text:
+              type: string
+              example: OWNER, JOINT_OWNER, SPOUSE,NOTARY
+        spousalConsent:
+          type: object
+          properties:
+            text:
+              type: string
+              example: null
+
+    MetaData:
+      type: object
+      properties:
+        formId:
+          type: integer
+          example: 37825
+        formNumber:
+          type: string
+          example: null
+        formType:
+          type: string
+          example: ANNUITY CONTRACT DIGITAL WD V1
+    Fund:
+      type: object
+      properties:
+        amount:
+          type: object
+          properties:
+            text:
+              type: string
+              example: 122
+            amountType:
+              type: string
+              example: DOLLAR,
+              enum: ['DOLLAR', 'PERCENT']
+        fundCode:
+          type: string
+          example: 056HJ0A
+        fundName:
+          type: string
+          example: Fixed
+    TaskCreateRequest:
+      type: object
+      properties:
+        taskType:
+          type: string
+          example: RenewalTask
+        carrier:
+          type: string
+          example: MASS
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/RenewalTaskData'
+            - $ref: '#/components/schemas/DummyTaskData'
+            - $ref: '#/components/schemas/WithdrawalTaskData'
+    TaskUpdateRequest:
+      type: object
+      properties:
+        taskType:
+          type: string
+          example: WithdrawalTask
+        carrier:
+          type: string
+          example: SBGC
+        status:
+          type: string
+          example: DRAFT
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/WithdrawalTaskData'
+            - $ref: '#/components/schemas/DummyTaskData'
+
+    TaskSummary:
+      type: object
+      properties:
+        taskId:
+          type: string
+          format: 23432-234234-324234-5345434
+        caseId:
+          type: string
+          format: 34545-543453-323223-534522
+        taskType:
+          type: string
+          example: RenewalTask
+        status:
+          type: string
+          example: Pending
+        source:
+          type: string
+          example: SupportTool
+        carrier:
+          type: string
+          example: MASS
+        assignedTo:
+          type: string
+          example: operator-3
+        createdDate:
+          type: string
+          format: date-time
+        createdBy:
+          type: string
+          example: operator-1
+        updatedDate:
+          type: string
+          format: date-time
+        updatedBy:
+          type: string
+          example: operator-2
+
+    TaskSummaryList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskSummary'
+
+    ReferenceDataResponse:
+      type: object
+      properties:
+        referenceData:
+          type: object
+          properties:
+            requestSubType:
+              type: array
+              items:
+                type: string
+                example: INTERNAL CONVERSION
+            productName:
+              type: array
+              items:
+                type: string
+                example: TOTAL INTEREST ANUITY APPLICATION
+
+    TaskInstance:
+      type: object
+      properties:
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/RenewalTaskData'
+            - $ref: '#/components/schemas/DummyTaskData'
+      allOf:
+        - $ref: '#/components/schemas/TaskSummary'
+
+    DummyTaskData:
+      type: object
+      properties:
+        source:
+          type: string
+          example: SupportTool
+        contractNum:
+          type: string
+          example: 571016565
+        userId:
+          type: string
+          example: abc121243
+        onbaseCaseId:
+          type: string
+          example: 9280926
+        productName:
+          type: string
+          example: MASSMUTUAL STABLE VOYAGE
+        clientCode:
+          type: string
+          example: MASS
+        taskType:
+          type: string
+          example: RenewalTransfer
+
+    ServerErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 500
+        timestamp:
+          type: integer
+          format: int64
+          example: 1681395423438
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: 'Failed to process request'
+    InvalidCaseResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 404
+        timestamp:
+          type: number
+        errorId:
+          type: string
+          example: 33c88eca-ad13-46cc-b14e-b7f82b4af541
+        message:
+          type: string
+          example: Invalid case id - <caseId>
+        error:
+          type: string
+
+    TemplateMetadataModel:
+      type: object
+      additionalProperties:
+        type: object
+        additionalProperties:
+          type: object
+          properties:
+            info:
+              type: string
+              example: New Application has been received to ETP
+  securitySchemes:
+    Auth0:
+      type: openIdConnect
+      openIdConnectUrl: { { openIdConnectUrl } }
+      x-kong-security-openid-connect:
+        config:
+          run_on_preflight: true
+          scopes_claim:
+            - { { scopeClaimUrl } }
+          audience_claim:
+            - aud
+          audience_required:
+            - { { audienceRequiredUrl } }
+          client_id:
+            - client_id
+          auth_methods:
+            - bearer
+        enabled: true
+        protocols:
+          - grpc
+          - grpcs
+          - http
+          - https

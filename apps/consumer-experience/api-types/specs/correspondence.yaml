@@ -1,0 +1,217 @@
+openapi: 3.0.3
+info:
+  title: Correspondence ApiGateway
+  description: Correspondence ApiGateway
+  version: 1.0.0
+servers:
+  - url: https://dev.api.zinnia.io
+    description: Dev Environment
+  - url: https://qa.api.zinnia.io
+    description: QA Environment
+  - url: https://uat.api.zinnia.io
+    description: UAT Environment
+  - url: https://api.zinnia.io
+    description: PROD Environment
+tags:
+  - name: DocumentsList
+    description: Correspondence Document List
+paths:
+  /correspondence/v1/document/list:
+    get:
+      tags:
+        - DocumentsList
+      summary: Correspondence Document List
+      parameters:
+        - name: planCode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: carrierCode
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: documentType
+          in: query
+          required: true
+          schema:
+            type: string
+      x-kong-route-defaults:
+        strip_path: false
+      x-kong-plugin-request-transformer:
+        enabled: true
+        config:
+          http_method: GET
+          replace:
+            uri: /apigateway/api/v1/documents/list
+      responses:
+        "200":
+          description: Correspondence Document List Response Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DocumentsListResponse"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequestResponse"
+        "401":
+          description: Authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+        "403":
+          description: Access denied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AccessDeniedResponse"
+        "404":
+          description: Task Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssignmentResourceNotFoundResponse"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ServerErrorResponse"
+      security:
+        - Auth0: []
+components:
+  schemas:
+    Document:
+      type: object
+      description: Correspondence Document List Response.
+      properties:
+        DocumentName:
+          type: string
+          description: Name of the document
+        EventName:
+          type: string
+          description: Optional event that triggers the document
+      required:
+        - DocumentName
+    DocumentsListResponse:
+      type: array
+      items:
+        $ref: "#/components/schemas/Document"
+    BadRequestResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 400
+        timestamp:
+          type: integer
+          format: int64
+          example: 1681395423438
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: status not found in the request
+    UnauthorizedResponse:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+      example:
+        timestamp: 1721395364487
+        status: 401
+        error: Unauthorized
+        message: Unauthorized
+        path: API Path
+    AccessDeniedResponse:
+      type: object
+      properties:
+        timestamp:
+          type: integer
+          format: int64
+        status:
+          type: integer
+          format: int32
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+      example:
+        timestamp: 1681395423438
+        status: 403
+        error: Access Denied
+        message: User is not authorized
+        path: API Path
+    AssignmentResourceNotFoundResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 500
+        timestamp:
+          type: string
+          format: date-time
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: Task not available with provided taskId.
+    ServerErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 500
+        timestamp:
+          type: integer
+          format: int64
+          example: 1681395423438
+        errorId:
+          type: string
+          example: 0286d47a-7ad9-499c-8ca0-8f6634d236a3
+        message:
+          type: string
+          example: Failed to process request
+  securitySchemes:
+    Auth0:
+      type: openIdConnect
+      openIdConnectUrl: https://login.dev.zinnia.com/.well-known/openid-configuration
+      x-kong-security-openid-connect:
+        config:
+          run_on_preflight: true
+          scopes_claim:
+            - https://dev.api.zinnia.io/permissions
+          audience_claim:
+            - aud
+          audience_required:
+            - https://dev.api.zinnia.io
+          client_id:
+            - client_id
+          auth_methods:
+            - bearer
+        enabled: true
+        protocols:
+          - grpc
+          - grpcs
+          - http
+          - https

@@ -9,7 +9,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@zinnia/api-types/types/*": ["./api-types/generated-types/*/index"]
     },
     "module": "ESNext",
     "moduleResolution": "Bundler",

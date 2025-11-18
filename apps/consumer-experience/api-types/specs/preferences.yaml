@@ -1,0 +1,753 @@
+openapi: 3.0.0
+paths:
+  /preferences/v1/health:
+    get:
+      operationId: health
+      summary: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Preferences
+  /preferences/v1/{partyId}/e-delivery/{planCode}/{policyNumber}:
+    get:
+      operationId: getPreferencesplanCode
+      summary: ''
+      description: Get user preferences by plan code and policy number
+      parameters:
+        - name: planCode
+          required: true
+          in: path
+          description: Policy plan code
+          schema:
+            type: string
+        - name: policyNumber
+          required: true
+          in: path
+          description: Policy number
+          schema:
+            type: string
+        - name: partyId
+          required: true
+          in: path
+          description: Unique reference id of the party
+          schema:
+            type: string
+        - name: documentType
+          required: false
+          in: query
+          description: Type of document
+          schema:
+            enum:
+              - NWB
+              - ANST
+              - CONF
+              - TAX
+              - AGNT
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EDeliveryPreferenceModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: EDeliveryPreference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+    post:
+      operationId: createEDeliveryPreferenceplanCode
+      summary: ''
+      description: Create new user preferences for a given plan code and policy number
+      parameters:
+        - name: partyId
+          required: true
+          in: path
+          description: Unique reference id of the party
+          schema:
+            type: string
+        - name: planCode
+          required: true
+          in: path
+          description: Policy plan code
+          schema:
+            type: string
+        - name: policyNumber
+          required: true
+          in: path
+          description: Policy number
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEDeliveryPreferenceModel'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EDeliveryPreferenceModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+    put:
+      operationId: updateEDeliveryPreferenceplanCode
+      summary: ''
+      description: >-
+        update user preferences for a given plan code and policy number and doc
+        type
+      parameters:
+        - name: partyId
+          required: true
+          in: path
+          description: Unique reference id of the party
+          schema:
+            type: string
+        - name: planCode
+          required: true
+          in: path
+          description: Policy plan code
+          schema:
+            type: string
+        - name: policyNumber
+          required: true
+          in: path
+          description: Policy number
+          schema:
+            type: string
+        - name: documentType
+          required: true
+          in: query
+          description: Type of document
+          schema:
+            enum:
+              - NWB
+              - ANST
+              - CONF
+              - TAX
+              - AGNT
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEDeliveryPreferenceModel'
+      responses:
+        '201':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EDeliveryPreferenceModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: EDeliveryPreference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+    delete:
+      operationId: deletePreferencesplanCode
+      summary: ''
+      description: Delete user preferences by plan code and policy number
+      parameters:
+        - name: planCode
+          required: true
+          in: path
+          description: Policy plan code
+          schema:
+            type: string
+        - name: policyNumber
+          required: true
+          in: path
+          description: Policy number
+          schema:
+            type: string
+        - name: partyId
+          required: true
+          in: path
+          description: Unique reference id of the party
+          schema:
+            type: string
+        - name: documentType
+          required: false
+          in: query
+          description: Type of document
+          schema:
+            enum:
+              - NWB
+              - ANST
+              - CONF
+              - TAX
+              - AGNT
+            type: string
+      responses:
+        '204':
+          description: Deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: EDeliveryPreference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+  /preferences/v1/{id}/consent-date:
+    put:
+      operationId: updateConsentDate
+      summary: ''
+      description: Update consent date for an existing user preference by preference ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Preference's ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEDeliveryConsentDateModel'
+      responses:
+        '201':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EDeliveryPreferenceModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: EDeliveryPreference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+  /preferences/v1/{id}:
+    put:
+      operationId: updateEDeliveryPreferenceById
+      summary: ''
+      description: Update edelivery preferences
+      parameters:
+        - name: id
+          required: true
+          in: path
+          description: Preference's ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEDeliveryPreferenceModel'
+      responses:
+        '201':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EDeliveryPreferenceModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: EDeliveryPreference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+  /preferences/v1/preferences/documentTypes:
+    get:
+      operationId: EDeliveryPreferenceController getDefaultDocumentTypes
+      parameters: []
+      responses:
+        '200':
+          description: List of default document types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentTypeModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Document Type not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+  /preferences/v1/{partyId}/marketing-preference:
+    get:
+      operationId: getMarketingPreferences
+      summary: ''
+      description: Get marketing preferences for a party
+      parameters:
+        - name: partyId
+          required: true
+          in: path
+          description: Unique reference id of the party
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketingPreferencesModel'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Marketing preference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+    put:
+      operationId: updateMarketingPreference
+      summary: ''
+      description: Update marketing preferences for a party
+      parameters:
+        - name: partyId
+          required: true
+          in: path
+          description: Unique reference id of the party
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMarketingPreferencesModel'
+      responses:
+        '201':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketingPreferencesModel'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Marketing preference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+    delete:
+      operationId: deleteMarketingPreference
+      summary: ''
+      description: Delete marketing preferences for a party
+      parameters:
+        - name: partyId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Marketing preference not found.
+      tags:
+        - Preferences
+      security:
+        - {}
+  /preferences/v1/marketing-preference:
+    post:
+      operationId: createMarketingPreference
+      summary: ''
+      description: Create new marketing preferences for a user
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMarketingPreferencesModel'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarketingPreferencesModel'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      tags:
+        - Preferences
+      security:
+        - {}
+info:
+  title: Preference Service
+  description: >-
+    Preference service with auditing and consent built-in. Used for E-Delivery
+    preferences.
+  version: 1.0.0
+  contact: {}
+tags:
+  - name: Preferences
+    description: Storing eDelivery Preferences
+servers:
+  - url: https://api.zinnia.io
+components:
+  securitySchemes:
+    Auth0:
+      type: openIdConnect
+      openIdConnectUrl: https://login.dev.zinnia.com/.well-known/openid-configuration
+  schemas:
+    EDeliveryPreferenceModel:
+      type: object
+      properties:
+        id:
+          type: string
+          example: f22de4bff27e45d9a7c859e61f668c50
+        policyNumber:
+          type: string
+          description: number/subjective id of policy
+          example: '127147468264'
+        planCode:
+          type: string
+          description: plan code for policy
+          example: SBFIXUL1
+        carrierId:
+          type: string
+          description: carrier id for policy
+          example: SBUL
+        deliveryOption:
+          type: string
+          enum:
+            - EMAIL
+            - FAX
+            - MAIL
+          description: Delivery Options - Applicable values EMAIL/FAX/MAIL
+          example: EMAIL
+        email:
+          type: string
+          example: beth.johnson@gmail.com
+          description: User's email
+        effectiveFrom:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Date when the preference will be effective
+        effectiveTo:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Date when the preference will stop being effective
+        documentType:
+          type: string
+          description: Type of document
+          example: AGNT
+          enum:
+            - NWB
+            - ANST
+            - CONF
+            - TAX
+            - AGNT
+        acknowledgedByPartyId:
+          type: string
+          description: >-
+            Party that initiated the acknowledgment (i.e. an agent, if not the
+            party referred to by partyId)
+          example: f22de4bff27e45d9a7c859e61f668c50
+        acknowledgementDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Acknowledgement Date
+        consentDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Consent Date
+      required:
+        - id
+        - policyNumber
+        - planCode
+        - carrierId
+        - deliveryOption
+        - effectiveFrom
+        - documentType
+    CreateEDeliveryPreferenceModel:
+      type: object
+      properties:
+        carrierId:
+          type: string
+          description: carrier id for policy
+          example: SBUL
+        deliveryOption:
+          type: string
+          enum:
+            - EMAIL
+            - FAX
+            - MAIL
+          description: Delivery Options - Applicable values EMAIL/FAX/MAIL
+          example: EMAIL
+        email:
+          type: string
+          example: beth.johnson@gmail.com
+          description: User's email
+        effectiveFrom:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Date when the preference will be effective
+        effectiveTo:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Date when the preference will stop being effective
+        documentType:
+          type: string
+          description: Type of document
+          example: AGNT
+          enum:
+            - NWB
+            - ANST
+            - CONF
+            - TAX
+            - AGNT
+        acknowledgedByPartyId:
+          type: string
+          description: >-
+            Party that initiated the acknowledgment (i.e. an agent, if not the
+            party referred to by partyId)
+          example: f22de4bff27e45d9a7c859e61f668c50
+        acknowledgementDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Acknowledgement Date
+        consentDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Consent Date
+      required:
+        - carrierId
+        - deliveryOption
+        - effectiveFrom
+        - documentType
+    UpdateEDeliveryConsentDateModel:
+      type: object
+      properties:
+        consentDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Consent Date
+      required:
+        - consentDate
+    UpdateEDeliveryPreferenceModel:
+      type: object
+      properties:
+        email:
+          type: string
+          example: smith3847@gmail.com
+          description: User's email
+        effectiveFrom:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Date when the preference will be effective
+        effectiveTo:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Date when the preference will stop being effective
+        carrierId:
+          type: string
+          description: carrier id for policy
+          example: SBUL
+        deliveryOption:
+          type: string
+          enum:
+            - EMAIL
+            - FAX
+            - MAIL
+          description: Delivery Options - Applicable values EMAIL/FAX/MAIL
+          example: EMAIL
+        acknowledgedByPartyId:
+          type: string
+          description: >-
+            Party that initiated the acknowledgment (i.e. an agent, if not the
+            party referred to by partyId)
+          example: f22de4bff27e45d9a7c859e61f668c50
+        acknowledgementDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Acknowledgement Date
+        consentDate:
+          format: date
+          type: string
+          example: '2020-01-01T00:00:00.000Z'
+          description: Consent Date
+    DocumentTypeModel:
+      type: object
+      properties:
+        type:
+          type: string
+          description: Type of document
+          example: NWB
+        description:
+          type: string
+          description: Description of the document type
+          example: New Business Documents
+      required:
+        - type
+        - description
+    CompanyPreference:
+      type: object
+      properties:
+        name:
+          type: string
+          example: EVRG
+        selected:
+          type: boolean
+          example: true
+      required:
+        - name
+        - selected
+    MarketingPreferencesModel:
+      type: object
+      properties:
+        partyId:
+          type: string
+          example: '12345'
+        optIn:
+          type: string
+          enum:
+            - 'Y'
+            - 'N'
+            - null
+          example: 'Y'
+        phoneNumber:
+          type: string
+          example: 123-4567-8909
+        email:
+          type: string
+          example: example@example.com
+        companies:
+          example:
+            - name: evergreen
+              selected: true
+            - name: EVRG
+              selected: false
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyPreference'
+      required:
+        - partyId
+        - optIn
+        - phoneNumber
+        - email
+        - companies
+    CreateMarketingPreferencesModel:
+      type: object
+      properties:
+        optIn:
+          type: string
+          enum:
+            - 'Y'
+            - 'N'
+            - null
+          example: 'Y'
+        phoneNumber:
+          type: string
+          example: 123-4567-8909
+        email:
+          type: string
+          example: example@example.com
+        companies:
+          example:
+            - name: evergreen
+              selected: true
+            - name: EVRG
+              selected: false
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyPreference'
+      required:
+        - optIn
+        - phoneNumber
+        - email
+        - companies
+    UpdateMarketingPreferencesModel:
+      type: object
+      properties:
+        optIn:
+          type: string
+          enum:
+            - 'Y'
+            - 'N'
+            - null
+          example: 'Y'
+        phoneNumber:
+          type: string
+          example: 123-4567-8909
+        email:
+          type: string
+          example: example@example.com
+        companies:
+          example:
+            - name: evergreen
+              selected: true
+            - name: EVRG
+              selected: false
+          type: array
+          items:
+            $ref: '#/components/schemas/CompanyPreference'
