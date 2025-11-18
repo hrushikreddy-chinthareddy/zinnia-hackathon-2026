@@ -126,6 +126,7 @@ export const NotificationAlert: FC = () => {
         canDismiss={true}
         onDismiss={handleDismiss}
         variant={BannerVariant.Information}
+        className={styles.notificationAlertBanner}
       />
     </div>
   );

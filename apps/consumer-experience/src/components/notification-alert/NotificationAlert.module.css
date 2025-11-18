@@ -7,6 +7,11 @@
   opacity: 0;
 }
 
+.notificationAlertBanner {
+  border-radius: 0 0 var(--measure-dimension-button-button-default-radius)
+    var(--measure-dimension-button-button-default-radius);
+}
+
 .notificationAlert.visible {
   opacity: 1;
   animation: slideDown 0.5s forwards;
