@@ -21,18 +21,9 @@ module.exports = {
         map: [
           ['@/', './src'],
           [
-            '@xd-components',
-            path.resolve(__dirname, 'packages/xd-components/src'),
+            '@zinnia/api-types/types',
+            path.resolve(__dirname, 'api-types/generated-types'),
           ],
-          [
-            '@xd/components',
-            path.resolve(__dirname, 'packages/xd-components/src/components'),
-          ],
-          [
-            '@xd/hooks',
-            path.resolve(__dirname, 'packages/xd-components/src/hooks'),
-          ],
-          ['@pom', path.resolve(__dirname, 'packages/pom/src')],
         ],
       },
       typescript: {
