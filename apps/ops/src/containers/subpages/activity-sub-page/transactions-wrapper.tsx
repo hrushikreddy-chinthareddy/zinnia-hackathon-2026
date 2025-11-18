@@ -2,6 +2,7 @@ import {
     Transaction,
     TransactionStatus,
 } from '@xd/api-types/dist/generated-types/sor';
+import dayjs from 'dayjs';
 import {
     useCallback,
     useContext,
@@ -12,6 +13,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { CustomDateRange } from '@deps/components/dashboard/filters/time-filter/custom-date-range';
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import { FindAllKeyValuesTransactionSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-transaction-sidesheet';
 import { TransactionStatusTabGroup } from '@deps/components/history/filters/transaction-status-tab-group';
@@ -27,22 +29,45 @@ import {
     initialFilterTransactions,
     useTransactions,
 } from '@deps/hooks/useTransactions';
+import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 
 import styles from './transaction-wrapper.module.css';
 import { TransactionsTable } from './transactions-table';
 
+const multiTransactionTypes = true;
 export const TransactionsWrapper = () => {
     const { t } = useTranslation();
     const { policy } = useContext(PolicyData);
-    const { historyFilters } = useHistoryFiltersContext();
+    const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { statusFilter = TransactionStatus.COMPLETED } = historyFilters;
     const [offset, setOffset] = useState(0);
     const limit = 25;
     const previousStatus = useRef(statusFilter);
+    const selectedDateRange = {
+        from:
+            historyFilters?.datesFilter?.from.format(
+                DEFAULT_DATE_DISPLAY_FORMAT
+            ) ??
+            dayjs().subtract(1, 'year').format(DEFAULT_DATE_DISPLAY_FORMAT),
+        to:
+            historyFilters?.datesFilter?.to.format(
+                DEFAULT_DATE_DISPLAY_FORMAT
+            ) ?? dayjs().format(DEFAULT_DATE_DISPLAY_FORMAT),
+    };
     const {
         data: filteredTransactions = initialFilterTransactions,
         isLoading,
-    } = useTransactions(policy, historyFilters);
+    } = useTransactions(
+        policy,
+        {
+            ...historyFilters,
+            datesFilter: {
+                from: dayjs(selectedDateRange.from).utc(),
+                to: dayjs(selectedDateRange.to).utc(),
+            },
+        },
+        multiTransactionTypes
+    );
 
     const goToPage = useCallback(
         (pageNumber: number) => {
@@ -99,6 +124,21 @@ export const TransactionsWrapper = () => {
             <div className={styles.typeSelect}>
                 <div className="flex w-full flex-col">
                     <TransactionTypeSelect />
+                </div>
+                <div>
+                    <CustomDateRange
+                        showIcon={false}
+                        handleTimerangeChange={(dates) =>
+                            setHistoryFilters((prevState) => ({
+                                ...prevState,
+                                datesFilter: {
+                                    from: dayjs(dates.from).utc(),
+                                    to: dayjs(dates.to).utc(),
+                                },
+                            }))
+                        }
+                        timerange={selectedDateRange}
+                    />
                 </div>
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">

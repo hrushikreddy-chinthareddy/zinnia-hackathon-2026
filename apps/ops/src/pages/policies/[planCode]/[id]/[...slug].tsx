@@ -227,7 +227,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 break;
             case 'activity':
                 if (
-                    featureFlags.revised_history_table &&
+                    featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE] &&
                     slug[1] === 'transactions'
                 ) {
                     subPageContent = <FilterTransactions />;

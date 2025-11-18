@@ -15,6 +15,7 @@ interface GetTransactionsProps {
     planCode?: string;
     sortField?: 'PROCESSDATE' | 'EFFECTIVEDATE' | 'REVERSALDATE';
     sortOrder?: 'ASC' | 'DESC';
+    multiTransactionTypes?: boolean;
 }
 
 export const getTransactionsQuery = async ({
@@ -23,6 +24,7 @@ export const getTransactionsQuery = async ({
     planCode,
     sortField = 'EFFECTIVEDATE',
     sortOrder = 'DESC',
+    multiTransactionTypes,
 }: GetTransactionsProps) => {
     if (!policyNumber) {
         throw 'No policy number provided';
@@ -30,8 +32,11 @@ export const getTransactionsQuery = async ({
     if (!planCode) {
         throw 'No plan code provided';
     }
-    const { eventFilter, yearFilter, statusFilter } = historyFilters;
-    const transactionTypes = getEvents(eventFilter);
+
+    const { eventFilter, yearFilter, statusFilter, datesFilter } =
+        historyFilters;
+
+    const transactionTypes = getEvents(eventFilter, multiTransactionTypes);
 
     const results = await getPolicyTransactions({
         transactionTypes: transactionTypes,
@@ -41,6 +46,10 @@ export const getTransactionsQuery = async ({
         sortOrder,
         status: statusFilter,
         ...(hasFilter(yearFilter) && { year: yearFilter }),
+        ...(hasFilter(datesFilter) && {
+            from: historyFilters.datesFilter?.from,
+            to: historyFilters.datesFilter?.to,
+        }),
     });
 
     return results;
