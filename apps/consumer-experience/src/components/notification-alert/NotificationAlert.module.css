@@ -26,7 +26,19 @@
 
 @media screen and (max-width: 768px) {
   .sticky {
-    max-width: 344px;
+    min-width: 344px;
+    left: 0;
+    right: 0;
+    padding: 0 var(--measure-dimension-margin-sm);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .sticky {
+    min-width: 344px;
+    left: 0;
+    right: 0;
+    padding: 0 var(--measure-dimension-margin-xs);
   }
 }
 
