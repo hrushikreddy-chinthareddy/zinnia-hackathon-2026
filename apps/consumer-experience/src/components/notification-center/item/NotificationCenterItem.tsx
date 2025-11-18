@@ -81,25 +81,18 @@ export const NotificationCenterItem = ({
                 !needsAcknowledgement && Styles.hidden
               )}
             ></div>
-            <Icon height={24} width={24} type={IconType.CASH} />
+            <div>
+              <Icon height={24} width={24} type={IconType.CASH} />
+            </div>
             <div className={Styles.notificationTextGroup}>
               <h3 className="typography-labels-label-lg">
-                {notification.title}
+                {/* {notification.title} */}
+                Premium Processed
               </h3>
-              <p
-                className={clsx(
-                  !notification.completed ? Styles.description : '',
-                  'text-sm text-left'
-                )}
-              >
+              <p className={!notification.completed ? Styles.description : ''}>
                 {description}
               </p>
-              <div
-                className={clsx(
-                  Styles.date,
-                  'typography-content-caption text-left'
-                )}
-              >
+              <div className={clsx(Styles.date, 'typography-content-caption')}>
                 <p>{dateText}</p>
               </div>
             </div>

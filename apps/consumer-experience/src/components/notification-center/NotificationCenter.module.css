@@ -81,7 +81,7 @@
 
     @media (max-width: 600px) {
       .notificationHeaderSection {
-        max-width: 225px;
+        max-width: 215px;
       }
     }
 
@@ -94,6 +94,7 @@
 
     .description {
       color: var(--color-status-text-status-error-text);
+      text-align: left;
     }
 
     .date {
