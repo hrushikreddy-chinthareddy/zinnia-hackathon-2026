@@ -1,7 +1,8 @@
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { Transaction, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { PaymentMethod } from '@/types/payment';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 export interface TransactionPaymentInfo {
   paymentDescription: string;
@@ -29,7 +30,9 @@ export function getTransactionPaymentInfo(
     return null;
   }
 
-  const paymentMethod = paymentMethods.find(method => method.bankId === bankId);
+  const paymentMethod = paymentMethods?.find(
+    method => method.bankId === bankId
+  );
 
   if (!paymentMethod) {
     return null;
@@ -45,14 +48,16 @@ export function getTransactionPaymentInfo(
     return null;
   }
 
-  const formattedDate = dayjs(transaction.effectiveDate).format('M/D/YY');
+  const formattedDate = dayjs(transaction.effectiveDate).format(
+    DEFAULT_DATE_FORMAT
+  );
 
   // Determine payment type based on autopay status and transaction type
   const isAutopayPayment =
     hasActiveAutopay &&
-    (transaction.transactionType === 'SubsequentPremium' ||
-      transaction.transactionType === 'SubsequentPayment' ||
-      transaction.transactionType === 'InitialPremium');
+    (transaction.transactionType === TransactionType.SUBSEQUENT_PREMIUM ||
+      transaction.transactionType === TransactionType.SUBSEQUENT_PAYMENT ||
+      transaction.transactionType === TransactionType.INITIAL_PREMIUM);
 
   const paymentType = isAutopayPayment ? 'Autopay' : 'One-time payment';
 
