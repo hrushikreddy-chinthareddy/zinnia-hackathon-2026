@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node ./scripts/build-api-types-if-needed.mjs && NODE_OPTIONS='--max-http-header-size=32000' next dev",
+    "dev": "pnpm run build-api-types-if-needed && NODE_OPTIONS='--max-http-header-size=32000' next dev",
     "dev:pretty-logs": "NODE_OPTIONS='--max-http-header-size=32000' next dev | pino-pretty -m message -i time -c",
     "dev-ssl": "NODE_OPTIONS='--max-http-header-size=32000' next dev --experimental-https --experimental-https-key ../sso-mpv/.cert/key.pem --experimental-https-cert ../sso-mpv/.cert/cert.pem",
     "build": "pnpm run build-api-types && next build --no-lint",
@@ -14,17 +14,18 @@
     "lint:fix": "next lint --fix",
     "prettier": "prettier --check --cache --log-level=warn ./src",
     "prettier:fix": "prettier --write --cache ./src",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "test": "pnpm run build-api-types-if-needed && jest",
+    "test:watch": "pnpm run build-api-types-if-needed && jest --watch",
     "storybook": "storybook dev -p 6007 --no-open",
     "build-storybook": "storybook build",
     "chromatic": "npx chromatic",
-    "pre-commit": "pnpm lint-staged",
-    "pre-push": "turbo lint check-types test",
+    "pre-commit": "pnpm run build-api-types-if-needed && pnpm lint-staged",
+    "pre-push": "pnpm run build-api-types-if-needed && turbo lint check-types test",
     "build-api-types": "node ./scripts/build-types-with-timing.mjs",
     "update-api-spec": "node ./scripts/update-type-definition.mjs",
     "generate-api-types": "node ./scripts/generate-all-types.mjs",
-    "clean-api-types": "node ./scripts/clean-api-types.mjs"
+    "clean-api-types": "node ./scripts/clean-api-types.mjs",
+    "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs"
   },
   "dependencies": {
     "@datadog/browser-rum": "^5.17.1",
