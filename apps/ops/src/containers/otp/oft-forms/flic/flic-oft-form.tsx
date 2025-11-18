@@ -99,7 +99,6 @@ export default function FlicOftWithdrawalForm({
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                renderAuthPersonSignPresent={true}
             />
             <FormDisbursement
                 options={disbursementOptions}

@@ -3494,14 +3494,12 @@
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
                     "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isCorporateResolutionPresent": "Is corporate resolution present?",
+                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
                     "isLoaAttached": "Is letter of acceptance attached?",
                     "validOwnerRegType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
-                    "loaSignDate": "LOA Sign Date",
-                    "authPersonSignPresent": "Authorized Person’s signature is present",
-                    "signDate": "Signature date"
+                    "loaSignDate": "LOA Sign Date"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Joint Owner/Annuitant absence on paperwork or in the contract",

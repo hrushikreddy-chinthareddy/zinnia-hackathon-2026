@@ -123,7 +123,6 @@ export default function GdmnOftWithdrawalForm({
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
-                renderAuthPersonSignPresent={true}
             />
             <FormDisbursement
                 options={disbursementOptions}

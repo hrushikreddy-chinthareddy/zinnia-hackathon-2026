@@ -2,7 +2,6 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useContext, useEffect, useState } from 'react';
 
-import SelectSimple from '@deps/components/select/select';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
@@ -62,7 +61,6 @@ export type CedingCompanyDistributionProps = {
     renderLoaDate?: boolean;
     qualificationOptions: { label: string; value: QualTypes }[];
     authorizedSignatureLabel?: string;
-    renderAuthPersonSignPresent?: boolean;
 };
 
 const CedingCompanyDistribution = ({
@@ -73,7 +71,6 @@ const CedingCompanyDistribution = ({
     isFormStateReadOnly = false,
     renderLoaDate = false,
     authorizedSignatureLabel,
-    renderAuthPersonSignPresent = false,
 }: CedingCompanyDistributionProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.oftProcess',
@@ -86,7 +83,7 @@ const CedingCompanyDistribution = ({
     const [isMultipleQualType, setIsMultipleQualType] = useState<boolean>(
         formSurrenderingCompany?.multipleQualType?.text || false
     );
-    const [corporateResolution, setCorporateResolution] = useState<string>(
+    const [isSignValid, setIsSignValid] = useState<string>(
         stringifyTrueFalseNull(
             formSurrenderingCompany?.authorizedOfficerSignature?.text
         )
@@ -110,15 +107,6 @@ const CedingCompanyDistribution = ({
         formSurrenderingCompany?.nonRegTypeReason || []
     );
 
-    const [selectAuthSignedPresent, setSelectAuthSignedPresent] =
-        useState<string>(
-            stringifyTrueFalseNull(
-                formSurrenderingCompany?.authorizedOfficerSignature?.text
-            )
-        );
-
-    const [authPersonSignDate, setAuthPersonSignDate] = useState<string>('');
-
     const validButtonGroupOptions = [
         { label: t('yes'), value: stringifyTrueFalseNull(true) },
         { label: t('no'), value: stringifyTrueFalseNull(false) },
@@ -127,12 +115,6 @@ const CedingCompanyDistribution = ({
     const yesNoButtonGroupOptions = [
         { label: t('valid'), value: stringifyTrueFalseNull(true) },
         { label: t('notValid'), value: stringifyTrueFalseNull(false) },
-    ];
-
-    const authorizedPersonSignPresentoptions = [
-        { label: t('selectOption'), value: stringifyTrueFalseNull(null) },
-        { label: t('yes'), value: stringifyTrueFalseNull(true) },
-        { label: t('no'), value: stringifyTrueFalseNull(false) },
     ];
 
     const invalidOwnerRegReasons = [
@@ -166,21 +148,7 @@ const CedingCompanyDistribution = ({
                     text: isMultipleQualType,
                 },
                 authorizedOfficerSignature: {
-                    text: deStringifyTrueFalseNull(
-                        selectAuthSignedPresent
-                    ) as boolean,
-                },
-                authorizedOfficerSignatureDate: {
-                    text: authPersonSignDate
-                        ? dayjs(authPersonSignDate, DATE_PICKER_FORMAT).format(
-                              ZAHARA_API_DATE_FORMAT
-                          )
-                        : '',
-                },
-                corporateResolution: {
-                    text: deStringifyTrueFalseNull(
-                        corporateResolution
-                    ) as boolean,
+                    text: deStringifyTrueFalseNull(isSignValid) as boolean,
                 },
                 loa: {
                     text: deStringifyTrueFalseNull(isLoaAttached) as boolean,
@@ -211,13 +179,11 @@ const CedingCompanyDistribution = ({
         isTitlePresent,
         qualType,
         isMultipleQualType,
-        corporateResolution,
+        isSignValid,
         isLoaAttached,
         isValidOwnerRegType,
         selectedRegReasons,
         loaSignDate,
-        selectAuthSignedPresent,
-        authPersonSignDate,
     ]);
 
     return (
@@ -259,12 +225,12 @@ const CedingCompanyDistribution = ({
                 {renderCorporateResolution && (
                     <SelectValidButtonGroup
                         options={validButtonGroupOptions}
-                        isValid={corporateResolution}
-                        setIsValid={setCorporateResolution}
+                        isValid={isSignValid}
+                        setIsValid={setIsSignValid}
                         label={
                             authorizedSignatureLabel ||
                             (t(
-                                'cedingCompanySignature.isCorporateResolutionPresent'
+                                'cedingCompanySignature.isSignatureValid'
                             ) as string)
                         }
                         disabled={isFormStateReadOnly}
@@ -282,64 +248,7 @@ const CedingCompanyDistribution = ({
                         disabled={isFormStateReadOnly}
                     />
                 )}
-            </div>
-            {corporateResolution !== stringifyTrueFalseNull(null) &&
-                corporateResolution !== stringifyTrueFalseNull(false) && (
-                    <div className="my-4 grid grid-cols-3 gap-2">
-                        {renderAuthPersonSignPresent && (
-                            <SelectSimple
-                                disabled={isFormStateReadOnly}
-                                label={
-                                    t(
-                                        'cedingCompanySignature.authPersonSignPresent'
-                                    ) as string
-                                }
-                                options={authorizedPersonSignPresentoptions}
-                                onChange={(val) =>
-                                    setSelectAuthSignedPresent(val)
-                                }
-                                size={FieldSize.Small}
-                                value={selectAuthSignedPresent}
-                                data-testid="selectAuthSignedPresent"
-                                key={'selectAuthSignedPresent'}
-                            />
-                        )}
-                        <div className="self-end">
-                            <FieldDateSelect
-                                id="auth-person-sign-date"
-                                isFutureDateDisabled={false}
-                                onChange={(e) => {
-                                    setAuthPersonSignDate(e.target.value);
-                                }}
-                                size={FieldSize.Small}
-                                type={FieldType.BaseActive}
-                                value={authPersonSignDate}
-                                label={
-                                    t(
-                                        'cedingCompanySignature.signDate'
-                                    ) as string
-                                }
-                                disabled={isFormStateReadOnly}
-                                variant={
-                                    isFormStateReadOnly
-                                        ? FieldVariant.Inactive
-                                        : FieldVariant.Default
-                                }
-                            />
-                        </div>
-                    </div>
-                )}
 
-            <div className="my-4 grid grid-cols-3 gap-2">
-                <SelectValidButtonGroup
-                    options={yesNoButtonGroupOptions}
-                    isValid={isValidOwnerRegType}
-                    disabled={isFormStateReadOnly}
-                    setIsValid={setIsValidOwnerRegType}
-                    label={
-                        t('cedingCompanySignature.validOwnerRegType') as string
-                    }
-                />
                 {renderIsLoaAttached && (
                     <SelectValidButtonGroup
                         options={validButtonGroupOptions}
@@ -379,6 +288,18 @@ const CedingCompanyDistribution = ({
                             />
                         </div>
                     )}
+            </div>
+
+            <div className="my-4 grid grid-cols-2 gap-10">
+                <SelectValidButtonGroup
+                    options={yesNoButtonGroupOptions}
+                    isValid={isValidOwnerRegType}
+                    disabled={isFormStateReadOnly}
+                    setIsValid={setIsValidOwnerRegType}
+                    label={
+                        t('cedingCompanySignature.validOwnerRegType') as string
+                    }
+                />
             </div>
 
             {deStringifyTrueFalseNull(isValidOwnerRegType) === false && (
