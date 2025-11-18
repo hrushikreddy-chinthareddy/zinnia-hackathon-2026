@@ -24,6 +24,12 @@
   z-index: 10000;
 }
 
+@media screen and (max-width: 768px) {
+  .sticky {
+    max-width: 344px;
+  }
+}
+
 /* Keyframes for the slide-down animation */
 @keyframes slideDown {
   from {
