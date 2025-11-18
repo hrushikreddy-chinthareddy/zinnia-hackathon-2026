@@ -5,7 +5,7 @@
   padding: var(--measure-dimension-padding-2xl) 0;
   position: relative;
   z-index: 2;
-  background-color: white;
+  background-color: var(--color-base-surface-surface-primary);
 }
 
 .notificationAlertContainer {
