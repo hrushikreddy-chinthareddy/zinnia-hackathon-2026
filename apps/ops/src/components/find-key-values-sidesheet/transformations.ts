@@ -32,6 +32,8 @@ import {
     ToSections,
     ToSectionsProps,
     TransformationsConfig,
+    RenderData,
+    FieldType,
 } from './types';
 
 /**
@@ -218,6 +220,17 @@ export const prepareTransaction = ({
 
     return {
         toSections: (transactionOverride?: Transaction) => {
+            console.log(
+                toRenderData({
+                    transaction: transactionOverride ?? transaction,
+                    policy,
+                    allPartiesById,
+                    t,
+                    searchValue,
+                    config: transactionsConfig,
+                    type: FormatterType.TRANSACTION,
+                })
+            );
             return toSections({
                 transaction: transactionOverride ?? transaction,
                 policy,
@@ -238,6 +251,66 @@ export const prepareTransaction = ({
     };
 };
 
+const toRenderData = ({
+    transaction,
+    policy,
+    t,
+    searchValue,
+    planCode,
+    productType,
+    allPartiesById,
+    config,
+    type,
+}: ToSectionsProps & { transaction: Transaction }): RenderData => {
+    const tuples = typedEntries(
+        type === FormatterType.TRANSACTION ? transaction : policy
+    );
+    return tuples.reduce((acc, current): RenderData => {
+        if (current === null) {
+            return acc;
+        }
+
+        const [currentKey, currentVal] = current;
+
+        if (currentVal === null) {
+            return acc;
+        }
+
+        if (typeof currentVal === 'object') {
+            const sectionTitle = currentKey;
+            // If there are rules to hide this section,
+            // or if the section is empty, skip it
+            const shouldShow =
+                !config.showSection ||
+                config.showSection(sectionTitle, policy, planCode, productType);
+
+            if (!shouldShow) return acc;
+
+            return [
+                ...acc,
+                {
+                    type: FieldType.section,
+                    label: sectionTitle,
+                    children: typedEntries(currentVal).map(([key, value]) => ({
+                        type: FieldType.field,
+                        label: key,
+                        value,
+                    })),
+                },
+            ];
+        }
+
+        return [
+            ...acc,
+            {
+                type: FieldType.field,
+                label: currentKey,
+                value: currentVal,
+            },
+        ];
+    }, []);
+};
+
 /**
  * Given a policy, returns an object containing two lists of data
  * tuples: `policyBasics` and `policySections`.
@@ -248,7 +321,7 @@ export const prepareTransaction = ({
  * @param allPartiesById The mapping of party IDs to party objects
  * @returns A {@link PreparedPolicy} object
  */
-export const toSections = (props: ToSectionsProps): ToSections => {
+const toSections = (props: ToSectionsProps): ToSections => {
     const {
         policy,
         t,

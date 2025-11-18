@@ -36,6 +36,14 @@ export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
 export const toolTip = Symbol('toolTip');
 
+export type Section = [
+    string,
+    {
+        fields?: NestedData;
+        subSections?: NestedData;
+    }
+];
+
 export type ToSections = {
     basics: NestedData[] | null;
     sections: Section[];
@@ -115,7 +123,7 @@ type Field = {
     toolTip?: string;
 };
 
-type Section = {
+type NewSection = {
     type: typeof FieldType.section;
     label: string;
     children: Node[];
@@ -128,6 +136,6 @@ type List = {
     children: FieldGroup[];
 };
 
-type Node = Field | Section | List;
+type Node = Field | NewSection | List;
 
 export type RenderData = Node[];
