@@ -140,6 +140,7 @@ export const PolicySidesheetContent = ({
                 disableBeforeDate={
                     new Date(policy?.policyDates?.issueDate || '')
                 }
+                defaultDate={new Date()}
                 onDateSelect={(date) => handleDateChange(date)}
                 container={container}
                 fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
