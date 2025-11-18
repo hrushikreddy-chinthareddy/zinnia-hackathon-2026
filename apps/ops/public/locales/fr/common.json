@@ -455,7 +455,9 @@
         "disbursementAmount": "Monto del desembolso",
         "payeeGrossAmount": "Monto bruto del beneficiario",
         "timeline": "Ponctualité",
-        "taxes": "Impôts"
+        "taxes": "Impôts",
+        "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
+        "selectDateInRange": "Sélectionnez une date dans la plage:"
     },
     "enums": {
         "LIFE": "Vie",

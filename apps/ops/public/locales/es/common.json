@@ -456,7 +456,9 @@
         "disbursementAmount": "Montant du décaissement",
         "payeeGrossAmount": "Montant brut du bénéficiaire",
         "timeliness": "Cronología",
-        "taxes": "Impuestos"
+        "taxes": "Impuestos",
+        "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
+        "selectDateInRange": "Seleccione una fecha dentro del rango:"
     },
     "enums": {
         "LIFE": "Vida",
