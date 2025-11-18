@@ -147,8 +147,7 @@ export const upcomingPaymentDetails = ({
   if (
     policyStatus !== PolicyStatus.PENDINGLAPSE &&
     upcomingPaymentValid &&
-    upcomingPaymentAmount &&
-    upcomingPaymentAmount > 0
+    upcomingPaymentAmount
   ) {
     let paymentCaption =
       nextActivityDate &&
