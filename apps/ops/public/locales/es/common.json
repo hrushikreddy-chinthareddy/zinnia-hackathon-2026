@@ -2927,6 +2927,8 @@
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Cancelado",
                 "tooltip": "Esta {{processSubType}} fue cancelada el ",
+                "leadExpired": "El cliente potencial expiró debido a 30 días de inactividad.",
+                "leadWithdrawn": "El solicitante retiró este cliente potencial.",
                 "application expired": "La solicitud expiró debido a 30 días de inactividad.",
                 "application withdrawn": "El solicitante retiró esta solicitud.",
                 "underwriting declined": "El suscriptor rechazó esta solicitud.",
