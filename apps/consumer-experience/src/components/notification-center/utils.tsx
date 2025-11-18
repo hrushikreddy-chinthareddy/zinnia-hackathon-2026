@@ -46,7 +46,7 @@ export const parseNotifications = (
   if (!shownStatuses.has(caseItem.caseStatus)) return null;
   const id = caseItem.id;
   const dateString = caseItem.updatedAt || caseItem.createdAt;
-  const caseGroup = caseItem.caseGroup;
+  const caseGroup = caseItem.caseGroup ?? '';
   if (!dateString) return null;
   const date = new Date(dateString);
   let stepsToAcknowledge;

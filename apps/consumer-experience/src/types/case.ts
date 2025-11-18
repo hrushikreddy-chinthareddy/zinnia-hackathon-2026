@@ -15,7 +15,7 @@ export enum CaseTypes {
 
 export interface CaseSummary extends CaseInstanceSummary {
   processSubType: string;
-  caseGroup?: string;
+  caseGroup: string;
 }
 
 export interface CaseSearchResponse
