@@ -10,14 +10,12 @@ export const CompletedTaskTimesHeader = () => {
         CompletedTaskTimeContext
     );
 
-    const totalTasks = completedTaskTimeDataFetching ? (
-        <div className="blur">
+    const totalTasks = (
+        <div className={`${completedTaskTimeDataFetching ? 'blur' : ''}`}>
             <p className={'typography-titles-subtitle'}>
-                {totalTaskCount} tasks
+                {totalTaskCount.toLocaleString()} tasks
             </p>
         </div>
-    ) : (
-        <p className={'typography-titles-subtitle'}>{totalTaskCount} tasks</p>
     );
     const { t } = useTranslation();
 

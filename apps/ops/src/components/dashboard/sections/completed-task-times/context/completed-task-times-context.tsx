@@ -4,7 +4,14 @@ import {
     CompletedTaskTimeInputFilter,
     CompletedCaseTimeOutputLevel1,
 } from '@xd/api-types/dist/generated-types/analytics';
-import { createContext, FC, PropsWithChildren, useMemo, useState } from 'react';
+import {
+    createContext,
+    FC,
+    PropsWithChildren,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
 
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
@@ -167,4 +174,16 @@ export const CompletedTaskTimeProvider: FC<PropsWithChildren> = ({
             {children}
         </CompletedTaskTimeContext.Provider>
     );
+};
+
+export const useCompletedTaskTimes = (): CompletedTaskTimeContextTypes => {
+    const context = useContext(CompletedTaskTimeContext);
+
+    if (!context) {
+        throw new Error(
+            'useCompletedTaskTimes must be used within a CompletedTaskTimeProvider'
+        );
+    }
+
+    return context;
 };

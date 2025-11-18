@@ -11,7 +11,7 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -25,7 +25,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { useDashboardStore } from '@deps/store/store';
 
-import { CompletedTaskTimeContext } from '../../context/completed-task-times-context';
+import { useCompletedTaskTimes } from '../../context/completed-task-times-context';
 import {
     CSV_COLUMNS,
     generateTasksCSVFilename,
@@ -57,7 +57,7 @@ export const CompletedTaskTimesTable = () => {
         completedTaskTimeDataLoading,
         completedTaskTimeDataError,
         timerange,
-    } = useContext(CompletedTaskTimeContext);
+    } = useCompletedTaskTimes();
 
     const { selectedCarriers } = useDashboardStore((state) => state);
 

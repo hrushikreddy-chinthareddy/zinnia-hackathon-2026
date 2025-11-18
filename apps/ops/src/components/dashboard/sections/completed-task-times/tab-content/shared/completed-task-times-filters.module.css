@@ -1,0 +1,5 @@
+.filterContainer {
+    display: flex;
+    justify-content: end;
+    margin: var(--measure-dimension-gap-lg) 0;
+}
