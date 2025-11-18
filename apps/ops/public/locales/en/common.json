@@ -2925,6 +2925,8 @@
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Canceled",
                 "tooltip": "This {{processSubType}} was canceled on ",
+                "leadExpired": "The lead expired due to 30 days of inactivity.",
+                "leadWithdrawn": "The applicant withdrew this lead.",
                 "application expired": "The application expired due to 30 days of inactivity.",
                 "application withdrawn": "The applicant withdrew this application.",
                 "underwriting declined": "The underwriter denied this application.",
