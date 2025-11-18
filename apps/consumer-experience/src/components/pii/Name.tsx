@@ -1,9 +1,10 @@
 'use client';
 
+import { DEFAULT_ERROR_STRING } from '@xd/utils/dist';
+
 import { PiiProps } from '@/types/pii';
 
 import { PiiWrapper } from './PiiWrapper';
-import { DEFAULT_ERROR_STRING } from '@xd/utils/dist';
 
 interface Props extends PiiProps {
   displayName?: string | null;

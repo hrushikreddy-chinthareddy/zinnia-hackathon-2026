@@ -1403,7 +1403,7 @@
                 "beneficiaryInformation": {
                     "title": "Información del beneficiario",
                     "perStirpes": "Por estirpe",
-                    "irrevocable": "Irevocable"
+                    "irrevocable": "Irrevocable"
                 }
             },
             "confirm": {
@@ -2137,9 +2137,7 @@
             "fileDeletedError": "No se pudo eliminar el archivo {{fileName}}"
         },
         "true": "Verdadero",
-        "false": "Falso",
-        "email": "Correo electrónico",
-        "emailTooltip": "Por favor, introduce una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo."
+        "false": "Falso"
     },
     "dashboard": {
         "h1": "Politiques  y Contratos",
@@ -2333,6 +2331,7 @@
         "assigned": "Asignado",
         "queue": "Cola",
         "lastUpdated": "Última actualización",
+        "prioritized": "Priorizado",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Actualizar Estado de la Tarea",
             "setTaskAsPending": "Establecer la tarea como programada",
@@ -2458,7 +2457,12 @@
             "requestSubtype": "Tipos de caso",
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
-            "assignee": "Cesionario"
+            "assignee": "Cesionario",
+            "priority": "Prioridad",
+            "selectPriority": "Seleccionar prioridad",
+            "onlyPrioritized": "Seulement priorité",
+            "any": "Tout",
+            "notPrioritized": "Non priorisé"
         },
         "refineResultsErrors": {
             "caseType": "Por favor, seleccione al menos un tipo de caso",
@@ -2479,6 +2483,11 @@
                 "Withdrawal": "Retiros",
                 "New Business": "Nuevo negocio",
                 "Renewal": "Renovaciones"
+            },
+            "escalated": {
+                "true": "Solo priorizado",
+                "false": "No priorizado",
+                "any": "Cualquiera"
             }
         },
         "selectStatus": "Seleccionar estado",
@@ -2563,7 +2572,9 @@
             "sswRequestValidation": "Validar transacción",
             "suitabilityReview": "Validar idoneidad",
             "toaLetter": "Notificar al transportista cedente de la transferencia",
-            "viewDetails": "Ver detalles"
+            "viewDetails": "Ver detalles",
+            "outboundDeathScrub": "Enviar archivo a PBI Research Services - CertiDeath",
+            "inboundDeathScrub": "Archivo recibido de PBI Research Services - CertiDeath"
         },
         "steps": {
             "requestAck.nbRequestReceived": "Recibir {{subType}}",
@@ -2638,7 +2649,8 @@
             "verifyFunds.stopSystematicPrograms": "Detener el programa sistemático",
             "verifyFunds.stopRMD": "Detener los RMD",
             "verifyFunds.stopSpecialPrograms": "Detener programas especiales",
-            "requestAck.receiveClaimRequest": "Detalles de la notificación de defunción"
+            "requestAck.receiveClaimRequest": "Detalles de la notificación de defunción",
+            "requestAck.outboundDeathScrub": "Enviar información sobre la póliza a PBI Research Services - CertiDeath"
         },
         "stepDescriptions": {
             "requestAck.nbRequestReceived": "Cuando se recibe un documento de {{subType}}, se indexa y se ingiere en el sistema.",
@@ -2849,6 +2861,22 @@
     },
     "caseOverview": {
         "headerText": "Resumen del Caso",
+        "prioritizeCase": {
+            "title": "Priorizar Caso",
+            "quickActions": "Acciones rápidas",
+            "Prioritized": "Priorizado",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso priorizado será movido como un elemento de trabajo para procesamiento acelerado.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} priorizado exitosamente",
+            "simpleTooltipBody": "Este caso está priorizado.",
+            "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
+        },
         "navDrawer": {
             "topStatus": "Estado Principal",
             "stage": "Etapa",
@@ -3095,7 +3123,8 @@
             "contactEstablished": "Contacto establecido",
             "beneficiaryDeceased": "Beneficiario fallecido",
             "scheduledTooltip": "{{followup}} intentos restantes hasta que comience el proceso de escheatment a menos que se establezca contacto.",
-            "finalTooltip": "Último intento restante a menos que se establezca contacto."
+            "finalTooltip": "Último intento restante a menos que se establezca contacto.",
+            "notificationRestarted": "Notificación reiniciada {{date}}"
         }
     },
     "caseRenewal": {
@@ -3231,6 +3260,7 @@
                 "residentialAddressTitle": "Dirección Residencial",
                 "title": "Detalles de la Dirección",
                 "mailingAddress": "Dirección",
+                "mailingAddressLine1": "ínea de dirección 1",
                 "mailingAddressLine2": "Línea de dirección 2",
                 "mailingAddressLine3": "Línea de dirección 3",
                 "city": "Ciudad",
@@ -3465,12 +3495,15 @@
                     "title": "Firma de la Compañía Cedente",
                     "qualType": "Tipo de calificación",
                     "isQualTypeNotValid": "No se puede determinar el tipo de calificación",
+                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
                     "isSignatureValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "isSignatureAuthorized": "¿Es válida la firma del oficial autorizado?",
                     "isLoaAttached": "¿Está adjunta la carta de aceptación?",
                     "validOwnerRegType": "Tipo de registro/propietario válido",
                     "isTitlePresent": "¿Está presente el título?",
-                    "loaSignDate": "Fecha de Firma de LOA"
+                    "loaSignDate": "Fecha de Firma de LOA",
+                    "authPersonSignPresent": "¿Está presente la firma de la persona autorizada?",
+                    "signDate": "Fecha de la firma"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Ausencia de Propietario Conjunto/Rentista en los documentos o en el contrato",
@@ -3519,7 +3552,8 @@
                 "yes": "Sí",
                 "no": "No",
                 "valid": "Válido",
-                "notValid": "No Válido"
+                "notValid": "No Válido",
+                "select": "Seleccionar"
             },
             "distributionMethod": {
                 "chooseBankingType": "Elegir tipo de banco",
@@ -3853,6 +3887,7 @@
                 "nameIsRequired": "Se requiere el nombre",
                 "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente",
                 "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                "signatureCityOptionMustBeSelected": "Debe seleccionar la opción de ciudad/estado",
                 "signatureValidOptionMustBeSelected": "Debe seleccionarse la opción Firma válida",
                 "signatureCommentMustBePresent": "El comentario de la firma debe estar presente",
                 "accountNumberDoesNotMatch": "El número de cuenta no coincide",
@@ -4817,6 +4852,25 @@
                 "tierOneCriticalRiderPaymentAmount": "Monto del pago de nivel uno",
                 "tierTwoCriticalRiderPaymentDate": "Fecha de pago del nivel dos",
                 "tierTwoCriticalRiderPaymentAmount": "Monto del pago de nivel dos",
+                "remainingBenefit": "Beneficio restante",
+                "additionalBenefitUsedUp": "Beneficio adicional utilizado",
+                "payoutOption": "Opción de pago",
+                "benefitPercent": "Porcentaje de beneficio",
+                "annualBenefitLimit": "Límite anual de beneficio",
+                "currentAnnualLimit": "Límite anual actual",
+                "remainingAnnualLimit": "Límite anual restante",
+                "hypotheticalAnnualLimit": "Límite anual hipotético",
+                "lastResetDate": "Último día de reinicio",
+                "totalBenefit": "Beneficio total",
+                "phase": "Fase",
+                "base_currentBase": "Base actual",
+                "base_ratchetBase": "Base de ajuste",
+                "base_growthBase": "Base de crecimiento",
+                "base_deferralBonus": "Bono base por aplazamiento",
+                "base_deferralBonusBase": "Base del bono base por aplazamiento",
+                "base_simpleInterestBase": "Base de interés simple",
+                "charge_riderExerciseCharge": "Cargo por ejercicio del usuario",
+                "charge_riderExerciseChargeRate": "Tasa del cargo por ejercicio del usuario",
                 "coverageType": "Tipo de cobertura",
                 "coverageName": "Nombre de la cobertura",
                 "productCode": "Código de producto",
@@ -4872,17 +4926,7 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporario",
                     "PERMANENT": "Permanente"
-                },
-                "remainingBenefit": "Beneficio restante",
-                "benefitPercent": "Porcentaje de beneficio",
-                "annualBenefitLimit": "Límite anual de beneficio",
-                "payoutOption": "Opción de pago",
-                "currentAnnualLimit": "Límite anual actual",
-                "phase": "Fase",
-                "totalBenefit": "Beneficio total",
-                "remainingAnnualLimit": "Límite anual restante",
-                "additionalBenefitUsedUp": "Beneficio adicional utilizado",
-                "hypotheticalAnnualLimit": "Límite anual hipotético"
+                }
             },
             "coverageID": {
                 "Rider_ADR": "Proporciona un beneficio por muerte adicional si el asegurado muere debido a un accidente cubierto.",
@@ -6145,7 +6189,8 @@
         "cardDisableTooltip": "Seguimos trabajando en esta página. Por ahora, dirígete directamente a MCS para ver la información de contacto y los datos de identificación del agente.",
         "other": "Otro",
         "otherTooltip": "Otros agentes de la póliza no ganan comisión, pero también pueden estar autorizados a realizar cambios o discutir esta póliza. Por ejemplo, el agente de servicio de la póliza es el agente que trabaja directamente con el propietario ahora que la póliza está activa.",
-        "managePeople": "Gestionar personas"
+        "managePeople": "Gestionar personas",
+        "irrevocable": "Irrevocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -6307,7 +6352,9 @@
         "email": "Correo Electrónico",
         "fax": "Fax",
         "socialSecurityNumber": "Número de seguro social",
-        "nationalProducerNumber": "Número Nacional de Productor"
+        "nationalProducerNumber": "Número Nacional de Productor",
+        "estimatedCompletion": "Finalización estimada",
+        "estimatedCompletionToolTip": "Predicción generada por IA basada en los tiempos de finalización históricos de casos similares. La estimación se establece cuando se crea el caso y no cambia a medida que el caso avanza."
     },
     "bannerAlert": {
         "close": "Cerrar"
@@ -7449,6 +7496,24 @@
         },
         "settlementInProgress": "El acuerdo está en curso."
     },
+    "complianceDBUpdate": {
+        "noData": "Detalles del archivo no disponibles.",
+        "loadingTransactions": "Recuperando detalles del archivo...",
+        "errorGettingTransactions": "No se pudieron recuperar los detalles del archivo.",
+        "details": "Detalles"
+    },
+    "receiveNewDocument": {
+        "noData": "No hay nuevos detalles del documento disponibles.",
+        "loadingTransactions": "Recuperando nuevos detalles del documento...",
+        "errorGettingTransactions": "No se pudieron recuperar los datos del nuevo documento.",
+        "title": "Detalles",
+        "source": "Fuente",
+        "deceasedSsn": "Número de Seguro Social del fallecido:",
+        "deceasedFirstName": "Nombre del fallecido:",
+        "deceasedLastName": "Apellido del fallecido:",
+        "deceasedDob": "Fecha de nacimiento del fallecido:",
+        "deceasedDod": "Fecha de fallecimiento:"
+    },
     "deathAuditFiles": {
         "noData": "Detalles del archivo no disponibles.",
         "loadingTransactions": "Recuperando detalles del archivo...",
@@ -7737,13 +7802,23 @@
                 "matchDocument": "Coincidir Documento",
                 "beneficiaryStatus": "Estado del Beneficiario",
                 "addressChange": "Cambio de Dirección",
-                "call": "Llamar"
+                "call": "Llamar",
+                "formReview": "Revisión del formulario"
             }
         },
         "formErrors": {
             "caseNotFound": "Caso no encontrado",
             "correlationIdNotFount": "ID de correlación no encontrado",
             "transactionNotFound": "Transacción no encontrada"
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entiendo!",
+            "subTitle": "Tarea: Se envió la entrada de datos de cambio de beneficiario.",
+            "cta": "Ir al caso",
+            "secondaryCta": "De vuelta a casa",
+            "submitTask": "Entregar"
         }
     },
     "purchaseDocumentMatching": {
@@ -8049,8 +8124,22 @@
     },
     "updateNotificationMethodForBeneficiary": {
         "tabs": {
-            "updateNotificationMethod": "Update Notification Method",
-            "confirm": "Confirm"
+            "contactEstablished": "Contacto establecido",
+            "updateNotificationMethod": "Método de notificación de actualización",
+            "confirm": "Confirmar"
+        },
+        "contactEstablishedStep": {
+            "title": "Contacto establecido",
+            "selectOption": "Seleccione una de las siguientes opciones:",
+            "contactEstablished": {
+                "contactEstablishedRestartProcess": "Contacto establecido – Reiniciar proceso",
+                "updateNotificationMethod": "Método de notificación de actualización"
+            },
+            "formErrors": {
+                "formValidation": {
+                    "contactEstablishedIsRequired": "Seleccione una opción para continuar."
+                }
+            }
         },
         "updateNotificationMethodStep": {
             "title": "Update Notification Method",
@@ -8166,6 +8255,36 @@
             "submitTask": "Enviar"
         }
     },
+    "agentChangeDetail": {
+    "confirmStep": {
+        "title": "¡Entendido!",
+        "subTitle": "Las actualizaciones del agente fueron enviadas.",
+        "cta": "Ir al caso",
+        "secondaryCta": "Volver al inicio",
+        "submitTask": "Enviar"
+    },
+    "summary": {
+        "agentType": "Tipo de agente",
+        "allocation": "Asignación",
+        "externalId": "ID externo",
+        "bpm500Error": "Error BPM 500",
+        "header": "Resumen",
+        "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
+        "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
+        "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+        "tag": {
+            "new": "Agregado",
+            "none": "Ninguno",
+            "removed": "Eliminado",
+            "updated": "Actualizado"
+        },
+        "validation": "La API de validación está ejecutándose..."
+    },
+    "agentDetails": {
+        "allocationErr": "Las asignaciones deben ser iguales al 100%"
+    }
+}
+,
     "fundAllocation": {
         "submitted": "¡Enviado!",
         "editAllocationNigoSummary1": "Hemos enviado esta solicitud para ",
@@ -8252,6 +8371,15 @@
             "submitTask": "Enviar"
         }
     },
+    "claimsDeathAuditContractMatching": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Se envió el Match Death Case.",
+            "cta": "Ir al reclamo de muerte",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
     "nbPurchaseEnrichment": {
         "confirmStep": {
             "title": "¡Entendido!",
@@ -8300,6 +8428,7 @@
             "cancel": "Cancelar",
             "noChangesRequired": "No se requirieron cambios",
             "yes": "Sí",
+            "no": "No",
             "name": "Nombre",
             "phone": "Télefono",
             "contactRole": "Contact Role",
@@ -8316,6 +8445,7 @@
             "newInformation": "Nueva información",
             "relationshipToOwner": "Relación con el fallecido",
             "didYouMakeAnyChanges": "¿Hizo algún cambio en el sistema de registro?",
+            "wasContactEstablished": "¿Se estableció contacto?",
             "addAnotherCall": "Agregar otra llamada",
             "contactRoles": {
                 "agent": "Agente",
@@ -8326,6 +8456,7 @@
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
+            "contactEstablished": "Contacto establecido",
             "errors": {
                 "addressIsRequired": "Seleccione una dirección para continuar",
                 "emailIsRequired": "Se requiere correo electrónico",
@@ -8342,12 +8473,13 @@
                 "relationshipToOwner": "Se requiere relación con el propietario",
                 "changeRequireRequired": "Por favor seleccione una opción",
                 "changeTypeRequired": "Por favor seleccione un nuevo tipo de información",
-                "callSummaryRequired": "Se requiere resumen de llamada"
+                "callSummaryRequired": "Se requiere resumen de llamada",
+                "contactEstablishedRequired": "Por favor seleccione una opción"
             }
         },
         "confirmStep": {
             "title": "¡Entendido!",
-            "subTitle": "Tarea: Verificación de beneficiarios de reclamación de muerte fue enviada.",
+            "subTitle": "Tarea: Se envió la información para contactar a los beneficiarios.",
             "cta": "Ir al expediente de reclamación",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
@@ -8374,7 +8506,7 @@
     "day150Review": {
         "confirmStep": {
             "title": "¡Entendido!",
-            "subTitle": "Tarea: Operación Review fue enviada.",
+            "subTitle": "Tarea: Se envió la información final a los beneficiarios.",
             "cta": "Ir al caso",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
@@ -8386,6 +8518,7 @@
             "cancel": "Cancelar",
             "noChangesRequired": "No se requirieron cambios",
             "yes": "Sí",
+            "no": "No",
             "name": "Nombre ",
             "phone": "Télefono",
             "contactRole": "Contact Role",
@@ -8403,6 +8536,7 @@
             "relationshipToDeceased": "Relación con el propietario",
             "relationshipToOwner": "Relación con el fallecido",
             "didYouMakeAnyChanges": "¿Hizo algún cambio en el sistema de registro?",
+            "wasContactEstablished": "¿Se estableció contacto?",
             "addAnotherCall": "Agregar otra llamada",
             "contactRoles": {
                 "agent": "Agente",
@@ -8413,6 +8547,7 @@
                 "beneficiaryNotificationChange": "Cambio de notificación de beneficiario",
                 "beneficiaryDeceased": "Beneficiario fallecido"
             },
+            "contactEstablished": "Contacto establecido",
             "errors": {
                 "addressIsRequired": "Seleccione una dirección para continuar",
                 "emailIsRequired": "Se requiere correo electrónico",
@@ -8429,7 +8564,8 @@
                 "relationshipToOwner": "Se requiere relación con el propietario",
                 "changeRequireRequired": "Por favor seleccione una opción",
                 "changeTypeRequired": "Por favor seleccione un nuevo tipo de información",
-                "callSummaryRequired": "Se requiere resumen de llamada"
+                "callSummaryRequired": "Se requiere resumen de llamada",
+                "contactEstablishedRequired": "Por favor seleccione una opción"
             }
         }
     },
@@ -8444,7 +8580,8 @@
             "cancel": "Cancelar",
             "no": "No",
             "yes": "Sí"
-        }
+        },
+        "errors": { "beneDeceased": "Por favor seleccione una opción" }
     },
     "claimsMatchBeneDocument": {
         "confirmStep": {
@@ -8472,6 +8609,31 @@
             "cta": "Ir al caso",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
+        }
+    },
+    "caseStats": {
+        "tabs": {
+            "issue": "Problemas",
+            "tasks": "Tareas"
+        },
+        "tasks": {
+            "title": "Volumen de tareas",
+            "description": "Volumen de tareas creadas durante un período seleccionado, agrupadas por tipo de caso y por tarea.",
+            "filters": {
+                "status": {
+                    "label": "Estado",
+                    "placeholder": "Todas"
+                }
+            },
+            "table": {
+                "headers": {
+                    "caseType": "Tipo de caso",
+                    "task": "Tarea",
+                    "totalTasks": "Total de tareas"
+                },
+                "allTasks": "Todas las tareas",
+                "exportCSV": "Exportar a CSV"
+            }
         }
     },
     "usage": {

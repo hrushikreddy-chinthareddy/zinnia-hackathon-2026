@@ -28,24 +28,20 @@ const displayAddressType: { [key in AddressType]?: string } = {
 };
 
 const AddressGroup = ({
-  addresses,
-  preferredAddressIndicator,
+  allAddresses,
+  filteredAddresses,
   showEditButton,
   partyId,
   userOnlyHasOneAddress,
 }: {
-  addresses: AddressInterface[];
-  preferredAddressIndicator?: string;
+  allAddresses: AddressInterface[];
+  filteredAddresses: AddressInterface[];
   showEditButton?: boolean;
   partyId: string;
   userOnlyHasOneAddress: boolean;
 }) => {
-  return addresses?.map((address, index) => {
-    const isPreferredAddress =
-      !!preferredAddressIndicator &&
-      preferredAddressIndicator === address?.addressId;
-
-    const mailingAddressText = isPreferredAddress ? 'Mailing address' : '';
+  return filteredAddresses?.map((address, index) => {
+    const mailingAddressText = address.isPreferred ? 'Mailing address' : '';
 
     //Build out the addresses array by taking all the address lines and making sure we filter all the bad values out
     // there has to be a prettier and easier way of doing this
@@ -67,7 +63,7 @@ const AddressGroup = ({
       city: address.city,
       state: address.state as unknown as AddressChange.state,
       zipCode: address.zipCode,
-      defaultAddress: isPreferredAddress,
+      defaultAddress: address.isPreferred,
     };
 
     return (
@@ -86,6 +82,7 @@ const AddressGroup = ({
                     addressId={address.addressId}
                     fullAddressData={address}
                     disableEditingPreferredAddress={userOnlyHasOneAddress}
+                    addresses={allAddresses}
                   />,
                 ],
               })}
@@ -122,7 +119,6 @@ const AddressGroup = ({
 
 export const Addresses = ({
   addresses,
-  preferredAddressIndicator,
   partyId,
   allowAddressChanges,
 }: AddressProps) => {
@@ -149,29 +145,29 @@ export const Addresses = ({
     <div className={styles.itemsRowContainer}>
       <div className={styles.itemsRow}>
         <AddressGroup
-          addresses={residentialAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
+          allAddresses={addresses}
+          filteredAddresses={residentialAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
-          addresses={boxAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
+          allAddresses={addresses}
+          filteredAddresses={boxAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
-          addresses={businessAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
+          allAddresses={addresses}
+          filteredAddresses={businessAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}
         />
         <AddressGroup
-          addresses={mailingAddresses}
-          preferredAddressIndicator={preferredAddressIndicator}
+          allAddresses={addresses}
+          filteredAddresses={mailingAddresses}
           showEditButton={allowAddressChanges}
           partyId={partyId}
           userOnlyHasOneAddress={userOnlyHasOneAddress}

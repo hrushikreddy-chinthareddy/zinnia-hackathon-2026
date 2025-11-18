@@ -1,7 +1,8 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
+import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from '@/types/policy';
 
+import { isEndDated } from './dates';
 import { logTrace } from './logging/log-fns';
 import { toTitleCase } from './strings';
 
@@ -100,4 +101,21 @@ export const filterOutCoverageInsuredParties = (parties: PolicyParty[]) => {
   }
 
   return result;
+};
+
+export const filterOutEndDatedParties = (
+  parties: PolicyParty[],
+  partyRoles: PolicyPartyRoles[]
+) => {
+  return parties.filter(party => {
+    const rolesForParty = partyRoles.filter(
+      role => role?.partyId === party.partyId
+    );
+    if (!rolesForParty.length) return true;
+
+    return rolesForParty.some(role => {
+      const isEndDatedParty = isEndDated(role?.endDate);
+      return !isEndDatedParty;
+    });
+  });
 };

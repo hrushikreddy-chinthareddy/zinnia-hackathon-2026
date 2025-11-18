@@ -1,6 +1,7 @@
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
+import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -214,10 +215,24 @@ describe('RSLN withdrawal form config', () => {
             isSpousalConsentRequired: { text: false },
             signatures: [signature],
         };
-        it('should provide no errors for a valid form', () => {
-            expect(formValidation({ formParty, formSignature })).toEqual({
-                OwnerIsSignatureValid:
-                    'formValidation.signatureValidOptionMustBeSelected',
+        const formESignatureData: FormEsignatureData = {
+            isFormESignaturePresent: true,
+            eSignatures: [
+                {
+                    signType: { text: 'Owner' },
+                    isSigned: null,
+                    signDate: { text: '' },
+                    isAuditTrail: null,
+                    isAccordForm: null,
+                },
+            ],
+        };
+        it('should provide e-signature errors for eSign selected form', () => {
+            expect(
+                formValidation({ formParty, formSignature, formESignatureData })
+            ).toEqual({
+                'Owner-e-signature-present':
+                    'formValidation.signaturePresentOptionMustBeSelected',
             });
         });
     });

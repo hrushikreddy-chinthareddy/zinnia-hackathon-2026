@@ -16,7 +16,6 @@ import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-for
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import {
     SignatureBonusFields,
-    SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
@@ -51,6 +50,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../utils/form-validator.helpers';
 
 export enum FormSubtype {
     FullWithdrawal = 'Full',
@@ -220,26 +220,6 @@ export default function getGdmnConfig(t: TFunction) {
             },
         },
         {
-            key: `sig-val-beneficiary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
-                },
-
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-            ],
-            signatureType:
-                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-        },
-        {
             key: `sig-val-spouse`,
             bonusField: SignatureBonusFields.SpousalConsent,
             fields: [
@@ -284,6 +264,7 @@ export default function getGdmnConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -311,20 +292,15 @@ export default function getGdmnConfig(t: TFunction) {
                 );
             }
         }
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
 
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
 
-        return errors;
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -759,6 +735,7 @@ export default function getGdmnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -822,6 +799,7 @@ export default function getGdmnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({

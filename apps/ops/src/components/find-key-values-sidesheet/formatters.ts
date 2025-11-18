@@ -2,7 +2,10 @@ import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
 import { TFunction } from 'next-i18next';
 
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    numberFormatify,
+    percentFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { currencyFields } from './translations/currency-fields';
@@ -10,6 +13,7 @@ import { dateFields } from './translations/date-fields';
 import { excludeFields } from './translations/exclude-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
+import { percentageFields } from './translations/percentage-fields';
 import {
     label,
     tags,
@@ -207,7 +211,11 @@ export const formatAsDataValue = ({
 
     // Currency
     if (fieldName && currencyFields.has(fieldName))
-        return numberFormatify(String(fieldData));
+        return numberFormatify(Number(fieldData));
+
+    // Percentages
+    if (fieldName && percentageFields.has(fieldName))
+        return percentFormatify(Number(fieldData), { isInteger: true });
 
     // Dates
     if (fieldName && dateFields.has(fieldName))

@@ -10,10 +10,7 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
@@ -42,6 +39,7 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getNasuRmdConfig(t: TFunction) {
     const formPartyConfigs: PartyConfig[] = [
@@ -503,10 +501,11 @@ export default function getNasuRmdConfig(t: TFunction) {
         ],
     };
 
-    const rmdFormValidation = ({
+    const formValidation = ({
         formSignature,
         formDisbursement,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -536,12 +535,6 @@ export default function getNasuRmdConfig(t: TFunction) {
             }
         }
 
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
-
         const rmds = formProgram?.rmd?.rmdPrograms;
 
         if (rmds && rmds?.length === 0) {
@@ -550,18 +543,14 @@ export default function getNasuRmdConfig(t: TFunction) {
             );
         }
 
-        // No choice made for signature
-        if (
-            ownerSignature &&
-            ownerSignature?.isSigned !== false &&
-            !ownerSignature?.isSigned
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
 
-        return errors;
+        return { ...errors, ...signESignValidate };
     };
 
     const eSignatureFieldConfig = {
@@ -575,7 +564,7 @@ export default function getNasuRmdConfig(t: TFunction) {
         formPartyConfigs,
         signaturesConfig,
         signaturesNotaryConfig,
-        formValidation: rmdFormValidation,
+        formValidation,
         handleShouldShowDOBInOl4573,
         w4pSignaturesConfig,
         disbursementOptions,

@@ -70,6 +70,9 @@ export enum TaskType {
     Quality_Rework_Audit_Review = 'QUALITY_REWORK_AUDIT_REVIEW',
     Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
     Third_Party_Detail = 'THIRD_PARTY_DETAIL',
+    Agent_Change_Detail = 'AGENT_CHANGE_DETAIL',
+    Initiate_BeneChange_Transaction = 'INITIATE_BENECHANGE_TRANSACTION',
+    Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
 }
 
 export enum EarlyTaskType {
@@ -189,6 +192,7 @@ export interface renewalsFormParts {
 }
 export type TabSchema = {
     title?: string;
+    tabTitle?: string;
     description?: string;
     formSchema: RJSFSchema;
     uiSchema: UiSchema;

@@ -56,6 +56,7 @@ export type BankFieldConfig = {
     ) => string;
     error?: string;
     disableCopyPaste?: boolean;
+    isAddressLine2Required?: boolean;
 };
 
 export type Tooltip = {
@@ -221,4 +222,5 @@ export interface DisbursementParts {
     fboDetails: string;
     consentAvailable: boolean | null;
     ChooseBankingType: string;
+    isAddressLine2Required?: boolean;
 }

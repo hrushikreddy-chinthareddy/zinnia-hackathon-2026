@@ -21,10 +21,8 @@ const meta: Meta<typeof Addresses> = {
     ),
   ],
   args: {
-    preferredAddressIndicator: '1',
     addresses: [
       {
-        // preferredAddressIndicator: '1',
         addressId: '1',
         startDate: '2024-01-01',
         // endDate: null,
@@ -37,9 +35,9 @@ const meta: Meta<typeof Addresses> = {
         zipCode: '67846',
         // zipCodeExtension: null,
         country: 'US' as Country,
+        isPreferred: true,
       },
       {
-        // preferredAddressIndicator: '1',
         addressId: '2',
         startDate: '2024-01-01',
         // endDate: null,
@@ -54,7 +52,6 @@ const meta: Meta<typeof Addresses> = {
         country: 'US' as Country,
       },
       {
-        // preferredAddressIndicator: '1',
         addressId: '3',
         startDate: '2024-01-01',
         // endDate: null,
@@ -80,10 +77,9 @@ export const Default: StoryType = {};
 
 export const Single: StoryType = {
   args: {
-    preferredAddressIndicator: '1',
     addresses: [
       {
-        // preferredAddressIndicator: '1',
+        isPreferred: true,
         addressId: '1',
         startDate: '2024-01-01',
         // endDate: null,

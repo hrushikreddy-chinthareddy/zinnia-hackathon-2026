@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
@@ -12,10 +11,7 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import { WaiverItemConfig } from '@deps/components/otp-withdrawal-form/form-waivers/form-waivers';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { SignVerificationReasonItem } from '@deps/components/otp-withdrawal-form/signature-validation/signature-verification-reason';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
@@ -51,6 +47,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import useMassWithdrawalConfig from '../../withdrawal-forms/mass/mass-withdrawal-form-helpers';
 
 const getStandardYesNoOptions = (t: TFunction) => [
     {
@@ -64,84 +61,19 @@ const getStandardYesNoOptions = (t: TFunction) => [
 ];
 
 export default function useMassSSWConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({
-            formSignature,
-            formDisbursement,
-        }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            if (
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !==
-                        formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t(
-                        'formValidation.accountNumberDoesNotMatch'
-                    );
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !==
-                        formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                        'formValidation.routingNumberDoesNotMatch'
-                    );
-                }
-            }
-
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                errors[BankingFields.AccountType] = t(
-                    'formValidation.accountTypeMustBeSelected'
-                );
-            }
-
-            if (ownerSignature?.isDesignationPresent === null) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-                ] = t('formValidation.signatureDesignationMustBeSelected');
-            }
-
-            return errors;
-        },
-        [t]
-    );
+    const { formValidation } = useMassWithdrawalConfig(t);
 
     const sswFormValidation = ({
         formParty,
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = formValidation({
             formParty,
             formSignature,
             formDisbursement,
+            formESignatureData,
         });
 
         return errors;
@@ -360,6 +292,7 @@ export default function useMassSSWConfig(t: TFunction) {
                     fieldName: BankingFields.Address,
                     fieldLabel: '',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
                 {
                     fieldName: BankingFields.TaxId,

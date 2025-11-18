@@ -1,5 +1,5 @@
 import { toTitleCase } from '@xd/utils/dist';
-import get from 'lodash/get';
+import { merge } from 'lodash';
 import last from 'lodash/last';
 
 import { NEW_BUSINESS_API_ORIGIN } from '@deps/queries/api/server/v2/new-business';
@@ -8,8 +8,10 @@ import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { NewBusiness, party, Policy } from '@deps/types/new-business';
 import { LoggingContext } from '@deps/utils/server-logging';
 
+import { buildConversionData } from './conversions';
 import { getAgencyIdFromHierarchy } from './get-agency-id-from-hierarchy';
 import { getSellingcodeFromPartyReference } from './get-selling-code-from-party-reference';
+import { validateRequiredFields } from './validate-required-fields';
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
 enum AgentBusinessLabel {
@@ -30,21 +32,6 @@ export const isAgentBusinessLabel = (
         value as AgentBusinessLabel
     );
 };
-
-/**
- * Returns an array with the readable names of missing fields of an object
- * Validate required paths, considering external system may omit fields or return blank values
- */
-const validateRequiredFields = (
-    object: any,
-    requiredFieldsPathArray: Record<string, string>
-) =>
-    Object.entries(requiredFieldsPathArray)
-        .filter(([path]) => {
-            const value = get(object, path);
-            return value === null || value === undefined || value === '';
-        })
-        .map(([_, label]) => label);
 
 const INSURED_PARTY_REQUIRED_FIELDS = {
     firstName: 'Insured first name',
@@ -120,8 +107,6 @@ export const buildInsuredDetailsFromNewbusiness = (
         // nicotineUser
         // illustrateAtOlderAge
         // issueAge
-        // riskClass
-        // riskClassCode
     };
 };
 
@@ -301,12 +286,18 @@ export const buildClientCaseFromNewBusiness = async (
         );
     }
 
-    return {
-        eAppId,
-        caseManagementCaseId: caseId,
-        title: 'Untitled Client Case',
-        insuredDetails,
-        agentDetails,
-        agencyId,
-    };
+    // Extract conversion data (if available)
+    const conversionData = buildConversionData(newBusinessObject);
+
+    return merge(
+        {
+            eAppId,
+            caseManagementCaseId: caseId,
+            title: 'Untitled Client Case',
+            insuredDetails,
+            agentDetails,
+            agencyId,
+        },
+        conversionData
+    );
 };

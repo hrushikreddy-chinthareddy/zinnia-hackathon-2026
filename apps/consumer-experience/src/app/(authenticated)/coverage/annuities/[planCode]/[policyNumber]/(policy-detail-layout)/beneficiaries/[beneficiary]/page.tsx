@@ -71,7 +71,7 @@ export default async function Beneficiary({
     );
   }
 
-  // TODO: do benes show preferredAddressIndicator?
+  // TODO: do benes show preferred Address?
   const address = () => {
     if (data.addresses) {
       const currentAddresses = filterItemsWithPastEndDate(data.addresses);
@@ -81,7 +81,6 @@ export default async function Beneficiary({
             <h2 className="mb-lg">Address</h2>
             <Addresses
               addresses={currentAddresses as Address[]}
-              preferredAddressIndicator="1"
               partyId={partyId}
               allowAddressChanges={allowAddressChanges}
             />

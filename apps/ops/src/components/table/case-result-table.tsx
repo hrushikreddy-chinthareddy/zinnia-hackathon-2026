@@ -270,6 +270,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <CaseDetailField
                         text={singleCase.id}
                         className={styles.detail}
+                        escalated={singleCase.escalated ?? false}
                         highlights={
                             searchValues?.caseId ? [searchValues.caseId] : null
                         }
@@ -322,8 +323,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                     src={imageSrc}
                                     alt={`${singleCase.carrier} icon`}
                                     role="presentation"
-                                    height={24}
-                                    width={24}
+                                    height={14}
+                                    width={14}
                                 />
                                 <span className="sr-only">
                                     {singleCase.carrier} icon

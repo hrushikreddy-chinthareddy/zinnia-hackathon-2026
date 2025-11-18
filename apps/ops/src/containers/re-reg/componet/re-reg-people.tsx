@@ -213,7 +213,7 @@ export const ReRegPeopleView = ({
                                 />
                                 {beneficiaryDataByType(
                                     peopleSelection.cardActionData.filteredData,
-                                    BeneficiaryType.CONTIGENT
+                                    BeneficiaryType.CONTINGENT
                                 )?.length ? (
                                     <BeneficiaryCardContainer
                                         title={t('people.contingentAllocation')}
@@ -221,9 +221,9 @@ export const ReRegPeopleView = ({
                                         filteredData={beneficiaryDataByType(
                                             peopleSelection.cardActionData
                                                 .filteredData,
-                                            BeneficiaryType.CONTIGENT
+                                            BeneficiaryType.CONTINGENT
                                         )}
-                                        type={BeneficiaryType.CONTIGENT}
+                                        type={BeneficiaryType.CONTINGENT}
                                         isRereg={true}
                                     />
                                 ) : null}

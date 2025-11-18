@@ -54,7 +54,7 @@ const options = [
 ];
 
 type TaxWithholdingsProps = {
-  taxWithholdingState: string;
+  taxWithholdingState?: string;
 };
 
 export const TaxWithholdings = ({
@@ -220,8 +220,10 @@ export const TaxWithholdings = ({
             labelFor="tax-withholdings-state"
           >
             How much State tax{' '}
-            {taxWithholdingState.length > 0 && `(${taxWithholdingState})`} would
-            you like to withhold?
+            {taxWithholdingState &&
+              taxWithholdingState.length > 0 &&
+              `(${taxWithholdingState})`}{' '}
+            would you like to withhold?
           </Label>
           <Controller
             control={form.control}

@@ -37,6 +37,7 @@ const FormDisbursementSection = ({
                         maskOnBlur,
                         disableCopyPaste,
                         validator,
+                        isAddressLine2Required,
                     } = currentField;
                     if (
                         shouldDisplay &&
@@ -62,6 +63,7 @@ const FormDisbursementSection = ({
                         error: formDataContext.formErrors[fieldName],
                         validator,
                         disableCopyPaste,
+                        isAddressLine2Required,
                     });
                 })}
         </div>

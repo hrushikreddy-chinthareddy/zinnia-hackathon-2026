@@ -29,9 +29,21 @@ export type CaseAdditionalData = {
     value?: string;
 };
 
+export type caseProcessingDetails = {
+    detailType: string;
+    details: {
+        performedBy?: string;
+        source?: string;
+        partyId?: string;
+        applicationType?: string;
+    };
+    eventTimeStamp: number;
+};
+
 export type Case = {
     additionalData: AdditionalDataInstance;
     applicationType?: string;
+    escalated?: boolean;
     carrier: string;
     caseAdditionalData?: CaseAdditionalData[];
     caseStatus: Statuses;
@@ -68,16 +80,7 @@ export type Case = {
     updatedAt: string;
     caseResult?: string;
     caseResultDetail?: string;
-    caseProcessingDetails?: {
-        detailType: string;
-        details: {
-            performedBy?: string;
-            source?: string;
-            partyId?: string;
-            applicationType?: string;
-        };
-        eventTimeStamp: number;
-    }[];
+    caseProcessingDetails?: caseProcessingDetails[];
 };
 
 // Case Type and a Case's Process are the same

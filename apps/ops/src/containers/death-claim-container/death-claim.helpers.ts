@@ -11,7 +11,9 @@ import { v4 as uuid4 } from 'uuid';
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { DocumentData } from '@deps/models/case/document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { UserProfile } from '@deps/models/user-profile';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import {
@@ -116,21 +118,36 @@ const formatNotifier = (value: any) => {
     };
 };
 
-export const buildClaimPaylod = (
-    policy: Policy,
-    document: any = {},
-    selNotifiers: NotifierParty,
-    selOwners: DeceasedParty[],
-    selBeneficiaries: NotificationMethod[],
-    onbaseCaseId: string,
-    onbaseDocumentNumber: string
-) => {
+interface ClaimPayloadParams {
+    policy: Policy;
+    document: DocumentData | null;
+    selNotifiers: NotifierParty;
+    selOwners: DeceasedParty[];
+    selBeneficiaries: NotificationMethod[];
+    onbaseCaseId: string;
+    onbaseDocumentNumber: string;
+    user: UserProfile;
+    correlationId: string;
+}
+
+export const buildClaimPayload = ({
+    policy,
+    document,
+    selNotifiers,
+    selOwners,
+    selBeneficiaries,
+    onbaseCaseId,
+    onbaseDocumentNumber,
+    user,
+    correlationId,
+}: ClaimPayloadParams) => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
     const ownersRec = selOwners.map((item: any) => formatBene(item));
+
     return {
         ...DEFAULT_PAYLOAD,
         businessKey: document?.documentNumber,
-        correlationid: uuid4(),
+        correlationid: correlationId || uuid4(),
         onbaseCaseId: onbaseCaseId,
         onbaseDocumentNumber: onbaseDocumentNumber,
         caseId: null,
@@ -145,6 +162,9 @@ export const buildClaimPaylod = (
         notifiers: formatNotifier(selNotifiers),
         owners: ownersRec,
         beneficiaries: selBeneficiaries,
+        submittedBy: user?.email ?? '',
+        submittedByPartyId: user?.partyId ?? '',
+        source: 'Zinnia Live',
     };
 };
 
@@ -174,9 +194,6 @@ export const DEFAULT_PHONE = {
 
 export const DEFAULT_PARTY = {
     partyId: '',
-    //partyRoleId: '',
-    //partyRole: '',
-    //partyType: '',
     prefix: '',
     suffix: null,
     firstName: '',

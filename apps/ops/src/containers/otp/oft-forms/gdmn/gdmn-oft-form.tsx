@@ -120,16 +120,6 @@ export default function GdmnOftWithdrawalForm({
                     isLoanRepayment={true}
                 />
             )}
-            {is403b && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
-
             <CedingCompanyDistribution
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
@@ -142,6 +132,10 @@ export default function GdmnOftWithdrawalForm({
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -151,6 +145,11 @@ export default function GdmnOftWithdrawalForm({
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {is403b && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

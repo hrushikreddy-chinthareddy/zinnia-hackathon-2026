@@ -6,7 +6,7 @@ import {
     WidgetProps,
 } from '@rjsf/utils';
 import { IconType } from '@zinnia/bloom/components';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import Radio, {
     RadioItem,
@@ -77,8 +77,20 @@ function RadioWidget<
         readonly,
     } = widgetProps;
     const { enumOptions, enumDisabled, inline } = options;
-    const { customOptions, props, properties, cardType, icon, sectionTitle } =
-        getUiOptions<T, S, F>(uiSchema);
+    const {
+        customOptions,
+        props,
+        properties,
+        cardType,
+        icon,
+        sectionTitle,
+        allowNullValue,
+        showReadOnlyCardView = false,
+    } = getUiOptions<T, S, F>(uiSchema);
+
+    useEffect(() => {
+        allowNullValue && onChange(value || null);
+    }, [allowNullValue]);
 
     const apiProps =
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -184,10 +196,11 @@ function RadioWidget<
         }
     };
 
-    if (readonly)
+    if (readonly && !showReadOnlyCardView) {
         return (
             <>{enumOptions?.find((option) => option.value === value)?.label}</>
         );
+    }
 
     const selectedValue = newOptions?.find(
         (option) => option.value === stringifyObjectValue(value)
@@ -197,7 +210,11 @@ function RadioWidget<
         <div>
             <Radio
                 id={id}
-                items={newOptions as RadioItem[]}
+                items={
+                    newOptions.filter(
+                        (option) => option.value !== null
+                    ) as RadioItem[]
+                }
                 value={selectedValue as string}
                 disabled={disabled}
                 readonly={readonly}

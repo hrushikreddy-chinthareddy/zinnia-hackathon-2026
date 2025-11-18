@@ -51,7 +51,7 @@ export const CommunicationPreferenceSidesheet = ({
   };
 
   const mailingAddress = profileData.addresses.find(
-    address => address.addressId === profileData.preferredAddressIndicator
+    address => address.isPreferred
   );
 
   // Call api to update the communication preferences
