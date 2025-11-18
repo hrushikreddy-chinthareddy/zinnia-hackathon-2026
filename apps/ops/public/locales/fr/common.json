@@ -8876,9 +8876,9 @@
                     "maxTime": "Temps de traitement maximal",
                     "minTime": "Temps de traitement minimal",
                     "task": "Tâche",
-                    "totalTasks": "Toutes les tâches"
+                    "totalTasks": "Nombre total de tâches"
                 },
-                "allTasks": "All tasks",
+                "allTasks": "Toutes les tâches",
                 "exportCSV": "Exporter en CSV"
             }
         }

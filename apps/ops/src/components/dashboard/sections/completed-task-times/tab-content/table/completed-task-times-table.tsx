@@ -45,6 +45,8 @@ enum SortByOptions {
     MIN_TIME = 'secondLow',
 }
 
+export const ICON_COLOR = 'var(--color-secondary-color-secondary)';
+
 export const CompletedTaskTimesTable = () => {
     const [offset, setOffset] = useState(0);
     const limit = 6; // Show 6 case types per page
@@ -172,7 +174,7 @@ export const CompletedTaskTimesTable = () => {
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
-                                            color="#00628B"
+                                            color={ICON_COLOR}
                                             height={16}
                                             width={16}
                                         />
@@ -191,7 +193,7 @@ export const CompletedTaskTimesTable = () => {
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
-                                            color="#00628B"
+                                            color={ICON_COLOR}
                                             height={16}
                                             width={16}
                                         />
@@ -208,7 +210,7 @@ export const CompletedTaskTimesTable = () => {
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
-                                            color="#00628B"
+                                            color={ICON_COLOR}
                                             height={16}
                                             width={16}
                                         />
@@ -225,7 +227,7 @@ export const CompletedTaskTimesTable = () => {
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
-                                            color="#00628B"
+                                            color={ICON_COLOR}
                                             height={16}
                                             width={16}
                                         />
@@ -249,7 +251,7 @@ export const CompletedTaskTimesTable = () => {
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
-                                            color="#00628B"
+                                            color={ICON_COLOR}
                                             height={16}
                                             width={16}
                                         />

@@ -1,13 +1,16 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 
-import { defaultDateFormat } from '@deps/components/dashboard/utils';
+dayjs.extend(duration);
+
+import { defaultDateFormat } from '../../utils';
 
 // Flattened data structure for CSV export
 export interface FlattenedCompletedTaskTimeData {
     caseType: string;
-    secondMedian: number;
-    secondHigh: number;
-    secondLow: number;
+    secondMedian: number | string;
+    secondHigh: number | string;
+    secondLow: number | string;
     taskName: string;
     count: number;
 }
@@ -28,15 +31,7 @@ export interface CompletedTaskTimeData {
     totalTasks: number;
 }
 
-// Formatted data structure for CSV export
-export interface FormattedCompletedTaskTimeData {
-    caseType: string;
-    secondMedian: string;
-    secondHigh: string;
-    secondLow: string;
-    taskName: string;
-    count: number;
-}
+type TimeUnit = 'minute' | 'hour' | 'day';
 
 // CSV column definitions for processing times export
 export const CSV_COLUMNS: {
@@ -70,12 +65,12 @@ export const getCarrierName = (selectedCarriers: {
  * @param duration Duration in seconds.
  * @returns A normalized, human-readable duration string.
  */
-export const formatTaskTime = (duration: number): string => {
-    const ONE_MINUTE = 60;
-    const ONE_HOUR = 60 * ONE_MINUTE;
-    const ONE_DAY = 24 * ONE_HOUR;
+export const formatTaskTime = (duration: number | string): string => {
+    const seconds =
+        typeof duration === 'string' ? Number(duration.trim()) : duration;
+    const dur = dayjs.duration(seconds, 'seconds');
 
-    const format = (value: number, unit: string): string => {
+    const format = (value: number, unit: TimeUnit): string => {
         const rounded = Number(value.toFixed(1));
         const displayValue = Number.isInteger(rounded)
             ? rounded.toFixed(0)
@@ -85,15 +80,23 @@ export const formatTaskTime = (duration: number): string => {
         return `${displayValue} ${unitLabel}`;
     };
 
-    if (duration < ONE_HOUR) {
-        return format(duration / ONE_MINUTE, 'minute');
+    const ONE_HOUR_IN_SECONDS = dayjs.duration(1, 'hour').asSeconds();
+    const ONE_DAY_IN_SECONDS = dayjs.duration(1, 'day').asSeconds();
+
+    if (seconds < ONE_HOUR_IN_SECONDS) {
+        const totalMinutes = dur.asMinutes();
+
+        return format(totalMinutes, 'minute');
     }
 
-    if (duration < ONE_DAY) {
-        return format(duration / ONE_HOUR, 'hour');
+    if (seconds < ONE_DAY_IN_SECONDS) {
+        const totalHours = dur.asHours();
+
+        return format(totalHours, 'hour');
     }
 
-    return format(duration / ONE_DAY, 'day');
+    const totalDays = dur.asDays();
+    return format(totalDays, 'day');
 };
 
 /**
@@ -103,7 +106,7 @@ export const formatTaskTime = (duration: number): string => {
  */
 export const formatTaskTimeFromArray = (
     processingTimesData: FlattenedCompletedTaskTimeData[]
-): FormattedCompletedTaskTimeData[] => {
+): FlattenedCompletedTaskTimeData[] => {
     if (!processingTimesData) return [];
 
     return processingTimesData.map((caseType) => {

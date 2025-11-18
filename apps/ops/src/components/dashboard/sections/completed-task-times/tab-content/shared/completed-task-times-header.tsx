@@ -13,23 +13,19 @@ export const CompletedTaskTimesHeader = () => {
     const totalTasks = completedTaskTimeDataFetching ? (
         <div className="blur">
             <p className={'typography-titles-subtitle'}>
-                {totalTaskCount?.toLocaleString() || '0'} tasks
+                {totalTaskCount} tasks
             </p>
         </div>
     ) : (
-        <p className={'typography-titles-subtitle'}>
-            {totalTaskCount?.toLocaleString() || '0'} tasks
-        </p>
+        <p className={'typography-titles-subtitle'}>{totalTaskCount} tasks</p>
     );
     const { t } = useTranslation();
 
     return (
         <ChartHeader
-            title={String(t('caseStats.completedTaskTimes.title') ?? '')}
+            title={t('caseStats.completedTaskTimes.title')}
             subtitle={totalTasks}
-            description={String(
-                t('caseStats.completedTaskTimes.description') ?? ''
-            )}
+            description={t('caseStats.completedTaskTimes.description')}
         />
     );
 };
