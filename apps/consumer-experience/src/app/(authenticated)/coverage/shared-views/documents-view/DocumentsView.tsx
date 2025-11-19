@@ -36,7 +36,6 @@ const maxTaxYears = 5;
 export const DocumentsView = async ({
   planCode,
   policyNumber,
-  lineOfBusiness,
   currentView,
 }: {
   planCode: string;

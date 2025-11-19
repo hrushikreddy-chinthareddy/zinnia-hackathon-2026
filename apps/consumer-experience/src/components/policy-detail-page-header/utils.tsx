@@ -21,7 +21,6 @@ export const getPageTitleByPathPart = ({
   lineOfBusiness,
   pathPart,
   policyNumber,
-  beneficiaryKey,
 }: {
   lineOfBusiness: LineOfBusinessPath;
   pathPart: string;

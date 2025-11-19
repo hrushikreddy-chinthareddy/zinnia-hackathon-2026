@@ -1,6 +1,5 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
 
 import { default as Styles } from '@/components/notification-center/NotificationCenter.module.css';
 import { NotificationCenterSidesheet } from '@/components/notification-center/side-sheet/NotificatonCenterSidesheet';
@@ -39,7 +38,6 @@ export const NotificationCenterItem = ({
   notification: NotificationCenterNotification;
   sidesheetLinkText: string;
 }) => {
-  const notificationDate = dayjs(notification.date);
   const dateText = formatDateWithUserTimezone(notification.date);
 
   if (loading) return NotificationCenterItemLoadingState;

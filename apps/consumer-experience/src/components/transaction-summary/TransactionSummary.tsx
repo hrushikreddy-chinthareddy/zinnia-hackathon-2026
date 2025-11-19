@@ -19,13 +19,13 @@ interface TransactionsSummaryProps {
 
 export const TransactionsSummary: FC<
   PropsWithChildren<TransactionsSummaryProps>
-> = async ({ transactionDetails, children }) => {
+> = ({ transactionDetails, children }) => {
   const router = useRouter();
   const pathname = usePathname();
   //TODO: When API is done, fix this up
   const fakePost = async (
     url: string,
-    data: any,
+    data: unknown,
     failureRate: number = 0.2
   ): Promise<{ success: boolean }> => {
     // Log the request for debugging

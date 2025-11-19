@@ -21,7 +21,10 @@ import { useSteppedWorkflowContext } from '@/components/stepped-workflow/Stepped
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
 
-import { SystematicPremiumsAction } from '../provider/types';
+import {
+  SPSelectBankStepSchema,
+  SystematicPremiumsAction,
+} from '../provider/types';
 import { useSystematicPremiums } from '../provider/useSystematicPremiums';
 import { default as styles } from '../SystematicPremiums.module.css';
 
@@ -78,6 +81,10 @@ export const SelectBank = ({
   addBankInlineEnabled?: boolean;
   onAddPaymentMethod: () => void;
 }) => {
+  type SelectBankFormValues = {
+    payorBank: string | undefined;
+  };
+
   const { dispatch, state } = useSystematicPremiums();
   const { selectBankStep } = state;
   const { stepInfo } = useSteppedWorkflowContext();
@@ -91,7 +98,7 @@ export const SelectBank = ({
     );
   }, [activeBanks, selectBankStep?.bankId]);
 
-  const form = useForm({
+  const form = useForm<SelectBankFormValues>({
     // this is why the zod definition was all optional, because no gaurantee about what we'regoing to get from API
     // but does this really make sense to use? I don't need to validate the bank object...
     // That's not really the point of this form?
@@ -101,7 +108,7 @@ export const SelectBank = ({
     },
   });
 
-  const onSubmit: SubmitHandler<any> = data => {
+  const onSubmit: SubmitHandler<SelectBankFormValues> = data => {
     const selectedBank = activeBanks.find(
       ({ bankId }) => bankId === data.payorBank
     );
@@ -110,7 +117,8 @@ export const SelectBank = ({
       type: SystematicPremiumsAction.SET_SYSTEMATIC_PREMIUM_DISTRIBUTION_METHOD_STEP,
       payload: {
         // TODO: fix this error
-        selectBankStep: selectedBank || (activeBanks[0] as any),
+        selectBankStep: (selectedBank ||
+          activeBanks[0]) as unknown as SPSelectBankStepSchema,
       },
     });
 

@@ -92,7 +92,6 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentValid,
   upcomingPaymentAmount,
   nextActivityDate,
-  productType,
   transactions,
   paymentMethods,
   hasActiveAutopay,

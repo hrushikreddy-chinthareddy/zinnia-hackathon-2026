@@ -5,6 +5,8 @@ import { markAsReadMutationOptions } from '@/queries/query-options';
 
 import { createAcknowledgedEntry } from '../utils';
 
+type AcknowledgedEntry = ReturnType<typeof createAcknowledgedEntry>;
+
 /**
  *
  *  // mutation to acknowledge a specific notification
@@ -30,26 +32,29 @@ export const useAcknowledgeCaseMutate = ({
       const previousAcknowledged =
         queryClient.getQueryData(acknowledgedQueryKey);
 
-      queryClient.setQueryData(acknowledgedQueryKey, (old: any[] = []) => {
-        const newEntry = createAcknowledgedEntry(
-          planCode,
-          policyNumber,
-          id,
-          stepsToAcknowledge
-        );
+      queryClient.setQueryData(
+        acknowledgedQueryKey,
+        (old: AcknowledgedEntry[]) => {
+          const newEntry = createAcknowledgedEntry(
+            planCode,
+            policyNumber,
+            id,
+            stepsToAcknowledge
+          );
 
-        const existingIndex = old.findIndex(
-          item => item.caseId?.toString() === id.toString()
-        );
+          const existingIndex = old.findIndex(
+            item => item.caseId?.toString() === id.toString()
+          );
 
-        if (existingIndex !== -1) {
-          const copy = [...old];
-          copy[existingIndex] = newEntry;
-          return copy;
+          if (existingIndex !== -1) {
+            const copy = [...old];
+            copy[existingIndex] = newEntry;
+            return copy;
+          }
+
+          return [newEntry, ...old];
         }
-
-        return [newEntry, ...old];
-      });
+      );
 
       return { previousAcknowledged };
     },

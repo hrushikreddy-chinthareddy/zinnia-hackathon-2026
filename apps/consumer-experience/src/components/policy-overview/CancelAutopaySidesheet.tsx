@@ -93,7 +93,7 @@ export const CancelAutopaySidesheet = ({
     }
   );
 
-  const { data: payorFullName, isLoading: payorIsLoading } = useQuery({
+  const { isLoading: payorIsLoading } = useQuery({
     queryKey: [
       QueryKeys.SYSTEMATIC_PREMIUMS,
       planCode,
@@ -176,15 +176,6 @@ export const CancelAutopaySidesheet = ({
   const handleClose = () => {
     setOpen(false);
   };
-
-  const partyName = payorFullName?.fullName?.length
-    ? {
-        fullName: payorFullName.fullName,
-      }
-    : {
-        firstName: payorFullName?.firstName,
-        lastName: payorFullName?.lastName,
-      };
 
   const Views: Record<Partial<ViewState>, React.ReactNode> = {
     [FormSteps.CONFIRM]: (
