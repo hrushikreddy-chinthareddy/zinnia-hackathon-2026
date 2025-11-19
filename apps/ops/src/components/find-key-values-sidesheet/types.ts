@@ -36,18 +36,18 @@ export const link = Symbol('link');
 export const linkedField = Symbol('linkedField');
 export const toolTip = Symbol('toolTip');
 
-export type Section = [
-    string,
-    {
-        fields?: NestedData;
-        subSections?: NestedData;
-    }
-];
+// export type Section = [
+//     string,
+//     {
+//         fields?: NestedData;
+//         subSections?: NestedData;
+//     }
+// ];
 
-export type ToSections = {
-    basics: NestedData[] | null;
-    sections: Section[];
-};
+// export type ToSections = {
+//     basics: NestedData[] | null;
+//     sections: Section[];
+// };
 
 export const [Expand, Collapse] = [true, false];
 
@@ -93,10 +93,10 @@ export type TransformationsConfig = {
         currentKey,
     }: {
         sectionTitle: keyof Policy;
-        acc: ToSections;
+        acc: RenderData;
         currentVal: object;
         currentKey: string;
-    }) => ToSections;
+    }) => RenderData;
     showSection?: (
         sectionTitle: string,
         policy?: Policy,
@@ -115,7 +115,7 @@ export const FieldType = {
     list: LIST,
 } as const;
 
-type Field = {
+export type Field = {
     type: typeof FieldType.field;
     label: string;
     value: string;
@@ -123,19 +123,19 @@ type Field = {
     toolTip?: string;
 };
 
-type NewSection = {
+export type Section = {
     type: typeof FieldType.section;
     label: string;
-    children: Node[];
+    children: DataNode[];
     tags?: string[];
 };
 
-type FieldGroup = Field[];
-type List = {
+export type FieldGroup = Field[];
+export type List = {
     type: typeof FieldType.list;
     children: FieldGroup[];
 };
 
-type Node = Field | NewSection | List;
+export type DataNode = Field | Section | List;
 
-export type RenderData = Node[];
+export type RenderData = DataNode[];

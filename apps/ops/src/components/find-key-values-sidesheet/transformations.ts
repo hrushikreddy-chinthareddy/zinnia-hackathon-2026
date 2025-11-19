@@ -34,6 +34,9 @@ import {
     TransformationsConfig,
     RenderData,
     FieldType,
+    FieldGroup,
+    DataNode,
+    Field,
 } from './types';
 
 /**
@@ -220,17 +223,6 @@ export const prepareTransaction = ({
 
     return {
         toSections: (transactionOverride?: Transaction) => {
-            console.log(
-                toRenderData({
-                    transaction: transactionOverride ?? transaction,
-                    policy,
-                    allPartiesById,
-                    t,
-                    searchValue,
-                    config: transactionsConfig,
-                    type: FormatterType.TRANSACTION,
-                })
-            );
             return toSections({
                 transaction: transactionOverride ?? transaction,
                 policy,
@@ -251,65 +243,111 @@ export const prepareTransaction = ({
     };
 };
 
-const toRenderData = ({
-    transaction,
-    policy,
-    t,
-    searchValue,
+const pipe =
+    <T>(...fns: Array<(arg: T) => T>) =>
+    (initialValue: T): T =>
+        fns.reduce((acc, fn) => fn(acc), initialValue);
+
+const removeSectionNodes = ({
+    lineOfBusiness,
     planCode,
     productType,
-    allPartiesById,
-    config,
-    type,
-}: ToSectionsProps & { transaction: Transaction }): RenderData => {
-    const tuples = typedEntries(
-        type === FormatterType.TRANSACTION ? transaction : policy
-    );
-    return tuples.reduce((acc, current): RenderData => {
-        if (current === null) {
-            return acc;
-        }
-
-        const [currentKey, currentVal] = current;
-
-        if (currentVal === null) {
-            return acc;
-        }
-
-        if (typeof currentVal === 'object') {
-            const sectionTitle = currentKey;
-            // If there are rules to hide this section,
-            // or if the section is empty, skip it
-            const shouldShow =
-                !config.showSection ||
-                config.showSection(sectionTitle, policy, planCode, productType);
-
-            if (!shouldShow) return acc;
-
-            return [
-                ...acc,
-                {
-                    type: FieldType.section,
-                    label: sectionTitle,
-                    children: typedEntries(currentVal).map(([key, value]) => ({
-                        type: FieldType.field,
-                        label: key,
-                        value,
-                    })),
-                },
-            ];
-        }
-
-        return [
-            ...acc,
-            {
-                type: FieldType.field,
-                label: currentKey,
-                value: currentVal,
-            },
-        ];
-    }, []);
+    data,
+}: {
+    lineOfBusiness: LineOfBusiness;
+    planCode?: string | undefined;
+    productType?: ProductType;
+    data: any;
+}): RenderData => {
+    return data.filter((field: Field) => {
+        const rule = sectionVisibility[field.label];
+        return (
+            (!rule && field.type === FieldType.section) ||
+            (planCode && rule.has(planCode)) ||
+            rule.has(lineOfBusiness) ||
+            (productType && rule.has(productType))
+        );
+    });
 };
+
+function convertNodes(
+    obj: any,
+    overrides?: Record<string, string>
+): RenderData {
+    if (!obj || typeof obj !== 'object') return [];
+
+    return Object.entries(obj)
+        .map(([key, value]) => convertNode(key, value, overrides))
+        .filter((n): n is DataNode => n != null);
+}
+function convertNode(
+    key: string,
+    value: any,
+    overrides?: Record<string, string>
+): DataNode | null {
+    if (value == null) return null;
+
+    const label = overrides?.[key] ?? key;
+
+    // Primitive → Field
+    if (isPrimitive(value)) {
+        return {
+            type: FieldType.field,
+            label,
+            value: String(value),
+        };
+    }
+
+    // Array → List
+    if (Array.isArray(value)) {
+        const groups: FieldGroup[] = [];
+
+        for (const item of value) {
+            if (item == null) continue;
+
+            if (typeof item === 'object' && !Array.isArray(item)) {
+                // flatten object properties into a field group
+                const fields = Object.entries(item)
+                    .map(([k, v]) => convertNode(k, v, overrides))
+                    .filter((n): n is Field => n?.type === FieldType.field);
+
+                if (fields.length > 0) groups.push(fields);
+            } else {
+                // primitive: wrap as single-field group
+                const f = convertNode(key, item, overrides);
+                if (f && f.type === FieldType.field) groups.push([f]);
+            }
+        }
+
+        if (groups.length === 0) return null;
+
+        return {
+            type: FieldType.list,
+            children: groups,
+        };
+    }
+
+    // Object → Section
+    if (typeof value === 'object') {
+        const children = convertNodes(value, overrides);
+
+        if (children.length === 0) return null;
+
+        return {
+            type: FieldType.section,
+            label,
+            children,
+        };
+    }
+
+    return null;
+}
+
+function isPrimitive(v: any): boolean {
+    return (
+        typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
+    );
+}
 
 /**
  * Given a policy, returns an object containing two lists of data
@@ -336,6 +374,22 @@ const toSections = (props: ToSectionsProps): ToSections => {
     const tuples = typedEntries(
         type === FormatterType.TRANSACTION ? props.transaction : policy
     );
+
+    const lineOfBusiness =
+        policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
+
+    const toRenderData = pipe(
+        (data) => convertNodes(data),
+        (data) =>
+            removeSectionNodes({
+                lineOfBusiness,
+                planCode,
+                productType,
+                data,
+            })
+    )(type === FormatterType.TRANSACTION ? props.transaction : policy);
+
+    console.log(toRenderData);
 
     const basicsAndSections = tuples.reduce(
         (acc, current): ToSections => {
