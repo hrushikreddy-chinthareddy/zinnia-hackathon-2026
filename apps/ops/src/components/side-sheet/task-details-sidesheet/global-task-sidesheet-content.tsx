@@ -31,7 +31,7 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
@@ -138,7 +138,7 @@ const DocumentItem = ({ document, taskCarrier, t }: DocumentItemProps) => {
                 </div>
             </div>
             <div className="ml-auto">
-                {createAction(
+                {createViewDownloadAction(
                     document as V3DocumentWithSource,
                     taskCarrier.toUpperCase(),
                     t,

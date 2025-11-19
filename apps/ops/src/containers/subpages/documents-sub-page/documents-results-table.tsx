@@ -13,6 +13,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
+import { v4 as uuidV4 } from 'uuid';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import NavElement, {
@@ -26,6 +27,7 @@ import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
@@ -50,6 +52,8 @@ type DocumentsResultsTableProps = {
     linkedDocumentIdentifiers?: string[];
     policyNumber: string;
     results: DocumentWithSource[] | V3DocumentWithSource[];
+    planCode: string | undefined;
+    policyDeliveryDate: string | undefined;
 };
 
 const DownloadItem = ({
@@ -59,6 +63,7 @@ const DownloadItem = ({
     doc: DocumentWithSource | MetadataSearchResponse;
     carrierCode: string;
 }) => {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
     const docId =
         doc.documentId || ((doc as DocumentWithSource).documentID as string);
@@ -88,7 +93,10 @@ const DownloadItem = ({
 
     return (
         <NavElement
-            className="text-left underline underline-offset-2"
+            className={clsx(
+                'text-left underline underline-offset-2',
+                styles.actionPadding
+            )}
             onClick={downloadDocument}
             size={NavElementSize.Small}
             title={`${t('general.download')} ${doc.displayName}`}
@@ -105,15 +113,16 @@ const DownloadItem = ({
     );
 };
 
-export const createAction = (
+export const createViewDownloadAction = (
     doc: DocumentWithSource | V3DocumentWithSource,
     carrierCode: string,
     t: TFunction,
     label?: string
 ) => {
+    const { featureFlags } = useOptimizely();
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
-            className="!underline-offset-2"
+            className={clsx('!underline-offset-2', styles.actionPadding)}
             carrier={carrierCode}
             displayName={
                 (doc.displayName || doc.documentId) ??
@@ -125,10 +134,34 @@ export const createAction = (
             }
             activeDocType={doc.documentSource}
         >
-            {label ? t(label) : t('view')}
+            {label ? t(label) : t('policy.documents.view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />
+    );
+};
+
+export const createSendAction = (
+    policyNumber: string,
+    planCode: string | undefined,
+    policyDeliveryDate: string | undefined,
+    t: TFunction
+) => {
+    return (
+        <NavElement
+            className={clsx(
+                'text-left underline underline-offset-2',
+                styles.actionPadding,
+                !policyDeliveryDate && styles.disabled
+            )}
+            href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+            size={NavElementSize.Small}
+            title={`${t('general.send')}`}
+            type={NavElementType.Link}
+            disabled={!policyDeliveryDate}
+        >
+            {t('general.send')}
+        </NavElement>
     );
 };
 
@@ -138,14 +171,18 @@ export default function DocumentsResultsTable({
     linkedDocumentIdentifiers = [],
     policyNumber,
     results,
+    planCode,
+    policyDeliveryDate,
 }: DocumentsResultsTableProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
+    const { featureFlags } = useOptimizely();
+    const pd = 'policy.documents';
+    const { t } = useTranslation();
 
     return (
         <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className="hidden">{`${policyNumber} ${t(
-                'documents'
-            )}`}</caption>
+            <caption className="hidden">
+                {`${policyNumber} ${t(`${pd}.documents`)}`}
+            </caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
                     <TableHeaderCell>
@@ -154,13 +191,13 @@ export default function DocumentsResultsTable({
                                 variant={TypographyVariant.BodySmBold}
                                 asTag="h3"
                             >
-                                {t('documentId')}
+                                {t(`${pd}.documentId`)}
                             </Typography>
                             {documentType !==
                                 DocumentTypeView.Correspondence && (
                                 <Popover
-                                    body={t('documentIdentifierTooltip')}
-                                    title={t('documentId') as string}
+                                    body={t(`${pd}.documentIdentifierTooltip`)}
+                                    title={t(`${pd}.documentId`) as string}
                                     placement={PopoverPlacement.TopRight}
                                 >
                                     <Icon
@@ -176,22 +213,27 @@ export default function DocumentsResultsTable({
                     <TableHeaderCell>
                         {t(
                             documentType === DocumentTypeView.Correspondence
-                                ? 'sentDate'
-                                : 'receivedDate'
+                                ? `${pd}.sentDate`
+                                : `${pd}.receivedDate`
                         )}
                     </TableHeaderCell>
-                    <TableHeaderCell>{t('fileType')}</TableHeaderCell>
+                    <TableHeaderCell>{t(`${pd}.fileType`)}</TableHeaderCell>
                     <TableHeaderCell>
-                        <div className="flex flex-row items-center gap-1">
+                        <div
+                            className={clsx(
+                                'flex flex-row items-center gap-1',
+                                styles.actionPadding
+                            )}
+                        >
                             <Typography
                                 variant={TypographyVariant.BodySmBold}
                                 asTag="h3"
                             >
-                                {t('actions')}
+                                {t(`${pd}.actions`)}
                             </Typography>
                             <Popover
-                                body={t('actionsTooltip')}
-                                title={t('actions') as string}
+                                body={t(`${pd}.actionsTooltip`)}
+                                title={t(`${pd}.actions`) as string}
                                 placement={PopoverPlacement.TopLeft}
                             >
                                 <Icon
@@ -232,7 +274,7 @@ export default function DocumentsResultsTable({
                                         ) ? (
                                             <Tooltip
                                                 body={
-                                                    t('linkedTo', {
+                                                    t(`${pd}.linkedTo`, {
                                                         type:
                                                             document.documentType?.toLowerCase() ||
                                                             DEFAULT_ERROR_STRING,
@@ -269,7 +311,21 @@ export default function DocumentsResultsTable({
                                 <span>{document.fileType}</span>
                             </TableCell>
                             <TableCell>
-                                {createAction(document, carrierCode, t)}
+                                {createViewDownloadAction(
+                                    document,
+                                    carrierCode,
+                                    t
+                                )}
+
+                                {featureFlags.send_policy_pages &&
+                                document.documentType === 'POLPG'
+                                    ? createSendAction(
+                                          policyNumber,
+                                          planCode,
+                                          policyDeliveryDate,
+                                          t
+                                      )
+                                    : null}
                             </TableCell>
                         </TableRow>
                     );
@@ -283,7 +339,7 @@ export default function DocumentsResultsTable({
                             )}
                             colSpan={5}
                         >
-                            {t('noResults')}
+                            {t(`${pd}.noResults`)}
                         </TableCell>
                     </TableRow>
                 )}
