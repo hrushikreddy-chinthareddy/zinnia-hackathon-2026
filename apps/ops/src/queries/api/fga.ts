@@ -199,7 +199,7 @@ export const getRoleList = async (
             writeToCache('getRoleList', query, response, 10);
         } else {
             browserLogWarn(
-                'getCarrierList::An error occurred while getting the role list',
+                'getRoleList::An error occurred while getting the role list',
                 {
                     file: 'queries/api/fga',
                     function: 'getCarrierList',
