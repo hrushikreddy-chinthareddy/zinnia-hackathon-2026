@@ -4567,7 +4567,7 @@
                 "policyTimeline": "Policy Timeline",
                 "freeLookExpiration": "Free look expiration",
                 "freeLookEndDate": "Free look end date",
-                "deliveryDate": "Delivery date"
+                "deliveryDate": "Acknowledgement date"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Agent email address",
