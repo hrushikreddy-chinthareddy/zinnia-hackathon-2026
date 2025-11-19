@@ -202,7 +202,7 @@ export const getRoleList = async (
                 'getRoleList::An error occurred while getting the role list',
                 {
                     file: 'queries/api/fga',
-                    function: 'getCarrierList',
+                    function: 'getRoleList',
                     url,
                 }
             );
