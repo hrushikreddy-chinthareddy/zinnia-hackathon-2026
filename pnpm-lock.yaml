@@ -68,18 +68,9 @@ importers:
       '@types/uuid':
         specifier: ^9.0.8
         version: 9.0.8
-      '@zinnia/api-types':
-        specifier: workspace:*
-        version: link:../../packages/api-types
       '@zinnia/bloom':
-        specifier: 6.5.0
+        specifier: ^6.5.0
         version: 6.5.0(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.53.1)(typescript@5.9.3)(vite@6.4.1(@types/node@20.19.24)(jiti@2.6.1)(less@4.4.2)(terser@5.44.1)(yaml@2.8.1))
-      '@zinnia/utils':
-        specifier: workspace:*
-        version: link:../../packages/utils
-      '@zinnia/xd-components':
-        specifier: workspace:*
-        version: link:../../packages/xd-components
       clsx:
         specifier: ^2.1.0
         version: 2.1.1
@@ -201,18 +192,6 @@ importers:
       '@typescript-eslint/parser':
         specifier: ^6.21.0
         version: 6.21.0(eslint@8.57.1)(typescript@5.9.3)
-      '@zinnia/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@zinnia/jest-presets':
-        specifier: workspace:*
-        version: link:../../packages/jest-presets
-      '@zinnia/prettier-config':
-        specifier: workspace:*
-        version: link:../../packages/prettier-config
-      '@zinnia/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       autoprefixer:
         specifier: ^10.0.1
         version: 10.4.21(postcss@8.5.6)
@@ -273,6 +252,9 @@ importers:
       lint-staged:
         specifier: ^15.2.2
         version: 15.5.2
+      openapi-typescript-codegen:
+        specifier: ^0.26.0
+        version: 0.26.0
       pino-pretty:
         specifier: ^13.0.0
         version: 13.1.2

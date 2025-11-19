@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/react-query';
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
 import { CaseSearchCriteriaWithLimit } from '@/services/case';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import {
   acknowledgeCase,

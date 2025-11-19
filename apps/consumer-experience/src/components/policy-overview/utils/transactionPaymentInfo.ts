@@ -1,9 +1,9 @@
-import { Transaction, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { getAccountTypeDisplay } from '@/components/paymentus/utils';
 import { PaymentMethod } from '@/types/payment';
 import { DEFAULT_DATE_FORMAT, sortByDate } from '@/utils/dates';
+import { Transaction, TransactionType } from '@zinnia/api-types/types/sor';
 
 export interface TransactionPaymentInfo {
   paymentDescription: string; // Keep for backward compatibility

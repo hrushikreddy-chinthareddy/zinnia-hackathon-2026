@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -14,6 +13,7 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { FieldDate } from '@/components/field/date/FieldDate';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { formatUSDollars } from '@/utils/currency';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import {
   SPAmountStepSchema,
@@ -23,7 +23,6 @@ import {
 import { useSystematicPremiums } from '../provider/useSystematicPremiums';
 import { default as styles } from '../SystematicPremiums.module.css';
 import { paymentFrequencyDisplay } from '../utils';
-
 const getRadioOptions = ({
   paymentFrequency,
   paymentAmount,

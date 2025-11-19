@@ -1,5 +1,4 @@
 'use client';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import { Label } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -14,6 +13,7 @@ import { CancelDialogLink } from '@/components/stepped-workflow/common/CancelDia
 import commonStyles from '@/components/stepped-workflow/common/Styles.module.css';
 import { useGetTransactionStepData } from '@/hooks/use-get-transaction-step-data';
 import { formatUSDollars } from '@/utils/currency';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { FreeLookCancelAction } from '../provider/types';
 import { useFreeLookCancel } from '../provider/useFreeLookCancel';

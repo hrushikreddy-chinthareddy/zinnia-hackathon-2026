@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { FIFTEEN_MINUTES_IN_MS } from '@xd-components/utils/Numbers';
 
 import { getAllSystematicPrograms } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import { FIFTEEN_MINUTES_IN_MS } from '@/utils/numbers';
 
 import { usePolicyUrlInputs } from './use-policy-url-inputs';
 

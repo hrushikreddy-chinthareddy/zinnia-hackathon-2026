@@ -1,11 +1,4 @@
 'use server';
-import {
-  ArrangementType,
-  SystematicProgramUpdateRequest,
-  TransactionAcceptedResponse,
-  TransactionFailureResponse,
-  TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 import { CLIENT_STATIC_FILES_RUNTIME_REACT_REFRESH } from 'next/dist/shared/lib/constants';
 
@@ -18,6 +11,13 @@ import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import {
+  ArrangementType,
+  SystematicProgramUpdateRequest,
+  TransactionAcceptedResponse,
+  TransactionFailureResponse,
+  TransactionResponse,
+} from '@zinnia/api-types/types/bpm';
 
 import { transformEligibility } from '../transformers';
 

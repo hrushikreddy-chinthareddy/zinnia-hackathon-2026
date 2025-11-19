@@ -1,6 +1,5 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -14,6 +13,7 @@ import {
   submitSystematicPremium,
 } from '@/queries/transaction-queries';
 import { generateTransactionErrorUrl } from '@/services/errors/errors';
+import { TransactionFailureResponse } from '@zinnia/api-types/types/bpm';
 
 import { SummaryTable } from './SummaryTable';
 import { useSystematicPremiums } from '../../provider/useSystematicPremiums';

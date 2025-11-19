@@ -1,5 +1,3 @@
-import { yearsLeft } from '@xd/utils/dist';
-import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -8,9 +6,10 @@ import { CoveragePopover } from '@/components/policy-overview/CoveragePopover';
 import { getCoverage } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { isNullEmptyOrUndefined, lineOfBusinessUrlPath } from '@/utils/data';
-import { standardDateMonthDayYear } from '@/utils/dates';
+import { standardDateMonthDayYear, yearsLeft } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
+import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 
 import styles from './PolicyOverview.module.css';
 

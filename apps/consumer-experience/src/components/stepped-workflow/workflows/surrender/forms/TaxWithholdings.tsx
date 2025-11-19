@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TaxRateToUse } from '@xd/api-types/dist/generated-types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -22,6 +21,7 @@ import {
   taxWithholdingAmountTypeEnum,
 } from '@/components/stepped-workflow/workflows/surrender/provider/types';
 import { useSurrender } from '@/components/stepped-workflow/workflows/surrender/provider/useSurrender';
+import { TaxRateToUse } from '@zinnia/api-types/types/bpm';
 
 import { default as styles } from '../Surrender.module.css';
 

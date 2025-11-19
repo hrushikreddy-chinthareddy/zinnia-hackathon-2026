@@ -1,4 +1,3 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
@@ -9,6 +8,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { getPolicyFundDetails, getPolicyStatusDetails } from '@/services';
 import { formatUSDollars } from '@/utils/currency';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 export const OriginalFundsView = async ({
   planCode,

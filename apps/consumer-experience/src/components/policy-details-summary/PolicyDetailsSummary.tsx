@@ -1,4 +1,3 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 
 import { FullName } from '@/components/pii/FullName';
@@ -10,6 +9,7 @@ import {
   policyStatusDisplayText,
 } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import styles from './PolicyDetailsSummary.module.css';
 

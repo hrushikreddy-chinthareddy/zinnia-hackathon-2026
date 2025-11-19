@@ -1,4 +1,3 @@
-import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import AccordionDetails from '@/components/accordion-details/AccordionDetails';
@@ -26,6 +25,7 @@ import {
   formatPartyRoles,
   filterOutEndDatedParties,
 } from '@/utils/party';
+import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 
 export const ProfileView = async ({
   lineOfBusiness,

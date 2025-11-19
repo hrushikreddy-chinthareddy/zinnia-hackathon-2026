@@ -1,6 +1,7 @@
-import { toSentenceCase } from '@xd/utils/dist';
 import { Loader } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
+
+import { toSentenceCase } from '@/utils/strings';
 
 // TODO: UPDATE COPY!!!!
 const loadingStrings = [

@@ -1,11 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  AmountType,
-  DisbursementType,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
-import {
   AssistiveText,
   AssistiveTextVariant,
   FieldData,
@@ -23,6 +18,8 @@ import { z } from 'zod';
 import { FieldDate } from '@/components/field/date/FieldDate';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { AmountType, DisbursementType } from '@zinnia/api-types/types/bpm';
 
 import {
   amountTypeEnum,
@@ -44,7 +41,8 @@ export const WithdrawalAmountForm = () => {
     defaultValues: {
       amountType: state.withdrawalAmountStep?.amountType || AmountType.MAX,
       paymentAmount: maxAmount,
-      withdrawalType: state.withdrawalAmountStep?.withdrawalType || 'GROSS',
+      withdrawalType:
+        state.withdrawalAmountStep?.withdrawalType || DisbursementType.GROSS,
       effectiveDate:
         state.withdrawalAmountStep?.effectiveDate ||
         dayjs().format(DEFAULT_DATE_FORMAT),

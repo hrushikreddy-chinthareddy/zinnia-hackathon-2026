@@ -1,5 +1,6 @@
 import { Icon, IconType, Popover } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
+
+import { toSentenceCase } from '@/utils/strings';
 
 export const LabelPopover = ({
   title,

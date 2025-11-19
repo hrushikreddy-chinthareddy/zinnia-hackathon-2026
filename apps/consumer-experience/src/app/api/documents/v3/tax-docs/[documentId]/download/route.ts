@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { b64ToBlob } from '@/app/api/documents/utils';
@@ -10,6 +9,7 @@ import {
   getUserInfoFromSession,
   logCompliance,
 } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export const GET = async (
   request: NextRequest,

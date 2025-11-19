@@ -1,10 +1,9 @@
-import { PartyRole } from '@xd/api-types/dist/generated-types/sor';
-
 import { PayeeStep } from '@/components/stepped-workflow/workflows/withdrawals/forms/PayeeStep';
 import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { getPolicyProfileData } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 const PayeePage = async ({ params }: PolicyRequestInputsParams) => {
   const loggingContext = await buildCommonLogContext();

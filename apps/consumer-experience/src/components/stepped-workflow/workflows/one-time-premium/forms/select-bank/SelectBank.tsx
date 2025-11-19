@@ -1,5 +1,4 @@
 'use client';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -22,6 +21,7 @@ import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { PaymentMethod } from '@/types/payment';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './SelectBank.module.css';
 import { useOttp } from '../../provider/OttpContext';

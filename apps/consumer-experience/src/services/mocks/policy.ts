@@ -1,3 +1,4 @@
+import { CarrierId } from '@/types/carriers';
 import {
   AccountStatus,
   AccountType,
@@ -45,8 +46,6 @@ import {
   TaxRateToUse,
   TaxWithholdingType,
 } from '@zinnia/api-types/types/sor';
-
-import { CarrierId } from '@/types/carriers';
 
 export const mockPolicyResponse: Policy = {
   coverage: {

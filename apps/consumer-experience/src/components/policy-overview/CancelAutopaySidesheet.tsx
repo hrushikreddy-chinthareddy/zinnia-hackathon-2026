@@ -1,15 +1,5 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  AmountType,
-  ArrangementType,
-  PaymentForm,
-  SystematicProgramUpdateRequest,
-  Frequency,
-  PartyRole,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { SystematicProgram } from '@xd/api-types/dist/generated-types/sor';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
 import { Button, SideSheet } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
@@ -23,7 +13,16 @@ import { cancelSystematicPremium } from '@/queries/transaction-queries';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FormSteps } from '@/types/transactions';
 import { formatUSDollars } from '@/utils/currency';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import {
+  AmountType,
+  ArrangementType,
+  PaymentForm,
+  SystematicProgramUpdateRequest,
+  Frequency,
+  PartyRole,
+} from '@zinnia/api-types/types/bpm';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 
 import { Confirm } from '../transaction-steps/confirm/Confirm';
 import { Error } from '../transaction-steps/error/Error';
@@ -94,7 +93,7 @@ export const CancelAutopaySidesheet = ({
     }
   );
 
-  const { data: payorFullName, isLoading: payorIsLoading } = useQuery({
+  const { isLoading: payorIsLoading } = useQuery({
     queryKey: [
       QueryKeys.SYSTEMATIC_PREMIUMS,
       planCode,
@@ -177,15 +176,6 @@ export const CancelAutopaySidesheet = ({
   const handleClose = () => {
     setOpen(false);
   };
-
-  const partyName = payorFullName?.fullName?.length
-    ? {
-        fullName: payorFullName.fullName,
-      }
-    : {
-        firstName: payorFullName?.firstName,
-        lastName: payorFullName?.lastName,
-      };
 
   const Views: Record<Partial<ViewState>, React.ReactNode> = {
     [FormSteps.CONFIRM]: (

@@ -1,5 +1,4 @@
 import '@/app/styles/globals.css';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import { Footer } from '@/components/footer/Footer';
@@ -13,6 +12,7 @@ import {
   LoggingModule,
   LoggingStage,
 } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

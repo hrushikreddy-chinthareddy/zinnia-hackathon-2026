@@ -1,10 +1,10 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/navigation';
 
 import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export interface CancelDialogLinkProps {
   planCode: string;

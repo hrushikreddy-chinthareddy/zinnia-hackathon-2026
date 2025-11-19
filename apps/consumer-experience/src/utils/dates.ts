@@ -1,12 +1,13 @@
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 
 import { numberWithOrdinal } from './numbers';
+import { DEFAULT_ERROR_STRING } from './strings';
 export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
 export const ZAHARA_DATE_FORMAT = 'YYYY-MM-DD';
+export const ENTERPRISE_DATE_FORMAT = 'YYYY-MM-DD';
 export const ASIA_IN_TZ = 'Asia/Calcutta';
 export const ASIA_IN_LOCAL = 'en-IN';
 
@@ -45,6 +46,14 @@ export const standardDateMonthDayYear = (
   }
 
   return dayjs(date).format(DEFAULT_DATE_FORMAT);
+};
+
+export const toEnterpriseDate = (date: string | null | undefined) => {
+  if (!isValidDate(date)) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  return dayjs(date).format(ENTERPRISE_DATE_FORMAT);
 };
 
 /**
@@ -184,4 +193,127 @@ export const formatDateWithUserTimezone = (date: Date): string => {
 export function isEndDated(endDate: string | undefined): boolean {
   if (!endDate || dayjs(endDate).isAfter(dayjs())) return false;
   return true;
+}
+
+export const yearsLeft = (
+  startDate: string | undefined | null,
+  duration: number | undefined | null
+): number => {
+  if (!startDate || !duration) {
+    return 0;
+  }
+  const start = new Date(startDate);
+  const now = new Date();
+
+  let elapsedYears = now.getFullYear() - start.getFullYear();
+
+  if (
+    now.getMonth() < start.getMonth() ||
+    (now.getMonth() === start.getMonth() && now.getDate() < start.getDate())
+  ) {
+    elapsedYears--;
+  }
+
+  const yearsLeft = duration - elapsedYears;
+  return yearsLeft > 0 ? yearsLeft : 0;
+};
+
+export const formatTimestamp = (
+  timestamp: string,
+  style: 'standard' | 'tooltip' | 'monthDay' | 'dateTimeWithTZ' = 'standard'
+): string => {
+  const parsedTime = dayjs(timestamp, 'YYYY-MM-DDTHH:mm:ss.SSSZ');
+
+  if (!parsedTime.isValid()) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  const timeZone = dayjs.tz.guess();
+  const localizedTime = parsedTime.tz(timeZone);
+  const locale = getUserLocale();
+  const formatter = new Intl.DateTimeFormat(locale, {
+    timeZone,
+    timeZoneName: 'short',
+  });
+
+  const parts = formatter.formatToParts(new Date(localizedTime.format()));
+  const timeZoneAbbr =
+    parts.find(part => part.type === 'timeZoneName')?.value || '';
+
+  switch (style) {
+    case 'standard':
+      return localizedTime.format(`M/D/YYYY [at] h:mma [${timeZoneAbbr}]`);
+
+    case 'tooltip':
+      return localizedTime.format(`MMM D, YYYY [at] h:mma [${timeZoneAbbr}]`);
+
+    case 'monthDay': {
+      const currentYear = dayjs().year();
+      const base = localizedTime.format('MMM D');
+      return currentYear === localizedTime.year()
+        ? base
+        : `${base}, ${localizedTime.year()}`;
+    }
+
+    case 'dateTimeWithTZ':
+      return localizedTime.format(`M/D/YYYY [at] h:mm a [${timeZoneAbbr}]`);
+
+    default:
+      return localizedTime.format(DEFAULT_DATE_FORMAT);
+  }
+};
+
+export const formatRelativeTime = (
+  inputDate: Date | string | number | undefined
+): string => {
+  if (!inputDate) {
+    return DEFAULT_ERROR_STRING;
+  }
+
+  const now = dayjs();
+  const target = dayjs(inputDate);
+
+  const diffInMinutes = now.diff(target, 'minute');
+  const diffInHours = now.diff(target, 'hour');
+  const diffInDays = now.diff(target, 'day');
+
+  if (diffInMinutes < 1) {
+    return 'just now';
+  }
+  if (diffInMinutes < 60) {
+    return `${diffInMinutes} minute${diffInMinutes !== 1 ? 's' : ''} ago`;
+  }
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours !== 1 ? 's' : ''} ago`;
+  }
+  return `${diffInDays} day${diffInDays !== 1 ? 's' : ''} ago`;
+};
+
+export const startOfTomorrowLocalIso = (ymd: string) => {
+  const base = dayjs(ymd);
+  if (!base.isValid()) return DEFAULT_ERROR_STRING;
+
+  return base.add(1, 'day').startOf('day').toDate().toISOString();
+};
+
+export function formatDateTime(isoString: string): string {
+  const date = new Date(isoString);
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: 'UTC',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  };
+
+  let formatted = date.toLocaleString('en-US', options);
+
+  formatted = formatted
+    .replace('at ', '')
+    .replace(' PM', ' pm')
+    .replace(' AM', ' am');
+
+  return formatted;
 }

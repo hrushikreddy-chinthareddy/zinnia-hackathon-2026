@@ -1,4 +1,6 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
+
+import { PolicyParty } from '@/types/policy';
 import {
   AddressType,
   Country,
@@ -8,8 +10,6 @@ import {
   PhoneType,
   State,
 } from '@zinnia/api-types/types/sor';
-
-import { PolicyParty } from '@/types/policy';
 
 import { PartyList, PartyListProps } from './PartyList';
 

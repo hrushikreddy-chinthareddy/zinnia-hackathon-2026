@@ -14,7 +14,7 @@ const meta: Meta<typeof SystematicPremiums> = {
       appDirectory: true,
     },
   },
-  decorators: Story => {
+  decorators: () => {
     return (
       <UserProvider user={undefined}>
         {/* TODO: fix this!!! */}

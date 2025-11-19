@@ -1,6 +1,5 @@
 'use client';
 
-import { AddressChange } from '@zinnia/api-types/types/bpm';
 import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { FC, ReactNode, useState } from 'react';
@@ -15,6 +14,7 @@ import { Button } from '@/components/button/Button';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { FormSteps } from '@/types/transactions';
 import { zipCodeInParts } from '@/utils/address';
+import { AddressChange } from '@zinnia/api-types/types/bpm';
 
 import styles from './AddEditAddressSidesheet.module.css';
 import { formatAddressLines, generateChanges } from './utils';

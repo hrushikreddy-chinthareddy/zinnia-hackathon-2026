@@ -1,5 +1,6 @@
-import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
 import { z } from 'zod';
+
+import { Frequency } from '@zinnia/api-types/types/bpm';
 
 export enum SystematicPremiumSteps {
   AMOUNT = 'amount',
@@ -85,7 +86,7 @@ export const systematicPremiumStepsSchema = z.nativeEnum(
 
 export const systematicPremiumsStateSchema = z.object({
   activeArrangementId: z.string().optional(),
-  currentSystematicPremium: z.any().optional() || {},
+  currentSystematicPremium: z.any().optional().default({}),
   selectBankStep: selectBankStepSchema,
   systematicPremiumAmountStep: systematicPremiumAmountStepSchema,
 });

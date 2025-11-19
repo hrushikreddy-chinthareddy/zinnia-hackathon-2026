@@ -1,19 +1,18 @@
-import { TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
+import {
+  getAddSystematicProgramEligibility,
+  getUpdateSystematicProgramEligibility,
+} from '@/services/bpm/systematic-programs';
+import { PaymentMethod } from '@/types/payment';
+import { standardDateMonthDayYear } from '@/utils/dates';
+import { CommonLogContext } from '@/utils/logging/server-logging';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   FeatureType,
   PolicyFeature,
   PolicyStatus,
   ProductType,
   Transaction,
-} from '@xd/api-types/dist/generated-types/sor';
-import { standardDateMonthDayYear } from '@xd/utils/dist';
-
-import {
-  getAddSystematicProgramEligibility,
-  getUpdateSystematicProgramEligibility,
-} from '@/services/bpm/systematic-programs';
-import { PaymentMethod } from '@/types/payment';
-import { CommonLogContext } from '@/utils/logging/server-logging';
+} from '@zinnia/api-types/types/sor';
 
 import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';
 
@@ -93,7 +92,6 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentValid,
   upcomingPaymentAmount,
   nextActivityDate,
-  productType,
   transactions,
   paymentMethods,
   hasActiveAutopay,

@@ -1,4 +1,3 @@
-import { EmailType } from '@zinnia/api-types/types/sor';
 import { IconType, Label } from '@zinnia/bloom/components';
 
 import { FieldData } from '@/components/field-data/FieldData';
@@ -6,6 +5,7 @@ import { Email } from '@/components/pii/Email';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { ManageChange } from '@/types/carrier-config';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { EmailType } from '@zinnia/api-types/types/sor';
 
 import styles from './PersonData.module.css';
 import { EmailProps } from './types';

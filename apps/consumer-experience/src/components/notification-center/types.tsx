@@ -1,4 +1,5 @@
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+
 export type NotificationCenterNotification = {
   id: string;
   title: string;

@@ -1,6 +1,5 @@
 'use client';
 
-import { AccountStatus } from '@zinnia/api-types/types/sor';
 import { SideSheet, Icon, IconType } from '@zinnia/bloom/components';
 import { useParams, useSearchParams } from 'next/navigation';
 import { FC, ReactNode, useEffect, useState } from 'react';
@@ -11,6 +10,7 @@ import { useNeedsVerificationCode } from '@/hooks/use-needs-verification-code';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { BankFormFields } from '@/types/bank';
 import { FormSteps } from '@/types/transactions';
+import { AccountStatus } from '@zinnia/api-types/types/sor';
 
 import styles from './AddBankSidesheet.module.css';
 import { Button } from '../button/Button';

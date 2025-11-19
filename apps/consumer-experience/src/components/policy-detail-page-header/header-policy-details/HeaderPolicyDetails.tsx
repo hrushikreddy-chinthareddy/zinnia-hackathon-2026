@@ -1,4 +1,3 @@
-import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { HTMLAttributes } from 'react';
@@ -11,6 +10,7 @@ import { ApiResponse } from '@/services/types';
 import { isAnnuity, policyStatusDisplayText } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
+import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import styles from './HeaderPolicyDetails.module.css';
 

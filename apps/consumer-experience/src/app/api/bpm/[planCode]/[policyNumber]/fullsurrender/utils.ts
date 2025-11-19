@@ -1,3 +1,7 @@
+import dayjs from 'dayjs';
+
+import { SurrenderState } from '@/components/stepped-workflow/workflows/surrender/provider/types';
+import { FullSurrenderBPMRequest } from '@/services/bpm/fullsurrender';
 import {
   DisbursementPaymentForm,
   PaymentForm,
@@ -5,11 +9,7 @@ import {
   DisbursementType,
   TaxWithholdingType,
   FilingStatus,
-} from '@xd/api-types/dist/generated-types/bpm';
-import dayjs from 'dayjs';
-
-import { SurrenderState } from '@/components/stepped-workflow/workflows/surrender/provider/types';
-import { FullSurrenderBPMRequest } from '@/services/bpm/fullsurrender';
+} from '@zinnia/api-types/types/bpm';
 
 export const buildFullSurrenderRequestBody = (
   state: SurrenderState,

@@ -1,11 +1,5 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-  Address,
-  BankAccount,
-  DisbursementPaymentForm,
-  LineOfBusiness,
-} from '@xd/api-types/dist/generated-types/sor';
 import { Label, Loader, Radio } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
@@ -28,6 +22,12 @@ import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PaymentProvider } from '@/types/carrier-config';
 import { PaymentMethod } from '@/types/payment';
+import {
+  Address,
+  BankAccount,
+  DisbursementPaymentForm,
+  LineOfBusiness,
+} from '@zinnia/api-types/types/sor';
 
 import { FreeLookCancelAction } from '../provider/types';
 import { useFreeLookCancel } from '../provider/useFreeLookCancel';

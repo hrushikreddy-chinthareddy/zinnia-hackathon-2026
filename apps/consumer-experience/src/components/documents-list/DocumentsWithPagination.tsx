@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Pagination } from '@zinnia/bloom/components';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -16,6 +15,7 @@ import {
   TaxDocument,
 } from '@/types/document';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import DocumentsList from './DocumentsList';
 import styles from './documentsList.module.css';

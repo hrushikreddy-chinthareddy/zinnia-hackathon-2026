@@ -69,7 +69,7 @@ jobs:
       - name: Build packages
         run: npx turbo build --filter='./packages/**'
       - name: Run prettier, type checks, and lint
-        run: npx turbo prettier check-types lint
+        run: npx turbo prettier && npx turbo check-types && npx turbo lint
 
   test:
     name: Test All Apps

@@ -1,10 +1,9 @@
 'use client';
 
-import { AccountType } from '@xd/api-types/dist/generated-types/sor';
-
 import { PaymentusAccountType } from '@/types/paymentus';
 import { PiiProps } from '@/types/pii';
 import { checkIfNull } from '@/utils/data';
+import { AccountType } from '@zinnia/api-types/types/sor';
 
 import { PiiWrapper } from './PiiWrapper';
 import { getBranchName } from '../paymentus/utils';

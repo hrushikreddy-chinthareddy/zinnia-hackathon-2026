@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import styles from '@/app/(authenticated)/coverage/policies.module.css';
@@ -8,6 +7,7 @@ import { ComponentName } from '@/services/display-rules/types';
 import { CarrierPolicyDetails } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { AccountValuePopover } from '../account-value/AccountValuePopover';
 import { ClickableCardContainer } from '../clickable-card-container/ClickableCardContainer';

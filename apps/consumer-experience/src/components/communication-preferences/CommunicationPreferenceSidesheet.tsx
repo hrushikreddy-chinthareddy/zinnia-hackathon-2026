@@ -1,10 +1,6 @@
 'use client';
 
 import { useMutation } from '@tanstack/react-query';
-import {
-  EDeliveryPreferenceModel,
-  UpdateEDeliveryPreferenceModel,
-} from '@zinnia/api-types/types/preferences';
 import { Button, Icon, IconType, SideSheet } from '@zinnia/bloom/components';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
@@ -14,6 +10,10 @@ import { ApiResponseError } from '@/services';
 import { PolicyProfile } from '@/types/policy';
 import { FormSteps, ResponseMessage } from '@/types/transactions';
 import { filterItemsWithPastEndDate } from '@/utils/data';
+import {
+  EDeliveryPreferenceModel,
+  UpdateEDeliveryPreferenceModel,
+} from '@zinnia/api-types/types/preferences';
 
 import styles from './CommunicationPreferences.module.css';
 import { EditCommunicationPreferences } from './EditCommunicationPreferences';

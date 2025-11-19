@@ -1,4 +1,3 @@
-import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -8,6 +7,7 @@ import { RouteKey, getPageTitle } from '@/route-map';
 import { getBeneficiaries } from '@/services/policy';
 import { Beneficiary } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.BENEFICIARIES);
 // disable because NextJS needs this to be exported from this file

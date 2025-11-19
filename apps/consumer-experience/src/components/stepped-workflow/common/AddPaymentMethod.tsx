@@ -1,12 +1,12 @@
 'use client';
 
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { useRouter } from 'next/navigation';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
 import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './Selectable.module.css';
 

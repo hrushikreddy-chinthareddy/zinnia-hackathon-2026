@@ -1,3 +1,4 @@
+import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useParams, usePathname } from 'next/navigation';
 
@@ -55,7 +56,7 @@ describe('NotificationAlert', () => {
   it('shows the banner when there are in-progress notifications and nothing dismissed', () => {
     (getDismissedIdsMock as jest.Mock).mockReturnValue([]);
 
-    const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
+    const useQuery = ReactQuery.useQuery as jest.Mock;
     useQuery.mockReturnValue({
       data: { data: ['id-1'], total: 1 },
       refetch: refetchMock,
@@ -71,7 +72,7 @@ describe('NotificationAlert', () => {
   it('hides the banner when dismissed and stores the current notification IDs', () => {
     (getDismissedIdsMock as jest.Mock).mockReturnValue([]);
 
-    const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
+    const useQuery = ReactQuery.useQuery as jest.Mock;
     useQuery.mockReturnValue({
       data: { data: ['id-1', 'id-2'], total: 2 },
       refetch: refetchMock,
@@ -98,7 +99,7 @@ describe('NotificationAlert', () => {
     // Hydrate with dismissed IDs
     (getDismissedIdsMock as jest.Mock).mockReturnValue(['id-1']);
 
-    const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
+    const useQuery = ReactQuery.useQuery as jest.Mock;
     useQuery.mockReturnValue({
       data: { data: ['id-1'], total: 1 },
       refetch: refetchMock,
@@ -114,7 +115,7 @@ describe('NotificationAlert', () => {
     // Hydrate with dismissed ID
     (getDismissedIdsMock as jest.Mock).mockReturnValue(['id-1']);
 
-    const useQuery = require('@tanstack/react-query').useQuery as jest.Mock;
+    const useQuery = ReactQuery.useQuery as jest.Mock;
     useQuery.mockReturnValue({
       data: { data: ['id-1', 'id-2'], total: 2 },
       refetch: refetchMock,

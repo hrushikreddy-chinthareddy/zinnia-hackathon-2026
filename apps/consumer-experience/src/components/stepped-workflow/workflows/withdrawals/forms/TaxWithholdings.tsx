@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TaxRateToUse } from '@xd/api-types/dist/generated-types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -16,6 +15,7 @@ import { z } from 'zod';
 
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { TaxRateToUse } from '@zinnia/api-types/types/bpm';
 
 import {
   taxWithholdingStepSchema,

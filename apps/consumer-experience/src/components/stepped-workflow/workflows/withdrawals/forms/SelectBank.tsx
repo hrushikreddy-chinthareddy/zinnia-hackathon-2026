@@ -1,14 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  DisbursementPaymentForm,
-  PaymentForm,
-} from '@xd/api-types/dist/generated-types/bpm';
-import { Address as AddressType } from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils';
-import { countryCodeToName } from '@xd-components/utils/Adresses';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-import {
   AssistiveText,
   AssistiveTextVariant,
   IconType,
@@ -34,6 +26,16 @@ import { BankName } from '@/components/pii/BankName';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PolicyParty } from '@/types/policy';
+import { countryCodeToName } from '@/utils/address';
+import { toSentenceCase } from '@/utils/strings';
+import {
+  DisbursementPaymentForm,
+  PaymentForm,
+} from '@zinnia/api-types/types/bpm';
+import {
+  Address as AddressType,
+  LineOfBusiness,
+} from '@zinnia/api-types/types/sor';
 
 import {
   distributionMethodStepSchema,
@@ -61,7 +63,9 @@ export const SelectBank = ({
   const form = useForm<z.infer<typeof distributionMethodStepSchema>>({
     resolver: zodResolver(distributionMethodStepSchema),
     defaultValues: {
-      distributionType: state.distributionMethodStep.distributionType || 'ACH',
+      distributionType:
+        state.distributionMethodStep.distributionType ||
+        DisbursementPaymentForm.ACH,
     },
   });
 
