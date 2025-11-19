@@ -1,8 +1,10 @@
 import { Transaction, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
+import { getAccountTypeDisplay } from '@/components/paymentus/utils';
 import { PaymentMethod } from '@/types/payment';
-import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_DATE_FORMAT, sortByDate } from '@/utils/dates';
+import { toSentenceCase } from '@/utils/strings';
 
 export interface TransactionPaymentInfo {
   paymentDescription: string;
@@ -61,8 +63,9 @@ export function getTransactionPaymentInfo(
 
   const paymentType = isAutopayPayment ? 'Autopay' : 'One-time payment';
 
-  const accountTypeFormatted =
-    paymentMethod.accountType?.toLowerCase() || 'account';
+  const accountTypeFormatted = toSentenceCase(
+    getAccountTypeDisplay(paymentMethod.accountType as any) || 'account'
+  );
   const paymentDescription = `${paymentType} from ${accountTypeFormatted} ending in ${lastFourDigits} on ${formattedDate}`;
 
   return {
@@ -94,11 +97,9 @@ export function getMostRecentTransactionPaymentInfo(
     return null;
   }
 
-  const sortedTransactions = paymentTransactions.sort((a, b) => {
-    const timestampA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-    const timestampB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
-    return timestampB - timestampA;
-  });
+  const sortedTransactions = paymentTransactions.sort((a, b) =>
+    sortByDate(a.effectiveDate, b.effectiveDate, { order: 'desc' })
+  );
 
   const mostRecentTransaction = sortedTransactions[0];
 
