@@ -25,7 +25,6 @@ describe('notificationAlertStorage', () => {
 
   beforeEach(() => {
     // Ensure a clean global window before each test
-    // @ts-expect-error - window may not exist on global
     delete global.window;
   });
 
