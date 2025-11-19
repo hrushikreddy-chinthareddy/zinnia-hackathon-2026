@@ -70,6 +70,11 @@ export function getTransactionPaymentInfo(
     paymentMethod.accountType as PaymentMethod['type']
   );
 
+  // Return null if account type cannot be determined (would show as "-")
+  if (!accountTypeFormatted || accountTypeFormatted === '-') {
+    return null;
+  }
+
   const paymentDescription = `${paymentType} from ${accountTypeFormatted} ending in ${lastFourDigits} on ${formattedDate}`;
 
   return {
