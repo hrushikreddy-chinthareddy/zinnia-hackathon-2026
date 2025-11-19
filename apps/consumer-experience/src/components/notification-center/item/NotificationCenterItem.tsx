@@ -10,8 +10,6 @@ import { formatDateWithUserTimezone } from '@/utils/dates';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
 
-const today = dayjs();
-
 export type NotificationCenterNotification = {
   id: string;
   title: string;
@@ -43,14 +41,7 @@ export const NotificationCenterItem = ({
   sidesheetLinkText: string;
 }) => {
   const notificationDate = dayjs(notification.date);
-  const dateIsToday = notificationDate.isSame(today, 'day');
-  let dateText;
-  if (dateIsToday) {
-    dateText = 'Today';
-  } else {
-    const formatter = new Intl.DateTimeFormat('en-US', { dateStyle: 'short' });
-    dateText = formatter.format(notification.date);
-  }
+  const dateText = formatDateWithUserTimezone(notification.date);
 
   if (loading || !isClient) return NotificationCenterItemLoadingState;
 
@@ -58,6 +49,10 @@ export const NotificationCenterItem = ({
     'Case ID': notification.id,
     Submitted: formatDateWithUserTimezone(notification.date),
   };
+
+  const description = notification.completed
+    ? `Processing Complete`
+    : 'There was an error processing this transaction.';
 
   return (
     <NotificationCenterSidesheet
@@ -75,23 +70,38 @@ export const NotificationCenterItem = ({
             onAcknowledge(notification.id, notification.stepsToAcknowledge);
           }
         }}
-        className={clsx(
-          Styles.item,
-          needsAcknowledgement && Styles.needsAcknowledgement
-        )}
+        className={clsx(Styles.item, Styles.needsAcknowledgement)}
       >
-        <h3 className={clsx(Styles.title, 'typography-labels-label-sm')}>
-          {needsAcknowledgement && <div className={Styles.pip}></div>}
-          {notification.title}
-        </h3>
-        <div className={clsx(Styles.date, 'typography-content-caption')}>
-          <Icon small type={IconType.CALENDAR} />
-          {dateText}
+        <div className={Styles.notificationContentWrapper}>
+          <div className={Styles.notificationHeaderSection}>
+            <div
+              className={clsx(
+                Styles.pip,
+                'mt-sm',
+                !needsAcknowledgement && Styles.hidden
+              )}
+            ></div>
+            <div>
+              <Icon height={24} width={24} type={IconType.CASH} />
+            </div>
+            <div className={Styles.notificationTextGroup}>
+              <h3 className="typography-labels-label-lg">
+                {notification.title}
+              </h3>
+              <p className={!notification.completed ? Styles.description : ''}>
+                {description}
+              </p>
+              <div className={clsx(Styles.date, 'typography-content-caption')}>
+                <p>{dateText}</p>
+              </div>
+            </div>
+          </div>
+          <div className={Styles.notificationLinkSection}>
+            <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
+              {sidesheetLinkText}
+            </span>
+          </div>
         </div>
-
-        <span className={clsx(Styles.link, 'typography-nav-links-sm')}>
-          {sidesheetLinkText}
-        </span>
       </button>
     </NotificationCenterSidesheet>
   );

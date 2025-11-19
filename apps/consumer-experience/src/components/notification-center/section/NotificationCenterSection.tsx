@@ -1,5 +1,4 @@
 import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
-import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
@@ -30,14 +29,10 @@ export const NotificationCenterSection = ({
   acknowledgedNotifications,
   isLoading,
   handleAcknowledge,
-  variant,
-  sectionHeading,
   className,
   mutatingId = '',
 }: {
   mutatingId?: string;
-  variant: AssistiveTextVariant;
-  sectionHeading: string;
   notifications: NotificationCenterNotification[];
   isClient: boolean;
   acknowledgedNotifications: Array<CaseAcknowledgmentItem> | null;
@@ -47,13 +42,6 @@ export const NotificationCenterSection = ({
 }) => {
   return (
     <section className={clsx(Styles.list, className?.length && className)}>
-      <h2>
-        <AssistiveText
-          className={Styles.heading}
-          text={sectionHeading}
-          variant={variant}
-        />
-      </h2>
       <ul>
         {items.map(notification => {
           const needsAcknowledgement =
@@ -81,11 +69,7 @@ export const NotificationCenterSection = ({
                 notification={notification}
                 loading={isLoading}
                 needsAcknowledgement={needsAcknowledgement}
-                sidesheetLinkText={
-                  notification.completed
-                    ? 'More Info'
-                    : `Case ID ${notification.id}`
-                }
+                sidesheetLinkText={'Details'}
               />
             </Suspense>
           );
