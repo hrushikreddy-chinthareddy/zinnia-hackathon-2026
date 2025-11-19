@@ -57,6 +57,10 @@ export const Link = (props: Props): React.ReactElement => {
         return internalLinkText;
       }
 
+      if ('text' in props) {
+        return props.text;
+      }
+
       return internalLinkText;
     };
 
