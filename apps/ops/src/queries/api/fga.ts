@@ -196,7 +196,7 @@ export const getRoleList = async (
         };
 
         if (roleListCheck.status === 200) {
-            writeToCache('getCarrierList', query, response, 10);
+            writeToCache('getRoleList', query, response, 10);
         } else {
             browserLogWarn(
                 'getCarrierList::An error occurred while getting the role list',
