@@ -4,10 +4,13 @@ import dayjs from 'dayjs';
 import { getAccountTypeDisplay } from '@/components/paymentus/utils';
 import { PaymentMethod } from '@/types/payment';
 import { DEFAULT_DATE_FORMAT, sortByDate } from '@/utils/dates';
-import { toSentenceCase } from '@/utils/strings';
 
 export interface TransactionPaymentInfo {
-  paymentDescription: string;
+  paymentDescription: string; // Keep for backward compatibility
+  paymentType: string; // 'Autopay' or 'One-time payment'
+  accountType: string | null; // Raw account type for PII wrapping
+  lastFourDigits: string; // Last 4 digits for PII wrapping
+  formattedDate: string;
   bankId: string | null;
   accountNumber: string | null;
   transactionType: string | null;
@@ -63,13 +66,18 @@ export function getTransactionPaymentInfo(
 
   const paymentType = isAutopayPayment ? 'Autopay' : 'One-time payment';
 
-  const accountTypeFormatted = toSentenceCase(
-    getAccountTypeDisplay(paymentMethod.accountType as any) || 'account'
+  const accountTypeFormatted = getAccountTypeDisplay(
+    paymentMethod.accountType as PaymentMethod['type']
   );
+
   const paymentDescription = `${paymentType} from ${accountTypeFormatted} ending in ${lastFourDigits} on ${formattedDate}`;
 
   return {
-    paymentDescription,
+    paymentDescription, // Keep for backward compatibility
+    paymentType,
+    accountType: paymentMethod.accountType || null,
+    lastFourDigits,
+    formattedDate,
     bankId,
     accountNumber: accountNumber || null,
     transactionType: transaction.transactionType || null,

@@ -59,6 +59,10 @@
   max-width: 50%;
 }
 
+.lowercase {
+  text-transform: lowercase;
+}
+
 @media (width > 767px) {
   .additionalContent {
     flex-direction: row;

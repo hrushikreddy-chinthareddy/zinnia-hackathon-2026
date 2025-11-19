@@ -10,6 +10,8 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { AccountType } from '@/components/pii/AccountType';
+import { RoutingNumber } from '@/components/pii/RoutingNumber';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { stepsInfo } from '@/components/stepped-workflow/workflows/one-time-premium/steps';
 import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
@@ -29,8 +31,31 @@ import {
   determineAutopayDisplayAndEligibility,
   upcomingPaymentDetails,
 } from './utils';
+import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';
 
 dayjs.extend(isSameOrAfter);
+
+/**
+ * Composes payment description with PII-wrapped components
+ */
+const PaymentDescriptionWithPII = ({
+  paymentType,
+  accountType,
+  lastFourDigits,
+  formattedDate,
+}: {
+  paymentType: string;
+  accountType?: string;
+  lastFourDigits: string;
+  formattedDate: string;
+}) => (
+  <span>
+    {paymentType} from{' '}
+    <AccountType className={styles.lowercase} accountType={accountType} />{' '}
+    ending in <RoutingNumber routingNumber={lastFourDigits} /> on{' '}
+    {formattedDate}
+  </span>
+);
 
 export const UpcomingPremium = async ({
   planCode,
@@ -193,6 +218,16 @@ export const UpcomingPremium = async ({
     hasActiveAutopay: !!arrangementId, // If there's an arrangementId, autopay is active
   });
 
+  // Get structured payment info for PII-wrapped caption
+  const paymentInfo =
+    transactionData && paymentMethodsData
+      ? getMostRecentTransactionPaymentInfo(
+          transactionData,
+          paymentMethodsData,
+          !!arrangementId
+        )
+      : null;
+
   return (
     <ClickableCardContainer>
       <ClickableCardContainer.LinkContent
@@ -212,7 +247,18 @@ export const UpcomingPremium = async ({
               <div className={styles.maxWidth50}>
                 <FieldData
                   Label={<Label>{scheduledPayment.label}</Label>}
-                  caption={scheduledPayment.caption}
+                  caption={
+                    paymentInfo ? (
+                      <PaymentDescriptionWithPII
+                        paymentType={paymentInfo.paymentType}
+                        accountType={paymentInfo.accountType || undefined}
+                        lastFourDigits={paymentInfo.lastFourDigits}
+                        formattedDate={paymentInfo.formattedDate}
+                      />
+                    ) : (
+                      scheduledPayment.caption
+                    )
+                  }
                 >
                   {isNullEmptyOrUndefined(scheduledPayment.amount) ? (
                     <p className="typography-content-body-sm">
