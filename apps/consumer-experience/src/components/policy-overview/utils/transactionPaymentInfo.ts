@@ -111,7 +111,7 @@ export function getMostRecentTransactionPaymentInfo(
   }
 
   const sortedTransactions = paymentTransactions.sort((a, b) =>
-    sortByDate(a.effectiveDate, b.effectiveDate, { order: 'desc' })
+    sortByDate(a.effectiveDate, b.effectiveDate, { order: 'asc' })
   );
 
   const mostRecentTransaction = sortedTransactions[0];
