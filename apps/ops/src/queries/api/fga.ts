@@ -216,7 +216,7 @@ export const getRoleList = async (
         return response;
     } catch (error: any) {
         browserLogWarn(
-            'getCarrierList::An error occurred while getting the role list',
+            'getRoleList::An error occurred while getting the role list',
             {
                 file: 'queries/api/fga',
                 function: 'getRoleList',
