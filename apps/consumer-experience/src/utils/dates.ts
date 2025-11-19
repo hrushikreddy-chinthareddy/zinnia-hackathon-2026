@@ -185,36 +185,3 @@ export function isEndDated(endDate: string | undefined): boolean {
   if (!endDate || dayjs(endDate).isAfter(dayjs())) return false;
   return true;
 }
-export const getUserLocale = (): string => {
-  const formatter = new Intl.DateTimeFormat();
-  const resolvedOptions = formatter.resolvedOptions();
-  if (resolvedOptions.timeZone === ASIA_IN_TZ) {
-    return ASIA_IN_LOCAL;
-  }
-  return resolvedOptions.locale;
-};
-
-/**
- * Formats date and time in the user's current timezone.
- * Example output: 11/13/2025 at 6:00 pm EST
- */
-export const formatDateWithUserTimezone = (date: Date): string => {
-  const parsedTime = dayjs(date);
-  const timeZone = dayjs.tz.guess();
-  const locale = getUserLocale();
-
-  const formatter = new Intl.DateTimeFormat(locale, {
-    timeZone,
-    timeZoneName: 'short',
-  });
-
-  const parts = formatter.formatToParts(
-    new Date(parsedTime.tz(timeZone).format())
-  );
-  const timeZoneAbbr =
-    parts.find(part => part.type === 'timeZoneName')?.value || '';
-
-  return `${parsedTime
-    .tz(timeZone)
-    .format(`${DEFAULT_DATE_FORMAT} [at] h:mm a`)} ${timeZoneAbbr}`;
-};

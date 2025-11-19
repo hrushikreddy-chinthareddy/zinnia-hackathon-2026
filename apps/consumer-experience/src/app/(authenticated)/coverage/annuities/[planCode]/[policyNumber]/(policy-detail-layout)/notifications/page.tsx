@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -29,6 +30,7 @@ export default async function NotificationsPage({ params }: Props) {
     <NotificationCenter
       policyNumber={params.policyNumber}
       planCode={params.planCode}
+      lineOfBusiness={LineOfBusiness.ANNUITY}
     />
   );
 }

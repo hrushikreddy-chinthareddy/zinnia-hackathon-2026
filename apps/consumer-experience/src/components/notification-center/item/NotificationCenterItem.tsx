@@ -26,14 +26,12 @@ export type NotificationCenterProps = {
 };
 
 export const NotificationCenterItem = ({
-  isClient,
   loading,
   needsAcknowledgement,
   onAcknowledge,
   notification,
   sidesheetLinkText,
 }: {
-  isClient: boolean;
   loading: boolean;
   needsAcknowledgement: boolean;
   onAcknowledge: (id: string, stepsToAcknowledge: string[]) => void;
@@ -43,7 +41,7 @@ export const NotificationCenterItem = ({
   const notificationDate = dayjs(notification.date);
   const dateText = formatDateWithUserTimezone(notification.date);
 
-  if (loading || !isClient) return NotificationCenterItemLoadingState;
+  if (loading) return NotificationCenterItemLoadingState;
 
   const fieldData = {
     'Case ID': notification.id,

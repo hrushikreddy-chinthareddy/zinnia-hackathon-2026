@@ -1,69 +1,95 @@
 'use client';
-import { useIsClient } from '@xd/hooks/useIsClient';
+import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType } from '@zinnia/bloom/components';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
-import { useAcknowledgeCases } from '@/hooks/use-acknowledge-cases';
+import { useFeatureFlagsFor } from '@/hooks/use-feature-flags';
+import {
+  acknowledgedCasesOptions,
+  caseQueryOptions,
+} from '@/queries/query-options';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { default as Styles } from './NotificationCenter.module.css';
 import { NotificationCenterProps } from './types';
-import { sortNotificationsByDate } from './utils';
+import { selectNotifications, sortNotificationsByDate } from './utils';
+import { Button } from '../button/Button';
+import { useAcknowledgeCaseMutate } from './hooks/use-acknowledge-case-mutate';
+import { useMarkAllReadMutate } from './hooks/use-mark-all-read-mutate';
 
 export const NotificationCenter = ({
   policyNumber,
   planCode,
 }: NotificationCenterProps) => {
-  const isClient = useIsClient();
+  const { data: fetchNotificationsFlag } = useFeatureFlagsFor(
+    FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS
+  );
 
   const {
-    acknowledgedNotifications,
-    acknowledgedNotificationsLoading,
-    acknowledgedCaseMutation,
-    actionNeededNotifications,
-    completedNotifications,
-    notificationsLoading: isLoading,
-    notificationsError: isError,
-    notificationsFetching: isFetching,
-  } = useAcknowledgeCases({
+    data: notifications = {
+      completedNotifications: [],
+      actionNeededNotifications: [],
+      allNotifications: [],
+    },
+    isLoading,
+  } = useQuery({
+    ...caseQueryOptions({
+      policyNumber,
+    }),
+    select: selectNotifications,
+    enabled:
+      !!fetchNotificationsFlag && !!policyNumber.length && !!planCode.length,
+  });
+
+  // fetch acknowledged notifications
+  const { data: acknowledgedNotifications = [] } = useQuery({
+    ...acknowledgedCasesOptions({ planCode, policyNumber }),
+    enabled:
+      !!fetchNotificationsFlag && !!policyNumber.length && !!planCode.length,
+  });
+
+  // all notifications = completed + action needed notifications
+  const { allNotifications } = notifications;
+
+  const markAllAsReadMutation = useMarkAllReadMutate({
+    planCode,
+    policyNumber,
+    allNotifications,
+  });
+
+  const acknowledgedCaseMutation = useAcknowledgeCaseMutate({
     planCode,
     policyNumber,
   });
 
-  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) =>
+  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) => {
     acknowledgedCaseMutation.mutate({ id, stepsToAcknowledge });
+  };
 
-  const showLoader =
-    acknowledgedNotificationsLoading ||
-    acknowledgedCaseMutation.isPending ||
-    !isClient ||
-    isLoading ||
-    isFetching;
-
-  const allNotifications = actionNeededNotifications.concat(
-    completedNotifications
-  );
+  const handleMarkAllAsRead = () => {
+    markAllAsReadMutation.mutate();
+  };
 
   return (
     <div className={Styles.container}>
-      {allNotifications.length > 0 ? (
+      <div className={Styles.markAllReadContainer}>
+        <Icon
+          small
+          type={IconType.CIRCLE_CHECKMARK}
+          color="rgba(0, 98, 139, 1)"
+        />
+        <Button mode="link" size="small" onClick={handleMarkAllAsRead}>
+          Mark all as read
+        </Button>
+      </div>
+      {allNotifications.length > 0 && (
         <NotificationCenterSection
           className={Styles.actionNeeded}
           notifications={allNotifications.sort(sortNotificationsByDate)}
           handleAcknowledge={handleAcknowledge}
           acknowledgedNotifications={acknowledgedNotifications}
           isLoading={isLoading}
-          isClient={isClient}
-          mutatingId={acknowledgedCaseMutation?.variables?.id}
         />
-      ) : (
-        <div className={Styles.emptyState}>
-          <div className={Styles.alertIcon}>
-            <Icon type={IconType.ALERT} />
-          </div>
-          <h3 className="typography-labels-label-lg">
-            You have no new notifications
-          </h3>
-        </div>
       )}
     </div>
   );
