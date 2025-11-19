@@ -1,4 +1,4 @@
-import { UserProfile } from '@deps/models/user-profile';
+import { UserProfile } from '@auth0/nextjs-auth0/client';
 
 export enum UserEmailDomain {
     ZINNIA = 'zinnia.com',

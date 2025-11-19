@@ -22,6 +22,12 @@ export type GetCarrierListQuery = {
     policyNumber?: string | undefined;
 };
 
+export type GetRoleListQuery = {
+    user: string;
+    relation: string;
+    type: 'role';
+};
+
 export type Tuple = FGA_Tuple;
 
 export type TupleRequest = {
