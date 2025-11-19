@@ -165,7 +165,7 @@ const DifferentAddress = ({
                 />
             )}
 
-            <div className="mt-4 flex ">
+            <div className="mt-4 flex">
                 <Button
                     className="mr-4"
                     onClick={handleContinue}

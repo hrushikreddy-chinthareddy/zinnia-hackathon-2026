@@ -5,7 +5,7 @@ import {
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import TransactionNavigationButtons, {
     ParentPage,
@@ -81,6 +81,7 @@ export const DeathClaimNotificationStep = ({
         setCaseId,
         onbaseCaseId,
         onbaseDocumentNumber,
+        caseId,
     } = useDeathClaim();
     const [isNewBene, setIsNewBene] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -163,7 +164,14 @@ export const DeathClaimNotificationStep = ({
         }));
     }, [notifiers, isNewBene, setFormErrors, t]);
 
-    const submit = async () => {
+    const submit = useCallback(async () => {
+        if (caseId) {
+            browserLogInfo('DeathClaimNotifierStep::Claim already submitted', {
+                caseId,
+                policy: policy?.policyNumber,
+            });
+            return;
+        }
         setIsLoading(true);
         const payload = buildClaimPayload({
             policy: policy,
@@ -195,9 +203,21 @@ export const DeathClaimNotificationStep = ({
         }
 
         setIsLoading(false);
-    };
+    }, [
+        beneficiaries,
+        caseId,
+        correlationId,
+        notifiers,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        owners,
+        policy,
+        setCaseId,
+        setSubmitFailed,
+        user,
+    ]);
 
-    const handleStepContinue = async () => {
+    const handleStepContinue = useCallback(async () => {
         const errors: FormValidationErrors = {};
         if (!isNullEmptyOrUndefined(notifiers?.notifierRole)) {
             if (
@@ -241,7 +261,18 @@ export const DeathClaimNotificationStep = ({
             }
             goToNext();
         }
-    };
+    }, [
+        formErrors,
+        goToNext,
+        isNewBene,
+        notifiers?.notifierRole,
+        notifiers?.party?.partyId,
+        owners,
+        setFormErrors,
+        showNotification,
+        submit,
+        t,
+    ]);
 
     const handleOwners = (owner: DeceasedParty, position: number) => {
         setOwners((prevState: DeceasedParty[]) => {

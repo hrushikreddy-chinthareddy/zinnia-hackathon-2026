@@ -202,10 +202,13 @@ export const submitDeathClaim = async (body: any): Promise<any> => {
     try {
         browserLogInfo('webnonfinancial::Submitting claim', {
             url: url,
+            policyNumber: body?.policyNumber,
+            correlationid: body?.correlationid,
             function: 'webnonfinancial.submitClaim',
         });
         const { data } = await client.put<any, AxiosResponse>(url, body);
         browserLogInfo('webNonFinancial::Successfully submitted claim', {
+            policyNumber: body?.policyNumber,
             correlationid: body?.correlationid,
             url: url,
             function: 'webnonfinancial.submitClaim',
