@@ -72,17 +72,25 @@ export const formatTaskTime = (duration: number | string): string => {
         return `${displayValue} ${unitLabel}`;
     };
 
-    const ONE_HOUR_IN_SECONDS = dayjs.duration(1, 'hour').asSeconds();
-    const ONE_DAY_IN_SECONDS = dayjs.duration(1, 'day').asSeconds();
+    const ONE_HOUR = dayjs.duration(1, 'hour').asSeconds();
+    const ONE_DAY = dayjs.duration(1, 'day').asSeconds();
 
-    if (seconds < ONE_HOUR_IN_SECONDS) {
+    if (seconds < ONE_HOUR) {
         const totalMinutes = dur.asMinutes();
+        const roundedMinutes = Number(totalMinutes.toFixed(1));
+        if (roundedMinutes >= 60) {
+            return '1 hour';
+        }
 
         return format(totalMinutes, 'minute');
     }
 
-    if (seconds < ONE_DAY_IN_SECONDS) {
+    if (seconds < ONE_DAY) {
         const totalHours = dur.asHours();
+        const roundedHours = Number(totalHours.toFixed(1));
+        if (roundedHours >= 24) {
+            return '1 day';
+        }
 
         return format(totalHours, 'hour');
     }

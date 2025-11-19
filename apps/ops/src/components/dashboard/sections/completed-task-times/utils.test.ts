@@ -46,12 +46,24 @@ describe('Completed Task Time Utils', () => {
             expect(formatTaskTime(1 * ONE_MINUTE)).toBe('1 minute');
         });
 
+        it('formats 3599 seconds to 1 hour', () => {
+            expect(formatTaskTime(3599)).toBe('1 hour');
+        });
+
+        it('formats 59 minutes correctly', () => {
+            expect(formatTaskTime(59 * ONE_MINUTE)).toBe('59 minutes');
+        });
+
         it('formats fractionals hours (2.5h)', () => {
             expect(formatTaskTime(2.5 * ONE_HOUR)).toBe('2.5 hours');
         });
 
         it('formats exactly 1 day', () => {
             expect(formatTaskTime(1 * ONE_DAY)).toBe('1 day');
+        });
+
+        it('formats 86399 seconds to 1 days', () => {
+            expect(formatTaskTime(86399)).toBe('1 day');
         });
 
         it('formats exactly (1.5 d)', () => {
