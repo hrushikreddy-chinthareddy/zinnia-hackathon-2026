@@ -5,6 +5,7 @@ export type NotificationCenterNotification = {
   date: Date;
   completed: boolean;
   stepsToAcknowledge?: string[];
+  caseGroup: string;
 };
 
 export type NotificationCenterProps = {

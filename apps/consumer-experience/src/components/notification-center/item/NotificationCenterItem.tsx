@@ -16,6 +16,7 @@ export type NotificationCenterNotification = {
   date: Date;
   completed: boolean;
   stepsToAcknowledge?: string[];
+  caseGroup: string;
 };
 
 export type NotificationCenterProps = {
@@ -52,6 +53,16 @@ export const NotificationCenterItem = ({
     ? `Processing Complete`
     : 'There was an error processing this transaction.';
 
+  const caseGroupIconMap: Record<string, IconType> = {
+    Correspondence: IconType.MAIL,
+    Claims: IconType.TRANSACTION,
+    Financial: IconType.TRANSACTION,
+    'Non-Financial': IconType.CIRCLE_INFO,
+  };
+
+  const iconForGroup =
+    caseGroupIconMap[notification?.caseGroup] ?? IconType.CIRCLE_INFO;
+
   return (
     <NotificationCenterSidesheet
       caseId={notification.id}
@@ -80,7 +91,7 @@ export const NotificationCenterItem = ({
               )}
             ></div>
             <div>
-              <Icon height={24} width={24} type={IconType.CASH} />
+              <Icon height={24} width={24} type={iconForGroup} />
             </div>
             <div className={Styles.notificationTextGroup}>
               <h3 className="typography-labels-label-lg">
