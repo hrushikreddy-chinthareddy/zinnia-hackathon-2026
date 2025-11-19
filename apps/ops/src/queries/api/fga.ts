@@ -9,6 +9,7 @@ import {
     GetCarrierListQuery,
     TupleRequest,
     TupleResponse,
+    GetRoleListQuery,
 } from '@deps/types/fga';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
@@ -163,6 +164,71 @@ export const getCarrierList = async (
                 status: 500,
                 message: error.message,
                 name: 'Error getting carrier list',
+            },
+        };
+    }
+};
+
+export const getRoleList = async (
+    partyId: string,
+    relation: UserPermission
+): Promise<ApiResponse<string[]>> => {
+    const url = `${baseUrl}/list`;
+
+    try {
+        const query: GetRoleListQuery = {
+            user: `party:${partyId}`,
+            relation,
+            type: 'role',
+        };
+
+        const cachedResult = pullFromCache('getRoleList', query);
+        if (cachedResult) return cachedResult;
+
+        const roleListCheck = await client.post<
+            GetCarrierListQuery,
+            AxiosResponse
+        >(url, query);
+
+        const response: ApiResponse<string[]> = {
+            data: roleListCheck?.data?.objects || [],
+            error: null,
+        };
+
+        if (roleListCheck.status === 200) {
+            writeToCache('getCarrierList', query, response, 10);
+        } else {
+            browserLogWarn(
+                'getCarrierList::An error occurred while getting the role list',
+                {
+                    file: 'queries/api/fga',
+                    function: 'getCarrierList',
+                    url,
+                }
+            );
+            response.error = {
+                status: roleListCheck.status,
+                message: roleListCheck.statusText,
+                name: 'Error getting role list',
+            };
+        }
+
+        return response;
+    } catch (error: any) {
+        browserLogWarn(
+            'getCarrierList::An error occurred while getting the role list',
+            {
+                file: 'queries/api/fga',
+                function: 'getRoleList',
+                url,
+            }
+        );
+        return {
+            data: [],
+            error: {
+                status: 500,
+                message: error.message,
+                name: 'Error getting role list',
             },
         };
     }
