@@ -228,7 +228,7 @@ export const getUnsanitizedBanksByPolicyPlanCodeAndId = withLogging(
   { file: FILE_NAME, functionName: 'getUnsanitizedBanksByPolicyPlanCodeAndId' }
 );
 
-const getPolicyTransactions = withLogging(
+export const getPolicyTransactions = withLogging(
   async (
     {
       transactionTypes,

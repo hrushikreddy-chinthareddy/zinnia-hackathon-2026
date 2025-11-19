@@ -18,6 +18,11 @@ interface LinkItem {
   disabled?: boolean;
   ctaText?: string;
   iconType?: IconType;
+  /**
+   * Only need to pass this if you want the arrow icon to show as well as cta text
+   * if you do not pass in ctaText, the arrow will show by default
+   */
+  showArrow?: boolean;
 }
 
 export interface ChildCard {
@@ -39,6 +44,7 @@ const LinkArrow = ({
   label,
   newTab = false,
   url,
+  showArrow,
 }: LinkItem) => {
   // TODO: add additional handling for 'open in new window or tab
   if (!url) {
@@ -51,7 +57,7 @@ const LinkArrow = ({
     ? (Link as unknown as NextComponentType<LinkProps>)
     : ('a' as keyof JSX.IntrinsicElements);
 
-  if (!iconType && !ctaText) {
+  if ((!iconType && !ctaText) || showArrow) {
     iconToRender = IconType.CHEVRON_RIGHT;
   }
 
@@ -65,15 +71,25 @@ const LinkArrow = ({
       prefetch={isInternal ? true : undefined}
       isInternal={isInternal}
     >
-      {ctaText && <div className="typography-nav-links-sm">{ctaText}</div>}
-      {iconToRender && (
-        <Icon
-          type={iconToRender}
-          width={20}
-          height={20}
-          color="var(--color-base-icon-icon-action)"
-        />
-      )}
+      <div className="flex-center">
+        {ctaText && (
+          <div
+            className={clsx('typography-nav-links-sm mr-sm', {
+              'mr-sm': showArrow,
+            })}
+          >
+            {ctaText}
+          </div>
+        )}
+        {iconToRender && (
+          <Icon
+            type={iconToRender}
+            width={20}
+            height={20}
+            color="var(--color-base-icon-icon-action)"
+          />
+        )}
+      </div>
     </Tag>
   );
 };
