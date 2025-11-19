@@ -2885,6 +2885,19 @@
             "simpleTooltipBody": "Este caso está priorizado.",
             "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
         },
+        "deprioritizeCase": {
+            "title": "De-priorizar Caso",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso depriorizado será movido como un elemento de trabajo para procesamiento normal.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} depriorizado exitosamente",
+            "tooltipBody": "Este caso está depriorizado."
+        },
         "navDrawer": {
             "topStatus": "Estado Principal",
             "stage": "Etapa",

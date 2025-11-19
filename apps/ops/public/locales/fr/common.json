@@ -2839,6 +2839,19 @@
             "simpleTooltipBody": "Ce dossier est priorisé.",
             "tooltipBody": "Ce dossier a été priorisé le {{date}} par {{userName}} pour traitement."
         },
+        "deprioritizeCase": {
+            "title": "De-prioriser le Dossier",
+            "detailsHeader": "Détails",
+            "detailsBody": "Un dossier dépriorisé sera déplacé en tant qu'élément de travail pour un traitement normal.",
+            "cancel": "Annuler",
+            "submit": "Soumettre",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Dossier ID: {{caseId}} a été dépriorisé",
+            "tooltipBody": "Ce dossier est dépriorisé."
+        },
         "navDrawer": {
             "topStatus": "Statut supérieur",
             "stage": "Organiser",

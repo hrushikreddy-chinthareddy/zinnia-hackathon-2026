@@ -91,3 +91,8 @@ export enum CaseSource {
     FarmersNewWorldLifeInsurance = "Farmer's New World Life Insurance",
     DeathAudit = 'Death Audit',
 }
+
+export enum CaseAction {
+    Prioritize = 'prioritize',
+    Deprioritize = 'deprioritize',
+}

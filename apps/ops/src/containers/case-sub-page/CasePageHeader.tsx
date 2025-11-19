@@ -1,7 +1,7 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
@@ -20,12 +20,13 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { caseProcessingDetails, Statuses } from '@deps/models/case/case';
+import { CaseAction } from '@deps/models/case/enums';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
 
-import PrioritizeCaseSideSheet from './priortizeCaseSideSheet';
+import CaseActionSideSheet from './caseActionsSideSheet';
 import styles from './styles.module.css';
 interface CasePageHeaderProps {
     caseId: string;
@@ -66,6 +67,12 @@ const CasePageHeader = ({
         lastName: '',
         id: '',
     });
+
+    const canShowPriorityActions =
+        hasPermissionToPrioritizeCases &&
+        status.toUpperCase() !== Statuses.Canceled &&
+        status.toUpperCase() !== Statuses.Completed;
+
     const prioritizedDate = caseProcessingDetails?.find(
         (d) => d.detailType === detailTypesEnum.ESCALATION
     )?.eventTimeStamp;
@@ -98,14 +105,29 @@ const CasePageHeader = ({
         fetchPartyData();
     }, [caseProcessingDetails]);
 
-    const openSideSheet = () => {
-        const content = <PrioritizeCaseSideSheet caseId={caseId} />;
-        sideSheet.changeSideSheetContent(
-            t('caseOverview.prioritizeCase.title'),
-            content
-        );
-        sideSheet.handleOpen(true);
-    };
+    const openSideSheet = useCallback(
+        (action: CaseAction) => {
+            const content = (
+                <CaseActionSideSheet action={action} caseId={caseId} />
+            );
+            sideSheet.changeSideSheetContent(
+                t(`caseOverview.${action}Case.title`),
+                content
+            );
+            sideSheet.handleOpen(true);
+        },
+        [caseId, sideSheet, t]
+    );
+
+    const handleDeprioritize = useCallback(
+        () => openSideSheet(CaseAction.Deprioritize),
+        [openSideSheet]
+    );
+
+    const handlePrioritize = useCallback(
+        () => openSideSheet(CaseAction.Prioritize),
+        [openSideSheet]
+    );
 
     return (
         <div className="flex items-center justify-between rounded-t border-b-2 border-gray-100 bg-white pb-4 md:items-center md:pb-8">
@@ -224,17 +246,27 @@ const CasePageHeader = ({
                         />
                     }
                 >
-                    {hasPermissionToPrioritizeCases &&
-                        status.toUpperCase() !== Statuses.Canceled &&
-                        status.toUpperCase() !== Statuses.Completed && (
-                            <MenuContextualItem
-                                content={t('caseOverview.prioritizeCase.title')}
-                                onClick={() => {
-                                    openSideSheet();
-                                }}
-                                type={NavElementType.Button}
-                            />
-                        )}
+                    {canShowPriorityActions && (
+                        <>
+                            {escalated ? (
+                                <MenuContextualItem
+                                    content={t(
+                                        'caseOverview.deprioritizeCase.title'
+                                    )}
+                                    onClick={handleDeprioritize}
+                                    type={NavElementType.Button}
+                                />
+                            ) : (
+                                <MenuContextualItem
+                                    content={t(
+                                        'caseOverview.prioritizeCase.title'
+                                    )}
+                                    onClick={handlePrioritize}
+                                    type={NavElementType.Button}
+                                />
+                            )}
+                        </>
+                    )}
                 </MenuContextual>
             </div>
         </div>

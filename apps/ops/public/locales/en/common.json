@@ -2882,6 +2882,19 @@
             "simpleTooltipBody": "This case is prioritized.",
             "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
         },
+        "deprioritizeCase": {
+            "title": "De-prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A de-prioritized case will be moved back as a regular work item for normal processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Case ID: {{caseId}} was deprioritized",
+            "tooltipBody": "This case is deprioritized."
+        },
         "navDrawer": {
             "topStatus": "Top Status",
             "stage": "Stage",
