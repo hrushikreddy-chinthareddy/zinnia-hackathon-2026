@@ -90,7 +90,9 @@ export const NotificationCenterItem = ({
                 !needsAcknowledgement && Styles.hidden
               )}
             ></div>
-            <Icon height={24} width={24} type={iconForGroup} />
+            <div>
+              <Icon height={24} width={24} type={iconForGroup} />
+            </div>
             <div className={Styles.notificationTextGroup}>
               <h3 className="typography-labels-label-lg">
                 {notification.title}
