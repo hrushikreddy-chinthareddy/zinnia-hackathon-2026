@@ -1,18 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { CaseInstanceSummary } from '@xd/api-types/dist/generated-types/case';
 import { useIsClient } from '@xd/xd-components/src/hooks/useIsClient';
+import { useCallback } from 'react';
 
 import {
   parseNotifications,
   transformNotifications,
 } from '@/components/notification-center/utils';
-import {
-  acknowledgeCase,
-  searchCasesByPolicyNumber,
-} from '@/queries/case-queries';
+import { acknowledgeCase } from '@/queries/case-queries';
 import { QueryKeys } from '@/queries/query-keys';
-import { acknowledgedCasesOptions } from '@/queries/query-options';
-import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import {
+  acknowledgedCasesOptions,
+  caseQueryOptions,
+} from '@/queries/query-options';
+import { TransformedCaseSearchResponse } from '@/services/case/types';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { useFeatureFlagsFor } from './use-feature-flags';
@@ -21,16 +21,12 @@ interface UseAcknowledgeCasesParams {
   planCode: string;
   policyNumber: string;
   fetchNotificationsFlagEnabled?: boolean;
-  initialNotifications?: CaseInstanceSummary[] | null;
-  initialAcknowledgedNotifications?: CaseAcknowledgmentItem[];
 }
 
 export const useAcknowledgeCases = ({
   planCode,
   policyNumber,
   fetchNotificationsFlagEnabled = false,
-  initialNotifications,
-  initialAcknowledgedNotifications,
 }: UseAcknowledgeCasesParams) => {
   const isClient = useIsClient();
   const queryClient = useQueryClient();
@@ -42,27 +38,23 @@ export const useAcknowledgeCases = ({
   const shouldFetchClientSideNotifications =
     !!fetchNotificationsFlag && isClient;
 
+  const selectNotifications = useCallback(
+    (data: TransformedCaseSearchResponse | null | undefined) => {
+      return (data?.data || [])
+        .map(parseNotifications)
+        .filter(notification => !!notification);
+    },
+    []
+  );
+
   const {
     data: notifications = [],
     isLoading,
     isError,
     isFetching,
   } = useQuery({
-    queryKey: [
-      QueryKeys.NOTIFICATIONS,
-      policyNumber,
-      planCode,
-      initialNotifications,
-    ],
-    queryFn: () => {
-      return searchCasesByPolicyNumber(policyNumber, planCode);
-    },
-    select: data => {
-      return (data || [])
-        .map(parseNotifications)
-        .filter(notification => !!notification);
-    },
-    initialData: initialNotifications,
+    ...caseQueryOptions({ policyNumber }),
+    select: selectNotifications,
     enabled: shouldFetchClientSideNotifications,
   });
 
@@ -71,7 +63,6 @@ export const useAcknowledgeCases = ({
     isLoading: acknowledgedNotificationsLoading,
   } = useQuery({
     ...acknowledgedCasesOptions({ planCode, policyNumber }),
-    initialData: initialAcknowledgedNotifications,
     enabled:
       fetchNotificationsFlagEnabled &&
       !!policyNumber.length &&

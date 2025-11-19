@@ -9,10 +9,12 @@ export async function POST(_request: NextRequest) {
   logTrace('case::search::POST::start', loggingContext);
 
   try {
-    const { policyNumber } = await _request.json();
+    const { policyNumber, limit, caseStatus } = await _request.json();
     const { data, error } = await searchCases(
       {
         policyNumber,
+        limit,
+        caseStatus,
       },
       loggingContext
     );

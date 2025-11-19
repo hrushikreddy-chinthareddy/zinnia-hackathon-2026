@@ -1,0 +1,55 @@
+.notificationAlert {
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+.notificationAlertBanner {
+  border-radius: 0 0 var(--measure-dimension-button-button-default-radius)
+    var(--measure-dimension-button-button-default-radius);
+}
+
+.notificationAlert.visible {
+  opacity: 1;
+  animation: slideDown 0.5s forwards;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  max-width: 744px;
+  z-index: 10000;
+}
+
+@media screen and (max-width: 768px) {
+  .sticky {
+    min-width: 344px;
+    left: 0;
+    right: 0;
+    padding: 0 var(--measure-dimension-margin-sm);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .sticky {
+    min-width: 344px;
+    left: 0;
+    right: 0;
+    padding: 0 var(--measure-dimension-margin-xs);
+  }
+}
+
+/* Keyframes for the slide-down animation */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

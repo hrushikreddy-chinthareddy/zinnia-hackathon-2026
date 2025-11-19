@@ -3,8 +3,8 @@ import { MutableRefObject } from 'react';
 import { ActionTypes, BpmAction, PropertyKeys } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
 
-const POLL_INTERVAL = 1000;
-const POLL_LIMIT = 5;
+export const POLL_INTERVAL = 1000;
+export const POLL_LIMIT = 10;
 
 interface RefetchArgs {
   data: PolicyProfile[keyof PolicyProfile];

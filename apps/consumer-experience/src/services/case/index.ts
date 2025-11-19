@@ -124,8 +124,15 @@ const fetchCaseLegacy = withLogging(
   }
 );
 
+export interface CaseSearchCriteriaWithLimit extends CaseSearchCriteria {
+  limit?: number;
+}
+
 export const searchCases = withLogging(
-  async (searchData: CaseSearchCriteria, loggingCtx: CommonLogContext) => {
+  async (
+    searchData: CaseSearchCriteriaWithLimit,
+    loggingCtx: CommonLogContext
+  ) => {
     // TODO: remove this when https://zinnia.atlassian.net/browse/ZC-1524 is complete
     // to always use enterpriseCaseSearchBaseUrl
     // const url = `${enterpriseCaseSearchBaseUrl}/search`;
@@ -138,7 +145,7 @@ export const searchCases = withLogging(
 
     const rawResponse = await EnterpriseTokenApi.post(
       url,
-      JSON.stringify(searchData),
+      JSON.stringify({ ...searchData }),
       {
         headers: { 'Content-Type': 'application/json' },
       },

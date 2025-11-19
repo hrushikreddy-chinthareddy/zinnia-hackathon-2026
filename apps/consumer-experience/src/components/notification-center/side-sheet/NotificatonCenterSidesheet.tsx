@@ -69,6 +69,7 @@ const NotificationSidesheetDetails = ({
     queryKey: [QueryKeys.CASE_DETAILS, caseId],
     queryFn: async () => await getCaseDetails(caseId),
     enabled: caseId.length > 0 && FETCH_CASE_DETAILS,
+    select: ({ data }) => data,
   });
   if (!FETCH_CASE_DETAILS) return null;
 

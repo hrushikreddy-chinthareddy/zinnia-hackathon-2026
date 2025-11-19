@@ -31,7 +31,7 @@ export const useShowNotificationAlertBasedOn = ({
       policyNumber,
       lineOfBusiness,
     }),
-    select: data => {
+    select: ({ data }) => {
       return (data || [])
         .map(parseNotifications)
         .filter(notification => !!notification && !notification.completed);
