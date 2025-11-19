@@ -39,6 +39,227 @@ import {
     Field,
 } from './types';
 
+const renderData: RenderData = [
+    {
+        type: FieldType.section,
+        label: 'Contract Basics',
+        children: [
+            {
+                type: FieldType.field,
+                label: 'Effective Date',
+                value: '11/28/2025',
+            },
+            {
+                type: FieldType.field,
+                label: 'Expiration Date',
+                value: '12/28/2025',
+            },
+        ],
+    },
+    {
+        type: FieldType.section,
+        label: 'Timeline',
+        children: [
+            {
+                // if no label, may not have tags or value
+
+                type: FieldType.list,
+
+                // only allowed if there is no value
+                children: [
+                    [
+                        {
+                            type: FieldType.field,
+                            label: 'Active Status',
+                            value: 'Pending',
+                        },
+                        {
+                            type: FieldType.field,
+                            label: 'Lifecycle Date',
+                            value: '10/28/2025',
+                        },
+                    ],
+                    [
+                        {
+                            type: FieldType.field,
+                            label: 'Active Status',
+                            value: 'Active',
+                        },
+                        {
+                            type: FieldType.field,
+                            label: 'Lifecycle Date',
+                            value: '10/28/2025',
+                        },
+                    ],
+                ],
+            },
+        ],
+    },
+    {
+        type: FieldType.section,
+        label: 'Funds',
+        children: [
+            {
+                type: FieldType.field,
+                label: 'Investment type',
+                value: 'Active',
+            },
+            {
+                type: FieldType.section,
+                label: 'SF001',
+
+                // only allowed if there is a label
+                tags: ['primary', 'disbursable'],
+                children: [
+                    {
+                        type: FieldType.field,
+                        label: 'Fund ID',
+                        value: 'SBF001',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund name',
+                        value: '3 Year Fixed Account Guarantee',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund account type',
+                        value: 'Fixed',
+                    },
+                ],
+            },
+            {
+                type: FieldType.section,
+                label: 'SF002',
+                children: [
+                    {
+                        type: FieldType.field,
+                        label: 'Fund ID',
+                        value: 'SBF002',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund name',
+                        value: '5 Year Variable Account Guarantee',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund account type',
+                        value: 'Variable',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        type: FieldType.section,
+        label: 'Mixed Primitive, Accordion and Flat List',
+        children: [
+            {
+                type: FieldType.field,
+                label: 'Investment type',
+                value: 'Active',
+            },
+            {
+                type: FieldType.list,
+                children: [
+                    [
+                        {
+                            type: FieldType.field,
+                            label: 'Active Status',
+                            value: 'Pending',
+                        },
+                        {
+                            type: FieldType.field,
+                            label: 'Lifecycle Date',
+                            value: '10/28/2025',
+                        },
+                    ],
+                    [
+                        {
+                            type: FieldType.field,
+                            label: 'Active Status',
+                            value: 'Active',
+                        },
+                        {
+                            type: FieldType.field,
+                            label: 'Lifecycle Date',
+                            value: '10/28/2025',
+                        },
+                    ],
+                ],
+            },
+            {
+                type: FieldType.section,
+                label: 'SF001',
+                children: [
+                    {
+                        type: FieldType.field,
+                        label: 'Fund ID',
+                        value: 'SBF001',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund name',
+
+                        // Only allowed if there's a label
+                        value: '3 Year Fixed Account Guarantee',
+
+                        // Only allowed if there's a value
+                        link: '/policies/{{planCode}}/{{id}}/policy/funds',
+
+                        // Only allowed if there's a value
+                        toolTip: 'This fund name description is fun.',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund account type',
+                        value: 'Fixed',
+                    },
+                ],
+            },
+            {
+                type: FieldType.section,
+                label: 'SF002',
+                children: [
+                    {
+                        type: FieldType.field,
+                        label: 'Fund ID',
+                        value: 'SBF002',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund name',
+                        value: '5 Year Variable Account Guarantee',
+                    },
+                    {
+                        type: FieldType.field,
+                        label: 'Fund account type',
+                        value: 'Variable',
+                    },
+                ],
+            },
+            {
+                type: FieldType.list,
+                children: [
+                    [
+                        {
+                            type: FieldType.field,
+                            label: 'Active Status',
+                            value: 'Pending',
+                        },
+                        {
+                            type: FieldType.field,
+                            label: 'Lifecycle Date',
+                            value: '10/28/2025',
+                        },
+                    ],
+                ],
+            },
+        ],
+    },
+];
+
 /**
  * Prepare a policy for rendering sections and fields.
  *
@@ -262,7 +483,7 @@ const removeSectionNodes = ({
     return data.filter((field: Field) => {
         const rule = sectionVisibility[field.label];
         return (
-            (!rule && field.type === FieldType.section) ||
+            !rule ||
             (planCode && rule.has(planCode)) ||
             rule.has(lineOfBusiness) ||
             (productType && rule.has(productType))
@@ -298,13 +519,25 @@ function convertNode(
         };
     }
 
-    // Array → List
+    // Array → Section -> subsection-field-to-title.ts
     if (Array.isArray(value)) {
         const groups: FieldGroup[] = [];
 
+        const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
+        console.log({ sectionLabelFieldName });
         for (const item of value) {
-            if (item == null) continue;
+            if (item == null || isPrimitive(item)) continue;
 
+            if (sectionLabelFieldName) {
+                const fields = Object.entries(item)
+                    .map(([k, v]) => convertNode(k, v, overrides))
+                    .filter((n): n is Field => n?.type === FieldType.field);
+                return {
+                    type: FieldType.section,
+                    label: sectionLabelFieldName,
+                    children: fields, // TODO: recurse?
+                };
+            }
             if (typeof item === 'object' && !Array.isArray(item)) {
                 // flatten object properties into a field group
                 const fields = Object.entries(item)
