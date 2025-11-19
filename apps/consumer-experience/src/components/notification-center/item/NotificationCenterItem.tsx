@@ -86,8 +86,7 @@ export const NotificationCenterItem = ({
             </div>
             <div className={Styles.notificationTextGroup}>
               <h3 className="typography-labels-label-lg">
-                {/* {notification.title} */}
-                Premium Processed
+                {notification.title}
               </h3>
               <p className={!notification.completed ? Styles.description : ''}>
                 {description}
