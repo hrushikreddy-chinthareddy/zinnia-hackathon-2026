@@ -100,7 +100,7 @@ export const markAllAsReadMutationOptions = ({
   notifications,
 }: MarkAllAsReadOptions) => ({
   mutationFn: () =>
-    Promise.all(
+    Promise.allSettled(
       notifications.map(notification =>
         acknowledgeCase({
           acknowledgedIds: notification.stepsToAcknowledge,
@@ -109,6 +109,6 @@ export const markAllAsReadMutationOptions = ({
           policyNumber,
         })
       )
-    ),
+    ).then(results => results.filter(result => result.status === 'fulfilled')),
   mutationKey: ['acknowledgeAllCases', planCode, policyNumber],
 });
