@@ -1,6 +1,11 @@
 import { render } from '@testing-library/react';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 import PendoAnalyticsInit from './PendoAnalyticsInit';
+
+jest.mock('@deps/utils/browser-logging', () => ({
+    browserLogError: jest.fn(),
+}));
 
 jest.mock('@auth0/nextjs-auth0/client', () => ({
     useUser: () => ({
@@ -37,6 +42,16 @@ let originalPendo: typeof window.pendo;
 let initializeMock: jest.Mock;
 let updateOptionsMock: jest.Mock;
 
+const withPendoMissing = (fn: () => void) => {
+    const originalPendo = window.pendo;
+    window.pendo = undefined;
+    try {
+        fn();
+    } finally {
+        window.pendo = originalPendo;
+    }
+};
+
 beforeAll(() => {
     originalPendo = window.pendo;
     initializeMock = jest.fn();
@@ -68,13 +83,14 @@ describe('PendoAnalyticsInit', () => {
 
         const config = initializeMock.mock.calls[0][0];
 
+        expect(browserLogError).not.toHaveBeenCalled();
         expect(config).toMatchObject({
             visitor: {
                 id: 'party:123',
                 email: 'user@example.com',
                 firstLogin: '2024-01-01T00:00:00.000Z',
                 // Internal flag comes from isInternalZinniaUser mock
-                isInternaZinnialUser: 'true',
+                isInternalZinniaUser: 'true',
             },
             account: {
                 id: 'zinnia',
@@ -89,6 +105,7 @@ describe('PendoAnalyticsInit', () => {
 
         const options = updateOptionsMock.mock.calls[0][0];
 
+        expect(browserLogError).not.toHaveBeenCalled();
         expect(options.visitor.id).toBe('party:123');
         expect(options.visitor.roles).toEqual([
             'role:zahara_admin',
@@ -105,5 +122,29 @@ describe('PendoAnalyticsInit', () => {
 
         expect(options.visitor.id).toBe('party:123');
         expect(options.visitor.carrierAccessList).toEqual(['ELIC', 'SBUL']);
+    });
+
+    it('logs an error if pendo is not loaded on initialize', () => {
+        withPendoMissing(() => {
+            render(<PendoAnalyticsInit />);
+
+            expect(initializeMock).not.toHaveBeenCalled();
+            expect(browserLogError).toHaveBeenCalledWith(
+                'pendo::Pendo not loaded, skipping initialization',
+                { user: 'party:123' }
+            );
+        });
+    });
+
+    it('logs an error if pendo is not loaded on updateOptions', () => {
+        withPendoMissing(() => {
+            render(<PendoAnalyticsInit />);
+
+            expect(updateOptionsMock).not.toHaveBeenCalled();
+            expect(browserLogError).toHaveBeenCalledWith(
+                'pendo::Pendo not loaded, skipping option update',
+                { user: 'party:123' }
+            );
+        });
     });
 });

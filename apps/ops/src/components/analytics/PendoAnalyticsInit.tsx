@@ -17,6 +17,7 @@ import { useEffect, useMemo } from 'react';
 import { useCarrierListQuery } from '@deps/hooks/tanstack/user/useCarrierListQuery';
 import { useRoleListQuery } from '@deps/hooks/tanstack/user/useRoleListQuery';
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 const PendoAnalyticsInit = () => {
     const { user } = useUser();
@@ -50,7 +51,16 @@ const PendoAnalyticsInit = () => {
 
     useEffect(() => {
         if (initOptions) {
-            window.pendo.initialize(initOptions);
+            if (window.pendo) {
+                window.pendo.initialize(initOptions);
+            } else {
+                browserLogError(
+                    'pendo::Pendo not loaded, skipping initialization',
+                    {
+                        user: user?.partyId,
+                    }
+                );
+            }
         }
     }, [initOptions]);
 
@@ -84,8 +94,17 @@ const PendoAnalyticsInit = () => {
 
     useEffect(() => {
         if (options) {
-            // Update the visitor options with any additional metadata
-            window.pendo.updateOptions(options);
+            if (window.pendo) {
+                // Update the visitor options with any additional metadata
+                window.pendo.updateOptions(options);
+            } else {
+                browserLogError(
+                    'pendo::Pendo not loaded, skipping option update',
+                    {
+                        user: user?.partyId,
+                    }
+                );
+            }
         }
     }, [options]);
 

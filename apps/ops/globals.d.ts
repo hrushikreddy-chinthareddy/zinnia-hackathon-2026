@@ -15,7 +15,7 @@ export type PendoOptions = {
 };
 declare global {
     interface Window {
-        pendo: {
+        pendo?: {
             initialize: (config: PendoOptions) => void;
             updateOptions: (config: PendoUpdateOptions) => void;
         };
