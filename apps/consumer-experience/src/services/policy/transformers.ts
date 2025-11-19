@@ -1,19 +1,3 @@
-import {
-  PartyRole,
-  Policy,
-  PolicyStatus,
-  Transaction,
-  TransactionType,
-  MetricsType,
-  Party,
-  PolicyFeature,
-  Status,
-  Reason,
-  Transaction_Payor,
-  FeatureType,
-  LineOfBusiness,
-  Frequency,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -54,6 +38,22 @@ import {
 import { logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import {
+  PartyRole,
+  Policy,
+  PolicyStatus,
+  Transaction,
+  TransactionType,
+  MetricsType,
+  Party,
+  PolicyFeature,
+  Status,
+  Reason,
+  Transaction_Payor,
+  FeatureType,
+  LineOfBusiness,
+  Frequency,
+} from '@zinnia/api-types/types/sor';
 
 import { LimitedPolicyParty } from './types';
 

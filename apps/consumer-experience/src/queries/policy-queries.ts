@@ -1,5 +1,3 @@
-import { SystematicProgram } from '@zinnia/api-types/types/sor';
-
 import { ApiResponse } from '@/services';
 import { ClientApi } from '@/services/client-http';
 import { Fund } from '@/services/funds/types';
@@ -12,6 +10,7 @@ import {
   UpcomingPremium,
 } from '@/types/policy';
 import { CarrierListDetail } from '@/utils/carriers';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 
 export const getPolicyParties = async ({
   planCode,

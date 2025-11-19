@@ -39,7 +39,6 @@ module.exports = {
     'plugin:storybook/recommended',
     'prettier',
     'plugin:@typescript-eslint/recommended',
-    'turbo',
     'plugin:@next/next/recommended',
   ],
   plugins: [

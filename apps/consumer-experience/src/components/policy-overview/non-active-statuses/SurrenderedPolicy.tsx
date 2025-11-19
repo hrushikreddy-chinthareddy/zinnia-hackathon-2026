@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/bpm';
 import { Suspense } from 'react';
 
 import { DocumentsView } from '@/app/(authenticated)/coverage/shared-views/documents-view/DocumentsView';
@@ -6,6 +5,7 @@ import { LargeSkeleCard } from '@/components/skeleton-loader/policy-page/policy-
 import { getFeatureFlags } from '@/services/feature-flags';
 import { DocumentCategory } from '@/types/document';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { LineOfBusiness } from '@zinnia/api-types/types/bpm';
 export const SurrenderedPolicy = async ({
   planCode,
   policyNumber,

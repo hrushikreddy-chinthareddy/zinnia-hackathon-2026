@@ -1,10 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import {
-  DisbursementPaymentForm,
-  TransactionFailureResponse,
-} from '@zinnia/api-types/types/bpm';
-import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
@@ -34,6 +30,10 @@ import { useSurrender } from '@/components/stepped-workflow/workflows/surrender/
 import { stepsInfo } from '@/components/stepped-workflow/workflows/surrender/steps';
 import { postFullSurrenderValidation } from '@/queries/fullsurrender-queries';
 import { QueryKeys } from '@/queries/query-keys';
+import {
+  DisbursementPaymentForm,
+  TransactionFailureResponse,
+} from '@zinnia/api-types/types/bpm';
 
 import styles from '../Surrender.module.css';
 

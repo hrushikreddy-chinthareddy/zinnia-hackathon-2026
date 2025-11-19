@@ -1,5 +1,4 @@
 import { QueryClient } from '@tanstack/react-query';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -10,6 +9,7 @@ import { getPageTitle, RouteKey } from '@/route-map';
 import { getPolicyProfileData } from '@/services';
 import { PolicyProfile, PolicyRequestInputs } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.PROFILE);
 // disable because NextJS needs this to be exported from this file

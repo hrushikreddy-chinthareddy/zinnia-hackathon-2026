@@ -1,5 +1,3 @@
-import { PartyRole, ProductType } from '@zinnia/api-types/types/sor';
-
 import { RouteKey } from '@/route-map';
 import { UserInfo } from '@/types/logging';
 import {
@@ -7,6 +5,7 @@ import {
   CommonLogContext,
 } from '@/utils/logging/server-logging';
 import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
+import { PartyRole, ProductType } from '@zinnia/api-types/types/sor';
 
 import { ComponentName } from './types';
 import { getLoggedInUserPolicyAndPartyData } from '../policy';

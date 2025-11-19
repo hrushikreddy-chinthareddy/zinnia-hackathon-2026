@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AmountType, DisbursementType } from '@zinnia/api-types/types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -20,6 +19,7 @@ import { FieldDate } from '@/components/field/date/FieldDate';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { AmountType, DisbursementType } from '@zinnia/api-types/types/bpm';
 
 import {
   amountTypeEnum,

@@ -1,10 +1,10 @@
-import { PartyRole, PartyType } from '@zinnia/api-types/types/sor';
 import { Button, Icon, IconType, SideSheet } from '@zinnia/bloom/components';
 import { CSSProperties } from 'react';
 
 import { PolicyParty } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { formatPartyRoles } from '@/utils/party';
+import { PartyRole, PartyType } from '@zinnia/api-types/types/sor';
 
 import styles from './PartyList.module.css';
 import { Addresses } from '../person-data/Addresses';

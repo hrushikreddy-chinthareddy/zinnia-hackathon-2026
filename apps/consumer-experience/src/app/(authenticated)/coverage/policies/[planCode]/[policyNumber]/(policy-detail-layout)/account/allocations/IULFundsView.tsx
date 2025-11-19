@@ -1,7 +1,5 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { FeatureType, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
@@ -18,6 +16,8 @@ import {
 import { QueryKeys } from '@/queries/query-keys';
 import { PolicyStatusDetail } from '@/types/policy';
 import { toTitleCase } from '@/utils/strings';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
+import { FeatureType, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export const IULFundsView = ({
   planCode,

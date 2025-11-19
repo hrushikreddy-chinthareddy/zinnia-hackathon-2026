@@ -1,13 +1,13 @@
+import dayjs from 'dayjs';
+
+import { FreeLookCancelState } from '@/components/stepped-workflow/workflows/free-look-cancel/provider/types';
+import { FreeLookCancellationBPMRequest } from '@/services/bpm/free-look-cancel';
 import {
   DisbursementPaymentForm,
   PaymentForm,
   DisbursementType,
 } from '@zinnia/api-types/types/bpm';
 import { BankAccount, Address } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
-
-import { FreeLookCancelState } from '@/components/stepped-workflow/workflows/free-look-cancel/provider/types';
-import { FreeLookCancellationBPMRequest } from '@/services/bpm/free-look-cancel';
 
 export const buildFreeLookCancellationRequestBody = (
   state: FreeLookCancelState,

@@ -1,5 +1,4 @@
 'use client';
-import { AddressChange } from '@zinnia/api-types/types/bpm';
 import {
   Radio,
   Label,
@@ -22,6 +21,7 @@ import { SelectResponsive } from '@/components/select-responsive/SelectResponsiv
 import { getDirtyValues } from '@/utils/forms';
 import { isNumberOrHyphen } from '@/utils/regex';
 import { states } from '@/utils/states';
+import { AddressChange } from '@zinnia/api-types/types/bpm';
 
 import styles from './AddEditAddress.module.css';
 import { AddressFormFields, FormActionType } from '../../types';

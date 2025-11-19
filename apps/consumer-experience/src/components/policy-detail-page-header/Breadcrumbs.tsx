@@ -1,9 +1,9 @@
 'use client';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useParams, usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Link } from '@/components/link/Link';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import breadcrumbStyles from './PolicyDetailPageHeader.module.css';
 import {

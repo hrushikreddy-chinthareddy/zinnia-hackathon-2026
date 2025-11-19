@@ -2,8 +2,6 @@
 // between policies and annuities. If this changes, don't think too much about it just separate them
 // and return this to the page view rather than having it as a separate view.
 
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -19,6 +17,8 @@ import { DocumentsVersion } from '@/types/carrier-config';
 import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DocumentsTabs } from './DocumentsTabs';
 import { extensionsFilter, filterDocuments, filterStatements } from './utils';

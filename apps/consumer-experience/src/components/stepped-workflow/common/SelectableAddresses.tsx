@@ -1,5 +1,4 @@
 'use client';
-import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   IconType,
   Label,
@@ -15,6 +14,7 @@ import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.
 import { countryCodeToName } from '@/utils/address';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
+import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './Selectable.module.css';
 

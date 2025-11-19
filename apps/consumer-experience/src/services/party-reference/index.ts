@@ -1,9 +1,8 @@
-import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
-
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 
 import { apiServerBaseUrl, isMockErrorEnabled } from '../api-config';
 import { ServerApi } from '../server-http';

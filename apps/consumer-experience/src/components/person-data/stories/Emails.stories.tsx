@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
+
 import { EmailType } from '@zinnia/api-types/types/sor';
 
 import { Emails } from '../Emails';

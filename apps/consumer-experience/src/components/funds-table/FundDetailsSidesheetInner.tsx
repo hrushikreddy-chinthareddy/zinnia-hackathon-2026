@@ -1,6 +1,4 @@
 'use client';
-import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType } from '@zinnia/bloom/components';
 import { ReactNode } from 'react';
 import { z } from 'zod';
@@ -9,6 +7,8 @@ import { Fund } from '@/services/funds/types';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
 import { toSentenceCase, DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './FundDetailsSidesheetInner.module.css';
 import { allocationAccountInfo, sweepDateInfo } from './utils';

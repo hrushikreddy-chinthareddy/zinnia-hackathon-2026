@@ -1,4 +1,3 @@
-import { FeatureType, ProductType, Reason } from '@zinnia/api-types/types/sor';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -16,6 +15,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 // import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { FeatureType, ProductType, Reason } from '@zinnia/api-types/types/sor';
 
 export default async function SystematicPremiumLayout({
   children,

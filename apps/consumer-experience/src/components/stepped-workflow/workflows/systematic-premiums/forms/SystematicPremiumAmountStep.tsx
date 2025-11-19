@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Frequency } from '@zinnia/api-types/types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -20,6 +19,7 @@ import { FieldValue } from '@/components/field/value/FieldValue';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { Frequency } from '@zinnia/api-types/types/bpm';
 
 import {
   SPAmountStepSchema,

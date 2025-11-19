@@ -1,15 +1,15 @@
 'use client';
 
-import {
-  EDeliveryPreferenceModel,
-  UpdateEDeliveryPreferenceModel,
-} from '@zinnia/api-types/types/preferences';
-import { Email } from '@zinnia/api-types/types/sor';
 import { Button, Radio } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { Controller, useForm } from 'react-hook-form';
 
 import { toSentenceCase } from '@/utils/strings';
+import {
+  EDeliveryPreferenceModel,
+  UpdateEDeliveryPreferenceModel,
+} from '@zinnia/api-types/types/preferences';
+import { Email } from '@zinnia/api-types/types/sor';
 
 import styles from './CommunicationPreferences.module.css';
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';

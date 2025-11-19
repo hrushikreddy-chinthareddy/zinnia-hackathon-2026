@@ -1,3 +1,4 @@
+import { PolicyProfile } from '@/types/policy';
 import {
   AccountStatus,
   AccountType,
@@ -9,8 +10,6 @@ import {
   PhoneType,
   State,
 } from '@zinnia/api-types/types/sor';
-
-import { PolicyProfile } from '@/types/policy';
 
 export const profileData: PolicyProfile = {
   name: {

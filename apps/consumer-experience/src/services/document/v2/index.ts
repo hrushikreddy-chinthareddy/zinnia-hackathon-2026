@@ -1,9 +1,4 @@
 import {
-  DownloadDocumentResponse,
-  TaxFormsResponse200,
-} from '@zinnia/api-types/types/documents';
-
-import {
   DocumentApiRequestInputs,
   DocumentV2DownloadApiRequestInputs,
   DocumentV2SearchResult,
@@ -15,6 +10,10 @@ import { parseAPIResponse } from '@/utils/api';
 import { logWarn } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import {
+  DownloadDocumentResponse,
+  TaxFormsResponse200,
+} from '@zinnia/api-types/types/documents';
 
 import {
   ApiResponse,

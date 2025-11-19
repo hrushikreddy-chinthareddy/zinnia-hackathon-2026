@@ -1,8 +1,8 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { createContext, Dispatch, SetStateAction, useContext } from 'react';
 import { ZodObject } from 'zod';
 
 import { BankDetail } from '@/components/person-data/types';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { StepInfo } from './types';
 

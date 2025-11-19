@@ -1,4 +1,3 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Button, Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -28,6 +27,7 @@ import {
   DEFAULT_UNAVAILABLE_STRING,
   pluralize,
 } from '@/utils/strings';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.WITHDRAWALS);
 // disable because NextJS needs this to be exported from this file

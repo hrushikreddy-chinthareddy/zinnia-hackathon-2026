@@ -1,3 +1,11 @@
+import dayjs from 'dayjs';
+
+import { convertAggregationAccountTypeToPaymentForm } from '@/app/api/bpm/[planCode]/[policyNumber]/onetimepremium/utils';
+import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
+import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
+import { TransactionEligbility } from '@/types/transactions';
+import { eligibilityStatus } from '@/utils/data';
+import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import {
   AmountType,
   ArrangementType,
@@ -10,14 +18,6 @@ import {
   TaxWithholdingType,
   TransactionResponse,
 } from '@zinnia/api-types/types/bpm';
-import dayjs from 'dayjs';
-
-import { convertAggregationAccountTypeToPaymentForm } from '@/app/api/bpm/[planCode]/[policyNumber]/onetimepremium/utils';
-import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
-import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
-import { TransactionEligbility } from '@/types/transactions';
-import { eligibilityStatus } from '@/utils/data';
-import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 
 export const transformEligibility = (
   eligibility: TransactionResponse

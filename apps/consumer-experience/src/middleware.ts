@@ -4,7 +4,6 @@
 // https://github.com/vercel/next.js/discussions/64993
 // prefetched pages also hit middleware by default!!
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { NextResponse, type NextRequest } from 'next/server';
 
 import { RouteKey } from '@/route-map';
@@ -17,6 +16,7 @@ import {
   MOCK_ERROR_COOKIE_KEY,
   SHOW_DEV_MENU_COOKIE_KEY,
 } from '@/utils/serverClientUtils';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { consumerExperienceAPIBaseUrl, ServerApi } from './services';
 import { ROOT_URL_PATH } from './types';

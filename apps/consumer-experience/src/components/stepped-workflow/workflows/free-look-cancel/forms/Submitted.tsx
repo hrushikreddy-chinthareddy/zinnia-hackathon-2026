@@ -1,12 +1,11 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-
 import { Link } from '@/components/link/Link';
 import { default as commonStyles } from '@/components/stepped-workflow/common/Styles.module.css';
 import { useGetBasePolicyPath } from '@/hooks/use-get-base-policy-path';
 import { lineOfBusinessDisplayText } from '@/utils/data';
 import { toSentenceCase } from '@/utils/strings';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export const Submission = ({
   lineOfBusiness,

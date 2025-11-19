@@ -1,4 +1,3 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -19,6 +18,7 @@ import { formatUSDollars } from '@/utils/currency';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.LOANS);
 // disable because NextJS needs this to be exported from this file

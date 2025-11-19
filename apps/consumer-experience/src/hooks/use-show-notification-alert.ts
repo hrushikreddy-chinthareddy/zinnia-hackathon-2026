@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { parseNotifications } from '@/components/notification-center/utils';
 import {
@@ -7,6 +6,7 @@ import {
   searchCasesByPolicyNumberOptions,
 } from '@/queries/query-options';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { useFeatureFlagsFor } from './use-feature-flags';
 

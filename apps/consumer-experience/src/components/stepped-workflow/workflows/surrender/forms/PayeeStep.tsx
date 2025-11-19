@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PartyRole } from '@zinnia/api-types/types/bpm';
 import { Label, Radio } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -14,6 +13,7 @@ import {
 } from '@/components/stepped-workflow/workflows/surrender/provider/types';
 import { useSurrender } from '@/components/stepped-workflow/workflows/surrender/provider/useSurrender';
 import { PolicyParty } from '@/types/policy';
+import { PartyRole } from '@zinnia/api-types/types/bpm';
 
 import { default as styles } from '../Surrender.module.css';
 

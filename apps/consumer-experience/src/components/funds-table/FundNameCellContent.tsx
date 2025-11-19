@@ -1,9 +1,9 @@
 'use client';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 
 import { Fund } from '@/services/funds/types';
 import { toSentenceCase } from '@/utils/strings';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { FundDescription } from './FundDescription';
 import { FundDetailsSidesheetInner } from './FundDetailsSidesheetInner';

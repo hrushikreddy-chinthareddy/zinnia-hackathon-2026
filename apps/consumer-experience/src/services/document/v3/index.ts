@@ -1,8 +1,3 @@
-import {
-  DownloadDocumentResponse,
-  TaxFormsResponse200,
-} from '@zinnia/api-types/types/documents';
-
 import { mockV3DocumentsResponse } from '@/services/mocks/documents-v3';
 import {
   DocumentApiRequestInputs,
@@ -15,6 +10,10 @@ import {
 import { parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import {
+  DownloadDocumentResponse,
+  TaxFormsResponse200,
+} from '@zinnia/api-types/types/documents';
 
 import {
   ServerApi,

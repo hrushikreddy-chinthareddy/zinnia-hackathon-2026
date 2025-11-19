@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { Metadata } from 'next';
 
@@ -17,6 +16,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './account.module.css';
 

@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -7,6 +6,7 @@ import { getPageTitle, RouteKey } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.NOTIFICATIONS);
 // disable because NextJS needs this to be exported from this file

@@ -1,5 +1,4 @@
 'use client';
-import { PayeeOrBeneficiary } from '@zinnia/api-types/types/sor';
 import { Label, Radio } from '@zinnia/bloom/components';
 import { useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
@@ -11,6 +10,7 @@ import { default as commonStyles } from '@/components/stepped-workflow/common/St
 import { useGetTransactionStepData } from '@/hooks/use-get-transaction-step-data';
 import { PolicyParty } from '@/types/policy';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { PayeeOrBeneficiary } from '@zinnia/api-types/types/sor';
 
 import { FreeLookCancelAction } from '../provider/types';
 import { useFreeLookCancel } from '../provider/useFreeLookCancel';

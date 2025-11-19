@@ -1,11 +1,6 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  DisbursementPaymentForm,
-  PaymentForm,
-} from '@zinnia/api-types/types/bpm';
-import { Address } from '@zinnia/api-types/types/sor';
-import {
   AssistiveText,
   AssistiveTextVariant,
   IconType,
@@ -38,6 +33,11 @@ import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
 import { countryCodeToName } from '@/utils/address';
 import { toSentenceCase } from '@/utils/strings';
+import {
+  DisbursementPaymentForm,
+  PaymentForm,
+} from '@zinnia/api-types/types/bpm';
+import { Address } from '@zinnia/api-types/types/sor';
 
 import { default as styles } from '../Surrender.module.css';
 

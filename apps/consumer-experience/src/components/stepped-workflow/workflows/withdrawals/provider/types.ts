@@ -1,3 +1,5 @@
+import { z } from 'zod';
+
 import {
   AllocationOption,
   AmountType,
@@ -7,7 +9,6 @@ import {
   TaxRateToUse,
 } from '@zinnia/api-types/types/bpm';
 import { FilingStatus } from '@zinnia/api-types/types/sor';
-import { z } from 'zod';
 
 export enum WithdrawalSteps {
   INTRO = 'introduction',

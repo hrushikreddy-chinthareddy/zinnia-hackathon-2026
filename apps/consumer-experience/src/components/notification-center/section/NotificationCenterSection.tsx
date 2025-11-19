@@ -1,10 +1,10 @@
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
 import { NotificationCenterItem } from '@/components/notification-center/item/NotificationCenterItem';
 import { default as Styles } from '@/components/notification-center/NotificationCenter.module.css';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
 

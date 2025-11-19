@@ -1,7 +1,5 @@
 'use client';
 
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 
 import { ClickableListContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -10,6 +8,8 @@ import { DocumentCategory, TaxDocument } from '@/types/document';
 import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { createQueryString } from '@/utils/strings';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './documentsList.module.css';
 import { NoDataAvailable } from '../no-data-available/NoDataAvailable';

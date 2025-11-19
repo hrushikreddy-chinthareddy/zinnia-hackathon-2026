@@ -1,5 +1,3 @@
-import { SystematicProgramUpdateRequest } from '@zinnia/api-types/types/bpm';
-
 import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
 import { WithdrawalsState } from '@/components/stepped-workflow/workflows/withdrawals/provider/types';
 import { ApiResponse } from '@/services';
@@ -14,6 +12,7 @@ import {
 import { ClientApi } from '@/services/client-http';
 import { PolicyRequestInputs } from '@/types/policy';
 import { TransactionEligbility } from '@/types/transactions';
+import { SystematicProgramUpdateRequest } from '@zinnia/api-types/types/bpm';
 
 export const getPartialWithdrawalOneTimeValidation = async ({
   planCode,

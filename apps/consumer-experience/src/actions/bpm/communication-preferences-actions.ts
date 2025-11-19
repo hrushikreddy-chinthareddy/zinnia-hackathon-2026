@@ -1,7 +1,5 @@
 'use server';
 
-import { CommunicationPreferenceChange } from '@zinnia/api-types/types/bpm';
-import { UpdateEDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
@@ -10,6 +8,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { ApiResponse, bpmApiBaseUrl, ServerApi } from '@/services';
 import { BPMResponse } from '@/types/transactions';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import { CommunicationPreferenceChange } from '@zinnia/api-types/types/bpm';
+import { UpdateEDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 
 import {
   ActionTypes,

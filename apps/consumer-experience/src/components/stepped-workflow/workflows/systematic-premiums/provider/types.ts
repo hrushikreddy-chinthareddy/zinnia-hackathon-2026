@@ -1,5 +1,6 @@
-import { Frequency } from '@zinnia/api-types/types/bpm';
 import { z } from 'zod';
+
+import { Frequency } from '@zinnia/api-types/types/bpm';
 
 export enum SystematicPremiumSteps {
   AMOUNT = 'amount',

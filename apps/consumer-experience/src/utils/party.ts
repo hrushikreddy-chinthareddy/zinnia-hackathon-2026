@@ -1,6 +1,5 @@
-import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
-
 import { PolicyParty } from '@/types/policy';
+import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { isEndDated } from './dates';
 import { logTrace } from './logging/log-fns';

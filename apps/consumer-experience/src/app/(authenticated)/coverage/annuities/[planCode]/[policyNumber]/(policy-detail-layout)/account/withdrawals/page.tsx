@@ -1,4 +1,3 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { Metadata } from 'next';
@@ -18,6 +17,7 @@ import { PolicyRequestInputs, PolicyWithdrawals } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import styles from './withdrawals.module.css';
 

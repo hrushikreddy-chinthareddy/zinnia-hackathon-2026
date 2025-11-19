@@ -1,4 +1,3 @@
-import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { NextRequest, NextResponse } from 'next/server';
@@ -8,6 +7,7 @@ import { getAllSystematicPrograms } from '@/services/policy/systematic-programs'
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
 

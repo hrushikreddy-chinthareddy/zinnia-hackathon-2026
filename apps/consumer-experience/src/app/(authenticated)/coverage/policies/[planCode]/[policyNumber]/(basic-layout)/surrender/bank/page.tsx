@@ -1,5 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-
 import { SelectBankWrapper } from '@/components/stepped-workflow/workflows/surrender/forms/SelectBankWrapper';
 import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
 import { getPolicyProfileData } from '@/services';
@@ -8,6 +6,7 @@ import { getPaymentMethods } from '@/services/payment-methods';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const BankPage = async ({ params }: PolicyRequestInputsParams) => {
   const { planCode, policyNumber } = params;

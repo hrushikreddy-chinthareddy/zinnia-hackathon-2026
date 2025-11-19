@@ -1,3 +1,4 @@
+import { BankDetail } from '@/components/person-data/types';
 import { PolicyReferenceDataModel } from '@zinnia/api-types/types/search';
 import {
   Address,
@@ -21,8 +22,6 @@ import {
   Product,
   PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { BankDetail } from '@/components/person-data/types';
 
 export interface PolicyWithAgent extends Partial<Policy> {
   primaryAgentExternalId?: string | null;

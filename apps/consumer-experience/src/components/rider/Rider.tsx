@@ -1,6 +1,5 @@
 'use client';
 
-import { Status } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -13,6 +12,7 @@ import { PolicyRider } from '@/types/riders';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING, toSentenceCase } from '@/utils/strings';
+import { Status } from '@zinnia/api-types/types/sor';
 
 import styles from './Rider.module.css';
 import { LabelPopover } from '../label-popover/LabelPopover';

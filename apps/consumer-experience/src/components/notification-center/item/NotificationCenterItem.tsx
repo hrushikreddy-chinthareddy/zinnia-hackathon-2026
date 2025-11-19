@@ -1,4 +1,3 @@
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
@@ -7,6 +6,7 @@ import { default as Styles } from '@/components/notification-center/Notification
 import { NotificationCenterSidesheet } from '@/components/notification-center/side-sheet/NotificatonCenterSidesheet';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
 import { formatDateWithUserTimezone } from '@/utils/dates';
+import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
 

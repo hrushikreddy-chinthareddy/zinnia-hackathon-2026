@@ -1,4 +1,3 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -18,6 +17,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { sortByDate } from '@/utils/dates';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { toSentenceCase } from '@/utils/strings';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 const displayWithRequested = [
   TransactionType.PAYMENT_INITIAL_PREMIUM,

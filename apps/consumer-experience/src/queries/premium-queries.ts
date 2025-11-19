@@ -1,11 +1,10 @@
+import { ApiResponse } from '@/services';
+import { OneTimePremiumBPMResponse } from '@/services/bpm/one-time-premium-payment';
+import { ClientApi } from '@/services/client-http';
 import {
   TransactionAcceptedResponse,
   TransactionFailureResponse,
 } from '@zinnia/api-types/types/bpm';
-
-import { ApiResponse } from '@/services';
-import { OneTimePremiumBPMResponse } from '@/services/bpm/one-time-premium-payment';
-import { ClientApi } from '@/services/client-http';
 
 export const submitOttp = async (
   policyNumber: string,

@@ -1,14 +1,5 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import {
-  AmountType,
-  ArrangementType,
-  PaymentForm,
-  SystematicProgramUpdateRequest,
-  Frequency,
-  PartyRole,
-} from '@zinnia/api-types/types/bpm';
-import { SystematicProgram } from '@zinnia/api-types/types/sor';
 import { Button, SideSheet } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import React, { useState } from 'react';
@@ -23,6 +14,15 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { FormSteps } from '@/types/transactions';
 import { formatUSDollars } from '@/utils/currency';
 import { DEFAULT_DATE_FORMAT, ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import {
+  AmountType,
+  ArrangementType,
+  PaymentForm,
+  SystematicProgramUpdateRequest,
+  Frequency,
+  PartyRole,
+} from '@zinnia/api-types/types/bpm';
+import { SystematicProgram } from '@zinnia/api-types/types/sor';
 
 import { Confirm } from '../transaction-steps/confirm/Confirm';
 import { Error } from '../transaction-steps/error/Error';

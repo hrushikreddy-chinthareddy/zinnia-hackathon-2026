@@ -1,12 +1,12 @@
 'use server';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { cookies } from 'next/headers';
 
 import { postResetDeliveryDate } from '@/services/bpm/delivery-date';
 import { getCookie } from '@/utils/auth';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { ACKNOWLEDGEMENT_COOKIE_KEY } from '@/utils/serverClientUtils';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export interface AcknowledgeInputs {
   policyAcknowledged: boolean;

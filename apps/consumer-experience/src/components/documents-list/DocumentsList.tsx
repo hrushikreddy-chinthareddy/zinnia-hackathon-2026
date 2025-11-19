@@ -1,6 +1,5 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 
 import { ClickableListContainer } from '@/components/clickable-card-container/ClickableCardContainer';
@@ -14,6 +13,7 @@ import {
 import { checkIfNull, lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { createQueryString } from '@/utils/strings';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './documentsList.module.css';
 

@@ -1,6 +1,5 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
 
 import {
@@ -11,6 +10,7 @@ import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PaymentProvider } from '@/types/carrier-config';
 import { PaymentMethod } from '@/types/payment';
+import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { SelectBank } from './SelectBank';
 

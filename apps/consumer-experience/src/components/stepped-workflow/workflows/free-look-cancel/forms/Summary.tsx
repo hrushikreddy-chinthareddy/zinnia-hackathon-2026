@@ -1,9 +1,4 @@
 'use client';
-import { DisbursementPaymentForm } from '@zinnia/api-types/types/bpm';
-import {
-  BankAccount,
-  Address as AddressSOR,
-} from '@zinnia/api-types/types/sor';
 import { Icon, IconType, Label, Loader } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
@@ -24,6 +19,11 @@ import styles from '@/components/stepped-workflow/common/Styles.module.css';
 import { useGetTransactionStepData } from '@/hooks/use-get-transaction-step-data';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 import { toSentenceCase, DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { DisbursementPaymentForm } from '@zinnia/api-types/types/bpm';
+import {
+  BankAccount,
+  Address as AddressSOR,
+} from '@zinnia/api-types/types/sor';
 
 import { FreeLookCancelUrlPaths } from '../provider/types';
 import { useFreeLookCancel } from '../provider/useFreeLookCancel';

@@ -1,5 +1,3 @@
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import PdfPreviewer from '@/components/pdf-previewer/PdfPreviewer';
@@ -14,6 +12,8 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { logInfo } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import previewStyles from '../[documentId]/Preview.module.css';
 

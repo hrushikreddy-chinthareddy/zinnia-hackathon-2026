@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AccountStatus, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useParams } from 'next/navigation';
 import { FC, useMemo, useRef } from 'react';
 
@@ -18,6 +17,7 @@ import {
   POLL_INTERVAL,
   POLL_LIMIT,
 } from '@/utils/transactions';
+import { AccountStatus, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './BankList.module.css';
 import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';

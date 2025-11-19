@@ -1,10 +1,9 @@
-import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
-
 import { CaseSearchResponse, CaseSummary } from '@/types/case';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
 
 import {
   caseManagementBaseUrl,

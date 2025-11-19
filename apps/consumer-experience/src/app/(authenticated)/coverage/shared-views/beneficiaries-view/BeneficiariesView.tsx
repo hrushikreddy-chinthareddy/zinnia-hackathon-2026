@@ -1,4 +1,3 @@
-import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
 import {
   AllocationColorBar,
   contingentColorOrder,
@@ -14,6 +13,7 @@ import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable'
 import { Party } from '@/components/party-list/PartyList';
 import { Beneficiary, PolicyParty } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { LineOfBusiness, PartyRole } from '@zinnia/api-types/types/sor';
 
 import styles from './BeneficiariesView.module.css';
 

@@ -1,11 +1,10 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-
 import { SelectBank } from '@/components/stepped-workflow/workflows/withdrawals/forms/SelectBank';
 import { Withdrawals } from '@/components/stepped-workflow/workflows/withdrawals/Withdrawals';
 import { getPaymentDetails, getPolicyProfileData } from '@/services';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const BankPage = async ({ params }: PolicyRequestInputsParams) => {
   const { planCode, policyNumber } = params;

@@ -1,3 +1,7 @@
+import dayjs from 'dayjs';
+
+import { BankDetail } from '@/components/person-data/types';
+import { LineOfBusinessPath } from '@/types';
 import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   AccountType,
@@ -15,10 +19,6 @@ import {
   LineOfBusiness,
   Party,
 } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
-
-import { BankDetail } from '@/components/person-data/types';
-import { LineOfBusinessPath } from '@/types';
 
 import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 

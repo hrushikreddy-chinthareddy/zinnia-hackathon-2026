@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -10,6 +9,7 @@ import { getFeatureFlags } from '@/services/feature-flags';
 import { getTransactionSummaryById } from '@/services/transactions';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.TRANSACTION_SUMMARY);
 

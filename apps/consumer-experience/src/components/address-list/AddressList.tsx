@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { FC, useRef } from 'react';
 
 import { actionLogInfo } from '@/actions/log-actions';
@@ -17,6 +16,7 @@ import {
   POLL_INTERVAL,
   POLL_LIMIT,
 } from '@/utils/transactions';
+import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
 import { FormActionType } from '../add-edit-address/types';

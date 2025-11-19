@@ -1,6 +1,5 @@
-import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
-
 import { Fund } from '@/services/funds/types';
+import { FundAccountTypeEnum } from '@zinnia/api-types/types/funds';
 
 const fundIdToFundDescription: { [key: string]: string } = {
   ELI001:

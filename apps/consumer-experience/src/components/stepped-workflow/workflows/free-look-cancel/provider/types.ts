@@ -1,8 +1,8 @@
-import { DisbursementPaymentForm } from '@zinnia/api-types/types/bpm';
-import { Address, BankAccount } from '@zinnia/api-types/types/sor';
 import z from 'zod';
 
 import { PolicyParty } from '@/types/policy';
+import { DisbursementPaymentForm } from '@zinnia/api-types/types/bpm';
+import { Address, BankAccount } from '@zinnia/api-types/types/sor';
 
 // These need to match the routes defined in the app directory
 export enum FreeLookCancelUrlPaths {

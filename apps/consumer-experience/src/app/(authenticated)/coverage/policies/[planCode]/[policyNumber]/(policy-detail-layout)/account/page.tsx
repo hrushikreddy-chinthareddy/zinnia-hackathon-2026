@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import { AccountValue } from '@/components/account-value/AccountValue';
@@ -6,6 +5,7 @@ import { AdditionalAccountValueLinks } from '@/components/account-value/Addition
 import { ClickableCardContainer } from '@/components/clickable-card-container/ClickableCardContainer';
 import { RouteKey, getPageTitle } from '@/route-map';
 import { PolicyRequestInputs } from '@/types/policy';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.ACCOUNT);
 // disable because NextJS needs this to be exported from this file

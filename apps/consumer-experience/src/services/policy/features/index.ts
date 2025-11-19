@@ -1,5 +1,3 @@
-import { PolicyFeature } from '@zinnia/api-types/types/sor';
-
 import { ApiResponse } from '@/services';
 import { policyApiBaseUrl } from '@/services/api-config';
 import { ServerApi } from '@/services/server-http';
@@ -7,6 +5,7 @@ import { PolicyRequestInputs } from '@/types/policy';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
 
 const FILE_NAME = '/src/services/policy/features/index.ts';
 

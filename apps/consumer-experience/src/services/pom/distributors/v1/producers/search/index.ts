@@ -1,9 +1,8 @@
-import { Swizzle_Host_Defaults_Contracts_PagedResponse_1 } from '@zinnia/api-types/types/pom';
-
 import { EnterpriseTokenApi } from '@/services/enterprise-api-token-http';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import { Swizzle_Host_Defaults_Contracts_PagedResponse_1 } from '@zinnia/api-types/types/pom';
 
 import { formatPomAgentData } from './transformers';
 
