@@ -90,7 +90,7 @@ export const MenuContextual = ({
             <DropdownMenu.Portal>
                 <DropdownMenu.Content
                     className={clsx(
-                        'absolute z-[300] flex max-w-[320px] flex-col items-start justify-center gap-2 rounded bg-gray-900 py-4 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+                        'absolute z-[300] max-w-[320px] max-h-[75vh] overflow-y-auto rounded bg-gray-900 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
                         placementClasses
                     )}
                     side={side}
@@ -99,7 +99,7 @@ export const MenuContextual = ({
                     onEscapeKeyDown={() => setOpen(false)}
                     onInteractOutside={() => setOpen(false)}
                 >
-                    <ul className="flex flex-col items-start gap-4 rounded-md">
+                    <ul className="flex flex-col items-start gap-4 rounded-md py-4">
                         {children}
                     </ul>
                 </DropdownMenu.Content>
