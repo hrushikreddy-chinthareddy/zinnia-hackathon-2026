@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { default as Styles } from '@/components/notification-center/NotificationCenter.module.css';
 import { NotificationCenterSidesheet } from '@/components/notification-center/side-sheet/NotificatonCenterSidesheet';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import { formatDateWithUserTimezone } from '@/utils/dates';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
 
@@ -55,14 +56,14 @@ export const NotificationCenterItem = ({
 
   const fieldData = {
     'Case ID': notification.id,
-    'Completion Date': notificationDate.format('MM/DD/YYYY'),
-    Transaction: notification.title,
+    Submitted: formatDateWithUserTimezone(notification.date),
   };
 
   return (
     <NotificationCenterSidesheet
       caseId={notification.id}
       title={notification.title}
+      isCompleted={notification.completed}
       fields={Object.entries(fieldData).map(([key, value]) => ({
         label: key,
         value,

@@ -5,6 +5,7 @@ import {
   Label,
   SideSheet,
 } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { PropsWithChildren } from 'react';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
@@ -18,6 +19,7 @@ import { default as Styles } from '../NotificationCenter.module.css';
 export type NotificationCenterSidesheetProps = {
   caseId: string;
   title?: string;
+  isCompleted?: boolean;
   fields: {
     label: string;
     value: string;
@@ -31,20 +33,31 @@ export const NotificationCenterSidesheet = ({
   children,
   fields,
   title,
+  isCompleted,
 }: NotificationCenterSidesheetProps) => {
+  const description = isCompleted
+    ? `Processing complete`
+    : 'There was an error processing this transaction.';
   return (
     <SideSheet
       preventCloseOnOutsideClick={false}
-      header={'Case Details'}
+      header={'Details'}
       trigger={children}
-      description="Case Details"
     >
+      <div className={clsx(Styles.caseDetails, 'mb-xl')}>
+        <h3 className="typography-labels-label-lg">{title}</h3>
+        <p className={!isCompleted ? Styles.transactionError : ''}>
+          {description}
+        </p>
+      </div>
       <div className={Styles.sidesheet}>
-        {fields.map(({ label, value }) => (
-          <FieldData key={label} Label={<Label>{label}</Label>}>
-            {value}
-          </FieldData>
-        ))}
+        <div className={Styles.fieldContainer}>
+          {fields.map(({ label, value }) => (
+            <FieldData key={label} Label={<Label>{label}</Label>}>
+              {value}
+            </FieldData>
+          ))}
+        </div>
         <NotificationSidesheetDetails caseId={caseId} title={title} />
         <div className={Styles.disclaimer}>
           If you feel like this was an error, or are having trouble processing
