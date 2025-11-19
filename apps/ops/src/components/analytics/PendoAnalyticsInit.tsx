@@ -93,6 +93,7 @@ const PendoAnalyticsInit = () => {
         console.log('partyReference...', response);
     });
     */
+    return null;
 };
 
 export default PendoAnalyticsInit;
