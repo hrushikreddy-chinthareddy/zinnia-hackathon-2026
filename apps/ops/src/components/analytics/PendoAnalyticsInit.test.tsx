@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+
 import { browserLogError } from '@deps/utils/browser-logging';
 
 import PendoAnalyticsInit from './PendoAnalyticsInit';

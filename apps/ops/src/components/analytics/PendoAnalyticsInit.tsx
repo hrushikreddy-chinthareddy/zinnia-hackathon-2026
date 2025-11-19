@@ -1,23 +1,21 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { useEffect, useMemo } from 'react';
 
 import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
+import { useCarrierListQuery } from '@deps/hooks/tanstack/user/useCarrierListQuery';
+import { useRoleListQuery } from '@deps/hooks/tanstack/user/useRoleListQuery';
+import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import {
     UserPermission,
     UserProfile as ZinniaUserProfile,
 } from '@deps/models/user-profile';
+import { browserLogError } from '@deps/utils/browser-logging';
+import { PendoOptions } from 'globals';
 
 // Account for additional properties on the user profile
 declare module '@auth0/nextjs-auth0/client' {
     interface UserProfile extends ZinniaUserProfile {}
 }
-
-import { PendoOptions } from 'globals';
-import { useEffect, useMemo } from 'react';
-
-import { useCarrierListQuery } from '@deps/hooks/tanstack/user/useCarrierListQuery';
-import { useRoleListQuery } from '@deps/hooks/tanstack/user/useRoleListQuery';
-import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
-import { browserLogError } from '@deps/utils/browser-logging';
 
 const PendoAnalyticsInit = () => {
     const { user } = useUser();
@@ -57,7 +55,7 @@ const PendoAnalyticsInit = () => {
                 browserLogError(
                     'pendo::Pendo not loaded, skipping initialization',
                     {
-                        user: user?.partyId,
+                        user: initOptions.visitor.id,
                     }
                 );
             }
@@ -101,7 +99,7 @@ const PendoAnalyticsInit = () => {
                 browserLogError(
                     'pendo::Pendo not loaded, skipping option update',
                     {
-                        user: user?.partyId,
+                        user: options.visitor.id,
                     }
                 );
             }
