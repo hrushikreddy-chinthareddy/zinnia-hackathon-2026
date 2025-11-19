@@ -3462,14 +3462,15 @@
                     "title": "Signature de la société cédante",
                     "qualType": "type de qualification",
                     "isQualTypeNotValid": "Impossible de déterminer le type de qualification",
-                    "isCorporateResolutionPresent": "La résolution de l'entreprise est-elle présente ?",
                     "isSignatureValid": "La signature du dirigeant autorisé est-elle valide sur la base de la résolution de l'entreprise?",
                     "isSignatureAuthorized": "La signature du responsable autorisé est-elle valide?",
                     "isLoaAttached": "La lettre d'acceptation est-elle jointe?",
-                    "validOwnerRegType": "Propriétaire/Type d'enregistrement valide",
+                    "registrationType": "Propriétaire/Type d'enregistrement valide",
                     "isTitlePresent": "Le titre est-il présent?",
                     "loaSignDate": "Date de signature de la LOA",
-                    "authPersonSignPresent": "Signature de la personne autorisée présente",
+                    "authPersonSignPresent": "La signature de la personne autorisée est présente",
+                    "isCorporateResolutionPresent": "La résolution de l'entreprise est-elle présente?",
+                    "isAuthSignValid": "La signature de l'officier autorisé est-elle valide selon la résolution de l'entreprise?",
                     "signDate": "Date de la signature"
                 },
                 "nonRegTypeReason": {

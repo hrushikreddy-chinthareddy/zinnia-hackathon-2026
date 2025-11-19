@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import CedingCompanySignature from '@deps/components/ceding-company-signature/ceding-company-signature';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
@@ -120,9 +120,10 @@ export default function GdmnOftWithdrawalForm({
                     isLoanRepayment={true}
                 />
             )}
-            <CedingCompanyDistribution
+            <CedingCompanySignature
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
+                renderNewCorporateResolution={true}
             />
             <FormDisbursement
                 options={disbursementOptions}

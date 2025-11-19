@@ -34,11 +34,7 @@ import {
     PolicySearchResult,
     SearchViewQuery,
 } from '@deps/types/search';
-import {
-    browserLogError,
-    browserLogInfo,
-    browserLogWarn,
-} from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import {
     fullyMaskPolicyResponse,
     lcPartyResponseSanitizer,
@@ -384,7 +380,7 @@ export const getPolicyPartiesSSR = async (
             policyNumber,
             clientCode,
         });
-        const { data } = await serverApi.get<
+        const data = await serverApi.get<
             LifeCadParty[],
             AxiosResponse<LifeCadParty[]>
         >(
@@ -401,9 +397,18 @@ export const getPolicyPartiesSSR = async (
             loggingContext
         );
 
-        return lcPartyResponseSanitizer(data);
+        if (data?.status !== 200) {
+            browserLogError(
+                'getPolicyPartiesSSR:: Error fetching parties from policies'
+            );
+            throw new Error(
+                'getPolicyPartiesSSR:: Error fetching parties from policies'
+            );
+        }
+        return lcPartyResponseSanitizer(data?.data);
     } catch (error: any) {
-        logWarn('getPolicyPartiesSSR', {
+        console.error('getPolicyPartiesSSR::error getting policy info', error);
+        logError('getPolicyPartiesSSR', {
             ...parseErrorInformation(error),
             policyNumber,
             clientCode,
@@ -530,22 +535,36 @@ export const getPolicyNotesInfo = async ({
             browserLogError(
                 'getPolicyNotesInfo::planCode is required for FAST policies'
             );
+
+            throw new Error(
+                'getPolicyNotesInfo::planCode is required for FAST policies'
+            );
         }
 
-        browserLogError('getPolicyNotesInfo::Fetching Diary Notes Data');
+        browserLogInfo('getPolicyNotesInfo::Fetching Diary Notes Data');
 
-        const { data } = await client.get<
+        const data = await client.get<
             PolicyNotesInfoResponse,
             AxiosResponse<PolicyNotesInfoResponse>
         >(endpoint);
 
-        browserLogError('getPolicyNotesInfo Diary Notes Data fetched');
+        if (data?.status !== 200) {
+            browserLogError('getPolicyNotesInfo:: Diary Notes API failed');
 
-        return data;
+            throw new Error(
+                'getPolicyNotesInfo::Error fetching Dairy Notes Data'
+            );
+        }
+
+        browserLogInfo('getPolicyNotesInfo Diary Notes Data fetched', {
+            data,
+        });
+
+        return data?.data;
     } catch (e) {
         console.error('getPolicyNotesInfo::error getting notesInfo', e);
         browserLogError('getPolicyNotesInfo::error getting Diary Notes data', {
-            e,
+            ...parseErrorInformation(e),
         });
 
         return null;
@@ -639,14 +658,24 @@ export const getPolicyTransactionHistory = async (
             transactionType,
             ...loggingContext,
         });
-        const { data } = await client.get<
+        const data = await client.get<
             TransactionHistory,
             AxiosResponse<TransactionHistory>
         >(url);
 
-        return data;
+        if (data?.status !== 200) {
+            browserLogError(
+                'getPolicyTransactionHistory:: Failed to fetch transaction history'
+            );
+
+            throw new Error(
+                'getPolicyTransactionHistory:: Failed to fetch transaction history'
+            );
+        }
+
+        return data?.data;
     } catch (error: any) {
-        browserLogWarn('getPolicyTransactionHistory', {
+        browserLogError('getPolicyTransactionHistory', {
             ...parseErrorInformation(error),
             policyNumber,
             clientCode,

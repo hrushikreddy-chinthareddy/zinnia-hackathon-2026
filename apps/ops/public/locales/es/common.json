@@ -3505,14 +3505,15 @@
                     "title": "Firma de la Compañía Cedente",
                     "qualType": "Tipo de calificación",
                     "isQualTypeNotValid": "No se puede determinar el tipo de calificación",
-                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
                     "isSignatureValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "isSignatureAuthorized": "¿Es válida la firma del oficial autorizado?",
                     "isLoaAttached": "¿Está adjunta la carta de aceptación?",
-                    "validOwnerRegType": "Tipo de registro/propietario válido",
+                    "registrationType": "Tipo de registro/propietario válido",
                     "isTitlePresent": "¿Está presente el título?",
                     "loaSignDate": "Fecha de Firma de LOA",
-                    "authPersonSignPresent": "¿Está presente la firma de la persona autorizada?",
+                    "authPersonSignPresent": "La firma de la persona autorizada está presente",
+                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
+                    "isAuthSignValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "signDate": "Fecha de la firma"
                 },
                 "nonRegTypeReason": {
