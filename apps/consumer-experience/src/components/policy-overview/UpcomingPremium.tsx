@@ -1,3 +1,4 @@
+import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
 import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
 import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
@@ -214,7 +215,9 @@ export const UpcomingPremium = async ({
                   caption={scheduledPayment.caption}
                 >
                   {isNullEmptyOrUndefined(scheduledPayment.amount) ? (
-                    <p className="typography-content-body-sm">--</p>
+                    <p className="typography-content-body-sm">
+                      {DEFAULT_UNAVAILABLE_STRING}
+                    </p>
                   ) : (
                     <p className="typography-content-value">
                       {formatUSDollars(scheduledPayment.amount!)}
