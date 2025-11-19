@@ -1,4 +1,4 @@
-export type InitOptions = {
+export type PendoInitOptions = {
     visitor: {
         id: string; // Required if user is logged in
         email?: string; // Recommended if using Pendo Feedback, or NPS Email
@@ -25,14 +25,14 @@ export type InitOptions = {
     };
 };
 
-export type UpdateOptions = {
+export type PendoUpdateOptions = {
     visitor?: object;
     account?: object;
 };
 declare global {
     interface Window {
         pendo: {
-            initialize: (config: InitOptions) => void;
+            initialize: (config: PendoInitOptions) => void;
             updateOptions: (config: UpdateOptions) => void;
         };
     }

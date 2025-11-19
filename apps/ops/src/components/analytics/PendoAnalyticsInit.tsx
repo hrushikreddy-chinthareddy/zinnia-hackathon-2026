@@ -11,14 +11,11 @@ declare module '@auth0/nextjs-auth0/client' {
     interface UserProfile extends ZinniaUserProfile {}
 }
 
-import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
-
 import { useEffect, useMemo } from 'react';
+import { PendoUpdateOptions } from 'globals';
 
+import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import { useCarrierList } from '@deps/hooks/user/useCarrierList';
-
-import { UpdateOptions } from 'globals';
-
 import { useRoleList } from '@deps/hooks/user/useRoleList';
 
 const PendoAnalyticsInit = () => {
@@ -63,7 +60,7 @@ const PendoAnalyticsInit = () => {
     }, [initOptions]);
 
     const options = useMemo(() => {
-        let updatedOptions: UpdateOptions | undefined = initOptions;
+        let updatedOptions: PendoUpdateOptions | undefined = initOptions;
         if (authorizedCarriers) {
             updatedOptions = {
                 visitor: {
