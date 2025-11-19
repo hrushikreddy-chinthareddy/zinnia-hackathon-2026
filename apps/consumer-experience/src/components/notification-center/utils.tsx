@@ -1,3 +1,4 @@
+import { TransformedCaseSearchResponse } from '@/services/case/types';
 import { CaseSummary, CaseStatus, StageStatus } from '@/types/case';
 
 import { NotificationCenterNotification } from './types';
@@ -85,8 +86,12 @@ export const sortNotificationsByDate = (
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 };
 
-export const selectNotifications = (data: CaseSummary[]) => {
-  const { completedNotifications, actionNeededNotifications } = (data || [])
+export const selectNotifications = (
+  response: TransformedCaseSearchResponse
+) => {
+  const { completedNotifications, actionNeededNotifications } = (
+    response.data || []
+  )
     .map(parseNotifications)
     .filter(notification => !!notification)
     .reduce(transformNotifications, {
@@ -100,3 +105,31 @@ export const selectNotifications = (data: CaseSummary[]) => {
     allNotifications: [...completedNotifications, ...actionNeededNotifications],
   };
 };
+
+export const createAcknowledgedEntry = (
+  planCode: string,
+  policyNumber: string,
+  id: string,
+  stepsToAcknowledge: string[] | undefined
+) => ({
+  planCode,
+  policyNumber,
+  caseId: id,
+  partyId: '',
+  dateAcknowledged: new Date().toISOString(),
+  acknowledgedIds: stepsToAcknowledge ?? [],
+});
+
+export const createAllAcknowledgedEntries = (
+  planCode: string,
+  policyNumber: string,
+  notifications: NotificationCenterNotification[]
+) =>
+  notifications.map(notification =>
+    createAcknowledgedEntry(
+      planCode,
+      policyNumber,
+      notification.id,
+      notification.stepsToAcknowledge
+    )
+  );
