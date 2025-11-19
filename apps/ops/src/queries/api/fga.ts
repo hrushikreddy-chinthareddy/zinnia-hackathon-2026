@@ -186,7 +186,7 @@ export const getRoleList = async (
         if (cachedResult) return cachedResult;
 
         const roleListCheck = await client.post<
-            GetCarrierListQuery,
+            GetRoleListQuery,
             AxiosResponse
         >(url, query);
 
