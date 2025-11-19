@@ -12,7 +12,7 @@ declare module '@auth0/nextjs-auth0/client' {
 }
 
 import { useEffect, useMemo } from 'react';
-import { PendoUpdateOptions } from 'globals';
+import { PendoOptions } from 'globals';
 
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import { useCarrierList } from '@deps/hooks/user/useCarrierList';
@@ -31,7 +31,6 @@ const PendoAnalyticsInit = () => {
     );
 
     const initOptions = useMemo(() => {
-        console.log('user', user?.partyId, 'carrier', carrier);
         if (user?.partyId && carrier) {
             const isInternalUser = isInternalZinniaUser(user);
 
@@ -60,25 +59,22 @@ const PendoAnalyticsInit = () => {
     }, [initOptions]);
 
     const options = useMemo(() => {
-        let updatedOptions: PendoUpdateOptions | undefined = initOptions;
-        if (authorizedCarriers) {
-            updatedOptions = {
-                visitor: {
-                    ...updatedOptions?.visitor,
+        if (!initOptions) {
+            return undefined;
+        }
+        const updatedOptions: PendoOptions = {
+            ...initOptions,
+            visitor: {
+                ...initOptions?.visitor,
+                ...(authorizedCarriers && {
                     carrierAccessList: authorizedCarriers,
-                },
-            };
-        }
-        if (authorizedRoles) {
-            updatedOptions = {
-                visitor: {
-                    ...updatedOptions?.visitor,
-                    roles: authorizedRoles,
-                },
-            };
-        }
+                }),
+                ...(authorizedRoles && { roles: authorizedRoles }),
+            },
+        };
+
         return updatedOptions;
-    }, [authorizedCarriers, authorizedRoles]); // Should depend on any additional metadata
+    }, [initOptions, authorizedCarriers, authorizedRoles]); // Should depend on any additional metadata
 
     useEffect(() => {
         if (options) {
@@ -87,12 +83,6 @@ const PendoAnalyticsInit = () => {
         }
     }, [options]);
 
-    /*
-    const partyReference = getPartyMetadataById(user.partyId);
-    partyReference.then((response) => {
-        console.log('partyReference...', response);
-    });
-    */
     return null;
 };
 

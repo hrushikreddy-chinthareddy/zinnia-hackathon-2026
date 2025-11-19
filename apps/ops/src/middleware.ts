@@ -63,7 +63,6 @@ export default async function middleware(request: NextRequest) {
     let user = {} as Claims;
     try {
         const session = await getSession(request, response);
-        console.log('sessio......', session);
         user = session?.user ?? {};
     } catch (e) {
         pino.warn(
