@@ -203,7 +203,7 @@ export const FindKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                             <CircleInfoIcon
                                                                 height={'16px'}
                                                                 width={'16px'}
-                                                                className="text-primary"
+                                                                className="tooltip-primary"
                                                             />
                                                         </Popover>
                                                     )}

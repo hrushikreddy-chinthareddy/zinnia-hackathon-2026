@@ -10,11 +10,13 @@ import { useTranslation } from 'react-i18next';
 
 import CallLogsTab from '@deps/components/case-sub-page/case-tabs/call-logs-tab';
 import PageHeader from '@deps/components/page-header/page-header';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { PolicyActivityTabValues } from '@deps/types/constants';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import TransactionsTab from './transactions-tab';
 
@@ -25,6 +27,8 @@ export default function ActivitySubPage() {
     const router = useRouter();
     const { query } = router;
     const { slug } = query;
+
+    const { featureFlags } = useOptimizely();
 
     const getInitialTabValue = () => {
         let initialTabVal = PolicyActivityTabValues.transactions;
@@ -45,6 +49,9 @@ export default function ActivitySubPage() {
         );
         setTabVal(val);
     };
+
+    const isRevisedHistoryEnabled =
+        featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE];
 
     useEffect(() => {
         browserLogInfo('CaseOverview_Permission_Check', {
@@ -73,9 +80,13 @@ export default function ActivitySubPage() {
                 className="px-8"
             >
                 <TabList>
-                    <TabTrigger value={PolicyActivityTabValues.transactions}>
-                        Transactions
-                    </TabTrigger>
+                    {!isRevisedHistoryEnabled && (
+                        <TabTrigger
+                            value={PolicyActivityTabValues.transactions}
+                        >
+                            Transactions
+                        </TabTrigger>
+                    )}
                     {hasCallLogsAccess && (
                         <TabTrigger
                             value={PolicyActivityTabValues['call-logs']}
@@ -84,10 +95,11 @@ export default function ActivitySubPage() {
                         </TabTrigger>
                     )}
                 </TabList>
-                <TabContent value={PolicyActivityTabValues.transactions}>
-                    <TransactionsTab />
-                </TabContent>
-
+                {!isRevisedHistoryEnabled && (
+                    <TabContent value={PolicyActivityTabValues.transactions}>
+                        <TransactionsTab />
+                    </TabContent>
+                )}
                 {hasCallLogsAccess && (
                     <TabContent value={PolicyActivityTabValues['call-logs']}>
                         <CallLogsTab

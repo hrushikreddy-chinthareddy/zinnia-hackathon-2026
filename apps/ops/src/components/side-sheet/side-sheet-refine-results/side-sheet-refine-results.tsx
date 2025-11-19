@@ -62,6 +62,11 @@ export default function SideSheetRefineResults({
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
+    enum Priority {
+        ANY = 'any',
+        PRIORITY = 'true',
+        NOT_PRIORITY = 'false',
+    }
 
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
         const valueAndDisplay =
@@ -441,7 +446,6 @@ export default function SideSheetRefineResults({
             additionalFilters,
         }));
         closeSideSheet();
-
         const selectedFilters = Object.keys(additionalFilters).reduce(
             (acc, key) => {
                 if (
@@ -478,9 +482,24 @@ export default function SideSheetRefineResults({
                         additionalFilters[
                             key as keyof typeof additionalFilters
                         ];
+                } else if (
+                    (key === 'escalated' &&
+                        additionalFilters[
+                            key as keyof typeof additionalFilters
+                        ] === true) ||
+                    additionalFilters[key as keyof typeof additionalFilters] ===
+                        false ||
+                    additionalFilters[key as keyof typeof additionalFilters] ===
+                        null
+                ) {
+                    acc[key] =
+                        additionalFilters[
+                            key as keyof typeof additionalFilters
+                        ];
                 }
                 return acc;
             },
+
             {} as { [key: string]: any }
         );
 
@@ -578,42 +597,97 @@ export default function SideSheetRefineResults({
                 updatedEndOnChange={updatedEndOnChange}
             />
             <div className="flex flex-col gap-12 py-8">
-                <Select
-                    options={[
-                        {
-                            label: `${t('temporal.days', { min: 0, max: 7 })}`,
-                            value: '7',
-                        },
-                        {
-                            label: `${t('temporal.days', { min: 7, max: 14 })}`,
-                            value: '14',
-                        },
-                        {
-                            label: `${t('temporal.days', {
-                                min: 15,
-                                max: 30,
-                            })}`,
-                            value: '30',
-                        },
-                        {
-                            label: `${t('temporal.daysMax', { min: 31 })}`,
-                            value: '31',
-                        },
-                    ]}
-                    onChange={(value: string) =>
-                        setAdditionalFilters((prevFilters) => ({
-                            ...prevFilters,
-                            age: value,
-                        }))
-                    }
-                    value={additionalFilters.age || ''}
-                    size={FieldSize.Small}
-                    label={t(`${REFINE_RESULTS_BASE_KEY}age`) as string}
-                    placeholder={
-                        t(`${REFINE_RESULTS_BASE_KEY}selectDayRange`) as string
-                    }
-                    className="!w-[198px]"
-                />
+                <div className="flex flex-row gap-12">
+                    <Select
+                        options={[
+                            {
+                                label: `${t('temporal.days', {
+                                    min: 0,
+                                    max: 7,
+                                })}`,
+                                value: '7',
+                            },
+                            {
+                                label: `${t('temporal.days', {
+                                    min: 7,
+                                    max: 14,
+                                })}`,
+                                value: '14',
+                            },
+                            {
+                                label: `${t('temporal.days', {
+                                    min: 15,
+                                    max: 30,
+                                })}`,
+                                value: '30',
+                            },
+                            {
+                                label: `${t('temporal.daysMax', { min: 31 })}`,
+                                value: '31',
+                            },
+                        ]}
+                        onChange={(value: string) =>
+                            setAdditionalFilters((prevFilters) => ({
+                                ...prevFilters,
+                                age: value,
+                            }))
+                        }
+                        value={additionalFilters.age || ''}
+                        size={FieldSize.Small}
+                        label={t(`${REFINE_RESULTS_BASE_KEY}age`) as string}
+                        placeholder={
+                            t(
+                                `${REFINE_RESULTS_BASE_KEY}selectDayRange`
+                            ) as string
+                        }
+                        className="!w-[198px]"
+                    />
+                    <Select
+                        options={[
+                            {
+                                label: `${t(`${REFINE_RESULTS_BASE_KEY}any`)}`,
+                                value: Priority.ANY,
+                            },
+                            {
+                                label: `${t(
+                                    `${REFINE_RESULTS_BASE_KEY}onlyPrioritized`
+                                )}`,
+                                value: Priority.PRIORITY,
+                            },
+                            {
+                                label: `${t(
+                                    `${REFINE_RESULTS_BASE_KEY}notPrioritized`
+                                )}`,
+                                value: Priority.NOT_PRIORITY,
+                            },
+                        ]}
+                        onChange={(value: string) =>
+                            setAdditionalFilters((prevFilters) => ({
+                                ...prevFilters,
+                                escalated:
+                                    value === Priority.ANY
+                                        ? null
+                                        : value === Priority.PRIORITY,
+                            }))
+                        }
+                        value={
+                            additionalFilters.escalated === null
+                                ? Priority.ANY
+                                : additionalFilters?.escalated?.toString()
+                        }
+                        size={FieldSize.Small}
+                        label={
+                            t(`${REFINE_RESULTS_BASE_KEY}priority`) as string
+                        }
+                        placeholder={
+                            t(
+                                `${REFINE_RESULTS_BASE_KEY}selectPriority`
+                            ) as string
+                        }
+                        className="!w-[198px]"
+                    />
+                </div>
+
                 <div className="flex flex-row">
                     <Button
                         type={ButtonType.Primary}

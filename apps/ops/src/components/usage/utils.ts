@@ -80,9 +80,9 @@ export const toUiRole = (apiRoleName: string): UiRoles | undefined =>
     API_TO_UI_ROLE[apiRoleName as ApiRoles];
 
 export const TRANSACTION_CATEGORY_DISPLAY_MAP: Record<string, string> = {
-    financial: 'Financial',
-    non_financial: 'Non-Financial',
-    policy_update: 'Policy Update',
+    financial: 'Payments & Distributions',
+    non_financial: 'Policy & Contract Servicing',
+    policy_update: 'Party Management',
 };
 
 // Transaction type mapping

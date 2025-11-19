@@ -27,6 +27,7 @@ import {
   filterPayorViewParties,
   filterOutCoverageInsuredParties,
   formatPartyRoles,
+  filterOutEndDatedParties,
 } from '@/utils/party';
 
 export const ProfileView = async ({
@@ -141,7 +142,7 @@ export const ProfileView = async ({
   };
 
   const parties = async () => {
-    const { parties } = profileData;
+    const { parties, partyRoles } = profileData;
     const loggingCtx = await buildCommonLogContext();
     const { data: visibility } = await getComponentVisibility(
       { policyNumber, planCode },
@@ -159,8 +160,14 @@ export const ProfileView = async ({
       ? filterPayorViewParties(parties)
       : parties;
 
+    // Filter out parties on the basis of their partyRole endDate
+    const activeParties = filterOutEndDatedParties(
+      initialFiltered,
+      partyRoles || []
+    );
+
     // Remove parties that only have COVERAGEINSURED role (or filter out COVERAGEINSURED from mixed roles)
-    const filteredParties = filterOutCoverageInsuredParties(initialFiltered);
+    const filteredParties = filterOutCoverageInsuredParties(activeParties);
 
     return (
       <AccordionDetails

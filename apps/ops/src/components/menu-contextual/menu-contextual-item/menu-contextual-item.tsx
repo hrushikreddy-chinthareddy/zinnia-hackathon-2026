@@ -9,9 +9,10 @@ import styles from './menu-contextual-item.module.css';
 
 export interface MenuContextualItemProps {
     content: string;
-    href: string;
+    href?: string;
     icon?: React.ReactNode;
     onClick?: () => void;
+    type?: NavElementType;
     disabled?: boolean;
     openInNewTab?: boolean;
 }
@@ -22,6 +23,7 @@ const MenuContextualItem = ({
     href,
     onClick,
     disabled,
+    type = NavElementType.Link,
     openInNewTab,
 }: MenuContextualItemProps) => {
     const handleSelect = () => {
@@ -35,7 +37,7 @@ const MenuContextualItem = ({
                     styles.menuContextualItem,
                     disabled && styles.disabled
                 )}
-                type={NavElementType.Link}
+                type={type}
                 disabled={disabled}
                 href={href}
                 rel={openInNewTab ? 'noopener noreferrer' : undefined}

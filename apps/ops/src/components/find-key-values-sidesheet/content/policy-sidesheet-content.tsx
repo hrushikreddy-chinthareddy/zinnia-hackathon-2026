@@ -2,19 +2,21 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     FieldData,
-    FieldSize,
     FieldTypes,
     Icon,
     IconType,
     Label,
     FieldSize as BloomFieldSize,
+    FieldDateSingle,
+    FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+import isBetween from 'dayjs/plugin/isBetween';
+import localizedFormat from 'dayjs/plugin/localizedFormat';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -32,10 +34,15 @@ import {
     FindAllKeyValuesSidebarProps,
     NestedData,
 } from '../types';
+dayjs.extend(localizedFormat);
+dayjs.extend(customParseFormat);
+dayjs.extend(isBetween);
 
 export const PolicySidesheetContent = ({
     planCode,
     policyNumber,
+    container,
+    handleCalendarOpen,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
     const [treeState, setTreeState] = useState(Collapse);
@@ -45,37 +52,35 @@ export const PolicySidesheetContent = ({
     const [enableQuery, setEnableQuery] = useState(false);
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
-
     const {
         data: policy,
         isFetching,
         isError,
     } = usePolicyQuery(planCode, policyNumber, date, queryClient, enableQuery);
+    const rangeErrorMsg = `${t('allFields.selectDateInRange')} ${dayjs(
+        policy?.policyDates?.issueDate
+    ).format('L')} - ${dayjs().format('L')}`;
 
     const isDateAllowed = (date: Dayjs) => {
         const policyIssuanceDate = dayjs(
             policy?.policyDates?.issueDate as string
         );
-        return (
-            date.isAfter(policyIssuanceDate) &&
-            date.isBefore(dayjs().add(1, 'day'))
-        );
+        return date.isBetween(dayjs(policyIssuanceDate), dayjs(), 'day', '[]');
     };
 
-    const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // if value isnt a number, early return
-        const numberRegex = /^\d+$/;
-        if (!numberRegex.test(e.target.value)) {
+    const handleDateChange = (date?: Date) => {
+        if (date === undefined) {
             return;
         }
-        const day = dayjs(e.target.value, NUMERIC_DATE_FORMAT);
+
+        const day = dayjs(date);
 
         if (day.isValid() && isDateAllowed(day)) {
             setDate(day.format(NUMERIC_DATE_FORMAT));
             setEnableQuery(true);
             setFieldError(false);
         } else {
-            setDate(e.target.value);
+            setDate(date.toString());
             setEnableQuery(false);
             setFieldError(true);
         }
@@ -124,29 +129,25 @@ export const PolicySidesheetContent = ({
     if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
-            <FieldDateSelect
-                label={t('label.findKeyValuesDate') as string}
-                className={styles.datePicker}
-                id="start-date"
-                isFutureDateDisabled={true}
-                onChange={handleDateChange}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                message={
-                    fieldError || isError
-                        ? (t('label.findKeyValuesDateError') as string)
-                        : ''
+            <FieldDateSingle
+                name={'select-date'}
+                label={
+                    <Label labelFor="select-date">
+                        {t('label.findKeyValuesDate') || ''}
+                    </Label>
                 }
-                variant={
-                    fieldError || isError
-                        ? FieldVariant.Error
-                        : FieldVariant.Default
+                disableAfterDate={new Date()}
+                disableBeforeDate={
+                    new Date(policy?.policyDates?.issueDate || '')
                 }
-                value={date || dayjs().format(NUMERIC_DATE_FORMAT)}
-                showMonths={true}
-                isDateAllowed={isDateAllowed}
+                defaultDate={new Date()}
+                onDateSelect={(date) => handleDateChange(date)}
+                container={container}
+                fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
+                formatErrorMsg={t('allFields.invalidDateFormat') || ''}
+                rangeErrorMsg={rangeErrorMsg}
+                handleCalendarOpen={handleCalendarOpen}
             />
-
             <FieldData
                 onChange={(e) => setSearchValue(e.target.value)}
                 handleClear={() => setSearchValue('')}
@@ -155,7 +156,6 @@ export const PolicySidesheetContent = ({
                 fieldSize={BloomFieldSize.Small}
                 placeholder="Search"
             />
-
             <BlurOverlayLoader loading={fieldError || isFetching || isError}>
                 <div className={styles.container}>
                     <div className={styles.treeControl}>

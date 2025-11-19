@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import ChipX from '@deps/components/chip/chip-x';
 import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
@@ -45,7 +46,6 @@ export default function ActiveFilters({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseManagementDashboard.refineResultsFilters',
     });
-
     const [filtersActive, setFiltersActive] = useState(false);
     const createdDateStart =
         filters.createdDateStart && filters.createdDateStart !== '';
@@ -59,6 +59,10 @@ export default function ActiveFilters({
     const hasSubtypes = filters.requestSubType.size !== 0;
     const hasBrokerDealerName =
         filters.brokerDealerName && filters.brokerDealerName !== '';
+    const hasEscalated =
+        filters.escalated === true ||
+        filters.escalated === false ||
+        filters.escalated === null;
 
     useEffect(() => {
         if (
@@ -67,7 +71,8 @@ export default function ActiveFilters({
             ageRange ||
             hasProcessTypeFilters ||
             hasCarriers ||
-            hasBrokerDealerName
+            hasBrokerDealerName ||
+            hasEscalated
         )
             return setFiltersActive(true);
         setFiltersActive(false);
@@ -78,11 +83,17 @@ export default function ActiveFilters({
         hasCarriers,
         hasBrokerDealerName,
         updatedDateStart,
+        hasEscalated,
     ]);
 
     const handleRemoveFilter = (removedFilters: {
         [key: string]: '' | boolean | object | Set<Processes>;
     }) => removeFilter({ ...filters, ...removedFilters });
+
+    const handleRemoveEscalatedFilter = () => {
+        const { escalated, ...rest } = filters;
+        removeFilter(rest);
+    };
 
     if (!filtersActive) return null;
 
@@ -127,6 +138,24 @@ export default function ActiveFilters({
                         t={t}
                     />
                 ))}
+            {hasEscalated && (
+                <ChipX
+                    ariaLabel={
+                        t('ariaLabel.clearFilter', {
+                            filter: process,
+                        }) as string
+                    }
+                    label={
+                        filters.escalated == null
+                            ? t('escalated.any')
+                            : filters.escalated
+                            ? t('escalated.true')
+                            : t('escalated.false')
+                    }
+                    onDelete={handleRemoveEscalatedFilter}
+                />
+            )}
+
             {hasSubtypes &&
                 Array.from(filters.requestSubType).map((subTypeCode) => (
                     <SubTypeChip

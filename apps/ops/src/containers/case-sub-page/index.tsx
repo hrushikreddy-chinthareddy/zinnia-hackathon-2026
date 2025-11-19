@@ -35,7 +35,11 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
     const { policy } = useCaseActivityContext();
-    const { hasCallLogsAccess, hasNotesAccess } = usePermissionsContext();
+    const {
+        hasCallLogsAccess,
+        hasNotesAccess,
+        hasPermissionToPrioritizeCases,
+    } = usePermissionsContext();
     const router = useRouter();
     const { query } = router;
 
@@ -77,6 +81,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     useEffect(() => {
         browserLogInfo('CaseOverview_Permission_Check', {
             pathname: router.pathname,
+            hasPermissionToPrioritizeCases,
             hasCallLogsAccess,
             hasNotesAccess,
             caseId: caseDetails?.id,
@@ -105,7 +110,6 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         t,
         issueDate: policy?.issueDate,
     });
-
     return (
         <div className={styles.container}>
             <CasePageHeader
@@ -115,6 +119,9 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
                 status={statusDetails.statusText}
                 statusTooltip={statusDetails.statusTooltip}
                 statusVariant={statusDetails.statusVariant as BadgeVariant}
+                escalated={caseDetailsModel?.escalated ?? false}
+                hasPermissionToPrioritizeCases={hasPermissionToPrioritizeCases}
+                caseProcessingDetails={caseDetailsModel.caseProcessingDetails}
             />
             <div className="flex w-full flex-col justify-between gap-2 pt-2 lg:flex-row">
                 <CaseSideNav

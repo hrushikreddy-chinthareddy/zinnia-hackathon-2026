@@ -110,7 +110,7 @@ const FundsCard = ({
                 >
                     <Icon
                         type={IconType.CIRCLE_INFO}
-                        color="var(--color-primary-color-primary)"
+                        color="var(--color-base-icon-icon-action-text-link)"
                         height={16}
                         width={16}
                     />

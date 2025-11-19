@@ -1,117 +1,96 @@
 'use client';
-import { useIsClient } from '@xd/hooks/useIsClient';
-import {
-  AssistiveTextVariant,
-  Icon,
-  IconType,
-  Loader,
-} from '@zinnia/bloom/components';
-import clsx from 'clsx';
+import { useQuery } from '@tanstack/react-query';
+import { Icon, IconType } from '@zinnia/bloom/components';
 
 import { NotificationCenterSection } from '@/components/notification-center/section/NotificationCenterSection';
-import { useAcknowledgeCases } from '@/hooks/use-acknowledge-cases';
+import { useFeatureFlagsFor } from '@/hooks/use-feature-flags';
+import {
+  acknowledgedCasesOptions,
+  caseQueryOptions,
+} from '@/queries/query-options';
+import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
 import { default as Styles } from './NotificationCenter.module.css';
 import { NotificationCenterProps } from './types';
-import { sortNotificationsByDate } from './utils';
+import { selectNotifications, sortNotificationsByDate } from './utils';
+import { Button } from '../button/Button';
+import { useAcknowledgeCaseMutate } from './hooks/use-acknowledge-case-mutate';
+import { useMarkAllReadMutate } from './hooks/use-mark-all-read-mutate';
 
 export const NotificationCenter = ({
-  initialNotifications,
   policyNumber,
   planCode,
 }: NotificationCenterProps) => {
-  const isClient = useIsClient();
+  const { data: fetchNotificationsFlag } = useFeatureFlagsFor(
+    FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS
+  );
 
   const {
-    acknowledgedNotifications,
-    acknowledgedNotificationsLoading,
-    acknowledgedCaseMutation,
-    actionNeededNotifications,
-    completedNotifications,
-    notificationsLoading: isLoading,
-    notificationsError: isError,
-    notificationsFetching: isFetching,
-  } = useAcknowledgeCases({
-    planCode,
-    policyNumber,
-    initialNotifications,
+    data: notifications = {
+      completedNotifications: [],
+      actionNeededNotifications: [],
+      allNotifications: [],
+    },
+    isLoading,
+  } = useQuery({
+    ...caseQueryOptions({
+      policyNumber,
+    }),
+    select: selectNotifications,
+    enabled:
+      !!fetchNotificationsFlag && !!policyNumber.length && !!planCode.length,
   });
 
-  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) =>
-    acknowledgedCaseMutation.mutate({ id, stepsToAcknowledge });
+  // fetch acknowledged notifications
+  const { data: acknowledgedNotifications = [] } = useQuery({
+    ...acknowledgedCasesOptions({ planCode, policyNumber }),
+    enabled:
+      !!fetchNotificationsFlag && !!policyNumber.length && !!planCode.length,
+  });
 
-  const showLoader =
-    acknowledgedNotificationsLoading ||
-    acknowledgedCaseMutation.isPending ||
-    !isClient ||
-    isLoading ||
-    isFetching;
+  // all notifications = completed + action needed notifications
+  const { allNotifications } = notifications;
+
+  const markAllAsReadMutation = useMarkAllReadMutate({
+    planCode,
+    policyNumber,
+    allNotifications,
+  });
+
+  const acknowledgedCaseMutation = useAcknowledgeCaseMutate({
+    planCode,
+    policyNumber,
+  });
+
+  const handleAcknowledge = (id: string, stepsToAcknowledge: string[]) => {
+    acknowledgedCaseMutation.mutate({ id, stepsToAcknowledge });
+  };
+
+  const handleMarkAllAsRead = () => {
+    markAllAsReadMutation.mutate();
+  };
 
   return (
     <div className={Styles.container}>
-      {actionNeededNotifications.length > 0 && (
+      <div className={Styles.markAllReadContainer}>
+        <Icon
+          small
+          type={IconType.CIRCLE_CHECKMARK}
+          color="rgba(0, 98, 139, 1)"
+        />
+        <Button mode="link" size="small" onClick={handleMarkAllAsRead}>
+          Mark all as read
+        </Button>
+      </div>
+      {allNotifications.length > 0 && (
         <NotificationCenterSection
           className={Styles.actionNeeded}
-          variant={AssistiveTextVariant.Error}
-          sectionHeading="Action Needed"
-          notifications={actionNeededNotifications.sort(
-            sortNotificationsByDate
-          )}
+          notifications={allNotifications.sort(sortNotificationsByDate)}
           handleAcknowledge={handleAcknowledge}
           acknowledgedNotifications={acknowledgedNotifications}
           isLoading={isLoading}
-          isClient={isClient}
-          mutatingId={acknowledgedCaseMutation?.variables?.id}
         />
       )}
-      {completedNotifications.length > 0 && (
-        <NotificationCenterSection
-          className={Styles.completed}
-          variant={AssistiveTextVariant.Success}
-          sectionHeading="Completed"
-          notifications={completedNotifications.sort(sortNotificationsByDate)}
-          handleAcknowledge={handleAcknowledge}
-          acknowledgedNotifications={acknowledgedNotifications}
-          isLoading={isLoading}
-          isClient={isClient}
-        />
-      )}
-      <section
-        style={{
-          backgroundColor: clsx(
-            (isError || isLoading) &&
-              'var(--color-base-surface-surface-secondary)'
-          ),
-        }}
-        className={Styles.end}
-      >
-        {showLoader ? (
-          <Loader />
-        ) : (
-          <>
-            <Icon
-              width={32}
-              height={32}
-              color={clsx(
-                isError && 'var(--color-status-icon-status-error-icon)'
-              )}
-              type={isError ? IconType.HEX_EXCLAMATION : IconType.FLAG_GOALS}
-            />
-            <h2
-              style={{
-                color: clsx(
-                  isError && 'var(--color-status-text-status-error-text)'
-                ),
-              }}
-              className="typography-labels-label-lg"
-            >
-              {isError
-                ? 'There was a problem fetching notifications'
-                : "That's All Your Notifications From the Last 30 Days"}
-            </h2>
-          </>
-        )}
-      </section>
     </div>
   );
 };

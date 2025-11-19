@@ -1,32 +1,30 @@
 import { ApiResponse } from '@/services';
+import { CaseSearchCriteriaWithLimit } from '@/services/case';
+import { TransformedCaseSearchResponse } from '@/services/case/types';
 import { ClientApi } from '@/services/client-http';
 import {
   AcknowledgeCaseDTO,
   CaseAcknowledgmentItem,
 } from '@/services/terms-and-conditions';
-import { CaseSummary } from '@/types/case';
 
 export const searchCasesByPolicyNumber = async (
-  policyNumber: string,
-  planCode?: string
+  body: CaseSearchCriteriaWithLimit
 ) => {
-  const response: ApiResponse<CaseSummary[]> = await (
-    await ClientApi.post(
-      `/api/case/search`,
-      JSON.stringify({ policyNumber, planCode })
-    )
+  const response: ApiResponse<TransformedCaseSearchResponse> = await (
+    await ClientApi.post(`/api/case/search`, JSON.stringify(body))
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }
-
   return response.data;
 };
 
 export const getCaseDetails = async (caseId: string) => {
-  const response: ApiResponse<CaseSummary> = await (
+  const response: ApiResponse<TransformedCaseSearchResponse> = await (
     await ClientApi.get(`/api/case/search/${caseId}`)
   ).json();
+
   if (response.error || !response) {
     throw response.error;
   }

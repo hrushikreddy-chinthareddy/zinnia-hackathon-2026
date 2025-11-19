@@ -27,8 +27,16 @@ export default function DateWidget<
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
-    const { id, value, onChange, disabled, uiSchema, readonly, rawErrors } =
-        props;
+    const {
+        id,
+        value,
+        onChange,
+        disabled,
+        uiSchema,
+        readonly,
+        rawErrors,
+        hideError,
+    } = props;
     const { futureDateEnabled, inline, title, dataType } =
         getUiOptions(uiSchema);
 
@@ -63,7 +71,7 @@ export default function DateWidget<
                 defaultDate={value}
                 disableAfterDate={disableAfterDate}
                 fieldStatus={
-                    rawErrors && rawErrors?.length > 0
+                    !hideError && rawErrors && rawErrors?.length > 0
                         ? FieldStatus.ERROR
                         : FieldStatus.DEFAULT
                 }

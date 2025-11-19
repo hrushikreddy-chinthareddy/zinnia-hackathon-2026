@@ -1,6 +1,5 @@
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
-
-import { CaseStatus, StageStatus } from '@/types/case';
+import { TransformedCaseSearchResponse } from '@/services/case/types';
+import { CaseSummary, CaseStatus, StageStatus } from '@/types/case';
 
 import { NotificationCenterNotification } from './types';
 
@@ -10,7 +9,10 @@ export const transformNotifications = (
     actionNeededNotifications: NotificationCenterNotification[];
   },
   notification: NotificationCenterNotification
-) => {
+): {
+  completedNotifications: NotificationCenterNotification[];
+  actionNeededNotifications: NotificationCenterNotification[];
+} => {
   if (notification.completed) {
     acc.completedNotifications.push(notification);
   } else {
@@ -38,12 +40,13 @@ const shownStatuses: Set<string | undefined> = new Set([
 ]);
 
 export const parseNotifications = (
-  caseItem: CaseInstanceSummary
+  caseItem: CaseSummary
 ): NotificationCenterNotification | null => {
   if (!caseItem.id) return null;
   if (!shownStatuses.has(caseItem.caseStatus)) return null;
   const id = caseItem.id;
   const dateString = caseItem.updatedAt || caseItem.createdAt;
+  const caseGroup = caseItem.caseGroup ?? '';
   if (!dateString) return null;
   const date = new Date(dateString);
   let stepsToAcknowledge;
@@ -66,7 +69,6 @@ export const parseNotifications = (
   }
 
   if (!caseItem.process) return null;
-  // @ts-expect-error api spec wrong, this field exists
   const title = caseItem.processSubType || caseItem.process;
 
   return {
@@ -75,6 +77,7 @@ export const parseNotifications = (
     completed,
     title,
     stepsToAcknowledge,
+    caseGroup,
   };
 };
 
@@ -84,3 +87,51 @@ export const sortNotificationsByDate = (
 ) => {
   return new Date(b.date).getTime() - new Date(a.date).getTime();
 };
+
+export const selectNotifications = (
+  response: TransformedCaseSearchResponse
+) => {
+  const { completedNotifications, actionNeededNotifications } = (
+    response.data || []
+  )
+    .map(parseNotifications)
+    .filter(notification => !!notification)
+    .reduce(transformNotifications, {
+      completedNotifications: [],
+      actionNeededNotifications: [],
+    });
+
+  return {
+    completedNotifications,
+    actionNeededNotifications,
+    allNotifications: [...completedNotifications, ...actionNeededNotifications],
+  };
+};
+
+export const createAcknowledgedEntry = (
+  planCode: string,
+  policyNumber: string,
+  id: string,
+  stepsToAcknowledge: string[] | undefined
+) => ({
+  planCode,
+  policyNumber,
+  caseId: id,
+  partyId: '',
+  dateAcknowledged: new Date().toISOString(),
+  acknowledgedIds: stepsToAcknowledge ?? [],
+});
+
+export const createAllAcknowledgedEntries = (
+  planCode: string,
+  policyNumber: string,
+  notifications: NotificationCenterNotification[]
+) =>
+  notifications.map(notification =>
+    createAcknowledgedEntry(
+      planCode,
+      policyNumber,
+      notification.id,
+      notification.stepsToAcknowledge
+    )
+  );

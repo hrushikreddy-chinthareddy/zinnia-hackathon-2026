@@ -18,7 +18,7 @@ import {
     TransactionType,
 } from '@deps/types/illustrations';
 import { NewBusiness } from '@deps/types/new-business';
-import { logError, LoggingContext } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo } from '@deps/utils/server-logging';
 
 import { buildClientCaseFromNewBusiness } from './build-client-case-from-new-business';
 import { validateConversionPayload } from './conversions';
@@ -148,6 +148,11 @@ export const createClientCaseFromSureify = async (
                 CLIENT_CASE_MANAGER_API_ORIGIN
             );
         }
+
+        logInfo('Client case created from new business', {
+            ...loggingContext,
+            clientCaseId: newCaseResponse.id,
+        });
 
         // Step 5: Redirect to the new client case page
         return buildSuccessRedirection(

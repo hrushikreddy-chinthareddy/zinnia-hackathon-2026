@@ -42,6 +42,9 @@ export const putEndDateAddress = async (
         correlationId: uuidv4(),
         effectiveDate: dayjs().format(ZAHARA_DATE_FORMAT),
         deleteRequest: true,
+        preferredAddressIndicator:
+          addressChangeRequest.preferredAddressIndicator,
+        preferredAddressId: addressChangeRequest.preferredAddressId,
       }),
       {
         headers: { 'Content-Type': 'application/json' },
@@ -105,7 +108,6 @@ export const putUpdateAddress = async (
     correlationId,
   } = options;
   const url = `${bpmApiBaseUrl}/${planCode}/${policyNumber}/parties/${partyId}/address/${addressId}`;
-
   try {
     const rawResponse = await ServerApi.put(
       url,

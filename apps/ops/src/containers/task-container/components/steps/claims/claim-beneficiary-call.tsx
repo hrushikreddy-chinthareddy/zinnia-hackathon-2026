@@ -13,7 +13,7 @@ import { TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 
 import CallForInformation from './call-for-information';
-import { UpdatedBeneficiaryRecord } from './claims.type';
+import { DynamicKey, UpdatedBeneficiaryRecord } from './claims.type';
 
 type TaskReviewStepProps = {
     taskType: TaskType;
@@ -37,7 +37,8 @@ export const ClaimsBeneficiaryCall = ({ taskType }: TaskReviewStepProps) => {
 
     const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>({
         notificationPreferences:
-            task?.data?.details?.beneCall?.beneficiary?.notificationPreferences,
+            task?.data?.details?.[DynamicKey.BENE_CALL]?.beneficiary
+                ?.notificationPreferences,
         changeRequire: null,
         changeType: null,
         beneDeceased: false,

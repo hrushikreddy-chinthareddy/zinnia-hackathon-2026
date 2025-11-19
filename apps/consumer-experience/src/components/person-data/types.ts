@@ -66,7 +66,6 @@ export enum BestTimeType {
 //   zipCode?: string | null;
 //   zipCodeExtension?: string | null;
 //   country?: string | null;
-//   preferredAddressIndicator?: string | null;
 // };
 
 export interface PhoneProps {
@@ -81,9 +80,9 @@ export interface EmailProps {
 
 export interface AddressProps {
   addresses: Address[];
-  preferredAddressIndicator?: string;
   partyId: string;
   allowAddressChanges?: boolean;
+  isPreferred?: boolean;
 }
 
 export interface BankDetail extends BankAccount {

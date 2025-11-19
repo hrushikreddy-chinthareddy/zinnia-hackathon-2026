@@ -10,7 +10,7 @@ interface SelectValidButtonGroupProps {
         value: string;
     }[];
     label: string;
-    isValid: string;
+    isValid: string | boolean;
     setIsValid: (val: string) => void;
     disabled?: boolean;
 }

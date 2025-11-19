@@ -2,6 +2,7 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { Policy } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { v4 as uuidv4 } from 'uuid';
+
 import { TranslationFiles } from '@deps/config/translations';
 import DeathClaimContainer from '@deps/containers/death-claim-container/death-claim-container';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';

@@ -84,7 +84,6 @@ export default async function Beneficiary({
             <h2 className="mb-lg">Address</h2>
             <Addresses
               addresses={currentAddresses as Address[]}
-              preferredAddressIndicator="1"
               partyId={partyId}
               allowAddressChanges={allowAddressChanges}
             />

@@ -1,4 +1,5 @@
 import { TransactionStatus } from '@zinnia/api-types/types/sor';
+import { Dayjs } from 'dayjs';
 import {
     Dispatch,
     SetStateAction,
@@ -10,6 +11,10 @@ import {
 
 import { NOOP } from '@deps/types/constants';
 
+// TODO: convert these enums to objects and use as const
+// export const eventFilterKeys = { ... } as const;
+// export EventFilterKey = keyof typeof eventFilterKey;
+// dodges enums entirely = DEPU-XXXX
 export enum EventFilterKeys {
     All = 'all',
     Transactions = 'transactions',
@@ -47,12 +52,18 @@ export enum TransactionFilters {
 }
 
 export interface EventFilters {
+    [EventFilterKeys.All]?: AllFilters;
     [EventFilterKeys.Policy]?: PolicyFilters;
     [EventFilterKeys.Transactions]?: TransactionFilters;
     [EventFilterKeys.People]?: PeopleFilters;
 }
 
 export type YearFilters = string;
+
+export type DatesFilter = {
+    from: Dayjs;
+    to: Dayjs;
+};
 
 export type AllFilters =
     | EventFilterKeys
@@ -64,6 +75,7 @@ export interface HistoryFilters {
     eventFilter?: EventFilters;
     statusFilter?: TransactionStatus;
     yearFilter?: YearFilters;
+    datesFilter?: DatesFilter;
 }
 
 export type SetHistoryFilters = Dispatch<SetStateAction<HistoryFilters>>;

@@ -8,8 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { TranslationFiles } from '@deps/config/translations';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 
-import { setStatusFilter } from './filter.helpers';
-
 export const TransactionStatusTabGroup = ({
     transactions,
     children,
@@ -39,7 +37,10 @@ export const TransactionStatusTabGroup = ({
             defaultValue={statusFilter}
             value={statusFilter}
             onValueChange={(tab) =>
-                setStatusFilter(setHistoryFilters, tab as TransactionStatus)
+                setHistoryFilters((prevState) => ({
+                    ...prevState,
+                    statusFilter: tab as TransactionStatus,
+                }))
             }
             className="px-8"
         >

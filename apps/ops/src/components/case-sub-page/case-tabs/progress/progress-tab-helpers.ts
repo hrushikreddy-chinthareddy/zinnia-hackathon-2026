@@ -387,6 +387,7 @@ export class TransformedStage {
                                     ? acc.updatedAt
                                     : val.updatedAt, // Take the latest updated at date for the multi-instance step
                             stepStatus,
+                            stepResult: val.stepResult,
                         };
                     },
                     {} as MultiStepInstance

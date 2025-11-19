@@ -510,3 +510,30 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
         return error.response;
     }
 };
+
+export const escalateCase = async (
+    caseId: string,
+    escalate: boolean
+): Promise<AxiosResponse | null> => {
+    try {
+        const url = `${baseCasesUrl2}/${caseId}/escalate`;
+
+        const response = await client.patch(url, {
+            escalated: escalate,
+        });
+        browserLogInfo('cases::Successfully created a case', {
+            url: baseCasesUrl,
+            caseId,
+            function: 'cases.escalateCase',
+        });
+        return response;
+    } catch (error: any) {
+        browserLogError('cases::Failed to create a case', {
+            ...parseErrorInformation(error),
+            url: baseCasesUrl,
+            caseId,
+            function: 'cases.escalateCase',
+        });
+        return error;
+    }
+};

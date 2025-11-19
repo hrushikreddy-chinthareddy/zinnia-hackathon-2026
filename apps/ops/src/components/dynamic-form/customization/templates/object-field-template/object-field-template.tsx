@@ -32,7 +32,7 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
                     onClick={(e) => e.preventDefault()}
                     height={'16px'}
                     width={'16px'}
-                    className="text-primary"
+                    className="tooltip-primary"
                 />
             }
             placement={TooltipPlacement.TopRight}

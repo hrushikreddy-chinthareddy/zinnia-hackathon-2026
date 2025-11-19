@@ -206,7 +206,7 @@ export const ClientCaseTable = () => {
                                             <CircleInfoIcon
                                                 height={'16px'}
                                                 width={'16px'}
-                                                className="text-primary"
+                                                className="tooltip-primary"
                                             />
                                         }
                                         triggerClassName={styles.agentTrigger}

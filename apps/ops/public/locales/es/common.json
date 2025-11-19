@@ -456,7 +456,9 @@
         "disbursementAmount": "Montant du décaissement",
         "payeeGrossAmount": "Montant brut du bénéficiaire",
         "timeliness": "Cronología",
-        "taxes": "Impuestos"
+        "taxes": "Impuestos",
+        "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
+        "selectDateInRange": "Seleccione una fecha dentro del rango:"
     },
     "enums": {
         "LIFE": "Vida",
@@ -1403,7 +1405,7 @@
                 "beneficiaryInformation": {
                     "title": "Información del beneficiario",
                     "perStirpes": "Por estirpe",
-                    "irrevocable": "Irevocable"
+                    "irrevocable": "Irrevocable"
                 }
             },
             "confirm": {
@@ -2331,6 +2333,7 @@
         "assigned": "Asignado",
         "queue": "Cola",
         "lastUpdated": "Última actualización",
+        "prioritized": "Priorizado",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Actualizar Estado de la Tarea",
             "setTaskAsPending": "Establecer la tarea como programada",
@@ -2409,6 +2412,12 @@
     "caseManagementDashboard": {
         "h1": "Casos",
         "h2": "Resultados de Búsqueda",
+        "loadingMessage": {
+            "gatheringYourResults": "Recopilando tus resultados…",
+            "organizingYourResults": "Organizando tus resultados…",
+            "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
+        },
+
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -2434,6 +2443,7 @@
         "results": "Resultados",
         "refineResults": "Refinar resultados",
         "addFilters": "Agregar filtros",
+        "filters": "Filtros",
         "refineResultsOptions": {
             "carrier": "Operadoras",
             "caseType": "Tipo de caso",
@@ -2456,7 +2466,12 @@
             "requestSubtype": "Tipos de caso",
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
-            "assignee": "Cesionario"
+            "assignee": "Cesionario",
+            "priority": "Prioridad",
+            "selectPriority": "Seleccionar prioridad",
+            "onlyPrioritized": "Seulement priorité",
+            "any": "Tout",
+            "notPrioritized": "Non priorisé"
         },
         "refineResultsErrors": {
             "caseType": "Por favor, seleccione al menos un tipo de caso",
@@ -2477,6 +2492,11 @@
                 "Withdrawal": "Retiros",
                 "New Business": "Nuevo negocio",
                 "Renewal": "Renovaciones"
+            },
+            "escalated": {
+                "true": "Solo priorizado",
+                "false": "No priorizado",
+                "any": "Cualquiera"
             }
         },
         "selectStatus": "Seleccionar estado",
@@ -2507,8 +2527,7 @@
                 }
             },
             "empty": {
-                "title": "No pudimos encontrar un caso que coincida con su búsqueda.",
-                "titleFilters": "No pudimos encontrar un caso que coincida con sus filtros.",
+                "title": "Nada que mostrar.",
                 "paragraph": "No se preocupe, probablemente sea solo un error tipográfico. Verifique su entrada y vuelva a intentarlo.",
                 "action": {
                     "text": "¿Sigue teniendo problemas?",
@@ -2850,6 +2869,35 @@
     },
     "caseOverview": {
         "headerText": "Resumen del Caso",
+        "prioritizeCase": {
+            "title": "Priorizar Caso",
+            "quickActions": "Acciones rápidas",
+            "Prioritized": "Priorizado",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso priorizado será movido como un elemento de trabajo para procesamiento acelerado.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} priorizado exitosamente",
+            "simpleTooltipBody": "Este caso está priorizado.",
+            "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
+        },
+        "deprioritizeCase": {
+            "title": "De-priorizar Caso",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso depriorizado será movido como un elemento de trabajo para procesamiento normal.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} depriorizado exitosamente",
+            "tooltipBody": "Este caso está depriorizado."
+        },
         "navDrawer": {
             "topStatus": "Estado Principal",
             "stage": "Etapa",
@@ -2900,6 +2948,8 @@
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Cancelado",
                 "tooltip": "Esta {{processSubType}} fue cancelada el ",
+                "leadExpired": "El cliente potencial expiró debido a 30 días de inactividad.",
+                "leadWithdrawn": "El solicitante retiró este cliente potencial.",
                 "application expired": "La solicitud expiró debido a 30 días de inactividad.",
                 "application withdrawn": "El solicitante retiró esta solicitud.",
                 "underwriting declined": "El suscriptor rechazó esta solicitud.",
@@ -3468,14 +3518,15 @@
                     "title": "Firma de la Compañía Cedente",
                     "qualType": "Tipo de calificación",
                     "isQualTypeNotValid": "No se puede determinar el tipo de calificación",
-                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
                     "isSignatureValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "isSignatureAuthorized": "¿Es válida la firma del oficial autorizado?",
                     "isLoaAttached": "¿Está adjunta la carta de aceptación?",
-                    "validOwnerRegType": "Tipo de registro/propietario válido",
+                    "registrationType": "Tipo de registro/propietario válido",
                     "isTitlePresent": "¿Está presente el título?",
                     "loaSignDate": "Fecha de Firma de LOA",
-                    "authPersonSignPresent": "¿Está presente la firma de la persona autorizada?",
+                    "authPersonSignPresent": "La firma de la persona autorizada está presente",
+                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
+                    "isAuthSignValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "signDate": "Fecha de la firma"
                 },
                 "nonRegTypeReason": {
@@ -4825,6 +4876,25 @@
                 "tierOneCriticalRiderPaymentAmount": "Monto del pago de nivel uno",
                 "tierTwoCriticalRiderPaymentDate": "Fecha de pago del nivel dos",
                 "tierTwoCriticalRiderPaymentAmount": "Monto del pago de nivel dos",
+                "remainingBenefit": "Beneficio restante",
+                "additionalBenefitUsedUp": "Beneficio adicional utilizado",
+                "payoutOption": "Opción de pago",
+                "benefitPercent": "Porcentaje de beneficio",
+                "annualBenefitLimit": "Límite anual de beneficio",
+                "currentAnnualLimit": "Límite anual actual",
+                "remainingAnnualLimit": "Límite anual restante",
+                "hypotheticalAnnualLimit": "Límite anual hipotético",
+                "lastResetDate": "Último día de reinicio",
+                "totalBenefit": "Beneficio total",
+                "phase": "Fase",
+                "base_currentBase": "Base actual",
+                "base_ratchetBase": "Base de ajuste",
+                "base_growthBase": "Base de crecimiento",
+                "base_deferralBonus": "Bono base por aplazamiento",
+                "base_deferralBonusBase": "Base del bono base por aplazamiento",
+                "base_simpleInterestBase": "Base de interés simple",
+                "charge_riderExerciseCharge": "Cargo por ejercicio del usuario",
+                "charge_riderExerciseChargeRate": "Tasa del cargo por ejercicio del usuario",
                 "coverageType": "Tipo de cobertura",
                 "coverageName": "Nombre de la cobertura",
                 "productCode": "Código de producto",
@@ -4880,17 +4950,7 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporario",
                     "PERMANENT": "Permanente"
-                },
-                "remainingBenefit": "Beneficio restante",
-                "benefitPercent": "Porcentaje de beneficio",
-                "annualBenefitLimit": "Límite anual de beneficio",
-                "payoutOption": "Opción de pago",
-                "currentAnnualLimit": "Límite anual actual",
-                "phase": "Fase",
-                "totalBenefit": "Beneficio total",
-                "remainingAnnualLimit": "Límite anual restante",
-                "additionalBenefitUsedUp": "Beneficio adicional utilizado",
-                "hypotheticalAnnualLimit": "Límite anual hipotético"
+                }
             },
             "coverageID": {
                 "Rider_ADR": "Proporciona un beneficio por muerte adicional si el asegurado muere debido a un accidente cubierto.",
@@ -6153,7 +6213,8 @@
         "cardDisableTooltip": "Seguimos trabajando en esta página. Por ahora, dirígete directamente a MCS para ver la información de contacto y los datos de identificación del agente.",
         "other": "Otro",
         "otherTooltip": "Otros agentes de la póliza no ganan comisión, pero también pueden estar autorizados a realizar cambios o discutir esta póliza. Por ejemplo, el agente de servicio de la póliza es el agente que trabaja directamente con el propietario ahora que la póliza está activa.",
-        "managePeople": "Gestionar personas"
+        "managePeople": "Gestionar personas",
+        "irrevocable": "Irrevocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -7765,13 +7826,23 @@
                 "matchDocument": "Coincidir Documento",
                 "beneficiaryStatus": "Estado del Beneficiario",
                 "addressChange": "Cambio de Dirección",
-                "call": "Llamar"
+                "call": "Llamar",
+                "formReview": "Revisión del formulario"
             }
         },
         "formErrors": {
             "caseNotFound": "Caso no encontrado",
             "correlationIdNotFount": "ID de correlación no encontrado",
             "transactionNotFound": "Transacción no encontrada"
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entiendo!",
+            "subTitle": "Tarea: Se envió la entrada de datos de cambio de beneficiario.",
+            "cta": "Ir al caso",
+            "secondaryCta": "De vuelta a casa",
+            "submitTask": "Entregar"
         }
     },
     "purchaseDocumentMatching": {
@@ -8206,6 +8277,35 @@
             "cta": "Ir a transferencia entrante",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
+        }
+    },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Las actualizaciones del agente fueron enviadas.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        },
+        "summary": {
+            "agentType": "Tipo de agente",
+            "allocation": "Asignación",
+            "externalId": "ID externo",
+            "bpm500Error": "Error BPM 500",
+            "header": "Resumen",
+            "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
+            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
+            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "tag": {
+                "new": "Agregado",
+                "none": "Ninguno",
+                "removed": "Eliminado",
+                "updated": "Actualizado"
+            },
+            "validation": "La API de validación está ejecutándose..."
+        },
+        "agentDetails": {
+            "allocationErr": "Las asignaciones deben ser iguales al 100%"
         }
     },
     "fundAllocation": {

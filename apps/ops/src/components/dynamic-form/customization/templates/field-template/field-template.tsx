@@ -22,7 +22,7 @@ export const helpInformation = (helpText: string) => {
                     onClick={(e) => e.preventDefault()}
                     height={'16px'}
                     width={'16px'}
-                    className="text-primary"
+                    className="tooltip-primary"
                 />
             }
             placement={TooltipPlacement.TopRight}

@@ -1,18 +1,15 @@
-import { CaseInstanceSummary } from '@xd/api-types/dist/generated-types/case';
-
-import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
-
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 export type NotificationCenterNotification = {
   id: string;
   title: string;
   date: Date;
   completed: boolean;
   stepsToAcknowledge?: string[];
+  caseGroup: string;
 };
 
 export type NotificationCenterProps = {
-  initialNotifications?: Array<CaseInstanceSummary> | null;
-  initialAcknowledgedNotifications?: Array<CaseAcknowledgmentItem>;
   policyNumber: string;
   planCode: string;
+  lineOfBusiness: LineOfBusiness;
 };

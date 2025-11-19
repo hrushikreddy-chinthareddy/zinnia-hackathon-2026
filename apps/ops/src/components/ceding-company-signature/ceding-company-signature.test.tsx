@@ -9,13 +9,13 @@ import {
 import { ButtonGroupTest } from '@deps/jest/constants/test-id-constants';
 import { mockT as t } from '@deps/setupTests';
 
-import CedingCompanyDistribution from './ceding-company-distribution';
+import CedingCompanySignature from './ceding-company-signature';
 
 describe('#CedingCompanyDistribution component', () => {
     it('should render the corporate resolution and loa attached sections by default', () => {
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                <CedingCompanyDistribution
+                <CedingCompanySignature
                     qualificationOptions={getQualTypeOptions(t)}
                     isFormStateReadOnly={false}
                 />
@@ -29,21 +29,19 @@ describe('#CedingCompanyDistribution component', () => {
         expect(
             screen.getByText('cedingCompanySignature.qualType')
         ).toBeInTheDocument();
+
         expect(
-            screen.getByText('cedingCompanySignature.isQualTypeNotValid')
+            screen.getByText('cedingCompanySignature.isSignatureValid')
         ).toBeInTheDocument();
         expect(
             screen.getByText('cedingCompanySignature.isLoaAttached')
-        ).toBeInTheDocument();
-        expect(
-            screen.getByText('cedingCompanySignature.validOwnerRegType')
         ).toBeInTheDocument();
     });
 
     it('should not render the corporate resolution and loa attached sections when render is false', () => {
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                <CedingCompanyDistribution
+                <CedingCompanySignature
                     qualificationOptions={getQualTypeOptions(t)}
                     isFormStateReadOnly={false}
                     renderCorporateResolution={false}
@@ -59,24 +57,19 @@ describe('#CedingCompanyDistribution component', () => {
         expect(
             screen.getByText('cedingCompanySignature.qualType')
         ).toBeInTheDocument();
-        expect(
-            screen.getByText('cedingCompanySignature.isQualTypeNotValid')
-        ).toBeInTheDocument();
+
         expect(
             screen.queryByText('cedingCompanySignature.isSignatureValid')
         ).not.toBeInTheDocument();
         expect(
             screen.queryByText('cedingCompanySignature.isLoaAttached')
         ).not.toBeInTheDocument();
-        expect(
-            screen.getByText('cedingCompanySignature.validOwnerRegType')
-        ).toBeInTheDocument();
     });
 
     it('should show loa sign date only when line of agreement is attached', () => {
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                <CedingCompanyDistribution
+                <CedingCompanySignature
                     qualificationOptions={getQualTypeOptions(t)}
                     isFormStateReadOnly={false}
                     renderCorporateResolution={false}
@@ -108,7 +101,7 @@ describe('#CedingCompanyDistribution component', () => {
     it('should not show loa sign date when renderLoaDate is false', () => {
         render(
             <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
-                <CedingCompanyDistribution
+                <CedingCompanySignature
                     qualificationOptions={getQualTypeOptions(t)}
                     isFormStateReadOnly={false}
                     renderCorporateResolution={false}
