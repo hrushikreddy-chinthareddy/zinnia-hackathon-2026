@@ -218,15 +218,6 @@ export const yearsLeft = (
   return yearsLeft > 0 ? yearsLeft : 0;
 };
 
-const getUserLocale = (): string => {
-  const formatter = new Intl.DateTimeFormat();
-  const resolvedOptions = formatter.resolvedOptions();
-  if (resolvedOptions.timeZone === ASIA_IN_TZ) {
-    return ASIA_IN_LOCAL;
-  }
-  return resolvedOptions.locale;
-};
-
 export const formatTimestamp = (
   timestamp: string,
   style: 'standard' | 'tooltip' | 'monthDay' | 'dateTimeWithTZ' = 'standard'

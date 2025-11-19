@@ -1,11 +1,3 @@
-import { TransactionResponse } from '@zinnia/api-types/types/bpm';
-import {
-  FeatureType,
-  PolicyFeature,
-  PolicyStatus,
-  ProductType,
-} from '@zinnia/api-types/types/sor';
-
 import {
   getAddSystematicProgramEligibility,
   getUpdateSystematicProgramEligibility,
@@ -13,6 +5,14 @@ import {
 import { PaymentMethod } from '@/types/payment';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { CommonLogContext } from '@/utils/logging/server-logging';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
+import {
+  FeatureType,
+  PolicyFeature,
+  PolicyStatus,
+  ProductType,
+  Transaction,
+} from '@zinnia/api-types/types/sor';
 
 import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';
 
