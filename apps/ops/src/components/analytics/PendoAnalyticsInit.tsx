@@ -30,20 +30,16 @@ const PendoAnalyticsInit = () => {
         UserPermission.AllowUIAccess
     );
 
-    const initOptions = useMemo(() => {
+    const initOptions = useMemo((): PendoOptions | undefined => {
         if (user?.partyId && carrier) {
             const isInternalUser = isInternalZinniaUser(user);
 
             return {
                 visitor: {
                     id: user.partyId, // Indicates the unique visitor ID
-                    ...(user.email && { email: user.email }),
-                    ...(user.updated_at && {
-                        firstLogin: user.updated_at,
-                    }),
-                    ...(isInternalUser != null && {
-                        isInternaZinnialUser: String(isInternalUser),
-                    }),
+                    email: user.email ?? undefined,
+                    firstLogin: user.updated_at ?? undefined,
+                    isInternalZinniaUser: String(isInternalUser ?? false),
                 },
                 account: {
                     id: carrier, // Indicates the source of traffic (Zinnia Live vs 3rt party portal)
@@ -62,17 +58,27 @@ const PendoAnalyticsInit = () => {
         if (!initOptions) {
             return undefined;
         }
-        const updatedOptions: PendoOptions = {
-            ...initOptions,
-            visitor: {
-                ...initOptions?.visitor,
-                ...(authorizedCarriers && {
-                    carrierAccessList: authorizedCarriers,
-                }),
-                ...(authorizedRoles && { roles: authorizedRoles }),
-            },
-        };
+        let updatedOptions: PendoOptions = initOptions;
 
+        if (authorizedCarriers) {
+            updatedOptions = {
+                ...updatedOptions,
+                visitor: {
+                    ...updatedOptions?.visitor,
+                    carrierAccessList: authorizedCarriers,
+                },
+            };
+        }
+
+        if (authorizedRoles) {
+            updatedOptions = {
+                ...updatedOptions,
+                visitor: {
+                    ...updatedOptions?.visitor,
+                    roles: authorizedRoles,
+                },
+            };
+        }
         return updatedOptions;
     }, [initOptions, authorizedCarriers, authorizedRoles]); // Should depend on any additional metadata
 
