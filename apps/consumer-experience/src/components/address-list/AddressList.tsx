@@ -26,7 +26,6 @@ interface AddressListProps {
   planCode: string;
   policyNumber: string;
   initialProfileData?: PolicyProfile | null;
-  allowAddressChanges?: boolean;
   initialCaseData?: CaseSummary[];
   lineOfBusiness?: LineOfBusiness;
 }
@@ -35,7 +34,6 @@ export const AddressList: FC<AddressListProps> = ({
   planCode,
   policyNumber,
   initialProfileData,
-  allowAddressChanges,
   initialCaseData,
   lineOfBusiness,
 }) => {
@@ -81,27 +79,23 @@ export const AddressList: FC<AddressListProps> = ({
       <h2 className="mb-lg" id="addAddressSection">
         Address
       </h2>
-      {allowAddressChanges && (
-        <OpenTransactionCaseDetails
-          cases={initialCaseData}
-          planCode={planCode}
-          policyNumber={policyNumber}
-          lineOfBusiness={lineOfBusiness}
-          caseType={CaseTypes.ADDRESS_CHANGE}
-        />
-      )}
+      <OpenTransactionCaseDetails
+        cases={initialCaseData}
+        planCode={planCode}
+        policyNumber={policyNumber}
+        lineOfBusiness={lineOfBusiness}
+        caseType={CaseTypes.ADDRESS_CHANGE}
+      />
+
       <Addresses
         addresses={addresses as Address[]}
         partyId={initialProfileData?.partyId || ''}
-        allowAddressChanges={allowAddressChanges}
       />
-      {allowAddressChanges && (
-        <AddEditAddressSidesheet
-          partyId={initialProfileData?.partyId || ''}
-          actionType={FormActionType.ADD}
-          addresses={addresses as Address[]}
-        />
-      )}
+      <AddEditAddressSidesheet
+        partyId={initialProfileData?.partyId || ''}
+        actionType={FormActionType.ADD}
+        addresses={addresses as Address[]}
+      />
     </div>
   );
 };

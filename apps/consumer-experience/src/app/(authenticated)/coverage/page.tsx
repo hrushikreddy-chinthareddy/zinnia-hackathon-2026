@@ -8,13 +8,11 @@ import { CoverageCard } from '@/components/coverage-card/CoverageCard';
 import { Footer } from '@/components/footer/Footer';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import { RouteKey, getPageTitle } from '@/route-map';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { getMyPoliciesByCarrier } from '@/services/policy';
 import { SearchParams } from '@/types/url';
 import { getCarrierIdsByThemeCookie } from '@/utils/carriers';
 import { isVercelEnvironment } from '@/utils/environment';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { getThemeCookies } from '@/utils/theme';
 
 const pageTitle = getPageTitle(RouteKey.COVERAGE);
@@ -29,10 +27,8 @@ export default async function Page({
 }: {
   searchParams: SearchParams;
 }) {
-  const featureFlagDecisions = await getFeatureFlags();
   const themeCookie = await getThemeCookies();
-  const showPicker =
-    featureFlagDecisions?.[FEATURE_FLAGS.ANNUITY_MODE] && !themeCookie;
+  const showPicker = !themeCookie;
 
   const carrierIds = getCarrierIdsByThemeCookie(themeCookie);
 

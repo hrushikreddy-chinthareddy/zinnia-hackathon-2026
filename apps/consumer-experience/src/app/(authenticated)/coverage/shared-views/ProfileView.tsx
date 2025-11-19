@@ -1,4 +1,3 @@
-import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import { Email, LineOfBusiness, Phone } from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 
@@ -16,13 +15,11 @@ import { FullName } from '@/components/pii/FullName';
 import { getCarrierConfig } from '@/services/carrier-config';
 import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { getPreferencesByPlanCode } from '@/services/preferences/v1/[partyId]/e-delivery/[planCode]/[policyNumber]';
 import { PaymentProvider } from '@/types/carrier-config';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import {
   filterPayorViewParties,
   filterOutCoverageInsuredParties,
@@ -41,32 +38,19 @@ export const ProfileView = async ({
   planCode: string;
   policyNumber: string;
 }) => {
-  const flags = await getFeatureFlags();
   const commonLoggingContext = await buildCommonLogContext();
-  const showCommunicationPreferences =
-    flags?.[FEATURE_FLAGS.COMMUNICATION_PREFERENCES];
-  const allowBankingChanges =
-    flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT] || false;
-  const showFarmersPaymentus =
-    flags?.[FEATURE_FLAGS.FARMERS_PAYMENTUS] || false;
-  const allowAddressChanges = flags?.[FEATURE_FLAGS.ADD_EDIT_DELETE_ADDRESS];
-  const showParties = flags?.[FEATURE_FLAGS.POLICY_OWNER_PROFILE_PARTIES];
+
   const { data } = await getCarrierConfig(commonLoggingContext);
 
-  let preferencesData = [] as EDeliveryPreferenceModel[];
   const loggingContext = await buildCommonLogContext();
 
-  if (showCommunicationPreferences) {
-    const { data } = await getPreferencesByPlanCode(
-      {
-        planCode,
-        policyNumber,
-      },
-      loggingContext
-    );
-
-    preferencesData = data;
-  }
+  const { data: preferencesData } = await getPreferencesByPlanCode(
+    {
+      planCode,
+      policyNumber,
+    },
+    loggingContext
+  );
 
   const addresses = () => {
     return (
@@ -74,7 +58,6 @@ export const ProfileView = async ({
         planCode={planCode}
         policyNumber={policyNumber}
         initialProfileData={profileData}
-        allowAddressChanges={allowAddressChanges}
         lineOfBusiness={lineOfBusiness}
       />
     );
@@ -114,10 +97,7 @@ export const ProfileView = async ({
   };
 
   const bank = () => {
-    if (
-      data?.payment.provider === PaymentProvider.PAYMENTUS &&
-      showFarmersPaymentus
-    ) {
+    if (data?.payment.provider === PaymentProvider.PAYMENTUS) {
       return (
         <PaymentDetails
           verifyIdentityRequired={data?.payment.verifyIdentityRequired}
@@ -132,7 +112,6 @@ export const ProfileView = async ({
         <BankList
           planCode={planCode}
           policyNumber={policyNumber}
-          allowBankingChanges={allowBankingChanges}
           initialProfileData={profileData}
           lineOfBusiness={lineOfBusiness}
           verifyIdentityRequired={data?.payment.verifyIdentityRequired}
@@ -209,13 +188,13 @@ export const ProfileView = async ({
               />
             </p>
           </FieldData>
-          {showParties && parties()}
+          {parties()}
         </div>
 
         {addresses()}
         {phone()}
         {email()}
-        {showCommunicationPreferences && communicationPreferences()}
+        {communicationPreferences()}
         {bank()}
       </div>
     </div>

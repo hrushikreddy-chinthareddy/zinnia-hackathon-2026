@@ -67,7 +67,7 @@ export const SelectBankWrapper = ({
       {isSuccess && (
         <SelectBank
           activeBanks={paymentMethods ?? []}
-          addBankEnabled={showAddBank}
+          addBankInlineEnabled={showAddBank}
           onAddPaymentMethod={handleAddPaymentMethod}
         />
       )}

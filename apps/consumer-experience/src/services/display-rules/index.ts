@@ -108,7 +108,6 @@ export const evaluateRouteRules = (
       !isCancelled,
     [RouteKey.ALLOCATIONS]: () => isNotPayor && !isCancelled,
     [RouteKey.BENEFICIARIES]: () => isNotPayor && !isCancelled,
-    [RouteKey.BENEFICIARY]: () => isNotPayor && !isCancelled,
     [RouteKey.COVERAGE]: () => true,
     [RouteKey.DETAILS]: () => !isCancelled,
     [RouteKey.DOCUMENTS]: () => isNotPayor && !isCancelled,

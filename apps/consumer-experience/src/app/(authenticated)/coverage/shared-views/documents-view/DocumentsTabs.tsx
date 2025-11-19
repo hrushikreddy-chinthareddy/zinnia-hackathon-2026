@@ -11,10 +11,8 @@ import { DocumentCategory } from '@/types/document';
 
 export const DocumentsTabs = ({
   activeTab,
-  showTaxDocuments,
 }: {
   activeTab: DocumentCategory;
-  showTaxDocuments: boolean;
 }) => {
   const { width } = useWindowSize();
 
@@ -53,17 +51,16 @@ export const DocumentsTabs = ({
             Statements
           </Link>
         </li>
-        {showTaxDocuments && (
-          <li>
-            <Link
-              isInternal
-              href={taxLink}
-              className={`${activeTab === DocumentCategory.TAX ? documentStyles.selected : ''}`}
-            >
-              {width < 501 ? 'Tax' : 'Tax Documents'}
-            </Link>
-          </li>
-        )}
+
+        <li>
+          <Link
+            isInternal
+            href={taxLink}
+            className={`${activeTab === DocumentCategory.TAX ? documentStyles.selected : ''}`}
+          >
+            {width < 501 ? 'Tax' : 'Tax Documents'}
+          </Link>
+        </li>
       </ul>
     </ClientOnly>
   );

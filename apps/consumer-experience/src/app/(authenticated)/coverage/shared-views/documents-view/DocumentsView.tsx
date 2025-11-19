@@ -54,7 +54,6 @@ export const DocumentsView = async ({
     loggingContext
   );
   const { data: carrierConfigData } = await getCarrierConfig(loggingContext);
-  const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV2 =
     !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
     carrierConfigData?.documents.version === DocumentsVersion.V2;
@@ -141,10 +140,7 @@ export const DocumentsView = async ({
 
   return (
     <div className="container">
-      <DocumentsTabs
-        activeTab={activeTab}
-        showTaxDocuments={showTaxDocuments}
-      />
+      <DocumentsTabs activeTab={activeTab} />
       <DocumentsWithPagination
         docCategory={activeTab}
         documents={currentViewDocs()}
