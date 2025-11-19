@@ -107,7 +107,6 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         createdDateStart: timerange.from,
-        createdDateEnd: timerange.to || undefined,
         process: formatProcessFilter(selectedProcess),
     };
 
@@ -118,6 +117,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         error: pieChartStatsError,
     } = useQuery({
         queryKey: ['submissionTypePieChartStats', filter],
+
         queryFn: () =>
             createBaseQuery(filter, [CaseCountGroupByEnum.APPLICATION_TYPE]),
         placeholderData: (previousData) => previousData,

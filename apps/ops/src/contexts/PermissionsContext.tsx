@@ -62,6 +62,7 @@ export interface PermissionsContextProps {
     isZinniaInternalViewer: boolean;
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
+    hasPermissionToPrioritizeCases: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -211,6 +212,19 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         queryKey: ['writeClientCaseCarriers', partyId],
         queryFn: () =>
             getCarriersListQuery(UserPermission.AllowWriteClientCase, partyId),
+        enabled: !!partyId,
+        initialData: [],
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+        initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
+    });
+
+    const { data: writeCasePriority } = useQuery({
+        queryKey: ['writeCasePriority', partyId],
+        queryFn: () =>
+            getCarriersListQuery(
+                UserPermission.AllowWriteCasePriority,
+                partyId
+            ),
         enabled: !!partyId,
         initialData: [],
         staleTime: FIFTEEN_MINUTES_IN_MS,
@@ -413,6 +427,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
                 hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
+                hasPermissionToPrioritizeCases: !!writeCasePriority,
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements

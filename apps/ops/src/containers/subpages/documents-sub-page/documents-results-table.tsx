@@ -165,7 +165,7 @@ export default function DocumentsResultsTable({
                                 >
                                     <Icon
                                         type={IconType.CIRCLE_INFO}
-                                        color="var(--color-primary-color-primary)"
+                                        color="var(--color-base-icon-icon-action-text-link)"
                                         height={16}
                                         width={16}
                                     />
@@ -196,7 +196,7 @@ export default function DocumentsResultsTable({
                             >
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
-                                    color="var(--color-primary-color-primary)"
+                                    color="var(--color-base-icon-icon-action-text-link)"
                                     height={16}
                                     width={16}
                                 />

@@ -12,7 +12,11 @@ import { PropertyKeys, useBpmStore } from '@/store/store';
 import { CaseSummary, CaseTypes } from '@/types/case';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
-import { refetchHandler } from '@/utils/transactions';
+import {
+  refetchHandler,
+  POLL_INTERVAL,
+  POLL_LIMIT,
+} from '@/utils/transactions';
 
 import { AddEditAddressSidesheet } from '../add-edit-address/AddEditAddressSidesheet';
 import { FormActionType } from '../add-edit-address/types';
@@ -26,9 +30,6 @@ interface AddressListProps {
   initialCaseData?: CaseSummary[];
   lineOfBusiness?: LineOfBusiness;
 }
-
-const POLL_INTERVAL = 1000;
-const POLL_LIMIT = 5;
 
 export const AddressList: FC<AddressListProps> = ({
   planCode,
@@ -91,9 +92,6 @@ export const AddressList: FC<AddressListProps> = ({
       )}
       <Addresses
         addresses={addresses as Address[]}
-        preferredAddressIndicator={
-          initialProfileData?.preferredAddressIndicator || ''
-        }
         partyId={initialProfileData?.partyId || ''}
         allowAddressChanges={allowAddressChanges}
       />
@@ -101,6 +99,7 @@ export const AddressList: FC<AddressListProps> = ({
         <AddEditAddressSidesheet
           partyId={initialProfileData?.partyId || ''}
           actionType={FormActionType.ADD}
+          addresses={addresses as Address[]}
         />
       )}
     </div>

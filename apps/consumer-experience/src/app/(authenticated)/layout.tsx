@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 
 import styles from '@/app/layout.module.css';
 import Analytics from '@/components/analytics/Analytics';
-import { MourningBanner } from '@/components/mourning-banner/MourningBanner';
 import { Nav } from '@/components/nav/Nav';
 import { PiiProvider } from '@/components/providers/PiiProvider';
 import { RefreshRouterManager } from '@/components/providers/RefreshRouterManager';
@@ -67,7 +66,6 @@ export default async function AuthenticatedLayout({
 
           <SessionManager>
             <RefreshRouterManager>
-              <MourningBanner />
               <div className="layout-wrapper">
                 <div className="layout-wrapper-inner">
                   <div className={styles.mainContent}>

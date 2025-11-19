@@ -19,6 +19,7 @@ import {
   TransactionAmounts,
   Policy,
   Product,
+  PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
 import { BankDetail } from '@/components/person-data/types';
@@ -99,7 +100,6 @@ export interface PolicyParty {
 }
 
 export interface PolicyProfile {
-  preferredAddressIndicator: string;
   name: { firstName?: string; lastName?: string; fullName?: string };
   partyId: string;
   addresses: Address[];
@@ -107,6 +107,7 @@ export interface PolicyProfile {
   emails: Email[];
   bankDetails: BankDetail[];
   parties: PolicyParty[];
+  partyRoles?: PolicyPartyRoles[];
 }
 
 export type PolicyReferenceData = Pick<

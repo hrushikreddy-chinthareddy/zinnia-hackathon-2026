@@ -13,7 +13,11 @@ import { QueryKeys } from '@/queries/query-keys';
 import { ActionTypes, PropertyKeys, useBpmStore } from '@/store/store';
 import { CaseSummary, CaseTypes } from '@/types/case';
 import { PolicyProfile } from '@/types/policy';
-import { refetchHandler } from '@/utils/transactions';
+import {
+  refetchHandler,
+  POLL_INTERVAL,
+  POLL_LIMIT,
+} from '@/utils/transactions';
 
 import styles from './BankList.module.css';
 import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
@@ -21,9 +25,6 @@ import { BankData } from '../bank-data/BankData';
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 import { OpenTransactionCaseDetails } from '../open-transaction-case-details/OpenTransactionCaseDetails';
 import { BankDetail } from '../person-data/types';
-
-const POLL_INTERVAL = 1000;
-const POLL_LIMIT = 5;
 
 interface BankListProps {
   planCode: string;

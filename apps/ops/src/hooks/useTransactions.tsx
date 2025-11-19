@@ -35,31 +35,46 @@ const filteredTransactions = (transactions: Transaction[]) => {
 export const useTransactionsOptions = (
     historyFilters: HistoryFilters,
     policy: BasePolicy,
+    multiTransactionTypes?: boolean,
     enabled: boolean = true
-) =>
-    queryOptions({
+) => {
+    return queryOptions({
         queryKey: [
             'getTransactions',
             historyFilters.eventFilter,
+            historyFilters.datesFilter,
             policy.policyNumber,
             policy.product?.planCode,
+            multiTransactionTypes,
         ],
+
         queryFn: () =>
             getTransactionsQuery({
-                historyFilters: { eventFilter: historyFilters.eventFilter },
+                historyFilters: {
+                    eventFilter: historyFilters.eventFilter,
+                    datesFilter: historyFilters.datesFilter,
+                },
                 policyNumber: policy.policyNumber,
                 planCode: policy.product?.planCode,
+                multiTransactionTypes,
             }),
         enabled: enabled && !!policy.policyNumber && !!policy.product?.planCode,
         select: (results) => filteredTransactions(results),
     });
+};
 
 export const useTransactions = (
     policy: BasePolicy,
     historyFilters: HistoryFilters,
+    multiTransactionTypes: boolean = false,
     enabled?: boolean
 ) => {
     return useQuery({
-        ...useTransactionsOptions(historyFilters, policy, enabled),
+        ...useTransactionsOptions(
+            historyFilters,
+            policy,
+            multiTransactionTypes,
+            enabled
+        ),
     });
 };

@@ -1,16 +1,15 @@
 import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+import { isEmpty } from 'lodash';
 
 import {
-    AllFilters,
+    DatesFilter,
     EventFilterKeys,
     EventFilters,
     PeopleFilters,
     PolicyFilters,
-    SetHistoryFilters,
     TransactionFilters,
     YearFilters,
-    initialFilter,
 } from '@deps/contexts/HistoryFiltersContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
@@ -39,7 +38,13 @@ export const getYearOptions = (policyIssueDate: string | undefined) => {
 };
 
 export const hasFilter = (
-    filter?: 'all' | EventFilters | YearFilters | TransactionStatus | null
+    filter?:
+        | 'all'
+        | EventFilters
+        | YearFilters
+        | TransactionStatus
+        | DatesFilter
+        | null
 ) => {
     return !isNullEmptyOrUndefined(filter) && filter !== 'all';
 };
@@ -71,53 +76,33 @@ export const getFilterEnumKey = (filter: string) => {
     return EventFilterKeys.All;
 };
 
-export const setFilter = (
-    setHistoryFilters: SetHistoryFilters,
-    filter: EventFilterKeys,
-    subfilter: AllFilters
+// TODO: Use more type safe definitions
+export const filterEventFilters = (
+    state: EventFilters | undefined,
+    filterKey: Exclude<EventFilterKeys, 'All'>,
+    subfilter: string
 ) => {
-    setHistoryFilters((prevState) => ({
-        ...prevState,
-        eventFilter: {
-            [filter]: subfilter,
-        },
-    }));
-};
-
-export const setStatusFilter = (
-    setHistoryFilters: SetHistoryFilters,
-    status: TransactionStatus
-) => {
-    setHistoryFilters((prevState) => ({
-        ...prevState,
-        statusFilter: status,
-    }));
-};
-
-export const setYearFilter = (
-    setHistoryFilters: SetHistoryFilters,
-    year: YearFilters
-) => {
-    setHistoryFilters((prevState) => ({
-        ...prevState,
-        yearFilter: year,
-    }));
-};
-
-export const removeAllFilters = (setHistoryFilters: SetHistoryFilters) => {
-    setHistoryFilters(initialFilter);
-};
-
-export const removeEventFilter = (setHistoryFilters: SetHistoryFilters) => {
-    setHistoryFilters((prevState) => {
-        const { eventFilter, ...updatedState } = prevState;
-        return updatedState;
-    });
-};
-
-export const removeYearFilter = (setHistoryFilters: SetHistoryFilters) => {
-    setHistoryFilters((prevState) => {
-        const { yearFilter, ...updatedState } = prevState;
-        return updatedState;
-    });
+    const newState = { ...state };
+    if (Array.isArray(newState?.[filterKey])) {
+        if (newState[filterKey].includes(subfilter)) {
+            const filtered = newState[filterKey].filter(
+                (filter: string) => filter !== subfilter
+            );
+            if (isEmpty(filtered)) {
+                delete newState[filterKey];
+                return newState;
+            }
+            return {
+                [filterKey]: filtered,
+            };
+        }
+        return {
+            ...newState,
+            [filterKey]: [...newState[filterKey], subfilter],
+        };
+    }
+    return {
+        ...newState,
+        [filterKey]: [subfilter],
+    };
 };

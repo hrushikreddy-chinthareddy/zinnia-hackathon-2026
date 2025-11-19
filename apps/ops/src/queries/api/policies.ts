@@ -7,7 +7,7 @@ import {
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { PaginationParams } from '@deps/components/pagination/pagination';
 import { PolicySortBy } from '@deps/components/policy-index/types';
@@ -758,9 +758,11 @@ interface PolicyTransactionQuery {
     sortField?: 'EFFECTIVEDATE' | 'PROCESSDATE' | 'REVERSALDATE';
     sortOrder?: 'ASC' | 'DESC';
     status?: TransactionStatus | TransactionStatus[];
-    transactionTypes?: string[];
+    transactionTypes?: readonly string[];
     year?: string;
     reverseInitiatorOnly?: boolean;
+    from?: Dayjs;
+    to?: Dayjs;
 }
 
 // Get policy transactions by transactionType
@@ -775,6 +777,8 @@ export const getPolicyTransactions = async ({
     transactionTypes,
     year,
     reverseInitiatorOnly,
+    from,
+    to,
 }: PolicyTransactionQuery): Promise<Transaction[]> => {
     try {
         const params = new URLSearchParams();
@@ -788,6 +792,8 @@ export const getPolicyTransactions = async ({
             status,
             transactionTypes,
             year: year && dayjs(year).format('YYYY-01-01'),
+            startDate: from && dayjs(from).format('YYYY-MM-DD'),
+            endDate: to && dayjs(to).format('YYYY-MM-DD'),
         })) {
             if (value) params.append(key, `${value}`);
         }

@@ -6,9 +6,12 @@ import {
     WidgetProps,
 } from '@rjsf/utils';
 import { IconType } from '@zinnia/bloom/components';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 
-import Radio, { RadioItem } from '@deps/components/radio/radio';
+import Radio, {
+    RadioItem,
+    RadioOrientation,
+} from '@deps/components/radio/radio';
 import {
     csrApiHelper,
     parseJsonValue,
@@ -73,7 +76,7 @@ function RadioWidget<
         formContext,
         readonly,
     } = widgetProps;
-    const { enumOptions, enumDisabled } = options;
+    const { enumOptions, enumDisabled, inline } = options;
     const {
         customOptions,
         props,
@@ -81,8 +84,13 @@ function RadioWidget<
         cardType,
         icon,
         sectionTitle,
+        allowNullValue,
         showReadOnlyCardView = false,
     } = getUiOptions<T, S, F>(uiSchema);
+
+    useEffect(() => {
+        allowNullValue && onChange(value || null);
+    }, [allowNullValue]);
 
     const apiProps =
         typeof props === 'object' ? (props as ApiProps) : ({} as ApiProps);
@@ -202,13 +210,22 @@ function RadioWidget<
         <div>
             <Radio
                 id={id}
-                items={newOptions as RadioItem[]}
+                items={
+                    newOptions.filter(
+                        (option) => option.value !== null
+                    ) as RadioItem[]
+                }
                 value={selectedValue as string}
                 disabled={disabled}
                 readonly={readonly}
                 defaultValue={value}
                 onChange={handleOnChange}
                 className="items-center justify-between text-sm"
+                orientation={
+                    inline
+                        ? RadioOrientation.Horizontal
+                        : RadioOrientation.Vertical
+                }
             />
         </div>
     );

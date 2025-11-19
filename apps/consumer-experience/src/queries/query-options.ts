@@ -1,6 +1,8 @@
 import { queryOptions } from '@tanstack/react-query';
 import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 
+import { CaseSearchCriteriaWithLimit } from '@/services/case';
+
 import {
   getAcknowledgedCases,
   searchCasesByPolicyNumber,
@@ -32,13 +34,15 @@ export const searchCasesByPolicyNumberOptions = ({
       policyNumber,
       lineOfBusiness,
     ],
-    queryFn: () => searchCasesByPolicyNumber(policyNumber, planCode),
+    queryFn: () => searchCasesByPolicyNumber({ policyNumber }),
   });
 
 type AcknowledgedCasesOptions = {
   planCode: string;
   policyNumber: string;
+  limit?: number;
 };
+
 export const acknowledgedCasesOptions = ({
   planCode,
   policyNumber,
@@ -46,4 +50,15 @@ export const acknowledgedCasesOptions = ({
   queryOptions({
     queryKey: [QueryKeys.NOTIFICATIONS, QueryKeys.NOTIFICATION_ACKNOWLEDGMENT],
     queryFn: () => getAcknowledgedCases({ planCode, policyNumber }),
+  });
+
+export const caseQueryOptions = ({
+  policyNumber,
+  limit = 10,
+  caseStatus = [],
+}: CaseSearchCriteriaWithLimit) =>
+  queryOptions({
+    queryKey: [QueryKeys.CASES_FOR_POLICY, policyNumber, limit, caseStatus],
+    queryFn: () =>
+      searchCasesByPolicyNumber({ policyNumber, limit, caseStatus }),
   });

@@ -7,10 +7,12 @@ import { QueryKeys } from '@/queries/query-keys';
 import { useBpmStore, PropertyKeys } from '@/store/store';
 import { PolicyProfile } from '@/types/policy';
 import { filterItemsWithPastEndDate } from '@/utils/data';
-import { refetchHandler } from '@/utils/transactions';
+import {
+  refetchHandler,
+  POLL_INTERVAL,
+  POLL_LIMIT,
+} from '@/utils/transactions';
 
-export const POLL_INTERVAL = 1000;
-export const POLL_LIMIT = 5;
 export const useAddresses = (
   planCode: string,
   policyNumber: string,

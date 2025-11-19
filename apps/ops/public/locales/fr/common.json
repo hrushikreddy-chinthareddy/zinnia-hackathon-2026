@@ -455,7 +455,9 @@
         "disbursementAmount": "Monto del desembolso",
         "payeeGrossAmount": "Monto bruto del beneficiario",
         "timeline": "Ponctualité",
-        "taxes": "Impôts"
+        "taxes": "Impôts",
+        "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
+        "selectDateInRange": "Sélectionnez une date dans la plage:"
     },
     "enums": {
         "LIFE": "Vie",
@@ -1319,6 +1321,7 @@
         "assigned": "Attribué",
         "queue": "File d'attente",
         "lastUpdated": "Dernière mise à jour",
+        "prioritized": "Priorisé",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Mettre à jour l'état de la tâche",
             "setTaskAsPending": "Définir la tâche comme planifiée",
@@ -2358,6 +2361,11 @@
     "caseManagementDashboard": {
         "h1": "Dossiers",
         "h2": "Résultats de recherche",
+        "loadingMessage": {
+            "gatheringYourResults": "Collecte de vos résultats…",
+            "organizingYourResults": "Organisation de vos résultats…",
+            "takingLongerThanUsual": "Cette opération prend plus de temps que d'habitude. Veuillez ajuster vos filtres."
+        },
         "case": {
             "createdAt": "Créé",
             "updatedAt": "Mis à jour",
@@ -2383,6 +2391,7 @@
         "results": "Résultats",
         "refineResults": "Affiner les résultats",
         "addFilters": "Ajouter des filtres",
+        "filters": "Filtres",
         "refineResultsOptions": {
             "carriers": "Assureur",
             "caseType": "Type de dossier",
@@ -2405,7 +2414,12 @@
             "requestSubtype": "Catégories de dossier.",
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
-            "assignee": "Cessionnaire"
+            "assignee": "Cessionnaire",
+            "priority": "Priorité",
+            "selectPriority": "Sélectionner la priorité",
+            "onlyPrioritized": "Seulement priorisé",
+            "any": "Tout",
+            "notPrioritized": "Non priorisé"
         },
         "refineResultsErrors": {
             "caseType": "Veuillez sélectionner un type de dossier",
@@ -2426,6 +2440,11 @@
                 "Withdrawal": "Retraits",
                 "New Business": "Nouvelle affaire",
                 "Renewal": "Renouvellements"
+            },
+            "escalated": {
+                "true": "Seulement priorisé",
+                "false": "Non priorisé",
+                "any": "Tout"
             }
         },
         "selectStatus": "Sélectionner le statut",
@@ -2456,8 +2475,7 @@
                 }
             },
             "empty": {
-                "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
-                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
+                "title": "Rien à montrer.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",
@@ -2805,6 +2823,22 @@
     },
     "caseOverview": {
         "headerText": "Aperçu du Dossier",
+        "prioritizeCase": {
+            "quickActions": "Actions rapides",
+            "prioritize": "Priorisé",
+            "title": "Prioriser le Dossier",
+            "detailsHeader": "Détails",
+            "detailsBody": "Un dossier priorisé sera déplacé en tant qu'élément de travail pour un traitement accéléré.",
+            "cancel": "Annuler",
+            "submit": "Soumettre",
+            "successMessage": "Dossier ID: {{caseId}} priorisé avec succès",
+            "errorMessage": "Échec de la priorisation du dossier",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "simpleTooltipBody": "Ce dossier est priorisé.",
+            "tooltipBody": "Ce dossier a été priorisé le {{date}} par {{userName}} pour traitement."
+        },
         "navDrawer": {
             "topStatus": "Statut supérieur",
             "stage": "Organiser",
@@ -2855,6 +2889,8 @@
                 "reasonNoExceptions": "À déterminer",
                 "badgeText": "Annulé",
                 "tooltip": "Ce {{processSubType}} a été annulé le ",
+                "leadExpired": "Le prospect a expiré en raison de 30 jours d'inactivité",
+                "leadWithdrawn": "Le candidat a retiré ce lead.",
                 "application expired": "La candidature a expiré en raison de 30 jours d'inactivité.",
                 "application withdrawn": "Le demandeur a retiré cette demande.",
                 "underwriting declined": "Le souscripteur a refusé cette demande.",
@@ -6123,7 +6159,8 @@
         "cardDisableTooltip": "Nous travaillons encore sur cette page. Pour l'instant, rendez-vous directement sur MCS pour consulter les coordonnées et les informations d'identification des agents.",
         "other": "Autre",
         "otherTooltip": "Les autres agents participant à la police ne gagnent pas de commission, mais peuvent également être autorisés à apporter des modifications ou à discuter de cette politique. Par exemple, l'agent de gestion de la politique est l'agent qui travaille directement avec le propriétaire maintenant que la politique est active.",
-        "managePeople": "Gérer les gens"
+        "managePeople": "Gérer les gens",
+        "irrevocable": "Irrévocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -7812,8 +7849,18 @@
                 "summary": "Résumé",
                 "beneficiaryStatus": "Statut du bénéficiaire",
                 "addressChange": "Changement d'adresse",
-                "call": "Appel"
+                "call": "Appel",
+                "formReview": "Examen du formulaire"
             }
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La saisie des données de modification des bénéficiaires a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à la maison",
+            "submitTask": "Soumettre"
         }
     },
     "purchaseDocumentMatching": {
@@ -8253,6 +8300,35 @@
             "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"
+        }
+    },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Les mises à jour de l’agent ont été soumises.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l’accueil",
+            "submitTask": "Soumettre"
+        },
+        "summary": {
+            "agentType": "Type d’agent",
+            "allocation": "Allocation",
+            "externalId": "ID externe",
+            "bpm500Error": "Erreur BPM 500",
+            "header": "Résumé",
+            "reviewMessage": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
+            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Consultez l’erreur ci-dessous.",
+            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l’équipe concernée assure le suivi.",
+            "tag": {
+                "new": "Ajouté",
+                "none": "Aucun",
+                "removed": "Supprimé",
+                "updated": "Mis à jour"
+            },
+            "validation": "L’API de validation est en cours d’exécution..."
+        },
+        "agentDetails": {
+            "allocationErr": "Les allocations doivent être égales à 100 %"
         }
     },
     "fundAllocation": {

@@ -63,7 +63,7 @@ const GracePeriodValues = ({ values }: GracePeriodValuesProps) => {
                             <CircleInfoIcon
                                 height={13}
                                 width={13}
-                                className="text-primary"
+                                className="tooltip-primary"
                             />
                         </span>
                     </Popover>
@@ -106,7 +106,7 @@ const GracePeriodValues = ({ values }: GracePeriodValuesProps) => {
                             <CircleInfoIcon
                                 height={13}
                                 width={13}
-                                className="text-primary"
+                                className="tooltip-primary"
                             />
                         </span>
                     </Popover>
@@ -227,7 +227,7 @@ const PremiumsPageHeaderContainer = ({
                                 <CircleInfoIcon
                                     height={13}
                                     width={13}
-                                    className="text-primary"
+                                    className="tooltip-primary"
                                 />
                             </span>
                         </Popover>
@@ -267,7 +267,7 @@ const PremiumsPageHeaderContainer = ({
                                     <CircleInfoIcon
                                         height={13}
                                         width={13}
-                                        className="text-primary"
+                                        className="tooltip-primary"
                                     />
                                 </span>
                             </Popover>

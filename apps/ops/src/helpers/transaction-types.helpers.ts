@@ -198,4 +198,4 @@ export const allTransactions = {
         ...policyTransactions.all,
         ...peopleTransactions.all,
     ],
-};
+} as const;

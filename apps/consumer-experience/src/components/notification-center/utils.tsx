@@ -1,6 +1,4 @@
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
-
-import { CaseStatus, StageStatus } from '@/types/case';
+import { CaseStatus, CaseSummary, StageStatus } from '@/types/case';
 
 import { NotificationCenterNotification } from './types';
 
@@ -38,7 +36,7 @@ const shownStatuses: Set<string | undefined> = new Set([
 ]);
 
 export const parseNotifications = (
-  caseItem: CaseInstanceSummary
+  caseItem: CaseSummary
 ): NotificationCenterNotification | null => {
   if (!caseItem.id) return null;
   if (!shownStatuses.has(caseItem.caseStatus)) return null;
@@ -66,7 +64,6 @@ export const parseNotifications = (
   }
 
   if (!caseItem.process) return null;
-  // @ts-expect-error api spec wrong, this field exists
   const title = caseItem.processSubType || caseItem.process;
 
   return {

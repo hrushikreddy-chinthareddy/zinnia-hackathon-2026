@@ -456,7 +456,9 @@
         "disbursementAmount": "Disbursement amount",
         "payeeGrossAmount": "Payee gross amount",
         "timeline": "Timeline",
-        "taxes": "Taxes"
+        "taxes": "Taxes",
+        "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
+        "selectDateInRange": "Please select a date within range:"
     },
     "enums": {
         "LIFE": "Life",
@@ -2327,6 +2329,7 @@
         "assigned": "Assigned",
         "queue": "Queue",
         "lastUpdated": "Last Updated",
+        "prioritized": " Prioritized",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
             "setTaskAsPending": "Set Task as Scheduled",
@@ -2405,6 +2408,11 @@
     "caseManagementDashboard": {
         "h1": "Cases",
         "h2": "Search Results",
+        "loadingMessage": {
+            "gatheringYourResults": "Gathering your results…",
+            "organizingYourResults": "Organizing your results…",
+            "takingLongerThanUsual": "This is taking longer than usual. Try adjusting your filters."
+        },
         "case": {
             "createdAt": "Created",
             "updatedAt": "Updated",
@@ -2430,6 +2438,7 @@
         "results": "Results",
         "refineResults": "Refine results",
         "addFilters": "Add filters",
+        "filters": "Filters",
         "refineResultsOptions": {
             "carrier": "Carriers",
             "caseType": "Case type",
@@ -2452,7 +2461,12 @@
             "requestSubtype": "Case types",
             "taskStatus": "Task Status",
             "group": "Group",
-            "assignee": "Assignee"
+            "assignee": "Assignee",
+            "priority": "Priority",
+            "selectPriority": "Select priority",
+            "onlyPrioritized": "Only Prioritized",
+            "any": "Any",
+            "notPrioritized": "Not Prioritized"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -2473,6 +2487,11 @@
                 "Withdrawal": "Withdrawals",
                 "New Business": "New Business",
                 "Renewal": "Renewals"
+            },
+            "escalated": {
+                "true": "Only Prioritized",
+                "false": "Not Prioritized",
+                "any": "Any"
             }
         },
         "selectStatus": "Select status",
@@ -2503,8 +2522,7 @@
                 }
             },
             "empty": {
-                "title": "We couldn't find a case that matches your search.",
-                "titleFilters": "We couldn't find a case that matches your filters.",
+                "title": "Nothing to show.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",
@@ -2848,6 +2866,22 @@
     },
     "caseOverview": {
         "headerText": "Case Overview",
+        "prioritizeCase": {
+            "prioritized": "Prioritized",
+            "quickActions": "Quick Actions",
+            "title": "Prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A prioritized case will be moved up as a work item for expedited processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Case ID: {{caseId}} was prioritized",
+            "simpleTooltipBody": "This case is prioritized.",
+            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
+        },
         "navDrawer": {
             "topStatus": "Top Status",
             "stage": "Stage",
@@ -2898,6 +2932,8 @@
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Canceled",
                 "tooltip": "This {{processSubType}} was canceled on ",
+                "leadExpired": "The lead expired due to 30 days of inactivity.",
+                "leadWithdrawn": "The applicant withdrew this lead.",
                 "application expired": "The application expired due to 30 days of inactivity.",
                 "application withdrawn": "The applicant withdrew this application.",
                 "underwriting declined": "The underwriter denied this application.",
@@ -3467,14 +3503,12 @@
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
                     "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isCorporateResolutionPresent": "Is corporate resolution present?",
+                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
                     "isLoaAttached": "Is letter of acceptance attached?",
                     "validOwnerRegType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
-                    "loaSignDate": "LOA Sign Date",
-                    "authPersonSignPresent": "Authorized Person’s signature is present",
-                    "signDate": "Signature date"
+                    "loaSignDate": "LOA Sign Date"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Joint Owner/Annuitant absence on paperwork or in the contract",
@@ -6209,7 +6243,8 @@
         "cardDisableTooltip": "We're still working on this page. For now, head to MCS directly to see agent contact information and identification details.",
         "other": "Other",
         "otherTooltip": "Other agents on the policy don't earn commission, but may also be authorized to make changes or discuss this policy. For example, the servicing agent on the policy is the agent who works directly with the owner now that the policy is active.",
-        "managePeople": "Manage people"
+        "managePeople": "Manage people",
+        "irrevocable": "Irrevocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -7925,7 +7960,8 @@
                 "matchDocument": "Match Document",
                 "beneficiaryStatus": "Beneficiary Status",
                 "addressChange": "Address Change",
-                "call": "Call"
+                "call": "Call",
+                "formReview": "Form Review"
             },
             "nextTask": "Continue to Next Task"
         },
@@ -8367,6 +8403,44 @@
             "cta": "Go to incoming transfer ",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
+        }
+    },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Beneficary Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Agent updates were submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        },
+        "summary": {
+            "agentType": "Agent type",
+            "allocation": "Allocation",
+            "externalId": "External ID",
+            "bpm500Error": "BPM 500 error",
+            "header": "Summary",
+            "reviewMessage": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "tag": {
+                "new": "Added",
+                "none": "None",
+                "removed": "Removed",
+                "updated": "Updated"
+            },
+            "validation": "Validation API is Running...."
+        },
+        "agentDetails": {
+            "allocationErr": "Allocations must equal 100%"
         }
     },
     "fundAllocation": {
