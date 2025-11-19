@@ -441,6 +441,7 @@ export interface RMD {
     isOneTimeWithdrawal?: boolean;
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
+    rmdMethod: RMDType | null;
 }
 
 export interface QCD {
