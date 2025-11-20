@@ -32,6 +32,7 @@ const setupTest = <T>(props: T) => {
         policyDates: {
             issueDate: '2023-01-01',
             maturityDate: '2033-01-01',
+            policyDeliveryDate: '2033-01-01',
         },
         policyYear: 10,
         policyTerm: 20,
@@ -182,6 +183,7 @@ describe('policy details helpers', () => {
                 policyAge: '10',
                 policyLength: 'temporal.nYears',
                 policyYearsLeft: 'temporal.timeLeft',
+                deliveryDate: '1/1/2033',
             });
         });
     });

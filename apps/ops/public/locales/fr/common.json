@@ -4562,7 +4562,8 @@
                 "policyYear": "Año de póliza",
                 "policyLengthTooltip": "La durée de la police correspond à sa durée de validité. Certaines polices ont une durée déterminée (exprimée en nombre d'années) et une date de fin, tandis que d'autres durent jusqu'au décès de l'assuré.",
                 "policyTimeline": "Chronologie de la police",
-                "freeLookEndDate": "Date de fin de la consultation gratuite"
+                "freeLookEndDate": "Date de fin de la consultation gratuite",
+                "deliveryDate": "Date de réception"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Adresse e-mail de l'agent",

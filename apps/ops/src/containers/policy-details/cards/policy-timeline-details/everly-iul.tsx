@@ -6,6 +6,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
 import FreeLookCancelDate from '@deps/containers/policy-summary-card/display-fields/free-look-cancel-date';
 
+import DeliveryDate from '../display-fields/delivery-date';
 import FixedCostPeriod from '../display-fields/fixed-cost-period';
 import IssueDate from '../display-fields/issue-date';
 import PolicyAge from '../display-fields/policy-age';
@@ -30,6 +31,7 @@ const EverlyIul = ({ policyTimelineCardData, productType }: EverlyIulProps) => {
         policyAge,
         policyLength,
         policyYearsLeft,
+        deliveryDate,
     } = policyTimelineCardData;
 
     return (
@@ -41,6 +43,7 @@ const EverlyIul = ({ policyTimelineCardData, productType }: EverlyIulProps) => {
             />
             <PolicyAge policyAge={policyAge} />
             <IssueDate issueDate={issueDate} />
+            <DeliveryDate deliveryDate={deliveryDate} />
             <FreeLookCancelDate freeLookCancelDate={freeLookCancelDate} />
             {maturityDate && (
                 <div>

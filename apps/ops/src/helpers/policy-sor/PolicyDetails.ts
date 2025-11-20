@@ -80,6 +80,7 @@ export class PolicyDetails {
     public systematicPrograms: SystematicPrograms;
     public investmentType?: string;
     public isTPA: boolean;
+    public deliveryDate: string | undefined;
 
     constructor(policy: Policy = {}) {
         this.policyRaw = policy;
@@ -143,6 +144,7 @@ export class PolicyDetails {
         this.investmentType = policy?.allocation?.investmentType;
         this.qualificationType = policy?.qualificationType;
         this.isTPA = policy?.thirdPartyAdministratorId !== 'Non-Zinnia';
+        this.deliveryDate = policy?.policyDates?.policyDeliveryDate;
     }
 
     public get carrierName(): string | undefined {

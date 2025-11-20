@@ -6,6 +6,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
+import DeliveryDate from '../display-fields/delivery-date';
 import IssueDate from '../display-fields/issue-date';
 import PolicyAge from '../display-fields/policy-age';
 import { TermPolicyLength } from '../display-fields/policy-length-term';
@@ -28,6 +29,7 @@ const TermTimelineDetails = ({ policyTimelineCardData }: EverlyIulProps) => {
         maturityDate,
         policyAge,
         fixedCostPeriod,
+        deliveryDate,
     } = policyTimelineCardData;
 
     return (
@@ -35,6 +37,7 @@ const TermTimelineDetails = ({ policyTimelineCardData }: EverlyIulProps) => {
             <TermPolicyLength policyFixedCostPeriod={fixedCostPeriod} />
             <PolicyAge policyAge={policyAge} />
             <IssueDate issueDate={issueDate} />
+            <DeliveryDate deliveryDate={deliveryDate} />
             {maturityDate && (
                 <div>
                     <Label
