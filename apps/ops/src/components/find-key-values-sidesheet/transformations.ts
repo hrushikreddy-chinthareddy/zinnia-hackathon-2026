@@ -509,7 +509,7 @@ function convertTuple(
     if (isPrimitive(value)) {
         return {
             type: FieldType.field,
-            label: t(label),
+            label: t(label) ?? label,
             value: String(value),
         };
     }
@@ -528,22 +528,22 @@ function convertTuple(
                 if (!sectionLabel) return; // TODO: maybe skip, maybe provide default label?
 
                 // TODO: filter out fields that are not visible, including the title field
-                const fields = convertNode(item, overrides);
+                const fields = convertNode(item, t, overrides);
 
                 return {
                     type: FieldType.section,
-                    label: t(sectionLabel),
+                    label: t(sectionLabel) ?? sectionLabel,
                     children: fields, // TODO: recurse?
                 };
             });
 
             return {
                 type: FieldType.section,
-                label: t(key),
+                label: t(key) ?? key,
                 children: sections,
             };
         } else {
-            const groups = value.map((item) => convertNode(item, overrides));
+            const groups = value.map((item) => convertNode(item, t, overrides));
             if (groups.length === 0) return null;
 
             return {
@@ -555,7 +555,7 @@ function convertTuple(
 
     // Object → Section
     if (typeof value === 'object' && !Array.isArray(value)) {
-        const children = convertNode(value, overrides);
+        const children = convertNode(value, t, overrides);
 
         if (children.length === 0) return null;
 
