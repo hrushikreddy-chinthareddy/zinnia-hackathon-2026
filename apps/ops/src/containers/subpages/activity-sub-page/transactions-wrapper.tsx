@@ -108,10 +108,19 @@ export const TransactionsWrapper = () => {
     );
 
     const [isSideSheetOpen, setIsSideSheetOpen] = useState(false);
+    const prevActiveElement = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        // Restore focus to row on sidesheet close
+        if (!isSideSheetOpen) {
+            prevActiveElement.current?.focus();
+        }
+    }, [isSideSheetOpen]);
 
     const handleRowClick = (transaction: Transaction) => {
         if (transaction) {
             setSelectedTransaction(transaction);
+            prevActiveElement.current = document.activeElement as HTMLElement;
             setIsSideSheetOpen(!isSideSheetOpen);
         }
     };
