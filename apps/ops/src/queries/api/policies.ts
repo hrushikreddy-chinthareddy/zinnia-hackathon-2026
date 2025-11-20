@@ -397,7 +397,7 @@ export const getPolicyPartiesSSR = async (
             loggingContext
         );
 
-        if (data?.status !== 200) {
+        if (data?.status === 500) {
             browserLogError(
                 'getPolicyPartiesSSR:: Error fetching parties from policies'
             );
@@ -548,7 +548,7 @@ export const getPolicyNotesInfo = async ({
             AxiosResponse<PolicyNotesInfoResponse>
         >(endpoint);
 
-        if (data?.status !== 200) {
+        if (data?.status === 500) {
             browserLogError('getPolicyNotesInfo:: Diary Notes API failed');
 
             throw new Error(
@@ -663,7 +663,7 @@ export const getPolicyTransactionHistory = async (
             AxiosResponse<TransactionHistory>
         >(url);
 
-        if (data?.status !== 200) {
+        if (data?.status === 500) {
             browserLogError(
                 'getPolicyTransactionHistory:: Failed to fetch transaction history'
             );

@@ -62,7 +62,7 @@ export const getCaseTaskByIdSSR = async (
             },
             logCtx
         );
-        if (data?.status !== 200) {
+        if (data?.status === 500) {
             logError('getCaseTaskByIdSSR::Failed to retrieve task', {
                 status: data?.status,
                 ...logCtx,

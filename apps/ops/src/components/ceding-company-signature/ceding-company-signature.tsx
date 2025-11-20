@@ -42,16 +42,16 @@ export type CedingCompanySignatureProps = {
 };
 
 export interface FormSurrenderingSignature {
-    qualType: { text: string } | null;
-    multipleQualType: { text: boolean } | null;
-    authorizedOfficerSignature: { text: string } | null;
-    loa: { text: boolean } | null;
-    registrationType: { text: string } | null;
+    qualType: { text: string | null };
+    multipleQualType: { text: boolean };
+    authorizedOfficerSignature: { text: string | null };
+    loa: { text: boolean | null };
+    registrationType: { text: string | null };
     nonRegTypeReason: RegReason<NonRegTypeReason>[] | [] | null;
-    isTitlePresent: { text: boolean } | null;
+    isTitlePresent: { text: boolean | null };
     loaSignDate: { text: string } | null;
-    corporateResolution: { text: string } | null;
-    authorizedOfficerSignatureDate: { text: string } | null;
+    corporateResolution: { text: string | null };
+    authorizedOfficerSignatureDate: { text: string | null };
 }
 
 const CedingCompanySignature = ({
@@ -87,6 +87,33 @@ const CedingCompanySignature = ({
             nonRegTypeReason: selectedRegReasons,
         }));
     }, [selectedRegReasons]);
+
+    useEffect(() => {
+        setFormSurrenderingCompany({
+            qualType: {
+                text: '',
+            },
+            multipleQualType: {
+                text: false,
+            },
+            authorizedOfficerSignature: {
+                text: null,
+            },
+            loa: {
+                text: null,
+            },
+            registrationType: {
+                text: null,
+            },
+            nonRegTypeReason: [],
+            isTitlePresent: {
+                text: null,
+            },
+            loaSignDate: null,
+            corporateResolution: { text: null },
+            authorizedOfficerSignatureDate: { text: null },
+        });
+    }, []);
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
