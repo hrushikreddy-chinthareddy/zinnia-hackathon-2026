@@ -2,11 +2,8 @@ import { SideSheet } from '@zinnia/bloom/components';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
-<<<<<<< HEAD
-import { Transaction } from '@zinnia/api-types/types/sor';
-=======
 import { toTitleCase } from '@deps/helpers/string.helpers';
->>>>>>> c960805a39 (to titleCase)
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
 

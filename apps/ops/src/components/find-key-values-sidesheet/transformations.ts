@@ -1,6 +1,17 @@
 import { TFunction } from 'next-i18next';
 
 import { typedEntries } from '@deps/utils/objects';
+/*
+Agenda:
+- filter nodes through show/hide list by key
+- custom-group nodes and rename keys
+- enforce TS safety
+- the "structured tree" will have translated labels and values <- doesn't change on search
+- search will transform the "structured tree" into the "search/render tree" <- rebuild on every search
+- modify render components to fit the new structure
+
+*/
+
 import {
     Policy,
     LineOfBusiness,
@@ -34,9 +45,7 @@ import {
     TransformationsConfig,
     RenderData,
     FieldType,
-    FieldGroup,
     DataNode,
-    Field,
 } from './types';
 
 const renderData: RenderData = [
@@ -469,44 +478,30 @@ const pipe =
     (initialValue: T): T =>
         fns.reduce((acc, fn) => fn(acc), initialValue);
 
-const removeSectionNodes = ({
-    lineOfBusiness,
-    planCode,
-    productType,
-    data,
-}: {
-    lineOfBusiness: LineOfBusiness;
-    planCode?: string | undefined;
-    productType?: ProductType;
-    data: any;
-}): RenderData => {
-    return data.filter((field: Field) => {
-        const rule = sectionVisibility[field.label];
-        return (
-            !rule ||
-            (planCode && rule.has(planCode)) ||
-            rule.has(lineOfBusiness) ||
-            (productType && rule.has(productType))
-        );
-    });
+const isPrimitive = (v: any): boolean => {
+    return (
+        typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
+    );
 };
 
-function convertNodes(
+function convertNode(
     obj: any,
+    t: TFunction,
     overrides?: Record<string, string>
 ): RenderData {
     if (!obj || typeof obj !== 'object') return [];
 
     return Object.entries(obj)
-        .map(([key, value]) => convertNode(key, value, overrides))
+        .map(([key, value]) => convertTuple(key, value, t, overrides))
         .filter((n): n is DataNode => n != null);
 }
-function convertNode(
+function convertTuple(
     key: string,
     value: any,
+    t: TFunction,
     overrides?: Record<string, string>
 ): DataNode | null {
-    if (value == null) return null;
+    if (value === null || value === '') return null;
 
     const label = overrides?.[key] ?? key;
 
@@ -514,64 +509,53 @@ function convertNode(
     if (isPrimitive(value)) {
         return {
             type: FieldType.field,
-            label,
+            label: t(label),
             value: String(value),
         };
     }
 
     // Array → Section -> subsection-field-to-title.ts
     if (Array.isArray(value)) {
-        const groups: FieldGroup[] = [];
-
         const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
-        console.log({ sectionLabelFieldName });
+        let sections;
         if (sectionLabelFieldName) {
-            for (const item of value) {
+            sections = value.map((item) => {
                 //object within each array item
 
-                if (item == null || isPrimitive(item)) continue;
+                if (item == null || isPrimitive(item)) return;
 
                 const sectionLabel = item[sectionLabelFieldName];
-                if (!sectionLabel) continue; // TODO: maybe skip, maybe provide default label?
+                if (!sectionLabel) return; // TODO: maybe skip, maybe provide default label?
 
                 // TODO: filter out fields that are not visible, including the title field
-                const fields = convertNodes(item, overrides);
+                const fields = convertNode(item, overrides);
 
                 return {
                     type: FieldType.section,
-                    label: sectionLabel,
+                    label: t(sectionLabel),
                     children: fields, // TODO: recurse?
                 };
-            }
+            });
+
+            return {
+                type: FieldType.section,
+                label: t(key),
+                children: sections,
+            };
+        } else {
+            const groups = value.map((item) => convertNode(item, overrides));
+            if (groups.length === 0) return null;
+
+            return {
+                type: FieldType.list,
+                children: groups,
+            };
         }
-        for (const item of value) {
-            if (item == null || isPrimitive(item)) continue;
-
-            if (typeof item === 'object' && !Array.isArray(item)) {
-                // flatten object properties into a field group
-                const fields = Object.entries(item)
-                    .map(([k, v]) => convertNode(k, v, overrides))
-                    .filter((n): n is Field => n?.type === FieldType.field);
-
-                if (fields.length > 0) groups.push(fields);
-            } else {
-                // primitive: wrap as single-field group
-                const f = convertNode(key, item, overrides);
-                if (f && f.type === FieldType.field) groups.push([f]);
-            }
-        }
-
-        if (groups.length === 0) return null;
-
-        return {
-            type: FieldType.list,
-            children: groups,
-        };
     }
 
     // Object → Section
-    if (typeof value === 'object') {
-        const children = convertNodes(value, overrides);
+    if (typeof value === 'object' && !Array.isArray(value)) {
+        const children = convertNode(value, overrides);
 
         if (children.length === 0) return null;
 
@@ -584,13 +568,6 @@ function convertNode(
 
     return null;
 }
-
-function isPrimitive(v: any): boolean {
-    return (
-        typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
-    );
-}
-
 /**
  * Given a policy, returns an object containing two lists of data
  * tuples: `policyBasics` and `policySections`.
@@ -620,16 +597,9 @@ const toSections = (props: ToSectionsProps): ToSections => {
     const lineOfBusiness =
         policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
 
-    const toRenderData = pipe(
-        (data) => convertNodes(data),
-        (data) =>
-            removeSectionNodes({
-                lineOfBusiness,
-                planCode,
-                productType,
-                data,
-            })
-    )(type === FormatterType.TRANSACTION ? props.transaction : policy);
+    const toRenderData = pipe((data) => convertNode(data, t))(
+        type === FormatterType.TRANSACTION ? props.transaction : policy
+    );
 
     console.log(toRenderData);
 
@@ -653,12 +623,7 @@ const toSections = (props: ToSectionsProps): ToSections => {
                 // or if the section is empty, skip it
                 if (
                     (config.showSection &&
-                        !config.showSection(
-                            sectionTitle,
-                            policy,
-                            planCode,
-                            productType
-                        )) ||
+                        !config.showSection(policy, planCode, productType)) ||
                     currentVal == null
                 ) {
                     return acc;

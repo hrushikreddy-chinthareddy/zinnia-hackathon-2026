@@ -7,6 +7,8 @@ export const sectionTypeToSubSectionTitleFields: Record<string, string> = {
     features: 'featureType',
     policyFeatures: 'featureType',
     riders: 'riderName',
+    riderParticipants: 'partyId',
+    parties: 'partyId',
     funds: 'fundName', // FIXME: should be keyed to combinedFunds
     loans: 'loanType',
     people: 'FIXME',
