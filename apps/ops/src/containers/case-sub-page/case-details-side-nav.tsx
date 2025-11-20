@@ -14,6 +14,7 @@ import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getValidFullName } from '@deps/helpers/case-management';
 import {
     convertKebabedDateString,
@@ -60,6 +61,7 @@ const CaseDetailsSideNav = ({
     applicationType,
     caseProcessingDetails,
 }: CaseDetailsSideNavProps) => {
+    const { hasCaseInsightPermission } = usePermissionsContext();
     const { t } = useTranslation();
     const submissionDetails = caseProcessingDetails?.[0]?.details;
     const { agentFirstName, agentLastName, agentNPN, agentSSN } =
@@ -303,7 +305,7 @@ const CaseDetailsSideNav = ({
                                 </React.Fragment>
                             )
                         )}
-                    {estimatedCompletionAt && (
+                    {estimatedCompletionAt && hasCaseInsightPermission && (
                         <>
                             <div className="flex items-center gap-1">
                                 <Typography
