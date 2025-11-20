@@ -16,55 +16,63 @@
         "processSubType": "Third Party Designee Change",
         "planCode": "WBFDAV03",
         "policyStatus": "ACTIVE",
-        "details": {
-            "documents": [
-                {
-                    "documentId": "67c1b9655c3f6536d7f2ac69",
-                    "documentName": "Third Party Designee Form",
-                    "documentExt": "pdf"
-                }
-            ]
-        },
-        "thirdPartyDesignee": {
-            "policyNumber": "FNWL645505687",
-            "policyOwner": "test owner",
-            "policyJointOwner": "test joint owner",
-            "insured": "test insured",
-            "matchDetails": "Yes",
-            "designeeType": "Individual",
+        "documents": [
+            {
+                "documentId": "67c1b9655c3f6536d7f2ac69",
+                "documentName": "Third Party Designee Form",
+                "documentExt": "pdf"
+            }
+        ],
+        "party": {
+            "partyType": "INDIVIDUAL",
             "prefix": "Mr.",
             "firstName": "first",
             "middleName": "",
             "lastName": "last",
-            "suffix": "I",
-            "communicationPreference": "Address",
-            "signature": [
+            "identifications": [
                 {
-                    "signType": "Owner",
-                    "isSignedPresent": "Yes",
-                    "signDesignation": "Trustee"
-                },
+                    "identificationValue": "123-45-6789",
+                    "identificationType": "SSN"
+                }
+            ],
+            "preferredCommunicationType": "EMAIL",
+            "addresses": [
                 {
-                    "signType": "Third party designee",
-                    "isSignedPresent": "Yes",
-                    "signDesignation": "Trustee"
+                    "addressType": "RESIDENCE",
+                    "addressLine1": "123",
+                    "city": "California",
+                    "state": "CA",
+                    "zipCode": "90001"
+                }
+            ],
+            "phones": [
+                {
+                    "phoneType": "BUSINESS",
+                    "dialNumber": "1234567890"
+                }
+            ],
+            "emails": [
+                {
+                    "emailType": "BUSINESS",
+                    "emailAddress": "1234567890"
                 }
             ]
         },
+        "signature": [
+            {
+                "signType": "Owner",
+                "isSignedPresent": "Yes",
+                "signDesignation": "Trustee"
+            },
+            {
+                "signType": "Third party designee",
+                "isSignedPresent": "Yes",
+                "signDesignation": "Trustee"
+            }
+        ],
         "summary": {
             "matchDetails": "Yes",
             "designeeType": "Trust"
-        },
-        "missingInformation": {
-            "details": {
-                "documents": [
-                    {
-                        "documentId": "67c1b9655c3f6536d7f2ac69",
-                        "documentName": "Third Party Designee Form",
-                        "documentExt": "pdf"
-                    }
-                ]
-            }
         }
     },
     "mappedExceptions": [],

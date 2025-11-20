@@ -10,7 +10,7 @@ const thirdPartyDetailHandler: TaskHandler<
     api: NigoSearch,
 
     getPayload: (task: any) => ({
-        category: ['Existing Name Change'],
+        category: ['Party Change', 'TPD Change'],
         businessProcess: task?.process,
         carrier: task?.carrier,
     }),

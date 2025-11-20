@@ -18,15 +18,8 @@ export const getThirdPartyDetailSteps = ({
 
     const dynamicSteps = taskMetadata.map((meta, index) => {
         const title = meta?.title || '';
-        const isVisible =
-            index === 0
-                ? () => true
-                : index === 3
-                ? () => !isIssueResolved
-                : () => isIssueResolved;
-
         return {
-            isVisible,
+            isVisible: () => index === 0 || isIssueResolved,
             component: (
                 <TaskFormStep
                     readonly={readOnly}
@@ -34,12 +27,11 @@ export const getThirdPartyDetailSteps = ({
                     taskMetadata={meta}
                     key={`step_${index}`}
                     isContinueButtonEnabled={isContinueButtonEnabled}
-                    isSubmit={index > 0}
+                    isSubmit={(index === 3 && !readOnly) || !isIssueResolved}
                 />
             ),
             text: title,
             index,
-            isCompleted: true,
             screenReaderLabel: title,
         };
     });
