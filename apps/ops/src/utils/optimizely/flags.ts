@@ -175,6 +175,7 @@ export enum FEATURE_FLAGS {
     ENTERPRISE_SEARCH_TRUST_OR_ORGANIZATION = 'enterprise_search_trust_or_organization',
     CASE_ESTIMATED_COMPLETION = 'case_estimated_completion',
     SEND_POLICY_PAGES = 'send_policy_pages',
+    CASE_PRIORITIZATION = 'case_prioritization',
     //Illustrations
     ILLUSTRATIONS_QUICK_QUOTE = 'illustrations_quick_quote',
     FGA_ENTITY_SALES_MATERIALS = 'fga_entity_sales_materials',

@@ -16,6 +16,7 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
@@ -25,6 +26,7 @@ import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/war
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import CaseActionSideSheet from './caseActionsSideSheet';
 import styles from './styles.module.css';
@@ -60,6 +62,7 @@ const CasePageHeader = ({
 }: CasePageHeaderProps) => {
     const { t } = useTranslation();
     const { breadcrumb } = useBreadcrumb();
+    const { featureFlags } = useOptimizely();
     const caseTitle = toSentenceCase(title);
     const sideSheet = useSideSheetContext();
     const [partyData, setPartyData] = useState<partyDataType>({
@@ -67,6 +70,9 @@ const CasePageHeader = ({
         lastName: '',
         id: '',
     });
+
+    const isCasePrioritizationEnabled =
+        featureFlags[FEATURE_FLAGS.CASE_PRIORITIZATION];
 
     const canShowPriorityActions =
         hasPermissionToPrioritizeCases &&
@@ -236,39 +242,41 @@ const CasePageHeader = ({
                 </div>
             </div>
 
-            <div>
-                <MenuContextual
-                    trigger={
-                        <TextButton
-                            label={t(
-                                'caseOverview.prioritizeCase.quickActions'
-                            )}
-                        />
-                    }
-                >
-                    {canShowPriorityActions && (
-                        <>
-                            {escalated ? (
-                                <MenuContextualItem
-                                    content={t(
-                                        'caseOverview.deprioritizeCase.title'
-                                    )}
-                                    onClick={handleDeprioritize}
-                                    type={NavElementType.Button}
-                                />
-                            ) : (
-                                <MenuContextualItem
-                                    content={t(
-                                        'caseOverview.prioritizeCase.title'
-                                    )}
-                                    onClick={handlePrioritize}
-                                    type={NavElementType.Button}
-                                />
-                            )}
-                        </>
-                    )}
-                </MenuContextual>
-            </div>
+            {isCasePrioritizationEnabled && (
+                <div>
+                    <MenuContextual
+                        trigger={
+                            <TextButton
+                                label={t(
+                                    'caseOverview.prioritizeCase.quickActions'
+                                )}
+                            />
+                        }
+                    >
+                        {canShowPriorityActions && (
+                            <>
+                                {escalated ? (
+                                    <MenuContextualItem
+                                        content={t(
+                                            'caseOverview.deprioritizeCase.title'
+                                        )}
+                                        onClick={handleDeprioritize}
+                                        type={NavElementType.Button}
+                                    />
+                                ) : (
+                                    <MenuContextualItem
+                                        content={t(
+                                            'caseOverview.prioritizeCase.title'
+                                        )}
+                                        onClick={handlePrioritize}
+                                        type={NavElementType.Button}
+                                    />
+                                )}
+                            </>
+                        )}
+                    </MenuContextual>
+                </div>
+            )}
         </div>
     );
 };
