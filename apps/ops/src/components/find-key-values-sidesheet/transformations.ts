@@ -525,19 +525,28 @@ function convertNode(
 
         const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
         console.log({ sectionLabelFieldName });
-        for (const item of value) {
-            if (item == null || isPrimitive(item)) continue;
+        if (sectionLabelFieldName) {
+            for (const item of value) {
+                //object within each array item
 
-            if (sectionLabelFieldName) {
-                const fields = Object.entries(item)
-                    .map(([k, v]) => convertNode(k, v, overrides))
-                    .filter((n): n is Field => n?.type === FieldType.field);
+                if (item == null || isPrimitive(item)) continue;
+
+                const sectionLabel = item[sectionLabelFieldName];
+                if (!sectionLabel) continue; // TODO: maybe skip, maybe provide default label?
+
+                // TODO: filter out fields that are not visible, including the title field
+                const fields = convertNodes(item, overrides);
+
                 return {
                     type: FieldType.section,
-                    label: sectionLabelFieldName,
+                    label: sectionLabel,
                     children: fields, // TODO: recurse?
                 };
             }
+        }
+        for (const item of value) {
+            if (item == null || isPrimitive(item)) continue;
+
             if (typeof item === 'object' && !Array.isArray(item)) {
                 // flatten object properties into a field group
                 const fields = Object.entries(item)
