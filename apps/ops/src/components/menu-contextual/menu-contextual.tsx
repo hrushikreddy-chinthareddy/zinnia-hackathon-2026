@@ -90,7 +90,7 @@ export const MenuContextual = ({
             <DropdownMenu.Portal>
                 <DropdownMenu.Content
                     className={clsx(
-                        'absolute z-[300] max-w-[320px] max-h-[75vh] overflow-y-auto rounded bg-gray-900 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+                        'absolute z-[300] max-w-[320px] sm:max-h-[65vh] md:max-h-[40vh] overflow-y-auto rounded bg-gray-900 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
                         placementClasses
                     )}
                     side={side}
