@@ -30,6 +30,7 @@ export type SectionCardProps = {
     headerContent?: ReactNode;
     footerContent?: FooterContent[];
     className?: string;
+    headerClassName?: string;
 } & JestProps &
     PropsWithChildren;
 
@@ -42,6 +43,7 @@ const SectionCard = ({
     className,
     headerContent,
     footerContent,
+    headerClassName,
     'data-testid': testId,
 }: SectionCardProps) => (
     <CardContainer
@@ -55,13 +57,14 @@ const SectionCard = ({
         <CardHeader
             horizontalResizing={HorizontalResizing.Hug}
             itemSpacing={ItemSpacing.XXSmall}
+            className={headerClassName}
         >
             {headerContent}
         </CardHeader>
         <CardBody
             layoutDirection={LayoutDirection.Vertical}
             layoutAlignment={LayoutAlignment.TopEvenly}
-            className="md:flex-row md:justify-start md:gap-8"
+            className="md:flex-row md:justify-start md:gap-8 w-full"
         >
             {children}
         </CardBody>

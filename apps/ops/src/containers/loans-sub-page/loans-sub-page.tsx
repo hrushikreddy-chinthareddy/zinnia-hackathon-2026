@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useMemo, useContext } from 'react';
 
+import SystematicProgramsCard from '@deps/components/card/card-systematic-programs/card-systematic-programs';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
@@ -55,6 +56,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const loanPaymentEnabled =
         featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
     const loanCancelEnabled = featureFlags[FEATURE_FLAGS.LOAN_CANCEL_AUTOPAY];
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const {
         allocation,
@@ -78,6 +81,10 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                     sp.status === Status.ACTIVE
             ),
         [systematicPrograms]
+    );
+
+    const loanPrograms = policyDetails.systematicPrograms.getProgramsByType(
+        ArrangementType.LOANREPAYMENT
     );
 
     const payorParty = getParty(parties, upcomingLoanRepayment);
@@ -200,6 +207,38 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
         );
     };
 
+    const loanSetAutopay = {
+        href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/start-loan-payment`,
+        text: t('setUpAutopay'),
+        isDisabled:
+            !loanPaymentEnabled ||
+            upcomingLoanRepayment?.nextProgramDate !== undefined ||
+            !isUserPermissionedToEditLoan,
+        tooltip: getLoanTooltipsetUpAutoPay(),
+    };
+
+    const loanManageAutopay = {
+        href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
+        text: t('manageAutopay'),
+        isDisabled:
+            !loanPaymentEnabled ||
+            !systematicProgramsEligibility?.isEligibleManageAutopay ||
+            !upcomingLoanRepayment?.nextProgramDate ||
+            !isUserPermissionedToEditLoan,
+        tooltip: getLoanTooltip(),
+    };
+
+    const loanCancelAutopay = {
+        href: '#',
+        isDisabled:
+            !loanCancelEnabled ||
+            !loanPaymentEnabled ||
+            !upcomingLoanRepayment?.nextProgramDate ||
+            !isUserPermissionedToEditLoan,
+        text: t('cancelAutopay'),
+        onClick: openCancelSideSheet,
+    };
+
     return (
         <>
             <LoansPageHeaderContainer
@@ -207,7 +246,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                 policy={policy}
             />
             <hr className="h-0.5 border-none bg-gray-200" />
-            {!!loanCarryingBalance && (
+            {!systematicProgramTablesEnabled && !!loanCarryingBalance && (
                 <UpcomingPaymentCard
                     className="content-divider"
                     autopayAmount={upcomingLoanRepayment?.amount}
@@ -229,36 +268,9 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         undefined
                     }
                     footerLinks={[
-                        {
-                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/start-loan-payment`,
-                            text: t('setUpAutopay'),
-                            isDisabled:
-                                !loanPaymentEnabled ||
-                                upcomingLoanRepayment?.nextProgramDate !==
-                                    undefined ||
-                                !isUserPermissionedToEditLoan,
-                            tooltip: getLoanTooltipsetUpAutoPay(),
-                        },
-                        {
-                            href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
-                            text: t('manageAutopay'),
-                            isDisabled:
-                                !loanPaymentEnabled ||
-                                !systematicProgramsEligibility?.isEligibleManageAutopay ||
-                                !upcomingLoanRepayment?.nextProgramDate ||
-                                !isUserPermissionedToEditLoan,
-                            tooltip: getLoanTooltip(),
-                        },
-                        {
-                            href: '#',
-                            isDisabled:
-                                !loanCancelEnabled ||
-                                !loanPaymentEnabled ||
-                                !upcomingLoanRepayment?.nextProgramDate ||
-                                !isUserPermissionedToEditLoan,
-                            text: t('cancelAutopay'),
-                            onClick: openCancelSideSheet,
-                        },
+                        loanSetAutopay,
+                        loanManageAutopay,
+                        loanCancelAutopay,
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
                             text: t('oneTimePaymentText'),
@@ -273,6 +285,27 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         'Update Loan Repayment',
                     ]}
                     hasProgram={!!upcomingLoanRepayment}
+                />
+            )}
+            {systematicProgramTablesEnabled && (
+                <SystematicProgramsCard
+                    title="Systematic Programs"
+                    programs={[
+                        {
+                            arrangementType: ArrangementType.LOANREPAYMENT,
+                            activePrograms: loanPrograms.filter(
+                                (programs) => programs.status === Status.ACTIVE
+                            ),
+                            terminatedOrSuspendedPrograms: loanPrograms.filter(
+                                (programs) =>
+                                    programs.status === Status.TERMINATED ||
+                                    programs.status === Status.SUSPENDED
+                            ),
+                            manageAction: loanManageAutopay,
+                            cancelAction: loanCancelAutopay,
+                        },
+                    ]}
+                    setUpAction={loanSetAutopay}
                 />
             )}
             <LoanRulesCard currency={currency} loanValues={loanValues} />

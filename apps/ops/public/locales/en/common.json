@@ -5216,6 +5216,21 @@
                     "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
                 }
             }
+        },
+        "systematicPrograms": {
+            "showHistory": "Show history",
+            "setUp": "set up",
+            "type": "Type",
+            "paymentAmount": "Payment amount",
+            "frecuency": "Frecuency",
+            "nextPayment": "Next payment",
+            "paymentType": "Payment Type",
+            "actions": "Actions",
+            "manage": "Manage",
+            "cancel": "Cancel",
+            "lastPaymentDate": "Last payment date",
+            "status": "Status",
+            "terminationDate": "Termination date"
         }
     },
     "transactions": {

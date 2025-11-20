@@ -5199,6 +5199,21 @@
                     "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
                 }
             }
+        },
+        "systematicPrograms": {
+            "showHistory": "Mostrar historial",
+            "setUp": "Configurar",
+            "type": "Tipo",
+            "paymentAmount": "Monto del pago",
+            "frecuency": "Frecuencia",
+            "nextPayment": "Próximo pago",
+            "paymentType": "Tipo de pago",
+            "actions": "Acciones",
+            "manage": "Administrar",
+            "cancel": "Cancelar",
+            "lastPaymentDate": "Fecha del último pago",
+            "status": "Estado",
+            "terminationDate": "Fecha de terminación"
         }
     },
     "transactions": {

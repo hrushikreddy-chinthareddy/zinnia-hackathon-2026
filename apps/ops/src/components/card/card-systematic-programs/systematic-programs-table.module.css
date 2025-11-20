@@ -1,0 +1,73 @@
+.systematicPrograms {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    th,
+    td {
+        padding: var(--measure-dimension-padding-lg)
+            var(--measure-dimension-padding-2xl);
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.setUp {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+}
+
+.toggle {
+    button {
+        background-color: var(
+            --Toggle-Default-Surface-toggle-selected-fill,
+            #00628b
+        );
+    }
+}
+
+.typeCell {
+    width: 152px;
+}
+
+.paymentAmountCell {
+    width: 155px;
+}
+
+.frecuencyCell {
+    width: 115px;
+}
+
+.nextPaymentCell {
+    width: 132px;
+}
+
+.paymentTypeCell {
+    width: 322px;
+}
+.statusCell {
+    width: 322px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--status-text-status-error-text, #db004f);
+}
+
+.emptyTableCell {
+    display: flex;
+    justify-content: center;
+    padding: 4px;
+    width: 100%;
+}
+
+.actionCell {
+    display: flex;
+    gap: 8px;
+}

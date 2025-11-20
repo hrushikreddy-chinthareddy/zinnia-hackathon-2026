@@ -1,10 +1,15 @@
-import { ArrangementType, FeatureType } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    FeatureType,
+    Status,
+} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
 import CardSection, {
     FooterContent,
 } from '@deps/components/card/card-section/card-section';
+import SystematicProgramsCard from '@deps/components/card/card-systematic-programs/card-systematic-programs';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import FieldData from '@deps/components/fields/field-data/field-data';
 import ResponsiveFlex from '@deps/components/responsive-flex/responsive-flex';
@@ -16,6 +21,7 @@ import {
     VerticalResizing,
 } from '@deps/components/responsive-flex/responsive-flex.types';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -24,6 +30,7 @@ import {
     TransactionResponseStatus,
     checkEligibilitySystematicPrograms,
 } from '@deps/queries/api/bpm';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { AnnuitizationPageHeader } from './annuitization-page-header';
 
@@ -38,6 +45,15 @@ export const AnnuitizationSubPage = () => {
 
     const { parties, planCode, features, policyNumber, systematicPrograms } =
         policyDetails;
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
+
+    const payoutPrograms = policyDetails.systematicPrograms.getProgramsByType(
+        ArrangementType.PAYOUT
+    );
+
     const upcomingPayout = useMemo(
         () =>
             systematicPrograms.getNextProgramByType(
@@ -84,14 +100,14 @@ export const AnnuitizationSubPage = () => {
         checkManageAutopayEligibility();
     }, [planCode, policyNumber, upcomingPayout]);
 
-    const footerContent = [
-        {
-            text: t('manageAutopay'),
-            href: `/policies/${planCode}/${policyNumber}/policy/annuitization/manage-autopay`, // BPB - this will need an update once we get the route and stuff
-            isDisabled: !isEligibleManagePayout,
-            tooltip: ineligibleManagePayoutReason,
-        },
-    ];
+    const paymentManageAutopay = {
+        text: t('manageAutopay'),
+        href: `/policies/${planCode}/${policyNumber}/policy/annuitization/manage-autopay`, // BPB - this will need an update once we get the route and stuff
+        isDisabled: !isEligibleManagePayout,
+        tooltip: ineligibleManagePayoutReason,
+    };
+
+    const footerContent = [paymentManageAutopay];
 
     return (
         <>
@@ -100,22 +116,44 @@ export const AnnuitizationSubPage = () => {
                 policyDetails={policyDetails}
             />
             <hr className="border-t-2 border-t-background" />
-            <UpcomingPaymentCard
-                bankDetails={payeeBankDetails}
-                inactiveText={t('upcoming.inactive.text') as string}
-                inactiveHeaderText={t('upcoming.inactive.header') as string}
-                footerLinks={footerContent as FooterContent[]}
-                autopayAmount={upcomingPayout?.amount}
-                paymentText={t('upcoming.payoutAmount') as string}
-                paymentDate={upcomingPayout?.nextProgramDate}
-                paymentDateText={
-                    (!!upcomingPayout?.nextProgramDate &&
-                        t('upcoming.payoutDateText')) ||
-                    undefined
-                }
-                title={t('upcoming.title') as string}
-                hasProgram={!!upcomingPayout}
-            />
+            {!systematicProgramTablesEnabled && (
+                <UpcomingPaymentCard
+                    bankDetails={payeeBankDetails}
+                    inactiveText={t('upcoming.inactive.text') as string}
+                    inactiveHeaderText={t('upcoming.inactive.header') as string}
+                    footerLinks={footerContent as FooterContent[]}
+                    autopayAmount={upcomingPayout?.amount}
+                    paymentText={t('upcoming.payoutAmount') as string}
+                    paymentDate={upcomingPayout?.nextProgramDate}
+                    paymentDateText={
+                        (!!upcomingPayout?.nextProgramDate &&
+                            t('upcoming.payoutDateText')) ||
+                        undefined
+                    }
+                    title={t('upcoming.title') as string}
+                    hasProgram={!!upcomingPayout}
+                />
+            )}
+            {systematicProgramTablesEnabled && (
+                <SystematicProgramsCard
+                    title="Systematic Programs"
+                    programs={[
+                        {
+                            arrangementType: ArrangementType.PAYOUT,
+                            activePrograms: payoutPrograms.filter(
+                                (programs) => programs.status === Status.ACTIVE
+                            ),
+                            terminatedOrSuspendedPrograms:
+                                payoutPrograms.filter(
+                                    (programs) =>
+                                        programs.status === Status.TERMINATED ||
+                                        programs.status === Status.SUSPENDED
+                                ),
+                            manageAction: paymentManageAutopay,
+                        },
+                    ]}
+                />
+            )}
             <CardSection
                 headerContent={
                     <h2 className="font-primary headline-2">

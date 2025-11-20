@@ -5138,6 +5138,21 @@
                     "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
                 }
             }
+        },
+        "systematicPrograms": {
+            "showHistory": "Afficher l'historique",
+            "setUp": "Configurer",
+            "type": "Type",
+            "paymentAmount": "Montant du paiement",
+            "frecuency": "Fréquence",
+            "nextPayment": "Prochain paiement",
+            "paymentType": "Type de paiement",
+            "actions": "Actions",
+            "manage": "Gérer",
+            "cancel": "Annuler",
+            "lastPaymentDate": "Date du dernier paiement",
+            "status": "Statut",
+            "terminationDate": "Date de résiliation"
         }
     },
     "transactions": {
