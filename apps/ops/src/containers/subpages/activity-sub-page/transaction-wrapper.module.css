@@ -4,7 +4,10 @@
     display: flex;
     flex-direction: column;
 
-    .typeSelect {
+    .filters {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
         padding: 0 var(--measure-dimension-padding-4xl)
             var(--measure-dimension-padding-4xl);
     }

@@ -121,25 +121,20 @@ export const TransactionsWrapper = () => {
             <PageHeader
                 headerText={t('pageHeader.transactions.headerText') || ''}
             />
-            <div className={styles.typeSelect}>
-                <div className="flex w-full flex-col">
-                    <TransactionTypeSelect />
-                </div>
-                <div>
-                    <CustomDateRange
-                        showIcon={false}
-                        handleTimerangeChange={(dates) =>
-                            setHistoryFilters((prevState) => ({
-                                ...prevState,
-                                datesFilter: {
-                                    from: dayjs(dates.from).utc(),
-                                    to: dayjs(dates.to).utc(),
-                                },
-                            }))
-                        }
-                        timerange={selectedDateRange}
-                    />
-                </div>
+            <div className={styles.filters}>
+                <TransactionTypeSelect />
+                <CustomDateRange
+                    handleTimerangeChange={(dates) =>
+                        setHistoryFilters((prevState) => ({
+                            ...prevState,
+                            datesFilter: {
+                                from: dayjs(dates.from).utc(),
+                                to: dayjs(dates.to).utc(),
+                            },
+                        }))
+                    }
+                    timerange={selectedDateRange}
+                />
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
                 {liveResultsMessage}

@@ -16,11 +16,11 @@ import { SimpleOption } from '../autocomplete/autocomplete.types';
 import { ExtendedProcesses } from './filters/case-type-filter';
 
 export enum TimeframeFilterOptions {
-    Trailing12Months = '12M',
-    Last6Months = '6M',
-    Last3Months = '3M',
-    Last1Month = '1M',
     LastWeek = '1W',
+    Last1Month = '1M',
+    Last3Months = '3M',
+    Last6Months = '6M',
+    Trailing12Months = '12M',
 }
 
 export const caseStatusMap = {
