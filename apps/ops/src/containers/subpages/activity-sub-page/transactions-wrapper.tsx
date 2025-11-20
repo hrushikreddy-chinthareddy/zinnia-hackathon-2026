@@ -108,10 +108,19 @@ export const TransactionsWrapper = () => {
     );
 
     const [isSideSheetOpen, setIsSideSheetOpen] = useState(false);
+    const prevActiveElement = useRef<HTMLElement | null>(null);
+
+    useEffect(() => {
+        // Restore focus to row on sidesheet close
+        if (!isSideSheetOpen) {
+            prevActiveElement.current?.focus();
+        }
+    }, [isSideSheetOpen]);
 
     const handleRowClick = (transaction: Transaction) => {
         if (transaction) {
             setSelectedTransaction(transaction);
+            prevActiveElement.current = document.activeElement as HTMLElement;
             setIsSideSheetOpen(!isSideSheetOpen);
         }
     };
@@ -121,25 +130,20 @@ export const TransactionsWrapper = () => {
             <PageHeader
                 headerText={t('pageHeader.transactions.headerText') || ''}
             />
-            <div className={styles.typeSelect}>
-                <div className="flex w-full flex-col">
-                    <TransactionTypeSelect />
-                </div>
-                <div>
-                    <CustomDateRange
-                        showIcon={false}
-                        handleTimerangeChange={(dates) =>
-                            setHistoryFilters((prevState) => ({
-                                ...prevState,
-                                datesFilter: {
-                                    from: dayjs(dates.from).utc(),
-                                    to: dayjs(dates.to).utc(),
-                                },
-                            }))
-                        }
-                        timerange={selectedDateRange}
-                    />
-                </div>
+            <div className={styles.filters}>
+                <TransactionTypeSelect />
+                <CustomDateRange
+                    handleTimerangeChange={(dates) =>
+                        setHistoryFilters((prevState) => ({
+                            ...prevState,
+                            datesFilter: {
+                                from: dayjs(dates.from).utc(),
+                                to: dayjs(dates.to).utc(),
+                            },
+                        }))
+                    }
+                    timerange={selectedDateRange}
+                />
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
                 {liveResultsMessage}

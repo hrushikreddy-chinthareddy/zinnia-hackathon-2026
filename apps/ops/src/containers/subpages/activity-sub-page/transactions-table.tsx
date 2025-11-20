@@ -75,8 +75,18 @@ export const TransactionsTable = ({
                         <>
                             {paginatedData.map((transaction, index) => (
                                 <TableRow
+                                    tabIndex={0}
                                     key={`${transaction.transactionId}-${index}`}
                                     onClick={() => onTableRowClick(transaction)}
+                                    onKeyDown={(e) => {
+                                        if (
+                                            e.key === 'Enter' ||
+                                            e.key === ' '
+                                        ) {
+                                            e.preventDefault();
+                                            onTableRowClick(transaction);
+                                        }
+                                    }}
                                 >
                                     <TableCell>
                                         {t(
