@@ -1,3 +1,4 @@
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
 import {
     NoParamRider,
@@ -39,7 +40,7 @@ export type RiderAlternatives = {
 
 export type ClassRule = {
     className: string; // for debugging
-    classCode: string;
+    classCode: UnderwritingClass;
     alternatives: ClassAlternatives;
 };
 
@@ -65,7 +66,7 @@ export type RulesModel = {
 export type ProductClassResult = {
     planCode: PlanCode;
     termLength: TermFixedCostPeriod;
-    classCodes: string[];
+    classCodes: UnderwritingClass[];
     notAvailabilityReasonField: NotAvailabilityReasonField;
     riders: ProductClassResultRiders;
 };

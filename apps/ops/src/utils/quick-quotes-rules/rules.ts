@@ -1,3 +1,5 @@
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
+
 import { RulesModel } from './types';
 
 /**
@@ -53,7 +55,7 @@ export const RULES_MODEL: RulesModel = {
             classes: [
                 {
                     className: 'Gold (Nicotine)',
-                    classCode: 'STANDARDTOBACCO',
+                    classCode: UnderwritingClass.STANDARDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -64,7 +66,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Gold Plus (Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -75,7 +77,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'STANDARDNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -86,7 +88,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Choice (Non-Nicotine)',
-                    classCode: 'STANDARDPLUSNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDPLUSNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -97,7 +99,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Plus (Non-Nicotine)',
-                    classCode: 'PREFERREDNONTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -108,7 +110,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Elite (Non-Nicotine)',
-                    classCode: 'ELITENONTOBACCO',
+                    classCode: UnderwritingClass.ELITENONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -180,7 +182,7 @@ export const RULES_MODEL: RulesModel = {
             classes: [
                 {
                     className: 'Gold (Nicotine)',
-                    classCode: 'STANDARDTOBACCO',
+                    classCode: UnderwritingClass.STANDARDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -191,7 +193,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Gold Plus (Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -202,7 +204,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'STANDARDNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -213,7 +215,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Choice (Non-Nicotine)',
-                    classCode: 'STANDARDPLUSNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDPLUSNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -224,7 +226,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Plus (Non-Nicotine)',
-                    classCode: 'PREFERREDNONTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -235,7 +237,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Elite (Non-Nicotine)',
-                    classCode: 'ELITENONTOBACCO',
+                    classCode: UnderwritingClass.ELITENONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -300,7 +302,7 @@ export const RULES_MODEL: RulesModel = {
             classes: [
                 {
                     className: 'Gold (Nicotine)',
-                    classCode: 'STANDARDTOBACCO',
+                    classCode: UnderwritingClass.STANDARDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -311,7 +313,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Gold Plus (Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -322,7 +324,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'STANDARDNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -333,7 +335,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Choice (Non-Nicotine)',
-                    classCode: 'STANDARDPLUSNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDPLUSNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -344,7 +346,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Plus (Non-Nicotine)',
-                    classCode: 'PREFERREDNONTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -355,7 +357,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Elite (Non-Nicotine)',
-                    classCode: 'ELITENONTOBACCO',
+                    classCode: UnderwritingClass.ELITENONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -420,7 +422,7 @@ export const RULES_MODEL: RulesModel = {
             classes: [
                 {
                     className: 'Gold (Nicotine)',
-                    classCode: 'STANDARDTOBACCO',
+                    classCode: UnderwritingClass.STANDARDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -431,7 +433,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Gold Plus (Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -442,7 +444,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'STANDARDNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -453,7 +455,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Choice (Non-Nicotine)',
-                    classCode: 'STANDARDPLUSNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDPLUSNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -464,7 +466,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Plus (Non-Nicotine)',
-                    classCode: 'PREFERREDNONTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -475,7 +477,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Elite (Non-Nicotine)',
-                    classCode: 'ELITENONTOBACCO',
+                    classCode: UnderwritingClass.ELITENONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -540,7 +542,7 @@ export const RULES_MODEL: RulesModel = {
             classes: [
                 {
                     className: 'Gold (Nicotine)',
-                    classCode: 'STANDARDTOBACCO',
+                    classCode: UnderwritingClass.STANDARDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -551,7 +553,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Gold Plus (Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -562,7 +564,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'STANDARDNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -573,7 +575,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Choice (Non-Nicotine)',
-                    classCode: 'STANDARDPLUSNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDPLUSNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -584,7 +586,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Plus (Non-Nicotine)',
-                    classCode: 'PREFERREDNONTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -595,7 +597,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Elite (Non-Nicotine)',
-                    classCode: 'ELITENONTOBACCO',
+                    classCode: UnderwritingClass.ELITENONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -660,7 +662,7 @@ export const RULES_MODEL: RulesModel = {
             classes: [
                 {
                     className: 'Gold (Nicotine)',
-                    classCode: 'STANDARDTOBACCO',
+                    classCode: UnderwritingClass.STANDARDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -671,7 +673,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Gold Plus (Nicotine)',
-                    classCode: 'PREFERREDTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDTOBACCO,
                     alternatives: {
                         nicotine: 'Y',
                         ageMin: 18,
@@ -682,7 +684,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum (Non-Nicotine)',
-                    classCode: 'STANDARDNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -693,7 +695,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Choice (Non-Nicotine)',
-                    classCode: 'STANDARDPLUSNONTOBACCO',
+                    classCode: UnderwritingClass.STANDARDPLUSNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -704,7 +706,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Plus (Non-Nicotine)',
-                    classCode: 'PREFERREDNONTOBACCO',
+                    classCode: UnderwritingClass.PREFERREDNONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,
@@ -715,7 +717,7 @@ export const RULES_MODEL: RulesModel = {
                 },
                 {
                     className: 'Platinum Elite (Non-Nicotine)',
-                    classCode: 'ELITENONTOBACCO',
+                    classCode: UnderwritingClass.ELITENONTOBACCO,
                     alternatives: {
                         nicotine: 'N',
                         ageMin: 18,

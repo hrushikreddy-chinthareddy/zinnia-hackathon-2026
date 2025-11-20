@@ -1,5 +1,6 @@
 import { ValueOf } from 'type-fest';
 
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import { USStates } from '@deps/constants/geography/us-states';
 import { PartyType } from '@deps/models/policy/sor-policy';
 
@@ -229,7 +230,7 @@ interface NonInsuredParty extends IllustrationPartyBase {
 
 export type IllustrationParty = InsuredParty | NonInsuredParty;
 
-export const COVERAGE_ID_MAP = {
+export const COVERAGE_IDS = {
     BASE_COVERAGE: 'BASE_COVERAGE',
     Rider_ABRTRM: 'Rider_ABRTRM',
     Rider_CTR: 'Rider_CTR',
@@ -243,15 +244,16 @@ export const COVERAGE_ID_MAP = {
     Rider_WDR: 'Rider_WDR',
     Rider_NHR: 'Rider_NHR',
     Rider_ABRCRI: 'Rider_ABRCRI',
-};
-export type CoverageId = ValueOf<typeof COVERAGE_ID_MAP>;
+} as const;
+
+export type CoverageId = ValueOf<typeof COVERAGE_IDS>;
 
 export type FlatExtra = {};
 
 export type Participant = {
     participantId: string;
     issueAge: number;
-    underwritingClass?: string;
+    underwritingClass?: UnderwritingClass;
     subStandardRating?: string;
     flatExtra?: FlatExtra[];
 };
