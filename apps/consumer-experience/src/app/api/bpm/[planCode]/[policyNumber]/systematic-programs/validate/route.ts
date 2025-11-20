@@ -1,7 +1,3 @@
-import {
-  TransactionFailureResponse,
-  TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { SystematicPremiumsState } from '@/components/stepped-workflow/workflows/systematic-premiums/provider/types';
@@ -14,6 +10,10 @@ import { systematicPremiumsStateToPolicyRequestInput } from '@/services/bpm/tran
 import { PolicyRequestInputs } from '@/types/policy';
 import { logError, logTrace } from '@/utils/logging/log-fns';
 import { buildNextReqLoggingContext } from '@/utils/logging/server-logging';
+import {
+  TransactionFailureResponse,
+  TransactionResponse,
+} from '@zinnia/api-types/types/bpm';
 
 export async function POST(
   _request: NextRequest,

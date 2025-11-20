@@ -1,7 +1,7 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { FC } from 'react';
 
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { GenerateClickableContainerList } from '../clickable-card-container/GenerateClickableContainerList';
 

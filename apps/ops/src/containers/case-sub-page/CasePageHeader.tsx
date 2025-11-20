@@ -1,7 +1,7 @@
 import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
@@ -16,16 +16,19 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { caseProcessingDetails, Statuses } from '@deps/models/case/case';
+import { CaseAction } from '@deps/models/case/enums';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import PrioritizeCaseSideSheet from './priortizeCaseSideSheet';
+import CaseActionSideSheet from './caseActionsSideSheet';
 import styles from './styles.module.css';
 interface CasePageHeaderProps {
     caseId: string;
@@ -59,6 +62,7 @@ const CasePageHeader = ({
 }: CasePageHeaderProps) => {
     const { t } = useTranslation();
     const { breadcrumb } = useBreadcrumb();
+    const { featureFlags } = useOptimizely();
     const caseTitle = toSentenceCase(title);
     const sideSheet = useSideSheetContext();
     const [partyData, setPartyData] = useState<partyDataType>({
@@ -66,6 +70,15 @@ const CasePageHeader = ({
         lastName: '',
         id: '',
     });
+
+    const isCasePrioritizationEnabled =
+        featureFlags[FEATURE_FLAGS.CASE_PRIORITIZATION];
+
+    const canShowPriorityActions =
+        hasPermissionToPrioritizeCases &&
+        status.toUpperCase() !== Statuses.Canceled &&
+        status.toUpperCase() !== Statuses.Completed;
+
     const prioritizedDate = caseProcessingDetails?.find(
         (d) => d.detailType === detailTypesEnum.ESCALATION
     )?.eventTimeStamp;
@@ -98,14 +111,29 @@ const CasePageHeader = ({
         fetchPartyData();
     }, [caseProcessingDetails]);
 
-    const openSideSheet = () => {
-        const content = <PrioritizeCaseSideSheet caseId={caseId} />;
-        sideSheet.changeSideSheetContent(
-            t('caseOverview.prioritizeCase.title'),
-            content
-        );
-        sideSheet.handleOpen(true);
-    };
+    const openSideSheet = useCallback(
+        (action: CaseAction) => {
+            const content = (
+                <CaseActionSideSheet action={action} caseId={caseId} />
+            );
+            sideSheet.changeSideSheetContent(
+                t(`caseOverview.${action}Case.title`),
+                content
+            );
+            sideSheet.handleOpen(true);
+        },
+        [caseId, sideSheet, t]
+    );
+
+    const handleDeprioritize = useCallback(
+        () => openSideSheet(CaseAction.Deprioritize),
+        [openSideSheet]
+    );
+
+    const handlePrioritize = useCallback(
+        () => openSideSheet(CaseAction.Prioritize),
+        [openSideSheet]
+    );
 
     return (
         <div className="flex items-center justify-between rounded-t border-b-2 border-gray-100 bg-white pb-4 md:items-center md:pb-8">
@@ -214,29 +242,41 @@ const CasePageHeader = ({
                 </div>
             </div>
 
-            <div>
-                <MenuContextual
-                    trigger={
-                        <TextButton
-                            label={t(
-                                'caseOverview.prioritizeCase.quickActions'
-                            )}
-                        />
-                    }
-                >
-                    {hasPermissionToPrioritizeCases &&
-                        status.toUpperCase() !== Statuses.Canceled &&
-                        status.toUpperCase() !== Statuses.Completed && (
-                            <MenuContextualItem
-                                content={t('caseOverview.prioritizeCase.title')}
-                                onClick={() => {
-                                    openSideSheet();
-                                }}
-                                type={NavElementType.Button}
+            {isCasePrioritizationEnabled && (
+                <div>
+                    <MenuContextual
+                        trigger={
+                            <TextButton
+                                label={t(
+                                    'caseOverview.prioritizeCase.quickActions'
+                                )}
                             />
+                        }
+                    >
+                        {canShowPriorityActions && (
+                            <>
+                                {escalated ? (
+                                    <MenuContextualItem
+                                        content={t(
+                                            'caseOverview.deprioritizeCase.title'
+                                        )}
+                                        onClick={handleDeprioritize}
+                                        type={NavElementType.Button}
+                                    />
+                                ) : (
+                                    <MenuContextualItem
+                                        content={t(
+                                            'caseOverview.prioritizeCase.title'
+                                        )}
+                                        onClick={handlePrioritize}
+                                        type={NavElementType.Button}
+                                    />
+                                )}
+                            </>
                         )}
-                </MenuContextual>
-            </div>
+                    </MenuContextual>
+                </div>
+            )}
         </div>
     );
 };

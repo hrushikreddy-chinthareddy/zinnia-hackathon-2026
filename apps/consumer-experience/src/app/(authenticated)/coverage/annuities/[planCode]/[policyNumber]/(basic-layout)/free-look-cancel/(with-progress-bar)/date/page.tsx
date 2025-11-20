@@ -9,7 +9,7 @@ export default async function FreeLookCancelInformation({
   const { planCode, policyNumber } = params;
 
   const loggingContext = await buildCommonLogContext();
-  const { data, error } = await getPolicySurrenderDetails(
+  const { data } = await getPolicySurrenderDetails(
     {
       planCode,
       policyNumber,

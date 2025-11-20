@@ -1,39 +1,20 @@
-import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
-
 import { CaseSearchResponse, CaseSummary } from '@/types/case';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { CaseSearchCriteria } from '@zinnia/api-types/types/case';
 
 import {
   caseManagementBaseUrl,
   enterpriseCaseSearchBaseUrl,
 } from '../api-config';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
-import { getFeatureFlags } from '../feature-flags';
 import { transformCaseSearchResponse } from './transformers';
 
 const FILE_NAME = '/src/services/case/index.ts';
 
-// TODO: remove this wrapper
-// and only use `fetchCaseEnterpriseSearch`, renaming it to `fetchCase` when
-// https://zinnia.atlassian.net/browse/ZC-1524 is complete
-export const fetchCase = async (
-  caseId: string,
-  loggingCtx: CommonLogContext
-) => {
-  const featureFlags = await getFeatureFlags();
-
-  if (featureFlags?.[FEATURE_FLAGS.ENTERPRISE_CASE_SEARCH]) {
-    return fetchCaseEnterpriseSearch(caseId, loggingCtx);
-  }
-
-  return fetchCaseLegacy(caseId, loggingCtx);
-};
-
-const fetchCaseEnterpriseSearch = withLogging(
+export const fetchCaseEnterpriseSearch = withLogging(
   async (
     caseId: string | string[],
     loggingCtx: CommonLogContext
@@ -86,44 +67,6 @@ const fetchCaseEnterpriseSearch = withLogging(
   }
 );
 
-const fetchCaseLegacy = withLogging(
-  async (
-    caseId: string,
-    loggingCtx: CommonLogContext
-  ): Promise<CaseSummary> => {
-    const url = new URL(caseManagementBaseUrl);
-    url.pathname = `${url.pathname}/${caseId}`;
-
-    const rawResponse = await EnterpriseTokenApi.get(
-      url.href,
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingCtx
-    );
-
-    const response = await parseAPIResponse(rawResponse);
-
-    if (!rawResponse?.ok) {
-      throw new Error('Error fetching case', {
-        cause: {
-          details: await logApiNotOkDetails({
-            rawResponse,
-            parsedResponse: response,
-          }),
-          status: rawResponse.status,
-        },
-      });
-    }
-
-    return response;
-  },
-  {
-    file: FILE_NAME,
-    functionName: 'fetchCaseLegacy',
-  }
-);
-
 export interface CaseSearchCriteriaWithLimit extends CaseSearchCriteria {
   limit?: number;
 }
@@ -133,15 +76,7 @@ export const searchCases = withLogging(
     searchData: CaseSearchCriteriaWithLimit,
     loggingCtx: CommonLogContext
   ) => {
-    // TODO: remove this when https://zinnia.atlassian.net/browse/ZC-1524 is complete
-    // to always use enterpriseCaseSearchBaseUrl
-    // const url = `${enterpriseCaseSearchBaseUrl}/search`;
-    let baseUrl = caseManagementBaseUrl;
-    const featureFlags = await getFeatureFlags();
-    if (featureFlags?.[FEATURE_FLAGS.ENTERPRISE_CASE_SEARCH]) {
-      baseUrl = enterpriseCaseSearchBaseUrl;
-    }
-    const url = `${baseUrl}/search`;
+    const url = `${enterpriseCaseSearchBaseUrl}/search`;
 
     const rawResponse = await EnterpriseTokenApi.post(
       url,

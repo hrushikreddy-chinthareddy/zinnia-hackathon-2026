@@ -1,17 +1,20 @@
-import { TransactionResponse } from '@xd/api-types/dist/generated-types/bpm';
+import {
+  getAddSystematicProgramEligibility,
+  getUpdateSystematicProgramEligibility,
+} from '@/services/bpm/systematic-programs';
+import { PaymentMethod } from '@/types/payment';
+import { standardDateMonthDayYear } from '@/utils/dates';
+import { CommonLogContext } from '@/utils/logging/server-logging';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   FeatureType,
   PolicyFeature,
   PolicyStatus,
   ProductType,
-} from '@xd/api-types/dist/generated-types/sor';
-import { standardDateMonthDayYear } from '@xd/utils/dist';
+  Transaction,
+} from '@zinnia/api-types/types/sor';
 
-import {
-  getAddSystematicProgramEligibility,
-  getUpdateSystematicProgramEligibility,
-} from '@/services/bpm/systematic-programs';
-import { CommonLogContext } from '@/utils/logging/server-logging';
+import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';
 
 export enum AutopayStatus {
   MANAGE = 'manage',
@@ -89,7 +92,9 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentValid,
   upcomingPaymentAmount,
   nextActivityDate,
-  productType,
+  transactions,
+  paymentMethods,
+  hasActiveAutopay,
 }: {
   policyStatus: PolicyStatus;
   policyFeatures?: PolicyFeature[] | null;
@@ -97,55 +102,76 @@ export const upcomingPaymentDetails = ({
   upcomingPaymentAmount?: number;
   nextActivityDate: string;
   productType?: ProductType;
-}): { amount?: number; label: string; caption?: string | null } => {
-  let amount;
-  let label = 'Premium due';
-  let caption;
+  transactions?: Transaction[];
+  paymentMethods?: PaymentMethod[];
+  hasActiveAutopay?: boolean;
+}): {
+  scheduledPayment?: {
+    amount?: number;
+    label: string;
+    caption?: string | null;
+  };
+  premiumDue: { amount: number; label: string; caption?: string | null };
+} => {
+  let scheduledPayment;
+  let premiumDue;
 
   if (policyStatus === PolicyStatus.PENDINGLAPSE) {
     const pendingLapseDueDetails = policyFeatures?.find(
       item => item.featureType === FeatureType.LAPSEASSESSMENT
     );
 
-    amount = pendingLapseDueDetails?.totalMinimumRequiredAmount;
-    caption =
-      pendingLapseDueDetails?.endDate &&
-      `Due by ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`;
+    premiumDue = {
+      amount: pendingLapseDueDetails?.totalMinimumRequiredAmount ?? 0,
+      label: 'Premium due',
+      caption:
+        pendingLapseDueDetails?.endDate &&
+        `Due by ${standardDateMonthDayYear(pendingLapseDueDetails?.endDate)}`,
+    };
+  } else {
+    const billingFeature = policyFeatures?.find(
+      item => item.featureType === FeatureType.BILLING
+    );
 
-    return {
-      amount,
-      label,
-      caption,
+    premiumDue = {
+      amount: billingFeature?.paymentAmount ?? 0,
+      label: 'Premium due',
+      caption:
+        billingFeature?.effectiveDate &&
+        `Due by ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`,
     };
   }
 
-  if (upcomingPaymentValid) {
-    amount = upcomingPaymentAmount;
-    label = 'Scheduled premium';
-    caption =
+  if (
+    policyStatus !== PolicyStatus.PENDINGLAPSE &&
+    upcomingPaymentValid &&
+    upcomingPaymentAmount
+  ) {
+    let paymentCaption =
       nextActivityDate &&
       `Autopay on ${standardDateMonthDayYear(nextActivityDate)}`;
-  }
 
-  if (!upcomingPaymentValid) {
-    if (productType === ProductType.TERM) {
-      const billingFeature = policyFeatures?.find(
-        item => item.featureType === FeatureType.BILLING
+    if (transactions && paymentMethods) {
+      const paymentInfo = getMostRecentTransactionPaymentInfo(
+        transactions,
+        paymentMethods,
+        hasActiveAutopay
       );
 
-      amount = billingFeature?.paymentAmount;
-      label = 'Premium due';
-      caption =
-        billingFeature?.effectiveDate &&
-        `Due by ${standardDateMonthDayYear(billingFeature?.effectiveDate)}`;
-    } else {
-      amount = 0;
+      if (paymentInfo?.paymentDescription) {
+        paymentCaption = paymentInfo.paymentDescription;
+      }
     }
+
+    scheduledPayment = {
+      amount: upcomingPaymentAmount,
+      label: 'Next scheduled payment',
+      caption: paymentCaption,
+    };
   }
 
   return {
-    amount,
-    label,
-    caption,
+    scheduledPayment,
+    premiumDue,
   };
 };

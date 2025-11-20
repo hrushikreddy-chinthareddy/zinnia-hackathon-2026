@@ -1,7 +1,6 @@
-import { toTitleCase } from '@zinnia/utils';
-
 import { getPageTitle, RouteKey } from '@/route-map';
 import { LineOfBusinessPath } from '@/types';
+import { toTitleCase } from '@/utils/strings';
 
 export interface Breadcrumb {
   url: string;
@@ -22,7 +21,6 @@ export const getPageTitleByPathPart = ({
   lineOfBusiness,
   pathPart,
   policyNumber,
-  beneficiaryKey,
 }: {
   lineOfBusiness: LineOfBusinessPath;
   pathPart: string;
@@ -41,8 +39,6 @@ export const getPageTitleByPathPart = ({
   if (pathPart === policyNumber) {
     return toTitleCase(overviewTitle);
     // if the beneficiary id is the route key it means we are on a Beneficiary Detail page
-  } else if (pathPart === beneficiaryKey) {
-    return getPageTitle(RouteKey.BENEFICIARY);
   } else {
     return getPageTitle(`/${pathPart}` as RouteKey, lineOfBusiness);
   }

@@ -1,12 +1,11 @@
+import { PolicyFund } from '@/types/policy';
+import { getNextOccurrenceOfDay } from '@/utils/dates';
+import { findPropertyValue } from '@/utils/objects';
 import {
   FundAccountTypeEnum,
   ProductRules,
 } from '@zinnia/api-types/types/funds';
 import { FundAccountType } from '@zinnia/api-types/types/sor';
-
-import { PolicyFund } from '@/types/policy';
-import { getNextOccurrenceOfDay } from '@/utils/dates';
-import { findPropertyValue } from '@/utils/objects';
 
 import { FundDetails, Fund } from './types';
 

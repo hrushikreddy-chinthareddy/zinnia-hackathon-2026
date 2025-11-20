@@ -49,7 +49,7 @@ export const getCaseTaskByIdSSR = async (
         url,
     };
     try {
-        const { data } = await serverApi.get<any>(
+        const data = await serverApi.get<any>(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -62,14 +62,21 @@ export const getCaseTaskByIdSSR = async (
             },
             logCtx
         );
+        if (data?.status !== 200) {
+            logError('getCaseTaskByIdSSR::Failed to retrieve task', {
+                status: data?.status,
+                ...logCtx,
+            });
+            throw new Error('getCaseTaskByIdSSR::Failed to retrieve task');
+        }
         logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', {
-            caseId: data?.caseId,
-            taskType: data?.taskType,
-            process: data?.process,
-            carrier: data?.carrier,
+            caseId: data?.data?.caseId,
+            taskType: data?.data?.taskType,
+            process: data?.data?.process,
+            carrier: data?.data?.carrier,
             ...logCtx,
         });
-        return data;
+        return data?.data;
     } catch (error: any) {
         logError('getCaseTaskByIdSSR::Failed to retrieve task by id', {
             ...parseErrorInformation(error),
@@ -78,7 +85,6 @@ export const getCaseTaskByIdSSR = async (
         return null;
     }
 };
-
 export const getTaskInstance = async (
     query: any
 ): Promise<ManagementTask | null> => {

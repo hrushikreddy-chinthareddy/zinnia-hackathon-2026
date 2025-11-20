@@ -31,7 +31,6 @@ interface BaseBankDetailProps {
 }
 
 interface BankDetailWithRemoveBank extends BaseBankDetailProps {
-  removeBankEnabled: boolean;
   onRemoveBank: () => Promise<{
     data: { title: string; message: string };
     error: ApiResponseError | null;
@@ -39,7 +38,6 @@ interface BankDetailWithRemoveBank extends BaseBankDetailProps {
 }
 
 interface BankDetailWithoutRemoveBank extends BaseBankDetailProps {
-  removeBankEnabled?: boolean;
   onRemoveBank?: never;
 }
 
@@ -52,7 +50,6 @@ export const BankData = ({
   branchName,
   nameOnAccount,
   routingNumber,
-  removeBankEnabled = false,
   numberOfAccounts,
   onRemoveBank,
   editBankEnabled = false,
@@ -65,7 +62,7 @@ export const BankData = ({
           <BankName bankName={branchName} accountType={accountType} />
           <div className={styles.bankActions}>
             {editBankEnabled && <EditBankSidesheet />}
-            {removeBankEnabled && onRemoveBank && (
+            {onRemoveBank && (
               <RemoveBankSidesheet
                 autopayEnabled={autopayEnabled}
                 numberOfAccounts={numberOfAccounts}

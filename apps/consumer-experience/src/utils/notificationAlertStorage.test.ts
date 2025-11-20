@@ -5,11 +5,14 @@ import {
 
 describe('notificationAlertStorage', () => {
   const key = 'notificationAlertDismissed:plan:policy';
-
   const createMockSessionStorage = () => {
     let store: Record<string, string> = {};
 
     return {
+      get length() {
+        return Object.keys(store).length;
+      },
+      key: jest.fn((index: number) => Object.keys(store)[index] ?? null),
       getItem: jest.fn((k: string) => store[k] ?? null),
       setItem: jest.fn((k: string, v: string) => {
         store[k] = v;
@@ -23,9 +26,14 @@ describe('notificationAlertStorage', () => {
     };
   };
 
+  type GlobalWithWindowSessionStorage = {
+    window: {
+      sessionStorage: ReturnType<typeof createMockSessionStorage>;
+    };
+  };
+
   beforeEach(() => {
     // Ensure a clean global window before each test
-    // @ts-expect-error - window may not exist on global
     delete global.window;
   });
 
@@ -37,7 +45,7 @@ describe('notificationAlertStorage', () => {
     });
 
     it('returns an empty array when there is no stored value', () => {
-      (global as any).window = {
+      (global as unknown as GlobalWithWindowSessionStorage).window = {
         sessionStorage: createMockSessionStorage(),
       };
 
@@ -49,7 +57,7 @@ describe('notificationAlertStorage', () => {
       const mockSessionStorage = createMockSessionStorage();
       mockSessionStorage.setItem(key, JSON.stringify(['id-1', 'id-2']));
 
-      (global as any).window = {
+      (global as unknown as GlobalWithWindowSessionStorage).window = {
         sessionStorage: mockSessionStorage,
       };
 
@@ -61,7 +69,7 @@ describe('notificationAlertStorage', () => {
       const mockSessionStorage = createMockSessionStorage();
       mockSessionStorage.setItem(key, 'not-json');
 
-      (global as any).window = {
+      (global as unknown as GlobalWithWindowSessionStorage).window = {
         sessionStorage: mockSessionStorage,
       };
 
@@ -73,7 +81,7 @@ describe('notificationAlertStorage', () => {
       const mockSessionStorage = createMockSessionStorage();
       mockSessionStorage.setItem(key, JSON.stringify({ id: 'id-1' }));
 
-      (global as any).window = {
+      (global as unknown as GlobalWithWindowSessionStorage).window = {
         sessionStorage: mockSessionStorage,
       };
 
@@ -93,7 +101,7 @@ describe('notificationAlertStorage', () => {
     it('stores IDs as JSON when array is non-empty', () => {
       const mockSessionStorage = createMockSessionStorage();
 
-      (global as any).window = {
+      (global as unknown as GlobalWithWindowSessionStorage).window = {
         sessionStorage: mockSessionStorage,
       };
 
@@ -109,7 +117,7 @@ describe('notificationAlertStorage', () => {
     it('removes stored value when array is empty', () => {
       const mockSessionStorage = createMockSessionStorage();
 
-      (global as any).window = {
+      (global as unknown as GlobalWithWindowSessionStorage).window = {
         sessionStorage: mockSessionStorage,
       };
 

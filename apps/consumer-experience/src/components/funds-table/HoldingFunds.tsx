@@ -1,6 +1,5 @@
 'use client';
 
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   Label,
   Table,
@@ -10,12 +9,13 @@ import {
   TableHeaderCell,
   TableRow,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
 import { useWindowSize } from 'react-use';
 
 import { Fund } from '@/services/funds/types';
 import { formatUSDollars } from '@/utils/currency';
 import { percentFormatify } from '@/utils/numbers';
+import { toSentenceCase } from '@/utils/strings';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { FundNameCellContent } from './FundNameCellContent';
 import styles from './FundsTable.module.css';

@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import { CallForAssistance } from '@/components/call-for-assistance/CallForAssistance';
 import { NonHoldingFunds } from '@/components/funds-table/NonHoldingFunds';
@@ -11,6 +10,7 @@ import {
 } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PolicyRequestInputs, PolicyStatusDetail } from '@/types/policy';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 interface ULFundsViewProps extends PolicyRequestInputs {
   initialPolicyStatus?: Partial<PolicyStatusDetail> | null;

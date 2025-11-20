@@ -1,8 +1,7 @@
 import { SummaryPage } from '@/components/stepped-workflow/workflows/surrender/forms/SummaryPage';
 import Surrender from '@/components/stepped-workflow/workflows/surrender/Surrender';
-import { PolicyRequestInputsParams } from '@/types/policy';
 
-const BankPage = ({ params }: PolicyRequestInputsParams) => {
+const BankPage = () => {
   return (
     <Surrender currentStepOverride={5}>
       <SummaryPage />

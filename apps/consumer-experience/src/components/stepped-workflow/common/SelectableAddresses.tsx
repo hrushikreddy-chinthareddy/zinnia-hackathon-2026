@@ -1,11 +1,5 @@
 'use client';
 import {
-  Address,
-  LineOfBusiness,
-} from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils/dist';
-import { countryCodeToName } from '@xd/xd-components/src/utils/Adresses';
-import {
   IconType,
   Label,
   Address as AddressComponent,
@@ -17,7 +11,10 @@ import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
+import { countryCodeToName } from '@/utils/address';
 import { lineOfBusinessUrlPath } from '@/utils/data';
+import { toSentenceCase } from '@/utils/strings';
+import { Address, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './Selectable.module.css';
 

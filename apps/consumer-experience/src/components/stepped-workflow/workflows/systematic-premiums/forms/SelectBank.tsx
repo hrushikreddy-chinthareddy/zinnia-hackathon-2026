@@ -10,7 +10,6 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { ConfirmDialog } from '@/components/confirm-dialog/ConfirmDialog';
-import { FeatureFlagComponent } from '@/components/FeatureFlagComponent';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
 import noDataStyles from '@/components/no-data-available/NoDataAvailable.module.css';
 import { PaymentusAddPaymentMethod } from '@/components/paymentus/PaymentusAddPaymentMethod';
@@ -21,17 +20,19 @@ import { SkeletonLoader } from '@/components/skeleton-loader/SkeletonLoader';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
 import { PaymentMethod } from '@/types/payment';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 
-import { SystematicPremiumsAction } from '../provider/types';
+import {
+  SPSelectBankStepSchema,
+  SystematicPremiumsAction,
+} from '../provider/types';
 import { useSystematicPremiums } from '../provider/useSystematicPremiums';
 import { default as styles } from '../SystematicPremiums.module.css';
 
 const AddBankInTransaction = ({
-  addBankEnabled,
+  addBankInlineEnabled,
   onAddPaymentMethod,
 }: {
-  addBankEnabled: boolean;
+  addBankInlineEnabled: boolean;
   onAddPaymentMethod: () => void;
 }) => {
   const router = useRouter();
@@ -40,7 +41,7 @@ const AddBankInTransaction = ({
   return (
     <div>
       {' '}
-      {addBankEnabled ? (
+      {addBankInlineEnabled ? (
         <div className={styles.addBank}>
           <PaymentusAddPaymentMethod
             policyNumber={policyNumber}
@@ -49,28 +50,23 @@ const AddBankInTransaction = ({
           />
         </div>
       ) : (
-        <FeatureFlagComponent
-          flagKey={FEATURE_FLAGS.ADD_EDIT_DELETE_BANK_ACCOUNT}
-          enabledComponent={
-            <div className={`my-lg mb-none ${styles.disclaimer}`}>
-              <p className="typography-content-body-sm">
-                Want to pay with another bank account? Go to{' '}
-                <ConfirmDialog
-                  confirmCallback={() => router.push(addBankUrl)}
-                  inline
-                  linkText="banking details"
-                  linkClassName={styles.linkClassname}
-                  confirmDescription="Navigate to the profile page and open the add bank sidesheet"
-                  message="If you leave now, your payment won't be submitted and you will have to start over."
-                  cancelDescription="Stay on the premium payment page"
-                  title="Leave payment?"
-                />{' '}
-                to add. If you're not seeing the account you want to pay with,
-                give us a call at <CarrierPhoneNumber />.
-              </p>
-            </div>
-          }
-        />
+        <div className={`my-lg mb-none ${styles.disclaimer}`}>
+          <p className="typography-content-body-sm">
+            Want to pay with another bank account? Go to{' '}
+            <ConfirmDialog
+              confirmCallback={() => router.push(addBankUrl)}
+              inline
+              linkText="banking details"
+              linkClassName={styles.linkClassname}
+              confirmDescription="Navigate to the profile page and open the add bank sidesheet"
+              message="If you leave now, your payment won't be submitted and you will have to start over."
+              cancelDescription="Stay on the premium payment page"
+              title="Leave payment?"
+            />{' '}
+            to add. If you're not seeing the account you want to pay with, give
+            us a call at <CarrierPhoneNumber />.
+          </p>
+        </div>
       )}
     </div>
   );
@@ -78,13 +74,17 @@ const AddBankInTransaction = ({
 
 export const SelectBank = ({
   activeBanks,
-  addBankEnabled = false,
+  addBankInlineEnabled = false,
   onAddPaymentMethod,
 }: {
   activeBanks: PaymentMethod[];
-  addBankEnabled?: boolean;
+  addBankInlineEnabled?: boolean;
   onAddPaymentMethod: () => void;
 }) => {
+  type SelectBankFormValues = {
+    payorBank: string | undefined;
+  };
+
   const { dispatch, state } = useSystematicPremiums();
   const { selectBankStep } = state;
   const { stepInfo } = useSteppedWorkflowContext();
@@ -98,7 +98,7 @@ export const SelectBank = ({
     );
   }, [activeBanks, selectBankStep?.bankId]);
 
-  const form = useForm({
+  const form = useForm<SelectBankFormValues>({
     // this is why the zod definition was all optional, because no gaurantee about what we'regoing to get from API
     // but does this really make sense to use? I don't need to validate the bank object...
     // That's not really the point of this form?
@@ -108,7 +108,7 @@ export const SelectBank = ({
     },
   });
 
-  const onSubmit: SubmitHandler<any> = data => {
+  const onSubmit: SubmitHandler<SelectBankFormValues> = data => {
     const selectedBank = activeBanks.find(
       ({ bankId }) => bankId === data.payorBank
     );
@@ -117,7 +117,8 @@ export const SelectBank = ({
       type: SystematicPremiumsAction.SET_SYSTEMATIC_PREMIUM_DISTRIBUTION_METHOD_STEP,
       payload: {
         // TODO: fix this error
-        selectBankStep: selectedBank || (activeBanks[0] as any),
+        selectBankStep: (selectedBank ||
+          activeBanks[0]) as unknown as SPSelectBankStepSchema,
       },
     });
 
@@ -135,7 +136,7 @@ export const SelectBank = ({
           </NoDataAvailable>
         </div>
         <AddBankInTransaction
-          addBankEnabled={addBankEnabled}
+          addBankInlineEnabled={addBankInlineEnabled}
           onAddPaymentMethod={onAddPaymentMethod}
         />
       </>
@@ -240,7 +241,7 @@ export const SelectBank = ({
         </div>
       </form>
       <AddBankInTransaction
-        addBankEnabled={addBankEnabled}
+        addBankInlineEnabled={addBankInlineEnabled}
         onAddPaymentMethod={onAddPaymentMethod}
       />
     </>

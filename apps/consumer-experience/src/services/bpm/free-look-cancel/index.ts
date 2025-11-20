@@ -1,10 +1,4 @@
 'use server';
-import {
-  FreeLookCancellationRequest,
-  TransactionAcceptedResponse,
-  TransactionFailureResponse,
-  TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 
 import { transactionApiBaseUrl } from '@/services/api-config';
@@ -16,6 +10,12 @@ import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import {
+  FreeLookCancellationRequest,
+  TransactionAcceptedResponse,
+  TransactionFailureResponse,
+  TransactionResponse,
+} from '@zinnia/api-types/types/bpm';
 
 import { transformEligibility } from '../transformers';
 

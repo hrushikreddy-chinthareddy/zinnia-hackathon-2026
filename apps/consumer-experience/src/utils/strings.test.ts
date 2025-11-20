@@ -7,6 +7,7 @@ import {
   pluralize,
   createQueryString,
   indefiniteArticle,
+  formatPhoneNumber,
 } from './strings';
 
 describe('toTitleCase', () => {
@@ -116,5 +117,62 @@ describe('indefiniteArticle', () => {
   it('should return "a" when the word starts with a non-vowel', () => {
     expect(indefiniteArticle('tiger')).toBe('a');
     expect(indefiniteArticle('123')).toBe('a');
+  });
+});
+
+// Unit tests for formatPhoneNumber function
+describe('formatPhoneNumber', () => {
+  test('formats phone number with country code, area code, and rest of the phone number', () => {
+    const input = '18673452345';
+    const expectedOutput = '1-867-345-2345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('formats phone number with country code including "+"', () => {
+    const input = '+18673452345';
+    const expectedOutput = '+1-867-345-2345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('formats phone number with area code and rest of the phone number', () => {
+    const input = '8673452345';
+    const expectedOutput = '867-345-2345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('formats phone number with only the rest of the phone number', () => {
+    const input = '3452345';
+    const expectedOutput = '345-2345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('returns the original input for invalid phone number format', () => {
+    const input = '12345';
+    const expectedOutput = '12345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('returns the original input for empty string', () => {
+    const input = '';
+    const expectedOutput = '';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('returns the original input for non-numeric characters', () => {
+    const input = 'abc12345';
+    const expectedOutput = 'abc12345';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('returns the original input for mixed format', () => {
+    const input = '12-345-6789';
+    const expectedOutput = '12-345-6789';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
+  });
+
+  test('returns properly formatted number without country code and area code', () => {
+    const input = '1234567890';
+    const expectedOutput = '123-456-7890';
+    expect(formatPhoneNumber(input)).toBe(expectedOutput);
   });
 });

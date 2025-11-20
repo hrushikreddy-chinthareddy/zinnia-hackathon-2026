@@ -1,7 +1,6 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
-
 import { PolicyParty } from '@/types/policy';
 import { logTrace } from '@/utils/logging/log-fns';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import {
   isPartyOwner,

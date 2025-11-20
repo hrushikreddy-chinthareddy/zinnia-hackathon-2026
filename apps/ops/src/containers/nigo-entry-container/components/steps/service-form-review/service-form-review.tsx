@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Radio from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { DocumentType } from '@deps/models/case/document';
 
 import { DocumentIndexingInfo } from './document-indexing-info';
@@ -148,7 +148,7 @@ export const ServiceFormReview = ({
                             </div>
                         </div>
                         <div className="flex items-center">
-                            {createAction(
+                            {createViewDownloadAction(
                                 workingDocument,
                                 clientCode?.toUpperCase(),
                                 t

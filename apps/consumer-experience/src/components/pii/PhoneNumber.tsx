@@ -1,9 +1,8 @@
 'use client';
 
-import { Phone } from '@zinnia/api-types/types/sor';
-
 import { PiiProps } from '@/types/pii';
 import { formatPhoneNumberWithExtension } from '@/utils/data';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 import { PiiWrapper } from './PiiWrapper';
 

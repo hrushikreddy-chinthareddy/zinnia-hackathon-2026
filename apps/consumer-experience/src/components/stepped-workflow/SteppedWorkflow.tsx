@@ -40,7 +40,7 @@ export type SteppedWorkflowProps = {
   // but right now we don't have required data
   // on all transactionSteps, and this is only necessary
   // for validating against requiredData
-  currentState?: any;
+  currentState?: unknown;
 };
 
 export const SteppedWorkflow = ({

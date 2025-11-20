@@ -1,6 +1,5 @@
 'use client';
 import { Label, LabelProps, Loader } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useFormStatus } from 'react-dom';
@@ -13,6 +12,7 @@ import { AccountType } from '@/components/pii/AccountType';
 import { BankName } from '@/components/pii/BankName';
 import { Payor } from '@/components/pii/Payor';
 import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { toSentenceCase } from '@/utils/strings';
 
 import { OttpState } from '../../provider/types';
 import styles from '../OneTimePremiumPayment.module.css';

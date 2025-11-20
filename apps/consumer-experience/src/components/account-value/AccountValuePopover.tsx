@@ -1,6 +1,5 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
-
 import { standardDateMonthDayYear } from '@/utils/dates';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { LabelPopover } from '../label-popover/LabelPopover';
 const ACCOUNT_VALUE = 'Account value';

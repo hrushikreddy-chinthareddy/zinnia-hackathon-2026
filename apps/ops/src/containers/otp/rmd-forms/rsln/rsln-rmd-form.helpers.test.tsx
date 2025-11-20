@@ -183,6 +183,7 @@ describe('getRslnRmdConfig', () => {
                     isJointLifeExpectancy: false,
                     rmdPrograms: [],
                     taxId: { text: null },
+                    rmdMethod: null,
                 },
             },
         });

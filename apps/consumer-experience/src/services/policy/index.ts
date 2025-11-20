@@ -1,13 +1,3 @@
-import { PolicySearchRequest } from '@zinnia/api-types/types/search';
-import {
-  Policy,
-  Transaction,
-  TransactionErrorResponse,
-  MetricsType,
-  PolicyStatus,
-  BankAccount,
-} from '@zinnia/api-types/types/sor';
-import { policyOwner } from '@zinnia/utils';
 import dayjs from 'dayjs';
 
 import { ApiEndpoints } from '@/components/dev-menu/types';
@@ -81,12 +71,20 @@ import {
 import { RidersAndBenefits } from '@/types/riders';
 import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { getSession } from '@/utils/auth';
+import { policyOwner } from '@/utils/data';
 import { logError, logInfo } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { PolicySearchRequest } from '@zinnia/api-types/types/search';
+import {
+  Policy,
+  Transaction,
+  TransactionErrorResponse,
+  MetricsType,
+  PolicyStatus,
+  BankAccount,
+} from '@zinnia/api-types/types/sor';
 
-import { getFeatureFlags } from '../feature-flags';
 import { getLoggedInUserPolicyAndPartyDataErrors } from './types';
 import { mockAnnuityResponse } from '../mocks/annuity';
 import { MockMetricsResponse } from '../mocks/metrics';
@@ -111,7 +109,6 @@ const getPolicyReferencesByCarrierEnterprise = withLogging(
     const partyId = session?.user?.partyId;
 
     if (isTestPoliciesEnabled()) {
-      // @ts-expect-error specs aren't updated in developer portal yet
       searchFilter['carrier'] = CarrierId.SBUL;
     }
 
@@ -144,55 +141,6 @@ const getPolicyReferencesByCarrierEnterprise = withLogging(
     return response;
   },
   { file: FILE_NAME, functionName: 'getPolicyReferencesByCarrierEnterprise' }
-);
-
-/**
- * Returns error object that occur while fetching policy data from an API.
- *
- * @param {Response} rawResponse - The raw response object received from the API call.
- * @param {unknown} parsedResponse - The parsed response object obtained from the API call.
- * @return {Object} An object containing apiMessage, statusText, statusCode, url, and sessionInfo.
- */
-const getPolicyReferencesByCarrier = withLogging(
-  async (loggingCtx?: CommonLogContext) => {
-    const featureFlags = await getFeatureFlags();
-    const searchUrl = featureFlags[FEATURE_FLAGS.ENTERPRISE_POLICY_SEARCH]
-      ? `${policyApiBaseUrl}/search?searchEntity=policy&offset=0&limit=100`
-      : `${policyApiBaseUrl}/search?offset=0&limit=100`;
-    const searchFilter: PolicySearchRequest = {};
-
-    if (isTestPoliciesEnabled()) {
-      // @ts-expect-error specs aren't updated in developer portal yet
-      searchFilter['carrierIds'] = CarrierId.SBUL;
-    }
-
-    if (isMockErrorEnabled(ApiEndpoints.POLICY_BY_CARRIERS)) {
-      throw new Error('Error fetching policies by carrier.');
-    }
-
-    const rawResponse = await ServerApi.post(
-      searchUrl,
-      JSON.stringify(searchFilter),
-      {
-        headers: { 'Content-Type': 'application/json' },
-      },
-      loggingCtx
-    );
-
-    const response = await parseAPIResponse(rawResponse);
-
-    if (!rawResponse?.ok) {
-      logError(
-        'Error fetching policy search results',
-        await logApiNotOkDetails({ rawResponse, parsedResponse: response })
-      );
-
-      throw new Error('Error fetching policy references');
-    }
-
-    return response;
-  },
-  { file: FILE_NAME, functionName: 'getPolicyReferencesByCarrier' }
 );
 
 export const getPolicyByPlanCodeAndId = withLogging(
@@ -279,7 +227,7 @@ export const getUnsanitizedBanksByPolicyPlanCodeAndId = withLogging(
   { file: FILE_NAME, functionName: 'getUnsanitizedBanksByPolicyPlanCodeAndId' }
 );
 
-const getPolicyTransactions = withLogging(
+export const getPolicyTransactions = withLogging(
   async (
     {
       transactionTypes,
@@ -381,8 +329,6 @@ export const getMyPoliciesByCarrier = withLogging(
     carrierId: string[] | string,
     loggingCtx: CommonLogContext
   ): Promise<CarrierPolicyDetails[]> => {
-    const featureFlags = await getFeatureFlags();
-
     if (isMockSearchRequestEnabled()) {
       const product = isTestAnnuitiesEnabled()
         ? mockAnnuityResponse
@@ -390,11 +336,8 @@ export const getMyPoliciesByCarrier = withLogging(
       return transformPolicyReferenceData([product]);
     }
 
-    const { data: response, error } = featureFlags[
-      FEATURE_FLAGS.ENTERPRISE_POLICY_SEARCH
-    ]
-      ? await getPolicyReferencesByCarrierEnterprise(loggingCtx)
-      : await getPolicyReferencesByCarrier(loggingCtx);
+    const { data: response, error } =
+      await getPolicyReferencesByCarrierEnterprise(loggingCtx);
 
     if (!response && !error) {
       throw new Error(

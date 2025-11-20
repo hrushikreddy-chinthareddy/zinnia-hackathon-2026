@@ -2,9 +2,9 @@
  * TODO: Replace this file with API implementation after it is ready
  * see ticket `ZSOR-15155`
  */
-import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
-import { Frequency as BPMFrequency } from '@xd/api-types/dist/generated-types/sor';
-import { DEFAULT_ERROR_STRING } from '@xd/utils/dist';
+import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { Frequency } from '@zinnia/api-types/types/bpm';
+import { Frequency as BPMFrequency } from '@zinnia/api-types/types/sor';
 
 import { SPPaymentFrequency } from './provider/types';
 

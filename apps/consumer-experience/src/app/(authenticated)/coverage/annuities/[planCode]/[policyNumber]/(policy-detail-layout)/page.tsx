@@ -1,4 +1,3 @@
-import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
@@ -18,6 +17,7 @@ import { ComponentName } from '@/services/display-rules/types';
 import { LineOfBusinessPath } from '@/types';
 import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {

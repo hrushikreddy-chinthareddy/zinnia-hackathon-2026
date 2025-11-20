@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AccountStatus, LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { useParams } from 'next/navigation';
 import { FC, useMemo, useRef } from 'react';
 
@@ -18,6 +17,7 @@ import {
   POLL_INTERVAL,
   POLL_LIMIT,
 } from '@/utils/transactions';
+import { AccountStatus, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './BankList.module.css';
 import { AddBankSidesheet } from '../add-bank/AddBankSidesheet';
@@ -29,7 +29,6 @@ import { BankDetail } from '../person-data/types';
 interface BankListProps {
   planCode: string;
   policyNumber: string;
-  allowBankingChanges: boolean;
   initialProfileData?: PolicyProfile | null;
   initialCaseData?: CaseSummary[];
   lineOfBusiness?: LineOfBusiness;
@@ -39,7 +38,6 @@ interface BankListProps {
 export const BankList: FC<BankListProps> = ({
   planCode,
   policyNumber,
-  allowBankingChanges,
   initialProfileData,
   initialCaseData,
   lineOfBusiness,
@@ -131,17 +129,14 @@ export const BankList: FC<BankListProps> = ({
       return (
         <BankData
           key={bankDetail.accountNumber}
-          removeBankEnabled={allowBankingChanges}
           numberOfAccounts={data.length}
           checkVerification={verifyIdentityRequired}
-          onRemoveBank={
-            allowBankingChanges ? () => handleRemoveBank(bankDetail) : undefined
-          }
+          onRemoveBank={() => handleRemoveBank(bankDetail)}
           {...bankDetail}
         />
       );
     });
-  }, [allowBankingChanges, data, handleRemoveBank, verifyIdentityRequired]);
+  }, [data, handleRemoveBank, verifyIdentityRequired]);
 
   return (
     <div>
@@ -166,12 +161,10 @@ export const BankList: FC<BankListProps> = ({
         </>
       )}
 
-      {allowBankingChanges && (
-        <AddBankSidesheet
-          partyId={initialProfileData?.partyId || ''}
-          policyOwner={`${initialProfileData?.name.firstName} ${initialProfileData?.name.lastName}`}
-        />
-      )}
+      <AddBankSidesheet
+        partyId={initialProfileData?.partyId || ''}
+        policyOwner={`${initialProfileData?.name.firstName} ${initialProfileData?.name.lastName}`}
+      />
     </div>
   );
 };

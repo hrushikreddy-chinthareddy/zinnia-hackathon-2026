@@ -1,7 +1,5 @@
 'use client';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { TransactionFailureResponse } from '@xd/api-types/dist/generated-types/bpm';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -22,6 +20,8 @@ import {
 import { QueryKeys } from '@/queries/query-keys';
 import { ComponentName } from '@/services/display-rules/types';
 import { generateTransactionErrorUrl } from '@/services/errors/errors';
+import { TransactionFailureResponse } from '@zinnia/api-types/types/bpm';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { SummaryForm } from './SummaryForm';
 import { useOttp } from '../../provider/OttpContext';

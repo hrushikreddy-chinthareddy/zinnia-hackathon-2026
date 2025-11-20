@@ -1,9 +1,9 @@
 'use client';
 
-import { useIsClient } from '@xd/hooks/useIsClient';
 import Cookies from 'js-cookie';
 
 import { Link } from '@/components/link/Link';
+import { useIsClient } from '@/hooks/use-is-client';
 import { CompanyName } from '@/types/carriers';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';

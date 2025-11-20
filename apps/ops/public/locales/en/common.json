@@ -2104,6 +2104,7 @@
         "preview": "Preview",
         "rate": "rate",
         "draft": "Save as Draft",
+        "send": "Send",
         "submitPayment": "Submit payment",
         "successExclamation": "Success!",
         "total": "Total",
@@ -2882,6 +2883,19 @@
             "simpleTooltipBody": "This case is prioritized.",
             "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
         },
+        "deprioritizeCase": {
+            "title": "De-prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A de-prioritized case will be moved back as a regular work item for normal processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Case ID: {{caseId}} was deprioritized",
+            "tooltipBody": "This case is deprioritized."
+        },
         "navDrawer": {
             "topStatus": "Top Status",
             "stage": "Stage",
@@ -3502,13 +3516,17 @@
                 "cedingCompanySignature": {
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
-                    "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
+                    "multipleQualType": "Unable to determine the Qualification type",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
+                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
                     "isLoaAttached": "Is letter of acceptance attached?",
-                    "validOwnerRegType": "Valid owner/registration type",
+                    "registrationType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
-                    "loaSignDate": "LOA Sign Date"
+                    "loaSignDate": "LOA Sign Date",
+                    "authPersonSignPresent": "Authorized Person’s signature is present",
+                    "isCorporateResolutionPresent": "Is corporate resolution present?",
+                    "isAuthSignValid": "Is signature of authorized officer valid based on corporate resolution?",
+                    "signDate": "Signature date"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Joint Owner/Annuitant absence on paperwork or in the contract",

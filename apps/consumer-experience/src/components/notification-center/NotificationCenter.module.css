@@ -1,5 +1,27 @@
 .container {
   background-color: var(--color-base-surface-surface-primary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--measure-dimension-gap-xl);
+
+  .emptyState {
+    display: flex;
+    padding: var(--measure-dimension-padding-3xl) 0;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+  }
+  .alertIcon {
+    display: flex;
+    padding: var(--padding-sm, 4px);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .markAllReadContainer {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .list {
@@ -30,11 +52,6 @@
 
   .item {
     border-top: 1px solid lightgray;
-    display: grid;
-    grid-template-columns: 150px max-content auto;
-    padding: var(--measure-dimension-padding-lg)
-      var(--measure-dimension-padding-2xl);
-    gap: var(--measure-dimension-gap-2xl);
 
     &:hover {
       background-color: var(--color-base-surface-surface-secondary);
@@ -55,13 +72,37 @@
       place-content: start;
     }
 
-    .title {
+    .notificationContentWrapper {
       display: flex;
+      padding: var(--measure-dimension-padding-2xl)
+        var(--measure-dimension-padding-sm);
+      justify-content: space-between;
+      align-items: flex-start;
+      align-self: stretch;
+    }
+
+    .notificationHeaderSection {
+      display: flex;
+      align-items: flex-start;
       gap: var(--measure-dimension-gap-md);
-      justify-content: start;
-      align-items: center;
-      vertical-align: middle;
-      font-weight: 400;
+      align-self: stretch;
+    }
+
+    @media (max-width: 600px) {
+      .notificationHeaderSection {
+        max-width: 215px;
+      }
+    }
+
+    .notificationTextGroup {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--measure-dimension-gap-sm);
+    }
+
+    .description {
+      color: var(--color-status-text-status-error-text);
       text-align: left;
     }
 
@@ -75,6 +116,12 @@
       @media screen and (max-width: 600px) {
         justify-self: flex-end;
       }
+    }
+
+    .notificationLinkSection {
+      display: flex;
+      align-items: center;
+      align-self: stretch;
     }
 
     .link {
@@ -100,11 +147,14 @@
     .needsAcknowledgement {
       .pip {
         flex-shrink: 0;
-
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: var(--color-status-text-status-error-text);
+        background-color: var(--color-status-icon-status-information-icon);
+      }
+
+      .hidden {
+        visibility: hidden;
       }
 
       .title {

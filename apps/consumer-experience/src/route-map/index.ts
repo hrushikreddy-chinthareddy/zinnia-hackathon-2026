@@ -10,7 +10,6 @@ export enum RouteKey {
   ACCOUNT = '/account',
   ALLOCATIONS = '/allocations',
   BENEFICIARIES = '/beneficiaries',
-  BENEFICIARY = '/beneficiary',
   COVERAGE = '/coverage',
   DETAILS = '/details',
   DOCUMENTS = '/documents',
@@ -53,12 +52,6 @@ export const routeMap: Record<RouteKey, RouteMap> = {
     source: '/beneficiaries',
     title: 'Beneficiaries',
   },
-  [RouteKey.BENEFICIARY]: {
-    destination:
-      '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/beneficiaries/[beneficiary]',
-    source: '/beneficiary',
-    title: 'Beneficiary',
-  },
   [RouteKey.COVERAGE]: {
     destination: ROOT_URL_PATH,
     source: ROOT_URL_PATH,
@@ -97,7 +90,7 @@ export const routeMap: Record<RouteKey, RouteMap> = {
   [RouteKey.PREMIUM]: {
     destination: '/coverage/[lineOfBusiness]/[planCode]/[policyNumber]/premium',
     source: '/premium',
-    title: 'Premium payments',
+    title: 'Manage Payments',
   },
   [RouteKey.PREMIUM_DETAILS]: {
     destination:

@@ -1,10 +1,3 @@
-import {
-  PartyRole,
-  Policy,
-  PolicyStatus,
-  ProductType,
-} from '@xd/api-types/dist/generated-types/sor';
-
 import { RouteKey } from '@/route-map';
 import { logError, logTrace, logWarn } from '@/utils/logging/log-fns';
 import {
@@ -13,6 +6,12 @@ import {
 } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
 import { isPayorOnly, partyRolesAreInAllowedList } from '@/utils/party';
+import {
+  PartyRole,
+  Policy,
+  PolicyStatus,
+  ProductType,
+} from '@zinnia/api-types/types/sor';
 
 import { ComponentName } from './types';
 import { getLoggedInUserPolicyAndPartyData } from '../policy';
@@ -108,7 +107,6 @@ export const evaluateRouteRules = (
       !isCancelled,
     [RouteKey.ALLOCATIONS]: () => isNotPayor && !isCancelled,
     [RouteKey.BENEFICIARIES]: () => isNotPayor && !isCancelled,
-    [RouteKey.BENEFICIARY]: () => isNotPayor && !isCancelled,
     [RouteKey.COVERAGE]: () => true,
     [RouteKey.DETAILS]: () => !isCancelled,
     [RouteKey.DOCUMENTS]: () => isNotPayor && !isCancelled,

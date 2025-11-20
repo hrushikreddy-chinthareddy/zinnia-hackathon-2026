@@ -1,11 +1,11 @@
 'use client';
 
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/bpm';
 import { useRouter } from 'next/navigation';
 
 import { SteppedWorkflow } from '@/components/stepped-workflow/SteppedWorkflow';
 import { SurrenderSteps } from '@/components/stepped-workflow/workflows/surrender/provider/types';
 import { usePolicyUrlInputs } from '@/hooks/use-policy-url-inputs';
+import { LineOfBusiness } from '@zinnia/api-types/types/bpm';
 
 import { stepsInfo } from './steps';
 

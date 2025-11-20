@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AllocationOption } from '@xd/api-types/dist/generated-types/bpm';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -14,6 +13,7 @@ import { z } from 'zod';
 import { CarrierPhoneNumber } from '@/components/carrier-phone-number/CarrierPhoneNumber';
 import { LabelPopover } from '@/components/label-popover/LabelPopover';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { AllocationOption } from '@zinnia/api-types/types/bpm';
 
 import {
   withdrawalMethodStepSchema,

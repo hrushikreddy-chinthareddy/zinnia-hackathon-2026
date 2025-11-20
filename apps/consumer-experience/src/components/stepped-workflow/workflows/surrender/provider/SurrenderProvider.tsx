@@ -1,13 +1,13 @@
 'use client';
 
-import {
-  DisbursementPaymentForm,
-  TaxRateToUse,
-} from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 import { PropsWithChildren, useReducer } from 'react';
 
 import { ZAHARA_DATE_FORMAT } from '@/utils/dates';
+import {
+  DisbursementPaymentForm,
+  TaxRateToUse,
+} from '@zinnia/api-types/types/bpm';
 
 import { SurrenderState, SurrenderSteps, Action } from './types';
 import { SurrenderContext } from './useSurrender';

@@ -2,8 +2,6 @@
 // between policies and annuities. If this changes, don't think too much about it just separate them
 // and return this to the page view rather than having it as a separate view.
 
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -19,6 +17,8 @@ import { DocumentsVersion } from '@/types/carrier-config';
 import { DocumentCategory } from '@/types/document';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DocumentsTabs } from './DocumentsTabs';
 import { extensionsFilter, filterDocuments, filterStatements } from './utils';
@@ -36,7 +36,6 @@ const maxTaxYears = 5;
 export const DocumentsView = async ({
   planCode,
   policyNumber,
-  lineOfBusiness,
   currentView,
 }: {
   planCode: string;
@@ -54,7 +53,6 @@ export const DocumentsView = async ({
     loggingContext
   );
   const { data: carrierConfigData } = await getCarrierConfig(loggingContext);
-  const showTaxDocuments = flags?.[FEATURE_FLAGS.VIEW_TAX_DOCUMENTS];
   const shouldUseV2 =
     !flags?.[FEATURE_FLAGS.DOCUMENTS_V3] ||
     carrierConfigData?.documents.version === DocumentsVersion.V2;
@@ -141,10 +139,7 @@ export const DocumentsView = async ({
 
   return (
     <div className="container">
-      <DocumentsTabs
-        activeTab={activeTab}
-        showTaxDocuments={showTaxDocuments}
-      />
+      <DocumentsTabs activeTab={activeTab} />
       <DocumentsWithPagination
         docCategory={activeTab}
         documents={currentViewDocs()}

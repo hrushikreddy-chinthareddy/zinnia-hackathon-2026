@@ -21,5 +21,7 @@ module.exports = createJestConfig({
     '@panva/hkdf': '<rootDir>/node_modules/@panva/hkdf',
     jose: '<rootDir>/node_modules/jose',
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@zinnia/api-types/types/(.*)$':
+      '<rootDir>/api-types/generated-types/$1/index',
   },
 });

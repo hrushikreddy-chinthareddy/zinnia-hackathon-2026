@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
-import { Country, EmailType, State } from '@zinnia/api-types/types/sor';
 
 import { PolicyProfile } from '@/types/policy';
+import { Country, EmailType, State } from '@zinnia/api-types/types/sor';
 
 import { CommunicationPreferenceSidesheet } from './CommunicationPreferenceSidesheet';
 

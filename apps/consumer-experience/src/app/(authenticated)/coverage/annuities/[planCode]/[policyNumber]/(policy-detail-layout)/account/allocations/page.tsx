@@ -1,4 +1,3 @@
-import { ProductType } from '@zinnia/api-types/types/sor';
 import { Metadata } from 'next';
 
 import styles from '@/app/(authenticated)/coverage/shared-styles/Funds.module.css';
@@ -10,6 +9,7 @@ import { getPolicyDetails, getPolicyStatusDetails } from '@/services';
 import { PolicyRequestInputs } from '@/types/policy';
 import { logTrace } from '@/utils/logging/log-fns';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { ProductType } from '@zinnia/api-types/types/sor';
 
 import { ULFundsView } from './ULFundsView';
 

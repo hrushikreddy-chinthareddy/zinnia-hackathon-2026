@@ -1,4 +1,3 @@
-import { PartyRole } from '@xd/api-types/dist/generated-types/sor';
 import { notFound } from 'next/navigation';
 
 import { SelectPayee } from '@/components/stepped-workflow/workflows/free-look-cancel/forms/SelectPayee';
@@ -7,6 +6,7 @@ import { getPolicyProfileData } from '@/services/policy';
 import { PolicyRequestInputsParams } from '@/types/policy';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 export default async function FreeLookCancelInformation({
   params,

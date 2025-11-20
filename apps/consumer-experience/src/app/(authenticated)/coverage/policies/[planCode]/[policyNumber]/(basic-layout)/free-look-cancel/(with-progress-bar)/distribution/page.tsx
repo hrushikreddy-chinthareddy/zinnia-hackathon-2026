@@ -1,11 +1,10 @@
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
-
 import { SelectDistribution } from '@/components/stepped-workflow/workflows/free-look-cancel/forms/SelectDistribution';
 import { getPolicyProfileData } from '@/services';
 import { getFeatureFlagsWithCarrierConfig } from '@/services/feature-flags-carrier-config';
 import { getPaymentMethods } from '@/services/payment-methods';
 import { filterItemsWithPastEndDate } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 export default async function FreeLookCancelInformation({
   params,

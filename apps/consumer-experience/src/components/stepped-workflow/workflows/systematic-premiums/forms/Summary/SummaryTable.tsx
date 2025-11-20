@@ -1,12 +1,11 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/dist';
-import { ComparisonTable } from '@xd-components/components/ComparisonTable/ComparisonTable';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/navigation';
 
+import { ComparisonTable } from '@/components/comparison-table/ComparisonTable';
 import { Name } from '@/components/pii/Name';
 import commonStyles from '@/components/stepped-workflow/common/Styles.module.css';
 import { useUser } from '@/hooks/use-user';
@@ -14,6 +13,7 @@ import { getPaymentMethods } from '@/queries/payment-queries';
 import { getPolicyParties } from '@/queries/policy-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { formatUSDollars } from '@/utils/currency';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
 
 import { BankDisplay } from './BankDisplay';
 import { SummaryDisplay } from './SummaryDisplay';

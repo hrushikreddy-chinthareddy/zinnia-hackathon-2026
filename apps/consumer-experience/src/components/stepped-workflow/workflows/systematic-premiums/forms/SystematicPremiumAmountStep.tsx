@@ -1,7 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Frequency } from '@xd/api-types/dist/generated-types/bpm';
-import { DEFAULT_DATE_FORMAT, DEFAULT_ERROR_STRING } from '@xd/utils/dist';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -19,6 +17,9 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { FieldDate } from '@/components/field/date/FieldDate';
 import { FieldValue } from '@/components/field/value/FieldValue';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
+import { DEFAULT_DATE_FORMAT } from '@/utils/dates';
+import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { Frequency } from '@zinnia/api-types/types/bpm';
 
 import {
   SPAmountStepSchema,

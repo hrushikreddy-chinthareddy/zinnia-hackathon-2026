@@ -6,7 +6,10 @@ import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { Claims150Call } from '../components/steps/claims/claim-150-call';
 import { ClaimBeneStatus } from '../components/steps/claims/claims-day-150-bene-status';
-import { UpdatedBeneficiaryRecord } from '../components/steps/claims/claims.type';
+import {
+    DynamicKey,
+    UpdatedBeneficiaryRecord,
+} from '../components/steps/claims/claims.type';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep } from '../components/steps/task-form/task-form-step';
 
@@ -18,9 +21,11 @@ export const getDay150ReviewSteps = ({
     taskMetadata,
 }: GetStepsProps) => {
     const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>(
-        task?.data?.details?.benefinalcontactattempt
+        task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
             ?.beneficiaryChangeDetail || {
-            notificationPreferences: null,
+            notificationPreferences:
+                task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
+                    ?.beneficiary?.notificationPreferences,
             changeRequire: null,
             changeType: null,
             beneDeceased: false,
@@ -30,7 +35,8 @@ export const getDay150ReviewSteps = ({
 
     const readOnly = task.status === TaskStatus.Completed;
 
-    const beneAttempt = task?.data?.details?.benefinalcontactattempt ?? {};
+    const beneAttempt =
+        task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT] ?? {};
     const stepOneIsVisible =
         beneAttempt?.subTaskBeneDeceasedChangeRequire === false;
     const stepTwoIsVisible =

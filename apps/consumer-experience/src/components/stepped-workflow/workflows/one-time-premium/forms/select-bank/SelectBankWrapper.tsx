@@ -1,12 +1,12 @@
 'use client';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { Loader } from '@zinnia/bloom/components';
 
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { getPaymentMethods } from '@/queries/payment-queries';
 import { QueryKeys } from '@/queries/query-keys';
 import { PaymentProvider } from '@/types/carrier-config';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { SelectBank } from './SelectBank';
 

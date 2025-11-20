@@ -1,10 +1,3 @@
-import {
-  OneTimePremiumRequest,
-  PaymentForm,
-  TransactionFailureResponse,
-  TransactionResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
-
 import { ApiEndpoints } from '@/components/dev-menu/types';
 import { isMockErrorEnabled, transactionsAPIUrl } from '@/services/api-config';
 import { ServerApi } from '@/services/server-http';
@@ -13,6 +6,12 @@ import { logApiNotOkDetails, parseAPIResponse } from '@/utils/api';
 import { logError } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import {
+  OneTimePremiumRequest,
+  PaymentForm,
+  TransactionFailureResponse,
+  TransactionResponse,
+} from '@zinnia/api-types/types/bpm';
 
 import { transformEligibility } from '../transformers';
 

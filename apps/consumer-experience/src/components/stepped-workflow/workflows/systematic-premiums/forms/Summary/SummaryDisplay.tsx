@@ -1,6 +1,5 @@
 'use client';
 
-import { ComparisonTableRowProps } from '@xd/xd-components/src/components/ComparisonTable/types';
 import {
   Button,
   Icon,
@@ -11,6 +10,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
+import { ComparisonTableRowProps } from '@/components/comparison-table/types';
 import { FieldData } from '@/components/field-data/FieldData';
 import commonStyles from '@/components/stepped-workflow/common/Styles.module.css';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';

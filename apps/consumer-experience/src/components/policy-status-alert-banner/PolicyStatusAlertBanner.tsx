@@ -1,10 +1,5 @@
 'use client';
 
-import {
-  FeatureType,
-  LineOfBusiness,
-  PolicyStatus,
-} from '@zinnia/api-types/types/sor';
 import { BannerAlert, BannerVariant, IconType } from '@zinnia/bloom/components';
 import { usePathname } from 'next/navigation';
 
@@ -15,6 +10,11 @@ import { formatUSDollars } from '@/utils/currency';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 import { standardDateMonthDayYear } from '@/utils/dates';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import {
+  FeatureType,
+  LineOfBusiness,
+  PolicyStatus,
+} from '@zinnia/api-types/types/sor';
 
 import { CarrierPhoneNumber } from '../carrier-phone-number/CarrierPhoneNumber';
 

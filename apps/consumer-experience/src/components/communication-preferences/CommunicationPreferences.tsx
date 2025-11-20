@@ -1,11 +1,11 @@
 'use client';
 
-import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 import { IconType } from '@zinnia/bloom/components';
 
 import { useCarrierConfig } from '@/hooks/use-carrier-config';
 import { ManageChange } from '@/types/carrier-config';
 import { PolicyProfile } from '@/types/policy';
+import { EDeliveryPreferenceModel } from '@zinnia/api-types/types/preferences';
 
 import styles from './CommunicationPreferences.module.css';
 import { CommunicationPreferenceSidesheet } from './CommunicationPreferenceSidesheet';

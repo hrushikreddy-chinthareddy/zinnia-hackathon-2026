@@ -35,7 +35,7 @@ import {
 } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName } from '../utils';
+import { colors, generateCSVFileName, PageType } from '../utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const { t } = useTranslation();
@@ -55,7 +55,7 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     });
 
     const filter = {
-        pageType: ['Cases', 'Policies'],
+        pageType: [PageType.Cases, PageType.Illustrations, PageType.Policies],
         dateStart: timerange.from,
         dateEnd: startOfTomorrowLocalIso(timerange.to) || undefined,
         userRole: rolesToPass,

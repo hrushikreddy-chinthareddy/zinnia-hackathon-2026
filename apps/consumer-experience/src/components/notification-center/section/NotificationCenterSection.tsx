@@ -1,11 +1,10 @@
-import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
-import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { Suspense } from 'react';
 
 import { NotificationCenterItem } from '@/components/notification-center/item/NotificationCenterItem';
 import { default as Styles } from '@/components/notification-center/NotificationCenter.module.css';
 import { CaseAcknowledgmentItem } from '@/services/terms-and-conditions';
+import { CaseInstanceSummary } from '@zinnia/api-types/types/case';
 
 import { NotificationCenterItemLoadingState } from '../loading-state/NotificationCenterLoadingState';
 
@@ -15,6 +14,7 @@ export type NotificationCenterNotification = {
   date: Date;
   completed: boolean;
   stepsToAcknowledge?: string[];
+  caseGroup: string;
 };
 
 export type NotificationCenterProps = {
@@ -26,20 +26,12 @@ export type NotificationCenterProps = {
 
 export const NotificationCenterSection = ({
   notifications: items,
-  isClient,
   acknowledgedNotifications,
   isLoading,
   handleAcknowledge,
-  variant,
-  sectionHeading,
   className,
-  mutatingId = '',
 }: {
-  mutatingId?: string;
-  variant: AssistiveTextVariant;
-  sectionHeading: string;
   notifications: NotificationCenterNotification[];
-  isClient: boolean;
   acknowledgedNotifications: Array<CaseAcknowledgmentItem> | null;
   isLoading: boolean;
   className?: string;
@@ -47,13 +39,6 @@ export const NotificationCenterSection = ({
 }) => {
   return (
     <section className={clsx(Styles.list, className?.length && className)}>
-      <h2>
-        <AssistiveText
-          className={Styles.heading}
-          text={sectionHeading}
-          variant={variant}
-        />
-      </h2>
       <ul>
         {items.map(notification => {
           const needsAcknowledgement =
@@ -61,10 +46,6 @@ export const NotificationCenterSection = ({
             !notification.completed &&
             // there are steps to acknowledge
             !!notification.stepsToAcknowledge?.length &&
-            // if currently mutating
-            // don't show pip since we assume
-            // the acknowledgment call will return a success
-            mutatingId !== notification.id &&
             // if the notification is not already acknowledged
             // from the case acknowledgment api
             !acknowledgedNotifications?.find(
@@ -76,16 +57,11 @@ export const NotificationCenterSection = ({
               fallback={NotificationCenterItemLoadingState}
             >
               <NotificationCenterItem
-                isClient={isClient}
                 onAcknowledge={handleAcknowledge}
                 notification={notification}
                 loading={isLoading}
                 needsAcknowledgement={needsAcknowledgement}
-                sidesheetLinkText={
-                  notification.completed
-                    ? 'More Info'
-                    : `Case ID ${notification.id}`
-                }
+                sidesheetLinkText={'Details'}
               />
             </Suspense>
           );

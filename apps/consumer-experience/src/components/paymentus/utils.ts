@@ -1,8 +1,7 @@
-import { PaymentForm } from '@xd/api-types/dist/generated-types/bpm';
-import { AccountType } from '@xd/api-types/dist/generated-types/sor';
-
 import { PaymentusAccountType } from '@/types/paymentus';
 import { DEFAULT_ERROR_STRING } from '@/utils/strings';
+import { PaymentForm } from '@zinnia/api-types/types/bpm';
+import { AccountType } from '@zinnia/api-types/types/sor';
 
 type ExtendedAccountType = AccountType | PaymentusAccountType | PaymentForm;
 

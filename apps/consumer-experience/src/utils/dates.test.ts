@@ -1,11 +1,16 @@
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+import dayjs from 'dayjs';
 
 import {
   standardDateWithTimeEST,
   dayOfMonthWithOrdinal,
   standardDateMonthDayYear,
   sortByDate,
+  isValidDate,
+  toEnterpriseDate,
+  ENTERPRISE_DATE_FORMAT,
+  startOfTomorrowLocalIso,
 } from './dates';
+import { DEFAULT_ERROR_STRING } from './strings';
 
 describe('standardDateWithTimeEST', () => {
   it('should return a formatted date string with month, day, time, and timezone when given a valid date string', () => {
@@ -113,5 +118,88 @@ describe('sortByDate', () => {
 
     const result2 = sortByDate(date2, date1, { order: 'asc' });
     expect(result2).toBe(1);
+  });
+});
+
+describe('isValidDate', () => {
+  it('should return true for a valid date string', () => {
+    const date = '2022-01-01';
+    expect(isValidDate(date)).toBe(true);
+  });
+
+  it('should return false for an invalid date string', () => {
+    const date = 'invalid-date';
+    expect(isValidDate(date)).toBe(false);
+  });
+
+  it('should return false for a null date', () => {
+    const date = null;
+    expect(isValidDate(date)).toBe(false);
+  });
+
+  it('should return false for an undefined date', () => {
+    const date = undefined;
+    expect(isValidDate(date)).toBe(false);
+  });
+});
+
+describe('toEnterpriseDate', () => {
+  it('should return formatted date for valid date string', () => {
+    const date = '2022-01-01';
+    const result = toEnterpriseDate(date);
+    expect(result).toBe(dayjs(date).format(ENTERPRISE_DATE_FORMAT));
+  });
+
+  it('should return error string for invalid date string', () => {
+    const date = 'invalid-date';
+    const result = toEnterpriseDate(date);
+    expect(result).toBe(DEFAULT_ERROR_STRING);
+  });
+
+  it('should return error string for null date', () => {
+    const date = null;
+    const result = toEnterpriseDate(date);
+    expect(result).toBe(DEFAULT_ERROR_STRING);
+  });
+
+  it('should return error string for undefined date', () => {
+    const date = undefined;
+    const result = toEnterpriseDate(date);
+    expect(result).toBe(DEFAULT_ERROR_STRING);
+  });
+});
+
+describe('startOfTomorrowLocalIso', () => {
+  it('returns UTC ISO for local midnight of the next day', () => {
+    const input = '2025-09-08';
+    const expected = dayjs(input, ENTERPRISE_DATE_FORMAT, true)
+      .add(1, 'day')
+      .startOf('day')
+      .toDate()
+      .toISOString();
+
+    expect(startOfTomorrowLocalIso(input)).toBe(expected);
+  });
+
+  it('handles month/year rollovers', () => {
+    const input1 = '2025-12-31';
+    const expected1 = dayjs(input1, ENTERPRISE_DATE_FORMAT, true)
+      .add(1, 'day')
+      .startOf('day')
+      .toDate()
+      .toISOString();
+    expect(startOfTomorrowLocalIso(input1)).toBe(expected1);
+
+    const input2 = '2025-01-31';
+    const expected2 = dayjs(input2, ENTERPRISE_DATE_FORMAT, true)
+      .add(1, 'day')
+      .startOf('day')
+      .toDate()
+      .toISOString();
+    expect(startOfTomorrowLocalIso(input2)).toBe(expected2);
+  });
+
+  it('returns DEFAULT_ERROR_STRING for invalid input', () => {
+    expect(startOfTomorrowLocalIso('')).toBe(DEFAULT_ERROR_STRING);
   });
 });

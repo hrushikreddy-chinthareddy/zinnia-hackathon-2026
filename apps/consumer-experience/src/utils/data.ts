@@ -1,7 +1,7 @@
-import {
-  DEFAULT_ERROR_STRING,
-  toSentenceCase,
-} from '@xd-components/utils/Strings';
+import dayjs from 'dayjs';
+
+import { BankDetail } from '@/components/person-data/types';
+import { LineOfBusinessPath } from '@/types';
 import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import {
   AccountType,
@@ -17,12 +17,10 @@ import {
   BankAccount,
   ProductType,
   LineOfBusiness,
+  Party,
 } from '@zinnia/api-types/types/sor';
-import { policyOwner } from '@zinnia/utils';
-import dayjs from 'dayjs';
 
-import { BankDetail } from '@/components/person-data/types';
-import { LineOfBusinessPath } from '@/types';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from './strings';
 
 export const EVERLY_CONTACT_PHONE_NUMBER = '1-855-290-0529';
 export const WELLABE_CONTACT_PHONE_NUMBER = '1-888-222-3003';
@@ -47,6 +45,17 @@ export const policyStatusDisplayText: { [key in PolicyStatus]: string } = {
   [PolicyStatus.ISSUED]: '',
   [PolicyStatus.PARTIALDEATHCLAIM]: '',
   [PolicyStatus.PAYOUT]: '',
+};
+
+export const policyOwner = (policy: Policy): Party | undefined => {
+  const ownerParty = policy?.partyRoles?.find(p =>
+    ['Owner', 'OWNER'].includes(p.partyRole || '')
+  );
+  const ownerInfo = policy?.parties?.find(
+    p => p.partyId === ownerParty?.partyId
+  );
+
+  return ownerInfo;
 };
 
 /**

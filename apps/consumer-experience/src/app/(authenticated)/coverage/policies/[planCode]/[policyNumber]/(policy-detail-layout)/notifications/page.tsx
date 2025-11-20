@@ -5,8 +5,8 @@ import { NotificationCenter } from '@/components/notification-center/Notificatio
 import { getPageTitle, RouteKey } from '@/route-map';
 import { getFeatureFlags } from '@/services/feature-flags';
 import { PolicyRequestInputs } from '@/types/policy';
-import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 const pageTitle = getPageTitle(RouteKey.NOTIFICATIONS);
 // disable because NextJS needs this to be exported from this file
@@ -21,7 +21,6 @@ interface Props {
 
 export default async function NotificationsPage({ params }: Props) {
   const flags = await getFeatureFlags();
-  const loggingCtx = await buildCommonLogContext();
   const notificationViewEnabled =
     flags?.[FEATURE_FLAGS.TRANSACTION_NOTIFICATIONS];
 
@@ -31,6 +30,7 @@ export default async function NotificationsPage({ params }: Props) {
     <NotificationCenter
       policyNumber={params.policyNumber}
       planCode={params.planCode}
+      lineOfBusiness={LineOfBusiness.LIFE}
     />
   );
 }

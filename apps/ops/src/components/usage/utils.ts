@@ -102,6 +102,14 @@ export const TRANSACTION_TYPE_DISPLAY_MAP: Record<string, string> = {
     newloan: 'New Loan',
 };
 
+export const PageType = {
+    Cases: 'Cases',
+    Illustrations: 'Illustrations',
+    Policies: 'Policies',
+} as const;
+
+export type PageType = keyof typeof PageType;
+
 export const downloadCSV = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);

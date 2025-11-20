@@ -1,5 +1,6 @@
 import { PartyType } from '@zinnia/api-types/types/sor';
 
+import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
@@ -85,7 +86,7 @@ export interface FormParts {
     formFullSurrenderAck: FormFullSurrenderAck;
     formSignature: FormSignature;
     formESignatureData?: FormEsignatureData | null;
-    formSurrenderingCompany: FormSurrenderingCompany | null;
+    formSurrenderingCompany: FormSurrenderingSignature | null;
     formTaxWithholding: FormTaxWithholding;
     formAdditionalWaivers: FormAdditionalWaiver[];
     formTaxIdCertificate?: {
@@ -440,6 +441,7 @@ export interface RMD {
     isOneTimeWithdrawal?: boolean;
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
+    rmdMethod: RMDType | null;
 }
 
 export interface QCD {

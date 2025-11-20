@@ -617,6 +617,7 @@ function CallForInformation({
                                 setBeneficiary={setBeneficiary}
                                 task={task}
                                 setAddressSelected={setAddressSelected}
+                                dynamicKey={dynamicKey}
                             />
                         )}
 

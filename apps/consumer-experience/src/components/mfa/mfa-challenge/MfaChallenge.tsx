@@ -227,7 +227,7 @@ export const MfaChallenge = ({
               fieldStatus={
                 errors.code ? FieldStatus.ERROR : FieldStatus.DEFAULT
               }
-              errorMessage={errors.code?.message}
+              errorMessage={errors.code?.message?.toString()}
               placeholder="Enter your code"
             />
           )}

@@ -1,8 +1,3 @@
-import { AddressChange } from '@zinnia/api-types/types/bpm';
-import {
-  AddressType,
-  Address as AddressInterface,
-} from '@zinnia/api-types/types/sor';
 import {
   AssistiveText,
   AssistiveTextVariant,
@@ -18,6 +13,11 @@ import {
 import { FieldData } from '@/components/field-data/FieldData';
 import { AddressProps } from '@/components/person-data/types';
 import { Address } from '@/components/pii/Address';
+import { AddressChange } from '@zinnia/api-types/types/bpm';
+import {
+  AddressType,
+  Address as AddressInterface,
+} from '@zinnia/api-types/types/sor';
 
 import styles from './Addresses.module.css';
 const displayAddressType: { [key in AddressType]?: string } = {
@@ -51,7 +51,7 @@ const AddressGroup = ({
         address.addressLine2 && { addressVal: address.addressLine2 },
         address.addressLine3 && { addressVal: address.addressLine3 },
       ]
-        .filter(val => val != undefined && val !== '')
+        .filter(val => val != undefined && val.addressVal !== '')
         .map(val => val as AddressObj) || undefined;
 
     const editValues: AddressFormFields = {
@@ -120,7 +120,7 @@ const AddressGroup = ({
 export const Addresses = ({
   addresses,
   partyId,
-  allowAddressChanges,
+  allowAddressChanges = true,
 }: AddressProps) => {
   const residentialAddresses = addresses?.filter(
     address => address.addressType === AddressType.RESIDENCE

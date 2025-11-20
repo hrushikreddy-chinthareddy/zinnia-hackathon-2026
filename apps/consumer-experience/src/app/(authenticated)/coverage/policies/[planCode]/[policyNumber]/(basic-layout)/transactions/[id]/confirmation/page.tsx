@@ -56,16 +56,13 @@ export default async function TransactionSummaryConfirmation({
     transactionDetails.entity.withdrawalTransaction.policyHolder.name;
   const agentName = transactionDetails.entity.withdrawalTransaction.agent.name;
   //TODO: How do we get agent corporation???
-  const agentCorp =
-    transactionDetails.entity.withdrawalTransaction.agent.primaryId;
-
+  // from ????? TODO:Where does the agent corporation come from???.
   return (
     <div>
       <h1 className="mb-xl">Thank you for the confirmation!</h1>
       <p className="typography-content-body mb-md">
         We received your {denyOrApprove} for the {withdrawalAmount} withdrawal
-        request for {policyOwner} submitted by {agentName} from ????? TODO:
-        Where does the agent corporation come from???.
+        request for {policyOwner} submitted by {agentName}.
       </p>
 
       <p className="typography-content-body mb-md">

@@ -4,10 +4,8 @@ import { ReactNode } from 'react';
 
 import EverlyLogo from '@/app/styles/everly/assets/everly-logo-new.svg';
 import WellabeLogo from '@/app/styles/wellabe/assets/wellabe-logo.svg';
-import { getFeatureFlags } from '@/services/feature-flags';
 import { CompanyName } from '@/types/carriers';
 import { getCookie } from '@/utils/auth';
-import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { THEME_COOKIE } from '@/utils/serverClientUtils';
 
 import styles from './GenericInfoPage.module.css';
@@ -86,12 +84,7 @@ export const GenericInfoPage = async ({
   action,
   footer,
 }: Props) => {
-  const featureFlagDecisions = await getFeatureFlags();
-  let themeCookie = (await getCookie(THEME_COOKIE)) as CompanyName;
-
-  if (!featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE]) {
-    themeCookie = CompanyName.EVERLY;
-  }
+  const themeCookie = (await getCookie(THEME_COOKIE)) as CompanyName;
 
   const currentCarrierConfig = getCarrierConfig(themeCookie);
 
@@ -99,10 +92,7 @@ export const GenericInfoPage = async ({
   // but there may be a case where there is a subdomain, but we don't have the branding for it, so only want to add the classes
   // if we have the available branding (in themeClasses above) otherwise show the generic page
   const showBranding =
-    (themeCookie &&
-      currentCarrierConfig &&
-      currentCarrierConfig.showBranding) ||
-    !featureFlagDecisions[FEATURE_FLAGS.ANNUITY_MODE];
+    themeCookie && currentCarrierConfig && currentCarrierConfig.showBranding;
 
   const brandingBannerClasses = clsx(
     showBranding &&

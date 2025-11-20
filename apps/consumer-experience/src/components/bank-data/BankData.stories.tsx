@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/nextjs';
+
 import { AccountType } from '@zinnia/api-types/types/sor';
 
 import { BankData } from './BankData';

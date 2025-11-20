@@ -1,6 +1,3 @@
-import { DEFAULT_UNAVAILABLE_STRING } from '@xd/utils/dist';
-import { isNullEmptyOrUndefined } from '@xd/xd-components/src/utils/Data';
-import { Status } from '@zinnia/api-types/types/sor';
 import { Label, Icon, IconType, Button } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
@@ -10,15 +7,22 @@ import { ClickableCardContainer } from '@/components/clickable-card-container/Cl
 import { FieldData } from '@/components/field-data/FieldData';
 import { Link } from '@/components/link/Link';
 import { NoDataAvailable } from '@/components/no-data-available/NoDataAvailable';
+import { AccountType } from '@/components/pii/AccountType';
+import { RoutingNumber } from '@/components/pii/RoutingNumber';
 import { UpcomingPremiumPopover } from '@/components/policy-overview/UpcomingPremiumPopover';
 import { stepsInfo } from '@/components/stepped-workflow/workflows/one-time-premium/steps';
 import { getOneTimePremiumEligibility } from '@/services/bpm/one-time-premium-payment';
 import { getFeatureFlags } from '@/services/feature-flags';
-import { getUpcomingPremium } from '@/services/policy';
+import { getPaymentMethods } from '@/services/payment-methods';
+import { getUpcomingPremium, getPolicyTransactions } from '@/services/policy';
 import { getPolicyFeatures } from '@/services/policy/features';
+import { PendingPremiumTransactionType } from '@/types/policy';
 import { formatUSDollars } from '@/utils/currency';
+import { isNullEmptyOrUndefined } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
+import { DEFAULT_UNAVAILABLE_STRING } from '@/utils/strings';
+import { Status } from '@zinnia/api-types/types/sor';
 
 import { CancelAutopaySidesheet } from './CancelAutopaySidesheet';
 import styles from './PolicyOverview.module.css';
@@ -27,8 +31,31 @@ import {
   determineAutopayDisplayAndEligibility,
   upcomingPaymentDetails,
 } from './utils';
+import { getMostRecentTransactionPaymentInfo } from './utils/transactionPaymentInfo';
 
 dayjs.extend(isSameOrAfter);
+
+/**
+ * Composes payment description with PII-wrapped components
+ */
+const PaymentDescriptionWithPII = ({
+  paymentType,
+  accountType,
+  lastFourDigits,
+  formattedDate,
+}: {
+  paymentType: string;
+  accountType?: string;
+  lastFourDigits: string;
+  formattedDate: string;
+}) => (
+  <span>
+    {paymentType} from{' '}
+    <AccountType className={styles.lowercase} accountType={accountType} />{' '}
+    ending in <RoutingNumber routingNumber={lastFourDigits} /> on{' '}
+    {formattedDate}
+  </span>
+);
 
 export const UpcomingPremium = async ({
   planCode,
@@ -76,6 +103,36 @@ export const UpcomingPremium = async ({
   const policyFeatures =
     policyFeaturesResult?.status === 'fulfilled'
       ? policyFeaturesResult.value?.data?.data
+      : [];
+
+  const pendingTransactionTypes = Object.values(
+    PendingPremiumTransactionType
+  ).map(String);
+
+  const [transactionsResult, paymentMethodsResult] = await Promise.allSettled([
+    getPolicyTransactions(
+      {
+        transactionTypes: pendingTransactionTypes,
+        policyNumber,
+        planCode,
+        status: 'Pending',
+        limit: 10,
+        offset: 0,
+        order: 'DESC',
+      },
+      loggingContext
+    ),
+    getPaymentMethods({ planCode, policyNumber }, loggingContext),
+  ]);
+
+  const transactionData =
+    transactionsResult.status === 'fulfilled' && transactionsResult.value?.data
+      ? transactionsResult.value.data
+      : [];
+  const paymentMethodsData =
+    paymentMethodsResult.status === 'fulfilled' &&
+    paymentMethodsResult.value?.data
+      ? paymentMethodsResult.value.data
       : [];
 
   const { data, error } =
@@ -149,18 +206,27 @@ export const UpcomingPremium = async ({
       dayjs(nextActivityDate).isSameOrAfter(dayjs(), 'day')) ||
     false;
 
-  const {
-    amount: paymentAmount,
-    caption,
-    label,
-  } = upcomingPaymentDetails({
+  const { scheduledPayment, premiumDue } = upcomingPaymentDetails({
     policyStatus,
     policyFeatures,
     upcomingPaymentAmount,
     upcomingPaymentValid,
     nextActivityDate,
     productType,
+    transactions: transactionData,
+    paymentMethods: paymentMethodsData,
+    hasActiveAutopay: !!arrangementId, // If there's an arrangementId, autopay is active
   });
+
+  // Get structured payment info for PII-wrapped caption
+  const paymentInfo =
+    transactionData && paymentMethodsData
+      ? getMostRecentTransactionPaymentInfo(
+          transactionData,
+          paymentMethodsData,
+          !!arrangementId
+        )
+      : null;
 
   return (
     <ClickableCardContainer>
@@ -169,33 +235,62 @@ export const UpcomingPremium = async ({
           url: extended
             ? ''
             : `/coverage/policies/${planCode}/${policyNumber}/premium`, //annuities logic
-          label: 'go to premium payments page',
+          label: 'go to manage payments page',
+          ctaText: 'Manage payments',
+          showArrow: true,
         }}
       >
-        <div className={styles.content}>
-          <Icon type={IconType.AUTOPAY} className={styles.icon} />
-          <FieldData
-            Label={
-              <Label
-                interactiveElements={[
-                  <UpcomingPremiumPopover key="upcoming-popover" />,
-                ]}
-              >
-                {label}
-              </Label>
-            }
-            caption={caption}
-          >
-            {isNullEmptyOrUndefined(paymentAmount) ? (
-              <p className="typography-content-body-sm">
-                {DEFAULT_UNAVAILABLE_STRING}
-              </p>
-            ) : (
-              <p className="typography-content-value">
-                {formatUSDollars(paymentAmount)}
-              </p>
+        <div className={styles.rowWrapper}>
+          <div className={styles.content}>
+            <Icon type={IconType.AUTOPAY} className={styles.icon} />
+            {scheduledPayment && (
+              <div className={styles.maxWidth50}>
+                <FieldData
+                  Label={<Label>{scheduledPayment.label}</Label>}
+                  caption={
+                    paymentInfo ? (
+                      <PaymentDescriptionWithPII
+                        paymentType={paymentInfo.paymentType}
+                        accountType={paymentInfo.accountType || undefined}
+                        lastFourDigits={paymentInfo.lastFourDigits}
+                        formattedDate={paymentInfo.formattedDate}
+                      />
+                    ) : (
+                      scheduledPayment.caption
+                    )
+                  }
+                >
+                  {isNullEmptyOrUndefined(scheduledPayment.amount) ? (
+                    <p className="typography-content-body-sm">
+                      {DEFAULT_UNAVAILABLE_STRING}
+                    </p>
+                  ) : (
+                    <p className="typography-content-value">
+                      {formatUSDollars(scheduledPayment.amount!)}
+                    </p>
+                  )}
+                </FieldData>
+              </div>
             )}
-          </FieldData>
+            <div className={scheduledPayment ? 'ml-xl' : ''}>
+              <FieldData
+                Label={
+                  <Label
+                    interactiveElements={[
+                      <UpcomingPremiumPopover key="upcoming-popover" />,
+                    ]}
+                  >
+                    {premiumDue.label}
+                  </Label>
+                }
+                caption={premiumDue.caption}
+              >
+                <p className="typography-content-value">
+                  {formatUSDollars(premiumDue.amount)}
+                </p>
+              </FieldData>
+            </div>
+          </div>
         </div>
       </ClickableCardContainer.LinkContent>
       {extended && (
@@ -238,7 +333,7 @@ export const UpcomingPremium = async ({
                   arrangementId={arrangementId}
                   disabled={!cancelAutopayEnabled}
                   frequency={frequency}
-                  paymentAmount={paymentAmount || 0}
+                  paymentAmount={scheduledPayment?.amount || 0}
                   planCode={planCode}
                   policyNumber={policyNumber}
                   nextActivityDate={nextActivityDate}

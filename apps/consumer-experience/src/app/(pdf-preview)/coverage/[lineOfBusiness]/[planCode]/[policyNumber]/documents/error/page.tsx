@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { Metadata } from 'next';
 
@@ -8,6 +7,7 @@ import { GenericInfoPage } from '@/components/generic-info-page/GenericInfoPage'
 import styles from '@/components/generic-info-page/GenericInfoPage.module.css';
 import { Link } from '@/components/link/Link';
 import { PolicyRequestInputs } from '@/types/policy';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 // disable because NextJS needs this to be exported from this file
 // eslint-disable-next-line react-refresh/only-export-components

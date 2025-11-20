@@ -1,7 +1,6 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 
 import { Link } from '@/components/link/Link';
@@ -14,6 +13,7 @@ import { caseTypesToProccessSubtype } from '@/utils/cases';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 import { FEATURE_FLAGS } from '@/utils/optimizely/flags';
 import { indefiniteArticle } from '@/utils/strings';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import styles from './OpenTransactionCaseDetails.module.css';
 import { ClientOnly } from '../client-only/ClientOnly';

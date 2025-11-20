@@ -5,7 +5,7 @@ import {
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { RadioItem } from '@deps/components/radio/radio';
 import TransactionNavigationButtons, {
@@ -56,6 +56,7 @@ const NotificationMethodStep = ({
         formErrors,
         onbaseCaseId,
         onbaseDocumentNumber,
+        caseId,
     } = useDeathClaim();
     const { goToNext } = useWorkflow();
     const [isLoading, setIsLoading] = useState(false);
@@ -82,20 +83,6 @@ const NotificationMethodStep = ({
         }
     }, [beneficiaries.length, policyBeneficiaries, setBeneficiaries]);
 
-    const handleStepContinue = async () => {
-        const asArray = Object.entries(formErrors);
-        const filterCb = asArray.filter(
-            ([key, value]) => value !== '' || key === 'submit'
-        );
-        const filteredErrors = Object.fromEntries(filterCb);
-        if (Object.keys(filteredErrors).length > 0) {
-            return;
-        } else {
-            await submit();
-            goToNext();
-        }
-    };
-
     const handleNotification = (data: any, index: number) => {
         setBeneficiaries((prevState) => {
             const newState = prevState;
@@ -107,7 +94,14 @@ const NotificationMethodStep = ({
         });
     };
 
-    const submit = async () => {
+    const submit = useCallback(async () => {
+        if (caseId) {
+            browserLogInfo('NotificationMethodStep::Claim already submitted', {
+                caseId,
+                policy: policy?.policyNumber,
+            });
+            return;
+        }
         setIsLoading(true);
         const payload = buildClaimPayload({
             policy: policy,
@@ -136,7 +130,33 @@ const NotificationMethodStep = ({
         }
 
         setIsLoading(false);
-    };
+    }, [
+        beneficiaries,
+        caseId,
+        correlationId,
+        notifiers,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        owners,
+        policy,
+        setCaseId,
+        setSubmitFailed,
+        user,
+    ]);
+
+    const handleStepContinue = useCallback(async () => {
+        const asArray = Object.entries(formErrors);
+        const filterCb = asArray.filter(
+            ([key, value]) => value !== '' || key === 'submit'
+        );
+        const filteredErrors = Object.fromEntries(filterCb);
+        if (Object.keys(filteredErrors).length > 0) {
+            return;
+        } else {
+            await submit();
+            goToNext();
+        }
+    }, [formErrors, goToNext, submit]);
 
     return (
         <WorkflowCard

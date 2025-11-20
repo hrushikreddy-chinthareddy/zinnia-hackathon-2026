@@ -2161,6 +2161,7 @@
         "rate": "taux",
         "submitPayment": "Soumettre le paiement",
         "draft": "Sauvegarder en tant que brouillon",
+        "send": "Envoyer",
         "successExclamation": "Succès!",
         "total": "Total",
         "view": "Afficher",
@@ -2839,6 +2840,19 @@
             "simpleTooltipBody": "Ce dossier est priorisé.",
             "tooltipBody": "Ce dossier a été priorisé le {{date}} par {{userName}} pour traitement."
         },
+        "deprioritizeCase": {
+            "title": "De-prioriser le Dossier",
+            "detailsHeader": "Détails",
+            "detailsBody": "Un dossier dépriorisé sera déplacé en tant qu'élément de travail pour un traitement normal.",
+            "cancel": "Annuler",
+            "submit": "Soumettre",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Dossier ID: {{caseId}} a été dépriorisé",
+            "tooltipBody": "Ce dossier est dépriorisé."
+        },
         "navDrawer": {
             "topStatus": "Statut supérieur",
             "stage": "Organiser",
@@ -3462,14 +3476,15 @@
                     "title": "Signature de la société cédante",
                     "qualType": "type de qualification",
                     "isQualTypeNotValid": "Impossible de déterminer le type de qualification",
-                    "isCorporateResolutionPresent": "La résolution de l'entreprise est-elle présente ?",
                     "isSignatureValid": "La signature du dirigeant autorisé est-elle valide sur la base de la résolution de l'entreprise?",
                     "isSignatureAuthorized": "La signature du responsable autorisé est-elle valide?",
                     "isLoaAttached": "La lettre d'acceptation est-elle jointe?",
-                    "validOwnerRegType": "Propriétaire/Type d'enregistrement valide",
+                    "registrationType": "Propriétaire/Type d'enregistrement valide",
                     "isTitlePresent": "Le titre est-il présent?",
                     "loaSignDate": "Date de signature de la LOA",
-                    "authPersonSignPresent": "Signature de la personne autorisée présente",
+                    "authPersonSignPresent": "La signature de la personne autorisée est présente",
+                    "isCorporateResolutionPresent": "La résolution de l'entreprise est-elle présente?",
+                    "isAuthSignValid": "La signature de l'officier autorisé est-elle valide selon la résolution de l'entreprise?",
                     "signDate": "Date de la signature"
                 },
                 "nonRegTypeReason": {

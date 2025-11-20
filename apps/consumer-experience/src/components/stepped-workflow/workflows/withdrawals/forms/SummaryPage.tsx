@@ -1,11 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
 import {
-  AllocationOption,
-  DisbursementPaymentForm,
-  TransactionFailureResponse,
-} from '@xd/api-types/dist/generated-types/bpm';
-import {
   AssistiveText,
   AssistiveTextVariant,
   Button,
@@ -13,7 +8,6 @@ import {
   IconType,
   Label,
 } from '@zinnia/bloom/components';
-import { toSentenceCase } from '@zinnia/utils';
 import { useParams, useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
@@ -29,6 +23,12 @@ import { Payee } from '@/components/pii/Payee';
 import { PaymentLoading } from '@/components/stepped-workflow/common/TransactionLoading';
 import { useSteppedWorkflowContext } from '@/components/stepped-workflow/SteppedWorkflowContext';
 import { getPartialWithdrawalOneTimeValidation } from '@/queries/transaction-queries';
+import { toSentenceCase } from '@/utils/strings';
+import {
+  AllocationOption,
+  DisbursementPaymentForm,
+  TransactionFailureResponse,
+} from '@zinnia/api-types/types/bpm';
 
 // TODO: eventually move this into common styles, this is using a style from
 // surrender that is used in multiple files

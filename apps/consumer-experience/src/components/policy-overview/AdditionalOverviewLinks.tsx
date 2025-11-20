@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { IconType } from '@zinnia/bloom/components';
 import { FC } from 'react';
 
@@ -7,6 +6,7 @@ import { getComponentVisibility } from '@/services/display-rules';
 import { ComponentName } from '@/services/display-rules/types';
 import { lineOfBusinessUrlPath } from '@/utils/data';
 import { buildCommonLogContext } from '@/utils/logging/server-logging';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { GenerateClickableContainerList } from '../clickable-card-container/GenerateClickableContainerList';
 

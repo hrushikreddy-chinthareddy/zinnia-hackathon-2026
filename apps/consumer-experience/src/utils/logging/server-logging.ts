@@ -5,7 +5,6 @@ import { Session } from '@/types/auth';
 import { LoggingContext, UserInfo } from '@/types/logging';
 
 import { getSession } from '../auth';
-import pino from './pino-server';
 import logger from './pino-server';
 
 export enum LoggingModule {
@@ -94,7 +93,7 @@ export const getUserInfoForLogging = async (
     const session = await getSession(res);
     return getUserInfoFromSession(session);
   } catch (error) {
-    pino.warn('getUserInfoForLogging:: error', {
+    logger.warn('getUserInfoForLogging:: error', {
       // TODO: set this up
       // ...parseErrorInformation(error),
       file: 'utils/server-logging',

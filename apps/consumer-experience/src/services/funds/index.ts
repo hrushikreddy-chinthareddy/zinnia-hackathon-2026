@@ -1,13 +1,13 @@
-import {
-  FundAccountTypeEnum,
-  ProductRules,
-} from '@zinnia/api-types/types/funds';
 import { z } from 'zod';
 
 import { PolicyFund, PolicyRequestInputs } from '@/types/policy';
 import { logTrace } from '@/utils/logging/log-fns';
 import { CommonLogContext } from '@/utils/logging/server-logging';
 import { withLogging } from '@/utils/logging/with-logging';
+import {
+  FundAccountTypeEnum,
+  ProductRules,
+} from '@zinnia/api-types/types/funds';
 
 import { combineFundData, transformFundsTotalValue } from './transformers';
 import { EnterpriseTokenApi } from '../enterprise-api-token-http';
