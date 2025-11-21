@@ -1,8 +1,3 @@
-import {
-    Identification,
-    IdentificationType,
-    PartyType,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
@@ -28,6 +23,11 @@ import {
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    Identification,
+    IdentificationType,
+    PartyType,
+} from '@zinnia/api-types/types/sor';
 
 export interface IdentificationCardProps {
     editable?: boolean;

@@ -1,4 +1,3 @@
-import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 
 import { PageHead } from '@deps/components/page-title';
@@ -7,6 +6,7 @@ import AutopayContainer from '@deps/containers/financial-transactions/autopay/au
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
 
 export interface WithdrawalAutopayProps {
     policy: Policy;

@@ -1,9 +1,3 @@
-import {
-    Policy,
-    EmailType,
-    AddressType,
-    PhoneType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'i18next';
 import { v4 as uuid4 } from 'uuid';
@@ -15,6 +9,12 @@ import { DocumentData } from '@deps/models/case/document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { UserProfile } from '@deps/models/user-profile';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Policy,
+    EmailType,
+    AddressType,
+    PhoneType,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ClaimActionTypes,

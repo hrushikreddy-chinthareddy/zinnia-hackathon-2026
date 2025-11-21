@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { AddressType, Country, State } from '@zinnia/api-types/types/sor';
 
 import { RoleChangeProvider } from '@deps/contexts/RoleChangeContext';
+import { AddressType, Country, State } from '@zinnia/api-types/types/sor';
 
 import AddressDetails from './addressDetails';
 

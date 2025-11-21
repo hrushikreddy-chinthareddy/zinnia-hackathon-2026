@@ -1,4 +1,3 @@
-import { Address } from '@zinnia/api-types/types/sor';
 import { Tag, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
@@ -15,6 +14,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
+import { Address } from '@zinnia/api-types/types/sor';
 
 type PartyDataPoint<T> = {
     label: string;

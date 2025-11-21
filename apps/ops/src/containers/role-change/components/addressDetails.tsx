@@ -1,10 +1,4 @@
 import { Transition } from '@headlessui/react';
-import {
-    Address,
-    AddressType,
-    Country,
-    State,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -35,6 +29,12 @@ import {
 } from '@deps/contexts/RoleChangeContext';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
+import {
+    Address,
+    AddressType,
+    Country,
+    State,
+} from '@zinnia/api-types/types/sor';
 
 import { getVariant, getVisibleAddressLines } from '../role-change-helper';
 

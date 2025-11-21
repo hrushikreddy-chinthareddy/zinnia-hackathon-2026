@@ -1,9 +1,3 @@
-import {
-    IdentificationType,
-    Party,
-    PartyType,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { TagVariant } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 
@@ -14,6 +8,12 @@ import {
 import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    IdentificationType,
+    Party,
+    PartyType,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import { getFormattedAddress, getFormattedPhone } from './beneficiary-summary';
 import { ENTERPRISE_ADDRESS_TYPE } from '../../beneficiary-details/address-details/address-details.helpers';

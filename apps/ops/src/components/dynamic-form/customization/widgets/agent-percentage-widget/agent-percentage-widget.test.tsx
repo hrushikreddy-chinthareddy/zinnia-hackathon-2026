@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+
 import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import AgentPercentageWidget from './agent-percentage-widget';

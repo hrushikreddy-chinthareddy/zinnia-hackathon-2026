@@ -1,4 +1,3 @@
-import { Email } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState, useCallback, useContext } from 'react';
 
@@ -29,6 +28,7 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
+import { Email } from '@zinnia/api-types/types/sor';
 
 import { Emails, sortEmailsByType } from './email-card.helpers';
 import { PersonCardProps } from '../people-data-card-props';

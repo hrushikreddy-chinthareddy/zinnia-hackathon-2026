@@ -1,10 +1,3 @@
-import {
-    Gender,
-    IdentificationType,
-    PartyRole,
-    PartyType,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -36,6 +29,13 @@ import {
     toTitleCase,
     isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
+import {
+    Gender,
+    IdentificationType,
+    PartyRole,
+    PartyType,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import {
     DEFAULT_BENE_ADDRESS,

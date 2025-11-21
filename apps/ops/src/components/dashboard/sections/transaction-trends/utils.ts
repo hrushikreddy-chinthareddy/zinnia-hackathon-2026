@@ -6,11 +6,11 @@ export enum TransactionTrendsTimeframe {
     LastMonth = '1M',
 }
 
-import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 export const colors = ['#D385A5', '#BD85D3', '#8593D3', '#00628B', '#021936'];
 dayjs.extend(isoWeek);

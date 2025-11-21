@@ -1,6 +1,5 @@
-import { Policy, PolicyDates } from '@zinnia/api-types/types/sor';
-
 import { DataDefinition } from '@deps/types/data';
+import { Policy, PolicyDates } from '@zinnia/api-types/types/sor';
 
 export type PolicyDatesDto = PolicyDates;
 

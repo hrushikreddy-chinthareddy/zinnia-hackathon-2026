@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -10,6 +9,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { Action } from '@deps/constants/policy';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { getTagVariant, hasBeneficiaryChanged } from './summary-step.helpers';
 

@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -16,6 +15,7 @@ import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { addTransaction } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 interface ConfirmProps {
     policy: Policy;

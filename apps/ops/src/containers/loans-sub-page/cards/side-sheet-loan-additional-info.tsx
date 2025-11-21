@@ -1,4 +1,3 @@
-import { LoanSegment, LoanType } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -10,6 +9,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { rateFormatted } from '@deps/helpers/data-transform.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { LoanSegment, LoanType } from '@zinnia/api-types/types/sor';
 
 export type SideSheetLoanAdditionalInfoProps = {
     currencyFormat: Intl.NumberFormatOptions;

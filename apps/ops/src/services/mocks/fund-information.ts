@@ -1,5 +1,3 @@
-import { FundAccountType } from '@zinnia/api-types/types/sor';
-
 import {
     DisbursementMethodEnum,
     FundLevelDisbursementMethodEnum,
@@ -8,6 +6,7 @@ import {
     FundInformationByFundId,
     FundInformationByPlanCode,
 } from '@deps/types/fund-information';
+import { FundAccountType } from '@zinnia/api-types/types/sor';
 
 export const mockFundInformationByFundId: FundInformationByFundId = {
     fixedFund: {

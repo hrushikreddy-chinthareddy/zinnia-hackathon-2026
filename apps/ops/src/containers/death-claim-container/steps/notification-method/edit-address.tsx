@@ -1,4 +1,3 @@
-import { Address } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -18,6 +17,7 @@ import {
     AddressTypes,
     FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
+import { Address } from '@zinnia/api-types/types/sor';
 
 type CommonEditAddressProps = {
     carrierId: string;

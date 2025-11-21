@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useCallback } from 'react';
 
@@ -13,6 +12,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getName } from '@deps/helpers/party-info-helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { useSignatureStepConfig } from './signature-step-helpers';
 import { SignatureState } from '../../types/address-change-types';

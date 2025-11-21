@@ -1,4 +1,3 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,6 +26,7 @@ import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/d
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import CaseActionSideSheet from './caseActionsSideSheet';
 import styles from './styles.module.css';

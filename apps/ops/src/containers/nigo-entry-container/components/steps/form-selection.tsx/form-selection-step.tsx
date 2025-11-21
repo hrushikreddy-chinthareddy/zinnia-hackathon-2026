@@ -26,10 +26,8 @@ import {
     SendDocumentFormParts,
 } from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
-
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { updateTask } from '@deps/queries/api/v2/task';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { getFormSelectionConfig } from './form-selection.helpers';
 import TransactionDocumentSelection from './transaction-document-selection';

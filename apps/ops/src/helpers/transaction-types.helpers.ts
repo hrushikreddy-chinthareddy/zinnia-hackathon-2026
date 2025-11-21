@@ -1,11 +1,10 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
-
 import {
     EventFilterKeys,
     PeopleFilters,
     PolicyFilters,
     TransactionFilters,
 } from '@deps/contexts/HistoryFiltersContext';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 enum MissingTransactionTypes {
     CalendarProcessing = 'CalendarProcessing',

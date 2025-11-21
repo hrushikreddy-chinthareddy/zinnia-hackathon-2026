@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Party } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -97,6 +96,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party } from '@zinnia/api-types/types/sor';
 
 import { ERROR_CODES } from '../../error';
 

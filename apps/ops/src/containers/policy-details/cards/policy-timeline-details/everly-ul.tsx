@@ -1,10 +1,10 @@
-import { ProductType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { ProductType } from '@zinnia/api-types/types/sor';
 
 import DeliveryDate from '../display-fields/delivery-date';
 import IssueDate from '../display-fields/issue-date';

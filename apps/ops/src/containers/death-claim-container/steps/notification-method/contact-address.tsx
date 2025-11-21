@@ -1,4 +1,3 @@
-import { Address, AddressType, Policy } from '@zinnia/api-types/types/sor';
 import { Link } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -11,6 +10,7 @@ import { isEqualObjects } from '@deps/containers/death-claim-container/steps/not
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
+import { Address, AddressType, Policy } from '@zinnia/api-types/types/sor';
 
 import EditAddress from './edit-address';
 import { ClaimActionTypes } from '../../death-claim.types';

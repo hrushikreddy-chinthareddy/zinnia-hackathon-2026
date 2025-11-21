@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
@@ -27,6 +26,7 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface ConfirmStepProps {
     policy: Policy;

@@ -1,4 +1,3 @@
-import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -42,6 +41,7 @@ import {
     CaseDocumentClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
 import { DocumentWithSource } from './documents-sub-page';

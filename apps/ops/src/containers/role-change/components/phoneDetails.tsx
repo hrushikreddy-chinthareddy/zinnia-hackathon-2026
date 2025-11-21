@@ -1,5 +1,4 @@
 import { Transition } from '@headlessui/react';
-import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -32,6 +31,7 @@ import {
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 import {
     ANYTIME,

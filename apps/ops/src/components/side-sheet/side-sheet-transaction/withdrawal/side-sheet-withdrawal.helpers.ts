@@ -1,14 +1,3 @@
-import {
-    AllocationOption,
-    AmountType,
-    DisbursementType,
-    FullSurrenderQuoteResponse,
-    Policy,
-    TaxWithholdingType,
-    Transaction,
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -35,6 +24,17 @@ import {
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
+import {
+    AllocationOption,
+    AmountType,
+    DisbursementType,
+    FullSurrenderQuoteResponse,
+    Policy,
+    TaxWithholdingType,
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import {
     WithdrawalChargesValues,

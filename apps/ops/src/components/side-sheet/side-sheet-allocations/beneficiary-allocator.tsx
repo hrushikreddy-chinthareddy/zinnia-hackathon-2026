@@ -1,4 +1,3 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import xss from 'xss';
@@ -10,6 +9,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import AllocationField from './allocation-field';
 import {

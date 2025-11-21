@@ -1,12 +1,3 @@
-import {
-    AccountStatus,
-    AccountType,
-    BankAccount,
-    BankAccountPurpose,
-    Party,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -70,6 +61,15 @@ import {
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    AccountStatus,
+    AccountType,
+    BankAccount,
+    BankAccountPurpose,
+    Party,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
 

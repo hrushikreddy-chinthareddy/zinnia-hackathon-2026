@@ -1,5 +1,3 @@
-import { FilingStatus } from '@zinnia/api-types/types/bpm';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 
@@ -23,6 +21,8 @@ import {
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
+import { FilingStatus } from '@zinnia/api-types/types/bpm';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 

@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 
@@ -8,6 +7,7 @@ import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { getExceptionCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { IssueStatusType } from '../sections/issue-counts-by-status/context/issue-counts-by-status-context';
 

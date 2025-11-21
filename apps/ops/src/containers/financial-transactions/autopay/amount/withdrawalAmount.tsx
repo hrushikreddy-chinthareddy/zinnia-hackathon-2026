@@ -1,11 +1,3 @@
-import {
-    Policy,
-    Frequency,
-    ArrangementType,
-    AmountType as AutopayAmountType,
-    Status,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -43,6 +35,14 @@ import {
 } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    Policy,
+    Frequency,
+    ArrangementType,
+    AmountType as AutopayAmountType,
+    Status,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
     policy: Policy;

@@ -1,4 +1,3 @@
-import { Email, EmailType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
@@ -14,6 +13,7 @@ import { getEmailTypes } from '@deps/containers/people-data-cards/email-card/sid
 import { ExtendedEmail, useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { Email, EmailType } from '@zinnia/api-types/types/sor';
 
 import { getVariant } from '../role-change-helper';
 
