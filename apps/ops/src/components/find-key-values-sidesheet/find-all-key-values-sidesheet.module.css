@@ -29,10 +29,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-}
-
-.subSectionStd > .itemsList {
-    padding-bottom: var(--measure-dimension-padding-lg);
+    margin-top: var(--measure-dimension-margin-xs);
 }
 
 .fieldLabel {
@@ -48,14 +45,19 @@
     z-index: 600;
 }
 
-.subSectionContainer > .subSectionStd {
-    margin: var(--measure-dimension-padding-xl);
+.subSectionStd {
+    padding-bottom: var(--measure-dimension-padding-xl);
+}
+
+.subSectionStd > .itemsList {
+    padding-bottom: var(--measure-dimension-padding-lg);
 }
 
 .subSectionStd + .subSectionStd {
     border-top: var(--measure-dimension-stroke-sm) solid
         var(--color-base-border-border-light);
     padding-top: var(--measure-dimension-padding-xl);
+    padding-bottom: 0;
 }
 
 .subSection .subSection {
@@ -72,7 +74,8 @@
     gap: 8px;
 }
 
-.subSectionStd > .subSection {
+.subSectionStd > .subSection,
+.itemsList > .subSectionContainer {
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-sm) solid
