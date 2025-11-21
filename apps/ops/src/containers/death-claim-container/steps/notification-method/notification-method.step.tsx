@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -22,6 +21,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import NotificationCard from './notification-card';
 import {

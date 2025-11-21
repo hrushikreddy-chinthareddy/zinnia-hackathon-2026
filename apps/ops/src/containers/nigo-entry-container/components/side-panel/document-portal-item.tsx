@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -6,6 +5,7 @@ import DocumentPreviewer from '@deps/components/document-viewer/document-preview
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyDocument } from '@deps/models/case/document';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 type DocumentItemProps = {
     document: PolicyDocument;

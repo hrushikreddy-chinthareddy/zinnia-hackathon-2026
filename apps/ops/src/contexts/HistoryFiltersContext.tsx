@@ -1,4 +1,3 @@
-import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import { Dayjs } from 'dayjs';
 import {
     Dispatch,
@@ -10,6 +9,7 @@ import {
 } from 'react';
 
 import { NOOP } from '@deps/types/constants';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 // TODO: convert these enums to objects and use as const
 // export const eventFilterKeys = { ... } as const;

@@ -1,7 +1,7 @@
-import { Gender, Suffix, PartyType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { NewTrustType, PolicyRole } from '@deps/constants/policy';
+import { Gender, Suffix, PartyType } from '@zinnia/api-types/types/sor';
 export interface Errors {
     firstName?: string;
     lastName?: string;

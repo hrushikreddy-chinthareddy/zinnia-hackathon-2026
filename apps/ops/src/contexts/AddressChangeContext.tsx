@@ -1,4 +1,3 @@
-import { Phone, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { createContext } from 'react';
 
 import {
@@ -10,6 +9,7 @@ import {
     Address,
     FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
+import { Phone, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 //TODO: Update all any with the types, we get from api response
 export type AddressChangeFormState = {

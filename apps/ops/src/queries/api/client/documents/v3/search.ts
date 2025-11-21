@@ -1,4 +1,3 @@
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
@@ -8,6 +7,7 @@ import { ApiResponse } from '@deps/types/api-response';
 import { SearchDocumentResponse } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 // Search for documents using the documents v3 api
 export const searchDocumentsV3 = async ({

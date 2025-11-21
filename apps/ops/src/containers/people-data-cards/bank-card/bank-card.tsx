@@ -1,4 +1,3 @@
-import { BankAccount, Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState, useContext } from 'react';
 
@@ -29,6 +28,7 @@ import {
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { BankAccount, Party } from '@zinnia/api-types/types/sor';
 
 import { filterPastEndDate } from '../people-data-cards.utils';
 

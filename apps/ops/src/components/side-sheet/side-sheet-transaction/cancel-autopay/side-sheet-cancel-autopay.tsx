@@ -1,13 +1,3 @@
-import {
-    AdhocSystematicProgram,
-    AmountType,
-    ArrangementType,
-    Frequency,
-    PaymentForm,
-    Policy,
-    Reason,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -51,6 +41,16 @@ import {
     TransactionStep,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    AdhocSystematicProgram,
+    AmountType,
+    ArrangementType,
+    Frequency,
+    PaymentForm,
+    Policy,
+    Reason,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';

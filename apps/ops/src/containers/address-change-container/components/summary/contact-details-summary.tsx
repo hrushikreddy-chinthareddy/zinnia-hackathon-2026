@@ -1,4 +1,3 @@
-import { Address as PolicyAddress, Policy } from '@zinnia/api-types/types/sor';
 import {
     Address,
     AddressProps,
@@ -16,6 +15,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { formatPhone } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Address as PolicyAddress, Policy } from '@zinnia/api-types/types/sor';
 
 import { useAddressChange } from '../../address-change-provider';
 import { AllowedRoleTypes } from '../roles-contract/utils/roles-contract-constants';

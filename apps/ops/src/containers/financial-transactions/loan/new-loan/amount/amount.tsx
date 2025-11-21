@@ -1,8 +1,3 @@
-import {
-    DisbursementType,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -35,6 +30,11 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    DisbursementType,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
     policy: Policy;

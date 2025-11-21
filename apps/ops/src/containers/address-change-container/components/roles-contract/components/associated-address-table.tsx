@@ -1,4 +1,3 @@
-import { Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
@@ -15,6 +14,7 @@ import {
     ContractUpdateOptions,
 } from '@deps/containers/address-change-container/types/address-change-types';
 import { useFetchAssociatedAddresses } from '@deps/hooks/useFetchAssociatedAddress';
+import { Policy, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { EmptyAssociatedAddress } from './empty-associated-address';
 import { AssociatedAddressTableColumns } from '../utils/roles-contract-constants';

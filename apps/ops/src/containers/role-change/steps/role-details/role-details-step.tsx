@@ -1,5 +1,4 @@
 import { Transition } from '@headlessui/react';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,6 +21,7 @@ import {
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import RoleDetailsComponent from './role-details-component';
 import { validate } from '../../role-change-helper';

@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import {
     Loader,
     TabGroup,
@@ -19,6 +18,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { PolicyDocument } from '@deps/models/case/document';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { useGetPolicyTypeDocs } from '../steps/service-form-review/service-form-review.helpers';
 

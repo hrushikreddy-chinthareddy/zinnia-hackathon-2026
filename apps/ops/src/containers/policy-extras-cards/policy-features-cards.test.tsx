@@ -1,5 +1,4 @@
 import { cleanup, render } from '@testing-library/react';
-import { PolicyFeature, FeatureType, Rider } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -10,6 +9,7 @@ import {
     DEFAULT_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
+import { PolicyFeature, FeatureType, Rider } from '@zinnia/api-types/types/sor';
 
 import PolicyExtrasCards, { ExtrasCardType } from './policy-extras-cards';
 

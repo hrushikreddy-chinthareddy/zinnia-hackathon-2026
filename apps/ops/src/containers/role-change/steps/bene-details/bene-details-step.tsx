@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,6 +15,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { BooleanValue } from '@deps/constants/policy';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { BooleanOptions } from '../../role-change-helper';
 

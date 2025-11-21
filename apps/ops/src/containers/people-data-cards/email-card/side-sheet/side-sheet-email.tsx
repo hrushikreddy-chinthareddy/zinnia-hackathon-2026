@@ -1,11 +1,3 @@
-import {
-    Email,
-    EmailType,
-    Party,
-    Policy,
-    PreferredCommunicationType,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -64,6 +56,14 @@ import {
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import {
+    Email,
+    EmailType,
+    Party,
+    Policy,
+    PreferredCommunicationType,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
 

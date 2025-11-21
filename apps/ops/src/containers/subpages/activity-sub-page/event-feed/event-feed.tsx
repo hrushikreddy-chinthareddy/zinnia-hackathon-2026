@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Transaction } from '@zinnia/api-types/types/sor';
 import { Pagination } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -21,6 +20,7 @@ import Typography, {
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { getTransactionsQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import EmptyState from './empty-state';
 

@@ -1,4 +1,5 @@
 import { cleanup } from '@testing-library/react';
+
 import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 jest.mock('@deps/components/badge/badge.helpers', () => ({

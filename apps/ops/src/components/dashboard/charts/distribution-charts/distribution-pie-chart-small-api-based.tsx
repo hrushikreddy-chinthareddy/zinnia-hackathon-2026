@@ -1,4 +1,3 @@
-import { CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import Highcharts from 'highcharts';
 // import accessibility from 'highcharts/modules/accessibility';
 import more from 'highcharts/highcharts-more';
@@ -6,6 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useState, useEffect, useCallback } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import { CaseCountOutput } from '@zinnia/api-types/types/analytics';
 
 //https://www.npmjs.com/package/highcharts-react-official#highcharts-with-nextjs
 if (typeof Highcharts === 'object') {

@@ -1,10 +1,10 @@
-import { DefinitionOfLifeInsurance, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { DefinitionOfLifeInsurance, Policy } from '@zinnia/api-types/types/sor';
 
 import GuidelineCard from './guidline-card/guideline-card';
 import SevenPayCard from './seven-pay-card/seven-pay-card';

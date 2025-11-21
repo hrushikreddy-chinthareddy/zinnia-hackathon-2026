@@ -1,11 +1,3 @@
-import {
-    Policy,
-    EmailType,
-    Email,
-    PartyType,
-    PhoneType,
-    IdentificationType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
@@ -30,6 +22,14 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { SorSystem } from '@deps/models/policy/enums';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Policy,
+    EmailType,
+    Email,
+    PartyType,
+    PhoneType,
+    IdentificationType,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ENTERPRISE_ADDRESS_TYPE,

@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
@@ -13,6 +12,7 @@ import { ChannelType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import Amount from './steps/amount';
 import Start from './steps/start';

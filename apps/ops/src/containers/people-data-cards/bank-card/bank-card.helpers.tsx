@@ -1,4 +1,3 @@
-import { AccountType, BankAccount } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
@@ -26,6 +25,7 @@ import {
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { AccountType, BankAccount } from '@zinnia/api-types/types/sor';
 
 import { SideSheetPeopleHeaderProps } from '../side-sheet-people-header/side-sheet-people-header';
 

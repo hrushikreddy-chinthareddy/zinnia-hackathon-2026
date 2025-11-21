@@ -1,4 +1,3 @@
-import { BankAccount } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -16,6 +15,7 @@ import {
 import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
 import { AccountType } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 import { SelectedBankContext } from './pre-populate-banking-details';
 

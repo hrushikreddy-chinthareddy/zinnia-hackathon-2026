@@ -1,3 +1,4 @@
+import { AgentData } from '@deps/types/agents';
 import {
     Address,
     AddressType,
@@ -12,8 +13,6 @@ import {
     State,
     Suffix,
 } from '@zinnia/api-types/types/sor';
-
-import { AgentData } from '@deps/types/agents';
 
 import { PolicyParty } from './Parties';
 

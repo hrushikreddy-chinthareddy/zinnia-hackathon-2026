@@ -1,3 +1,9 @@
+import dayjs from 'dayjs';
+import { useMemo } from 'react';
+
+import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
+import { Processes, Statuses } from '@deps/models/case/case';
+import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import {
     CaseCountGroupByEnum,
     CaseCountInputFilter,
@@ -5,12 +11,6 @@ import {
     ExceptionCountGroupByEnum,
     TaskCountGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
-import dayjs from 'dayjs';
-import { useMemo } from 'react';
-
-import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
-import { Processes, Statuses } from '@deps/models/case/case';
-import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 
 import { SimpleOption } from '../autocomplete/autocomplete.types';
 import { ExtendedProcesses } from './filters/case-type-filter';

@@ -1,4 +1,3 @@
-import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { createContext } from 'react';
 
 import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
@@ -37,6 +36,7 @@ import {
     SystematicSpecialPrograms,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
     formSubtype?: FormSubtype;

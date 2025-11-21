@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -26,6 +25,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import CaseDetailsSideNav from './case-details-side-nav';
 import { getSideNavData } from './case-helpers';

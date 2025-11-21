@@ -1,10 +1,4 @@
 import { cleanup, render, waitFor } from '@testing-library/react';
-import {
-    RiderType,
-    PolicyFeature,
-    Rider,
-    Status,
-} from '@zinnia/api-types/types/sor';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { RidersCardsTest } from '@deps/jest/constants/test-id-constants';
@@ -15,6 +9,12 @@ import {
     ConfiguredSettingId,
     CoverageToBenefitId,
 } from '@deps/types/product-rate';
+import {
+    RiderType,
+    PolicyFeature,
+    Rider,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 import { RIDER_NOT_ELECTED } from './consts';
 import PolicyExtrasCards, { ExtrasCardType } from './policy-extras-cards';

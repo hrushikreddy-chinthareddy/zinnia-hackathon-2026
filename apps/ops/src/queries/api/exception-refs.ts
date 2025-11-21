@@ -1,8 +1,3 @@
-import {
-    ExceptionCountInput,
-    ExceptionCountOutput,
-    HTTPValidationError,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
@@ -12,6 +7,11 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    ExceptionCountInput,
+    ExceptionCountOutput,
+    HTTPValidationError,
+} from '@zinnia/api-types/types/analytics';
 
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
 import { client } from '../api-utils/client';

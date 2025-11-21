@@ -1,4 +1,3 @@
-import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
@@ -8,6 +7,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAddressChange } from '@deps/containers/address-change-container/address-change-provider';
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { getRolesRadioConfig } from '../utils/roles-contract-helpers';
 

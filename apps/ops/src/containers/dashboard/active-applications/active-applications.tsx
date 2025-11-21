@@ -1,4 +1,3 @@
-import { CaseCountInputFilter } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import { FC } from 'react';
 
@@ -11,6 +10,7 @@ import { oneYearAgoISO } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Statuses } from '@deps/models/case/case';
 import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { useDashboardStore } from '@deps/store/store';
+import { CaseCountInputFilter } from '@zinnia/api-types/types/analytics';
 
 export const ActiveApplications: FC = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(

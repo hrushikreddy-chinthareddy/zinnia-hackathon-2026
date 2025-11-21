@@ -1,9 +1,9 @@
 import { Meta } from '@storybook/react';
-import { Status } from '@zinnia/api-types/types/sor';
 
 import { ReactComponent as EverlyLogo } from '@deps/styles/elements/logos/everly-logo.svg';
 import { CardInfoVariant } from '@deps/types/components';
 import { mockPolicyData } from '@deps/utils/mockData';
+import { Status } from '@zinnia/api-types/types/sor';
 
 import CardBarPolicyHolder from './card-bar-policy-holder/card-bar-policy-holder';
 import DetailsCard from './card-details';

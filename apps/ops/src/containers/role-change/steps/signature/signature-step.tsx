@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import { PolicyRole, Roles } from '@deps/constants/policy';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { validateRoleChange } from '@deps/queries/api/role-change';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import SignatureSection from './signature-section';
 import {

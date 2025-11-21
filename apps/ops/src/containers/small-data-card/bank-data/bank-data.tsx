@@ -1,5 +1,3 @@
-import { BankDetail } from '@zinnia/api-types/types/aggregation';
-import { BankAccount } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
@@ -9,6 +7,8 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { BankDetail } from '@zinnia/api-types/types/aggregation';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 export interface BankDataCardProps {
     bankDetails: BankAccount | BankDetail;

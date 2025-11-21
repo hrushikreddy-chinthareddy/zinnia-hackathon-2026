@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -17,6 +16,7 @@ import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import AssistiveText, {
     AssistiveTextVariant,

@@ -1,5 +1,4 @@
 import { datadogRum } from '@datadog/browser-rum';
-import { Rider, RiderType } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 
@@ -19,6 +18,7 @@ import {
     riderOverloanProtectionSettings,
     CoverageId,
 } from '@deps/types/product-rate';
+import { Rider, RiderType } from '@zinnia/api-types/types/sor';
 
 type ProductRateResponse = {
     carrier: string;
