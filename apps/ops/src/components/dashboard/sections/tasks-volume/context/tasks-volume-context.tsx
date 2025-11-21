@@ -1,9 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    TaskCountGroupByEnum,
-    TaskCountInputFilter,
-    TaskCountOutputLevel1,
-} from '@xd/api-types/dist/generated-types/analytics';
 import { createContext, FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
@@ -16,6 +11,11 @@ import {
 import { Processes } from '@deps/models/case/case';
 import { getTaskCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import {
+    TaskCountGroupByEnum,
+    TaskCountInputFilter,
+    TaskCountOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 import { TaskStatus, TaskVolumeData } from '../utils';
 

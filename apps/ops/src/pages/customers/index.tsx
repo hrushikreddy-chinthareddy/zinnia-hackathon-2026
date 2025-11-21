@@ -1,8 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-    ContactFilterRequest,
-    ContactSearchResult,
-} from '@xd/api-types/dist/generated-types/contact-management';
 import { Button, Pagination } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -26,6 +22,10 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import { logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    ContactFilterRequest,
+    ContactSearchResult,
+} from '@zinnia/api-types/types/contact-management';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './styles.module.css';

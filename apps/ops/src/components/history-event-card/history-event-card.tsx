@@ -1,11 +1,5 @@
 // TODO MG: why is this warning that TagProps isnt in bloom?
-import {
-    Policy,
-    Transaction,
-    TransactionStatus,
-} from '@zinnia/api-types/types/sor';
 import { Tag, TagProps, TagVariant } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -19,6 +13,12 @@ import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
+import { toTitleCase } from '@deps/utils/strings';
+import {
+    Policy,
+    Transaction,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 
 import {
     getEventTitle,

@@ -1,6 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import {
     Button,
     Icon,
@@ -73,18 +72,19 @@ import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outli
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
+import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import {
     isAPIErrorInformation,
     isClaimNextTask,
     RequestData,
 } from './type-guards';
-import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 
 export enum TabOptions {
     Details = 'Details',

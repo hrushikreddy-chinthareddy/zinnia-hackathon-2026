@@ -1,4 +1,3 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import React, {
     createContext,
     useCallback,
@@ -18,6 +17,7 @@ import {
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 type KnowledgeBaseContextState = {
     selectedClientId: string;

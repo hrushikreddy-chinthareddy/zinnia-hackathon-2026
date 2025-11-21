@@ -1,9 +1,10 @@
+import dayjs from 'dayjs';
+import { useTranslation } from 'react-i18next';
+
 import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
-} from '@xd/api-types/dist/generated-types/analytics';
-import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
+} from '@zinnia/api-types/types/analytics';
 
 import { Timerange } from '../dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '../dashboard/utils';

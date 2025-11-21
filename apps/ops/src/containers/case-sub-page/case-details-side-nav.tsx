@@ -1,5 +1,4 @@
 import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
-import { formatTimestamp, toSentenceCase } from '@zinnia/utils';
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
@@ -29,6 +28,8 @@ import { Processes } from '@deps/models/case/case';
 import { TransactionTypes } from '@deps/models/case/correspondence';
 import { CaseSource } from '@deps/models/case/enums';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import { formatTimestamp } from '@deps/utils/dates';
+import { toSentenceCase } from '@deps/utils/strings';
 
 type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;

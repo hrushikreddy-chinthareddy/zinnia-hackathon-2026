@@ -1,7 +1,6 @@
 // TODO: Generalize this Agent Summary Widget for other transaction types (e.g., Beneficiary Change, Owner Change)
 
 import { WidgetProps } from '@rjsf/utils';
-import { toTitleCase } from '@xd/utils/dist';
 import {
     Tag,
     TagVariant,
@@ -22,6 +21,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getTagVariant } from '@deps/containers/bene-change/components/steps/summary/summary-step.helpers';
 import { validateAgentTransaction } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo, browserLogError } from '@deps/utils/browser-logging';
+import { toTitleCase } from '@deps/utils/strings';
 
 interface DeclineReason {
     value: string;

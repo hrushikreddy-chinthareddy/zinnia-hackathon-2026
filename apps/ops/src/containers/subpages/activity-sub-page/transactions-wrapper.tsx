@@ -1,7 +1,3 @@
-import {
-    Transaction,
-    TransactionStatus,
-} from '@xd/api-types/dist/generated-types/sor';
 import dayjs from 'dayjs';
 import {
     useCallback,
@@ -30,6 +26,7 @@ import {
     useTransactions,
 } from '@deps/hooks/useTransactions';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import styles from './transaction-wrapper.module.css';
 import { TransactionsTable } from './transactions-table';

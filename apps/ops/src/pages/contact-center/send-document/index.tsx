@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import dynamic from 'next/dynamic';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -55,6 +54,7 @@ import {
     withPageAuthAndLogging,
     LoggingContext,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 const FormSelection = dynamic(

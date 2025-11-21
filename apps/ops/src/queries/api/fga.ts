@@ -1,4 +1,3 @@
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
 import { AxiosResponse } from 'axios';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -11,6 +10,7 @@ import {
     TupleResponse,
     GetRoleListQuery,
 } from '@deps/types/fga';
+import { TransactionPermission } from '@deps/utils/auth';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 

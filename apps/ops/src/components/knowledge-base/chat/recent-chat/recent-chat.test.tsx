@@ -1,5 +1,4 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { useRouter } from 'next/router';
 
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -7,6 +6,7 @@ import {
     listChatSessionsByClientId,
     searchChatHistory,
 } from '@deps/queries/api/knowledge-base';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import RecentChat from './recent-chat';
 

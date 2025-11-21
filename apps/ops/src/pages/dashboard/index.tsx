@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
-import { FgaRoles } from '@zinnia/utils';
 import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useRef } from 'react';
@@ -34,6 +33,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import {
     logWarn,
     parseErrorInformation,

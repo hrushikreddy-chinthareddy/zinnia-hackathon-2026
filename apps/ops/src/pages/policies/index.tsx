@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRelation, FgaRoles } from '@xd/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { createContext } from 'react';
 
@@ -21,6 +20,7 @@ import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { SearchViewQuery } from '@deps/types/search';
 import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
+import { FgaRoles, FgaRelation } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,

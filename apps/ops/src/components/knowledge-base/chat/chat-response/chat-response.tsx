@@ -1,4 +1,3 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
 import {
     Icon,
     IconType,
@@ -26,6 +25,7 @@ import {
     FeedbackType,
 } from '@deps/types/knowledge-base';
 import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './chat-response.module.css';
 import DislikeReasons from './dislike-reasons/dislike-reasons';

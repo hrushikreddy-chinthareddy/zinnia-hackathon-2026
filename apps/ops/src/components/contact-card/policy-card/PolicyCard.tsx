@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { toSentenceCase } from '@xd/utils/dist';
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
@@ -13,6 +11,8 @@ import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { getPolicyQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { PolicySearchResult } from '@deps/types/search';
 import { getCarrierLogoByClientId } from '@deps/utils/carriers';
+import { toSentenceCase } from '@deps/utils/strings';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import styles from './PolicyCard.module.css';
 

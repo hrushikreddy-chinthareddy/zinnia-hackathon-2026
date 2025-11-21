@@ -1,4 +1,3 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,6 +18,7 @@ import {
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './chat-input.module.css';
 

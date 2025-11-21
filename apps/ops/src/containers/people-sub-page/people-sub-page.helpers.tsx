@@ -1,10 +1,3 @@
-import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
-import {
-    PartyRole,
-    PartyType,
-    Party,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { PartyRoleChipToText } from '@deps/constants/party-roles';
@@ -15,6 +8,13 @@ import {
 } from '@deps/helpers/sort.helpers';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import {
+    PartyRole,
+    PartyType,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import {
     AgentType,

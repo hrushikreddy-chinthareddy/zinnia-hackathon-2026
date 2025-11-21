@@ -1,12 +1,9 @@
-import {
-    LineOfBusiness,
-    PaymentForm,
-} from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { IssuanceRequest } from '@deps/pages/api/test-harness/create-policy';
 import { IssuanceType, PolicyState } from '@deps/utils/test-harness/types';
+import { LineOfBusiness, PaymentForm } from '@zinnia/api-types/types/bpm';
 
 /**
  *

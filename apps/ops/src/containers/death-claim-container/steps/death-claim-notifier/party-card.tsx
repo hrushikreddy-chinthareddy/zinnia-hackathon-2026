@@ -1,5 +1,4 @@
 import { Tag } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +10,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { toTitleCase } from '@deps/utils/strings';
 
 import { NotifierParty } from '../../death-claim.types';
 

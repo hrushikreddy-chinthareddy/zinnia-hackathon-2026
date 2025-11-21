@@ -1,11 +1,11 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DataDefinition } from '@deps/types/data';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export interface SideSheetCoverageColDto {
     baseDeathBenefit?: number;

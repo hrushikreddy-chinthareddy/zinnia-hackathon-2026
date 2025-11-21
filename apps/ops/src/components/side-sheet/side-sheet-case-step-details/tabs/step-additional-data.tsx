@@ -20,9 +20,9 @@ import {
     correspondenceTypes,
 } from '@deps/models/case/additional-data-instance';
 import { Statuses } from '@deps/models/case/case';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import { TransactionsAdditionalDataStepIds } from './transactions-step-additional-data.types';
-import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 
 type DeliveryCardProps = {
     additionalData: CaseAdditionalData;
