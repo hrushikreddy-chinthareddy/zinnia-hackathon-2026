@@ -1,6 +1,8 @@
 import {
     UserActivityGroupByEnum,
     UserActivityInputFilter,
+    UserIllustrationActivityGroupByEnum,
+    UserIllustrationActivityInputFilter,
     UserTransactionGroupByEnum,
     UserTransactionInputFilter,
     UserViewsGroupByEnum,
@@ -12,6 +14,7 @@ import {
     friendlyGroupByNameForUserViews,
 } from '@deps/components/usage/utils';
 import { getUserActivityCounts } from '@deps/queries/api/user-actvity-count';
+import { getUserIllustrationActivityCount } from '@deps/queries/api/user-illustration-activity-count';
 import { getUserTransactionCounts } from '@deps/queries/api/user-transaction-count';
 import { getUserViewsCounts } from '@deps/queries/api/user-views-count';
 
@@ -71,6 +74,32 @@ export const getUserTransactionCountsQuery = async (
     groupBy: UserTransactionGroupByEnum[]
 ) => {
     const userTransactionResponse = await getUserTransactionCounts({
+        filter,
+        groupBy,
+    });
+    if (
+        !userTransactionResponse ||
+        'detail' in userTransactionResponse ||
+        !('data' in userTransactionResponse)
+    ) {
+        throw userTransactionResponse;
+    }
+
+    userTransactionResponse.data = userTransactionResponse.data.map((item) => {
+        if (item.name === '') {
+            item.name = 'Unknown';
+        }
+        return item;
+    });
+
+    return userTransactionResponse;
+};
+
+export const getUserIllustrationActivityCountQuery = async (
+    filter: UserIllustrationActivityInputFilter,
+    groupBy: UserIllustrationActivityGroupByEnum[]
+) => {
+    const userTransactionResponse = await getUserIllustrationActivityCount({
         filter,
         groupBy,
     });

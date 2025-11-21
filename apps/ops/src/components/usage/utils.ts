@@ -153,3 +153,33 @@ export const colors = [
     '#560F08',
     '#9D5400',
 ];
+
+export const ProductType = {
+    IUL: 'INDEX_UNIVERSAL_LIFE',
+    Term: 'TERM',
+    ROP: 'ROP',
+} as const;
+
+// Dropdown options for the "Product Type" select
+export const PRODUCT_TYPE_OPTIONS = [
+    { value: ProductType.IUL, label: 'IUL' },
+    { value: ProductType.Term, label: 'Term' },
+    { value: ProductType.ROP, label: 'ROP' },
+];
+
+export const ActivityType = {
+    Created: 'Created',
+    Duplicated: 'Duplicated',
+    Selected: 'Selected',
+} as const;
+
+export const generateIllustrationsCSVFileName = (
+    title: string,
+    productType: string,
+    timerange: Timerange
+) => {
+    const fromDate = dayjs(timerange.from).format(defaultDateFormat);
+    const toDate = dayjs(timerange.to).format(defaultDateFormat);
+
+    return `${productType} ${title || ''} ${fromDate} to ${toDate}`;
+};

@@ -1,12 +1,12 @@
 import Highcharts from 'highcharts';
 import { useTranslation } from 'react-i18next';
-export const ActivityTooltip = () => {
+export const TransactionActivityTooltip = () => {
     const { t } = useTranslation();
 
     return <p>{t('usage.activity.toolTip.description')}</p>;
 };
 
-export const activityTooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =
+export const transactionActivityTooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =
     function () {
         const name = String((this as any).point?.name ?? this.x ?? '');
         const value =

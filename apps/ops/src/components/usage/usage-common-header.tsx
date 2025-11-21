@@ -1,5 +1,6 @@
 import {
     UserActivityOutputLevel1,
+    UserIllustrationActivityOutputLevel1,
     UserViewsOutputLevel1,
 } from '@xd/api-types/dist/generated-types/analytics';
 import { Icon, IconType, Link, Tooltip } from '@zinnia/bloom/components';
@@ -16,7 +17,10 @@ type UsageCommonLayoutProps = {
     data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[];
     csvFileName: string;
     csvFunction: (
-        data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[],
+        data:
+            | UserActivityOutputLevel1[]
+            | UserViewsOutputLevel1[]
+            | UserIllustrationActivityOutputLevel1[],
         csvFileName: string
     ) => void;
     description?: string;
