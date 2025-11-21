@@ -59,7 +59,6 @@ export function FlicSSWForm({ qualType }: SswFormProps) {
         isFormStateReadOnly,
         setFormDisbursement,
         ownerStateOfResidence,
-        contractIssueState,
         setOwnerStateOfResidence,
         formProgram,
         formESignatureData,

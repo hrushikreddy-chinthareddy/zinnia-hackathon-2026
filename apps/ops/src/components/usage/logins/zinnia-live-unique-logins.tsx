@@ -102,10 +102,10 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
                     t('usage.logins.zinniaLive.description') ?? ''
                 )}
                 data={zinniaLiveLoginsData?.data ?? []}
-                csvFileName={generateCSVFileName(
-                    'Zinnia Live Unique Logins by Role',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: 'Zinnia Live Unique Logins by Role',
+                    timerange,
+                })}
                 csvFunction={downloadUserActivityCSV}
             />
             <div className="flex items-center justify-end gap-4">

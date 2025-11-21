@@ -63,7 +63,6 @@ const DownloadItem = ({
     doc: DocumentWithSource | MetadataSearchResponse;
     carrierCode: string;
 }) => {
-    const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
     const docId =
         doc.documentId || ((doc as DocumentWithSource).documentID as string);
@@ -119,7 +118,6 @@ export const createViewDownloadAction = (
     t: TFunction,
     label?: string
 ) => {
-    const { featureFlags } = useOptimizely();
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className={clsx('!underline-offset-2', styles.actionPadding)}

@@ -97,10 +97,10 @@ export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
                     t('usage.logins.myPolicyView.description') ?? ''
                 )}
                 data={myPolicyViewLoginsData?.data ?? []}
-                csvFileName={generateCSVFileName(
-                    'MyPolicyView Unique Logins',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: 'MyPolicyView Unique Logins',
+                    timerange,
+                })}
                 csvFunction={downloadUserActivityCSV}
             />
             <div className="flex items-center justify-end gap-4">

@@ -73,7 +73,6 @@ export const SidesheetCommunicationsPreference = ({
     planCode,
     policyNumber,
     policy,
-    setPreferredCommunication,
     emails,
     addresses,
 }: SideSheetCommnunicationPreferenceProps) => {

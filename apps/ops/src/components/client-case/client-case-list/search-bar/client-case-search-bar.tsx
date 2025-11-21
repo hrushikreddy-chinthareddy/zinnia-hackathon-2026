@@ -40,7 +40,7 @@ function searchTypeFromFilters(
     return null;
 }
 
-const ClientCaseSearchBar: React.FC<{}> = () => {
+const ClientCaseSearchBar: React.FC<object> = () => {
     const { sendClientCaseDropdownClicked, sendSearchSubmitted } =
         useIllustrationAnalytics();
     const { t } = useTranslation(TranslationFiles.COMMON);

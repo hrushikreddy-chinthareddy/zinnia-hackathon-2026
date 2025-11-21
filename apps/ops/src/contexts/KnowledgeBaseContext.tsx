@@ -43,12 +43,12 @@ const KnowledgeBaseContextDefaultValues = {
     currentMessages: [],
     chatHistoryReloadTrigger: 0,
     commonClientId: null,
-    setSelectedClient: (clientId: string) => {},
+    setSelectedClient: () => {},
     setSessionId: noop,
     setCurrentMessages: noop,
     setChatHistoryReloadTrigger: noop,
     startNewChatSession: () => {},
-    viewChatHistory: (sessionId: string) => {},
+    viewChatHistory: () => {},
 };
 
 const KnowledgeBaseContext = createContext<KnowledgeBaseContextState>(

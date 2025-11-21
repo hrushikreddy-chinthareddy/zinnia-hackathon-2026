@@ -89,8 +89,7 @@ const InteriorPeoplePageHeaderContainer = ({
     // for header text siblings group two
     // date of birth
     const getDateOfBirth = (
-        partyType: string | undefined,
-        editable: boolean
+        partyType: string | undefined
     ): JSX.Element | null => {
         if (!partyType || partyType !== PartyType.INDIVIDUAL || isAgent) {
             return null;
@@ -186,12 +185,12 @@ const InteriorPeoplePageHeaderContainer = ({
                 editable={editable}
                 isUserPermissionedToEditCards={isUserPermissionedToEditCards}
             >
-                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+                {getDateOfBirth(selectedPolicyParty?.partyType)}
             </HeaderInfoCard>
         ) : (
             <div className="flex items-start align-baseline">
                 {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
-                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+                {getDateOfBirth(selectedPolicyParty?.partyType)}
             </div>
         );
     const belowHeaderTextChildren = partyRoleTags;

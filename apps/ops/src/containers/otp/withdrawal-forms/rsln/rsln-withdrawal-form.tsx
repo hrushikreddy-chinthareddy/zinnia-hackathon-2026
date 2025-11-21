@@ -61,7 +61,6 @@ export default function RslnWithdrawalForm() {
         initialForm,
         isFormStateReadOnly,
         formSubtype,
-        contractIssueState,
         formESignatureData,
         setFormESignatureData,
         formErrors,

@@ -1,9 +1,3 @@
-import {
-    CommunicationPreferenceChangeRequest,
-    TransactionAcceptedResponse,
-    ValidationResult,
-} from '@zinnia/api-types/types/bpm';
-
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import timezone from 'dayjs/plugin/timezone';
@@ -18,6 +12,11 @@ import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    CommunicationPreferenceChangeRequest,
+    TransactionAcceptedResponse,
+    ValidationResult,
+} from '@zinnia/api-types/types/bpm';
 import {
     AddressBase,
     BankAccountBase,

@@ -38,7 +38,6 @@ interface SignatureStepProps {
 }
 const SignatureStep = ({
     policy,
-    parentPage,
     leaveTransactionLink,
     validateTransaction,
 }: SignatureStepProps) => {
@@ -85,8 +84,6 @@ const SignatureStep = ({
         formErrors,
         setFormErrors,
         setValidationResponse,
-        validationResponse,
-        ownerInfo,
     } = useBeneChange();
 
     const [spousalConsent, setSpousalConsent] = useState(

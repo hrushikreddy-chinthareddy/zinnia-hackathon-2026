@@ -30,21 +30,15 @@ import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './styles.module.css';
 
-interface CustomersPageProps {
-    locale: string;
-}
-
-export default function CustomersPage({}: CustomersPageProps) {
+export default function CustomersPage() {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
     const limit = 10;
     const [page, setPage] = useState(0);
 
-    const [sortBy, setSortBy] = useState<ContactFilterRequest['sortBy']>();
-    const [sortOrder, setSortOrder] =
-        useState<ContactFilterRequest['sortOrder']>();
-    const [searchFilters, setSearchFilters] =
-        useState<ContactFilterRequest['filters']>();
+    const [sortBy] = useState<ContactFilterRequest['sortBy']>();
+    const [sortOrder] = useState<ContactFilterRequest['sortOrder']>();
+    const [searchFilters] = useState<ContactFilterRequest['filters']>();
 
     const offset = useMemo(() => page * limit, [page, limit]);
 
@@ -112,7 +106,7 @@ export default function CustomersPage({}: CustomersPageProps) {
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
-            const { locale = DEFAULT_LOCALE, res, req } = context;
+            const { locale = DEFAULT_LOCALE } = context;
 
             const user = await getUserData(context);
 

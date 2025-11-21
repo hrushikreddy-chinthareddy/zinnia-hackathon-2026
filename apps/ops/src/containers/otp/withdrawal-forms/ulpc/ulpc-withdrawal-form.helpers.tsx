@@ -75,7 +75,7 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getUlpcConfig(t: TFunction, isLC: boolean) {
+export default function getUlpcConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,

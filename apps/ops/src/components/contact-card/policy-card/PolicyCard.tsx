@@ -22,7 +22,7 @@ export default function PolicyCard({
 }: { policy: PolicySearchResult } & React.HTMLAttributes<HTMLLIElement>) {
     const { t } = useTranslation();
     const { unit, count } = getTimeAgoUnitValue(policy.lastUpdated) || {};
-    const { data: coverage, isLoading: isLoadingCoverage } = useQuery({
+    const { data: coverage } = useQuery({
         queryKey: ['policy', policy.policyNumber, policy.planCode],
         queryFn: () => getPolicyQuery(policy.policyNumber, policy.planCode),
         select: (policy) => {

@@ -16,10 +16,13 @@ export const canUserCreateClientCase = async (
         UserPermission.AllowWriteClientCase,
         loggingContext
     );
-    const partyReference = await getPartyReferenceByPartyId(
-        loggingContext.user?.partyId!,
-        loggingContext
-    );
+
+    // If user or partyId is missing, skip party reference lookup
+    const partyId = loggingContext.user?.partyId;
+    const partyReference = partyId
+        ? await getPartyReferenceByPartyId(partyId, loggingContext)
+        : null;
+
     const aliases = filterAliasesWithSellingCode(partyReference?.alias);
     const isAgent = aliases?.length ?? 0 > 0;
     const isAllowWriteClientCase = !!carriersList.length; //TODO: update this to check the ui access permission when CIAM implements

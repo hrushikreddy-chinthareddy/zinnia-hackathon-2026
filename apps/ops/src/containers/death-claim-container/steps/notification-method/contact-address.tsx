@@ -58,11 +58,6 @@ const ContactAddress = ({
         setSelectedAddress(id);
         const selectedAddress = partyCardsData[id];
         const { address } = selectedAddress;
-        let zipCode = '';
-
-        if (address?.zipCode && address?.zipCodeExtension) {
-            zipCode = `${address?.zipCode}${address?.zipCodeExtension}`;
-        }
         let action = ClaimActionTypes.NONE;
         if (address?.addressId !== prevAddress?.addressId) {
             action = ClaimActionTypes.ADD;

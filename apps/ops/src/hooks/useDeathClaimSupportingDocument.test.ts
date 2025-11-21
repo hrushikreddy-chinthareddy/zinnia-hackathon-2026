@@ -70,7 +70,7 @@ describe('useDeathClaimSupportingDocument', () => {
     });
 
     it('sets loading state correctly during fetch', async () => {
-        let resolveFn: Function;
+        let resolveFn: (value: unknown) => void;
         const promise = new Promise((resolve) => {
             resolveFn = resolve;
         });
@@ -130,7 +130,7 @@ describe('useDeathClaimSupportingDocument', () => {
     });
 
     it('returns default state before fetch resolves', async () => {
-        let resolveFn: Function;
+        let resolveFn: (value: unknown) => void;
         const promise = new Promise((resolve) => {
             resolveFn = resolve;
         });

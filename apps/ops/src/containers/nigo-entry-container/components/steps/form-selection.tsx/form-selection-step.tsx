@@ -75,7 +75,6 @@ function FormSelectionStep({
     const { setFormProgram } = formState;
     const [isLoading, setIsLoading] = useState(false);
     const { setSubmitFailed } = useNigoEntry();
-    const [timer] = useState(performance.now());
 
     useEffect(() => {
         setTransactionType((ogData) => ({
@@ -104,8 +103,7 @@ function FormSelectionStep({
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
-                buildFormV2(TaskStatus.Completed, documentData, formState),
-                timer
+                buildFormV2(TaskStatus.Completed, documentData, formState)
             );
 
             if (successfulCaseUpdate && successfulCaseUpdate.id) {
@@ -118,7 +116,7 @@ function FormSelectionStep({
         }
 
         setIsLoading(false);
-    }, [documentData, formState, setSubmitFailed, timer]);
+    }, [documentData, formState, setSubmitFailed]);
 
     useEffect(() => {
         if (

@@ -57,10 +57,6 @@ type UserTuple = {
     };
 };
 
-type AssigneeUser = {
-    email: string;
-};
-
 type FGATuple = {
     key: {
         object: string;
@@ -210,10 +206,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     userTuplesData?.tuples
                 );
             }
-
-            const selectedCarrier =
-                taskListingParams.carriers[1]?.toLowerCase();
-            const selectedQueue = taskListingParams.queues[1]?.toLowerCase();
 
             //needed to generate assignee list for sidesheet
             // const searchUsersFromQueue =

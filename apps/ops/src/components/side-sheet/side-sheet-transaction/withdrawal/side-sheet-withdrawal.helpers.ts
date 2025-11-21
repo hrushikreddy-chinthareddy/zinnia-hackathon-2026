@@ -56,15 +56,6 @@ const getPayeePaymentDetails = (
         payeeOrBeneficiaries
             ?.map((item) => item.partyId)
             .filter((id): id is string => id !== undefined) || [];
-    const bankIds: string[] =
-        payeeOrBeneficiaries
-            ?.map((item) => item.bankId)
-            .filter((id): id is string => id !== undefined) || [];
-
-    const addressIds: string[] =
-        payeeOrBeneficiaries
-            ?.map((item) => item.addressId)
-            .filter((id): id is string => id !== undefined) || [];
 
     partyIds.forEach((partyId) => {
         const party = policy.parties?.find(
@@ -435,12 +426,8 @@ const getWithdrawalDetailsValues = (
         transactionType,
         reversalDate,
     } = transaction;
-    const {
-        appliedAmount,
-        disbursementType,
-        requestedAmount,
-        totalChargeAmount,
-    } = transactionAmounts ?? {};
+    const { appliedAmount, disbursementType, totalChargeAmount } =
+        transactionAmounts ?? {};
     const amount = appliedAmount;
     const actualWithdrawalAmount = getActualWithdrawalAmount(
         appliedAmount,

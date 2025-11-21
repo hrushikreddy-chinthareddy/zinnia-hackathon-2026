@@ -45,7 +45,7 @@ export const createDtccValidator = (t: TFunction, processType: ProcessType) => {
 
             // Use switch for contract number required error logic
             switch (processType) {
-                case ProcessType.OFT:
+                case ProcessType.OFT: {
                     const participantId = allValues?.participantId;
 
                     // If participantId is '0000' and contractNumber is '0000', return error
@@ -61,7 +61,8 @@ export const createDtccValidator = (t: TFunction, processType: ProcessType) => {
                         ));
                     }
                     break;
-                case ProcessType.WITHDRAWAL:
+                }
+                case ProcessType.WITHDRAWAL: {
                     const dtccParticipantId = allValues?.participantId?.text;
 
                     // If participantId is '0000' and contractNumber is '0000', return error
@@ -84,6 +85,7 @@ export const createDtccValidator = (t: TFunction, processType: ProcessType) => {
                         ));
                     }
                     break;
+                }
             }
         }
         return '';

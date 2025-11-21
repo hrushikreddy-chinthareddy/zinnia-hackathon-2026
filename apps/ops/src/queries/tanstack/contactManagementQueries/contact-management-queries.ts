@@ -7,6 +7,7 @@ import {
 export async function getContactsQuery(
     searchCriteria: ContactFilterRequest
 ): Promise<ContactSearchResult> {
+    console.log(searchCriteria);
     // return await client.post('/api/contact-management/v1/contacts', searchCriteria);
     return {
         data: [

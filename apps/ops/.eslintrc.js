@@ -56,6 +56,8 @@ module.exports = {
     },
     rules: {
         // From shared config
+        'turbo/no-undeclared-env-vars': 'off',
+        'react/prop-types': 'off',
         'no-unused-vars': 'off',
         '@typescript-eslint/no-unused-vars': [
             'error',

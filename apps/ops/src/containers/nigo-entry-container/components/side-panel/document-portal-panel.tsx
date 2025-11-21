@@ -36,7 +36,6 @@ type DocumentViewProps = {
 };
 
 const DocumentPortalPanel = ({
-    policy,
     documentNumber,
     docType,
     policyNumber,

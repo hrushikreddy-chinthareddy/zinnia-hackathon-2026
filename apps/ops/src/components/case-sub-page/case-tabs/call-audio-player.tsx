@@ -35,7 +35,7 @@ const CallAudioPlayer: React.FC<ICallAudioPlayer> = ({
     );
 
     const [audio, setAudio] = useState<string | undefined>(undefined);
-    const [loading, setLoading] = useState(false);
+    const [, setLoading] = useState(false);
 
     const fetchAudioUrl = async () => {
         try {

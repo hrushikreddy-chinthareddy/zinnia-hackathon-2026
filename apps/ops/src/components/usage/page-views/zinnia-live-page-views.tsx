@@ -91,12 +91,12 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
                     t('usage.pageViews.zinniaLivePageViews.description') ?? ''
                 )}
                 data={zinniaLivePageViewsData?.data || []}
-                csvFileName={generateCSVFileName(
-                    'Zinnia Live',
+                csvFileName={generateCSVFileName({
+                    title: 'Zinnia Live',
                     timerange,
                     role,
-                    'usage.tabs.pageViews'
-                )}
+                    optionaltitle: t('usage.tabs.pageViews') ?? '',
+                })}
                 csvFunction={PrepareUserViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">

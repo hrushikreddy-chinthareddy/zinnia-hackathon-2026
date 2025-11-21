@@ -89,7 +89,6 @@ const SideSheetBank = ({
     policy,
     policyNumber,
     onCancel,
-    setCurrentBankAccounts,
     updatedBank,
 }: SideSheetBankProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {

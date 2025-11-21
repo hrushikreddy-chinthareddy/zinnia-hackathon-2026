@@ -1,7 +1,5 @@
 import { cleanup } from '@testing-library/react';
 
-import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
-
 jest.mock('@deps/components/badge/badge.helpers', () => ({
     getBadgeStatus: (s: any) => `status.${s}`,
     getBadgeStatusVariant: (s: any) => `variant.${s}`,
@@ -22,7 +20,8 @@ jest.mock('@deps/helpers/string.helpers', () => ({
     formatDate: (d: any) => (d ? 'DATE:' + d : ''),
 }));
 
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import {
     getTotalMinRequiredAmount,

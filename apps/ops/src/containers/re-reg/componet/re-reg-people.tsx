@@ -42,7 +42,7 @@ export const ReRegPeopleView = ({
     isEligibleBeneficiary,
 }: ReRegPeopleViewProps) => {
     const { t } = useTranslation();
-    const { peopleSelection, setPeopleSelection, setSOR } = useBeneChange();
+    const { peopleSelection, setPeopleSelection } = useBeneChange();
     const { breadcrumb } = useBreadcrumb();
     const router = useRouter();
 

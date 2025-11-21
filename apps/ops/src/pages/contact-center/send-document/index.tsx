@@ -320,9 +320,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, req, res } = context;
 
-            let accessToken;
             try {
-                accessToken = (await getAccessToken(req, res)).accessToken;
+                await getAccessToken(req, res);
             } catch (e) {
                 logWarn(
                     'getServerSidePropsPolicyDetailsPage::Access token expired',

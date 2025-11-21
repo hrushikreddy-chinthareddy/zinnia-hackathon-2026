@@ -115,14 +115,16 @@ export const Activity = () => {
                     )}
                     titleToolTip={<ActivityTooltip />}
                     data={transactionData?.data || []}
-                    csvFileName={generateCSVFileName(
-                        `${role} ${
+                    csvFileName={generateCSVFileName({
+                        title: `${role} ${
                             t(
                                 'usage.activity.zinniaLiveTransactionActivity.title'
                             ) ?? ''
                         }`,
-                        timerange
-                    )}
+                        timerange,
+                        role,
+                        optionaltitle: '',
+                    })}
                     csvFunction={PrepareTransactionActivityCSV}
                 />
                 <div className="flex items-center justify-between gap-4 w-full">

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useContext } from 'react';
 
 import Button, {
     ButtonSize,
@@ -54,7 +54,6 @@ export function FormControls({
     document,
 }: FormControlsProps) {
     const router = useRouter();
-    const [timer] = useState(performance.now());
     const { t } = useTranslation(TranslationFiles.REG60DEFS, {
         keyPrefix: 'caseReg60.request',
     });
@@ -151,8 +150,7 @@ export function FormControls({
                 successfulTaskUpsert = await updateTask(
                     formState.initialForm.caseId,
                     formState.initialForm?.id,
-                    buildForm(TaskStatus.Completed, document, formState),
-                    timer
+                    buildForm(TaskStatus.Completed, document, formState)
                 );
             } else {
                 successfulTaskUpsert = await createTask(

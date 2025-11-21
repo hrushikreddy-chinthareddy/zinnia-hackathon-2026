@@ -219,7 +219,6 @@ export default function GlobalTaskSideSheet({
     const { featureFlagVariables } = useOptimizely();
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
-    const [timer] = useState(performance.now());
     const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
@@ -403,8 +402,7 @@ export default function GlobalTaskSideSheet({
                 const response = await updateTask(
                     taskData.caseId,
                     taskData.id,
-                    body,
-                    timer
+                    body
                 );
                 if (response) {
                     await router.push(url);

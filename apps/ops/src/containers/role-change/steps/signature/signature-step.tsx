@@ -25,11 +25,7 @@ interface SignatureStepProps {
     leaveTransactionLink?: string;
 }
 
-const SignatureStep = ({
-    policy,
-    role,
-    leaveTransactionLink,
-}: SignatureStepProps) => {
+const SignatureStep = ({ policy, role }: SignatureStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.signature',
     });

@@ -1,5 +1,3 @@
-import dayjs from 'dayjs';
-
 import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     Address,

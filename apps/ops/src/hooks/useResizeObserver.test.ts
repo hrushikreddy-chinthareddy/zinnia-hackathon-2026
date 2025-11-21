@@ -64,10 +64,11 @@ describe('useResizeObserver (TS-safe)', () => {
                 'div',
                 null,
                 React.createElement('div', { ref }),
-                React.createElement('span', {
-                    'data-testid': 'size',
-                    children: `${size.width}x${size.height}`,
-                })
+                React.createElement(
+                    'span',
+                    { 'data-testid': 'size' },
+                    `${size.width}x${size.height}`
+                )
             );
         }
 
@@ -123,10 +124,11 @@ describe('useResizeObserver (TS-safe)', () => {
                 'div',
                 null,
                 React.createElement('div', { ref }),
-                React.createElement('span', {
-                    'data-testid': 'size',
-                    children: `${size.width}x${size.height}`,
-                })
+                React.createElement(
+                    'span',
+                    { 'data-testid': 'size' },
+                    `${size.width}x${size.height}`
+                )
             );
         }
 

@@ -99,10 +99,10 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                     t('usage.pageViews.zinniaLiveCaseViews.description') ?? ''
                 )}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
-                csvFileName={generateCSVFileName(
-                    'usage.pageViews.zinniaLiveCaseViews.title',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: t('usage.pageViews.zinniaLiveCaseViews.title'),
+                    timerange,
+                })}
                 csvFunction={PrepareTop5CaseViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">

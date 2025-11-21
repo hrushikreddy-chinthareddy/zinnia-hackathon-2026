@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import { useContext } from 'react';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
@@ -11,7 +10,6 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import {
     formatCardExpirationDate,
@@ -49,7 +47,6 @@ export const BankAccounts = ({
         keyPrefix: 'people.card.bank.general',
     });
     const { t: defaultT } = useTranslation();
-    const { policyDetails } = useContext(PolicyData);
     const { featureFlags } = useOptimizely();
     const shouldShowBankEdit =
         featureFlags[FEATURE_FLAGS.BANK_CHANGE_TRANSACTION];

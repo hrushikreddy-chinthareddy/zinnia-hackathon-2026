@@ -28,8 +28,7 @@ const SelectBank = ({
     onDataChange,
 }: DisbursementInformation) => {
     const { t } = useTranslation();
-    const { parties, partyRoles, initialForm, isLC } =
-        useContext(FormDataContext);
+    const { parties, partyRoles, isLC } = useContext(FormDataContext);
     const { setBankSelected } = useContext(SelectedBankContext);
     const OTHER_BANK_OPTION = 'other';
 

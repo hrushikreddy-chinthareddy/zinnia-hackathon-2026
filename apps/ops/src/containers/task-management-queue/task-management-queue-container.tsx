@@ -15,9 +15,12 @@ import TaskManagerActiveFilters from '@deps/containers/task-manager-active-filte
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import useTaskManagementQueue from '@deps/hooks/useTaskManagementQueue';
 import { MessageType } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
+import { LabelValue } from '@deps/types/data';
+import { PolicySearchKeys } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
@@ -27,10 +30,6 @@ const SideSheetTasksResults = dynamic(
             '@deps/containers/side-sheet-tasks-filters/side-sheet-tasks-filters'
         )
 );
-
-import { PolicySearchKeys } from '@deps/types/search';
-import { LabelValue } from '@deps/types/data';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 const fieldKeyMapping: Record<string, string> = {
     taskName: 'taskName',

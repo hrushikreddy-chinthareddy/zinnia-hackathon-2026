@@ -54,16 +54,6 @@ export interface PeopleState {
     selectedTagList: string[];
 }
 
-const initialPeopleState: PeopleState = {
-    cardActionData: {
-        filteredData: [],
-        isAgentSelected: false,
-        isBeneficiarySelected: false,
-    },
-    selectedChip: 'All',
-    selectedTagList: ['All'],
-};
-
 export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
     isEligibleBeneficiary,
 }) => {

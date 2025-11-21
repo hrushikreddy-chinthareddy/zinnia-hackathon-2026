@@ -49,15 +49,6 @@ interface ValidationResponse {
     correlationId?: string;
 }
 
-interface FormData {
-    partyUpdates: any[];
-    signatures?: Array<{ isSignedPresent: boolean; signDate: string | null }>;
-    planCode: string;
-    policyNumber: string;
-    issueResolved: boolean;
-    declineReason?: DeclineReason[];
-}
-
 const ROLE_MAP: { [key: string]: string } = {
     PRIMARYWRITINGAGENT: 'Writing agent',
     PRIMARYSERVICINGAGENT: 'Servicing agent',

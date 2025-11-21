@@ -292,8 +292,7 @@ function FormEntryStep({
                 const successfulCaseUpdate = await updateTask(
                     renewalInitialForm.caseId,
                     renewalInitialForm.taskId,
-                    payload,
-                    timer
+                    payload
                 );
                 if (successfulCaseUpdate && successfulCaseUpdate.id) {
                     setSubmitFailed(false);
@@ -308,8 +307,7 @@ function FormEntryStep({
                 const successfulCaseUpdate = await updateTask(
                     formState.initialForm.caseId,
                     formState.initialForm.taskId,
-                    buildFormV2(TaskStatus.Completed, document, formState),
-                    timer
+                    buildFormV2(TaskStatus.Completed, document, formState)
                 );
 
                 if (successfulCaseUpdate && successfulCaseUpdate.id) {
