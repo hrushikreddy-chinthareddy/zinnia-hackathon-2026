@@ -2403,14 +2403,14 @@ components:
         - name
         - count
       title: UserTransactionOutputLevel3
-        UserIllustrationActivityGroupByEnum:
+    UserIllustrationActivityGroupByEnum:
       type: string
       enum:
-      - activityType
-      - carrier
-      - productName
-      - productType
-      - activityDay
+        - activityType
+        - carrier
+        - productName
+        - productType
+        - activityDay
       title: UserIllustrationActivityGroupByEnum
     UserIllustrationActivityInput:
       properties:
@@ -2424,56 +2424,56 @@ components:
           minItems: 1
           title: Groupby
           example:
-          - activityType
+            - activityType
       type: object
       required:
-      - filter
-      - groupBy
+        - filter
+        - groupBy
       title: UserIllustrationActivityInput
     UserIllustrationActivityInputFilter:
       properties:
         activityType:
           anyOf:
-          - items:
-              type: string
-            type: array
+            - items:
+                type: string
+              type: array
           title: Activitytype
           example:
-          - Created
+            - Created
         carrier:
           anyOf:
-          - items:
-              type: string
-            type: array
+            - items:
+                type: string
+              type: array
           title: Carrier
           example:
-          - FNWL
+            - FNWL
         productName:
           anyOf:
-          - items:
-              type: string
-            type: array
+            - items:
+                type: string
+              type: array
           title: Productname
           example:
-          - Term
+            - Term
         productType:
           anyOf:
-          - items:
-              type: string
-            type: array
+            - items:
+                type: string
+              type: array
           title: Producttype
           example:
-          - TERM
+            - TERM
         dateStart:
           anyOf:
-          - type: string
-            format: date-time
+            - type: string
+              format: date-time
           title: Datestart
           example: '2025-11-01T00:00:00.000Z'
         dateEnd:
           anyOf:
-          - type: string
-            format: date-time
+            - type: string
+              format: date-time
           title: Dateend
           example: '2025-11-12T00:00:00.000Z'
       type: object
@@ -2491,8 +2491,8 @@ components:
           example: 123
       type: object
       required:
-      - data
-      - totalElements
+        - data
+        - totalElements
       title: UserIllustrationActivityOutput
     UserIllustrationActivityOutputLevel1:
       properties:
@@ -2510,15 +2510,15 @@ components:
           example: 18
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/UserIllustrationActivityOutputLevel2'
-            type: array
+            - items:
+                $ref: '#/components/schemas/UserIllustrationActivityOutputLevel2'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: UserIllustrationActivityOutputLevel1
     UserIllustrationActivityOutputLevel2:
       properties:
@@ -2536,15 +2536,15 @@ components:
           example: 24
         values:
           anyOf:
-          - items:
-              $ref: '#/components/schemas/UserIllustrationActivityOutputLevel3'
-            type: array
+            - items:
+                $ref: '#/components/schemas/UserIllustrationActivityOutputLevel3'
+              type: array
           title: Values
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: UserIllustrationActivityOutputLevel2
     UserIllustrationActivityOutputLevel3:
       properties:
@@ -2562,9 +2562,9 @@ components:
           example: 35
       type: object
       required:
-      - key
-      - name
-      - count
+        - key
+        - name
+        - count
       title: UserIllustrationActivityOutputLevel3
     UserViewsGroupByEnum:
       type: string
