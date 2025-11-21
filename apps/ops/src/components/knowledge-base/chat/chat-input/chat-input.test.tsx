@@ -1,9 +1,9 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 
 import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { createNewChatSession } from '@deps/queries/api/knowledge-base';
 import { BOT_ERROR_MESSAGE_ID, MessageRole } from '@deps/types/knowledge-base';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import ChatInput from './chat-input';
 

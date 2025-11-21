@@ -1,5 +1,4 @@
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
-import { areObjectsEqual, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { forwardRef, useEffect, useMemo, useState } from 'react';
@@ -22,6 +21,8 @@ import {
     getClientIdsByCarrierName,
     getCarrierListItem,
 } from '@deps/utils/carriers';
+import { areObjectsEqual } from '@deps/utils/objects';
+import { toTitleCase } from '@deps/utils/strings';
 interface FiltersHeaderProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];

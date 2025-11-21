@@ -8,8 +8,6 @@ This repo contains the necessary apps and packages used to build and maintain Zi
 
 These are consumer-facing end products that are deployable or deliverable in some form. Apps are typically configured to be started or deployed, like web frontends, backend services, mobile applications, desktop applications, etc. They are the final artifacts that end users interact with.
 
-- [Consumer Experience](apps/consumer-experience/README.md)
-
 ### Packages
 
 These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages.

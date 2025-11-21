@@ -1,4 +1,3 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,6 +11,7 @@ import {
     SSEEventType,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 type ChatEvent =
     | { type: SSEEventType.STATUS; message: string }

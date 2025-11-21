@@ -9,16 +9,6 @@ import {
     splitAndSentenceCase,
 } from './dashboard-helpers';
 
-jest.mock('@zinnia/utils', () => ({
-    // Simplified mock to ensure deterministic capitalization
-    toTitleCase: (s: string) =>
-        s
-            .toLowerCase()
-            .split(' ')
-            .map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w))
-            .join(' '),
-}));
-
 describe('helpers/dashboard-helpers', () => {
     afterEach(() => cleanup());
 

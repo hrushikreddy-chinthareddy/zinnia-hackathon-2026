@@ -1,4 +1,3 @@
-import { ClientDocumentDto } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Loader } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { getDocumentPreview } from '@deps/queries/api/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { ClientDocumentDto } from '@zinnia/api-types/types/knowledgebase';
 
 type DocumentPreviewProps = {
     document: ClientDocumentDto | null;

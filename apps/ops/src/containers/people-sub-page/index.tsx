@@ -1,7 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQueries } from '@tanstack/react-query';
-import { toTitleCase } from '@xd/utils/dist';
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
@@ -28,6 +26,8 @@ import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
 import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { toTitleCase } from '@deps/utils/strings';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import ManagePeople from './manage-people';
 import {

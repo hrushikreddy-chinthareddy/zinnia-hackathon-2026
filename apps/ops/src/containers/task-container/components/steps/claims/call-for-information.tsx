@@ -1,4 +1,3 @@
-import { Phone } from '@xd/api-types/dist/generated-types/sor';
 import {
     Label,
     AssistiveText,
@@ -36,6 +35,7 @@ import { CaseIdentifier } from '@deps/models/case/case';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { NOOP } from '@deps/types/constants';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import BeneficiaryNotificationChange from './beneficiary-notification-change';

@@ -1,9 +1,10 @@
+import { AxiosResponse } from 'axios';
+
 import {
     HTTPValidationError,
     TaskCountInput,
     TaskCountOutput,
-} from '@xd/api-types/dist/generated-types/analytics';
-import { AxiosResponse } from 'axios';
+} from '@zinnia/api-types/types/analytics';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';

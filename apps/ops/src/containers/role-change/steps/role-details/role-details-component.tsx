@@ -1,4 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +42,7 @@ import {
 import { SourceSystem } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import ContactDetailsComponent from './contact-details-component';
 import RoleIdentification from './role-identification';

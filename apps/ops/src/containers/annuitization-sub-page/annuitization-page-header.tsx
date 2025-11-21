@@ -1,6 +1,4 @@
-import { Policy, FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import clsx from 'clsx';
 import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +11,8 @@ import PageHeader from '@deps/components/page-header/page-header';
 import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { Policy, FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 interface AnnuitizationPageHeaderProps {
     policy: Policy;

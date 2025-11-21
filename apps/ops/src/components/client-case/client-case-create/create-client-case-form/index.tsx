@@ -1,5 +1,4 @@
 import { useIsFetching } from '@tanstack/react-query';
-import { isValidDate } from '@xd/utils/dist';
 import {
     Button,
     ButtonGroup,
@@ -36,6 +35,7 @@ import {
     IllustrationsClientCase,
     TransactionType,
 } from '@deps/types/illustrations';
+import { isValidDate } from '@deps/utils/dates';
 
 import styles from './create-client-case-form.module.css';
 import { AgentField } from '../agent-search/agent-field';

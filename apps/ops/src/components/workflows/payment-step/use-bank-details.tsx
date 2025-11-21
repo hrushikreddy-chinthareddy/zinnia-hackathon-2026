@@ -1,11 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { ArrangementType } from '@xd/api-types/dist/generated-types/sor';
-import { Policy, Status } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { QueryKeys } from '@deps/pages/cases/caseFilterQueryStore';
 import { getPaymentMethods } from '@deps/queries/api/aggregation';
+import { Policy, Status, ArrangementType } from '@zinnia/api-types/types/sor';
 
 import { PaymentState } from './types';
 

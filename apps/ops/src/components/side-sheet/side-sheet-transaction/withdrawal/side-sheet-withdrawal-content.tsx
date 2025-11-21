@@ -1,6 +1,4 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 import { Key } from 'react';
 
@@ -17,6 +15,8 @@ import {
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { toTitleCase } from '@deps/utils/strings';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalSideSheetValues } from './types';
 

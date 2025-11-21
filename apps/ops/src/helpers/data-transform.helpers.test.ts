@@ -1,5 +1,6 @@
 import { cleanup } from '@testing-library/react';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
+
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import {
     defToObject,

@@ -1,5 +1,3 @@
-import { DEFAULT_ERROR_STRING } from '@xd/utils/src/strings';
-import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 import {
     TagVariant,
     AssistiveText,
@@ -36,6 +34,8 @@ import {
     ValidationResult,
 } from '@deps/queries/api/bpm';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import {
     filterNotRemoved,

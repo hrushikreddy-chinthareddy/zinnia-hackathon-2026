@@ -1,3 +1,6 @@
+import { TFunction } from 'next-i18next';
+
+import { typedEntries } from '@deps/utils/objects';
 import {
     Policy,
     LineOfBusiness,
@@ -7,9 +10,7 @@ import {
     Party,
     ProductType,
     Transaction,
-} from '@xd/api-types/dist/generated-types/sor';
-import { typedEntries } from '@xd/utils/dist';
-import { TFunction } from 'next-i18next';
+} from '@zinnia/api-types/types/sor';
 
 import {
     formatDataField,

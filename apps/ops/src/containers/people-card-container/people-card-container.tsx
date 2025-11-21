@@ -1,5 +1,3 @@
-import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
-import { PartyType } from '@zinnia/api-types/types/sor';
 import { useContext } from 'react';
 
 import CardPeople from '@deps/components/card/card-people/card-people';
@@ -7,6 +5,8 @@ import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { goTo } from '@deps/helpers/routing.helpers';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import { tagsToBeneficiaryType } from './people-card-container.helpers';
 import {

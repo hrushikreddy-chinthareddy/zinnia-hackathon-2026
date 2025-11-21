@@ -434,7 +434,8 @@ describe('case-management.ts helper functions', () => {
         });
 
         it('returns 0 when same day and less than 24 hours', () => {
-            const date = new Date('2024-02-15T03:00:00Z');
+            // Use a time safely earlier on the same calendar day in local time
+            const date = new Date('2024-02-15T11:00:00Z');
             expect(calculateDaysAgo(date)).toBe(0);
         });
 

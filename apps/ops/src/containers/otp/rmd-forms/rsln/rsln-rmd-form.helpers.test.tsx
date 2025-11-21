@@ -1,10 +1,11 @@
-import getRslnRmdConfig from './rsln-rmd-form.helpers';
-import { SignatureValidationTypeWithdrawal } from '../../../../models/case/renewal/signature-validation';
+import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
+    AmountType,
     PaymentMethod,
     SignatureWithdrawal,
-    AmountType,
-} from '../../../../models/case/withdrawal/case';
+} from '@deps/models/case/withdrawal/case';
+
+import getRslnRmdConfig from './rsln-rmd-form.helpers';
 
 describe('getRslnRmdConfig', () => {
     // Mock translation function
