@@ -434,19 +434,28 @@ describe('case-management.ts helper functions', () => {
         });
 
         it('returns 0 when same day and less than 24 hours', () => {
-            const date = new Date('2024-02-15T03:00:00Z');
+            // 3 hours ago from mocked now (same local calendar day)
+            const date = new Date(Date.now() - 3 * 60 * 60 * 1000);
             expect(calculateDaysAgo(date)).toBe(0);
         });
 
         it('returns 1 when different calendar day but less than 24 hours', () => {
-            // Choose a time that is previous local calendar day
-            // At now=2024-02-15T12:00:00Z, using 2024-02-14T18:00:00Z is <24h and previous local date
-            const date = new Date('2024-02-14T18:00:00Z');
+            // Choose a time in the previous local calendar day but < 24 hours from now
+            const now = new Date(Date.now());
+            const startOfTodayLocal = new Date(
+                now.getFullYear(),
+                now.getMonth(),
+                now.getDate()
+            );
+            // 6 hours before local start of today ensures it's yesterday and < 24h
+            const date = new Date(
+                startOfTodayLocal.getTime() - 6 * 60 * 60 * 1000
+            );
             expect(calculateDaysAgo(date)).toBe(1);
         });
 
         it('returns 2 when 49 hours ago', () => {
-            const date = new Date('2024-02-13T11:00:00Z');
+            const date = new Date(Date.now() - 49 * 60 * 60 * 1000);
             expect(calculateDaysAgo(date)).toBe(2);
         });
     });
