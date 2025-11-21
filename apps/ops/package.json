@@ -178,7 +178,7 @@
         "cypress": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh",
         "cypress:local": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh --local",
         "dev": "pnpm run build-api-types-if-needed && next dev",
-        "lint": "pnpm run build-api-types-if-needed && next lint",
+        "lint": "pnpm run build-api-types-if-needed && next lint --max-warnings=0",
         "lint-staged": "pnpm run build-api-types-if-needed && lint-staged",
         "lint:fix": "pnpm run build-api-types-if-needed && next lint --fix",
         "lint:test": "pnpm run build-api-types-if-needed && eslint 'src/**/*.{js,ts,jsx,tsx}' --max-warnings=0 --no-ignore",
