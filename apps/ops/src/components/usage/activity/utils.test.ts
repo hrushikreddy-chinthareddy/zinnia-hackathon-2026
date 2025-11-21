@@ -8,7 +8,7 @@ import {
     getTransactionTypesByCategory,
     buildTopLevelSeries,
     buildDrilldownSeries,
-    formatActivity,
+    formatIllustrationActivity,
     mergeDuplicatedIntoCreated,
 } from './utils';
 import { colors } from '../utils';
@@ -316,7 +316,7 @@ describe('mergeDuplicatedIntoCreated', () => {
     });
 });
 
-describe('formatActivity', () => {
+describe('formatIllustrationActivity', () => {
     it('combines correctly Created and Selected by data', () => {
         const data = [
             {
@@ -375,7 +375,7 @@ describe('formatActivity', () => {
             },
         ] as UserIllustrationActivityOutputLevel1[];
 
-        const rows = formatActivity(data);
+        const rows = formatIllustrationActivity(data);
 
         expect(rows.length).toBe(5);
 
@@ -434,7 +434,7 @@ describe('formatActivity', () => {
             },
         ] as UserIllustrationActivityOutputLevel1[];
 
-        const [row] = formatActivity(data);
+        const [row] = formatIllustrationActivity(data);
         expect(row).toEqual({
             date: '2025-10-23',
             created: 5,
