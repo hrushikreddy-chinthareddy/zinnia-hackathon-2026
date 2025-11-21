@@ -63,21 +63,6 @@ export const CustomTarget: Story = {
     },
 };
 
-export const MediumSize: Story = {
-    args: {
-        href: '#main',
-        tabIndex: 0,
-        size: 'medium',
-    },
-    parameters: {
-        docs: {
-            description: {
-                story: 'Skip link with medium size styling.',
-            },
-        },
-    },
-};
-
 export const WithMainContent: Story = {
     args: {
         href: '#demo-main',
