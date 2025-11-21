@@ -492,7 +492,7 @@ const isNonNullishObject = (v: unknown): v is Record<string, unknown> =>
 const isNonEmptyString = (v: unknown): v is string =>
     typeof v === 'string' && v !== ''; // TODO: more specific TS type
 
-function convertNode(
+export function convertNode(
     obj: unknown,
     t: TFunction,
     overrides?: Record<string, string>

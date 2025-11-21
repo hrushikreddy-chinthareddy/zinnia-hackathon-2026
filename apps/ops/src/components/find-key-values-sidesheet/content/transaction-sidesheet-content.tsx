@@ -7,18 +7,16 @@ import {
     FieldSize as BloomFieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
-import { KeyValueBasics } from '../components/key-value-basics';
-import { KeyValueSections } from '../components/key-value-sections';
+import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { prepareTransaction } from '../transformations';
-import { Collapse, Expand, NestedData } from '../types';
+import { convertNode } from '../transformations';
+import { Collapse, Expand } from '../types';
 
 export const TransactionSidesheetContent = ({
     transaction,
@@ -28,7 +26,6 @@ export const TransactionSidesheetContent = ({
     const [treeState, setTreeState] = useState(Collapse);
     const [searchValue, setSearchValue] = useState('');
     const { t } = useTranslation();
-    const { policy } = useContext(PolicyData);
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
     useEffect(() => {
@@ -37,27 +34,7 @@ export const TransactionSidesheetContent = ({
         setTreeState(Expand);
     }, [debouncedSearchValue]);
 
-    const preparedTransaction = useMemo(
-        () =>
-            prepareTransaction({
-                transaction,
-                policy,
-                t,
-                searchValue: debouncedSearchValue,
-            }),
-        [transaction, policy, debouncedSearchValue, t]
-    );
-
-    const { basics, sections } = useMemo(
-        () =>
-            preparedTransaction
-                ? preparedTransaction.toSections()
-                : {
-                      basics: null,
-                      sections: null,
-                  },
-        [preparedTransaction]
-    );
+    const nodes = convertNode(transaction, t);
 
     return (
         <div className={styles.keyValuesContainer}>
@@ -87,24 +64,8 @@ export const TransactionSidesheetContent = ({
                         {treeState === Expand ? 'Collapse all' : 'Expand all'}
                     </Button>
                 </div>
-                {basics && (
-                    <KeyValueBasics
-                        policyBasics={basics as NestedData[]}
-                        searchValue={searchValue}
-                        treeState={treeState}
-                    />
-                )}
-
-                {!!sections?.length && (
-                    <KeyValueSections
-                        preparedData={preparedTransaction}
-                        sections={sections}
-                        searchValue={searchValue}
-                        treeState={treeState}
-                    />
-                )}
-
-                {!basics && !sections?.length && (
+                <DataNodeRenderer nodes={nodes} />
+                {!nodes.length && (
                     <div className={styles.emptySearch}>
                         <Label>
                             <Icon

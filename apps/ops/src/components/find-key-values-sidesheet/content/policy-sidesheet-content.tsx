@@ -11,10 +11,7 @@ import {
     FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import isBetween from 'dayjs/plugin/isBetween';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
@@ -24,19 +21,10 @@ import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
-import { KeyValueBasics } from '../components/key-value-basics';
-import { KeyValueSections } from '../components/key-value-sections';
+import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { preparePolicy } from '../transformations';
-import {
-    Collapse,
-    Expand,
-    FindAllKeyValuesSidebarProps,
-    NestedData,
-} from '../types';
-dayjs.extend(localizedFormat);
-dayjs.extend(customParseFormat);
-dayjs.extend(isBetween);
+import { convertNode } from '../transformations';
+import { Collapse, Expand, FindAllKeyValuesSidebarProps } from '../types';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -88,30 +76,6 @@ export const PolicySidesheetContent = ({
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
-    // This retains all the persistent extracted data on the policy
-    const preparedPolicy = useMemo(
-        () =>
-            policy
-                ? preparePolicy({
-                      policy,
-                      t,
-                      searchValue: debouncedSearchValue,
-                  })
-                : null,
-        [policy, debouncedSearchValue, t]
-    );
-
-    const { basics, sections } = useMemo(
-        () =>
-            preparedPolicy
-                ? preparedPolicy.toSections()
-                : {
-                      basics: null,
-                      sections: null,
-                  },
-        [preparedPolicy]
-    );
-
     // If the search value changes to non-empty, expand the tree
     // (the tree will be cropped to matching search results)
     useEffect(() => {
@@ -126,7 +90,9 @@ export const PolicySidesheetContent = ({
         setTreeState(Expand);
     }, [debouncedSearchValue, authSessionId, planCode, policyNumber]);
 
-    if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
+    const nodes = convertNode(policy, t);
+
+    if (!nodes) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
             <FieldDateSingle
@@ -178,24 +144,8 @@ export const PolicySidesheetContent = ({
                                 : 'Expand all'}
                         </Button>
                     </div>
-                    {basics && (
-                        <KeyValueBasics
-                            policyBasics={basics as NestedData[]}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    )}
-
-                    {!!sections?.length && (
-                        <KeyValueSections
-                            preparedData={preparedPolicy}
-                            sections={sections}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    )}
-
-                    {!basics && !sections?.length && (
+                    <DataNodeRenderer nodes={nodes} />
+                    {!nodes.length && (
                         <div className={styles.emptySearch}>
                             <Label>
                                 <Icon
