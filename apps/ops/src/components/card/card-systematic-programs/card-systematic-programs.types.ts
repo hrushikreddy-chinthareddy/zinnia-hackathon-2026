@@ -54,3 +54,7 @@ export const programStatusDictionary: Record<Status, string> = {
     PENDING: 'Pending',
     SUSPENDED: 'Suspended',
 };
+
+export enum SystematicProgramsCardTest {
+    CONTAINER = 'systematic-programs-card-container-test-id',
+}

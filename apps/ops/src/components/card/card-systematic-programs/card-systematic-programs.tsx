@@ -30,11 +30,11 @@ import {
     frequencyDictionary,
     paymentFormDictionary,
     programStatusDictionary,
+    SystematicProgramsCardTest,
 } from './card-systematic-programs.types';
 import styles from './systematic-programs-table.module.css';
 import FooterAction from '../card-footer-action/card-footer.action';
 import CardSection from '../card-section/card-section';
-import { UpcomingPaymentCardTest } from '../card-upcoming-payment/card-upcoming-payment.types';
 
 const SystematicProgramsCard = ({
     title,
@@ -76,7 +76,7 @@ const SystematicProgramsCard = ({
 
     return (
         <CardSection
-            data-testid={UpcomingPaymentCardTest.CONTAINER}
+            data-testid={SystematicProgramsCardTest.CONTAINER}
             headerClassName={styles.header}
             headerContent={
                 <div className={styles.header}>
@@ -101,7 +101,7 @@ const SystematicProgramsCard = ({
                         text={label}
                         value={showTerminatedOrSuspended}
                         variant={ToggleVariant.Default}
-                        data-testid="cost-basis-toggle"
+                        data-testid="show-history-toggle"
                         classes={
                             showTerminatedOrSuspended
                                 ? styles.toggle
@@ -296,14 +296,16 @@ const SystematicProgramsCard = ({
                                     )
                                 )
                             ) : (
-                                <TableCell colSpan={6}>
-                                    <div className={styles.emptyTableCell}>
-                                        <Content
-                                            details={`There are currently no ${getEmptyLabel()} systematic programs.`}
-                                            variant={ContentVariant.BodySm}
-                                        />
-                                    </div>
-                                </TableCell>
+                                <TableRow>
+                                    <TableCell colSpan={6}>
+                                        <div className={styles.emptyTableCell}>
+                                            <Content
+                                                details={`There are currently no ${getEmptyLabel()} systematic programs.`}
+                                                variant={ContentVariant.BodySm}
+                                            />
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
                             )}
                         </TableBody>
                     }
