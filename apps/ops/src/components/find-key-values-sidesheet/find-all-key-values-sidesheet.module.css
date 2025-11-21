@@ -48,12 +48,6 @@
     z-index: 600;
 }
 
-.subSectionContainer:has(.subSectionStd) {
-    border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
-    border-radius: var(--measure-dimension-radius-sm);
-}
-
 .subSectionContainer > .subSectionStd {
     margin: var(--measure-dimension-padding-xl);
 }
@@ -70,22 +64,6 @@
     border: var(--measure-dimension-stroke-sm) solid
         var(--color-base-border-border-light);
     border-radius: var(--measure-dimension-radius-sm);
-
-    &:not(:last-child) {
-        margin-bottom: var(--measure-dimension-margin-xs);
-    }
-}
-
-.subSectionBoxed {
-    padding: var(--measure-dimension-padding-xl);
-    gap: var(--measure-dimension-margin-xs);
-    border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
-    border-radius: var(--measure-dimension-radius-sm);
-
-    &:not(:last-child) {
-        margin-bottom: var(--measure-dimension-margin-xs);
-    }
 }
 
 .subSectionContainer > .subSectionStd {
