@@ -5,7 +5,7 @@ import { typedEntries } from '@deps/utils/objects';
 Agenda:
 - filter nodes through show/hide list by key
 - custom-group nodes and rename keys
-- enforce TS safety
+- enforce TS safety (done)
 - the "structured tree" will have translated labels and values <- doesn't change on search
 - search will transform the "structured tree" into the "search/render tree" <- rebuild on every search
 - modify render components to fit the new structure
@@ -38,7 +38,7 @@ import {
     link,
     linkedField,
     MetaData,
-    Section,
+    DataSection,
     FormatterType,
     ToSections,
     ToSectionsProps,
@@ -46,10 +46,9 @@ import {
     FieldType,
     DataNode,
     Primitive,
-    NodeGroup,
 } from './types';
 
-const renderData: NodeGroup = [
+const renderData: DataNode[] = [
     {
         type: FieldType.section,
         label: 'Contract Basics',
@@ -73,7 +72,7 @@ const renderData: NodeGroup = [
             {
                 // if no label, may not have tags or value
 
-                type: FieldType.list,
+                type: FieldType.group,
 
                 // only allowed if there is no value
                 children: [
@@ -171,7 +170,7 @@ const renderData: NodeGroup = [
                 value: 'Active',
             },
             {
-                type: FieldType.list,
+                type: FieldType.group,
                 children: [
                     [
                         {
@@ -250,7 +249,7 @@ const renderData: NodeGroup = [
                 ],
             },
             {
-                type: FieldType.list,
+                type: FieldType.group,
                 children: [
                     [
                         {
@@ -304,7 +303,7 @@ export const preparePolicy = ({
     allPartiesById?: Record<string, Party>;
     toSections: (policyOverride?: Policy) => {
         basics: NestedData[] | null;
-        sections: Section[];
+        sections: DataSection[];
     };
     formatAsSectionLabel: (label: string) => string;
 } => {
@@ -379,7 +378,7 @@ export const preparePolicy = ({
                     ...acc,
                     sections: [
                         ...acc.sections,
-                        [currentKey, currentVal] as Section,
+                        [currentKey, currentVal] as DataSection,
                     ],
                 };
             }
@@ -497,7 +496,7 @@ function convertNode(
     obj: unknown,
     t: TFunction,
     overrides?: Record<string, string>
-): NodeGroup {
+): DataNode[] {
     if (!isNonNullishObject(obj)) return [];
 
     return typedEntries(obj)
@@ -528,8 +527,8 @@ function convertTuple(
     if (isUnknownArray(value)) {
         const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
         if (sectionLabelFieldName) {
-            const sections: Section[] = value
-                .map((item): Section | undefined => {
+            const sections: DataSection[] = value
+                .map((item): DataSection | undefined => {
                     //object within each array item
 
                     if (!isNonNullishObject(item)) return;
@@ -538,7 +537,7 @@ function convertTuple(
                     if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
 
                     // TODO: filter out fields that are not visible, including the title field
-                    const fields: NodeGroup = convertNode(item, t, overrides);
+                    const fields: DataNode[] = convertNode(item, t, overrides);
 
                     return {
                         type: FieldType.section,
@@ -556,7 +555,7 @@ function convertTuple(
         } else {
             // value is list of groups
 
-            const groups: NodeGroup[] = value.map((item) =>
+            const groups: DataNode[][] = value.map((item) =>
                 convertNode(item, t, overrides)
             );
             if (groups.length === 0) return;
@@ -567,7 +566,7 @@ function convertTuple(
                 children: [
                     // In some instances the array will also contain fields and sections
                     {
-                        type: FieldType.list,
+                        type: FieldType.group,
                         children: groups,
                     },
                 ],
@@ -664,7 +663,7 @@ const toSections = (props: ToSectionsProps): ToSections => {
                         ...acc,
                         sections: [
                             ...acc.sections,
-                            [currentKey, currentVal] as Section,
+                            [currentKey, currentVal] as DataSection,
                         ],
                     };
                 }
@@ -739,7 +738,7 @@ const toSections = (props: ToSectionsProps): ToSections => {
         basicsAndSections.sections.push([
             config.labels.people,
             people,
-        ] as Section);
+        ] as DataSection);
     }
 
     // Fill in the section title
@@ -770,7 +769,7 @@ const toSections = (props: ToSectionsProps): ToSections => {
                     ? [section[0], fieldsAndSubsections]
                     : null;
             })
-            .filter((section) => section != null) as Section[],
+            .filter((section) => section != null) as DataSection[],
     };
 };
 
@@ -1318,7 +1317,7 @@ function parseLoanValues({
                     ...currentVal,
                     ...loanSegments,
                 },
-            ] as Section,
+            ] as DataSection,
         ],
     };
 }
@@ -1381,7 +1380,7 @@ function parseRiders({
         ...acc,
         sections: [
             ...acc.sections,
-            [currentKey, ridersAndParticipants ?? currentVal] as Section,
+            [currentKey, ridersAndParticipants ?? currentVal] as DataSection,
         ],
     };
 }
@@ -1469,7 +1468,10 @@ function parseSystematicPrograms({
         ...acc,
         sections: [
             ...acc.sections,
-            [currentKey, systematicProgramsAndParties ?? currentVal] as Section,
+            [
+                currentKey,
+                systematicProgramsAndParties ?? currentVal,
+            ] as DataSection,
         ],
     };
 }
@@ -1526,7 +1528,7 @@ function parseAllocation({
                         ...currentVal,
                         ...funds,
                     },
-                ] as Section,
+                ] as DataSection,
             ],
         }),
     };

@@ -7,8 +7,6 @@ import {
     Transaction,
 } from '@zinnia/api-types/types/sor';
 
-export type DataField = string | number | boolean | null;
-
 export type DataTuple = [string, DataField];
 
 export type NestedDataTuple = [string, NestedData];
@@ -93,10 +91,10 @@ export type TransformationsConfig = {
         currentKey,
     }: {
         sectionTitle: keyof Policy;
-        acc: NodeGroup;
+        acc: DataNode[];
         currentVal: object;
         currentKey: string;
-    }) => NodeGroup;
+    }) => DataNode[];
     showSection?: (
         sectionTitle: string,
         policy?: Policy,
@@ -109,15 +107,15 @@ export type Primitive = string | number | boolean;
 
 const FIELD = Symbol('FIELD');
 const SECTION = Symbol('SECTION');
-const LIST = Symbol('LIST');
+const GROUP = Symbol('GROUP');
 
 export const FieldType = {
     field: FIELD,
     section: SECTION,
-    list: LIST,
+    group: GROUP,
 } as const;
 
-export type Field = {
+export type DataField = {
     type: typeof FieldType.field;
     label: string;
     value: string;
@@ -125,18 +123,16 @@ export type Field = {
     toolTip?: string;
 };
 
-export type Section = {
+export type DataSection = {
     type: typeof FieldType.section;
     label: string;
     children: DataNode[];
     tags?: string[];
 };
 
-export type NodeGroup = DataNode[]; // a group of any nodes
-
-export type List = {
-    type: typeof FieldType.list;
-    children: NodeGroup[]; // arrays of arrays (groups) of nodes
+export type DataGroup = {
+    type: typeof FieldType.group;
+    children: DataNode[][]; // arrays of arrays (groups) of nodes
 };
 
-export type DataNode = Field | Section | List;
+export type DataNode = DataField | DataSection | DataGroup;

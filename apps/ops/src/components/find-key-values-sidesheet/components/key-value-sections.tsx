@@ -3,7 +3,7 @@ import { Accordion, AccordionType } from '@zinnia/bloom/components';
 import Highlighter from '@deps/components/highlighter/highlighter';
 
 import { preparePolicy, prepareTransaction } from '../transformations';
-import { ExpandCollapse, Section } from '../types';
+import { ExpandCollapse, DataSection } from '../types';
 import { KeyValueFieldList } from './key-value-field-list';
 import { KeyValueSubSections } from './key-value-sub-sections';
 import styles from '../find-all-key-values-sidesheet.module.css';
@@ -15,7 +15,7 @@ import styles from '../find-all-key-values-sidesheet.module.css';
  * Each section contains a list of DataField components and/or a list of subsections.
  * The subsections are rendered recursively using the KeyValueSubSections component.
  * @param {ReturnType<typeof preparePolicy | prepareTransaction>} preparedData
- * @param {Section[]} section
+ * @param {DataSection[]} section
  * @param {string} searchValue
  * @returns {JSX.Element[]}
  */
@@ -26,7 +26,7 @@ export const KeyValueSections = ({
     treeState,
 }: {
     preparedData: ReturnType<typeof preparePolicy | typeof prepareTransaction>;
-    sections: Section[] | null;
+    sections: DataSection[] | null;
     searchValue: string;
     treeState: ExpandCollapse;
 }) => {
