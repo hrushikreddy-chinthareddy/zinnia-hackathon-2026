@@ -164,6 +164,10 @@
                         "party": {
                             "type": "object",
                             "properties": {
+                                "identificationHeader": {
+                                    "type": "object",
+                                    "title": "Identification"
+                                },
                                 "partyType": {
                                     "type": "string",
                                     "enum": [
@@ -186,14 +190,18 @@
                                         }
                                     }
                                 },
+                                "contactDetailsHeader": {
+                                    "type": "object",
+                                    "title": "Contact Details"
+                                },
                                 "preferredCommunicationType": {
-                                    "type": "string",
+                                    "type": ["string", "null"],
                                     "enum": ["EMAIL", "REGULARMAIL", null],
-                                    "title": "Communication preference"
+                                    "title": "Preferred contact method"
                                 },
                                 "addresses": {
                                     "type": "array",
-                                    "title": "",
+                                    "title": "Address",
                                     "items": {
                                         "type": "object",
                                         "properties": {
@@ -203,8 +211,8 @@
                                                 "enum": [
                                                     "RESIDENCE",
                                                     "BUSINESS",
-                                                    "SECONDARYADDRESS",
-                                                    "DEFAULT"
+                                                    "SEASONAL",
+                                                    "POBOX"
                                                 ]
                                             },
                                             "addressLine1": {
@@ -286,8 +294,13 @@
                                             "zipCode": {
                                                 "type": ["string", "null"],
                                                 "title": "Zip"
+                                            },
+                                            "isPreferred": {
+                                                "type": "boolean",
+                                                "title": "Preferred"
                                             }
-                                        }
+                                        },
+                                        "required": ["addressType"]
                                     }
                                 },
                                 "phones": {
@@ -300,19 +313,19 @@
                                                 "type": "string",
                                                 "title": "Phone type",
                                                 "enum": [
-                                                    "FAX",
-                                                    "BUSINESS",
                                                     "MOBILE",
-                                                    "HOMEFAX",
-                                                    "MODEM",
                                                     "HOME",
-                                                    "SECONDARYHOME",
-                                                    "OTHER"
+                                                    "BUSINESS",
+                                                    "FAX"
                                                 ]
                                             },
                                             "dialNumber": {
                                                 "type": ["string", "null"],
-                                                "title": "Number"
+                                                "title": "Phone"
+                                            },
+                                            "isPreferred": {
+                                                "type": "boolean",
+                                                "title": "Preferred"
                                             }
                                         }
                                     }
@@ -335,6 +348,10 @@
                                             "emailAddress": {
                                                 "type": ["string", "null"],
                                                 "title": "Email"
+                                            },
+                                            "isPreferred": {
+                                                "type": "boolean",
+                                                "title": "Preferred"
                                             }
                                         }
                                     }
@@ -399,7 +416,9 @@
                                                     null,
                                                     "INDIVIDUALTRUST",
                                                     "CORPORATETRUST",
-                                                    "TESTAMENTARYTRUST"
+                                                    "TESTAMENTARYTRUST",
+                                                    "INTERVIVOSTRUST",
+                                                    "GRANTORTRUST"
                                                 ],
                                                 "default": null
                                             },
@@ -466,6 +485,7 @@
                     },
                     "party": {
                         "ui:order": [
+                            "identificationHeader",
                             "partyType",
                             "prefix",
                             "firstName",
@@ -476,6 +496,7 @@
                             "supportingDocumentAttached",
                             "entityType",
                             "identifications",
+                            "contactDetailsHeader",
                             "preferredCommunicationType",
                             "addresses",
                             "phones",
@@ -485,6 +506,12 @@
                             "label": false,
                             "ObjectFieldTemplate": "AddressFieldTemplate",
                             "backgroundColor": "white"
+                        },
+                        "identificationHeader": {
+                            "ui:options": {
+                                "ObjectFieldTemplate": "TitleFieldTemplate",
+                                "fontType": "title"
+                            }
                         },
                         "partyType": {
                             "ui:widget": "radio",
@@ -533,7 +560,9 @@
                                     "Select trust type",
                                     "Individual Trust",
                                     "Corporate Trust",
-                                    "Testamentary Trust"
+                                    "Testamentary Trust",
+                                    "Inter Vivos Trust",
+                                    "Grantor Trust"
                                 ]
                             },
                             "ui:placeholder": "Select trust type"
@@ -545,7 +574,8 @@
                             "ui:widget": "radio",
                             "ui:options": {
                                 "inline": true,
-                                "enumNames": ["Yes", "No", null]
+                                "enumNames": ["Yes", "No", null],
+                                "allowNullValue": true
                             }
                         },
                         "entityType": {
@@ -585,8 +615,14 @@
                                 }
                             }
                         },
+                        "contactDetailsHeader": {
+                            "ui:options": {
+                                "ObjectFieldTemplate": "TitleFieldTemplate",
+                                "fontType": "title"
+                            }
+                        },
                         "preferredCommunicationType": {
-                            "ui:widget": "radio",
+                            "ui:widget": "RadioWidget",
                             "ui:options": {
                                 "inline": true,
                                 "enumNames": ["Email", "Mail", "Not specified"]
@@ -604,18 +640,26 @@
                                 "ui:options": {
                                     "label": false,
                                     "noMargin": true,
-                                    "nobackground": true
+                                    "nobackground": true,
+                                    "ObjectFieldTemplate": "AddressFieldTemplate",
+                                    "backgroundColor": "white",
+                                    "classes": "p-0"
                                 },
                                 "addressType": {
                                     "ui:widget": "radio",
                                     "ui:options": {
                                         "inline": true,
                                         "enumNames": [
-                                            "Home address",
-                                            "Business address",
-                                            "Secondary address",
-                                            "Default"
+                                            "Residential",
+                                            "Business",
+                                            "Seasonal",
+                                            "PO Box"
                                         ]
+                                    }
+                                },
+                                "city": {
+                                    "ui:options": {
+                                        "width": 25
                                     }
                                 },
                                 "state": {
@@ -681,14 +725,18 @@
                                             "WI",
                                             "WV",
                                             "WY"
-                                        ]
+                                        ],
+                                        "width": 25
                                     }
                                 },
                                 "zipCode": {
                                     "ui:widget": "NumbersWidget",
                                     "pattern": "^[0-9]{5}$",
                                     "format": "#####",
-                                    "errorMessage": "Please enter valid zip code (5 digits)"
+                                    "errorMessage": "Please enter valid zip code (5 digits)",
+                                    "ui:options": {
+                                        "width": 25
+                                    }
                                 }
                             }
                         },
@@ -711,14 +759,10 @@
                                     "ui:options": {
                                         "inline": true,
                                         "enumNames": [
-                                            "Business fax",
-                                            "Business telephone",
-                                            "Cellular car/telephone",
-                                            "Home fax",
-                                            "Modem",
-                                            "Home telephone",
-                                            "Secondary home telephone",
-                                            "Default"
+                                            "Mobile",
+                                            "Home",
+                                            "Business",
+                                            "Fax"
                                         ]
                                     }
                                 },
@@ -734,7 +778,7 @@
                                 "addable": false,
                                 "orderable": false,
                                 "removable": false,
-                                "label": false,
+                                "label": true,
                                 "title": "Email"
                             },
                             "items": {
@@ -764,43 +808,42 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "thirdPartyDesignee": {
-                            "type": "object",
-                            "properties": {
-                                "signature": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "signType": {
-                                                "type": "string",
-                                                "title": "Type"
-                                            },
-                                            "isSignedPresent": {
-                                                "type": "string",
-                                                "title": "Signature present?",
-                                                "enum": ["Yes", "No"]
-                                            },
-                                            "signDesignation": {
-                                                "type": "string",
-                                                "title": "Designation",
-                                                "enum": [
-                                                    "Trustee",
-                                                    "Executor",
-                                                    "Custodian",
-                                                    "Guardian",
-                                                    "Attorney-in-fact",
-                                                    "Assignee",
-                                                    "NA"
-                                                ]
-                                            },
-                                            "signDate": {
-                                                "type": ["string", "null"],
-                                                "title": "Signature date",
-                                                "format": "date",
-                                                "default": null
-                                            }
-                                        }
+                        "signatures": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "signType": {
+                                        "type": "string",
+                                        "title": "Type"
+                                    },
+                                    "signTypeForUI": {
+                                        "type": "string",
+                                        "title": "Type"
+                                    },
+                                    "isSignedPresent": {
+                                        "type": "boolean",
+                                        "title": "Signature present?",
+                                        "enum": [true, false]
+                                    },
+                                    "signDesignation": {
+                                        "type": "string",
+                                        "title": "Designation",
+                                        "enum": [
+                                            "Trustee",
+                                            "Executor",
+                                            "Custodian",
+                                            "Guardian",
+                                            "Attorney-in-fact",
+                                            "Assignee",
+                                            "NA"
+                                        ]
+                                    },
+                                    "signDate": {
+                                        "type": ["string", "null"],
+                                        "title": "Signature date",
+                                        "format": "date",
+                                        "default": null
                                     }
                                 }
                             }
@@ -817,59 +860,55 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "thirdPartyDesignee": {
-                        "ui:order": ["signature"],
+                    "signatures": {
                         "ui:options": {
-                            "label": false,
-                            "ObjectFieldTemplate": "AddressFieldTemplate",
-                            "backgroundColor": "white"
+                            "addable": false,
+                            "label": false
                         },
-                        "signature": {
+                        "items": {
                             "ui:options": {
-                                "addable": false,
-                                "label": false
+                                "label": false,
+                                "nobackground": true,
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "backgroundColor": "white",
+                                "classes": "p-0"
                             },
-                            "items": {
+                            "signType": {
+                                "ui:widget": "hidden"
+                            },
+                            "signTypeForUI": {
                                 "ui:options": {
                                     "label": false,
-                                    "nobackground": true,
-                                    "ObjectFieldTemplate": "AddressFieldTemplate",
-                                    "backgroundColor": "white",
-                                    "classes": "p-0"
-                                },
-                                "signType": {
-                                    "ui:options": {
-                                        "label": false,
-                                        "readonly": true
-                                    }
-                                },
-                                "isSignedPresent": {
-                                    "ui:widget": "radio",
-                                    "ui:options": {
-                                        "enumNames": ["Yes", "No"],
-                                        "inline": true,
-                                        "width": 25
-                                    }
-                                },
-                                "signDesignation": {
-                                    "ui:widget": "select",
-                                    "ui:options": {
-                                        "enumNames": [
-                                            "Trustee",
-                                            "Executor",
-                                            "Custodian",
-                                            "Guardian",
-                                            "Attorney-in-fact",
-                                            "Assignee",
-                                            "NA"
-                                        ],
-                                        "width": 33
-                                    }
-                                },
-                                "signDate": {
-                                    "ui:options": {
-                                        "width": 33
-                                    }
+                                    "readonly": true,
+                                    "omitValue": true
+                                }
+                            },
+                            "isSignedPresent": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "enumNames": ["Yes", "No"],
+                                    "inline": true,
+                                    "width": 25
+                                }
+                            },
+                            "signDesignation": {
+                                "ui:widget": "select",
+                                "ui:options": {
+                                    "enumNames": [
+                                        "Trustee",
+                                        "Executor",
+                                        "Custodian",
+                                        "Guardian",
+                                        "Attorney-in-fact",
+                                        "Assignee",
+                                        "NA"
+                                    ],
+                                    "width": 33
+                                }
+                            },
+                            "signDate": {
+                                "ui:options": {
+                                    "width": 33
                                 }
                             }
                         }

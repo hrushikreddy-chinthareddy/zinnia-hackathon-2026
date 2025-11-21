@@ -1,21 +1,34 @@
 {
     "id": "TA000000022112",
+    "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
     "caseId": "CA0000402461",
     "source": "Zinnia.BPMTransactions",
     "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
     "process": "Policy Update",
+    "processSubType": "Third Party Designee Change",
     "carrier": "WELB",
     "taskType": "THIRD_PARTY_DETAIL",
     "taskName": "Third Party Data Entry",
     "status": "NEW",
+    "category": "Data entry",
+    "productType": "",
     "data": {
+        "caseId": "CA0000402461",
         "process": "Policy Update",
-        "policyNumber": "ADA2501506",
+        "policyNumber": "FIUL844450420",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
         "taskName": "Third Party Data Entry",
         "processSubType": "Third Party Designee Change",
-        "planCode": "WBFDAV03",
+        "planCode": "IU0101",
         "policyStatus": "ACTIVE",
+        "transactionName": "ThirdPartyDesignee",
+        "businessKey": "",
+        "partyRole": "ThirdPartyDesignee",
+        "partyId": "bb55421365184fb29ea820f0840c3db1",
+        "deleteRequest": false,
+        "requestType": "ADD",
+        "effectiveDate": "2025-11-07",
+        "supportingDocumentAttached": false,
         "documents": [
             {
                 "documentId": "67c1b9655c3f6536d7f2ac69",
@@ -24,15 +37,26 @@
             }
         ],
         "party": {
+            "partyId": "bb55421365184fb29ea820f0840c3db1",
             "partyType": "INDIVIDUAL",
             "prefix": "Mr.",
             "firstName": "first",
-            "middleName": "",
+            "middleName": "middle",
             "lastName": "last",
+            "fullName": "first middle last",
+            "entityType": null,
+            "dateOfBirth": null,
+            "gender": null,
+            "trustDate": null,
+            "trustType": null,
             "identifications": [
                 {
                     "identificationValue": "123-45-6789",
-                    "identificationType": "SSN"
+                    "identificationType": "SSN",
+                    "endDate": null,
+                    "issueCountry": null,
+                    "permanentResident": null,
+                    "startDate": "2025-11-21"
                 }
             ],
             "preferredCommunicationType": "EMAIL",
@@ -42,38 +66,68 @@
                     "addressLine1": "123",
                     "city": "California",
                     "state": "CA",
-                    "zipCode": "90001"
+                    "zipCode": "90001",
+                    "isPreferred": true,
+                    "country": "US",
+                    "endDate": null,
+                    "startDate": "2025-11-21",
+                    "zipCodeExtension": ""
+                },
+                {
+                    "addressType": "RESIDENCE",
+                    "addressLine1": "456",
+                    "city": "California",
+                    "state": "CA",
+                    "zipCode": "90001",
+                    "isPreferred": false,
+                    "country": "US",
+                    "endDate": null,
+                    "startDate": "2025-11-21",
+                    "zipCodeExtension": ""
                 }
             ],
             "phones": [
                 {
                     "phoneType": "BUSINESS",
-                    "dialNumber": "1234567890"
+                    "dialNumber": "1234567890",
+                    "areaCode": "777",
+                    "countryCode": "1",
+                    "endDate": null,
+                    "isPreferred": true,
+                    "startDate": "2025-11-21"
                 }
             ],
             "emails": [
                 {
                     "emailType": "BUSINESS",
-                    "emailAddress": "1234567890"
+                    "emailAddress": "1234567890",
+                    "endDate": null,
+                    "isPreferred": true,
+                    "startDate": "2025-11-21"
                 }
             ]
         },
-        "signature": [
+        "signatures": [
             {
-                "signType": "Owner",
-                "isSignedPresent": "Yes",
-                "signDesignation": "Trustee"
+                "signType": "OWNER",
+                "signTypeForUI": "Owner",
+                "signDate": "2025-11-07",
+                "signDesignation": "NA",
+                "isSignedPresent": true
             },
             {
-                "signType": "Third party designee",
-                "isSignedPresent": "Yes",
-                "signDesignation": "Trustee"
+                "signType": "JOINT_OWNER",
+                "signTypeForUI": "Joint Owner",
+                "signDate": "2025-11-07",
+                "signDesignation": "NA",
+                "isSignedPresent": true
             }
-        ],
-        "summary": {
-            "matchDetails": "Yes",
-            "designeeType": "Trust"
-        }
+        ]
+    },
+    "submitInfo": {
+        "submittedBy": "ace.test@farmersinsurance.com",
+        "source": "Zinnia Live",
+        "submittedByPartyId": "bb64385533b9458badb4629bb240275c"
     },
     "mappedExceptions": [],
     "mappedDocuments": [],
