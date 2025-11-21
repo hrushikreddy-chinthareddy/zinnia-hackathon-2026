@@ -129,6 +129,7 @@ export enum Processes {
     PhoneNumberChange = 'Phone Change',
     BankChange = 'Bank Info Change',
     CommunicationPreferenceChange = 'Communication Preference Change',
+    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
     SystematicProgramUpdate = 'Systematic Program Update',
     SystematicProgramSetup = 'Systematic Program Setup',
     SetupPayment = 'Setup Payment',

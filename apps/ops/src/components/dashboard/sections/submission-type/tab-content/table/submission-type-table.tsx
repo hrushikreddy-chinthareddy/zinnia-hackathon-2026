@@ -73,13 +73,10 @@ export const SubmissionTypeTable = () => {
 
     const {
         graphStats,
-        timerange,
         submissionVs,
-        selectedProcess,
         graphStatsLoading,
         graphStatsFetching,
         graphStatsError,
-        filter,
     } = useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it

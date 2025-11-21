@@ -8,7 +8,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import UpdateNotificationMethodContainer from '@deps/containers/death-claim-container/update-notification-method/update-notification-method-container';
 import { UpdateNotificationMethodProvider } from '@deps/contexts/UpdateNotificationMethodContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
-import { getUserData } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE, ALL_LOCALES } from '@deps/helpers/routing.helpers';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
@@ -36,8 +35,6 @@ interface UpdateNotificationMethodProps {
 
 const UpdateNotificationMethod = ({
     recordId,
-    policyNumber,
-    carrier,
     policy,
 }: UpdateNotificationMethodProps) => {
     const [transactionData, setTransactionData] =
@@ -83,8 +80,6 @@ const UpdateNotificationMethod = ({
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
-            const user = await getUserData(context);
-
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const logCtx = {
                 ...loggingContext,

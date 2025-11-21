@@ -69,7 +69,7 @@ function AddressDetails({
     });
     const { t: defaultT } = useTranslation();
 
-    const { currentErrors, setCurrentErrors } = useRoleChange();
+    const { currentErrors } = useRoleChange();
     const addressTypeOptions = getNewAddressTypeOptions({ t: defaultT });
     const stateOptions = getStateCodes().map((state) => ({
         label: state,

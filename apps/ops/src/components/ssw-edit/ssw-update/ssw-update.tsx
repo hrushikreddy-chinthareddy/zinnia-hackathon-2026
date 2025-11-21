@@ -47,7 +47,6 @@ const SswUpdate = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState(false);
-    const [timer] = useState(performance.now());
     const source = getDocumentSource(document.documentNumber);
 
     let oldProgram: Program[] = [];
@@ -86,8 +85,7 @@ const SswUpdate = ({
                     updateProgram,
                     document,
                     operationType
-                ),
-                timer
+                )
             );
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
@@ -102,8 +100,7 @@ const SswUpdate = ({
                     updateProgram,
                     document,
                     operationType
-                ),
-                timer
+                )
             );
         }
 

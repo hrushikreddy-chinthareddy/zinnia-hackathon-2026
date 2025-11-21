@@ -1134,6 +1134,7 @@ describe('SummaryWidget', () => {
                 ],
             });
 
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { rerender } = render(<SummaryWidget {...props} />);
 
             await waitFor(() => {

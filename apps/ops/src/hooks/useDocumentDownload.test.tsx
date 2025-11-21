@@ -4,6 +4,7 @@ import { saveAs } from 'file-saver';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { getDocumentDownloadQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 
 import { useDocumentDownload } from './useDocumentDownload';
 
@@ -39,8 +40,8 @@ describe('useDocumentDownload', () => {
     const mockBlob = new Blob(['test']);
     const mockGetDocumentDownloadQuery = getDocumentDownloadQuery as jest.Mock;
     const mockSaveAs = saveAs as jest.MockedFunction<typeof saveAs>;
-    const isFeatureFlagVariableActive = require('@deps/utils/optimizely/utils')
-        .isFeatureFlagVariableActive as jest.Mock;
+    const mockIsFeatureFlagVariableActive =
+        isFeatureFlagVariableActive as jest.Mock;
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (
         <QueryClientProvider client={new QueryClient()}>
@@ -112,7 +113,7 @@ describe('useDocumentDownload', () => {
         [true, 'uses useV3 = true'],
         [false, 'uses useV3 = false'],
     ])('respects feature flag: %s', async (flagValue, _) => {
-        isFeatureFlagVariableActive.mockReturnValue(flagValue);
+        mockIsFeatureFlagVariableActive.mockReturnValue(flagValue);
 
         mockGetDocumentDownloadQuery.mockResolvedValue({
             blob: mockBlob,

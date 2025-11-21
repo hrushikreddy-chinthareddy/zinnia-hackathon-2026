@@ -40,13 +40,6 @@ const customLabelMap: Record<string, string> = Object.keys(TaskLabel).reduce(
     {} as Record<string, string>
 );
 
-type Errors = {
-    createdDateStart?: string;
-    createdDateEnd?: string;
-    updatedDateStart?: string;
-    updatedDateEnd?: string;
-};
-
 type FilterPayload = {
     carriers: string[];
     statuses: string[];
@@ -110,7 +103,6 @@ export default function SideSheetTasksResults({
     const [additionalFilters, setAdditionalFilters] =
         useState<AdditionalFilters>(initialAdditionalFilters);
     const [groupList, setGroupList] = useState<string[]>([]);
-    const [errors, setErrors] = useState<Errors>({});
 
     const getUniqueCarrierFilterItems = () => {
         const carrierLabels = new Set();

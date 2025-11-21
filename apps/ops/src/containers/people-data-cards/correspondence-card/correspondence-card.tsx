@@ -35,8 +35,6 @@ const CorrespondenceCard = ({
     policy,
     communicationOptions,
     correspondenceData,
-    error,
-    showAdditionalRecipient,
     setError,
     setCorrespondenceData,
 }: CorrespondenceProps) => {
@@ -65,7 +63,7 @@ const CorrespondenceCard = ({
             : []
     );
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
-    const [ccEmails, setCCEmails] = useState<string[]>([]);
+    const [ccEmails] = useState<string[]>([]);
 
     const communicationTypes = [
         {

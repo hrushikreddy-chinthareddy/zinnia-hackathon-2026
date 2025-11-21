@@ -935,7 +935,6 @@ function parseLoanValues({
     policy,
     subSectionTitleField,
     sectionTitle,
-    t,
     acc,
     currentVal,
 }: {
@@ -982,7 +981,6 @@ function parseLoanValues({
 function parseRiders({
     policy,
     allPartiesById,
-    t,
     acc,
     currentKey,
     currentVal,

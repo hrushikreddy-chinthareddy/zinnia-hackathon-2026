@@ -11,7 +11,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { EmailField } from '@deps/constants/policy';
 import { getEmailTypes } from '@deps/containers/people-data-cards/email-card/side-sheet/side-sheet-email.helpers';
 import { ExtendedEmail, useRoleChange } from '@deps/contexts/RoleChangeContext';
-import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { Email, EmailType } from '@zinnia/api-types/types/sor';
 
@@ -54,10 +53,6 @@ const EmailDetails = ({
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
 
     const emailTypes = getEmailTypes({ t: defaultT });
-    const emailTypeTranslation = mapEmailTypeToTranslation(
-        emailType,
-        defaultT
-    ).toLowerCase();
 
     const emailChangeHandler = (key: EmailField, value: string | boolean) => {
         handleEmailChange(EmailField.Emails, index, key, value);

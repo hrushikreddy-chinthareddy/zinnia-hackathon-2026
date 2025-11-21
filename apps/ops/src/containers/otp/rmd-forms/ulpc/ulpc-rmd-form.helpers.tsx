@@ -36,7 +36,7 @@ import getUlpcConfig from '../../withdrawal-forms/ulpc/ulpc-withdrawal-form.help
 
 export default function getUlpcRmdConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
-    const { irsSignatureConfig, formValidation } = getUlpcConfig(t, true);
+    const { irsSignatureConfig, formValidation } = getUlpcConfig(t);
 
     const formPartyConfigs: PartyConfig[] = [
         {

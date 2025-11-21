@@ -54,7 +54,6 @@ interface SummaryStepProps {
 }
 
 const SummaryStep = ({
-    policy,
     role,
     roleLabel,
     leaveTransactionLink,

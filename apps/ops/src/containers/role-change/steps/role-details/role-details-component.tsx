@@ -80,16 +80,8 @@ const RoleDetailsComponent = ({
     );
     const [uploadError, setUploadError] = useState<string | null>(null);
 
-    const {
-        setRoleData,
-        existingRoleData,
-        setAddRole,
-        addRole,
-        removeRole,
-        setRemoveRole,
-        currentErrors,
-        setCurrentErrors,
-    } = useRoleChange();
+    const { setRoleData, setAddRole, removeRole, setRemoveRole } =
+        useRoleChange();
 
     const isReadOnly = !role?.toLowerCase().includes(NEW);
 

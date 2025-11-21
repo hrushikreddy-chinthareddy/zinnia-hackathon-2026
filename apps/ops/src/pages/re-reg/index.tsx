@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import PolicyLayout from '@deps/components/policy-layout';
@@ -32,7 +31,6 @@ import {
 } from '@deps/utils/optimizely/optimizely';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import {
-    getUserInfoFromUser,
     logError,
     logInfo,
     logWarn,
@@ -59,7 +57,6 @@ const BeneChange = ({
     planCode,
     user,
 }: AddressChangeProps) => {
-    const { t } = useTranslation();
     const showJointOwner = policy?.carrierId === Carrier.FLIC;
 
     useSegmentPageTracker(user, SegmentPageName.BeneChange, {
@@ -154,7 +151,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ALL_LOCALES
                 );
 
-                const userInfoForLogging = getUserInfoFromUser(user);
                 const response = await searchPolicySSR(
                     policyNumber,
                     [clientId.toUpperCase() as Carrier],

@@ -137,8 +137,6 @@ export default function RenewalCase({
         );
     }
 
-    const [taskApiError, setTaskApiError] = useState('');
-
     // Transaction Details
     const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
         DefaultSidebarContent

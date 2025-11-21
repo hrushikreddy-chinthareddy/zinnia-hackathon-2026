@@ -25,11 +25,7 @@ interface BeneDetailsStepProps {
     leaveTransactionLink?: string;
 }
 
-const BeneDetailsStep = ({
-    policy,
-    role,
-    leaveTransactionLink,
-}: BeneDetailsStepProps) => {
+const BeneDetailsStep = ({ leaveTransactionLink }: BeneDetailsStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.beneDetails',
     });

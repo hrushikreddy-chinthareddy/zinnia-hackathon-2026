@@ -93,9 +93,14 @@ export default withAuthAndLogging(
                 },
             });
 
-            while (true) {
+            let readerDone = false;
+            while (!readerDone) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                readerDone = done === true;
+
+                if (done) {
+                    break;
+                }
 
                 buffer += decoder.decode(value, { stream: true });
                 const parts = buffer.split('\n\n');

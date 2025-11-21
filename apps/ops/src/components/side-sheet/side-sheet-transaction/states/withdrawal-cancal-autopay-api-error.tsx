@@ -23,7 +23,6 @@ interface ApiErrorStateProps {
 
 const WithdrawalApiErrorState = ({
     onCancel,
-    onContinue,
     arrangementType,
 }: ApiErrorStateProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {

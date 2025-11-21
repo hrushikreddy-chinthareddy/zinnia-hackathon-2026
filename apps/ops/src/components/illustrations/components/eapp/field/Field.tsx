@@ -194,7 +194,6 @@ export function InnerField(props: FieldProps): ReactElement | null {
         : [];
 
     const placeholder = getPlaceholderForField(field);
-    const disabled = field.readOnly || field.disabled;
 
     const fieldSize = getFieldSize(field);
     // const isFullSize = fieldSize === FieldSizes.full;

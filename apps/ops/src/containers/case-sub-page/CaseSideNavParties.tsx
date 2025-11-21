@@ -8,7 +8,6 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';

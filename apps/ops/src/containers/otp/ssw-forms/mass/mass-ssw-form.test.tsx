@@ -53,7 +53,6 @@ describe('MassSSWForm', () => {
     const formSource = data.formSource;
     const formTaxWithholding = data.formTaxWithholding;
     const formTpaAuthorization = data.formTpaAuthorization;
-    const ownerStateOfResidence = 'OK'; // Mocked state for testing
 
     jest.mock('@deps/queries/api/policies', () => ({
         getSpecialPrograms: jest.fn(() => {

@@ -250,8 +250,7 @@ export const createTask = async (
 export const updateTask = async (
     caseId: string,
     taskId: string,
-    payload: CreateTaskBody<TaskStatus, TaskV2Payload>,
-    entryDuration?: number
+    payload: CreateTaskBody<TaskStatus, TaskV2Payload>
 ): Promise<any> => {
     const status = payload?.status;
     const statusLabel =
@@ -262,8 +261,6 @@ export const updateTask = async (
             : TaskLabel.Completed;
 
     try {
-        const logTime = entryDuration ? performance.now() - entryDuration : 0;
-        const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks/${taskId}`;
         const { data } = await client.put<
             CreateTaskBody<TaskStatus, TaskV2Payload>,

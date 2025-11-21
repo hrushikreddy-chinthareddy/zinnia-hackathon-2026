@@ -25,7 +25,6 @@ import { isEndDated } from '@deps/helpers/date.helpers';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
 import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
 import {
-    safeString,
     toTitleCase,
     isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
@@ -212,8 +211,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
         label: string,
         currentValue: string,
         updatedValue: string,
-        action: string,
-        renderValue: (value: any) => React.ReactNode = (value) => value
+        action: string
     ) => {
         if (shouldDisplayField(currentValue, updatedValue, action)) {
             return (
@@ -508,8 +506,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                         relationshipToParty,
                                         item?.party?.allocation
                                             ?.relationshipToParty,
-                                        item.action,
-                                        safeString
+                                        item.action
                                     )}
                                 </div>
                                 <div className="w-[1020px] border border-b-2 border-gray-100"></div>

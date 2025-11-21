@@ -79,8 +79,7 @@ function PhoneDetails({
     const bestTimeOptions = getBestTimeOptions({ t: defaultT });
     const phoneTypeOptions = getPhoneTypeOptions({ t: defaultT });
     const timeZoneOptions = getTimeZoneOptions({ t: defaultT });
-    const { roleData, existingRoleData, setRoleData, setCurrentErrors } =
-        useRoleChange();
+    const { setCurrentErrors } = useRoleChange();
 
     const phone = phoneDetails || INITIAL_PHONE;
     const isDelete = phone?.remove == true;

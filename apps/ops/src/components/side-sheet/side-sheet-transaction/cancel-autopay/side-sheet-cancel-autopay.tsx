@@ -89,7 +89,6 @@ const SideSheetCancelAutopay = ({
     systematicProgramReason,
     isFromWithdrawals = false,
     errorContent,
-    date,
 }: SideSheetCancelAutopayProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'transactions.cancelAutopay',

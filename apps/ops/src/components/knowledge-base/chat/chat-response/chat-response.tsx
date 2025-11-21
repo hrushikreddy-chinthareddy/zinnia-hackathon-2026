@@ -64,11 +64,7 @@ const ChatResponse = ({
     isFollowUp = false,
     searchCommonClientFollowUp = () => {},
     isStreaming,
-    getCommonClientResponse = (
-        sessionId: string,
-        questionId: string,
-        messageId: string
-    ) => {},
+    getCommonClientResponse = () => {},
 }: ChatResponseProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
@@ -214,11 +210,11 @@ const ChatResponse = ({
         );
     };
 
-    const searchCommonClient = async () => {
+    const searchCommonClient = () => {
         if (isFollowUp) {
             searchCommonClientFollowUp();
         } else {
-            await getCommonClientResponse(sessionId, questionId, responseId);
+            getCommonClientResponse(sessionId, questionId, responseId);
         }
     };
 

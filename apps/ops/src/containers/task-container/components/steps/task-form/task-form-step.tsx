@@ -54,7 +54,7 @@ const TaskFormStep = ({
     });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
-    const { task, correlationId, formErrors } = formState;
+    const { task, correlationId } = formState;
     const formRef = createRef<Form>();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);

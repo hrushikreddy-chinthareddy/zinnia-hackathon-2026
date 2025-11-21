@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
 
 import {
     UserActivityGroupByEnum,
@@ -122,20 +121,24 @@ export const downloadCSV = (csv: string, filename: string) => {
     document.body.removeChild(link);
 };
 
-export const generateCSVFileName = (
-    title: string,
-    timerange: Timerange,
-    role?: string,
-    optionaltitle?: string
-) => {
-    const { t } = useTranslation();
+export const generateCSVFileName = ({
+    title,
+    timerange,
+    role,
+    optionaltitle,
+}: {
+    title: string;
+    timerange: Timerange;
+    role?: string;
+    optionaltitle?: string;
+}) => {
     const rolePart = role === 'All' ? 'All Roles' : role;
     const fromDate = dayjs(timerange.from).format(defaultDateFormat);
     const toDate = dayjs(timerange.to).format(defaultDateFormat);
 
-    return `${t(title)} ${rolePart || ''} ${t(
+    return `${title} ${rolePart || ''} ${
         optionaltitle || ''
-    )} ${fromDate} to ${toDate}`;
+    } ${fromDate} to ${toDate}`;
 };
 
 export const colors = [

@@ -21,7 +21,6 @@ import SideSheetPeopleHeader, {
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,

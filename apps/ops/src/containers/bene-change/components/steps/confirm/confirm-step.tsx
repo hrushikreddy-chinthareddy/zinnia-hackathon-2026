@@ -49,7 +49,6 @@ const ConfirmStep = ({
     planCode,
     clientId,
     leaveTransactionLink,
-    parentPage,
 }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.confirm',

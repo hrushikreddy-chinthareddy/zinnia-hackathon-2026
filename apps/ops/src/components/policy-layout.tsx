@@ -29,7 +29,6 @@ const PolicyLayout: React.FC<PageLayoutProps> = ({
     hideSearch,
     showJointOwner,
     showLink,
-    policyReference,
 }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
