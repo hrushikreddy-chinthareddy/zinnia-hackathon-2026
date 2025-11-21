@@ -43,12 +43,13 @@ import {
     ToSections,
     ToSectionsProps,
     TransformationsConfig,
-    RenderData,
     FieldType,
     DataNode,
+    Primitive,
+    NodeGroup,
 } from './types';
 
-const renderData: RenderData = [
+const renderData: NodeGroup = [
     {
         type: FieldType.section,
         label: 'Contract Basics',
@@ -478,32 +479,41 @@ const pipe =
     (initialValue: T): T =>
         fns.reduce((acc, fn) => fn(acc), initialValue);
 
-const isPrimitive = (v: any): boolean => {
+const isPrimitive = (v: any): v is Primitive => {
     return (
         typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
     );
 };
 
+const isUnknownArray = (v: unknown): v is unknown[] => Array.isArray(v);
+
+const isNonNullishObject = (v: unknown): v is Record<string, unknown> =>
+    typeof v === 'object' && v != null;
+
+const isNonEmptyString = (v: unknown): v is string =>
+    typeof v === 'string' && v !== ''; // TODO: more specific TS type
+
 function convertNode(
-    obj: any,
+    obj: unknown,
     t: TFunction,
     overrides?: Record<string, string>
-): RenderData {
-    if (!obj || typeof obj !== 'object') return [];
+): NodeGroup {
+    if (!isNonNullishObject(obj)) return [];
 
-    return Object.entries(obj)
+    return typedEntries(obj)
         .map(([key, value]) => convertTuple(key, value, t, overrides))
         .filter((n): n is DataNode => n != null);
 }
 function convertTuple(
     key: string,
-    value: any,
+    value: unknown,
     t: TFunction,
     overrides?: Record<string, string>
-): DataNode | null {
-    if (value === null || value === '') return null;
-
+): DataNode | undefined {
     const label = overrides?.[key] ?? key;
+
+    // Skip nullish values
+    if (value == null) return;
 
     // Primitive → Field
     if (isPrimitive(value)) {
@@ -515,27 +525,28 @@ function convertTuple(
     }
 
     // Array → Section -> subsection-field-to-title.ts
-    if (Array.isArray(value)) {
+    if (isUnknownArray(value)) {
         const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
-        let sections;
         if (sectionLabelFieldName) {
-            sections = value.map((item) => {
-                //object within each array item
+            const sections: Section[] = value
+                .map((item): Section | undefined => {
+                    //object within each array item
 
-                if (item == null || isPrimitive(item)) return;
+                    if (!isNonNullishObject(item)) return;
 
-                const sectionLabel = item[sectionLabelFieldName];
-                if (!sectionLabel) return; // TODO: maybe skip, maybe provide default label?
+                    const sectionLabel = item[sectionLabelFieldName];
+                    if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
 
-                // TODO: filter out fields that are not visible, including the title field
-                const fields = convertNode(item, t, overrides);
+                    // TODO: filter out fields that are not visible, including the title field
+                    const fields: NodeGroup = convertNode(item, t, overrides);
 
-                return {
-                    type: FieldType.section,
-                    label: t(sectionLabel) ?? sectionLabel,
-                    children: fields, // TODO: recurse?
-                };
-            });
+                    return {
+                        type: FieldType.section,
+                        label: t(sectionLabel) ?? sectionLabel,
+                        children: fields, // TODO: recurse?
+                    };
+                })
+                .filter((n) => n != null);
 
             return {
                 type: FieldType.section,
@@ -543,12 +554,23 @@ function convertTuple(
                 children: sections,
             };
         } else {
-            const groups = value.map((item) => convertNode(item, t, overrides));
-            if (groups.length === 0) return null;
+            // value is list of groups
+
+            const groups: NodeGroup[] = value.map((item) =>
+                convertNode(item, t, overrides)
+            );
+            if (groups.length === 0) return;
 
             return {
-                type: FieldType.list,
-                children: groups,
+                type: FieldType.section,
+                label: t(key) ?? key,
+                children: [
+                    // In some instances the array will also contain fields and sections
+                    {
+                        type: FieldType.list,
+                        children: groups,
+                    },
+                ],
             };
         }
     }
@@ -557,7 +579,7 @@ function convertTuple(
     if (typeof value === 'object' && !Array.isArray(value)) {
         const children = convertNode(value, t, overrides);
 
-        if (children.length === 0) return null;
+        if (children.length === 0) return;
 
         return {
             type: FieldType.section,
@@ -566,7 +588,7 @@ function convertTuple(
         };
     }
 
-    return null;
+    return;
 }
 /**
  * Given a policy, returns an object containing two lists of data

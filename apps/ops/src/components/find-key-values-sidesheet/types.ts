@@ -93,10 +93,10 @@ export type TransformationsConfig = {
         currentKey,
     }: {
         sectionTitle: keyof Policy;
-        acc: RenderData;
+        acc: NodeGroup;
         currentVal: object;
         currentKey: string;
-    }) => RenderData;
+    }) => NodeGroup;
     showSection?: (
         sectionTitle: string,
         policy?: Policy,
@@ -104,6 +104,8 @@ export type TransformationsConfig = {
         productType?: ProductType
     ) => boolean | undefined;
 };
+
+export type Primitive = string | number | boolean;
 
 const FIELD = Symbol('FIELD');
 const SECTION = Symbol('SECTION');
@@ -130,12 +132,11 @@ export type Section = {
     tags?: string[];
 };
 
-export type FieldGroup = Field[];
+export type NodeGroup = DataNode[]; // a group of any nodes
+
 export type List = {
     type: typeof FieldType.list;
-    children: FieldGroup[];
+    children: NodeGroup[]; // arrays of arrays (groups) of nodes
 };
 
 export type DataNode = Field | Section | List;
-
-export type RenderData = DataNode[];
