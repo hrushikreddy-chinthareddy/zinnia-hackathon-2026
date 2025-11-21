@@ -6,6 +6,7 @@ import {
 } from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
+import groupBy from 'lodash/groupBy';
 
 import { GroupedColumnSeries } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
@@ -202,10 +203,15 @@ export const generateSeries = (
     });
 };
 
+/**
+ * Merge Duplicated and Created data into Created activity type
+ * @param data UserIllustrationActivityOutputLevel1[]
+ * @returns
+ */
 export const mergeDuplicatedIntoCreated = (
     data: UserIllustrationActivityOutputLevel1[]
 ): UserIllustrationActivityOutputLevel1[] => {
-    const groups = Object.groupBy(
+    const groups = groupBy(
         data,
         (item) => item.name.toLowerCase() ?? 'unknown'
     );
