@@ -70,4 +70,12 @@
 .actionCell {
     display: flex;
     gap: 8px;
+    a {
+        font-size: 500;
+        text-decoration: underline;
+        &:hover {
+            text-underline-offset: 1px;
+            text-decoration-thickness: 1px;
+        }
+    }
 }

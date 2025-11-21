@@ -32,6 +32,7 @@ import {
     programStatusDictionary,
 } from './card-systematic-programs.types';
 import styles from './systematic-programs-table.module.css';
+import FooterAction from '../card-footer-action/card-footer.action';
 import CardSection from '../card-section/card-section';
 import { UpcomingPaymentCardTest } from '../card-upcoming-payment/card-upcoming-payment.types';
 
@@ -83,15 +84,14 @@ const SystematicProgramsCard = ({
                         <Typography variant={TypographyVariant.H2}>
                             {title}
                         </Typography>
-                        {setUpAction && !setUpAction.isDisabled && (
-                            <a
-                                href={setUpAction.href}
-                                key={`${setUpAction.text}-link`}
-                                className="font-primary text-links-sm font-semibold text-cerulean-600"
-                                data-testid={setUpAction.text}
-                            >
-                                + {t('setUp')}
-                            </a>
+
+                        {setUpAction && (
+                            <FooterAction
+                                footerContent={{
+                                    ...setUpAction,
+                                    text: `+ ${t('setUp')}`,
+                                }}
+                            />
                         )}
                     </div>
                     <Toggle
@@ -269,84 +269,26 @@ const SystematicProgramsCard = ({
                                                             styles.actionCell
                                                         }
                                                     >
-                                                        {program.manageAction &&
-                                                            (program
-                                                                .manageAction
-                                                                .isDisabled ? (
-                                                                <span
-                                                                    className="cursor-not-allowed font-primary font-semibold text-gray-300"
-                                                                    key={`${t(
+                                                        {program.manageAction && (
+                                                            <FooterAction
+                                                                footerContent={{
+                                                                    ...program.manageAction,
+                                                                    text: t(
                                                                         'manage'
-                                                                    )}-link`}
-                                                                >
-                                                                    {t(
-                                                                        'manage'
-                                                                    )}
-                                                                </span>
-                                                            ) : (
-                                                                <a
-                                                                    href={
-                                                                        program
-                                                                            .manageAction
-                                                                            .href
-                                                                    }
-                                                                    key={`${t(
-                                                                        'manage'
-                                                                    )}-link`}
-                                                                    className="font-primary text-links-sm font-semibold text-cerulean-600"
-                                                                    data-testid={t(
-                                                                        'manage'
-                                                                    )}
-                                                                    onClick={
-                                                                        program
-                                                                            .manageAction
-                                                                            .onClick
-                                                                    }
-                                                                >
-                                                                    {t(
-                                                                        'manage'
-                                                                    )}
-                                                                </a>
-                                                            ))}
-                                                        {program.cancelAction &&
-                                                            (program
-                                                                .cancelAction
-                                                                .isDisabled ? (
-                                                                <span
-                                                                    className="cursor-not-allowed font-primary font-semibold text-gray-300"
-                                                                    key={`${t(
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        )}
+                                                        {program.cancelAction && (
+                                                            <FooterAction
+                                                                footerContent={{
+                                                                    ...program.cancelAction,
+                                                                    text: t(
                                                                         'cancel'
-                                                                    )}-link`}
-                                                                >
-                                                                    {t(
-                                                                        'cancel'
-                                                                    )}
-                                                                </span>
-                                                            ) : (
-                                                                <a
-                                                                    href={
-                                                                        program
-                                                                            .cancelAction
-                                                                            .href
-                                                                    }
-                                                                    key={`${t(
-                                                                        'cancel'
-                                                                    )}-link`}
-                                                                    className="font-primary text-links-sm font-semibold text-cerulean-600"
-                                                                    data-testid={t(
-                                                                        'cancel'
-                                                                    )}
-                                                                    onClick={
-                                                                        program
-                                                                            .cancelAction
-                                                                            .onClick
-                                                                    }
-                                                                >
-                                                                    {t(
-                                                                        'cancel'
-                                                                    )}
-                                                                </a>
-                                                            ))}
+                                                                    ),
+                                                                }}
+                                                            />
+                                                        )}
                                                     </TableCell>
                                                 </TableRow>
                                             );
