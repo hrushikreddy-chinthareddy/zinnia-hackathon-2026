@@ -2,8 +2,9 @@ import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion'
 import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
 
 import Highlighter from '@deps/components/highlighter/highlighter';
+import { useTreeState } from '@deps/hooks/useTreeState';
 
-import { DataSection, Expand } from '../types';
+import { DataSection } from '../types';
 import { renderNode } from './data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
 
@@ -12,14 +13,14 @@ export const Section = ({
     tags,
     children,
 }: Omit<DataSection, 'type'>) => {
-    //const treeState = useTreeState()
+    const { treeState } = useTreeState();
     return (
         <div className={styles.subSection}>
             <Accordion
                 key={`section_${label}`}
                 sectionLabel={<Highlighter text={label} highlights={['']} />}
                 type={AccordionType.NESTED}
-                treeState={Expand}
+                treeState={treeState}
                 tags={tags}
             >
                 <div className={styles.itemsList}>

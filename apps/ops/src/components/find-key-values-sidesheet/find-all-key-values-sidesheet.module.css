@@ -25,13 +25,6 @@
     }
 }
 
-.itemsList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: var(--measure-dimension-margin-xs);
-}
-
 .fieldLabel {
     display: flex;
     color: var(--color-base-text-text-secondary);
@@ -45,8 +38,20 @@
     z-index: 600;
 }
 
-.subSectionStd {
-    padding-bottom: var(--measure-dimension-padding-xl);
+.itemsList,
+.subSectionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.itemsList {
+    margin-top: var(--measure-dimension-margin-xs);
+}
+
+.itemsList > .subSectionContainer {
+    padding: var(--measure-dimension-padding-xl);
+    gap: var(--measure-dimension-margin-xs);
 }
 
 .subSectionStd > .itemsList {
@@ -57,7 +62,9 @@
     border-top: var(--measure-dimension-stroke-sm) solid
         var(--color-base-border-border-light);
     padding-top: var(--measure-dimension-padding-xl);
-    padding-bottom: 0;
+    &:last-child {
+        padding-bottom: 0;
+    }
 }
 
 .subSection .subSection {
@@ -74,13 +81,9 @@
     gap: 8px;
 }
 
-.subSectionStd > .subSection,
-.itemsList > .subSectionContainer {
+.subSectionStd > .subSection {
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
-    border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
-    border-radius: var(--measure-dimension-radius-sm);
 
     &:not(:last-child) {
         margin-bottom: var(--measure-dimension-margin-xs);

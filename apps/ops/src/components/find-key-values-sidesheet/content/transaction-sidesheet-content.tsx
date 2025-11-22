@@ -11,19 +11,19 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@deps/hooks/useDebounce';
+import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import { convertNode } from '../transformations';
-import { Collapse, Expand } from '../types';
 
 export const TransactionSidesheetContent = ({
     transaction,
 }: {
     transaction: Transaction;
 }) => {
-    const [treeState, setTreeState] = useState(Collapse);
+    const { treeState, setTreeState } = useTreeState();
     const [searchValue, setSearchValue] = useState('');
     const { t } = useTranslation();
 

@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
@@ -44,7 +45,9 @@ export const FindAllKeyValuesTransactionSidesheet = ({
             onOpenChange={onOpenChange}
             preventCloseOnOutsideClick={false}
         >
-            <TransactionSidesheetContent transaction={transaction} />
+            <TreeStateProvider initialTreeState={Collapse}>
+                <TransactionSidesheetContent transaction={transaction} />
+            </TreeStateProvider>
         </SideSheet>
     );
 };

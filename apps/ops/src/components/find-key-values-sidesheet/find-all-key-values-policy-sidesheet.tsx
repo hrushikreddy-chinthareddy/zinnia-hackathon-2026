@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { buttonClickedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
 
 import { PolicySidesheetContent } from './content/policy-sidesheet-content';
 import { FindAllKeyValuesSidebarProps } from './types';
@@ -64,12 +65,12 @@ export const FindAllKeyValuesPolicySidesheet: FC<
             ref={setContainerRef}
             preventEscKeyDownClose={calendarOpen}
         >
-            <PolicySidesheetContent
-                planCode={planCode}
-                policyNumber={policyNumber}
-                container={container}
-                handleCalendarOpen={handleCalendarOpen}
-            />
+            <TreeStateProvider initialTreeState={Collapse}>
+                <PolicySidesheetContent
+                    planCode={planCode}
+                    policyNumber={policyNumber}
+                />
+            </TreeStateProvider>
         </SideSheet>
     );
 };

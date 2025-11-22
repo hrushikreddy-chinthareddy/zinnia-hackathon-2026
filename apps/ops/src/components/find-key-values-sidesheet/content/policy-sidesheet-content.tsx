@@ -19,12 +19,13 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
+import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import { convertNode } from '../transformations';
-import { Collapse, Expand, FindAllKeyValuesSidebarProps } from '../types';
+import { FindAllKeyValuesSidebarProps } from '../types';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -33,7 +34,7 @@ export const PolicySidesheetContent = ({
     handleCalendarOpen,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
-    const [treeState, setTreeState] = useState(Collapse);
+    const { treeState, setTreeState } = useTreeState();
     const [fieldError, setFieldError] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const queryClient = useQueryClient();

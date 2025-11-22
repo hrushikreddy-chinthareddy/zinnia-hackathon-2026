@@ -16,7 +16,6 @@ export function renderNode(node: DataNode): React.ReactNode {
                 />
             );
         }
-
         case FieldType.section: {
             return (
                 <Section
@@ -26,11 +25,9 @@ export function renderNode(node: DataNode): React.ReactNode {
                 />
             );
         }
-
         case FieldType.group: {
             return <Group children={node.children} />;
         }
-
         default:
             // Fully exhaustive since type is a Symbol
             return null;
@@ -39,7 +36,7 @@ export function renderNode(node: DataNode): React.ReactNode {
 
 export const DataNodeRenderer = ({ nodes }: { nodes: DataNode[] }) => {
     return nodes.map((node, i) => (
-        <div className={styles.container} key={i}>
+        <div className={styles.keyValuesContainer} key={i}>
             {renderNode(node)}
         </div>
     ));
