@@ -285,7 +285,6 @@ export const getCaseDetailsSSR = async (
         let logAppropriateLevel = logError;
         switch (error?.status) {
             case 403:
-                console.log('...and here we are....');
                 logAppropriateLevel = logWarn;
                 break;
             case 404:
