@@ -1,16 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
+import { PendoOptions } from 'globals';
 import { useEffect, useMemo } from 'react';
 
 import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
-import { useCarrierListQuery } from '@deps/hooks/tanstack/user/useCarrierListQuery';
-import { useRoleListQuery } from '@deps/hooks/tanstack/user/useRoleListQuery';
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
-import {
-    UserPermission,
-    UserProfile as ZinniaUserProfile,
-} from '@deps/models/user-profile';
+import { UserProfile as ZinniaUserProfile } from '@deps/models/user-profile';
 import { browserLogError } from '@deps/utils/browser-logging';
-import { PendoOptions } from 'globals';
 
 // Account for additional properties on the user profile
 declare module '@auth0/nextjs-auth0/client' {
@@ -20,14 +15,6 @@ declare module '@auth0/nextjs-auth0/client' {
 const PendoAnalyticsInit = () => {
     const { user } = useUser();
     const carrier = useUserCarrier();
-    const { data: authorizedCarriers } = useCarrierListQuery(
-        user?.partyId,
-        UserPermission.AllowUIAccess
-    );
-    const { data: authorizedRoles } = useRoleListQuery(
-        user?.partyId,
-        UserPermission.AllowUIAccess
-    );
 
     const initOptions = useMemo((): PendoOptions | undefined => {
         if (user?.partyId && carrier) {
@@ -66,29 +53,12 @@ const PendoAnalyticsInit = () => {
         if (!initOptions) {
             return undefined;
         }
-        let updatedOptions: PendoOptions = initOptions;
+        const updatedOptions: PendoOptions = initOptions;
 
-        if (authorizedCarriers) {
-            updatedOptions = {
-                ...updatedOptions,
-                visitor: {
-                    ...updatedOptions?.visitor,
-                    carrierAccessList: authorizedCarriers,
-                },
-            };
-        }
+        // TODO: add carriers, roles, groups, perms
 
-        if (authorizedRoles) {
-            updatedOptions = {
-                ...updatedOptions,
-                visitor: {
-                    ...updatedOptions?.visitor,
-                    roles: authorizedRoles,
-                },
-            };
-        }
         return updatedOptions;
-    }, [initOptions, authorizedCarriers, authorizedRoles]); // Should depend on any additional metadata
+    }, [initOptions]); // Should depend on any additional metadata
 
     useEffect(() => {
         if (options) {
