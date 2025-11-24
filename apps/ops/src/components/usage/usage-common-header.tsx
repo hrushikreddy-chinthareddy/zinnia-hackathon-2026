@@ -72,7 +72,11 @@ const UsageHeaderLayout = ({
                 }}
             >
                 <Icon type={IconType.DOWNLOAD} />
-                <Link href={'#'} text={t('usage.logins.exportToCSV')} />
+                <Link
+                    href={''}
+                    text={t('usage.logins.exportToCSV')}
+                    onClick={(e) => e.preventDefault()}
+                />
             </div>
         </div>
     );
