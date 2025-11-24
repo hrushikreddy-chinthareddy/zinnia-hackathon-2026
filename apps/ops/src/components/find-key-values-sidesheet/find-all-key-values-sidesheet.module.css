@@ -52,6 +52,12 @@
 .itemsList > .subSectionContainer {
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
+
+    &:first-child {
+        border: var(--measure-dimension-stroke-sm) solid
+            var(--color-base-border-border-light);
+        border-radius: var(--measure-dimension-radius-sm);
+    }
 }
 
 .subSectionStd > .itemsList {

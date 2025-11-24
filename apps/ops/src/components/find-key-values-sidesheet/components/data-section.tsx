@@ -18,13 +18,13 @@ export const Section = ({
         <div className={styles.subSection}>
             <Accordion
                 key={`section_${label}`}
-                sectionLabel={<Highlighter text={label} highlights={['']} />}
+                sectionLabel={<Highlighter text={label} highlights={[]} />}
                 type={AccordionType.NESTED}
                 treeState={treeState}
                 tags={tags}
             >
                 <div className={styles.itemsList}>
-                    {children.map((node) => renderNode(node))}
+                    {children.map((node, index) => renderNode(node, index))}
                 </div>
             </Accordion>
         </div>

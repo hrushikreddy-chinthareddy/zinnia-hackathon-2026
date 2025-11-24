@@ -12,7 +12,9 @@ export const Group = ({ children }: Omit<DataGroup, 'type'>) => {
                     key={`group-node-${index}`}
                 >
                     {node.map((group, index) => (
-                        <div key={`group-${index}`}>{renderNode(group)}</div>
+                        <div key={`group-${index}`}>
+                            {renderNode(group, index)}
+                        </div>
                     ))}
                 </div>
             ))}

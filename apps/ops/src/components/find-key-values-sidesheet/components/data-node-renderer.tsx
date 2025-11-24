@@ -4,11 +4,12 @@ import { Group } from './data-group';
 import { Section } from './data-section';
 import styles from '../find-all-key-values-sidesheet.module.css';
 
-export function renderNode(node: DataNode): React.ReactNode {
+export function renderNode(node: DataNode, index: number): React.ReactNode {
     switch (node.type) {
         case FieldType.field: {
             return (
                 <DataField
+                    key={`${node.label}-${index}`}
                     dataField={[node.label, node.value]}
                     link={node.link}
                     toolTip={node.toolTip}

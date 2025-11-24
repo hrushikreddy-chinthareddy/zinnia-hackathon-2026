@@ -20,10 +20,11 @@ import {
     link,
     linkedField,
     NestedData,
-    DataField,
     NestedDataTuple,
     toolTip,
     FormatterType,
+    DataNode,
+    FieldType,
 } from './types';
 
 /**
@@ -191,41 +192,57 @@ export const formatAsDataLabel = ({
  * @returns The formatted field data as a string
  */
 export const formatAsDataValue = ({
+    fieldName,
     fieldData,
     t,
-    fieldName,
 }: {
-    fieldData: NestedData | DataField;
+    fieldData: string;
     t: TFunction;
-    fieldName?: string;
+    fieldName: string;
 }) => {
+    let value = '';
     // Empty values
-    if (fieldData == null) return DEFAULT_ERROR_STRING;
+    if (fieldData == null) value = DEFAULT_ERROR_STRING;
 
     // Enums
     // Attempt to translate first, then process as numeric data if no translation found
     const exactTranslation = t(`enums.${fieldData}`, {
         defaultValue: null,
     });
-    if (exactTranslation !== null) return exactTranslation;
+    if (exactTranslation !== null) value = exactTranslation;
 
     // Currency
     if (fieldName && currencyFields.has(fieldName))
-        return numberFormatify(Number(fieldData));
+        value = numberFormatify(Number(fieldData));
 
     // Percentages
     if (fieldName && percentageFields.has(fieldName))
-        return percentFormatify(Number(fieldData), { isInteger: true });
+        value = percentFormatify(Number(fieldData), { isInteger: true });
 
     // Dates
     if (fieldName && dateFields.has(fieldName))
-        return convertKebabedDateString(String(fieldData) || undefined);
+        value = convertKebabedDateString(String(fieldData) || undefined);
 
-    if (typeof fieldData === 'object') {
-        return fieldData;
+    return { value: String(value), label: t(`allFields.${fieldName}`) };
+};
+
+export const formatNode = (node: DataNode, t: TFunction): DataNode => {
+    if (node.type !== FieldType.field) {
+        return node;
     }
 
-    return String(fieldData);
+    // Apply your formatting to the leaf field value
+    const formattedValue = formatAsDataValue({
+        fieldData: node.value,
+        fieldName: node.label,
+        t,
+    });
+
+    return {
+        ...node,
+        value: formattedValue.value,
+        label: formattedValue.label,
+    };
 };
 
 /**

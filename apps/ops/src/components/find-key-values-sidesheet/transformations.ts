@@ -8,7 +8,7 @@ Agenda:
 - enforce TS safety (done)
 - the "structured tree" will have translated labels and values <- doesn't change on search
 - search will transform the "structured tree" into the "search/render tree" <- rebuild on every search
-- modify render components to fit the new structure
+- modify render components to fit the new structure (done)
 
 */
 
@@ -473,10 +473,21 @@ export const prepareTransaction = ({
     };
 };
 
-const pipe =
-    <T>(...fns: Array<(arg: T) => T>) =>
-    (initialValue: T): T =>
-        fns.reduce((acc, fn) => fn(acc), initialValue);
+// pipe needs to take the first arg as Policy/Transaction -> DataNode[]
+// and the rest as DataNode[] -> DataNode[]
+export const convertToDataNode =
+    <T>(
+        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
+        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
+    ) =>
+    (initialValue: T) => {
+        const initialTransformedData = initialTransformFn(initialValue);
+        const v = fns.reduce((acc, fn) => {
+            const ret = fn(acc);
+            return ret;
+        }, initialTransformedData);
+        return v;
+    };
 
 const isPrimitive = (v: any): v is Primitive => {
     return (
@@ -512,13 +523,13 @@ function convertTuple(
     const label = overrides?.[key] ?? key;
 
     // Skip nullish values
-    if (value == null) return;
+    if (value === null || value === '') return;
 
     // Primitive → Field
     if (isPrimitive(value)) {
         return {
             type: FieldType.field,
-            label: t(label) ?? label,
+            label: label,
             value: String(value),
         };
     }
@@ -530,12 +541,9 @@ function convertTuple(
             const sections: DataSection[] = value
                 .map((item): DataSection | undefined => {
                     //object within each array item
-
                     if (!isNonNullishObject(item)) return;
-
                     const sectionLabel = item[sectionLabelFieldName];
                     if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
-
                     // TODO: filter out fields that are not visible, including the title field
                     const fields: DataNode[] = convertNode(item, t, overrides);
 
@@ -554,7 +562,6 @@ function convertTuple(
             };
         } else {
             // value is list of groups
-
             const groups: DataNode[][] = value.map((item) =>
                 convertNode(item, t, overrides)
             );
@@ -589,6 +596,55 @@ function convertTuple(
 
     return;
 }
+
+export const transformObject = (
+    node: DataNode,
+    transform: (node: DataNode) => DataNode
+): DataNode => {
+    switch (node.type) {
+        case FieldType.field: {
+            return transform({ ...node });
+        }
+        case FieldType.section: {
+            const newChildren = node.children.map((child) =>
+                transformObject(child, transform)
+            );
+
+            return transform({
+                ...node,
+                children: newChildren,
+            });
+        }
+        case FieldType.group: {
+            const newGroups = node.children.map((group) =>
+                group.map((child) => transformObject(child, transform))
+            );
+            return transform({
+                ...node,
+                children: newGroups,
+            });
+        }
+        default:
+            return node;
+    }
+};
+
+export const groupBasics = (data: DataNode[], t: TFunction): DataNode[] => {
+    const filterByField = data.filter((node) => node.type === FieldType.field);
+    const filterBySectionOrList = data.filter(
+        (node) => node.type !== FieldType.field
+    );
+
+    return [
+        {
+            type: FieldType.section,
+            label: t('basics'),
+            children: filterByField,
+        },
+        ...filterBySectionOrList,
+    ];
+};
+
 /**
  * Given a policy, returns an object containing two lists of data
  * tuples: `policyBasics` and `policySections`.
@@ -614,15 +670,6 @@ const toSections = (props: ToSectionsProps): ToSections => {
     const tuples = typedEntries(
         type === FormatterType.TRANSACTION ? props.transaction : policy
     );
-
-    const lineOfBusiness =
-        policy?.product?.lineOfBusiness ?? LineOfBusiness.OTHER;
-
-    const toRenderData = pipe((data) => convertNode(data, t))(
-        type === FormatterType.TRANSACTION ? props.transaction : policy
-    );
-
-    console.log(toRenderData);
 
     const basicsAndSections = tuples.reduce(
         (acc, current): ToSections => {
