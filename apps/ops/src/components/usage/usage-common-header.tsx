@@ -50,6 +50,7 @@ const UsageHeaderLayout = ({
                                     height={'16px'}
                                     width={'16px'}
                                     className="tooltip-secondary"
+                                    color={'#00628B'}
                                 />
                             }
                         >
