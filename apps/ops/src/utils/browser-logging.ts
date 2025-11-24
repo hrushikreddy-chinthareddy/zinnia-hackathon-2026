@@ -6,7 +6,7 @@ export const browserLogError = (
     message: string,
     serializableValues: object = {}
 ) => {
-    console.error(message, serializableValues);
+    isNonProductionEnvironment() && console.error(message, serializableValues);
     datadogLogs.logger.error(message, serializableValues);
 };
 
