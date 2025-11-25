@@ -4,8 +4,6 @@ import { BeneRelationshipToInsured } from '@deps/containers/bene-change/componen
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { SignatureDesignation } from '@deps/models/case/renewal/signature-validation';
 
-import { Roles } from './policy';
-
 export const getRelationshipOptions = (t: (key: string) => string) => [
     {
         label: t('relationshipToParty.trustee'),
@@ -160,6 +158,10 @@ export const getSignatureDesignationOptions = (t: (key: string) => string) => [
         value: SignatureDesignation.AttorneyInFact,
     },
     { label: t('assignee'), value: SignatureDesignation.Assignee },
+    {
+        label: t('authorizedSignatory'),
+        value: SignatureDesignation.AuthorizedSignatory,
+    },
     { label: t('na'), value: SignatureDesignation.NA },
 ];
 

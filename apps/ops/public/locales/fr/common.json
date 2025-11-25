@@ -1895,6 +1895,7 @@
             "custodian": "Tuteur",
             "guardian": "Tuteur",
             "attorneyInFact": "Procuration",
+            "authorizedSignatory": "Representant autorisé",
             "assignee": "Cessionnaire",
             "poa": "Procuration",
             "na": "NA",

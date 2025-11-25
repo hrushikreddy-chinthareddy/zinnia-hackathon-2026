@@ -1849,6 +1849,7 @@
                                                     "Guardian",
                                                     "Attorney-in-fact",
                                                     "Assignee",
+                                                    "AUTHORIZEDSIGNATORY",
                                                     "NA"
                                                 ]
                                             },
@@ -1952,6 +1953,7 @@
                                             "Guardian",
                                             "Attorney-in-fact",
                                             "Assignee",
+                                            "Authorized signatory",
                                             "NA"
                                         ]
                                     },

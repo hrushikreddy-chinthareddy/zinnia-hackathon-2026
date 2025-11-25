@@ -1845,6 +1845,7 @@
             "custodian": "Custodio",
             "guardian": "Tutor",
             "attorneyInFact": "Abogado en hechos",
+            "authorizedSignatory": "Representante autorizado",
             "assignee": "Asignado",
             "poa": "POA",
             "na": "NA",
