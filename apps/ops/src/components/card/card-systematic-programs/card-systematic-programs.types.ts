@@ -8,16 +8,28 @@ import {
 
 import { FooterContent } from '../card-section/card-section';
 
+export interface SystematicProgramsDetails {
+    arrangementType: ArrangementType;
+    activePrograms: SystematicProgram[];
+    terminatedOrSuspendedPrograms: SystematicProgram[];
+    manageAction?: FooterContent;
+    cancelAction?: FooterContent;
+}
+
 export interface SystematicProgramsCardProps {
     title: string;
-    programs: {
-        arrangementType: ArrangementType;
-        activePrograms: SystematicProgram[];
-        terminatedOrSuspendedPrograms: SystematicProgram[];
-        manageAction?: FooterContent;
-        cancelAction?: FooterContent;
-    }[];
+    programs: SystematicProgramsDetails[];
     setUpAction?: FooterContent;
+}
+
+export interface SystematicProgramsActiveTableProps {
+    programs: SystematicProgramsDetails[];
+    hasActivePrograms: boolean;
+}
+export interface SystematicProgramsTerminatedTableProps {
+    programs: SystematicProgramsDetails[];
+    hasTerminatedOrSuspendedPrograms: boolean;
+    showTerminatedOrSuspended: boolean;
 }
 
 export const arrangmentTypesDictionary: Record<ArrangementType, string> = {
