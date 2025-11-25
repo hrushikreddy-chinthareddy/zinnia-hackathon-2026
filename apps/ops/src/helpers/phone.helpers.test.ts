@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 
 jest.mock('./date.helpers', () => ({
-    isEndDated: (d?: string) => false,
+    isEndDated: () => false,
 }));
 
 import { PhoneType } from '@zinnia/api-types/types/sor';

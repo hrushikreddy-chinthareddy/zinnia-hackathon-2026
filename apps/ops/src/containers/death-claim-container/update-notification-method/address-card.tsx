@@ -1,4 +1,3 @@
-import { Address } from '@zinnia/api-types/types/sor';
 import { Button } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -10,6 +9,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { Address } from '@zinnia/api-types/types/sor';
 
 import EditAddress from '../steps/notification-method/edit-address';
 

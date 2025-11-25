@@ -1,6 +1,4 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 
@@ -20,6 +18,8 @@ import {
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { toTitleCase } from '@deps/utils/strings';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import ContactAddress from './contact-address';
 import {

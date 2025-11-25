@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button } from '@zinnia/bloom/components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -42,6 +41,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import nextI18nextConfig from 'next-i18next.config';
 
 const DocumentViewerPage = ({

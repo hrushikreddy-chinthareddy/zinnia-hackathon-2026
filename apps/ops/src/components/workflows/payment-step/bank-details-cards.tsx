@@ -1,5 +1,3 @@
-import { BankDetailList } from '@zinnia/api-types/types/aggregation';
-import { BankAccount } from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
@@ -8,6 +6,8 @@ import AssistiveText, {
 } from '@deps/components/assistive-text/assistive-text';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { BankDetailList } from '@zinnia/api-types/types/aggregation';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 import { PaymentMethodType } from './types';
 

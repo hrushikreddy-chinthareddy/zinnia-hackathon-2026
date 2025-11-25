@@ -16,10 +16,8 @@ import {
     AvailableFormsTransaction,
     SendDocumentFormParts,
 } from '@deps/models/case/send-document';
-
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { searchForms } from '@deps/queries/api/c2web';
+import { Policy } from '@zinnia/api-types/types/sor';
 type FormSelectionProps = {
     policy?: Policy;
     ctiCallNumber: string;

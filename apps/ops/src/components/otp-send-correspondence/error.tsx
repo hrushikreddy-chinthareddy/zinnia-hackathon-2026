@@ -1,10 +1,10 @@
-import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import { TranslationFiles } from '@deps/config/translations';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 const CorrespondenceError = ({ policy }: { policy: Policy }) => {
     const { t } = useTranslation(TranslationFiles.COMMON);

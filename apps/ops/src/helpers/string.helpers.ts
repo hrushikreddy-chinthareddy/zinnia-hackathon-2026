@@ -1,5 +1,4 @@
 import { datadogRum } from '@datadog/browser-rum';
-import { Phone, Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -10,6 +9,7 @@ import {
     LEGACY_END_DATE,
     LEGACY_START_DATE,
 } from '@deps/types/constants';
+import { Phone, Party } from '@zinnia/api-types/types/sor';
 
 import { calculateAgeNumber } from './age.helpers';
 

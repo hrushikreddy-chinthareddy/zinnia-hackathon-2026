@@ -1,4 +1,3 @@
-import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
@@ -6,6 +5,7 @@ import { hasFilter } from '@deps/components/history/filters/filter.helpers';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 export default function TransactionStatusFilter() {
     const { t } = useTranslation(TranslationFiles.COMMON, {

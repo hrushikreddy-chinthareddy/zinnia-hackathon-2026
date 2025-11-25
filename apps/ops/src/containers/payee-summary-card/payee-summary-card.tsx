@@ -1,10 +1,4 @@
 import {
-    Address,
-    DisbursementPaymentForm,
-    DisbursementType,
-    PaymentForm,
-} from '@zinnia/api-types/types/sor';
-import {
     Label,
     Tag,
     TagVariant,
@@ -25,6 +19,12 @@ import { negativeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { getPaymentType } from '@deps/helpers/systematic-program.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    Address,
+    DisbursementPaymentForm,
+    DisbursementType,
+    PaymentForm,
+} from '@zinnia/api-types/types/sor';
 
 import PayeeSummaryCardRow from './payee-summary-card-row/payee-summary-card-row';
 import { getBeneficiaryColor } from '../people-card-container/people-card-container.helpers';

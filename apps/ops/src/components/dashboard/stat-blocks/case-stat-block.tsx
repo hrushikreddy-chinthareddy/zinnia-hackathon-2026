@@ -1,4 +1,3 @@
-import { CaseCountOutput } from '@zinnia/api-types/types/analytics';
 import { Tooltip } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { ReactNode, useEffect, useState } from 'react';
@@ -23,6 +22,7 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { ReactComponent as ChartSquare } from '@deps/styles/elements/icons/icons_outlined/chart-square-bar.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
+import { CaseCountOutput } from '@zinnia/api-types/types/analytics';
 
 import DistributionPieChartSmallAPIBased from '../charts/distribution-charts/distribution-pie-chart-small-api-based';
 

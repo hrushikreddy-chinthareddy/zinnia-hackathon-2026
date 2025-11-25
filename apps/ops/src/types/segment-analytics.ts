@@ -1,6 +1,5 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
-
 import { UserProfile } from '@deps/models/user-profile';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 export interface SegmentTrackedPageProps {
     user: UserProfile;

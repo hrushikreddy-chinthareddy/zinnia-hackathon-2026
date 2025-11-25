@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils';
 import { Button, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
@@ -64,6 +63,7 @@ import {
     SegmentTrackedEventName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,

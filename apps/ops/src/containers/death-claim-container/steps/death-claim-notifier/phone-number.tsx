@@ -1,4 +1,3 @@
-import { Phone } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
 
@@ -13,6 +12,7 @@ import {
     frequentCountryOptions,
 } from '@deps/containers/people-data-cards/phone-card/side-sheet/side-sheet-phone.helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 interface PhoneNumberProps {
     country: keyof typeof countries;

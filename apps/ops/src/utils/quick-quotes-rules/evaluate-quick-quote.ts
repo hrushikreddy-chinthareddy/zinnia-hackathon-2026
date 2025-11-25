@@ -101,21 +101,21 @@ export class QuickQuoteProducts {
             // Evaluate each rider for this product
             const resultRiders = {
                 accidentalDeathBenefit: this.isRiderEligible(
-                    input.insuredAge,
+                    input,
                     input.riders.accidentalDeathBenefit,
                     product.riders.find(
                         (rider) => rider.riderCode === 'Rider_ADR'
                     )
                 ),
                 childrensTerm: this.isRiderEligible(
-                    input.insuredAge,
+                    input,
                     input.riders.childrensTerm,
                     product.riders.find(
                         (rider) => rider.riderCode === 'Rider_CTR'
                     )
                 ),
                 waiverOfPremium: this.isRiderEligible(
-                    input.insuredAge,
+                    input,
                     input.riders.waiverOfPremium,
                     product.riders.find(
                         (rider) => rider.riderCode === 'Rider_WPR'
@@ -251,17 +251,24 @@ export class QuickQuoteProducts {
      */
     private getRiderEligible(
         alternatives: RiderAlternatives,
-        age: number,
+        {
+            insuredAge,
+            faceAmount: productFaceAmount,
+        }: { insuredAge: number; faceAmount: number },
         face: number
     ): true | NotAvailabilityReasonField {
         const { ageMin, ageMax, faceMin, faceMax } = alternatives;
 
-        const isAgeInRange = this.isWithin(age, ageMin, ageMax);
+        const isAgeInRange = this.isWithin(insuredAge, ageMin, ageMax);
         let isFaceInRange = true;
 
         // Only validate face range if both min and max are defined
         if (faceMin && faceMax) {
-            isFaceInRange = this.isWithin(face, faceMin, faceMax);
+            isFaceInRange = this.isWithin(
+                face,
+                faceMin,
+                Math.min(faceMax, productFaceAmount)
+            );
 
             if (!isFaceInRange) {
                 return 'face';
@@ -285,14 +292,18 @@ export class QuickQuoteProducts {
      *  - the result of `getRiderEligible` if rules and selection are present
      */
     isRiderEligible(
-        age: number,
+        productParams: { insuredAge: number; faceAmount: number },
         rider: boolean | number,
         riderRules: RiderRule | undefined
     ) {
         if (riderRules && rider) {
             const { alternatives } = riderRules;
             // `rider` here is expected to be a numeric face amount when used
-            return this.getRiderEligible(alternatives, age, rider as number);
+            return this.getRiderEligible(
+                alternatives,
+                productParams,
+                rider as number
+            );
         }
 
         // Rider either not selected or no rules for this product

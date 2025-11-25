@@ -1,4 +1,3 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
 import {
     Loader,
     LoaderVariant,
@@ -10,6 +9,7 @@ import { useEffect, useState } from 'react';
 
 import { Content, ContentVariant } from '@deps/components/content/content';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 import SideSheetReversedTransactionContent from './side-sheet-reversed-transaction-content';
 import { SideSheetTransactionProps } from '../types';

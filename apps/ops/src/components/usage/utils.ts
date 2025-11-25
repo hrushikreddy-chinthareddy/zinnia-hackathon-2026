@@ -1,9 +1,9 @@
+import dayjs from 'dayjs';
+
 import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
-} from '@xd/api-types/dist/generated-types/analytics';
-import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
+} from '@zinnia/api-types/types/analytics';
 
 import { Timerange } from '../dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '../dashboard/utils';
@@ -102,6 +102,14 @@ export const TRANSACTION_TYPE_DISPLAY_MAP: Record<string, string> = {
     newloan: 'New Loan',
 };
 
+export const PageType = {
+    Cases: 'Cases',
+    Illustrations: 'Illustrations',
+    Policies: 'Policies',
+} as const;
+
+export type PageType = keyof typeof PageType;
+
 export const downloadCSV = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -113,20 +121,24 @@ export const downloadCSV = (csv: string, filename: string) => {
     document.body.removeChild(link);
 };
 
-export const generateCSVFileName = (
-    title: string,
-    timerange: Timerange,
-    role?: string,
-    optionaltitle?: string
-) => {
-    const { t } = useTranslation();
+export const generateCSVFileName = ({
+    title,
+    timerange,
+    role,
+    optionaltitle,
+}: {
+    title: string;
+    timerange: Timerange;
+    role?: string;
+    optionaltitle?: string;
+}) => {
     const rolePart = role === 'All' ? 'All Roles' : role;
     const fromDate = dayjs(timerange.from).format(defaultDateFormat);
     const toDate = dayjs(timerange.to).format(defaultDateFormat);
 
-    return `${t(title)} ${rolePart || ''} ${t(
+    return `${title} ${rolePart || ''} ${
         optionaltitle || ''
-    )} ${fromDate} to ${toDate}`;
+    } ${fromDate} to ${toDate}`;
 };
 
 export const colors = [

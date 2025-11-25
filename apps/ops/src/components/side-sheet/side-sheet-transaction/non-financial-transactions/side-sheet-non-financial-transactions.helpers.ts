@@ -1,4 +1,3 @@
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -8,6 +7,7 @@ import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import {
     LooseIdObject,

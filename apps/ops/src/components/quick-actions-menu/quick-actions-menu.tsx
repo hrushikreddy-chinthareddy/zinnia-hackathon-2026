@@ -1,7 +1,5 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { Reason } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
 import React from 'react';
@@ -42,9 +40,11 @@ import {
     PolicyClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { TransactionPermission } from '@deps/utils/auth';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { Reason } from '@zinnia/api-types/types/sor';
 
 import { TextButton } from './quick-action-text-button';
 interface TranslateProps {

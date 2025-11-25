@@ -1,12 +1,12 @@
-import {
-    HTTPValidationError,
-    UserTransactionOutput,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    HTTPValidationError,
+    UserTransactionOutput,
+} from '@zinnia/api-types/types/analytics';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 

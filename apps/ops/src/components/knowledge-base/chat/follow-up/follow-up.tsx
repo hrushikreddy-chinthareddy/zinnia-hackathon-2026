@@ -1,4 +1,3 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Loader, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +19,7 @@ import {
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './follow-up.module.css';
 import ChatQuestion from '../chat-question/chat-question';

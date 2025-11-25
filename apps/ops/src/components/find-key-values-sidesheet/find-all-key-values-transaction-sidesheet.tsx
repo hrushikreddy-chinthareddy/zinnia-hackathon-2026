@@ -1,7 +1,8 @@
-import { Transaction } from '@xd/api-types/dist/generated-types/sor';
 import { SideSheet } from '@zinnia/bloom/components';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
 

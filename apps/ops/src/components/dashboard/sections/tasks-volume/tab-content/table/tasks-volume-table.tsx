@@ -1,4 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
 import {
     Icon,
     IconType,
@@ -24,6 +23,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { useDashboardStore } from '@deps/store/store';
+import { toSentenceCase } from '@deps/utils/strings';
 
 import { TasksVolumeContext } from '../../context/tasks-volume-context';
 import {

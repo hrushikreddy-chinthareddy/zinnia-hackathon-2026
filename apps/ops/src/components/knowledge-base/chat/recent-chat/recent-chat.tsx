@@ -1,9 +1,3 @@
-import {
-    ChatSearchResponse,
-    ChatSessionResponse,
-    MeResponse,
-} from '@xd/api-types/dist/generated-types/knowledgebase';
-import { formatDateTime } from '@xd/utils/src/dates';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
@@ -21,6 +15,12 @@ import {
 } from '@deps/queries/api/knowledge-base';
 import { KeyboardEvents, KnowledgeBasePages } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { formatDateTime } from '@deps/utils/dates';
+import {
+    ChatSearchResponse,
+    ChatSessionResponse,
+    MeResponse,
+} from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './recent-chat.module.css';
 import { KnowledgeBasePaths } from '../../knowledge-base-sidenav/knowledge-base-sidenav';

@@ -1,12 +1,12 @@
 import { cleanup } from '@testing-library/react';
+
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     PartyRole,
     TaxRateToUse,
     TaxWithholdingInstructions,
     TaxWithholdingType,
 } from '@zinnia/api-types/types/sor';
-
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import {
     getFormErrors,

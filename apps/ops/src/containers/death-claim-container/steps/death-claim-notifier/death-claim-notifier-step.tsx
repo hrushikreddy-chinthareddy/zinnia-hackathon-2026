@@ -1,4 +1,3 @@
-import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -28,6 +27,7 @@ import { PartyType } from '@deps/models/policy/sor-policy';
 import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 
 import { DeathClaim } from './death-claim';
 import { DeceasedDetails } from './deceased-details';

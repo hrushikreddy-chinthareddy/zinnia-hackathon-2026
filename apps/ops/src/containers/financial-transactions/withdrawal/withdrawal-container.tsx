@@ -1,8 +1,3 @@
-import {
-    FullSurrenderRequest,
-    PartialWithdrawalOneTimeRequest,
-} from '@zinnia/api-types/types/bpm';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -28,6 +23,11 @@ import {
 } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+} from '@zinnia/api-types/types/bpm';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import { WithdrawalType } from './amount/types';

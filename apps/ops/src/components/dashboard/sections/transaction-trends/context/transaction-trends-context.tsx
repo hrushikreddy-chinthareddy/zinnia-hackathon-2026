@@ -1,10 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
-import {
-    CaseCountGroupByEnum,
-    CaseCountInputFilter,
-    CaseCountOutput,
-} from '@zinnia/api-types/types/analytics';
 import {
     createContext,
     FC,
@@ -25,6 +19,12 @@ import {
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
 
 interface TransactionTrendsContextTypes {
     timeframeRadio: TimeframeFilterOptions | undefined;

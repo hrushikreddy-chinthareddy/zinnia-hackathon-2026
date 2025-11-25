@@ -1,4 +1,3 @@
-import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
@@ -25,6 +24,7 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 export interface AllocationCardProps {
     allocation?: number;

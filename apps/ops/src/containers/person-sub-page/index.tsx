@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -29,6 +27,8 @@ import {
     checkEmailChangeEligibilityQuery,
     checkCommunicationPreferenceChangeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -161,7 +161,12 @@ export const PersonSubPage = ({
         );
 
     const { data: phoneChangeEligibility } = useQuery({
-        queryKey: ['checkPhoneChangeEligibilityQuery', planCode, policyNumber],
+        queryKey: [
+            'checkPhoneChangeEligibilityQuery',
+            planCode,
+            policyNumber,
+            policy.policyNumber,
+        ],
         queryFn: () =>
             checkPhoneChangeEligibilityQuery(
                 planCode as string,

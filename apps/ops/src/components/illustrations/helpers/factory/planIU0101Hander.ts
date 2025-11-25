@@ -849,7 +849,7 @@ function mapIllustrationPayloadToEngineInputData(
 }
 
 // We are not checking the type of the return value right now so type is any
-function getIllustrationDataFromResponse(data: any, formInputs: any) {
+function getIllustrationDataFromResponse(data: any) {
     const fiveYearIndex = 4;
     const tenYearIndex = 9;
     const twentyYearIndex = 19;
@@ -911,8 +911,8 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return mapIllustrationPayloadToEngineInputData(data);
     }
 
-    getIllustrationDataFromResponse(data: any, formInputs: any): any {
-        return getIllustrationDataFromResponse(data, formInputs);
+    getIllustrationDataFromResponse(data: any): any {
+        return getIllustrationDataFromResponse(data);
     }
 
     getBlueprint(): QuestionnaireBlueprint {
@@ -944,7 +944,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return 'api/illustration/v3/indexed-universal-life/new-business';
     }
 
-    public generateTitle(data: any, formInputs: any): string {
+    public generateTitle(data: any): string {
         const assumed = data.assumed;
         const creationDate = new Date().toLocaleDateString();
 

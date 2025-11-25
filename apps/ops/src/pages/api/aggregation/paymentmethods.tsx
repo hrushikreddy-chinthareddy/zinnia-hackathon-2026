@@ -1,7 +1,6 @@
 // https://qa.api.zinnia.io/aggregation/v1/policies/{planCode}/{policyNumber}/paymentmethods
 
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { BankAccount } from '@xd/api-types/dist/generated-types/sor';
 import { AxiosResponse } from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -14,6 +13,7 @@ import {
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 type PaymentMethodResponse =
     | {

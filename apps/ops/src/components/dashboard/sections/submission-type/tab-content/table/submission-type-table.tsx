@@ -1,5 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
-import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import {
     FieldData,
     FieldSize,
@@ -27,6 +25,8 @@ import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { toSentenceCase } from '@deps/utils/strings';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
 
@@ -73,13 +73,10 @@ export const SubmissionTypeTable = () => {
 
     const {
         graphStats,
-        timerange,
         submissionVs,
-        selectedProcess,
         graphStatsLoading,
         graphStatsFetching,
         graphStatsError,
-        filter,
     } = useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it

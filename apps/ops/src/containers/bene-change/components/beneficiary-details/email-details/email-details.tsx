@@ -1,4 +1,3 @@
-import { Email } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
@@ -8,6 +7,7 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 import { TranslationFiles } from '@deps/config/translations';
+import { Email } from '@zinnia/api-types/types/sor';
 
 import { INITIAL_EMAIL } from './email-details.helpers';
 

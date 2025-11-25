@@ -1,11 +1,3 @@
-import {
-    Fund,
-    FundAccountType,
-    FundAllocation,
-    FundSegment,
-    MatchSegment,
-    Product,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -32,6 +24,14 @@ import {
     FundInformationByPlanCode,
     Funds,
 } from '@deps/types/fund-information';
+import {
+    Fund,
+    FundAccountType,
+    FundAllocation,
+    FundSegment,
+    MatchSegment,
+    Product,
+} from '@zinnia/api-types/types/sor';
 
 import {
     FundDetailsViewModel,

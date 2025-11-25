@@ -1,6 +1,5 @@
-import { Policy, TestValues } from '@zinnia/api-types/types/sor';
-
 import { DataDefinition } from '@deps/types/data';
+import { Policy, TestValues } from '@zinnia/api-types/types/sor';
 
 export type TestValuesDto = TestValues;
 

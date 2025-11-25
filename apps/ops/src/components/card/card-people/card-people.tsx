@@ -1,4 +1,3 @@
-import { PartyStatus } from '@zinnia/api-types/types/sor';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,6 +18,7 @@ import {
 } from '@deps/containers/people-card-container/people-card-container.types';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TagKey } from '@deps/types/components';
+import { PartyStatus } from '@zinnia/api-types/types/sor';
 
 export interface CardPeopleProps {
     name: string;

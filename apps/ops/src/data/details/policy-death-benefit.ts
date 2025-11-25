@@ -1,6 +1,5 @@
-import { DeathBenefit, Policy } from '@zinnia/api-types/types/sor';
-
 import { DataDefinition } from '@deps/types/data';
+import { DeathBenefit, Policy } from '@zinnia/api-types/types/sor';
 
 export type DeathBenefitDto = DeathBenefit;
 
