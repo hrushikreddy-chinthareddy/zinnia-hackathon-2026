@@ -1,7 +1,5 @@
+import { formatTaskTime } from '@xd/utils/src/dates';
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
-
-dayjs.extend(duration);
 
 import { defaultDateFormat } from '../../utils';
 
@@ -24,8 +22,6 @@ export interface CompletedTaskTimeData {
     }[];
     totalTasks: number;
 }
-
-type TimeUnit = 'minute' | 'hour' | 'day';
 
 // CSV column definitions for processing times export
 export const CSV_COLUMNS: {
@@ -50,53 +46,6 @@ export const getCarrierName = (selectedCarriers: {
     if (carrierKeys.length === 0) return 'All Carriers';
     if (carrierKeys.length === 1) return selectedCarriers[carrierKeys[0]];
     return 'All Carriers';
-};
-
-/**
- * Converts a duration expressed in seconds into a human-readable string
- * @param duration Duration in seconds.
- * @returns A normalized, human-readable duration string.
- */
-export const formatTaskTime = (duration: number | string): string => {
-    const seconds =
-        typeof duration === 'string' ? Number(duration.trim()) : duration;
-    const dur = dayjs.duration(seconds, 'seconds');
-
-    const format = (value: number, unit: TimeUnit): string => {
-        const rounded = Number(value.toFixed(1));
-        const displayValue = Number.isInteger(rounded)
-            ? rounded.toFixed(0)
-            : rounded.toString();
-        const unitLabel = rounded === 1 ? unit : `${unit}s`;
-
-        return `${displayValue} ${unitLabel}`;
-    };
-
-    const ONE_HOUR = dayjs.duration(1, 'hour').asSeconds();
-    const ONE_DAY = dayjs.duration(1, 'day').asSeconds();
-
-    if (seconds < ONE_HOUR) {
-        const totalMinutes = dur.asMinutes();
-        const roundedMinutes = Number(totalMinutes.toFixed(1));
-        if (roundedMinutes >= 60) {
-            return '1 hour';
-        }
-
-        return format(totalMinutes, 'minute');
-    }
-
-    if (seconds < ONE_DAY) {
-        const totalHours = dur.asHours();
-        const roundedHours = Number(totalHours.toFixed(1));
-        if (roundedHours >= 24) {
-            return '1 day';
-        }
-
-        return format(totalHours, 'hour');
-    }
-
-    const totalDays = dur.asDays();
-    return format(totalDays, 'day');
 };
 
 /**

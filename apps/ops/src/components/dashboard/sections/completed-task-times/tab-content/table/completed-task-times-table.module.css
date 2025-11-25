@@ -1,0 +1,18 @@
+.exportContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.exportContainerButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    cursor: pointer;
+
+    & span {
+        font: var(--typography-nav-links);
+        text-align: left;
+    }
+}

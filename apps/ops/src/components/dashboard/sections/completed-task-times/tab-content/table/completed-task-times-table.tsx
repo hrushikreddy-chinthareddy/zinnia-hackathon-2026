@@ -1,8 +1,8 @@
 import { toSentenceCase } from '@xd/utils/dist';
+import { formatTaskTime } from '@xd/utils/src/dates';
 import {
     Icon,
     IconType,
-    Link,
     Pagination,
     Table,
     TableBody,
@@ -10,6 +10,7 @@ import {
     TableHeader,
     TableHeaderCell,
     TableRow,
+    Button,
 } from '@zinnia/bloom/components';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,13 +26,13 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { useDashboardStore } from '@deps/store/store';
 
+import styles from './completed-task-times-table.module.css';
 import { useCompletedTaskTimes } from '../../context/completed-task-times-context';
 import {
     CSV_COLUMNS,
     generateTasksCSVFilename,
     getCarrierName,
     flattenCompletedTaskTimeData,
-    formatTaskTime,
     formatTaskTimeFromArray,
 } from '../../utils';
 import { CompletedTaskTimesFilters } from '../shared/completed-task-times-filters';
@@ -111,7 +112,9 @@ export const CompletedTaskTimesTable = () => {
     ) => {
         return tasks.map((task) => (
             <TableRow key={`${caseType}-${task.taskName}`}>
-                <TableCell aria-label={caseType}></TableCell>
+                <TableCell>
+                    <span className="sr-only">{caseType}</span>
+                </TableCell>
                 <TableCell>{formatTaskTime(task.secondMedian)}</TableCell>
                 <TableCell>{task.taskName}</TableCell>
                 <TableCell>{task.count.toLocaleString()}</TableCell>
@@ -126,18 +129,17 @@ export const CompletedTaskTimesTable = () => {
 
     return (
         <CardContainer>
-            <div className="flex justify-between items-center">
+            <div className={styles.exportContainer}>
                 <CompletedTaskTimesHeader />
-                <div
-                    className="flex items-center gap-2 cursor-pointer"
+                <Button
+                    mode="link"
+                    size="small"
+                    className={styles.exportContainerButton}
                     onClick={handleExportCSV}
                 >
-                    <Icon type={IconType.DOWNLOAD} />
-                    <Link
-                        href={'#'}
-                        text={t('caseStats.tasks.table.exportCSV')}
-                    />
-                </div>
+                    <Icon type={IconType.DOWNLOAD} color="black" />
+                    <span>{t('caseStats.tasks.table.exportCSV')}</span>
+                </Button>
             </div>
             <CompletedTaskTimesFilters />
             <div className={sharedStyles.tableContainer}>

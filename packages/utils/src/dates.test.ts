@@ -1,8 +1,12 @@
-import { isValidDate, startOfTomorrowLocalIso } from './dates';
+import { formatTaskTime, isValidDate, startOfTomorrowLocalIso } from './dates';
 import { standardDateMonthDayYear } from './dates';
 import { DEFAULT_ERROR_STRING } from './strings';
 import dayjs from 'dayjs';
 import { toEnterpriseDate, ENTERPRISE_DATE_FORMAT } from './dates';
+
+const ONE_MINUTE = 60;
+const ONE_HOUR = 60 * ONE_MINUTE;
+const ONE_DAY = 24 * ONE_HOUR;
 
 describe('isValidDate', () => {
   it('should return true for a valid date string', () => {
@@ -126,5 +130,43 @@ describe('startOfTomorrowLocalIso', () => {
 
   it('returns DEFAULT_ERROR_STRING for invalid input', () => {
     expect(startOfTomorrowLocalIso('')).toBe(DEFAULT_ERROR_STRING);
+  });
+});
+
+describe('formatTaskTime', () => {
+  it('formats 30 minutes correctly', () => {
+    expect(formatTaskTime(30 * ONE_MINUTE)).toBe('30 minutes');
+  });
+
+  it('formats exactly 1 minute', () => {
+    expect(formatTaskTime(1 * ONE_MINUTE)).toBe('1 minute');
+  });
+
+  it('formats 3599 seconds to 1 hour', () => {
+    expect(formatTaskTime(3599)).toBe('1 hour');
+  });
+
+  it('formats 59 minutes correctly', () => {
+    expect(formatTaskTime(59 * ONE_MINUTE)).toBe('59 minutes');
+  });
+
+  it('formats fractionals hours (2.5h)', () => {
+    expect(formatTaskTime(2.5 * ONE_HOUR)).toBe('2.5 hours');
+  });
+
+  it('formats exactly 1 day', () => {
+    expect(formatTaskTime(1 * ONE_DAY)).toBe('1 day');
+  });
+
+  it('formats 86399 seconds to 1 days', () => {
+    expect(formatTaskTime(86399)).toBe('1 day');
+  });
+
+  it('formats exactly (1.5 d)', () => {
+    expect(formatTaskTime(1.5 * ONE_DAY)).toBe('1.5 days');
+  });
+
+  it('formats 0ms as 0 minutes', () => {
+    expect(formatTaskTime(0)).toBe('0 minutes');
   });
 });
