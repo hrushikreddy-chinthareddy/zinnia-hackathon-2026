@@ -72,6 +72,13 @@ To run Ops, use the following command:
 pnpm run dev:ops
 ```
 
+or you can run it directly:
+
+```bash
+cd apps/ops
+pnpm run dev
+```
+
 #### Running SSO-MPV
 
 To run SSO-MPV, use the following command:
