@@ -33,6 +33,7 @@ import {
     Frequency,
     Policy,
     Reason,
+    Status,
 } from '@zinnia/api-types/types/sor';
 
 import { BPMErrorContent } from './bpm-error-content';
