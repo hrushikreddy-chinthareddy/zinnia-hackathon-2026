@@ -457,7 +457,17 @@
         "timeline": "Ponctualité",
         "taxes": "Impôts",
         "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
-        "selectDateInRange": "Sélectionnez une date dans la plage:"
+        "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "completedTaskTimesTitle": "Temps de traitement médian",
+        "completedTaskTimesDescription": "Temps de traitement médian pour les tâches sur une période selectionée.",
+        "caseType": "Type de dossier",
+        "medianProcessingTime": "Temps de traitement médian",
+        "maxProcessingTime": "Temps de traitement maximal",
+        "minProcessingTime": "Temps de traitement minimal",
+        "task": "Tâche",
+        "totalTasks": "Nombre total de tâches",
+        "allTasks": "Toutes les tâches",
+        "exportCSV": "Exporter en CSV"
     },
     "enums": {
         "LIFE": "Vie",
@@ -8961,22 +8971,6 @@
             "table": {
                 "headers": {
                     "caseType": "Type de dossier",
-                    "task": "Tâche",
-                    "totalTasks": "Nombre total de tâches"
-                },
-                "allTasks": "Toutes les tâches",
-                "exportCSV": "Exporter en CSV"
-            }
-        },
-        "completedTaskTimes": {
-            "title": "Temps de traitement médian",
-            "description": "Temps de traitement médian pour les tâches sur une période selectionée.",
-            "table": {
-                "headers": {
-                    "caseType": "Type de dossier",
-                    "medianTime": "Temps de traitement médian",
-                    "maxTime": "Temps de traitement maximal",
-                    "minTime": "Temps de traitement minimal",
                     "task": "Tâche",
                     "totalTasks": "Nombre total de tâches"
                 },

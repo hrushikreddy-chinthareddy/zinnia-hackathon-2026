@@ -458,7 +458,17 @@
         "timeliness": "Cronología",
         "taxes": "Impuestos",
         "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
-        "selectDateInRange": "Seleccione una fecha dentro del rango:"
+        "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "completedTaskTimesTitle": "Mediana del Tiempo de Procesamiento",
+        "completedTaskTimesDescription": "Mediana del tiempo de procesamiento de tareas durante el range de tiempo seleccionado.",
+        "caseType": "Tipo de caso",
+        "medianProcessingTime": "Mediana del tiempo de procesamiento",
+        "maxProcessingTime": "Máx. tiempo de procesamiento",
+        "minProcessingTime": "Min. tiempo de procesamiento",
+        "task": "Tarea",
+        "totalTasks": "Total de tareas",
+        "allTasks": "Todas las tareas",
+        "exportCSV": "Exportar a CSV"
     },
     "enums": {
         "LIFE": "Vida",
@@ -8654,22 +8664,6 @@
             "table": {
                 "headers": {
                     "caseType": "Tipo de caso",
-                    "task": "Tarea",
-                    "totalTasks": "Total de tareas"
-                },
-                "allTasks": "Todas las tareas",
-                "exportCSV": "Exportar a CSV"
-            }
-        },
-        "completedTaskTimes": {
-            "title": "Mediana del Tiempo de Procesamiento",
-            "description": "Mediana del tiempo de procesamiento de tareas durante el range de tiempo seleccionado.",
-            "table": {
-                "headers": {
-                    "caseType": "Tipo de caso",
-                    "medianTime": "Mediana del tiempo de procesamiento",
-                    "maxTime": "Máx. tiempo de procesamiento",
-                    "minTime": "Min. tiempo de procesamiento",
                     "task": "Tarea",
                     "totalTasks": "Total de tareas"
                 },

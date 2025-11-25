@@ -138,7 +138,7 @@ export const CompletedTaskTimesTable = () => {
                     onClick={handleExportCSV}
                 >
                     <Icon type={IconType.DOWNLOAD} color="black" />
-                    <span>{t('caseStats.tasks.table.exportCSV')}</span>
+                    <span>{t('allFields.exportCSV')}</span>
                 </Button>
             </div>
             <CompletedTaskTimesFilters />
@@ -156,7 +156,7 @@ export const CompletedTaskTimesTable = () => {
                     ) : (
                         <Table>
                             <caption className="sr-only">
-                                {t('caseStats.completedTaskTimes.title')}
+                                {t('allFields.completedTaskTimesTitle')}
                             </caption>
                             <TableHeader>
                                 <TableRow>
@@ -166,9 +166,7 @@ export const CompletedTaskTimesTable = () => {
                                         }
                                         sortable
                                     >
-                                        {t(
-                                            'caseStats.completedTaskTimes.table.headers.caseType'
-                                        )}
+                                        {t('allFields.caseType')}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -185,9 +183,7 @@ export const CompletedTaskTimesTable = () => {
                                         }
                                         sortable
                                     >
-                                        {t(
-                                            'caseStats.completedTaskTimes.table.headers.medianTime'
-                                        )}
+                                        {t('allFields.medianProcessingTime')}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -197,9 +193,7 @@ export const CompletedTaskTimesTable = () => {
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell width={256}>
-                                        {t(
-                                            'caseStats.completedTaskTimes.table.headers.task'
-                                        )}
+                                        {t('allFields.task')}
                                     </TableHeaderCell>
                                     <TableHeaderCell
                                         onClick={() =>
@@ -209,9 +203,7 @@ export const CompletedTaskTimesTable = () => {
                                         }
                                         sortable
                                     >
-                                        {t(
-                                            'caseStats.completedTaskTimes.table.headers.totalTasks'
-                                        )}
+                                        {t('allFields.totalTasks')}
                                         <Icon
                                             className={sharedStyles.sortIcon}
                                             type={IconType.SORT}
@@ -243,9 +235,7 @@ export const CompletedTaskTimesTable = () => {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                {t(
-                                                    'caseStats.tasks.table.allTasks'
-                                                )}
+                                                {t('allFields.allTasks')}
                                             </TableCell>
                                             <TableCell>
                                                 {item.totalTasks.toLocaleString()}

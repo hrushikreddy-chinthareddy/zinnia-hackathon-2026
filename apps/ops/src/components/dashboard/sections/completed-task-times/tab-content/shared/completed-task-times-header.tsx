@@ -19,9 +19,9 @@ export const CompletedTaskTimesHeader = () => {
 
     return (
         <ChartHeader
-            title={t('caseStats.completedTaskTimes.title')}
+            title={t('allFields.completedTaskTimesTitle')}
             subtitle={totalTasks}
-            description={t('caseStats.completedTaskTimes.description')}
+            description={t('allFields.completedTaskTimesDescription')}
         />
     );
 };
