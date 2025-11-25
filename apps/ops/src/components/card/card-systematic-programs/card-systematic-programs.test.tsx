@@ -1,5 +1,8 @@
 import { faker } from '@faker-js/faker';
 import { render, screen, fireEvent } from '@testing-library/react';
+
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { generateKebabDate } from '@deps/utils/mock/mockDates';
 import {
     ArrangementType,
     SystematicProgram,
@@ -7,9 +10,6 @@ import {
     PaymentForm,
     Status,
 } from '@zinnia/api-types/types/sor';
-
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { generateKebabDate } from '@deps/utils/mock/mockDates';
 
 import SystematicProgramsCard from './card-systematic-programs';
 import {
@@ -174,7 +174,7 @@ describe('SystematicProgramsCard', () => {
         it('renders table headers correctly', () => {
             expect(element).toHaveTextContent('type');
             expect(element).toHaveTextContent('paymentAmount');
-            expect(element).toHaveTextContent('frecuency');
+            expect(element).toHaveTextContent('frequency');
             expect(element).toHaveTextContent('nextPayment');
             expect(element).toHaveTextContent('paymentType');
             expect(element).toHaveTextContent('actions');
