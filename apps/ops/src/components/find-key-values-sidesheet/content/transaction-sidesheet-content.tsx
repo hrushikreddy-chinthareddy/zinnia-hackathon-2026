@@ -7,7 +7,7 @@ import {
     FieldSize as BloomFieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@deps/hooks/useDebounce';
@@ -30,16 +30,10 @@ export const TransactionSidesheetContent = ({
 }: {
     transaction: Transaction;
 }) => {
-    const { treeState, setTreeState } = useTreeState();
-    const [searchValue, setSearchValue] = useState('');
+    const { treeState, setTreeState, searchValue, setSearchValue } =
+        useTreeState();
     const { t } = useTranslation();
     const debouncedSearchValue = useDebounce(searchValue, 200);
-
-    useEffect(() => {
-        if (!debouncedSearchValue) return;
-        setTreeState(Expand);
-    }, [debouncedSearchValue, setTreeState]);
-
     const nodes = convertToDataNode(
         (data) => convertNode(data, t),
         (data) => groupBasics(data, t),
@@ -63,7 +57,11 @@ export const TransactionSidesheetContent = ({
 
     const matches = searchNodes(nodes, debouncedSearchValue);
 
-    console.log(matches);
+    useEffect(() => {
+        if (!debouncedSearchValue) return;
+        setTreeState(Expand);
+        setSearchValue(debouncedSearchValue);
+    }, [debouncedSearchValue, setTreeState, setSearchValue]);
 
     return (
         <div className={styles.keyValuesContainer}>
@@ -93,7 +91,7 @@ export const TransactionSidesheetContent = ({
                         {treeState === Expand ? 'Collapse all' : 'Expand all'}
                     </Button>
                 </div>
-                <DataNodeRenderer nodes={nodes} />
+                <DataNodeRenderer nodes={matches} />
                 {!matches.length && (
                     <div className={styles.emptySearch}>
                         <Label>

@@ -11,6 +11,8 @@ import {
 type TTreeState = {
     treeState: boolean;
     setTreeState: Dispatch<SetStateAction<boolean>>;
+    searchValue: string;
+    setSearchValue: Dispatch<SetStateAction<string>>;
 };
 
 export const [Expand, Collapse] = [true, false];
@@ -24,9 +26,11 @@ export const TreeStateProvider = ({
     initialTreeState: boolean;
 }) => {
     const [treeState, setTreeState] = useState(initialTreeState || Collapse);
+    const [searchValue, setSearchValue] = useState('');
+
     const memoizedValues = useMemo(
-        () => ({ treeState, setTreeState }),
-        [treeState, setTreeState]
+        () => ({ treeState, setTreeState, searchValue, setSearchValue }),
+        [treeState, setTreeState, searchValue, setSearchValue]
     );
 
     return (

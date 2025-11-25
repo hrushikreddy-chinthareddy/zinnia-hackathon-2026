@@ -650,50 +650,68 @@ export const groupBasics = (data: DataNode[], t: TFunction): DataNode[] => {
     ];
 };
 
-export const searchNodes = (nodes: DataNode[], search: string): DataNode[] => {
+export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     const lower = search.toLowerCase();
 
-    const searchNode = (node: DataNode): DataNode[] => {
-        const results: DataNode[] = [];
-
-        // FIELD
+    const filterNode = (node: DataNode): DataNode | null => {
+        // ---- FIELD ----
         if (node.type === FieldType.field) {
-            if (
+            const match =
                 node.label.toLowerCase().includes(lower) ||
-                node.value.toLowerCase().includes(lower)
-            ) {
-                results.push(node);
-            }
+                node.value.toLowerCase().includes(lower);
+
+            return match ? node : null;
         }
 
-        // SECTION
+        // ---- SECTION ----
         if (node.type === FieldType.section) {
-            if (node.label.toLowerCase().includes(lower)) {
-                results.push(node);
+            const labelMatches = node.label.toLowerCase().includes(lower);
+
+            // Recursively filter children
+            const filteredChildren = node.children
+                .map(filterNode)
+                .filter((n): n is DataNode => n !== null);
+
+            // Section matches if:
+            // - it matches by label, OR
+            // - any children matched
+            if (labelMatches || filteredChildren.length > 0) {
+                return {
+                    ...node,
+                    children: filteredChildren,
+                };
             }
 
-            node.children.forEach((child) => {
-                results.push(...searchNode(child));
-            });
+            return null;
         }
 
-        // GROUP
+        // ---- GROUP ----
         if (node.type === FieldType.group) {
-            node.children.forEach((group) =>
-                group.forEach((child) => {
-                    results.push(...searchNode(child));
-                })
-            );
+            const filteredGroups = node.children
+                .map((group) =>
+                    group
+                        .map(filterNode)
+                        .filter((n): n is DataNode => n !== null)
+                )
+                .filter((g) => g.length > 0); // remove empty groups
+
+            // Keep group only if some child in some group matched
+            if (filteredGroups.length > 0) {
+                return {
+                    ...node,
+                    children: filteredGroups,
+                };
+            }
+
+            return null;
         }
 
-        return results;
+        return null;
     };
 
-    return nodes.reduce<DataNode[]>((acc, node) => {
-        acc.push(...searchNode(node));
-        return acc;
-    }, []);
-};
+    // Apply filtering to the top-level array
+    return nodes.map(filterNode).filter((n): n is DataNode => n !== null);
+}
 
 /**
  * Given a policy, returns an object containing two lists of data

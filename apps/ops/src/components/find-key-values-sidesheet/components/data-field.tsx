@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import DotContainer from '@deps/components/dot-container/dot-container';
 import Highlighter from '@deps/components/highlighter/highlighter';
+import { useTreeState } from '@deps/hooks/useTreeState';
 
 import styles from '../find-all-key-values-sidesheet.module.css';
 
@@ -19,14 +20,13 @@ export const DataField = ({
     dataField,
     link,
     toolTip,
-    searchValue,
 }: {
     dataField: [string, string];
     link?: string;
     toolTip?: string;
-    searchValue: string;
 }) => {
     const [fieldLabel, fieldData] = dataField;
+    const { searchValue } = useTreeState();
     const [popoverContainer, setPopoverContainer] =
         useState<HTMLDivElement | null>(null);
 

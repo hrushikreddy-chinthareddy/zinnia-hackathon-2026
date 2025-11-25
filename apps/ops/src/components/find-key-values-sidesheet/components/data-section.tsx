@@ -12,12 +12,14 @@ export const Section = ({
     tags,
     children,
 }: Omit<DataSection, 'type'>) => {
-    const { treeState } = useTreeState();
+    const { treeState, searchValue } = useTreeState();
     return (
         <div className={styles.subSection}>
             <Accordion
                 key={`section_${label}`}
-                sectionLabel={<Highlighter text={label} highlights={[]} />}
+                sectionLabel={
+                    <Highlighter text={label} highlights={[searchValue]} />
+                }
                 type={AccordionType.NESTED}
                 treeState={treeState}
                 tags={tags}
