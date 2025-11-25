@@ -269,10 +269,10 @@ export const combinedTransform = ({
     exclude: string[];
 }) => {
     const format = formatNode({ t });
-    const excl = excludeNodes({ exclude });
+    const excludeNode = excludeNodes({ exclude });
 
     return (node: DataNode): DataNode | null => {
-        const afterExclude = excl(node);
+        const afterExclude = excludeNode(node);
         if (afterExclude === null) return null;
 
         return format(afterExclude);

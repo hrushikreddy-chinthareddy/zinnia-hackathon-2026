@@ -21,6 +21,7 @@ import {
     convertNode,
     convertToDataNode,
     groupBasics,
+    searchNodes,
     transformObject,
 } from '../transformations';
 
@@ -32,13 +33,12 @@ export const TransactionSidesheetContent = ({
     const { treeState, setTreeState } = useTreeState();
     const [searchValue, setSearchValue] = useState('');
     const { t } = useTranslation();
-
     const debouncedSearchValue = useDebounce(searchValue, 200);
+
     useEffect(() => {
         if (!debouncedSearchValue) return;
-
         setTreeState(Expand);
-    }, [debouncedSearchValue]);
+    }, [debouncedSearchValue, setTreeState]);
 
     const nodes = convertToDataNode(
         (data) => convertNode(data, t),
@@ -61,7 +61,9 @@ export const TransactionSidesheetContent = ({
         }
     )(transaction);
 
-    console.log(nodes);
+    const matches = searchNodes(nodes, debouncedSearchValue);
+
+    console.log(matches);
 
     return (
         <div className={styles.keyValuesContainer}>
@@ -92,7 +94,7 @@ export const TransactionSidesheetContent = ({
                     </Button>
                 </div>
                 <DataNodeRenderer nodes={nodes} />
-                {!nodes.length && (
+                {!matches.length && (
                     <div className={styles.emptySearch}>
                         <Label>
                             <Icon

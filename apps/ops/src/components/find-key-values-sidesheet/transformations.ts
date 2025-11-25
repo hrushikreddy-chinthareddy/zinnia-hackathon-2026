@@ -650,6 +650,51 @@ export const groupBasics = (data: DataNode[], t: TFunction): DataNode[] => {
     ];
 };
 
+export const searchNodes = (nodes: DataNode[], search: string): DataNode[] => {
+    const lower = search.toLowerCase();
+
+    const searchNode = (node: DataNode): DataNode[] => {
+        const results: DataNode[] = [];
+
+        // FIELD
+        if (node.type === FieldType.field) {
+            if (
+                node.label.toLowerCase().includes(lower) ||
+                node.value.toLowerCase().includes(lower)
+            ) {
+                results.push(node);
+            }
+        }
+
+        // SECTION
+        if (node.type === FieldType.section) {
+            if (node.label.toLowerCase().includes(lower)) {
+                results.push(node);
+            }
+
+            node.children.forEach((child) => {
+                results.push(...searchNode(child));
+            });
+        }
+
+        // GROUP
+        if (node.type === FieldType.group) {
+            node.children.forEach((group) =>
+                group.forEach((child) => {
+                    results.push(...searchNode(child));
+                })
+            );
+        }
+
+        return results;
+    };
+
+    return nodes.reduce<DataNode[]>((acc, node) => {
+        acc.push(...searchNode(node));
+        return acc;
+    }, []);
+};
+
 /**
  * Given a policy, returns an object containing two lists of data
  * tuples: `policyBasics` and `policySections`.
