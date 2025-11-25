@@ -69,6 +69,8 @@ export const FindAllKeyValuesPolicySidesheet: FC<
                 <PolicySidesheetContent
                     planCode={planCode}
                     policyNumber={policyNumber}
+                    container={container}
+                    handleCalendarOpen={handleCalendarOpen}
                 />
             </TreeStateProvider>
         </SideSheet>
