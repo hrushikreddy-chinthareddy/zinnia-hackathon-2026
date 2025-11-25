@@ -155,6 +155,9 @@ export const CompletedTaskTimesTable = () => {
                         <NoDataMessage />
                     ) : (
                         <Table>
+                            <caption className="sr-only">
+                                {t('caseStats.completedTaskTimes.title')}
+                            </caption>
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell
