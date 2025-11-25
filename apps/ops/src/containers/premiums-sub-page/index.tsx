@@ -82,9 +82,10 @@ export const PremiumsSubPage = () => {
         [systematicPrograms]
     );
 
-    const premiumPrograms = policyDetails.systematicPrograms.getProgramsByType(
-        ArrangementType.PAYMENT
-    );
+    const premiumPrograms =
+        systematicPrograms?.filter(
+            (sp) => sp.arrangementType === ArrangementType.PAYMENT
+        ) || [];
 
     const flatExtra = getFlatExtra(coverage);
     const addCharges = getAddCharges({
@@ -328,13 +329,13 @@ export const PremiumsSubPage = () => {
                         {
                             arrangementType: ArrangementType.PAYMENT,
                             activePrograms: premiumPrograms.filter(
-                                (programs) => programs.status === Status.ACTIVE
+                                (program) => program.status === Status.ACTIVE
                             ),
                             terminatedOrSuspendedPrograms:
                                 premiumPrograms.filter(
-                                    (programs) =>
-                                        programs.status === Status.TERMINATED ||
-                                        programs.status === Status.SUSPENDED
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
                                 ),
                             manageAction: manageAutopay,
                             cancelAction: cancelAutopay,

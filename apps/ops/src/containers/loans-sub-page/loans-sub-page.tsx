@@ -83,9 +83,10 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
         [systematicPrograms]
     );
 
-    const loanPrograms = policyDetails.systematicPrograms.getProgramsByType(
-        ArrangementType.LOANREPAYMENT
-    );
+    const loanPrograms =
+        systematicPrograms?.filter(
+            (sp) => sp.arrangementType === ArrangementType.LOANREPAYMENT
+        ) || [];
 
     const payorParty = getParty(parties, upcomingLoanRepayment);
     const payorBankDetails = getBankDetails(payorParty, upcomingLoanRepayment);
@@ -294,12 +295,12 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         {
                             arrangementType: ArrangementType.LOANREPAYMENT,
                             activePrograms: loanPrograms.filter(
-                                (programs) => programs.status === Status.ACTIVE
+                                (program) => program.status === Status.ACTIVE
                             ),
                             terminatedOrSuspendedPrograms: loanPrograms.filter(
-                                (programs) =>
-                                    programs.status === Status.TERMINATED ||
-                                    programs.status === Status.SUSPENDED
+                                (program) =>
+                                    program.status === Status.TERMINATED ||
+                                    program.status === Status.SUSPENDED
                             ),
                             manageAction: loanManageAutopay,
                             cancelAction: loanCancelAutopay,
@@ -308,6 +309,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                     setUpAction={loanSetAutopay}
                 />
             )}
+            <hr className="h-0.5 border-none bg-gray-200" />
             <LoanRulesCard currency={currency} loanValues={loanValues} />
             <OutstandingLoansCard
                 currency={currency}

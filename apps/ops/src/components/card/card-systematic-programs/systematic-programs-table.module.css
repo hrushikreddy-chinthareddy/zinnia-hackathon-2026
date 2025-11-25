@@ -7,6 +7,7 @@
     td {
         padding: var(--measure-dimension-padding-lg)
             var(--measure-dimension-padding-2xl);
+        font-size: 14px;
     }
 }
 
@@ -27,9 +28,30 @@
 .toggle {
     button {
         background-color: var(
-            --Toggle-Default-Surface-toggle-selected-fill,
+            --toggle-default-surface-toggle-selected-fill,
             #00628b
         );
+        border: 2px solid
+            var(--toggle-default-surface-toggle-selected-fill, #00628b);
+        span {
+            background: var(--base-surface-surface-carrier, #f8f8f8);
+        }
+    }
+    p {
+        font-size: 14px !important;
+    }
+}
+.toggleInactive {
+    button {
+        background: var(--toggle-default-surface-toggle-default-fill, #ededed);
+        border: 2px solid
+            var(--toggledDefault-border-toggle-default-border, #676767);
+    }
+    span {
+        background: var(--toggledDefault-border-toggle-default-border, #676767);
+    }
+    p {
+        font-size: 14px !important;
     }
 }
 
@@ -53,7 +75,7 @@
     width: 322px;
 }
 .statusCell {
-    width: 322px;
+    width: 132px;
     display: flex;
     align-items: center;
     gap: 8px;

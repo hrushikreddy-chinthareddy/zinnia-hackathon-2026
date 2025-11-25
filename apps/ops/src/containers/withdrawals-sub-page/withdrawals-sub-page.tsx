@@ -71,6 +71,18 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
+    const allRmdPrograms =
+        systematicPrograms.all.filter(
+            (sp) =>
+                sp.arrangementType ===
+                ArrangementType.REQUIREDMINIMUMDISTRIBUTION
+        ) || [];
+
+    const allWithdrawalPrograms =
+        systematicPrograms.all.filter(
+            (sp) => sp.arrangementType === ArrangementType.WITHDRAWAL
+        ) || [];
+
     const rmdPrograms = policyDetails.systematicPrograms.getProgramsByType(
         ArrangementType.REQUIREDMINIMUMDISTRIBUTION
     );
@@ -199,11 +211,6 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION
                 ? Reason.REQUIREDMINIMUMDISTRIBUTION
                 : Reason.WITHDRAWAL;
-
-        console.log(
-            'getPayout(arrangementType)?.nextProgramDate',
-            getPayout(arrangementType)?.nextProgramDate
-        );
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {sideSheetTitle}
@@ -376,14 +383,14 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                     programs={[
                         {
                             arrangementType: ArrangementType.WITHDRAWAL,
-                            activePrograms: withdrawalprograms.filter(
-                                (programs) => programs.status === Status.ACTIVE
+                            activePrograms: allWithdrawalPrograms.filter(
+                                (program) => program.status === Status.ACTIVE
                             ),
                             terminatedOrSuspendedPrograms:
-                                withdrawalprograms.filter(
-                                    (programs) =>
-                                        programs.status === Status.TERMINATED ||
-                                        programs.status === Status.SUSPENDED
+                                allWithdrawalPrograms.filter(
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
                                 ),
                             manageAction: withdrawManageAutopay,
                             cancelAction: withdrawCancelAutopay,
@@ -391,14 +398,15 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                         {
                             arrangementType:
                                 ArrangementType.REQUIREDMINIMUMDISTRIBUTION,
-                            activePrograms: rmdPrograms.filter(
-                                (programs) => programs.status === Status.ACTIVE
+                            activePrograms: allRmdPrograms.filter(
+                                (program) => program.status === Status.ACTIVE
                             ),
-                            terminatedOrSuspendedPrograms: rmdPrograms.filter(
-                                (programs) =>
-                                    programs.status === Status.TERMINATED ||
-                                    programs.status === Status.SUSPENDED
-                            ),
+                            terminatedOrSuspendedPrograms:
+                                allRmdPrograms.filter(
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
+                                ),
                             manageAction: rmdManageAutopay,
                             cancelAction: rmdCancelAutopay,
                         },

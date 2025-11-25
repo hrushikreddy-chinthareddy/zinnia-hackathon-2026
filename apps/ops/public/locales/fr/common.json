@@ -5144,7 +5144,7 @@
             "setUp": "Configurer",
             "type": "Type",
             "paymentAmount": "Montant du paiement",
-            "frecuency": "Fréquence",
+            "frequency": "Fréquence",
             "nextPayment": "Prochain paiement",
             "paymentType": "Type de paiement",
             "actions": "Actions",

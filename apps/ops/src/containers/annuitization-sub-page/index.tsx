@@ -50,9 +50,10 @@ export const AnnuitizationSubPage = () => {
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
-    const payoutPrograms = policyDetails.systematicPrograms.getProgramsByType(
-        ArrangementType.PAYOUT
-    );
+    const payoutPrograms =
+        systematicPrograms.all.filter(
+            (sp) => sp.arrangementType === ArrangementType.PAYOUT
+        ) || [];
 
     const upcomingPayout = useMemo(
         () =>
@@ -141,19 +142,20 @@ export const AnnuitizationSubPage = () => {
                         {
                             arrangementType: ArrangementType.PAYOUT,
                             activePrograms: payoutPrograms.filter(
-                                (programs) => programs.status === Status.ACTIVE
+                                (program) => program.status === Status.ACTIVE
                             ),
                             terminatedOrSuspendedPrograms:
                                 payoutPrograms.filter(
-                                    (programs) =>
-                                        programs.status === Status.TERMINATED ||
-                                        programs.status === Status.SUSPENDED
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
                                 ),
                             manageAction: paymentManageAutopay,
                         },
                     ]}
                 />
             )}
+            <hr className="border-t-2 border-t-background" />
             <CardSection
                 headerContent={
                     <h2 className="font-primary headline-2">

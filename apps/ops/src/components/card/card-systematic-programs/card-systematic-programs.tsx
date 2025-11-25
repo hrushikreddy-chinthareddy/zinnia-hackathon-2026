@@ -63,15 +63,16 @@ const SystematicProgramsCard = ({
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
         if (programs.length === 1)
-            return arrangmentTypesDictionary[programs[0].arrangementType];
+            return arrangmentTypesDictionary[
+                programs[0].arrangementType
+            ].toLowerCase();
         if (programs.length === 2)
-            return `${
-                arrangmentTypesDictionary[programs[0].arrangementType]
-            } or ${arrangmentTypesDictionary[programs[1].arrangementType]}`;
-
-        const allButLast = programs.slice(0, -1).join(', ');
-        const last = programs[programs.length - 1];
-        return `${allButLast}, or ${last}`;
+            return `${arrangmentTypesDictionary[
+                programs[0].arrangementType
+            ].toLowerCase()} or ${arrangmentTypesDictionary[
+                programs[1].arrangementType
+            ].toLowerCase()}`;
+        return '';
     };
 
     return (
@@ -100,12 +101,16 @@ const SystematicProgramsCard = ({
                         size={ToggleSize.Default}
                         text={label}
                         value={showTerminatedOrSuspended}
-                        variant={ToggleVariant.Default}
+                        variant={
+                            hasTerminatedOrSuspendedPrograms
+                                ? ToggleVariant.Default
+                                : ToggleVariant.Inactive
+                        }
                         data-testid="show-history-toggle"
                         classes={
                             showTerminatedOrSuspended
                                 ? styles.toggle
-                                : undefined
+                                : styles.toggleInactive
                         }
                     />
                 </div>
@@ -118,7 +123,7 @@ const SystematicProgramsCard = ({
                             <TableHeaderCell className={styles.typeCell}>
                                 <Content
                                     details={t('type') as string}
-                                    variant={ContentVariant.BodySmBold}
+                                    variant={ContentVariant.BodyBold}
                                 />
                             </TableHeaderCell>
                             <TableHeaderCell
@@ -126,33 +131,33 @@ const SystematicProgramsCard = ({
                             >
                                 <Content
                                     details={t('paymentAmount') as string}
-                                    variant={ContentVariant.BodySmBold}
+                                    variant={ContentVariant.BodyBold}
                                 />
                             </TableHeaderCell>
                             <TableHeaderCell className={styles.frecuencyCell}>
                                 <div className={styles.tableHeaderContainer}>
                                     <Content
-                                        details={t('frecuency') as string}
-                                        variant={ContentVariant.BodySmBold}
+                                        details={t('frequency') as string}
+                                        variant={ContentVariant.BodyBold}
                                     />
                                 </div>
                             </TableHeaderCell>
                             <TableHeaderCell className={styles.nextPaymentCell}>
                                 <Content
                                     details={t('nextPayment') as string}
-                                    variant={ContentVariant.BodySmBold}
+                                    variant={ContentVariant.BodyBold}
                                 />
                             </TableHeaderCell>
                             <TableHeaderCell className={styles.paymentTypeCell}>
                                 <Content
                                     details={t('paymentType') as string}
-                                    variant={ContentVariant.BodySmBold}
+                                    variant={ContentVariant.BodyBold}
                                 />
                             </TableHeaderCell>
                             <TableHeaderCell>
                                 <Content
                                     details={t('actions') as string}
-                                    variant={ContentVariant.BodySmBold}
+                                    variant={ContentVariant.BodyBold}
                                 />
                             </TableHeaderCell>
                         </TableRow>
@@ -320,7 +325,7 @@ const SystematicProgramsCard = ({
                                     >
                                         <Content
                                             details={t('type') as string}
-                                            variant={ContentVariant.BodySmBold}
+                                            variant={ContentVariant.BodyBold}
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell
@@ -330,7 +335,7 @@ const SystematicProgramsCard = ({
                                             details={
                                                 t('lastPaymentDate') as string
                                             }
-                                            variant={ContentVariant.BodySmBold}
+                                            variant={ContentVariant.BodyBold}
                                         />
                                     </TableHeaderCell>
                                     <TableHeaderCell
@@ -343,10 +348,10 @@ const SystematicProgramsCard = ({
                                         >
                                             <Content
                                                 details={
-                                                    t('frecuency') as string
+                                                    t('frequency') as string
                                                 }
                                                 variant={
-                                                    ContentVariant.BodySmBold
+                                                    ContentVariant.BodyBold
                                                 }
                                             />
                                         </div>
@@ -356,7 +361,7 @@ const SystematicProgramsCard = ({
                                     >
                                         <Content
                                             details={t('status') as string}
-                                            variant={ContentVariant.BodySmBold}
+                                            variant={ContentVariant.BodyBold}
                                         />
                                     </TableHeaderCell>
 
@@ -365,7 +370,7 @@ const SystematicProgramsCard = ({
                                             details={
                                                 t('terminationDate') as string
                                             }
-                                            variant={ContentVariant.BodySmBold}
+                                            variant={ContentVariant.BodyBold}
                                         />
                                     </TableHeaderCell>
                                 </TableRow>
