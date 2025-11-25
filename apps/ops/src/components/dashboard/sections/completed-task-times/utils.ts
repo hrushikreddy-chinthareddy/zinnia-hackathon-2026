@@ -1,5 +1,6 @@
-import { formatTaskTime } from '@xd/utils/src/dates';
 import dayjs from 'dayjs';
+
+import { formatTaskTime } from '@deps/utils/dates';
 
 import { defaultDateFormat } from '../../utils';
 

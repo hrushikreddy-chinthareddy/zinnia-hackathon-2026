@@ -1,10 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import {
-    CompletedTaskTimeGroupByEnum,
-    CompletedTaskTimeInputFilter,
-    CompletedCaseTimeOutputLevel1,
-} from '@xd/api-types/dist/generated-types/analytics';
-import {
     createContext,
     FC,
     PropsWithChildren,
@@ -23,6 +18,11 @@ import {
 import { Processes } from '@deps/models/case/case';
 import { getCompletedTaskTimeQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import {
+    CompletedTaskTimeGroupByEnum,
+    CompletedTaskTimeInputFilter,
+    CompletedCaseTimeOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 import { CompletedTaskTimeData } from '../utils';
 

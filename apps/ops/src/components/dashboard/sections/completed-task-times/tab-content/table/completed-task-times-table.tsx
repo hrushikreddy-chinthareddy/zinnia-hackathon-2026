@@ -1,5 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
-import { formatTaskTime } from '@xd/utils/src/dates';
 import {
     Icon,
     IconType,
@@ -23,8 +21,10 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { downloadCSV } from '@deps/components/dashboard/download-csv';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { useDashboardStore } from '@deps/store/store';
+import { formatTaskTime } from '@deps/utils/dates';
 
 import styles from './completed-task-times-table.module.css';
 import { useCompletedTaskTimes } from '../../context/completed-task-times-context';
