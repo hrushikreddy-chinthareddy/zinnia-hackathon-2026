@@ -25,11 +25,11 @@ import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import Exceptions from './exceptions';
 import { TransformedStep } from './progress-tab-helpers';
 import Tasks from './tasks';
-import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 
 enum StepResults {
     Approved = 'approved',
@@ -190,11 +190,7 @@ const Step = ({
     const stepAdditional = step.stepAdditionalData?.[0];
     const entityId = stepAdditional ? stepAdditional.value : undefined;
 
-    const {
-        data: transactionEntity,
-        isLoading,
-        isError,
-    } = useQuery({
+    const { data: transactionEntity } = useQuery({
         queryKey: ['requestInitiateWithBillingPartner', entityId],
         queryFn: () => getTransactionEntityQuery(entityId),
     });

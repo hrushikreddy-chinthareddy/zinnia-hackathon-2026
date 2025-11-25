@@ -1,10 +1,10 @@
-import { Rider } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import PolicyExtrasCard from '@deps/components/policy-extras-card/policy-extras-card';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useIsMounted } from '@deps/hooks/useIsMounted';
+import { Rider } from '@zinnia/api-types/types/sor';
 
 import {
     mapPolicyFeaturesToExtrasCards,

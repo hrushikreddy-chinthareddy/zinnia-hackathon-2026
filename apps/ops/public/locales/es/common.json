@@ -456,7 +456,9 @@
         "disbursementAmount": "Montant du décaissement",
         "payeeGrossAmount": "Montant brut du bénéficiaire",
         "timeliness": "Cronología",
-        "taxes": "Impuestos"
+        "taxes": "Impuestos",
+        "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
+        "selectDateInRange": "Seleccione una fecha dentro del rango:"
     },
     "enums": {
         "LIFE": "Vida",
@@ -1843,6 +1845,7 @@
             "custodian": "Custodio",
             "guardian": "Tutor",
             "attorneyInFact": "Abogado en hechos",
+            "authorizedSignatory": "Representante autorizado",
             "assignee": "Asignado",
             "poa": "POA",
             "na": "NA",
@@ -2107,6 +2110,7 @@
         "preview": "Vista previa",
         "rate": "tasa",
         "draft": "Guardar como Borrador",
+        "send": "Enviar",
         "submitPayment": "Enviar pago",
         "successExclamation": "¡Éxito!",
         "total": "Total",
@@ -2410,6 +2414,12 @@
     "caseManagementDashboard": {
         "h1": "Casos",
         "h2": "Resultados de Búsqueda",
+        "loadingMessage": {
+            "gatheringYourResults": "Recopilando tus resultados…",
+            "organizingYourResults": "Organizando tus resultados…",
+            "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
+        },
+
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -2435,6 +2445,7 @@
         "results": "Resultados",
         "refineResults": "Refinar resultados",
         "addFilters": "Agregar filtros",
+        "filters": "Filtros",
         "refineResultsOptions": {
             "carrier": "Operadoras",
             "caseType": "Tipo de caso",
@@ -2518,8 +2529,7 @@
                 }
             },
             "empty": {
-                "title": "No pudimos encontrar un caso que coincida con su búsqueda.",
-                "titleFilters": "No pudimos encontrar un caso que coincida con sus filtros.",
+                "title": "Nada que mostrar.",
                 "paragraph": "No se preocupe, probablemente sea solo un error tipográfico. Verifique su entrada y vuelva a intentarlo.",
                 "action": {
                     "text": "¿Sigue teniendo problemas?",
@@ -2877,6 +2887,19 @@
             "simpleTooltipBody": "Este caso está priorizado.",
             "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
         },
+        "deprioritizeCase": {
+            "title": "De-priorizar Caso",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso depriorizado será movido como un elemento de trabajo para procesamiento normal.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} depriorizado exitosamente",
+            "tooltipBody": "Este caso está depriorizado."
+        },
         "navDrawer": {
             "topStatus": "Estado Principal",
             "stage": "Etapa",
@@ -2927,6 +2950,8 @@
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Cancelado",
                 "tooltip": "Esta {{processSubType}} fue cancelada el ",
+                "leadExpired": "El cliente potencial expiró debido a 30 días de inactividad.",
+                "leadWithdrawn": "El solicitante retiró este cliente potencial.",
                 "application expired": "La solicitud expiró debido a 30 días de inactividad.",
                 "application withdrawn": "El solicitante retiró esta solicitud.",
                 "underwriting declined": "El suscriptor rechazó esta solicitud.",
@@ -3495,14 +3520,15 @@
                     "title": "Firma de la Compañía Cedente",
                     "qualType": "Tipo de calificación",
                     "isQualTypeNotValid": "No se puede determinar el tipo de calificación",
-                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
                     "isSignatureValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "isSignatureAuthorized": "¿Es válida la firma del oficial autorizado?",
                     "isLoaAttached": "¿Está adjunta la carta de aceptación?",
-                    "validOwnerRegType": "Tipo de registro/propietario válido",
+                    "registrationType": "Tipo de registro/propietario válido",
                     "isTitlePresent": "¿Está presente el título?",
                     "loaSignDate": "Fecha de Firma de LOA",
-                    "authPersonSignPresent": "¿Está presente la firma de la persona autorizada?",
+                    "authPersonSignPresent": "La firma de la persona autorizada está presente",
+                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
+                    "isAuthSignValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "signDate": "Fecha de la firma"
                 },
                 "nonRegTypeReason": {
@@ -4599,7 +4625,8 @@
                 "policyTimeline": "Cronología de la póliza",
                 "freeLookEndDate": "Fecha de finalización del look gratuito",
                 "policyLength": "Duración de la póliza",
-                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado."
+                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado.",
+                "deliveryDate": "Fecha de recepción"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Correo electrónico del agente",
@@ -8268,6 +8295,35 @@
             "cta": "Ir a transferencia entrante",
             "secondaryCta": "Volver a inicio",
             "submitTask": "Enviar"
+        }
+    },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Las actualizaciones del agente fueron enviadas.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        },
+        "summary": {
+            "agentType": "Tipo de agente",
+            "allocation": "Asignación",
+            "externalId": "ID externo",
+            "bpm500Error": "Error BPM 500",
+            "header": "Resumen",
+            "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
+            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
+            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "tag": {
+                "new": "Agregado",
+                "none": "Ninguno",
+                "removed": "Eliminado",
+                "updated": "Actualizado"
+            },
+            "validation": "La API de validación está ejecutándose..."
+        },
+        "agentDetails": {
+            "allocationErr": "Las asignaciones deben ser iguales al 100%"
         }
     },
     "fundAllocation": {

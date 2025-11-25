@@ -1,3 +1,9 @@
+import { TFunction } from 'next-i18next';
+
+import { RadioItem } from '@deps/components/radio/radio';
+import { hasSameProperties } from '@deps/helpers/objects.helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
+import { TagKey } from '@deps/types/components';
 import {
     Address,
     AddressBase,
@@ -8,12 +14,6 @@ import {
     Party,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
-
-import { RadioItem } from '@deps/components/radio/radio';
-import { hasSameProperties } from '@deps/helpers/objects.helpers';
-import { toTitleCase } from '@deps/helpers/string.helpers';
-import { TagKey } from '@deps/types/components';
 
 import {
     AddressFieldsToMatchForRoleGroup,

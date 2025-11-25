@@ -1,4 +1,3 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
 import {
     Icon,
     IconType,
@@ -26,6 +25,7 @@ import {
     FeedbackType,
 } from '@deps/types/knowledge-base';
 import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './chat-response.module.css';
 import DislikeReasons from './dislike-reasons/dislike-reasons';
@@ -64,11 +64,7 @@ const ChatResponse = ({
     isFollowUp = false,
     searchCommonClientFollowUp = () => {},
     isStreaming,
-    getCommonClientResponse = (
-        sessionId: string,
-        questionId: string,
-        messageId: string
-    ) => {},
+    getCommonClientResponse = () => {},
 }: ChatResponseProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
@@ -214,11 +210,11 @@ const ChatResponse = ({
         );
     };
 
-    const searchCommonClient = async () => {
+    const searchCommonClient = () => {
         if (isFollowUp) {
             searchCommonClientFollowUp();
         } else {
-            await getCommonClientResponse(sessionId, questionId, responseId);
+            getCommonClientResponse(sessionId, questionId, responseId);
         }
     };
 

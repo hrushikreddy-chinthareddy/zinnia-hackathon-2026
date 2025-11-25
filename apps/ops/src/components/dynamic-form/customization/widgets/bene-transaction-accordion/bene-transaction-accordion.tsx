@@ -65,7 +65,10 @@ const TransactionAccordion = ({
     };
 
     const handleItemChange = (index: number, updatedItem: any) => {
-        const updatedList = [...valueRef?.current];
+        let updatedList: any[] = [];
+        if (valueRef?.current) {
+            updatedList = [...valueRef.current];
+        }
         const originalItem = originalDataRef?.current?.[index];
         const hasChanged = !deepEqual(originalItem, updatedItem);
 
@@ -118,7 +121,10 @@ const TransactionAccordion = ({
     };
 
     const handleRemoveToggle = (index: number, checked: boolean) => {
-        const updatedList = [...valueRef?.current];
+        let updatedList: any[] = [];
+        if (valueRef?.current) {
+            updatedList = [...valueRef.current];
+        }
         updatedList[index] = {
             ...updatedList[index],
             action: checked ? Action.DELETE : Action.NONE,
@@ -186,7 +192,12 @@ const TransactionAccordion = ({
             },
         };
 
-        const updatedList = [...valueRef?.current, newItem];
+        let updatedList: any[] = [];
+        if (valueRef?.current) {
+            updatedList = [...valueRef.current, newItem];
+        } else {
+            updatedList = [newItem];
+        }
         onChange(updatedList);
         setActiveIndex(updatedList.length - 1);
     };

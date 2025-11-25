@@ -1,6 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
-import { Policy } from '@zinnia/api-types/types/sor';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -61,6 +59,8 @@ import {
     logInfo,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendTaxFormsProps extends SegmentTrackedPageProps {

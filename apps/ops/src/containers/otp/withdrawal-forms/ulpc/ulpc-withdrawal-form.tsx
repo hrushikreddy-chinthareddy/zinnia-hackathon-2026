@@ -42,7 +42,6 @@ export default function UlpcWithdrawalForm() {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        isLC,
     } = useContext(FormDataContext);
 
     const {
@@ -62,7 +61,7 @@ export default function UlpcWithdrawalForm() {
         w4pSignaturesConfig,
         eSignatureFieldConfig,
         reasonOptions,
-    } = getUlpcConfig(t, isLC ?? false);
+    } = getUlpcConfig(t);
 
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)

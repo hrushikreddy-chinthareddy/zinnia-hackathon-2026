@@ -1,4 +1,3 @@
-import { Policy, PartyRole } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -16,6 +15,7 @@ import {
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
+import { Policy, PartyRole } from '@zinnia/api-types/types/sor';
 
 import { validateBeneData } from './bene-details-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';

@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 
@@ -22,6 +20,8 @@ import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filt
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { getUserActivityCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserActivityGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
     downloadUserActivityCSV,
@@ -102,10 +102,10 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
                     t('usage.logins.zinniaLive.description') ?? ''
                 )}
                 data={zinniaLiveLoginsData?.data ?? []}
-                csvFileName={generateCSVFileName(
-                    'Zinnia Live Unique Logins by Role',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: 'Zinnia Live Unique Logins by Role',
+                    timerange,
+                })}
                 csvFunction={downloadUserActivityCSV}
             />
             <div className="flex items-center justify-end gap-4">

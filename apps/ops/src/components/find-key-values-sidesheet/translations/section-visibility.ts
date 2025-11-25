@@ -1,7 +1,4 @@
-import {
-    LineOfBusiness,
-    ProductType,
-} from '@xd/api-types/dist/generated-types/sor';
+import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 
 type ExceptionalPlanCode = string;
 

@@ -1,4 +1,3 @@
-import { CaseTimePredictOutput } from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -14,6 +13,7 @@ import {
     Statuses,
 } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
+import { CaseTimePredictOutput } from '@zinnia/api-types/types/analytics';
 
 import { CaseSideNavProps } from './CaseSideNav';
 import { PartiesProps, PartyInfo } from './CaseSideNavParties';

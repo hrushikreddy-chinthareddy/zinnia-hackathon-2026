@@ -41,7 +41,7 @@ const DefaultCaseFormStep = ({
     });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
 
-    const { defaultCaseData, setDefaultCaseData } = useDefaultCase();
+    const { defaultCaseData } = useDefaultCase();
     const formRef = createRef<Form>();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);

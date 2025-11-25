@@ -1,5 +1,8 @@
 import { RegistryWidgetsType } from '@rjsf/utils';
 
+import AgentPercentageWidget from './agent-percentage-widget/agent-percentage-widget';
+import SummaryWidget from './agent-summary-widget/agent-summary-widget';
+import AgentTransactionAccordion from './agent-transaction-accordian/agent-transaction-accordion';
 import AllocationPercentageWidget from './allocation-percentage/allocation-percentage';
 import ArithmeticOperationWidget from './arithmetic-operation-widget/arithmetic-operation-widget';
 import BeneTransactionAccordion from './bene-transaction-accordion/bene-transaction-accordion';
@@ -39,6 +42,9 @@ export function generateWidgets(): RegistryWidgetsType {
         ArithmeticOperationWidget,
         BeneTransactionAccordion,
         AllocationPercentageWidget,
+        AgentTransactionAccordion,
+        AgentPercentageWidget,
+        SummaryWidget,
         EmailWidget,
         NumbersWidget,
         DateWidgetV2,

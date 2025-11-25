@@ -5,7 +5,6 @@ import {
     Accordion as AccordionRoot,
     AccordionTrigger,
 } from '@radix-ui/react-accordion';
-import { formatTimestamp } from '@xd/utils/src/dates';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ForwardedRef, ReactNode, useMemo, useState } from 'react';
 
@@ -29,6 +28,7 @@ import {
     CaseStageAccordionClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import Exceptions from './exceptions';
 import {

@@ -1,0 +1,102 @@
+{
+    "id": "TA000000022112",
+    "caseId": "CA0000402461",
+    "source": "Zinnia.BPMTransactions",
+    "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
+    "process": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "AGENT_CHANGE_DETAIL",
+    "taskName": "Agent Details",
+    "status": "NEW",
+    "data": {
+        "process": "Policy Update",
+        "policyNumber": "ADA2501506",
+        "taskName": "Agent Details",
+        "processSubType": "Agent Change",
+        "planCode": "WBFDAV03",
+        "details": {
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "Post issue Application",
+                    "documentExt": "pdf"
+                },
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25g",
+                    "documentName": "Post issue Application",
+                    "documentExt": "pdf"
+                }
+            ]
+        },
+        "partyUpdates": [
+            {
+                "action": "UPDATE",
+                "partyRole": "PRIMARYWRITINGAGENT",
+                "party": {
+                    "externalId": "12345",
+                    "partyPercentage": 34,
+                    "agentName": "John tpy  Doe"
+                }
+            },
+            {
+                "action": "ADD",
+                "partyRole": "PRIMARYWRITINGAGENT",
+                "party": {
+                    "externalId": "123456789",
+                    "partyPercentage": 78,
+                    "agentName": "John Doe"
+                }
+            },
+            {
+                "action": "DELETE",
+                "partyRole": "PRIMARYSERVICINGAGENT",
+                "party": {
+                    "externalId": "12345678988",
+                    "partyPercentage": 67,
+                    "agentName": "John yoy"
+                }
+            },
+            {
+                "action": "NONE",
+                "partyRole": "PRIMARYWRITINGAGENT",
+                "party": {
+                    "externalId": "12345",
+                    "partyPercentage": 34,
+                    "agentName": "John tpy  Doe"
+                }
+            }
+        ],
+        "signatures": [
+            {
+                "signType": null,
+                "signDesignation": null,
+                "isSignedPresent": false
+            }
+        ]
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "policy_update",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-24T11:52:37Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-24T11:52:37Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000402461"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501506"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501506"
+        }
+    ],
+    "externalId": "0a805ffe-ef0b-4f4a-ba41-f774df12d820"
+}

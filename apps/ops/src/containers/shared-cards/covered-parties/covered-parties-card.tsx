@@ -1,10 +1,3 @@
-import {
-    FlatExtra,
-    FlatExtraType,
-    SubStandardRating,
-    PartyRole,
-    PartyType,
-} from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -30,6 +23,13 @@ import {
     toTitleCase,
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    FlatExtra,
+    FlatExtraType,
+    SubStandardRating,
+    PartyRole,
+    PartyType,
+} from '@zinnia/api-types/types/sor';
 
 const TableRating = ({
     substandardRating,

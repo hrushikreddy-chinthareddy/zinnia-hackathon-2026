@@ -11,12 +11,8 @@ import ContentInsured from './illustration-details-content-insured';
 import IulContentCoverage from './illustration-details-content-iul-coverage';
 import ContentPremium from './illustration-details-content-premium';
 import ContentRiders from './riders-section';
-type IllustrationDetailsContentProps = {
-    isLoading: boolean;
-};
-export default function IllustrationDetailsContent({
-    isLoading,
-}: IllustrationDetailsContentProps) {
+
+export default function IllustrationDetailsContent() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
     const illustration = useIllustrationDetail();

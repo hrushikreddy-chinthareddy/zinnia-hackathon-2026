@@ -1,4 +1,3 @@
-import { PartyType, State } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
@@ -10,6 +9,7 @@ import Field, {
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStateCodes } from '@deps/helpers/states.helpers';
+import { PartyType, State } from '@zinnia/api-types/types/sor';
 
 import {
     ENTERPRISE_ADDRESS_TYPE,

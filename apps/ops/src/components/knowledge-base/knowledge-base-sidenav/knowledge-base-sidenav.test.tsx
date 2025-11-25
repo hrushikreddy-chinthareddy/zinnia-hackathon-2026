@@ -1,9 +1,9 @@
 import { render, fireEvent, within } from '@testing-library/react';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { useRouter } from 'next/router';
 
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { DocumentsDisplayType } from '@deps/types/knowledge-base';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import KnowledgeBaseSidenav, {
     KnowledgeBasePaths,

@@ -1,6 +1,5 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
-
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import { Features } from './Features';
 

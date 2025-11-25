@@ -1,4 +1,7 @@
 import { faker } from '@faker-js/faker';
+
+import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 import {
     Gender,
     PartyType,
@@ -8,9 +11,6 @@ import {
     TrustType,
     EntityType,
 } from '@zinnia/api-types/types/sor';
-
-import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
-import { Party } from '@deps/models/policy-sor-touchups/Party';
 
 import { generateAddress } from './mockAddresses';
 import { generateBankDetails } from './mockBankDetails';

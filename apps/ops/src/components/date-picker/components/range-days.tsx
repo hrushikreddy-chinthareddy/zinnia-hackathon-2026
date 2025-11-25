@@ -81,7 +81,7 @@ export const RangeDays = ({
         })),
     ];
 
-    const { focusedIndex, setItemRef, handleKeyDown } = useKeyboardNavigation(
+    const { handleKeyDown } = useKeyboardNavigation(
         allDays.length,
         14,
         (index) => {

@@ -1,9 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    ExceptionCountInputFilter,
-    ExceptionCountGroupByEnum,
-    ExceptionCountOutput,
-} from '@zinnia/api-types/types/analytics';
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
@@ -18,6 +13,11 @@ import { Processes } from '@deps/models/case/case';
 import { getExceptionCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { useDashboardStore } from '@deps/store/store';
+import {
+    ExceptionCountInputFilter,
+    ExceptionCountGroupByEnum,
+    ExceptionCountOutput,
+} from '@zinnia/api-types/types/analytics';
 
 export type IssueStatusType = { [key: string]: string };
 export type ExceptionStatusMappingType = { [key: string]: ExceptionStatus[] };

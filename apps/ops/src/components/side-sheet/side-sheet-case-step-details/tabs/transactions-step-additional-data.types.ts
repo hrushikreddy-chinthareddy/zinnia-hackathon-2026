@@ -14,6 +14,7 @@ export enum TransactionsAdditionalDataStepIds {
     matchDocPerformMatch = 'matchDoc.performMatch',
     requestBillingPartner = 'requestAck.requestBillingPartner',
     receiveNewDocument = 'requestAck.createQualificationCase',
+    receiveNewDocument2 = 'requestAck.createMatchingCase',
     complianceDbUpdate = 'requestAck.complianceDbUpdate',
 }
 

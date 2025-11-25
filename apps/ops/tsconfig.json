@@ -23,6 +23,7 @@
         "next-env.d.ts",
         "**/*.ts",
         "**/*.tsx",
+        "globals.d.ts",
         "declaration.d.ts",
         "jest.config.js",
         "src/jest/coverage/**/*",

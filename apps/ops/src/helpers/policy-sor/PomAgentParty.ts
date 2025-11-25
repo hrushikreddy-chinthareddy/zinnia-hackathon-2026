@@ -1,3 +1,4 @@
+import { PomAgentData } from '@deps/types/agents';
 import {
     AddressType,
     Country,
@@ -5,9 +6,7 @@ import {
     IdentificationType,
     Party,
     State,
-} from '@xd/api-types/dist/generated-types/sor';
-
-import { PomAgentData } from '@deps/types/agents';
+} from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from './Parties';
 

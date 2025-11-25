@@ -1,5 +1,4 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl, policyApiBaseUrl } from '@deps/queries/api-config';
@@ -11,6 +10,7 @@ import {
     policyResponseSanitizer,
 } from '@deps/utils/sanitizers';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export default withAuthAndLogging(
     async (req, res, loggingContext) => {

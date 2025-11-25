@@ -65,7 +65,6 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
     const router = useRouter();
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
-    const [timer] = useState(performance.now());
 
     useEffect(() => {
         const getTaskData = async () => {
@@ -109,8 +108,7 @@ export default function NewTaskSideSheet({ taskId }: { taskId: string }) {
                 const response = await updateTask(
                     taskData?.caseId,
                     taskData.id,
-                    body,
-                    timer
+                    body
                 );
                 if (response) {
                     router.push(`/task/${taskId}`);

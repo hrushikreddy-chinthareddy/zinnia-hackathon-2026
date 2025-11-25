@@ -1,13 +1,3 @@
-import {
-    CaseCountInput,
-    CaseCountOutput,
-    CaseTimePredictInput,
-    CaseTimePredictOutput,
-    CompletedCaseTimeInput,
-    CompletedCaseTimeOutput,
-    CompletedCaseTimeOutputLevel1,
-    HTTPValidationError,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import {
@@ -42,6 +32,16 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    CaseCountInput,
+    CaseCountOutput,
+    CaseTimePredictInput,
+    CaseTimePredictOutput,
+    CompletedCaseTimeInput,
+    CompletedCaseTimeOutput,
+    CompletedCaseTimeOutputLevel1,
+    HTTPValidationError,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     baseAppUrl,
@@ -512,13 +512,14 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
 };
 
 export const escalateCase = async (
-    caseId: string
+    caseId: string,
+    escalate: boolean
 ): Promise<AxiosResponse | null> => {
     try {
         const url = `${baseCasesUrl2}/${caseId}/escalate`;
 
         const response = await client.patch(url, {
-            escalated: true,
+            escalated: escalate,
         });
         browserLogInfo('cases::Successfully created a case', {
             url: baseCasesUrl,

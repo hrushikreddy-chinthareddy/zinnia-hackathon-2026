@@ -1,4 +1,3 @@
-import { Transaction } from '@xd/api-types/dist/generated-types/sor';
 import {
     Button,
     FieldData,
@@ -13,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useDebounce } from '@deps/hooks/useDebounce';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { KeyValueBasics } from '../components/key-value-basics';
 import { KeyValueSections } from '../components/key-value-sections';

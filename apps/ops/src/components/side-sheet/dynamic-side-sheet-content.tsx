@@ -129,7 +129,7 @@ export default function DynamicSideSheetContent({
         }
     };
 
-    const renderSectionData = (data: TabDataItem[], idx: number) => {
+    const renderSectionData = (data: TabDataItem[]) => {
         if (!data || data.length === 0) return null;
 
         return (
@@ -198,7 +198,7 @@ export default function DynamicSideSheetContent({
                                 <div className="font-bold text-lg mb-4">
                                     {section.sectionHeader}
                                 </div>
-                                {renderSectionData(section.data, sIdx)}
+                                {renderSectionData(section.data)}
                             </div>
                         ))}
                     </div>
@@ -206,7 +206,7 @@ export default function DynamicSideSheetContent({
             ) : (
                 <div className="flex px-8  w-full flex-col items-start pt-10">
                     {sideSheetData?.data ? (
-                        renderSectionData(sideSheetData.data, 0)
+                        renderSectionData(sideSheetData.data)
                     ) : (
                         <div>No Data</div>
                     )}

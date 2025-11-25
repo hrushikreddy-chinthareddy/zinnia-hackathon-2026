@@ -1,13 +1,4 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import {
-    ArrangementType,
-    FlatExtra,
-    Frequency,
-    Policy,
-    Reason,
-    Status,
-} from '@zinnia/api-types/types/sor';
 import { I18n, useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
@@ -34,7 +25,15 @@ import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    ArrangementType,
+    FlatExtra,
+    Frequency,
+    Policy,
+    Reason,
+} from '@zinnia/api-types/types/sor';
 
 import { BPMErrorContent } from './bpm-error-content';
 

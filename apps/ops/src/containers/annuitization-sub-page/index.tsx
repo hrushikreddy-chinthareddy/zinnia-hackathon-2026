@@ -1,8 +1,3 @@
-import {
-    ArrangementType,
-    FeatureType,
-    Status,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -31,6 +26,7 @@ import {
     checkEligibilitySystematicPrograms,
 } from '@deps/queries/api/bpm';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { ArrangementType, FeatureType } from '@zinnia/api-types/types/sor';
 
 import { AnnuitizationPageHeader } from './annuitization-page-header';
 

@@ -39,6 +39,15 @@ export interface Reason {
     reason: string;
 }
 
+export interface AgentTaskPayload {
+    category: string[];
+    businessProcess: string;
+    carrier?: string;
+    policyNumber: string;
+    planCode: string;
+    logCtx?: LoggingContext;
+}
+
 export interface BeneficiaryTaskPayload {
     category: string[];
     businessProcess: string;
@@ -86,6 +95,10 @@ export interface Party {
     prefix?: string;
     suffix?: string;
     trustDate?: string;
+    agentExternalId?: string;
+    agentFullName?: string;
+    agentPercentage?: number;
+    agentType?: string;
 }
 
 export interface PolicyResponse {
@@ -98,6 +111,8 @@ export enum PartyRoleType {
     JOINTOWNER = 'JOINTOWNER',
     PRIMARYBENEFICIARY = 'PRIMARYBENEFICIARY',
     CONTINGENTBENEFICIARY = 'CONTINGENTBENEFICIARY',
+    PRIMARYWRITINGAGENT = 'PRIMARYWRITINGAGENT',
+    PRIMARYSERVICINGAGENT = 'PRIMARYSERVICINGAGENT',
 }
 
 export enum PartyRoleLabel {
@@ -105,6 +120,8 @@ export enum PartyRoleLabel {
     JOINTOWNER = 'Joint Owner',
     PRIMARYBENEFICIARY = 'Primary Beneficiary',
     CONTINGENTBENEFICIARY = 'Contingent Beneficiary',
+    PRIMARYWRITINGAGENT = 'Primary Writing Agent',
+    PRIMARYSERVICINGAGENT = 'Primary Servicing Agent',
 }
 
 export enum AddressType {

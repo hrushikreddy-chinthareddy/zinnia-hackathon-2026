@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { t } from 'i18next';
 import { FC, useState } from 'react';
 
@@ -7,6 +6,7 @@ import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { createBaseQuery, formatProcessListOptions } from '../utils';
 

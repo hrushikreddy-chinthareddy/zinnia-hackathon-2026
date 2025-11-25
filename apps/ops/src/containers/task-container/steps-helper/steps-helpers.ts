@@ -1,6 +1,7 @@
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { TaskType } from '@deps/models/case/task';
 
+import { getAgentChangeSteps } from './agent-change-steps';
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
 import { getBeneAddressVerificationSteps } from './bene-address-verification';
@@ -110,6 +111,9 @@ export const getFormSteps = (
             break;
         case TaskType.Initiate_BeneChange_Transaction:
             steps = getBeneChangeSteps(props);
+            break;
+        case TaskType.Agent_Change_Detail:
+            steps = getAgentChangeSteps(props);
             break;
         default:
             steps = getDefaultTaskSteps(props);

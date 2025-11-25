@@ -127,7 +127,7 @@ export const Label = ({
                     <CircleInfoIcon
                         height={16}
                         width={16}
-                        className="text-primary"
+                        className="tooltip-primary"
                     />
                 </Popover>
             )}

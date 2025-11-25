@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { createContext, useContext, useMemo } from 'react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -9,6 +8,7 @@ import {
     getPolicyQuery,
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export interface CaseActivityContextProps {
     policy: PolicyDetails | null;

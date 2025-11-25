@@ -1,20 +1,16 @@
 import {
     EventFilterKeys,
-    initialFilter,
+    EventFilters,
     PolicyFilters,
-    TransactionFilters,
 } from '@deps/contexts/HistoryFiltersContext';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import {
+    filterEventFilters,
+    getFilter,
+    getFilterEnumKey,
     getYearOptions,
     hasFilter,
-    getFilter,
-    setFilter,
-    setYearFilter,
-    removeAllFilters,
-    removeEventFilter,
-    removeYearFilter,
 } from './filter.helpers';
 
 describe('HistoryFilters helpers', () => {
@@ -45,128 +41,95 @@ describe('HistoryFilters helpers', () => {
             expect(getYearOptions('2019')).toEqual(expected);
             expect(getYearOptions('2019').length).toEqual(expected.length);
         });
+    });
 
-        describe('hasFilter', () => {
-            it('returns true if the filter is not null, empty, or undefined', () => {
-                expect(hasFilter('someFilter')).toBe(true);
-                expect(hasFilter('')).toBe(false);
-                expect(hasFilter(null)).toBe(false);
-                expect(hasFilter(undefined)).toBe(false);
+    describe('hasFilter', () => {
+        it('returns true if the filter is not null, empty, or undefined', () => {
+            expect(hasFilter('someFilter')).toBe(true);
+            expect(hasFilter('')).toBe(false);
+            expect(hasFilter(null)).toBe(false);
+            expect(hasFilter(undefined)).toBe(false);
+        });
+    });
+
+    describe('getFilter', () => {
+        it('returns the filter and subfilter names if a filter is present', () => {
+            const eventFilter = {
+                [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
+            };
+
+            expect(getFilter(eventFilter)).toEqual({
+                filterName: 'policy',
+                subfilterName: 'anniversary',
             });
         });
 
-        describe('getFilter', () => {
-            it('returns the filter and subfilter names if a filter is present', () => {
-                const eventFilter = {
-                    [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
-                };
+        it('returns undefined for filter and subfilter names if no filter is present', () => {
+            const eventFilter = undefined;
 
-                expect(getFilter(eventFilter)).toEqual({
-                    filterName: 'policy',
-                    subfilterName: 'anniversary',
-                });
-            });
-
-            it('returns undefined for filter and subfilter names if no filter is present', () => {
-                const eventFilter = undefined;
-
-                expect(getFilter(eventFilter)).toEqual({
-                    filterName: undefined,
-                    subfilterName: undefined,
-                });
+            expect(getFilter(eventFilter)).toEqual({
+                filterName: undefined,
+                subfilterName: undefined,
             });
         });
+    });
 
-        describe('setFilter', () => {
-            it('sets the filter and subfilter in history filters', () => {
-                let historyFilters = {};
-                const setHistoryFilters = jest
-                    .fn()
-                    .mockImplementation((callback) => {
-                        historyFilters = callback(historyFilters);
-                    });
-
-                setFilter(
-                    setHistoryFilters,
-                    EventFilterKeys.Transactions,
-                    TransactionFilters.Premiums
-                );
-
-                expect(historyFilters).toEqual({
-                    eventFilter: { transactions: 'premiums' },
-                });
-            });
+    describe('getFilterEnumKey', () => {
+        it('finds the correct parent enum property', () => {
+            const result = getFilterEnumKey('address');
+            expect(result).toBe('people');
         });
 
-        describe('setYearFilter', () => {
-            it('sets the year filter in history filters', () => {
-                let historyFilters = {};
-                const setHistoryFilters = jest
-                    .fn()
-                    .mockImplementation((callback) => {
-                        historyFilters = callback(historyFilters);
-                    });
+        it('returns EventFilterKeys.All when it can NOT find a parent enum value', () => {
+            const result = getFilterEnumKey('yolo');
+            expect(result).toBe('all');
+        });
+    });
 
-                setYearFilter(setHistoryFilters, '2022');
-
-                expect(historyFilters).toEqual({
-                    yearFilter: '2022',
-                });
-            });
+    describe('filterEventFilters', () => {
+        it('adds a new EventFilterKey and sets value to an array', () => {
+            const args = {
+                state: {},
+                filterKey: EventFilterKeys.People,
+                filter: 'address',
+            };
+            const result = filterEventFilters(
+                args.state as EventFilters,
+                args.filterKey,
+                args.filter
+            );
+            console.log(result);
+            expect(result).toStrictEqual({ people: ['address'] });
         });
 
-        describe('removeAllFilters', () => {
-            it('removes all filters from history filters', () => {
-                const setHistoryFilters = jest.fn();
-
-                removeAllFilters(setHistoryFilters);
-
-                expect(setHistoryFilters).toHaveBeenCalledWith(initialFilter);
-            });
+        it('filters out the EventFilterKey', () => {
+            const args = {
+                state: { people: ['address'] } as any,
+                filterKey: EventFilterKeys.People,
+                filter: 'address',
+            };
+            const result = filterEventFilters(
+                args.state,
+                args.filterKey,
+                args.filter
+            );
+            console.log(result);
+            expect(result).toStrictEqual({});
         });
 
-        describe('removeEventFilter', () => {
-            it('removes all subfilters from history filters', () => {
-                let historyFilters = {
-                    eventFilter: {
-                        [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
-                    },
-                    yearFilter: '2022',
-                };
-                const setHistoryFilters = jest
-                    .fn()
-                    .mockImplementation((callback) => {
-                        historyFilters = callback(historyFilters);
-                    });
-
-                removeEventFilter(setHistoryFilters);
-
-                expect(historyFilters).toEqual({
-                    yearFilter: '2022',
-                });
-            });
-        });
-
-        describe('removeYearFilter', () => {
-            it('removes the year filter from history filters', () => {
-                let historyFilters = {
-                    eventFilter: {
-                        [EventFilterKeys.Policy]: PolicyFilters.Anniversary,
-                    },
-                    yearFilter: '2022',
-                };
-                const setHistoryFilters = jest
-                    .fn()
-                    .mockImplementation((callback) => {
-                        historyFilters = callback(historyFilters);
-                    });
-
-                removeYearFilter(setHistoryFilters);
-
-                expect(historyFilters).toEqual({
-                    eventFilter: { policy: 'anniversary' },
-                });
-            });
+        it('add new value to the EventFilterKey array', () => {
+            const args = {
+                state: { people: ['address'] } as any,
+                filterKey: EventFilterKeys.People,
+                filter: 'phone',
+            };
+            const result = filterEventFilters(
+                args.state,
+                args.filterKey,
+                args.filter
+            );
+            console.log(result);
+            expect(result).toStrictEqual({ people: ['address', 'phone'] });
         });
     });
 });

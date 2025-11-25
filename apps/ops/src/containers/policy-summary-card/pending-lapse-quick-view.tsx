@@ -1,4 +1,3 @@
-import { FeatureType } from '@xd/api-types/dist/generated-types/sor';
 import dayjs from 'dayjs';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +12,7 @@ import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import BaseDeathBenefit from './display-fields/base-death-benefit';
 import UpcomingPremiumDisplayField from './display-fields/upcoming-premium';

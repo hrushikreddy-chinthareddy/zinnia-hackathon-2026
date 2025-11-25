@@ -2,7 +2,6 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
-import { getUserData } from '@deps/helpers/query-data.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
@@ -101,7 +100,6 @@ export const readUserTuplesPage = async (
     };
 
     try {
-        const user = await getUserData(ctx);
         const accessToken = (await getAccessToken(ctx.req, ctx.res))
             .accessToken;
 

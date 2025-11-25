@@ -1,6 +1,0 @@
-.addBank {
-  margin-top: var(--measure-dimension-margin-sm);
-  /* TODO MG: update bloom so we dont need !imortant */
-  padding: 0 !important;
-  gap: var(--measure-dimension-gap-sm, 0.25rem);
-}
