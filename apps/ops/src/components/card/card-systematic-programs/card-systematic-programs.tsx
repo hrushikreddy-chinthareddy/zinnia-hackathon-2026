@@ -64,15 +64,11 @@ const SystematicProgramsCard = ({
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
         if (programs.length === 1)
-            return arrangmentTypesMsgDictionary[
-                programs[0].arrangementType
-            ].toLowerCase();
+            return arrangmentTypesMsgDictionary[programs[0].arrangementType];
         if (programs.length === 2)
-            return `${arrangmentTypesMsgDictionary[
-                programs[0].arrangementType
-            ].toLowerCase()} or ${arrangmentTypesMsgDictionary[
-                programs[1].arrangementType
-            ].toLowerCase()}`;
+            return `${
+                arrangmentTypesMsgDictionary[programs[0].arrangementType]
+            } or ${arrangmentTypesMsgDictionary[programs[1].arrangementType]}`;
         return '';
     };
 
