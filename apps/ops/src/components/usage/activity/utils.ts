@@ -191,14 +191,18 @@ export const generateSeries = (
         const data = olderThanOneWeek
             ? groupDataByWeek(item.values!)
             : item.values;
+
+        const timeData =
+            data?.map((item: UserIllustrationActivityOutputLevel3) => [
+                dayjs(item.name).unix() * 1000,
+                item.count,
+            ]) ?? [];
+
         return {
             type: 'line',
             name: item.name,
             color: color[index],
-            data: data?.map((item: UserIllustrationActivityOutputLevel3) => [
-                dayjs(item.name).unix() * 1000,
-                item.count,
-            ]),
+            data: [[fromDate.unix() * 1000, 0], ...timeData],
         };
     });
 };
