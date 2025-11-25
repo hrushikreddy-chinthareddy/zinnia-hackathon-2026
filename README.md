@@ -1,23 +1,13 @@
 # Digital Experience Monorepo
 
-This repo contains the necessary apps and packages used to build and maintain Zinnia Live.
+This repo contains the Ops application and SSO-MPV service for Zinnia Live. The repository is transitioning to a single-app structure as applications are being moved to separate repositories.
 
 ## What's inside?
 
 ### Apps
 
-These are consumer-facing end products that are deployable or deliverable in some form. Apps are typically configured to be started or deployed, like web frontends, backend services, mobile applications, desktop applications, etc. They are the final artifacts that end users interact with.
-
-### Packages
-
-These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages.
-
-- [API Types](packages/utils/README.md)
-- [ESlint Config](packages/eslint-config/README.md)
-- [Prettier Config](packages/prettier-config/README.md)
-- [Jest Presets](packages/jest-presets/README.md)
-- [Typescript Config](packages/typescript-config/README.md)
-- [Utils](packages/utils/README.md)
+- **[Ops](apps/ops/README.md)** - Internal operations portal for managing Zinnia Live policies and operations
+- **[SSO-MPV](apps/sso-mpv/README.md)** - Single Sign-On service for MyPolicyView authentication via Auth0 IDP connections
 
 ## Getting Started
 
@@ -25,7 +15,7 @@ These consist of shared libraries, components, utilities, or any common code tha
 
 - For MacOS: XCode developer tools
 - Node.js 20+
-- [pnpm](https://pnpm.io/) - We use `pnpm` because it has better support for monorepos. It has a lot of built in tools that make it easier to filter on the app or package you want to build and deploy. You will want to install version `9.4.0`.
+- [pnpm](https://pnpm.io/) - Package manager for the repository. You will want to install version `10.20.0` (see `packageManager` field in `package.json`).
 - Personal Access Token
   - GitHub packages hosts our shared packages
   - Create a [personal access token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages)
@@ -64,7 +54,7 @@ pnpm run build
 
 ### Running the projects
 
-To simplify the development process, we have created two helper scripts to run either Ops or Consumer Experience.
+To simplify the development process, we have created a helper script to run either Ops.
 
 #### Setting up env variables
 
@@ -82,13 +72,16 @@ To run Ops, use the following command:
 pnpm run dev:ops
 ```
 
-#### Running Consumer Experience
+#### Running SSO-MPV
 
-To run Consumer Experience, use the following command:
+To run SSO-MPV, use the following command:
 
 ```bash
-pnpm run dev:cui
+cd apps/sso-mpv
+pnpm run dev
 ```
+
+Note: SSO-MPV requires additional setup. See the [SSO-MPV README](apps/sso-mpv/README.md) for details.
 
 #### Setting up Remote Cache
 
@@ -124,65 +117,48 @@ You should see a success message!
 
 - PRs should be opened off of dev and branches must use
 
-### Deploying the monorepo
+### Deploying
 
-Each `app` and `package` will have their own github workflow. This will allow us to deploy only the `apps` and `packages` that have changes since the last commit.
+Each app has its own GitHub workflow for deployment. Workflows are triggered based on changes to specific apps.
 
-### Adding a new local package
+### Repository Structure Changes
 
-To add a new package to the monorepo create a new directory in the `packages` folder and add a `package.json` file. The package name should be prefixed with `@zinnia/`. The package directory name should be the name of the package without the `@zinnia` prefix.
-
-Once you have created the package update the package.json file of the `app` you want to add the package to. For example, to add the `utils` package to the `consumer-experience` app:
-
-// packages/consumer-experience/package.json
-
-```bash
-{
-  "dependencies": {
-    "@zinnia/utils": "workspace:*"
-  }
-}
-```
+This repository previously contained multiple apps and shared packages. As part of a restructuring effort, applications are being moved to separate repositories. The `packages` directory and `consumer-experience` app have been removed. Shared code has been moved directly into the `ops` application.
 
 ### Adding a new NPM Package
 
-This repo uses PNPM to manage packages as it supports monorepos better than NPM.
+This repo uses PNPM to manage packages.
 
-To add a package ensure you are in the root of the monorepo, use:
+To add a package to an app, use:
 
-```
+```bash
 pnpm add --filter <app> <package>
 ```
 
-So for consumer-experience, it would be:
-
-```
-pnpm add --filter consumer-experience <package>
-```
-
-OR if you prefer you can `cd` into the specific `app` and add it there:
+For example, to add a package to ops:
 
 ```bash
-cd apps/consumer-experience
+pnpm add --filter ops <package>
+```
+
+OR you can `cd` into the specific app and add it there:
+
+```bash
+cd apps/ops
 pnpm add <package>
 ```
 
-## Examples
+## Development Workflow
 
-Below are some examples of how you would make an update to a `package` and see it reflected in an `app`.
+To work on the Ops application:
 
-- Making an update to `@zinnia/utils`
-  1. Run the following command at the `root` of the monorepo:
+```bash
+pnpm run dev:ops
+```
 
-  ```bash
-    pnpm run dev --filter @zinnia/utils
-    pnpm run dev --filter APP_NAME (example consumer-experience)
-  ```
+This will start the Ops application on [http://localhost:3000](http://localhost:3000).
 
-  2. Make the necessary changes
-  - You should see the `utils` package reflected in the `consumer-experience` app.
-
-  > NOTE: We don't want to run `pnpm run dev` without filtering because it will run the `dev` script for all `apps` and `packages` in the monorepo.
+For SSO-MPV, see the [SSO-MPV README](apps/sso-mpv/README.md) for specific setup instructions.
 
 ## Testing GitHub Workflows Locally
 
