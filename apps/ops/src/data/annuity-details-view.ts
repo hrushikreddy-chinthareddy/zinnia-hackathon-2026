@@ -1,13 +1,12 @@
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { DataDefinition } from '@deps/types/data';
 import {
     FeatureType,
     Policy,
     ArrangementType,
     FundAccountType,
 } from '@zinnia/api-types/types/sor';
-
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { DataDefinition } from '@deps/types/data';
 
 export interface AnnuityViewDetailsDto {
     applicationReceivedData: string;

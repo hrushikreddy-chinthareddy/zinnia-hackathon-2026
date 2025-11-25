@@ -1,3 +1,6 @@
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { getPartyFullName } from '@deps/helpers/party-info-helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import {
     Address,
     BankAccount,
@@ -15,10 +18,6 @@ import {
     Policy,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { isEndDated } from '@deps/helpers/date.helpers';
-import { getPartyFullName } from '@deps/helpers/party-info-helpers';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { calculateAgeNumber } from '../age.helpers';
 import { Addresses } from './party-items/Addresses';

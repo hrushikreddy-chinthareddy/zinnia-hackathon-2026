@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -28,6 +27,7 @@ import { getCases } from '@deps/queries/api/cases';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import DocumentCard from '../document/document-card';
 import WorkflowCard from '../workflow-card/workflow-card';

@@ -1,10 +1,5 @@
-import {
-    AddressBase,
-    Phone,
-    PhoneBase,
-} from '@xd/api-types/dist/generated-types/sor';
-
 import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
+import { AddressBase, Phone, PhoneBase } from '@zinnia/api-types/types/sor';
 
 export interface UpdatedBeneficiaryRecord {
     changeRequire: boolean | null;

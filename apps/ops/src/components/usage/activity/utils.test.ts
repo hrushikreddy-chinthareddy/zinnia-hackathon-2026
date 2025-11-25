@@ -1,4 +1,4 @@
-import { UserTransactionOutputLevel1 } from '@xd/api-types/dist/generated-types/analytics';
+import { UserTransactionOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import {
     aggregateByCategory,

@@ -1,12 +1,4 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import {
-    ArrangementType,
-    FeatureType,
-    ProductType,
-    Reason,
-    Status,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -36,7 +28,15 @@ import {
     checkSystematicProgramsEligibilityQuery,
     checkSystematicProgramEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    ArrangementType,
+    FeatureType,
+    ProductType,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 import PremiumsPageHeaderContainer from '../page-header/premiums-page-header';
 import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';

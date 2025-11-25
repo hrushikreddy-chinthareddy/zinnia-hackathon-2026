@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRoles } from '@xd/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { PageHead } from '@deps/components/page-title';
@@ -24,6 +23,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,

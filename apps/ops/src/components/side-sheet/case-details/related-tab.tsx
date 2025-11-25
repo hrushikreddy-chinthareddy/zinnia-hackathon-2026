@@ -1,4 +1,3 @@
-import { formatWithHash } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
@@ -14,6 +13,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { formatWithHash } from '@deps/utils/strings';
 
 type relatedTabProps = {
     caseTableData: CaseTableData;

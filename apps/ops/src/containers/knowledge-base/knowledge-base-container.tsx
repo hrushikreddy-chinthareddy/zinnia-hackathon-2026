@@ -1,7 +1,6 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
-
 import KnowledgeBaseSidenav from '@deps/components/knowledge-base/knowledge-base-sidenav/knowledge-base-sidenav';
 import KnowledgeBaseProvider from '@deps/contexts/KnowledgeBaseContext';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 type KnowledgeBaseContainerProps = {
     opsUserData: MeResponse;

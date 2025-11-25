@@ -1,12 +1,11 @@
+import { Channel } from '@deps/models/case/renewal/case-renewal';
+import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import {
     Party,
     PartyRole,
     PartyType,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { Channel } from '@deps/models/case/renewal/case-renewal';
-import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 
 import { SignatureState } from '../types/address-change-types';
 

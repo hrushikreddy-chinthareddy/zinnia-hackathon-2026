@@ -1,7 +1,6 @@
 // TODO: Generalize this Agent Summary Widget for other transaction types (e.g., Beneficiary Change, Owner Change)
 
 import { WidgetProps } from '@rjsf/utils';
-import { toTitleCase } from '@xd/utils/dist';
 import {
     Tag,
     TagVariant,
@@ -22,6 +21,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getTagVariant } from '@deps/containers/bene-change/components/steps/summary/summary-step.helpers';
 import { validateAgentTransaction } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo, browserLogError } from '@deps/utils/browser-logging';
+import { toTitleCase } from '@deps/utils/strings';
 
 interface DeclineReason {
     value: string;
@@ -47,15 +47,6 @@ interface ValidationResponse {
     };
     validationResult?: ValidationResult[] | null;
     correlationId?: string;
-}
-
-interface FormData {
-    partyUpdates: any[];
-    signatures?: Array<{ isSignedPresent: boolean; signDate: string | null }>;
-    planCode: string;
-    policyNumber: string;
-    issueResolved: boolean;
-    declineReason?: DeclineReason[];
 }
 
 const ROLE_MAP: { [key: string]: string } = {

@@ -1,8 +1,7 @@
-import { PartyType } from '@xd/api-types/dist/generated-types/sor/models/PartyType';
-
 import { BeneRelationshipToInsured } from '@deps/containers/bene-change/components/beneficiary-details/allocation-details/allocation-details.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { SignatureDesignation } from '@deps/models/case/renewal/signature-validation';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 export const getRelationshipOptions = (t: (key: string) => string) => [
     {
@@ -165,10 +164,7 @@ export const getSignatureDesignationOptions = (t: (key: string) => string) => [
     { label: t('na'), value: SignatureDesignation.NA },
 ];
 
-export const getPartyTypeOptions = (
-    t: (key: string) => string,
-    role: string
-) => {
+export const getPartyTypeOptions = (t: (key: string) => string) => {
     const partyTypeOptions = [
         { label: t('partyOptions.individual'), value: PartyType.INDIVIDUAL },
         { label: t('partyOptions.trust'), value: PartyType.TRUST },

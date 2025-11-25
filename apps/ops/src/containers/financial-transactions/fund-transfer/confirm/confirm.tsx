@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -22,6 +21,7 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { buildfundTransferRequestBody } from '../fund-transfer.helpers';
 

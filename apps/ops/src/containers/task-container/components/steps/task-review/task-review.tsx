@@ -1,5 +1,4 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
@@ -17,6 +16,7 @@ import { TaskStatus } from '@deps/models/case/task-instance';
 import { searchNigoExceptionRefs } from '@deps/queries/api/v1/exceptionRefs';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { convertToCamelCase } from '@deps/utils/strings';
 
 import { useGetCaseDocs } from './task-review.helpers';
 

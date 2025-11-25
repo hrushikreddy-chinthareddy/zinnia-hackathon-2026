@@ -1,5 +1,4 @@
 import { Transition } from '@headlessui/react';
-import { Country, State } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Field, {
@@ -11,6 +10,7 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
+import { Country, State } from '@zinnia/api-types/types/sor';
 
 interface AdditionalAddressLineProps {
     disabled: boolean;

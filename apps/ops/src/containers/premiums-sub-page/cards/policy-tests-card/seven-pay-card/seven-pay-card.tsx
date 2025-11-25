@@ -1,4 +1,3 @@
-import { TestValues } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
@@ -10,6 +9,7 @@ import PolicyTestCard from '@deps/containers/mec-card/policy-test-card/policy-te
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { ReactComponent as DateIcon } from '@deps/styles/elements/icons/content/date.svg';
+import { TestValues } from '@zinnia/api-types/types/sor';
 
 interface InactiveCardProps {
     sevenPayPeriod?: string;

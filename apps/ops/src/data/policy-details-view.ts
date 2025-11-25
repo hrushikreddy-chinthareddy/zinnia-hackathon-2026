@@ -1,9 +1,3 @@
-import {
-    FundAccountType,
-    Policy,
-    FeatureType,
-} from '@zinnia/api-types/types/sor';
-
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     convertKebabedDateString,
@@ -12,6 +6,11 @@ import {
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DataDefinition } from '@deps/types/data';
+import {
+    FundAccountType,
+    Policy,
+    FeatureType,
+} from '@zinnia/api-types/types/sor';
 
 export interface PolicyViewDetailsDto {
     issueDate: string;

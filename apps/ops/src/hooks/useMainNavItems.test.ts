@@ -1,6 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import React from 'react';
 
+import * as PermissionsContext from '@deps/contexts/PermissionsContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+
 import { useMainNavItems } from './useMainNavItems';
 
 jest.mock('next-i18next', () => ({
@@ -35,8 +38,7 @@ jest.mock('@auth0/nextjs-auth0/client', () => ({
 jest.mock('@deps/contexts/OptimizelyContext', () => ({
     useOptimizely: () => ({
         featureFlags: {
-            [require('@deps/utils/optimizely/flags').FEATURE_FLAGS
-                .SHOW_HOME_NAV_BTN]: true,
+            [FEATURE_FLAGS.SHOW_HOME_NAV_BTN]: true,
         },
         featureFlagVariables: {},
     }),
@@ -94,8 +96,9 @@ describe('useMainNavItems', () => {
     });
 
     it('returns empty array if permissionsLoadingComplete is false', () => {
-        const permissionsModule = require('@deps/contexts/PermissionsContext');
-        permissionsModule.usePermissionsContext.mockReturnValueOnce({
+        (
+            PermissionsContext.usePermissionsContext as jest.Mock
+        ).mockReturnValueOnce({
             ...defaultPermissions,
             permissionsLoadingComplete: false,
         });

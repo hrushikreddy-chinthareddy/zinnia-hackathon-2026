@@ -82,7 +82,6 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
 
     public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
-        const guaranteed = data.guaranteed;
         const createDate = new Date().toLocaleDateString();
 
         const getRidersText = () => {

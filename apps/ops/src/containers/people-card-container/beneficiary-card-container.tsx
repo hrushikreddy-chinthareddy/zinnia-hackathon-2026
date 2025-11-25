@@ -70,7 +70,6 @@ const BeneficiaryCardContainer = ({
     peopleCardData,
     showAllocationBar = true,
     isRereg = false,
-    tooltip,
     showManageBeneficiary = false,
     enableManageBeneficiary = false,
 }: BeneficiaryCardContainerProps) => {

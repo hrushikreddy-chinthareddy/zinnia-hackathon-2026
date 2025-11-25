@@ -1,6 +1,13 @@
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+
+import { useSendDocument } from '@deps/contexts/SendDocumentContext';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import {
+    CommunicationTypes,
+    SendDocumentAction,
+} from '@deps/models/case/send-document';
 import {
     AddressType,
     Country,
@@ -9,13 +16,6 @@ import {
     Policy,
     PartyType,
 } from '@zinnia/api-types/types/sor';
-
-import { useSendDocument } from '@deps/contexts/SendDocumentContext';
-import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import {
-    CommunicationTypes,
-    SendDocumentAction,
-} from '@deps/models/case/send-document';
 
 import Correspondence from './correspondence';
 

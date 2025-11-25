@@ -1,12 +1,12 @@
 import { queryOptions, useQuery } from '@tanstack/react-query';
+
+import { HistoryFilters } from '@deps/contexts/HistoryFiltersContext';
+import { getTransactionsQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import {
     BasePolicy,
     Transaction,
     TransactionStatus,
-} from '@xd/api-types/dist/generated-types/sor';
-
-import { HistoryFilters } from '@deps/contexts/HistoryFiltersContext';
-import { getTransactionsQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
+} from '@zinnia/api-types/types/sor';
 
 export const initialFilterTransactions: { [key: string]: Transaction[] } = {
     [TransactionStatus.COMPLETED]: [],

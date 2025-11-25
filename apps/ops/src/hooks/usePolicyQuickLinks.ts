@@ -10,7 +10,7 @@ export const usePolicyQuickLinks = (
     hasCallLogsAccess?: boolean
 ) => {
     return useQuery({
-        queryKey: ['quickLinks', policy, t],
+        queryKey: ['quickLinks', policy, t, hasCallLogsAccess],
         queryFn: () => getPolicyQuickLinks(t, policy, hasCallLogsAccess),
     });
 };

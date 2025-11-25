@@ -1,9 +1,3 @@
-import {
-    DistributionType,
-    FeatureType,
-    PolicyFeatureBase,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/types';
@@ -20,6 +14,12 @@ import {
     translateYearOrYears,
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DistributionType,
+    FeatureType,
+    PolicyFeatureBase,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 const distributionMapping: { [key: DistributionType | string]: string } = {
     [DistributionType.AFFILIATEDAGENCY]:

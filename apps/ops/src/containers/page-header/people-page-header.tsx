@@ -13,7 +13,6 @@ const PeoplePageHeaderContainer = ({
     breadcrumbText,
     breadcrumbUrl,
     onClick,
-    hideControls = false,
 }: PeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
 

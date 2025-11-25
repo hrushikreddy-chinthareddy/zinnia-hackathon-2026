@@ -1,4 +1,3 @@
-import { AddressType } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'i18next';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
@@ -11,6 +10,7 @@ import {
 } from '@deps/containers/death-claim-container/death-claim.types';
 import EditAddress from '@deps/containers/death-claim-container/steps/notification-method/edit-address';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
+import { AddressType } from '@zinnia/api-types/types/sor';
 
 import { DynamicKey, UpdatedBeneficiaryRecord } from './claims.type';
 

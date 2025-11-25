@@ -1,13 +1,3 @@
-import {
-    CaseCountInput,
-    CaseCountOutput,
-    CaseTimePredictInput,
-    CaseTimePredictOutput,
-    CompletedCaseTimeInput,
-    CompletedCaseTimeOutput,
-    CompletedCaseTimeOutputLevel1,
-    HTTPValidationError,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import {
@@ -42,6 +32,16 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    CaseCountInput,
+    CaseCountOutput,
+    CaseTimePredictInput,
+    CaseTimePredictOutput,
+    CompletedCaseTimeInput,
+    CompletedCaseTimeOutput,
+    CompletedCaseTimeOutputLevel1,
+    HTTPValidationError,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     baseAppUrl,

@@ -1,7 +1,3 @@
-import {
-    UserActivityOutputLevel1,
-    UserViewsOutputLevel1,
-} from '@xd/api-types/dist/generated-types/analytics';
 import { Icon, IconType, Link, Tooltip } from '@zinnia/bloom/components';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +6,10 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import {
+    UserActivityOutputLevel1,
+    UserViewsOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 type UsageCommonLayoutProps = {
     title: string;

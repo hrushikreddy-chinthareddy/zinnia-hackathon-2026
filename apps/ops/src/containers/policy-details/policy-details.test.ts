@@ -1,8 +1,7 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getPolicyVisibility } from '@deps/helpers/policy-visibility/policy-visibility-helper';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import {
     buildTransactionCards,

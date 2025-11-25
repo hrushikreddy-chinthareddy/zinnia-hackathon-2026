@@ -18,15 +18,11 @@ type FormContextOptions = {
 
 const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
     const {
-        id,
         schema,
         required,
         description,
         errors,
-        children,
         readonly,
-        formData,
-        classNames,
         uiSchema,
         hideError = false,
     } = props;
@@ -37,11 +33,6 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
     const uiOptions = getUiOptions(uiSchema);
     const helpText = uiOptions.help;
     const style = uiOptions?.style ?? '';
-    let { displayLabel } = props;
-
-    if (uiOptions.label === false) {
-        displayLabel = false;
-    }
 
     const helpInformation = helpText && (
         <Tooltip

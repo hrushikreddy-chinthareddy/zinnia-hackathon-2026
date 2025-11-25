@@ -1,3 +1,7 @@
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
+import { Statuses } from '@deps/models/case/case';
+import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
+import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 import {
     CaseCountGroupByEnum,
     CaseCountInput,
@@ -8,11 +12,6 @@ import {
     TaskCountGroupByEnum,
     TaskCountInputFilter,
 } from '@zinnia/api-types/types/analytics';
-
-import { friendlyGroupByName } from '@deps/components/dashboard/utils';
-import { Statuses } from '@deps/models/case/case';
-import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
-import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 
 import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 

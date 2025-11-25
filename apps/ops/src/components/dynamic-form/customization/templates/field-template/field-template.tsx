@@ -36,7 +36,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
         id,
         label,
         required,
-        description,
         errors,
         children,
         readonly,

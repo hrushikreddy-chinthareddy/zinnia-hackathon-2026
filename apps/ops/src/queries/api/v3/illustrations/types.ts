@@ -248,7 +248,7 @@ export const COVERAGE_IDS = {
 
 export type CoverageId = ValueOf<typeof COVERAGE_IDS>;
 
-export type FlatExtra = {};
+export type FlatExtra = object;
 
 export type Participant = {
     participantId: string;

@@ -1,3 +1,11 @@
+import dayjs from 'dayjs';
+
+import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import {
+    getCarrierLogoByClientId,
+    getCarrierNameByClientId,
+} from '@deps/utils/carriers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DistributionType,
     DeathBenefitOptionType,
@@ -14,14 +22,6 @@ import {
     CostBasis,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
-import dayjs from 'dayjs';
-
-import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-import {
-    getCarrierLogoByClientId,
-    getCarrierNameByClientId,
-} from '@deps/utils/carriers';
 
 import { Coverage } from './Coverage';
 import { Features } from './Features';

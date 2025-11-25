@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -33,6 +32,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface ServiceRequestProps extends SegmentTrackedPageProps {

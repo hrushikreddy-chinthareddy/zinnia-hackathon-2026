@@ -1,4 +1,7 @@
 import { render, screen } from '@testing-library/react';
+import dayjs from 'dayjs';
+
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import {
     Address,
     AddressType,
@@ -13,9 +16,6 @@ import {
     PreferredCommunicationType,
     PartyType,
 } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
-
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import AddressCard from './address-card';
 import { Addresses } from './address-card.helpers';

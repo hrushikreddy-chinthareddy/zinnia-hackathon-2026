@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useState } from 'react';
@@ -24,6 +23,7 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
     policy: Policy;

@@ -4,7 +4,6 @@ import {
     AssistiveTextVariant,
     Loader,
 } from '@zinnia/bloom/components';
-import { DEFAULT_DATE_FORMAT } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -40,6 +39,7 @@ import {
     DEFAULT_EXTENDED_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
+import { DEFAULT_DATE_FORMAT } from '@deps/utils/dates';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -292,8 +292,7 @@ function FormEntryStep({
                 const successfulCaseUpdate = await updateTask(
                     renewalInitialForm.caseId,
                     renewalInitialForm.taskId,
-                    payload,
-                    timer
+                    payload
                 );
                 if (successfulCaseUpdate && successfulCaseUpdate.id) {
                     setSubmitFailed(false);
@@ -308,8 +307,7 @@ function FormEntryStep({
                 const successfulCaseUpdate = await updateTask(
                     formState.initialForm.caseId,
                     formState.initialForm.taskId,
-                    buildFormV2(TaskStatus.Completed, document, formState),
-                    timer
+                    buildFormV2(TaskStatus.Completed, document, formState)
                 );
 
                 if (successfulCaseUpdate && successfulCaseUpdate.id) {

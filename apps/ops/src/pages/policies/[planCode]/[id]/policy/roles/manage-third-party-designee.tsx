@@ -1,11 +1,10 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { PageHead } from '@deps/components/page-title';
 import { PolicyRole, RoleLabel } from '@deps/constants/policy';
 import RoleChangeContainer from '@deps/containers/role-change/role-change-container';
 import { RoleChangeProvider } from '@deps/contexts/RoleChangeContext';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface IThirdPartyProps {
     policy: Policy;

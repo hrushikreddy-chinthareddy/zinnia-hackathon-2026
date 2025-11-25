@@ -1,4 +1,3 @@
-import { Policy, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { ValueGetterParams } from 'ag-grid-community';
 import { TFunction, useTranslation } from 'next-i18next';
 
@@ -26,6 +25,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { ReactComponent as CirclePlusIcon } from '@deps/styles/elements/icons/circles/circle-plus.svg';
+import { Policy, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 export interface SideSheetPolicyItemProps {
     policy: Policy;

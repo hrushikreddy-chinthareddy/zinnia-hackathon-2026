@@ -1,10 +1,3 @@
-import {
-    PartyRole,
-    PartyType,
-    Party,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -12,6 +5,13 @@ import {
     partyRoleOrder,
     TitleCasedPartyRole,
 } from '@deps/constants/party-roles';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import {
+    PartyRole,
+    PartyType,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import {
     combineNameAndRoles,

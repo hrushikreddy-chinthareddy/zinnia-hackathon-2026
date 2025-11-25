@@ -1,9 +1,3 @@
-import {
-    FollowUpChainResponse,
-    FollowUpResponse,
-    UserResponse,
-    ClientDetailsDto,
-} from '@xd/api-types/dist/generated-types/knowledgebase';
 import axios, { AxiosResponse } from 'axios';
 
 import {
@@ -23,6 +17,12 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    ClientDetailsDto,
+    FollowUpChainResponse,
+    FollowUpResponse,
+    UserResponse,
+} from '@zinnia/api-types/types/knowledgebase';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';

@@ -1,8 +1,8 @@
-import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 
 import { friendlyDateFormat } from '@deps/components/dashboard/utils';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 export enum ActiveAgingTimeRange {
     ZERO_TO_SIX = '0-6D',

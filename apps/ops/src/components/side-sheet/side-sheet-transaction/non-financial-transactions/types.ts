@@ -1,12 +1,12 @@
+import { Dispatch, SetStateAction } from 'react';
+
+import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 import {
     Address,
     BankAccount,
     Email,
     Phone,
 } from '@zinnia/api-types/types/sor';
-import { Dispatch, SetStateAction } from 'react';
-
-import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 
 import { BaseTransactionSideSheetValues } from '../types';
 

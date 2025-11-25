@@ -1,21 +1,13 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 import { PartyType } from '@deps/models/policy/sor-policy';
 
 import AgentTransactionAccordion from './agent-transaction-accordion';
 import { Action } from './agent-transaction-accordion.types';
-
-jest.mock(
-    '@xd/utils/dist',
-    () => ({
-        toTitleCase: (str: string) => {
-            if (!str) return '';
-            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        },
-    }),
-    { virtual: true }
-);
 
 jest.mock('@deps/components/checkbox/checkbox-text/checkbox-text', () => ({
     __esModule: true,

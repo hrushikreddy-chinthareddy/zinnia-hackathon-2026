@@ -1,3 +1,6 @@
+import { TFunction } from 'next-i18next';
+
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     AccountType,
     AddressType,
@@ -5,9 +8,6 @@ import {
     PhoneType,
     ProductType,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
-
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 // ToDo - BPB: Once the SOR ProductTypes spec has been updated to include the below types, we can remove anticipatedProductTypes logic.
 export type AnticipatedProductTypesType =

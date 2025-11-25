@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useSearchParams } from 'next/navigation';
@@ -105,6 +104,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { ERROR_CODES } from '../../error';
 
@@ -256,7 +256,7 @@ export default function WithdrawalCase({
             router.push('/create-case');
             return;
         }
-    }, [document]);
+    }, [document, router]);
 
     // If the user has manually opened or closed the nav drawer, we want to override the default behavior
     const isNavDrawerOpen = useMemo(() => {

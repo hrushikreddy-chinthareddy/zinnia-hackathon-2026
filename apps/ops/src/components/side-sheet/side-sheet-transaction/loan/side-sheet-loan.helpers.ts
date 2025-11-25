@@ -1,14 +1,14 @@
+import { TFunction } from 'next-i18next';
+
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { getLoanInterestRate } from '@deps/queries/api/product-rate';
 import {
     AccountType,
     Policy,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
-
-import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { getLoanInterestRate } from '@deps/queries/api/product-rate';
 
 import {
     calculateProcessDate,

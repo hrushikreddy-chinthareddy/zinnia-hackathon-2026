@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Typography, {

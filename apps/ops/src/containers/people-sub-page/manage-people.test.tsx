@@ -1,5 +1,6 @@
 import * as ReactQuery from '@tanstack/react-query';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
 jest.mock('@deps/utils/optimizely/flags', () => ({
     FEATURE_FLAGS: {
         OWNER_CHANGE_TRANSACTION: 'OWNER_CHANGE_TRANSACTION',
@@ -37,7 +38,6 @@ jest.mock('@deps/helpers/analytics/segment-analytics', () => ({
     segmentAnalyticsTrackEvent: jest.fn(),
 }));
 jest.mock('@deps/components/menu-contextual/menu-contextual', () => {
-    const React = require('react');
     return {
         __esModule: true,
         default: function MockMenuContextual({
