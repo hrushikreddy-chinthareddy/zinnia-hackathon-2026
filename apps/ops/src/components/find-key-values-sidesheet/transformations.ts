@@ -599,33 +599,38 @@ function convertTuple(
 
 export const transformObject = (
     node: DataNode,
-    transform: (node: DataNode) => DataNode
-): DataNode => {
+    transform: (node: DataNode) => DataNode | null
+): DataNode | null => {
+    const transformed = transform(node);
+    // If the transform says "remove this node", we stop here.
+    if (transformed === null) return null;
+
     switch (node.type) {
-        case FieldType.field: {
-            return transform({ ...node });
-        }
+        case FieldType.field:
+            return transformed;
         case FieldType.section: {
-            const newChildren = node.children.map((child) =>
-                transformObject(child, transform)
-            );
+            const newChildren = transformed.children
+                .map((child) => transformObject(child, transform))
+                .filter((n): n is DataNode => n !== null);
 
             return transform({
-                ...node,
+                ...transformed,
                 children: newChildren,
             });
         }
         case FieldType.group: {
-            const newGroups = node.children.map((group) =>
-                group.map((child) => transformObject(child, transform))
+            const newGroups = transformed.children.map((group) =>
+                group
+                    .map((child) => transformObject(child, transform))
+                    .filter((n): n is DataNode => n !== null)
             );
             return transform({
-                ...node,
+                ...transformed,
                 children: newGroups,
             });
         }
         default:
-            return node;
+            return transformed;
     }
 };
 

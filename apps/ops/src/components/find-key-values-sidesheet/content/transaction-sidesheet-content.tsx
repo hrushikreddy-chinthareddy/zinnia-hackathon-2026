@@ -16,7 +16,7 @@ import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { formatNode } from '../formatters';
+import { combinedTransform } from '../formatters';
 import {
     convertNode,
     convertToDataNode,
@@ -47,11 +47,21 @@ export const TransactionSidesheetContent = ({
         // show / hide sections
         // translate section labels
         (data) => {
-            return data.map((node) =>
-                transformObject(node, (node) => formatNode(node, t))
-            );
+            return data
+                .map((node) =>
+                    transformObject(
+                        node,
+                        combinedTransform({
+                            t,
+                            exclude: ['timestamp', 'id', 'transactionAmounts'],
+                        })
+                    )
+                )
+                .filter(Boolean);
         }
     )(transaction);
+
+    console.log(nodes);
 
     return (
         <div className={styles.keyValuesContainer}>

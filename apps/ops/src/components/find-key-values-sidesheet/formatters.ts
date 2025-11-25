@@ -200,7 +200,7 @@ export const formatAsDataValue = ({
     t: TFunction;
     fieldName: string;
 }) => {
-    let value = '';
+    let value = fieldData;
     // Empty values
     if (fieldData == null) value = DEFAULT_ERROR_STRING;
 
@@ -226,22 +226,56 @@ export const formatAsDataValue = ({
     return { value: String(value), label: t(`allFields.${fieldName}`) };
 };
 
-export const formatNode = (node: DataNode, t: TFunction): DataNode => {
-    if (node.type !== FieldType.field) {
+export const excludeNodes =
+    ({
+        exclude,
+    }: {
+        exclude: string[]; // e.g. ["Salary", "secret-info"]
+    }) =>
+    (node: DataNode): DataNode | null => {
+        // SECTION or FIELD nodes have a label
+        if ('label' in node && exclude.includes(node.label)) {
+            return null;
+        }
         return node;
-    }
+    };
 
-    // Apply your formatting to the leaf field value
-    const formattedValue = formatAsDataValue({
-        fieldData: node.value,
-        fieldName: node.label,
-        t,
-    });
+export const formatNode =
+    ({ t }: { t: TFunction }) =>
+    (node: DataNode): DataNode => {
+        if (node.type !== FieldType.field) {
+            return node;
+        }
+        // Apply your formatting to the leaf field value
+        const formattedValue = formatAsDataValue({
+            fieldData: node.value,
+            fieldName: node.label,
+            t,
+        });
 
-    return {
-        ...node,
-        value: formattedValue.value,
-        label: formattedValue.label,
+        return {
+            ...node,
+            value: formattedValue.value,
+            label: formattedValue.label,
+        };
+    };
+
+// Removes excluded sections or nodes and formats labels / values
+export const combinedTransform = ({
+    t,
+    exclude,
+}: {
+    t: TFunction;
+    exclude: string[];
+}) => {
+    const format = formatNode({ t });
+    const excl = excludeNodes({ exclude });
+
+    return (node: DataNode): DataNode | null => {
+        const afterExclude = excl(node);
+        if (afterExclude === null) return null;
+
+        return format(afterExclude);
     };
 };
 
