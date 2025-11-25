@@ -5,7 +5,6 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ops": "turbo dev --filter ops",
-    "dev:cui": "turbo dev --filter consumer-experience",
     "lint": "turbo lint",
     "clean": "node ./scripts/clean.mjs .next node_modules dist .turbo build",
     "test": "turbo test",
