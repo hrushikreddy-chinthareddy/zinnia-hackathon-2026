@@ -157,6 +157,10 @@ export const getSignatureDesignationOptions = (t: (key: string) => string) => [
         value: SignatureDesignation.AttorneyInFact,
     },
     { label: t('assignee'), value: SignatureDesignation.Assignee },
+    {
+        label: t('authorizedSignatory'),
+        value: SignatureDesignation.AuthorizedSignatory,
+    },
     { label: t('na'), value: SignatureDesignation.NA },
 ];
 

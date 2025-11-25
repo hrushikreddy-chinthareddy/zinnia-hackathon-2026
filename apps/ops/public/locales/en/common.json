@@ -1839,6 +1839,7 @@
             "custodian": "Custodian",
             "guardian": "Guardian",
             "attorneyInFact": "Attorney-in-fact",
+            "authorizedSignatory": "Authorized signatory",
             "assignee": "Assignee",
             "poa": "POA",
             "na": "NA",
