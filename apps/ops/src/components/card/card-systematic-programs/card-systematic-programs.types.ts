@@ -22,10 +22,18 @@ export interface SystematicProgramsCardProps {
 
 export const arrangmentTypesDictionary: Record<ArrangementType, string> = {
     PAYMENT: 'Premium',
-    LOANREPAYMENT: 'Loan Repayment',
+    LOANREPAYMENT: 'Loan repayment',
     PAYOUT: 'Payout',
     REQUIREDMINIMUMDISTRIBUTION: 'RMD',
     WITHDRAWAL: 'Withdrawal',
+};
+
+export const arrangmentTypesMsgDictionary: Record<ArrangementType, string> = {
+    PAYMENT: 'premium',
+    LOANREPAYMENT: 'loan repayment',
+    PAYOUT: 'payout',
+    REQUIREDMINIMUMDISTRIBUTION: 'RMD',
+    WITHDRAWAL: 'withdrawal',
 };
 
 export const frequencyDictionary: Record<Frequency | 'DEFAULT', string> = {

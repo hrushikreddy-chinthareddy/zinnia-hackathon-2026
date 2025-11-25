@@ -31,6 +31,7 @@ import {
     paymentFormDictionary,
     programStatusDictionary,
     SystematicProgramsCardTest,
+    arrangmentTypesMsgDictionary,
 } from './card-systematic-programs.types';
 import styles from './systematic-programs-table.module.css';
 import FooterAction from '../card-footer-action/card-footer.action';
@@ -63,13 +64,13 @@ const SystematicProgramsCard = ({
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
         if (programs.length === 1)
-            return arrangmentTypesDictionary[
+            return arrangmentTypesMsgDictionary[
                 programs[0].arrangementType
             ].toLowerCase();
         if (programs.length === 2)
-            return `${arrangmentTypesDictionary[
+            return `${arrangmentTypesMsgDictionary[
                 programs[0].arrangementType
-            ].toLowerCase()} or ${arrangmentTypesDictionary[
+            ].toLowerCase()} or ${arrangmentTypesMsgDictionary[
                 programs[1].arrangementType
             ].toLowerCase()}`;
         return '';
