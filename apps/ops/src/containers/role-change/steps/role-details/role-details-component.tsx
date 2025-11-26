@@ -64,6 +64,8 @@ const RoleDetailsComponent = ({
     action,
     roleData,
     index,
+    removedTpdIndex,
+    setRemovedTpdIndex,
 }: {
     policy: Policy;
     role: PolicyRole;
@@ -71,6 +73,8 @@ const RoleDetailsComponent = ({
     action: any;
     roleData: RoleData;
     index: number;
+    removedTpdIndex?: number | null;
+    setRemovedTpdIndex?: (index: number | null) => void;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.roleDetails',
@@ -84,6 +88,7 @@ const RoleDetailsComponent = ({
         useRoleChange();
 
     const isReadOnly = !role?.toLowerCase().includes(NEW);
+    const isTpdRole = role === PolicyRole.THIRDPARTYDESIGNEE;
 
     const [showRole, setShowRole] = useState<boolean>(
         role?.toLowerCase().includes(NEW) ? true : false
@@ -271,7 +276,8 @@ const RoleDetailsComponent = ({
     return (
         <div
             className={
-                removeRole && !role?.toLowerCase().includes(NEW)
+                (isTpdRole && removedTpdIndex === index) ||
+                (removeRole && !role?.toLowerCase().includes(NEW))
                     ? 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'
                     : 'my-4 w-full rounded-sm border-2 p-8'
             }
@@ -290,7 +296,14 @@ const RoleDetailsComponent = ({
                 ) : (
                     <div className="flex items-center gap-2">
                         <div className="font-primary text-xl">
-                            <span className={removeRole ? 'text-gray-200' : ''}>
+                            <span
+                                className={
+                                    (isTpdRole && removedTpdIndex === index) ||
+                                    removeRole
+                                        ? 'text-gray-200'
+                                        : ''
+                                }
+                            >
                                 {roleData?.party?.fullName ||
                                     getPartyName(roleData?.party as any)}
                             </span>
@@ -321,17 +334,34 @@ const RoleDetailsComponent = ({
                                 />
                             </label>
                         ) : (
-                            <label
-                                className={`${labelClasses} ${
-                                    role == PolicyRole.THIRDPARTYDESIGNEE
-                                        ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                                        : 'cursor-pointer'
-                                }`}
-                            >
+                            <label className={`${labelClasses}`}>
                                 <InputCheckBox
-                                    isDisabled={false}
-                                    checked={removeRole}
-                                    onChange={() => setRemoveRole(!removeRole)}
+                                    isDisabled={
+                                        // For TPD: disable if another TPD is already marked for removal
+                                        isTpdRole &&
+                                        removedTpdIndex !== null &&
+                                        removedTpdIndex !== index
+                                    }
+                                    checked={
+                                        isTpdRole
+                                            ? removedTpdIndex === index
+                                            : removeRole
+                                    }
+                                    onChange={() => {
+                                        if (isTpdRole && setRemovedTpdIndex) {
+                                            // For TPD: toggle specific index or clear if already selected
+                                            if (removedTpdIndex === index) {
+                                                setRemovedTpdIndex(null);
+                                                setRemoveRole(false);
+                                            } else {
+                                                setRemovedTpdIndex(index);
+                                                setRemoveRole(true);
+                                            }
+                                        } else {
+                                            // For other roles: use existing logic
+                                            setRemoveRole(!removeRole);
+                                        }
+                                    }}
                                 />
                                 <Content
                                     details={'Remove' as string}
