@@ -3044,7 +3044,8 @@
             "commonTaskIssues": "Problema: Se encontraron uno o más problemas de {{taskType}}.",
             "standardDocumentMatching": "Coincidencia de Documentos",
             "toaNigo": "Revisar Problemas de Transferencia",
-            "applicationReview": "Validar Detalles de la Solicitud"
+            "applicationReview": "Validar Detalles de la Solicitud",
+            "aiIndicatorTooltip": "Este formulario fue capturado automáticamente con IA para acelerar el proceso."
         },
         "processDate": {
             "canceled": "Cancelado el",

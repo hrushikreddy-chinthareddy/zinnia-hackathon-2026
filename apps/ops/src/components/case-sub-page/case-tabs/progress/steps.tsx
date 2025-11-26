@@ -209,6 +209,9 @@ const Step = ({
 
     const hasPii = step.parentStage.id === ParentStageIds.AgentValidation;
 
+    // Temporary hardcoded flag for testing AI indicator
+    const aiEnabled = true;
+
     const handleClick = () => {
         if (transactionEntity?.entity?.tabs) {
             openDynamicSideSheetWithTabs();
@@ -232,6 +235,22 @@ const Step = ({
                             details={step.name}
                             pii={hasPii}
                         />
+                        {/* aiEnabled testing */}
+                        {aiEnabled && (
+                            <Tooltip
+                                placement={PopoverPlacement.TopRight}
+                                body={t('caseOverview.tabs.aiIndicatorTooltip')}
+                                isTabbable={false}
+                            >
+                                <Icon
+                                    width={16}
+                                    height={16}
+                                    className="shrink-0 text-orange-400"
+                                    type={IconType.SPARKLES}
+                                    alt="AI"
+                                />
+                            </Tooltip>
+                        )}
                         <StepResultTag step={step} />
                         {step.documents?.length > 0 && (
                             <div className="flex flex-row items-center gap-0.5 text-gray-600">
