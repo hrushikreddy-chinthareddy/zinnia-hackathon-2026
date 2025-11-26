@@ -170,9 +170,6 @@ export const PolicyIndexCardView = ({
                 policySearchFilters?.searchValue?.policyNumber !== policyNumber)
         );
     };
-    useEffect(() => {
-        setShowFieldErrorMessage(false);
-    }, []);
 
     useEffect(() => {
         const { policyNumber = '' } = router.query;

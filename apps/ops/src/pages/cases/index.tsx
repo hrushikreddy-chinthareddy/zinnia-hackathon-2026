@@ -295,10 +295,6 @@ const CaseManagementDashboard = ({
     ]);
 
     useEffect(() => {
-        setShowFieldErrorMessage(false);
-    }, []);
-
-    useEffect(() => {
         if (loadedStoredFilters) {
             storage.setItem('CASE_MANAGEMENT_FILTERS', {
                 ...caseManagementFilters,
