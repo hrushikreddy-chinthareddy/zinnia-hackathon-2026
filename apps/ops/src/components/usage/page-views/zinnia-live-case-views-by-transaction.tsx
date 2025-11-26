@@ -11,6 +11,8 @@ import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
+import { TotalCount } from '@deps/components/usage//total-count';
+import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
@@ -24,8 +26,6 @@ import {
     PrepareTop5CaseViewsCSV,
     categoryValueTooltip,
 } from './utils';
-import { TotalCount } from '../total-count';
-import UsageHeaderLayout from '../usage-common-header';
 import { colors, generateCSVFileName, ApiRoles } from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({

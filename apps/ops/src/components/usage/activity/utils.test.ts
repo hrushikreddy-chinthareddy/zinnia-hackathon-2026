@@ -1,17 +1,16 @@
 import {
-    UserTransactionOutputLevel1,
-    UserIllustrationActivityOutputLevel1,
-} from '@zinnia/api-types/types/analytics';
-
-import {
     aggregateByCategory,
     getTransactionTypesByCategory,
     buildTopLevelSeries,
     buildDrilldownSeries,
     formatIllustrationActivity,
     mergeDuplicatedIntoCreated,
-} from './utils';
-import { colors } from '../utils';
+} from '@deps/components/usage/activity/utils';
+import { colors } from '@deps/components/usage/utils';
+import {
+    UserTransactionOutputLevel1,
+    UserIllustrationActivityOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 const mockTransactionData: UserTransactionOutputLevel1[] = [
     {

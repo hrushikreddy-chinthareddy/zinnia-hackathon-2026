@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserIllustrationActivityGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -20,22 +18,24 @@ import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
-import { getUserIllustrationActivityCountQuery } from '@deps/queries/tanstack/usage/usageQueries';
-
-import {
-    IllustrationsActivityTooltip,
-    tooltipFormatter,
-} from './illustrations-tooltip';
-import { TotalCount } from '../total-count';
-import UsageHeaderLayout from '../usage-common-header';
+import { TotalCount } from '@deps/components/usage//total-count';
+import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
 import {
     ActivityType,
     colors,
     generateIllustrationsCSVFileName,
     PRODUCT_TYPE_OPTIONS,
     ProductType,
-} from '../utils';
+} from '@deps/components/usage/utils';
+import { getUserIllustrationActivityCountQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserIllustrationActivityGroupByEnum } from '@zinnia/api-types/types/analytics';
+
 import styles from './Activity.module.css';
+import {
+    IllustrationsActivityTooltip,
+    tooltipFormatter,
+} from './illustrations-tooltip';
 import {
     generateSeries,
     mergeDuplicatedIntoCreated,

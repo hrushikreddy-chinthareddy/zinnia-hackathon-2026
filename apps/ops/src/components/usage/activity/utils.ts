@@ -4,14 +4,6 @@ import groupBy from 'lodash/groupBy';
 
 import { GroupedColumnSeries } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
-import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
-import {
-    UserIllustrationActivityOutputLevel1,
-    UserIllustrationActivityOutputLevel3,
-    UserTransactionOutputLevel1,
-    UserTransactionOutputLevel3,
-} from '@zinnia/api-types/types/analytics';
-
 import {
     ActivityType,
     colors,
@@ -19,7 +11,14 @@ import {
     PRODUCT_TYPE_OPTIONS,
     TRANSACTION_CATEGORY_DISPLAY_MAP,
     TRANSACTION_TYPE_DISPLAY_MAP,
-} from '../utils';
+} from '@deps/components/usage/utils';
+import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
+import {
+    UserIllustrationActivityOutputLevel1,
+    UserIllustrationActivityOutputLevel3,
+    UserTransactionOutputLevel1,
+    UserTransactionOutputLevel3,
+} from '@zinnia/api-types/types/analytics';
 
 export enum TimeframeFilterOptions {
     Last6Months = '6M',

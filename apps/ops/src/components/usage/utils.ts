@@ -1,12 +1,11 @@
 import dayjs from 'dayjs';
 
+import { Timerange } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
+import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
-
-import { Timerange } from '../dashboard/filters/time-filter/useTimeRangeFilter';
-import { defaultDateFormat } from '../dashboard/utils';
 
 export const friendlyGroupByName: Record<UserActivityGroupByEnum, string> = {
     [UserActivityGroupByEnum.ACTIVITY_DAY]: 'Activity day',

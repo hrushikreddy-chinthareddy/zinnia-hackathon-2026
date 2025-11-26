@@ -13,6 +13,7 @@ import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
+import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
 import { getUserTransactionCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserTransactionGroupByEnum } from '@zinnia/api-types/types/analytics';
@@ -26,7 +27,6 @@ import {
     buildTopLevelSeries,
     buildDrilldownSeries,
 } from './utils';
-import UsageHeaderLayout from '../usage-common-header';
 import { ApiRoles, colors, generateCSVFileName, ROLE_OPTIONS } from '../utils';
 import styles from './Activity.module.css';
 import {
@@ -119,14 +119,14 @@ export const TransactionActivity = () => {
                     )}
                     titleToolTip={<TransactionActivityTooltip />}
                     data={transactionData?.data || []}
-                    csvFileName={generateCSVFileName(
-                        `${role} ${
+                    csvFileName={generateCSVFileName({
+                        title: `${role} ${
                             t(
                                 'usage.activity.zinniaLiveTransactionActivity.title'
                             ) ?? ''
                         }`,
-                        timerange
-                    )}
+                        timerange,
+                    })}
                     csvFunction={PrepareTransactionActivityCSV}
                 />
                 <div className="flex items-center justify-between gap-4 w-full">

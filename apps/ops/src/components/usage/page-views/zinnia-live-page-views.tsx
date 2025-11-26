@@ -21,6 +21,13 @@ import {
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
+import { TotalCount } from '@deps/components/usage/total-count';
+import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
+import {
+    colors,
+    generateCSVFileName,
+    PageType,
+} from '@deps/components/usage/utils';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
@@ -33,9 +40,6 @@ import {
     startDates,
     TimeframeFilterOptions,
 } from './utils';
-import { TotalCount } from '../total-count';
-import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName, PageType } from '../utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const { t } = useTranslation();
