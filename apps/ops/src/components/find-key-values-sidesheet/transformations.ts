@@ -651,41 +651,33 @@ export const groupBasics = (data: DataNode[], t: TFunction): DataNode[] => {
 };
 
 export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
+    // should only filter on fields, still highlight section labels
+    // if there are no fields in section | group, remove the section / group
     const lower = search.toLowerCase();
 
     const filterNode = (node: DataNode): DataNode | null => {
-        // ---- FIELD ----
         if (node.type === FieldType.field) {
             const match =
                 node.label.toLowerCase().includes(lower) ||
                 node.value.toLowerCase().includes(lower);
-
             return match ? node : null;
         }
 
-        // ---- SECTION ----
         if (node.type === FieldType.section) {
-            const labelMatches = node.label.toLowerCase().includes(lower);
-
             // Recursively filter children
             const filteredChildren = node.children
                 .map(filterNode)
                 .filter((n): n is DataNode => n !== null);
 
-            // Section matches if:
-            // - it matches by label, OR
-            // - any children matched
-            if (labelMatches || filteredChildren.length > 0) {
+            if (filteredChildren.length > 0) {
                 return {
                     ...node,
                     children: filteredChildren,
                 };
             }
-
             return null;
         }
 
-        // ---- GROUP ----
         if (node.type === FieldType.group) {
             const filteredGroups = node.children
                 .map((group) =>
@@ -693,19 +685,16 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
                         .map(filterNode)
                         .filter((n): n is DataNode => n !== null)
                 )
-                .filter((g) => g.length > 0); // remove empty groups
+                .filter((g) => g.length > 0);
 
-            // Keep group only if some child in some group matched
             if (filteredGroups.length > 0) {
                 return {
                     ...node,
                     children: filteredGroups,
                 };
             }
-
             return null;
         }
-
         return null;
     };
 

@@ -13,21 +13,18 @@ export function renderNode(node: DataNode, index: number): React.ReactNode {
                     dataField={[node.label, node.value]}
                     link={node.link}
                     toolTip={node.toolTip}
-                    searchValue={''}
                 />
             );
         }
         case FieldType.section: {
             return (
-                <Section
-                    label={node.label}
-                    tags={node.tags}
-                    children={node.children}
-                />
+                <Section label={node.label} tags={node.tags}>
+                    {node.children}
+                </Section>
             );
         }
         case FieldType.group: {
-            return <Group children={node.children} />;
+            return <Group key={`group-${index}`}>{node.children}</Group>;
         }
         default:
             // Fully exhaustive since type is a Symbol
@@ -38,7 +35,7 @@ export function renderNode(node: DataNode, index: number): React.ReactNode {
 export const DataNodeRenderer = ({ nodes }: { nodes: DataNode[] }) => {
     return nodes.map((node, i) => (
         <div className={styles.keyValuesContainer} key={i}>
-            {renderNode(node)}
+            {renderNode(node, i)}
         </div>
     ));
 };
