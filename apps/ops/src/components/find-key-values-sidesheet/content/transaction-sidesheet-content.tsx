@@ -16,13 +16,12 @@ import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { combinedTransform } from '../formatters';
 import {
     convertNode,
     convertToDataNode,
+    excludeNodesByLabel,
     groupBasics,
     searchNodes,
-    transformObject,
 } from '../transformations';
 
 export const TransactionSidesheetContent = ({
@@ -40,19 +39,7 @@ export const TransactionSidesheetContent = ({
         // remove groupSections
         // show / hide sections
         // translate section labels
-        (data) => {
-            return data
-                .map((node) =>
-                    transformObject(
-                        node,
-                        combinedTransform({
-                            t,
-                            exclude: ['timestamp', 'id', 'transactionAmounts'],
-                        })
-                    )
-                )
-                .filter(Boolean);
-        }
+        (data) => excludeNodesByLabel(data, t)
     )(transaction);
 
     const matches = searchNodes(nodes, debouncedSearchValue);
