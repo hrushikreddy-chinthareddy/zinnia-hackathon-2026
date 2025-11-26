@@ -1,8 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-
-import { useCompletedTaskTimes } from '../../context/completed-task-times-context';
+import { useCompletedTaskTimes } from '@deps/components/dashboard/sections/completed-task-times/context/completed-task-times-context';
 
 export const CompletedTaskTimesHeader = () => {
     const { completedTaskTimeDataFetching, totalTaskCount } =

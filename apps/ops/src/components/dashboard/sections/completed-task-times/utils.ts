@@ -1,8 +1,7 @@
 import dayjs from 'dayjs';
 
+import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { formatTaskTime } from '@deps/utils/dates';
-
-import { defaultDateFormat } from '../../utils';
 
 // Flattened data structure for CSV export
 export interface FlattenedCompletedTaskTimeData {

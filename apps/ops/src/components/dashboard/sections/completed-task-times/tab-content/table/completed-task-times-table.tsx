@@ -19,6 +19,16 @@ import {
 } from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { downloadCSV } from '@deps/components/dashboard/download-csv';
+import { useCompletedTaskTimes } from '@deps/components/dashboard/sections/completed-task-times/context/completed-task-times-context';
+import { CompletedTaskTimesFilters } from '@deps/components/dashboard/sections/completed-task-times/tab-content/shared/completed-task-times-filters';
+import { CompletedTaskTimesHeader } from '@deps/components/dashboard/sections/completed-task-times/tab-content/shared/completed-task-times-header';
+import {
+    CSV_COLUMNS,
+    generateTasksCSVFilename,
+    getCarrierName,
+    flattenCompletedTaskTimeData,
+    formatTaskTimeFromArray,
+} from '@deps/components/dashboard/sections/completed-task-times/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
@@ -27,16 +37,6 @@ import { useDashboardStore } from '@deps/store/store';
 import { formatTaskTime } from '@deps/utils/dates';
 
 import styles from './completed-task-times-table.module.css';
-import { useCompletedTaskTimes } from '../../context/completed-task-times-context';
-import {
-    CSV_COLUMNS,
-    generateTasksCSVFilename,
-    getCarrierName,
-    flattenCompletedTaskTimeData,
-    formatTaskTimeFromArray,
-} from '../../utils';
-import { CompletedTaskTimesFilters } from '../shared/completed-task-times-filters';
-import { CompletedTaskTimesHeader } from '../shared/completed-task-times-header';
 
 enum SortByOptions {
     CASE_TYPE = 'caseType',

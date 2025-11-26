@@ -1,11 +1,11 @@
 import { IconType, TabContent } from '@zinnia/bloom/components';
 
-import { CompletedTaskTimeProvider } from './context/completed-task-times-context';
+import { CompletedTaskTimesTable } from '@deps/components/dashboard/sections/completed-task-times//tab-content/table/completed-task-times-table';
+import { CompletedTaskTimeProvider } from '@deps/components/dashboard/sections/completed-task-times/context/completed-task-times-provider';
 import {
     SectionTabNavs,
     SectionTabValues,
-} from '../../sections-tab-nav/sections-tab-nav';
-import { CompletedTaskTimesTable } from './tab-content/table/completed-task-times-table';
+} from '@deps/components/dashboard/sections-tab-nav/sections-tab-nav';
 
 export const CompletedTaskTime = () => {
     return (
