@@ -1,4 +1,3 @@
-import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { FC, useContext } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
@@ -9,6 +8,7 @@ import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { GroupByOptions } from '@deps/models/case/enums';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { TransactionTrendsContext } from '../../context/transaction-trends-context';
 

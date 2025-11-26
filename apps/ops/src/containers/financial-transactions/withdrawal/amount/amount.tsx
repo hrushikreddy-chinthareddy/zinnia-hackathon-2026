@@ -1,5 +1,3 @@
-import { DisbursementType } from '@zinnia/api-types/types/bpm';
-import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -29,6 +27,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { DisbursementType } from '@zinnia/api-types/types/bpm';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalContainerProps } from '../types';
 import PartialViewContainer from './partial-view-container/partial-view-container';
@@ -75,7 +75,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     const toggleLabels = (t: TFunction): LabelValue<WithdrawalType>[] => [
         {
             label: `${t('surrender')} (${numberFormatify(
-                policy.withdrawalValues?.maximumWithdrawalAmount || 0
+                policy.accountValues?.surrenderValue || 0
             )})`,
             value: WithdrawalType.Surrender,
             testId: WithdrawalType.Surrender,
@@ -142,7 +142,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
         isPartial,
         withdrawal.withdrawalAmount,
         withdrawal.withdrawalCustomAmount,
-        policy.withdrawalValues?.maximumWithdrawalAmount,
+        policy.accountValues?.surrenderValue,
         effectiveDate,
         goToNext,
         incompleteError,
@@ -165,9 +165,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
             setWithdrawal((prevState) => ({
                 ...prevState,
                 amount: parseFloat(
-                    (
-                        policy.withdrawalValues?.maximumWithdrawalAmount || 0
-                    ).toFixed(2)
+                    (policy.accountValues?.surrenderValue || 0).toFixed(2)
                 ),
             }));
         } else {
@@ -190,7 +188,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
             }));
         }
     }, [
-        policy.withdrawalValues?.maximumWithdrawalAmount,
+        policy.accountValues?.surrenderValue,
         setWithdrawal,
         withdrawal.withdrawalAmount,
         withdrawal.withdrawalCustomAmount,

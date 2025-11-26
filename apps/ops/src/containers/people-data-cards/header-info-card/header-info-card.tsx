@@ -1,4 +1,3 @@
-import { Party, Address, Email, Phone } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { FC, useContext, useMemo, useState } from 'react';
 
@@ -11,6 +10,7 @@ import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
+import { Party, Address, Email, Phone } from '@zinnia/api-types/types/sor';
 
 import SideSheetPeopleHeader from '../side-sheet-people-header/side-sheet-people-header';
 import { SidesheetCommunicationsPreference } from './sidesheet/sidesheet-communications-preference';

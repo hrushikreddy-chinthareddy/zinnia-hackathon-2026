@@ -1,4 +1,4 @@
-import { UserTransactionOutputLevel1 } from '@xd/api-types/dist/generated-types/analytics';
+import { UserTransactionOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import {
     aggregateByCategory,
@@ -80,21 +80,21 @@ describe('aggregateByCategory', () => {
         // Should be sorted by count descending
         expect(result[0]).toEqual({
             category: 'financial',
-            displayName: 'Financial',
+            displayName: 'Payments & Distributions',
             count: 500, // 300 + 200
             color: colors[0],
         });
 
         expect(result[1]).toEqual({
             category: 'policy_update',
-            displayName: 'Policy Update',
+            displayName: 'Party Management',
             count: 250, // 150 + 100
             color: colors[1],
         });
 
         expect(result[2]).toEqual({
             category: 'non_financial',
-            displayName: 'Non-Financial',
+            displayName: 'Policy & Contract Servicing',
             count: 50,
             color: colors[2],
         });
@@ -230,7 +230,7 @@ describe('buildDrilldownSeries', () => {
         expect(result[0]).toEqual({
             type: 'column',
             id: 'financial',
-            name: 'Financial',
+            name: 'Payments & Distributions',
             data: [
                 { name: 'Premium', y: 270 },
                 { name: 'Loan', y: 100 },
@@ -241,7 +241,7 @@ describe('buildDrilldownSeries', () => {
         expect(result[1]).toEqual({
             type: 'column',
             id: 'policy_update',
-            name: 'Policy Update',
+            name: 'Party Management',
             data: [
                 { name: 'Email', y: 80 },
                 { name: 'Address', y: 70 },

@@ -1,4 +1,3 @@
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 
 import NavElement, {
@@ -7,6 +6,7 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 
 export interface TaxFormPreviewer {
     carrier: string;

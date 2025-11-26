@@ -153,7 +153,7 @@ export const DeceasedRecord = ({
             <div className="my-2">
                 <Checkbox
                     isCheckedByDefault={currentDeceased.isDeceased}
-                    onClick={(e) =>
+                    onClick={() =>
                         onPartySelection(!currentDeceased?.isDeceased)
                     }
                     id={`is-deceased-${owner?.party.partyId}`}

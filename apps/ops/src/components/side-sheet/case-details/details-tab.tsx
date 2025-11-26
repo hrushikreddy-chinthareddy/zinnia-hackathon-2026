@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { IconType, Icon } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -11,8 +10,8 @@ import NavElement, {
 import { TranslationFiles } from '@deps/config/translations';
 import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
-
-import { formatCurrencyLocal } from '../../../../../../packages/utils/src/strings';
+import { formatCurrencyLocal } from '@deps/utils/strings';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export const DEFAULT_ERROR_STRING = '--';
 

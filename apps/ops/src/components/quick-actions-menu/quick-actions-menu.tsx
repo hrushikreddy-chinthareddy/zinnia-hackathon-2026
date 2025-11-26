@@ -1,9 +1,7 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { Reason } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
-import { TFunction, useTranslation } from 'next-i18next';
+import { useTranslation, TFunction } from 'next-i18next';
 import React from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -35,7 +33,6 @@ import {
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { searchPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
-import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import { Source } from '@deps/types/search';
 import {
@@ -43,28 +40,16 @@ import {
     PolicyClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { TransactionPermission } from '@deps/utils/auth';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { Reason } from '@zinnia/api-types/types/sor';
 
-import styles from './quick-actions-menu.module.css';
-
+import { TextButton } from './quick-action-text-button';
 interface TranslateProps {
     t: TFunction;
 }
-
-const TextButton = ({ t }: TranslateProps) => {
-    return (
-        <div className={clsx('md:flex', styles.quickActions)}>
-            <p className="text-links">{t('label')}</p>
-            <ChevronDown
-                className="simple-transition group-data-[state=open]:rotate-180"
-                height={16}
-                width={16}
-            />
-        </div>
-    );
-};
 
 const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
     function iconButtonForwardRef(props, forwardRef) {
@@ -621,11 +606,10 @@ const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
     return (
         <>
             <div className="hidden md:block">
-                <MenuContextual trigger={<TextButton t={t} />}>
+                <MenuContextual trigger={<TextButton label={t('label')} />}>
                     <MenuContextualContent policy={policy} t={t} />
                 </MenuContextual>
             </div>
-
             {/* small viewports */}
             <div className="md:hidden">
                 <ReactTooltip.Provider>

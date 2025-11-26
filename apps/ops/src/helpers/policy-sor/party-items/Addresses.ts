@@ -1,7 +1,6 @@
-import { Address } from '@zinnia/api-types/types/sor';
-
 import { sortAddressesByType } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { isEndDated } from '@deps/helpers/date.helpers';
+import { Address } from '@zinnia/api-types/types/sor';
 
 import { BasePartyItems } from './BasePartyItems';
 

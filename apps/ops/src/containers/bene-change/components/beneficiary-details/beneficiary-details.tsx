@@ -1,9 +1,3 @@
-import {
-    Email,
-    PartyRole,
-    Policy,
-    PreferredCommunicationType,
-} from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -26,6 +20,12 @@ import { ReactComponent as ChevronUp } from '@deps/styles/elements/icons/icons_o
 import { ReactComponent as FingerprintIcon } from '@deps/styles/elements/icons/icons_outlined/fingerprint.svg';
 import { ReactComponent as ContactIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
 import { ReactComponent as LocationIcon } from '@deps/styles/elements/icons/navigation/location.svg';
+import {
+    Email,
+    PartyRole,
+    Policy,
+    PreferredCommunicationType,
+} from '@zinnia/api-types/types/sor';
 
 import AddressDetails from './address-details/address-details';
 import {

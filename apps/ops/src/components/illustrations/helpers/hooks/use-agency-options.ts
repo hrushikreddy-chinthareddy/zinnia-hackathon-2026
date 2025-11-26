@@ -1,5 +1,4 @@
 import { UseQueryResult } from '@tanstack/react-query';
-import { AliasModel } from '@xd/api-types/dist/generated-types/partyreference';
 // AgencyOption should be in types directory not in a helpers module
 import { useCallback, useDebugValue, useMemo } from 'react';
 

@@ -1,3 +1,10 @@
+import { isEndDated } from '@deps/helpers/date.helpers';
+import {
+    convertKebabedDateString,
+    toTitleCase,
+    buildFullName,
+} from '@deps/helpers/string.helpers';
+import { DataDefinition } from '@deps/types/data';
 import {
     Address,
     Email,
@@ -6,14 +13,6 @@ import {
     Party,
     Phone,
 } from '@zinnia/api-types/types/sor';
-
-import { isEndDated } from '@deps/helpers/date.helpers';
-import {
-    convertKebabedDateString,
-    toTitleCase,
-    buildFullName,
-} from '@deps/helpers/string.helpers';
-import { DataDefinition } from '@deps/types/data';
 
 export interface PolicyOwnerDto {
     fullName: string;

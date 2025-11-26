@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
+import { TFunction } from 'next-i18next';
+
+import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 import {
     AccountType,
     BankAccountBase,
     BankAccountPurpose,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
-
-import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
 
 import {
     BankDetails,

@@ -26,10 +26,8 @@ import {
     SendDocumentFormParts,
 } from '@deps/models/case/send-document';
 import { TaskStatus } from '@deps/models/case/task-instance';
-
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { updateTask } from '@deps/queries/api/v2/task';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { getFormSelectionConfig } from './form-selection.helpers';
 import TransactionDocumentSelection from './transaction-document-selection';
@@ -77,7 +75,6 @@ function FormSelectionStep({
     const { setFormProgram } = formState;
     const [isLoading, setIsLoading] = useState(false);
     const { setSubmitFailed } = useNigoEntry();
-    const [timer] = useState(performance.now());
 
     useEffect(() => {
         setTransactionType((ogData) => ({
@@ -106,8 +103,7 @@ function FormSelectionStep({
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
-                buildFormV2(TaskStatus.Completed, documentData, formState),
-                timer
+                buildFormV2(TaskStatus.Completed, documentData, formState)
             );
 
             if (successfulCaseUpdate && successfulCaseUpdate.id) {
@@ -120,7 +116,7 @@ function FormSelectionStep({
         }
 
         setIsLoading(false);
-    }, [documentData, formState, setSubmitFailed, timer]);
+    }, [documentData, formState, setSubmitFailed]);
 
     useEffect(() => {
         if (

@@ -1,18 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
-import { PartyReferenceDataModel } from '@xd/api-types/dist/generated-types/partyreference';
-import {
-    BulkCheckTuple,
-    checkIfUserHasAdvisorsExcel,
-    checkIfUserHasCaseInsightsAccess,
-    checkIfUserHasDashboardAccess,
-    checkIfUserHasPolicyIndexAccess,
-    checkIfUserHasUsageAccess,
-    checkIfUserIsSuperAdmin,
-    checkRelation,
-    createBulkCheckBodyRequest,
-    FgaRoles,
-} from '@zinnia/utils';
 import { createContext, ReactNode, useContext } from 'react';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -26,8 +13,21 @@ import {
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
+import {
+    BulkCheckTuple,
+    checkIfUserHasAdvisorsExcel,
+    checkIfUserHasCaseInsightsAccess,
+    checkIfUserHasDashboardAccess,
+    checkIfUserHasPolicyIndexAccess,
+    checkIfUserHasUsageAccess,
+    checkIfUserIsSuperAdmin,
+    checkRelation,
+    createBulkCheckBodyRequest,
+    FgaRoles,
+} from '@deps/utils/auth';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 
 import { useOptimizely } from './OptimizelyContext';
 
@@ -62,6 +62,7 @@ export interface PermissionsContextProps {
     isZinniaInternalViewer: boolean;
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
+    hasPermissionToPrioritizeCases: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -211,6 +212,19 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         queryKey: ['writeClientCaseCarriers', partyId],
         queryFn: () =>
             getCarriersListQuery(UserPermission.AllowWriteClientCase, partyId),
+        enabled: !!partyId,
+        initialData: [],
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+        initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
+    });
+
+    const { data: writeCasePriority } = useQuery({
+        queryKey: ['writeCasePriority', partyId],
+        queryFn: () =>
+            getCarriersListQuery(
+                UserPermission.AllowWriteCasePriority,
+                partyId
+            ),
         enabled: !!partyId,
         initialData: [],
         staleTime: FIFTEEN_MINUTES_IN_MS,
@@ -413,6 +427,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
                 hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
+                hasPermissionToPrioritizeCases: !!writeCasePriority,
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements

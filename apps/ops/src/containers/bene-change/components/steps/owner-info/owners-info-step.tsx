@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
 
@@ -9,6 +8,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import {
     getConfigFlic,

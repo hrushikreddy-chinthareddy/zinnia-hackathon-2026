@@ -11,12 +11,10 @@ import {
     SendDocumentFormParts,
     SendDocumentFormPartsAdditionData,
 } from '@deps/models/case/send-document';
-
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { ReactComponent as AddDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
 import { ReactComponent as TrashDocumentIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import AssistiveText, {

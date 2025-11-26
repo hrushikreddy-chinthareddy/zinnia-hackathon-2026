@@ -26,8 +26,9 @@ export function parseJsonValue(value: string) {
             return value;
         }
     }
-
-    // Return non-JSON-like strings as is
+    if (typeof value === 'string' && (value === 'true' || value === 'false')) {
+        return value === 'true';
+    }
     return value;
 }
 
@@ -46,6 +47,9 @@ export const stringifyObjectValue = (v: unknown) => {
                     return acc;
                 }, {})
         );
+    }
+    if (v !== null && typeof v === 'boolean') {
+        return String(v);
     }
     return v;
 };

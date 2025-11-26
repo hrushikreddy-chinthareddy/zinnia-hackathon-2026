@@ -1,4 +1,3 @@
-import { Transaction } from '@xd/api-types/dist/generated-types/sor';
 import {
     Table,
     TableBody,
@@ -16,6 +15,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import styles from './transaction-wrapper.module.css';
 
@@ -75,8 +75,18 @@ export const TransactionsTable = ({
                         <>
                             {paginatedData.map((transaction, index) => (
                                 <TableRow
+                                    tabIndex={0}
                                     key={`${transaction.transactionId}-${index}`}
                                     onClick={() => onTableRowClick(transaction)}
+                                    onKeyDown={(e) => {
+                                        if (
+                                            e.key === 'Enter' ||
+                                            e.key === ' '
+                                        ) {
+                                            e.preventDefault();
+                                            onTableRowClick(transaction);
+                                        }
+                                    }}
                                 >
                                     <TableCell>
                                         {t(

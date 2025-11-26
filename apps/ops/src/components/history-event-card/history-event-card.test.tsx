@@ -1,10 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import {
-    Transaction,
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
-import { toTitleCase } from '@zinnia/utils';
 
 import { MittEvents, SideSheetContext } from '@deps/contexts/SideSheetContext';
 import useEmitter from '@deps/hooks/useEmitter';
@@ -12,6 +6,12 @@ import {
     mockPolicy,
     mockPremiumSystematicProgram,
 } from '@deps/jest/data/mockPolicy';
+import { toTitleCase } from '@deps/utils/strings';
+import {
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import HistoryEventCard from './history-event-card';
 import { getHistoryEventCardValues } from './history-event-card.helpers';

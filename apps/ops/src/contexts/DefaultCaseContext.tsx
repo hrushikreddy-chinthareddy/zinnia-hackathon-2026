@@ -1,13 +1,10 @@
-import {
-    IdentificationType,
-    Policy,
-} from '@xd/api-types/dist/generated-types/sor';
-import { policyOwner } from '@xd/utils/dist';
 import { createContext, useContext, useState } from 'react';
 
 import { formatSSN } from '@deps/helpers/string.helpers';
 import { DefaultDataEntryTask } from '@deps/models/case/default-case';
 import { UserProfile } from '@deps/models/user-profile';
+import { policyOwner } from '@deps/utils/data';
+import { IdentificationType, Policy } from '@zinnia/api-types/types/sor';
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 export const defaultCorrespondenceState = {

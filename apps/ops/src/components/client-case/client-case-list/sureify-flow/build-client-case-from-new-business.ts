@@ -1,4 +1,3 @@
-import { toTitleCase } from '@xd/utils/dist';
 import { merge } from 'lodash';
 import last from 'lodash/last';
 
@@ -7,6 +6,7 @@ import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { NewBusiness, party, Policy } from '@deps/types/new-business';
 import { LoggingContext } from '@deps/utils/server-logging';
+import { toTitleCase } from '@deps/utils/strings';
 
 import { buildConversionData } from './conversions';
 import { getAgencyIdFromHierarchy } from './get-agency-id-from-hierarchy';

@@ -1,11 +1,10 @@
+import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     Address,
     BankAccount,
     Email,
     Phone,
 } from '@zinnia/api-types/types/sor';
-
-import { isEndDated } from '@deps/helpers/date.helpers';
 
 export abstract class BasePartyItems<
     T extends Address | BankAccount | Email | Phone

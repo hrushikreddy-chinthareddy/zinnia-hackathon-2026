@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { capitalize } from '@xd/utils/src/strings';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -33,6 +32,7 @@ import {
     IllustrationsClientCase,
     TransactionType,
 } from '@deps/types/illustrations';
+import { capitalize } from '@deps/utils/strings';
 
 import styles from './case-summary.module.css';
 

@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/react';
-import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { t } from 'i18next';
 
 import {
@@ -9,6 +8,7 @@ import {
 } from '@deps/components/badge/badge.helpers';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 import PolicyInfo, {
     PolicyBadgeStatus as PolicyBadgeStatusComponent,

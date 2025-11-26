@@ -47,13 +47,11 @@ interface RenewalFormControls {
 const RenewalFormActions = ({
     userId,
     clientId,
-    caseId,
     setIsLoading,
 }: RenewalFormControls) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const router = useRouter();
     const { areDiaryNotesViewed } = useContext(DiaryNotesContext);
-    const [timer] = useState(performance.now());
     const [taskApiError, setTaskApiError] = useState('');
 
     const {
@@ -147,8 +145,7 @@ const RenewalFormActions = ({
             const data = await updateTask(
                 initialForm.caseId,
                 initialForm.taskId,
-                buildRenewalFormV2(TaskStatus.Completed),
-                timer
+                buildRenewalFormV2(TaskStatus.Completed)
             );
             if (data?.id) {
                 if (isLocalStorageEnabled()) {

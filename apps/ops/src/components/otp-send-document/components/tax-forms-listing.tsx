@@ -1,4 +1,3 @@
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Table,
     TableHeader,
@@ -22,6 +21,7 @@ import NavElement, {
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 
 const toggleFormSelection = (
     selectedForm: TaxForm | TaxformResponse,
@@ -173,7 +173,7 @@ const TaxFormsListing = ({
                                                         }
                                                         height={'16px'}
                                                         width={'16px'}
-                                                        className="text-primary"
+                                                        className="tooltip-primary"
                                                     />
                                                 }
                                             >

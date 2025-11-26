@@ -29,9 +29,21 @@ export type CaseAdditionalData = {
     value?: string;
 };
 
+export type caseProcessingDetails = {
+    detailType: string;
+    details: {
+        performedBy?: string;
+        source?: string;
+        partyId?: string;
+        applicationType?: string;
+    };
+    eventTimeStamp: number;
+};
+
 export type Case = {
     additionalData: AdditionalDataInstance;
     applicationType?: string;
+    escalated?: boolean;
     carrier: string;
     caseAdditionalData?: CaseAdditionalData[];
     caseStatus: Statuses;
@@ -68,16 +80,7 @@ export type Case = {
     updatedAt: string;
     caseResult?: string;
     caseResultDetail?: string;
-    caseProcessingDetails?: {
-        detailType: string;
-        details: {
-            performedBy?: string;
-            source?: string;
-            partyId?: string;
-            applicationType?: string;
-        };
-        eventTimeStamp: number;
-    }[];
+    caseProcessingDetails?: caseProcessingDetails[];
 };
 
 // Case Type and a Case's Process are the same
@@ -126,6 +129,7 @@ export enum Processes {
     PhoneNumberChange = 'Phone Change',
     BankChange = 'Bank Info Change',
     CommunicationPreferenceChange = 'Communication Preference Change',
+    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
     SystematicProgramUpdate = 'Systematic Program Update',
     SystematicProgramSetup = 'Systematic Program Setup',
     SetupPayment = 'Setup Payment',
@@ -328,3 +332,9 @@ export enum AgingTimeRanges {
 
 export type AgingTimeRangesKeys = keyof typeof AgingTimeRanges;
 export type AgingTimeRangesKeysExtended = keyof typeof AgingTimeRanges | 'All';
+
+export enum LOADING_TIME_CONFIG {
+    NO_MESSAGE_THRESHOLD = 500,
+    GATHERING_THRESHOLD = 2000,
+    ORGANIZING_THRESHOLD = 5000,
+}

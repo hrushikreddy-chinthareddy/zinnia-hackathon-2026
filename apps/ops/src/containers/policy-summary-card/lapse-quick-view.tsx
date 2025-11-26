@@ -1,4 +1,3 @@
-import { FeatureType } from '@xd/api-types/dist/generated-types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
@@ -8,6 +7,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import BaseDeathBenefit from './display-fields/base-death-benefit';
 import { QuickViewRoot } from './quick-view-root/quick-view-root';

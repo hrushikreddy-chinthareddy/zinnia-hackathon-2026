@@ -2,7 +2,7 @@ import {
     ClientDetailsDto,
     SourceDocument,
     UserResponse,
-} from '@xd/api-types/dist/generated-types/knowledgebase';
+} from '@zinnia/api-types/types/knowledgebase';
 
 export enum KnowledgeBasePages {
     CHAT = 'chat',

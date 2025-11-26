@@ -1,8 +1,8 @@
-import { BankDetailList } from '@zinnia/api-types/types/aggregation';
 import { AxiosResponse } from 'axios';
 
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { BankDetailList } from '@zinnia/api-types/types/aggregation';
 
 import { client } from '../api-utils/client';
 

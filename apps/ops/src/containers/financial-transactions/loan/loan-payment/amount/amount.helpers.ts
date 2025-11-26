@@ -1,7 +1,7 @@
-import { PolicyFeature, FeatureType } from '@zinnia/api-types/types/sor';
 import dayjs, { Dayjs } from 'dayjs';
 
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { PolicyFeature, FeatureType } from '@zinnia/api-types/types/sor';
 
 export const isDateAllowed = (
     dayjsDate: Dayjs,

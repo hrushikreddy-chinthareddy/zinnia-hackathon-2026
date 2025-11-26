@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -27,6 +26,7 @@ import {
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { buildRoleChangeRequestBody } from '../../role-change-helper';
 

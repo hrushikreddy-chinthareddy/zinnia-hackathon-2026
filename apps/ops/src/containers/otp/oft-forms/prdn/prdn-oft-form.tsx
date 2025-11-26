@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import CedingCompanySignature from '@deps/components/ceding-company-signature/ceding-company-signature';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -92,7 +92,7 @@ export default function PrdnOftWithdrawalForm() {
                 showContractReplacement={showContractReplacement}
             />
 
-            <CedingCompanyDistribution
+            <CedingCompanySignature
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />

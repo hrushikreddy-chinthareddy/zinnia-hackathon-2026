@@ -7,8 +7,10 @@ import NextDocument, {
     Main,
     NextScript,
 } from 'next/document';
+import Script from 'next/script';
 import { parseCookies } from 'nookies';
 
+import { PendoAnalyticsScript as PendoAnalyticsSnippet } from '@deps/components/analytics/PendoAnalyticsSnippet';
 import { getInitialData } from '@deps/helpers/query-data.helpers';
 
 import i18nextConfig from '../../next-i18next.config';
@@ -28,6 +30,9 @@ const Document = ({ company, theme }: DocumentContextProps) => {
                     rel="stylesheet"
                     href={`/styles/themes/${company?.toLowerCase()}/theme.css`}
                 />
+                <Script id="pendo-snippet" strategy="beforeInteractive">
+                    {PendoAnalyticsSnippet}
+                </Script>
             </Head>
             <body>
                 <Main />

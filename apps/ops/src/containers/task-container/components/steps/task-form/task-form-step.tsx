@@ -36,6 +36,7 @@ type TaskFormStepProps = {
     isSaveAsDraftEnabled?: boolean;
     isContinueButtonEnabled?: boolean;
     stepIndex?: number;
+    overrideTitle?: boolean;
 };
 
 const TaskFormStep = ({
@@ -46,13 +47,14 @@ const TaskFormStep = ({
     isSaveAsDraftEnabled = false,
     isContinueButtonEnabled,
     stepIndex,
+    overrideTitle = false,
 }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `taskManagement.taskForm`,
     });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
-    const { task, correlationId, formErrors } = formState;
+    const { task, correlationId } = formState;
     const formRef = createRef<Form>();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -109,7 +111,10 @@ const TaskFormStep = ({
         <WorkflowCard
             className="!gap-0"
             title={
-                (task.taskName || taskMetadata?.title) ?? (t('title') as string)
+                overrideTitle
+                    ? taskMetadata?.title ?? (t('title') as string)
+                    : (task.taskName || taskMetadata?.title) ??
+                      (t('title') as string)
             }
             subtitle={taskMetadata?.description as string}
             footerContent={

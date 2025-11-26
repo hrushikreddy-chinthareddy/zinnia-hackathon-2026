@@ -32,7 +32,6 @@ const TextField = (props: TextFieldProps) => {
         onChange,
         onBlur,
         onFocus,
-        onKeyDown,
         hideError,
         readOnly,
     } = props;

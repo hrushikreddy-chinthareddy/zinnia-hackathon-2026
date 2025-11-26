@@ -1,4 +1,3 @@
-import { TransactionStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -8,6 +7,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { isObjectKey } from '@deps/utils/types';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 type ChipStatusText = Statuses | TransactionStatus;
 export interface ChipStatusProps {

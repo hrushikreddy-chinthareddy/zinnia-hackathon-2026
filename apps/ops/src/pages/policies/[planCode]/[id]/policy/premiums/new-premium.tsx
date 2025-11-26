@@ -1,10 +1,9 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { PageHead } from '@deps/components/page-title';
 import NewPremiumContainer from '@deps/containers/financial-transactions/premium/new-premium/new-premium-container';
 import { NewPremiumProvider } from '@deps/contexts/transactions/NewPremiumContext';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface NewPremiumProps {
     policy: Policy;

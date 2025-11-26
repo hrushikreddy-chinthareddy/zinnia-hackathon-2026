@@ -75,8 +75,8 @@ export default function SbgcRmdWithdrawalForm() {
             },
         });
 
-        setFormProgram((prev) => ({
-            ...prev,
+        const newRMDFormType = {
+            ...formProgram,
             program: {
                 text:
                     rmdFormType === RmdFormType.QCD
@@ -89,8 +89,10 @@ export default function SbgcRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: prev.qcd ? [...prev.qcd] : [],
-        }));
+            qcd: formProgram.qcd ? [...formProgram.qcd] : [],
+        };
+
+        setFormProgram(newRMDFormType);
     }, [initialForm, rmdFormType]);
 
     const hasTpaAuthorization =

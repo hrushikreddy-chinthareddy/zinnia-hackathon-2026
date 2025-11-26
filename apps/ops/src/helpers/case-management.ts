@@ -88,6 +88,7 @@ type AdditionalFiltersResult = {
     category?: string;
     reason?: string;
     detailedReason?: string;
+    escalated?: boolean;
     issueStatus?: ExceptionStatus[];
 };
 
@@ -258,6 +259,9 @@ export const getAdditionalFilters = (
 
     if (additionalFilters.issueStatus) {
         result['issueStatus'] = Array.from(additionalFilters.issueStatus);
+    }
+    if (additionalFilters.escalated !== null) {
+        result['escalated'] = additionalFilters.escalated;
     }
 
     return result;

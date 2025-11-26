@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
@@ -32,6 +31,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { convertToCamelCase } from '@deps/utils/strings';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helpers';
 import nextI18nextConfig from 'next-i18next.config';
 

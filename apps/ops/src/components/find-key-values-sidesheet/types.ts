@@ -1,10 +1,11 @@
+import { TFunction } from 'next-i18next';
+
 import {
     Party,
     Policy,
     ProductType,
     Transaction,
-} from '@xd/api-types/dist/generated-types/sor';
-import { TFunction } from 'next-i18next';
+} from '@zinnia/api-types/types/sor';
 
 export type DataField = string | number | boolean | null;
 
@@ -55,6 +56,8 @@ export type ExpandCollapse = typeof Expand | typeof Collapse;
 export interface FindAllKeyValuesSidebarProps {
     planCode: string;
     policyNumber: string;
+    container?: any;
+    handleCalendarOpen?: (isOpen: boolean) => void;
 }
 
 export enum FormatterType {

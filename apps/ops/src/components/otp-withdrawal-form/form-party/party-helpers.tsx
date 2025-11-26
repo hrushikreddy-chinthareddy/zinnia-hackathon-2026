@@ -1,4 +1,3 @@
-import { PartyType } from '@xd/api-types/dist/generated-types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
@@ -20,6 +19,7 @@ import {
     PartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import { IFieldConfig, selectVarientByConfig } from './form-party';
 

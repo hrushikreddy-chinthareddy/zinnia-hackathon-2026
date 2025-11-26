@@ -1,6 +1,6 @@
-import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { createContext } from 'react';
 
+import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
@@ -24,7 +24,6 @@ import {
     FormValidationErrors,
     FormData,
     FormParts,
-    FormSurrenderingCompany,
     FormAdditionalWaiver,
     CaseStatus,
     FormOL4753Data,
@@ -37,6 +36,7 @@ import {
     SystematicSpecialPrograms,
 } from '@deps/models/case/withdrawal/case';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
     formSubtype?: FormSubtype;
@@ -63,7 +63,7 @@ export interface OtpWithdrawalFormState {
     fundWithdrawnMethod: string | null;
     initialForm: ActiveWithdrawalCase;
     ownerStateOfResidence: string | null;
-    formSurrenderingCompany: FormSurrenderingCompany | null;
+    formSurrenderingCompany: FormSurrenderingSignature | null;
     contractIssueState?: string;
     parties?: LifeCadParty[] | Party[];
     partyRoles?: PolicyPartyRoles[];
@@ -122,9 +122,7 @@ export interface OtpWithdrawalFormState {
     setOwnerStateOfResidence: React.Dispatch<
         React.SetStateAction<string | null>
     >;
-    setFormSurrenderingCompany: React.Dispatch<
-        React.SetStateAction<FormSurrenderingCompany | null>
-    >;
+    setFormSurrenderingCompany: React.Dispatch<React.SetStateAction<any>>;
     setFormSpecialInstruction: React.Dispatch<
         React.SetStateAction<FormSpecialInstruction>
     >;
@@ -170,7 +168,7 @@ export const defaultFormDataContext = {
     fundWithdrawnMethod: '',
     initialForm: {} as ActiveWithdrawalCase,
     ownerStateOfResidence: '',
-    formSurrenderingCompany: {} as FormSurrenderingCompany,
+    formSurrenderingCompany: {} as FormSurrenderingSignature,
     contractIssueState: '',
     parties: [],
     partyRoles: [],

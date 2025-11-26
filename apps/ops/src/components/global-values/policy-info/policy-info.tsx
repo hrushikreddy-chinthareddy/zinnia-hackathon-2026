@@ -1,5 +1,4 @@
 import { Skeleton } from '@radix-ui/themes';
-import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
@@ -22,6 +21,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 export const PolicyNumber = ({
     policyNumber,

@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+
 import { Email, EmailType } from '@zinnia/api-types/types/sor';
 
 export const generateEmail = (): Email => {

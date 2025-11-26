@@ -1,13 +1,3 @@
-import {
-    CaseCountInput,
-    CaseCountOutput,
-    CaseTimePredictInput,
-    CaseTimePredictOutput,
-    CompletedCaseTimeInput,
-    CompletedCaseTimeOutput,
-    CompletedCaseTimeOutputLevel1,
-    HTTPValidationError,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import {
@@ -42,6 +32,16 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    CaseCountInput,
+    CaseCountOutput,
+    CaseTimePredictInput,
+    CaseTimePredictOutput,
+    CompletedCaseTimeInput,
+    CompletedCaseTimeOutput,
+    CompletedCaseTimeOutputLevel1,
+    HTTPValidationError,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     baseAppUrl,
@@ -508,5 +508,32 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
             error
         );
         return error.response;
+    }
+};
+
+export const escalateCase = async (
+    caseId: string,
+    escalate: boolean
+): Promise<AxiosResponse | null> => {
+    try {
+        const url = `${baseCasesUrl2}/${caseId}/escalate`;
+
+        const response = await client.patch(url, {
+            escalated: escalate,
+        });
+        browserLogInfo('cases::Successfully created a case', {
+            url: baseCasesUrl,
+            caseId,
+            function: 'cases.escalateCase',
+        });
+        return response;
+    } catch (error: any) {
+        browserLogError('cases::Failed to create a case', {
+            ...parseErrorInformation(error),
+            url: baseCasesUrl,
+            caseId,
+            function: 'cases.escalateCase',
+        });
+        return error;
     }
 };

@@ -10,8 +10,9 @@ import {
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../../utils';
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
     api: {
@@ -92,9 +93,14 @@ export default withAuthAndLogging(
                 },
             });
 
-            while (true) {
+            let readerDone = false;
+            while (!readerDone) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                readerDone = done === true;
+
+                if (done) {
+                    break;
+                }
 
                 buffer += decoder.decode(value, { stream: true });
                 const parts = buffer.split('\n\n');
