@@ -10,7 +10,6 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     DEFAULT_ERROR_STRING,
@@ -31,9 +30,7 @@ const SystematicProgramsActiveTable = ({
     programs,
     hasActivePrograms,
 }: SystematicProgramsActiveTableProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'policy.systematicPrograms',
-    });
+    const { t } = useTranslation();
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
         if (programs.length === 1)
@@ -50,39 +47,39 @@ const SystematicProgramsActiveTable = ({
                 <TableRow>
                     <TableHeaderCell className={styles.typeCell}>
                         <Content
-                            details={t('type') as string}
+                            details={t('allFields.type') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.paymentAmountCell}>
                         <Content
-                            details={t('paymentAmount') as string}
+                            details={t('allFields.paymentAmount') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.frecuencyCell}>
                         <div className={styles.tableHeaderContainer}>
                             <Content
-                                details={t('frequency') as string}
+                                details={t('allFields.frequency') as string}
                                 variant={ContentVariant.BodyBold}
                             />
                         </div>
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.nextPaymentCell}>
                         <Content
-                            details={t('nextPayment') as string}
+                            details={t('allFields.nextPayment') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.paymentTypeCell}>
                         <Content
-                            details={t('paymentType') as string}
+                            details={t('allFields.paymentType') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
                     <TableHeaderCell>
                         <Content
-                            details={t('actions') as string}
+                            details={t('allFields.actions') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
@@ -195,7 +192,9 @@ const SystematicProgramsActiveTable = ({
                                                     <FooterAction
                                                         footerContent={{
                                                             ...program.manageAction,
-                                                            text: t('manage'),
+                                                            text: t(
+                                                                'allFields.manage'
+                                                            ),
                                                         }}
                                                     />
                                                 )}
@@ -203,7 +202,9 @@ const SystematicProgramsActiveTable = ({
                                                     <FooterAction
                                                         footerContent={{
                                                             ...program.cancelAction,
-                                                            text: t('cancel'),
+                                                            text: t(
+                                                                'allFields.cancel'
+                                                            ),
                                                         }}
                                                     />
                                                 )}

@@ -324,7 +324,6 @@ export const PremiumsSubPage = () => {
             )}
             {systematicProgramTablesEnabled && (
                 <SystematicProgramsCard
-                    title="Systematic Programs"
                     programs={[
                         {
                             arrangementType: ArrangementType.PAYMENT,

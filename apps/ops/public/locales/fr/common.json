@@ -457,7 +457,16 @@
         "timeline": "Ponctualité",
         "taxes": "Impôts",
         "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
-        "selectDateInRange": "Sélectionnez une date dans la plage:"
+        "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "showHistory": "Afficher l'historique",
+        "setUp": "Configurer",
+        "systemProgramStatus": "Statut",
+        "nextPayment": "Prochain paiement",
+        "paymentType": "Type de paiement",
+        "actions": "Actions",
+        "manage": "Gérer",
+        "cancel": "Annuler",
+        "lastPaymentDate": "Date du dernier paiement"
     },
     "enums": {
         "LIFE": "Vie",
@@ -5164,21 +5173,6 @@
                     "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
                 }
             }
-        },
-        "systematicPrograms": {
-            "showHistory": "Afficher l'historique",
-            "setUp": "Configurer",
-            "type": "Type",
-            "paymentAmount": "Montant du paiement",
-            "frequency": "Fréquence",
-            "nextPayment": "Prochain paiement",
-            "paymentType": "Type de paiement",
-            "actions": "Actions",
-            "manage": "Gérer",
-            "cancel": "Annuler",
-            "lastPaymentDate": "Date du dernier paiement",
-            "status": "Statut",
-            "terminationDate": "Date de résiliation"
         }
     },
     "transactions": {

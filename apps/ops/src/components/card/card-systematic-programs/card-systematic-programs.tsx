@@ -8,7 +8,6 @@ import Toggle, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 
 import {
     SystematicProgramsCardProps,
@@ -21,13 +20,10 @@ import SystematicProgramsActiveTable from './systematic-programs-tables/systemat
 import SystematicProgramsTerminatedTable from './systematic-programs-tables/systematic-program-terminated-table';
 
 const SystematicProgramsCard = ({
-    title,
     programs,
     setUpAction,
 }: SystematicProgramsCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'policy.systematicPrograms',
-    });
+    const { t } = useTranslation();
     const [showTerminatedOrSuspended, setShowTerminatedOrSuspended] =
         useState(false);
 
@@ -42,7 +38,7 @@ const SystematicProgramsCard = ({
         (program) => program.terminatedOrSuspendedPrograms.length > 0
     );
 
-    const label = t('showHistory') || 'Show history';
+    const label = t('allFields.showHistory') || 'Show history';
 
     return (
         <CardSection
@@ -52,14 +48,14 @@ const SystematicProgramsCard = ({
                 <div className={styles.header}>
                     <div className={styles.setUp}>
                         <Typography variant={TypographyVariant.H2}>
-                            {title}
+                            {t('allFields.systematicPrograms')}
                         </Typography>
 
                         {setUpAction && (
                             <FooterAction
                                 footerContent={{
                                     ...setUpAction,
-                                    text: `+ ${t('setUp')}`,
+                                    text: `+ ${t('allFields.setUp')}`,
                                 }}
                             />
                         )}

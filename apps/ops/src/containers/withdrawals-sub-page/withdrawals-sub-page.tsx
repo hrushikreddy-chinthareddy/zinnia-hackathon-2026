@@ -379,7 +379,6 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             )}
             {systematicProgramTablesEnabled && (
                 <SystematicProgramsCard
-                    title="Systematic Programs"
                     programs={[
                         {
                             arrangementType: ArrangementType.WITHDRAWAL,

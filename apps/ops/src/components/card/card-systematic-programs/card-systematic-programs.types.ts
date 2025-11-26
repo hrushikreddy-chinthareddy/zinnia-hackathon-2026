@@ -17,7 +17,6 @@ export interface SystematicProgramsDetails {
 }
 
 export interface SystematicProgramsCardProps {
-    title: string;
     programs: SystematicProgramsDetails[];
     setUpAction?: FooterContent;
 }

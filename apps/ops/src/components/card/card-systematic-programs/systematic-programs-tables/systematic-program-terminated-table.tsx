@@ -12,7 +12,6 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { TranslationFiles } from '@deps/config/translations';
 import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -30,9 +29,7 @@ const SystematicProgramsTerminatedTable = ({
     programs,
     showTerminatedOrSuspended,
 }: SystematicProgramsTerminatedTableProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'policy.systematicPrograms',
-    });
+    const { t } = useTranslation();
     const hasTerminatedOrSuspendedPrograms = programs.some(
         (program) => program.terminatedOrSuspendedPrograms.length > 0
     );
@@ -43,34 +40,36 @@ const SystematicProgramsTerminatedTable = ({
                 <TableRow>
                     <TableHeaderCell className={styles.typeCell}>
                         <Content
-                            details={t('type') as string}
+                            details={t('allFields.type') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.paymentAmountCell}>
                         <Content
-                            details={t('lastPaymentDate') as string}
+                            details={t('allFields.lastPaymentDate') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.frecuencyCell}>
                         <div className={styles.tableHeaderContainer}>
                             <Content
-                                details={t('frequency') as string}
+                                details={t('allFields.frequency') as string}
                                 variant={ContentVariant.BodyBold}
                             />
                         </div>
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.nextPaymentCell}>
                         <Content
-                            details={t('status') as string}
+                            details={
+                                t('allFields.systemProgramStatus') as string
+                            }
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>
 
                     <TableHeaderCell>
                         <Content
-                            details={t('terminationDate') as string}
+                            details={t('allFields.terminationDate') as string}
                             variant={ContentVariant.BodyBold}
                         />
                     </TableHeaderCell>

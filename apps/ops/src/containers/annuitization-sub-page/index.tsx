@@ -137,7 +137,6 @@ export const AnnuitizationSubPage = () => {
             )}
             {systematicProgramTablesEnabled && (
                 <SystematicProgramsCard
-                    title="Systematic Programs"
                     programs={[
                         {
                             arrangementType: ArrangementType.PAYOUT,
