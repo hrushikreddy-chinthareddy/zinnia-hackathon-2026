@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 export const TransactionActivityTooltip = () => {
     const { t } = useTranslation();
 
-    return <p>{t('usage.activity.toolTip.description')}</p>;
+    return <p>{t('allFields.activityTooltipDescription')}</p>;
 };
 
 export const transactionActivityTooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =

@@ -458,7 +458,13 @@
         "timeliness": "Cronología",
         "taxes": "Impuestos",
         "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
-        "selectDateInRange": "Seleccione una fecha dentro del rango:"
+        "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio",
+        "zinniaLiveTransactionActivityDescription": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro.",
+        "activityTooltipDescription": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa la ruta de navegación encima del gráfico para volver a todos los tipos de transacción.",
+        "illustrationsActivityTitle": "Actividad de Ilustraciones",
+        "illustrationsActivityDescription": "Compara las ilustraciones creadas con las seleccionadas para su aplicación a lo largo del tiempo.",
+        "illustrationsActivityTooltip": "Este gráfico compara ilustraciones creadas con las seleccionadas para su aplicación. 'Seleccionadas' puede ser mayor que 'Creadas' porque una ilustración se creó antes pero fue seleccionada en el período de tiempo mostrado."
     },
     "enums": {
         "LIFE": "Vida",
@@ -8691,15 +8697,6 @@
             "zinniaLiveCaseViews": {
                 "title": "Los casos más vistos de Zinnia Live",
                 "description": "Muestra el número de visualizaciones de casos únicamente para grupos de usuarios seleccionados."
-            }
-        },
-        "activity": {
-            "zinniaLiveTransactionActivity": {
-                "title": "Actividad de Transacciones de Autoservicio",
-                "description": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro."
-            },
-            "toolTip": {
-                "description": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa la ruta de navegación encima del gráfico para volver a todos los tipos de transacción."
             }
         }
     },

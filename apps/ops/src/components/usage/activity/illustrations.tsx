@@ -127,16 +127,14 @@ export const IllustrationsActivity = () => {
         <div className={styles.wrapper}>
             <div className={styles.card}>
                 <UsageHeaderLayout
-                    title={String(
-                        t('usage.activity.illustrationsActivity.title')
-                    )}
+                    title={String(t('allFields.illustrationsActivityTitle'))}
                     description={String(
-                        t('usage.activity.illustrationsActivity.description')
+                        t('allFields.illustrationsActivityDescription')
                     )}
                     titleToolTip={<IllustrationsActivityTooltip />}
                     data={normalizedIllustrationsActivityData}
                     csvFileName={generateIllustrationsCSVFileName(
-                        t('usage.activity.illustrationsActivity.title'),
+                        t('allFields.illustrationsActivityTitle'),
                         productName,
                         timerange
                     )}

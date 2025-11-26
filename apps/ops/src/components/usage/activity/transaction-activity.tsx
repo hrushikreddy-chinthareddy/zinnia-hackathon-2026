@@ -14,10 +14,21 @@ import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
 import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
+import {
+    ApiRoles,
+    colors,
+    generateCSVFileName,
+    ROLE_OPTIONS,
+} from '@deps/components/usage/utils';
 import { getUserTransactionCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserTransactionGroupByEnum } from '@zinnia/api-types/types/analytics';
 
+import styles from './Activity.module.css';
+import {
+    TransactionActivityTooltip,
+    transactionActivityTooltipFormatter,
+} from './transaction-activity-tooltip';
 import {
     TimeframeFilterOptions,
     aggregateByCategory,
@@ -27,13 +38,6 @@ import {
     buildTopLevelSeries,
     buildDrilldownSeries,
 } from './utils';
-import { ApiRoles, colors, generateCSVFileName, ROLE_OPTIONS } from '../utils';
-import styles from './Activity.module.css';
-import {
-    TransactionActivityTooltip,
-    transactionActivityTooltipFormatter,
-} from './transaction-activity-tooltip';
-
 export const TransactionActivity = () => {
     const [role, setRole] = useState('All');
     const { t } = useTranslation();
@@ -108,22 +112,19 @@ export const TransactionActivity = () => {
             <div className={styles.card}>
                 <UsageHeaderLayout
                     title={String(
-                        t(
-                            'usage.activity.zinniaLiveTransactionActivity.title'
-                        ) ?? ''
+                        t('allFields.zinniaLiveTransactionActivityTitle') ?? ''
                     )}
                     description={String(
                         t(
-                            'usage.activity.zinniaLiveTransactionActivity.description'
+                            'allFields.zinniaLiveTransactionActivityDescription'
                         ) ?? ''
                     )}
                     titleToolTip={<TransactionActivityTooltip />}
                     data={transactionData?.data || []}
                     csvFileName={generateCSVFileName({
                         title: `${role} ${
-                            t(
-                                'usage.activity.zinniaLiveTransactionActivity.title'
-                            ) ?? ''
+                            t('allFields.zinniaLiveTransactionActivityTitle') ??
+                            ''
                         }`,
                         timerange,
                     })}

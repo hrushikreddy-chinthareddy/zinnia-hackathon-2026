@@ -7,7 +7,7 @@ import { LabelComponent } from '@deps/components/dashboard/charts/date-time-char
 export const IllustrationsActivityTooltip = () => {
     const { t } = useTranslation();
 
-    return <p>{t('usage.activity.illustrationsActivity.tooltip')}</p>;
+    return <p>{t('allFields.illustrationsActivityTooltip')}</p>;
 };
 
 export const tooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =
