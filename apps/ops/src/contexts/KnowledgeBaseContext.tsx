@@ -1,4 +1,3 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import React, {
     createContext,
     useCallback,
@@ -18,6 +17,7 @@ import {
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 type KnowledgeBaseContextState = {
     selectedClientId: string;
@@ -43,12 +43,12 @@ const KnowledgeBaseContextDefaultValues = {
     currentMessages: [],
     chatHistoryReloadTrigger: 0,
     commonClientId: null,
-    setSelectedClient: (clientId: string) => {},
+    setSelectedClient: () => {},
     setSessionId: noop,
     setCurrentMessages: noop,
     setChatHistoryReloadTrigger: noop,
     startNewChatSession: () => {},
-    viewChatHistory: (sessionId: string) => {},
+    viewChatHistory: () => {},
 };
 
 const KnowledgeBaseContext = createContext<KnowledgeBaseContextState>(

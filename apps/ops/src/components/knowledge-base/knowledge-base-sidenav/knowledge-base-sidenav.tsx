@@ -1,4 +1,3 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +12,7 @@ import {
     DocumentsDisplayType,
     KnowledgeBasePages,
 } from '@deps/types/knowledge-base';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './knowledge-base-sidenav.module.css';
 import RecentChat from '../chat/recent-chat/recent-chat';

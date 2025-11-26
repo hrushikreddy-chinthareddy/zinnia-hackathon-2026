@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -31,6 +30,7 @@ import {
 } from '@deps/queries/api/product-rate';
 import { checkNewLoanEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface LoansContainerProps {
     policy: Policy;

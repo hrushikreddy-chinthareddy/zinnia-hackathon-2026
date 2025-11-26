@@ -1,9 +1,3 @@
-import {
-    AddressType,
-    PhoneType,
-    EmailType,
-    PartyRole,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
@@ -35,6 +29,12 @@ import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    AddressType,
+    PhoneType,
+    EmailType,
+    PartyRole,
+} from '@zinnia/api-types/types/sor';
 
 import AddressDetails from '../../components/addressDetails';
 import EmailDetails from '../../components/emailDetails';

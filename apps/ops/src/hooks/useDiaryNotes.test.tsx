@@ -12,6 +12,7 @@ jest.mock('@deps/models/case/withdrawal/case', () => ({
     },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { getPolicyNotesInfo } = require('@deps/queries/api/policies');
 
 const mockFASTNotes = [

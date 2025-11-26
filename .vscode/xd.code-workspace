@@ -13,14 +13,6 @@
       "path": "../apps/ops",
     },
     {
-      "name": "cui",
-      "path": "../apps/consumer-experience",
-    },
-    {
-      "name": "pom",
-      "path": "../packages/pom",
-    },
-    {
       "name": "xd-components",
       "path": "../packages/xd-components",
     },

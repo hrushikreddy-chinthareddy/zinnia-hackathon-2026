@@ -1,5 +1,3 @@
-import { PartyType } from '@zinnia/api-types/types/sor';
-
 import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -7,6 +5,7 @@ import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/ma
 import { TrustType } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helpers';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import {
     DesignationPresent,

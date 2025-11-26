@@ -1,7 +1,7 @@
 import {
     UserActivityOutput,
     UserViewsOutput,
-} from '@xd/api-types/dist/generated-types/analytics';
+} from '@zinnia/api-types/types/analytics';
 
 import Typography, { TypographyVariant } from '../typography/typography';
 

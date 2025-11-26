@@ -1,7 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_DATE_FORMAT } from '@xd/utils/src/dates';
-import { Address, Country, State } from '@zinnia/api-types/types/sor';
-import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 import { Tag, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
@@ -20,6 +17,9 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_DATE_FORMAT } from '@deps/utils/dates';
+import { Address, Country, State } from '@zinnia/api-types/types/sor';
+import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 
 import { FormattedAddress } from '../people-data-cards/address-card/address-card.helpers';
 

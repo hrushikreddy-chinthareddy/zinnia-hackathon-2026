@@ -1,7 +1,7 @@
 import {
-    UserIllustrationActivityOutputLevel1,
     UserTransactionOutputLevel1,
-} from '@xd/api-types/dist/generated-types/analytics';
+    UserIllustrationActivityOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     aggregateByCategory,

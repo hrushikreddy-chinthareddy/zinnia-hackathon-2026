@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { ReactNode } from 'react';
 
 import { TypographyVariant } from '@deps/components/typography/typography';

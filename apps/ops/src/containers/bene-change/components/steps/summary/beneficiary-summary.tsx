@@ -1,10 +1,3 @@
-import {
-    Gender,
-    IdentificationType,
-    PartyRole,
-    PartyType,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -32,10 +25,16 @@ import { isEndDated } from '@deps/helpers/date.helpers';
 import { percentFormatify } from '@deps/helpers/numbers.helpers';
 import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
 import {
-    safeString,
     toTitleCase,
     isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
+import {
+    Gender,
+    IdentificationType,
+    PartyRole,
+    PartyType,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import {
     DEFAULT_BENE_ADDRESS,
@@ -212,8 +211,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
         label: string,
         currentValue: string,
         updatedValue: string,
-        action: string,
-        renderValue: (value: any) => React.ReactNode = (value) => value
+        action: string
     ) => {
         if (shouldDisplayField(currentValue, updatedValue, action)) {
             return (
@@ -508,8 +506,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                         relationshipToParty,
                                         item?.party?.allocation
                                             ?.relationshipToParty,
-                                        item.action,
-                                        safeString
+                                        item.action
                                     )}
                                 </div>
                                 <div className="w-[1020px] border border-b-2 border-gray-100"></div>

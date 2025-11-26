@@ -1,7 +1,6 @@
 // TODO: Generalize this widget for other transaction types beyond agent changes
 
 import { WidgetProps } from '@rjsf/utils';
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,6 +10,7 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 import { TranslationFiles } from '@deps/config/translations';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 const ALLOWED_PERCENTAGE_AGENT = {
     HUNDRED: 100,

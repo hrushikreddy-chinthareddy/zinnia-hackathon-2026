@@ -4,6 +4,7 @@ import { ChipRadio, RadioOption } from '@deps/components/chip-radio/chip-radio';
 import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 
 import { CustomDateRange } from './custom-date-range';
+import styles from './time-filter.module.css';
 interface TimeFilterProps {
     defaultValue: RadioOption['value'] | undefined;
     onRadioChange: (val: string) => void;
@@ -36,7 +37,7 @@ export const TimeFilter: FC<TimeFilterProps> = ({
           }));
 
     return (
-        <div>
+        <div className={styles.timeContainer}>
             <CustomDateRange
                 timerange={timerange}
                 handleTimerangeChange={handleTimerangeChange}

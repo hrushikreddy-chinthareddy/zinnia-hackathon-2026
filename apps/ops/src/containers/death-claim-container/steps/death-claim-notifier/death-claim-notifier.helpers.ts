@@ -1,15 +1,15 @@
-import {
-    PartyRole,
-    PhoneType,
-    Policy,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import {
+    PartyRole,
+    PhoneType,
+    Policy,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ClaimActionTypes,

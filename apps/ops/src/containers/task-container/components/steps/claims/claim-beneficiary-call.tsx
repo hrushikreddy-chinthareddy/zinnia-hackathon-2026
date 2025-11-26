@@ -1,4 +1,3 @@
-import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
@@ -11,6 +10,7 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { convertToCamelCase } from '@deps/utils/strings';
 
 import CallForInformation from './call-for-information';
 import { DynamicKey, UpdatedBeneficiaryRecord } from './claims.type';

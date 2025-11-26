@@ -1,4 +1,3 @@
-import { PaymentForm } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import {
     Dispatch,
@@ -16,6 +15,7 @@ import {
     ReverseInitiatorType,
 } from '@deps/containers/financial-transactions/loan/loan-payment/amount/types';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { PaymentForm } from '@zinnia/api-types/types/sor';
 
 // ACH is the only supported payment type for MVP
 export const ACH = PaymentForm.ACH;

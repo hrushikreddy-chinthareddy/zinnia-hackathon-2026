@@ -1,10 +1,9 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { PageHead } from '@deps/components/page-title';
 import LoanPaymentContainer from '@deps/containers/financial-transactions/loan/loan-payment/loan-payment-container';
 import { LoanPaymentProvider } from '@deps/contexts/transactions/LoanPaymentContext';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export interface LoanPaymentOneTimeProps {
     policy: Policy;

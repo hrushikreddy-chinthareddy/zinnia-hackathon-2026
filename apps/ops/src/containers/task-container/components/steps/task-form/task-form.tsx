@@ -28,6 +28,7 @@ import {
 import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import {
@@ -54,8 +55,12 @@ const getPaymentCards = (
         value: transaction.entity.paymentRecordId,
         subElement: {
             ...transaction,
-            firstName: task?.data?.details?.payerDetails?.firstName || '',
-            lastName: task?.data?.details?.payerDetails?.lastName || '',
+            firstName:
+                task?.data?.details?.payerDetails?.firstName ||
+                DEFAULT_ERROR_STRING,
+            lastName:
+                task?.data?.details?.payerDetails?.lastName ||
+                DEFAULT_ERROR_STRING,
             title: transaction?.entity?.payment?.companyName,
         },
     }));

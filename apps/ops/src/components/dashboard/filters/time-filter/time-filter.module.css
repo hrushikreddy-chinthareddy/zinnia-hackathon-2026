@@ -1,20 +1,5 @@
-.timeframeContainer {
+.timeContainer {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: end;
-}
-
-.timeRadioItem {
-    align-items: center;
-    background: var(--color-chip-surface-chip-default-fill);
-    border-color: var(--color-chip-border-chip-default-border);
-    border-radius: var(--measure-dimension-radius-max);
-    border-width: var(--measure-dimension-stroke-sm);
-    color: var(--color-base-text-text-primary);
-    display: flex;
-    gap: var(--measure-dimension-gap-md);
-    padding: var(--measure-dimension-padding-xs)
-        var(--measure-dimension-padding-2xl);
-    white-space: nowrap;
-    width: fit-content;
 }

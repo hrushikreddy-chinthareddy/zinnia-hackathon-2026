@@ -66,8 +66,6 @@ jobs:
           cache: 'pnpm'
       - name: Install monorepo deps
         run: pnpm install --frozen-lockfile
-      - name: Build packages
-        run: npx turbo build --filter='./packages/**'
       - name: Run prettier, type checks, and lint
         run: npx turbo prettier && npx turbo check-types && npx turbo lint
 

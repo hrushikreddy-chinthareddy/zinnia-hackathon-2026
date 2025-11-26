@@ -1,4 +1,12 @@
 import {
+    friendlyGroupByName,
+    friendlyGroupByNameForUserViews,
+} from '@deps/components/usage/utils';
+import { getUserActivityCounts } from '@deps/queries/api/user-actvity-count';
+import { getUserIllustrationActivityCount } from '@deps/queries/api/user-illustration-activity-count';
+import { getUserTransactionCounts } from '@deps/queries/api/user-transaction-count';
+import { getUserViewsCounts } from '@deps/queries/api/user-views-count';
+import {
     UserActivityGroupByEnum,
     UserActivityInputFilter,
     UserIllustrationActivityGroupByEnum,
@@ -7,16 +15,7 @@ import {
     UserTransactionInputFilter,
     UserViewsGroupByEnum,
     UserViewsInputFilter,
-} from '@xd/api-types/dist/generated-types/analytics';
-
-import {
-    friendlyGroupByName,
-    friendlyGroupByNameForUserViews,
-} from '@deps/components/usage/utils';
-import { getUserActivityCounts } from '@deps/queries/api/user-actvity-count';
-import { getUserIllustrationActivityCount } from '@deps/queries/api/user-illustration-activity-count';
-import { getUserTransactionCounts } from '@deps/queries/api/user-transaction-count';
-import { getUserViewsCounts } from '@deps/queries/api/user-views-count';
+} from '@zinnia/api-types/types/analytics';
 
 export const getUserActivityCountsQuery = async (
     filter: UserActivityInputFilter,
@@ -112,7 +111,7 @@ export const getUserIllustrationActivityCountQuery = async (
     }
 
     userTransactionResponse.data = userTransactionResponse.data.map((item) => {
-        if (item.name === '') {
+        if (!item?.name) {
             item.name = 'Unknown';
         }
         return item;

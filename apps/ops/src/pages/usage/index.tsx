@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
-import { FgaRoles } from '@zinnia/utils';
 import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
@@ -23,6 +22,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -82,9 +82,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, res, req } = context;
-            let accessToken;
             try {
-                accessToken = (await getAccessToken(req, res)).accessToken;
+                await getAccessToken(req, res);
             } catch (e) {
                 logWarn('usage/index:: Access token expired', {
                     ...parseErrorInformation(e),

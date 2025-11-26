@@ -56,7 +56,6 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
     );
     const [isLoading, setIsLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
-    const [timer] = useState(performance.now());
     const [submitFailed, setSubmitFailed] = useState(false);
     const source = getDocumentSource(document.documentNumber);
 
@@ -75,8 +74,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                 formSignature,
                 document,
                 bankUpdateType
-            ),
-            timer
+            )
         );
         if (successfulCaseUpdate) {
             setIsLoading(false);

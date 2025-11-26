@@ -1,9 +1,3 @@
-import {
-    UserIllustrationActivityOutputLevel1,
-    UserIllustrationActivityOutputLevel3,
-    UserTransactionOutputLevel1,
-    UserTransactionOutputLevel3,
-} from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import groupBy from 'lodash/groupBy';
@@ -11,6 +5,12 @@ import groupBy from 'lodash/groupBy';
 import { GroupedColumnSeries } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
+import {
+    UserIllustrationActivityOutputLevel1,
+    UserIllustrationActivityOutputLevel3,
+    UserTransactionOutputLevel1,
+    UserTransactionOutputLevel3,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     ActivityType,

@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +26,7 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import { logWarn, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 import nextI18nextConfig from 'next-i18next.config';
 
 type additionalDataProps = {

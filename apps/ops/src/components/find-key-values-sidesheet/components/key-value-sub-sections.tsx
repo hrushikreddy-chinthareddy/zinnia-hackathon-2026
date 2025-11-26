@@ -1,5 +1,4 @@
-import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion';
-import { AccordionType } from '@xd/xd-components/src/components/Accordion/types';
+import { Accordion, AccordionType } from '@zinnia/bloom/components';
 import React from 'react';
 
 import Highlighter from '@deps/components/highlighter/highlighter';

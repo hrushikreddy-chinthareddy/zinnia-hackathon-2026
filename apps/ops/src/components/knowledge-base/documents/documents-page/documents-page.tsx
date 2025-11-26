@@ -1,5 +1,3 @@
-import { ClientDocumentDto } from '@xd/api-types/dist/generated-types/knowledgebase';
-import { formatDateTime } from '@xd/utils/src/dates';
 import {
     Divider,
     Icon,
@@ -35,6 +33,8 @@ import {
     SortFields,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { formatDateTime } from '@deps/utils/dates';
+import { ClientDocumentDto } from '@zinnia/api-types/types/knowledgebase';
 
 import CommonHeader from '../../common-header/common-header';
 import DocumentPreview from '../document-preview/document-preview';

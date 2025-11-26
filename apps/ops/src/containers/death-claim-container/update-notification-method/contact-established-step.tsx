@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -28,6 +27,7 @@ import {
 import { CaseIdentifier } from '@deps/models/case/case';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { updateNotificationMethod } from '@deps/queries/api/web-non-financial';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { buildUpdateNotificationMethodPayload } from './update-notification-method-helper';
 

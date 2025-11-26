@@ -1,8 +1,7 @@
-import { PartyType } from '@xd/api-types/dist/generated-types/sor';
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { PartyType, PartyRole } from '@zinnia/api-types/types/sor';
 
 export const validateBeneData = (beneData: any, t: TFunction) => {
     const errors = {} as FormValidationErrors;

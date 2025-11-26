@@ -1,4 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
 import {
     FieldData,
     FieldSize,
@@ -30,6 +29,7 @@ import NavElement, {
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { toSentenceCase } from '@deps/utils/strings';
 
 import { ActiveAgingContext } from '../../context/active-aging-context';
 import { calculateEndDate, startDates } from '../../utils';

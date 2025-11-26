@@ -1,4 +1,3 @@
-import { ExceptionCountOutputLevel1 } from '@xd/api-types/dist/generated-types/analytics';
 import {
     Icon,
     IconType,
@@ -40,6 +39,7 @@ import {
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { ExceptionCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import { IssueCountsByStatusHeader } from './issue-counts-by-status-header';
 import { IssueCountsByStatusContext } from '../../context/issue-counts-by-status-context';

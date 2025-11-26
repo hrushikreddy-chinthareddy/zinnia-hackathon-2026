@@ -1,13 +1,12 @@
+import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
+import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
+import { PartyRoleId } from '@deps/types/constants';
 import {
     BankAccount,
     Party,
     PartyRole,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { LifeCadBanking, LifeCadParty } from '@deps/models/case/lifecad-party';
-import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
-import { PartyRoleId } from '@deps/types/constants';
 
 export const getBankingDetailsLC = (parties: LifeCadParty[]) => {
     const party = parties?.find(

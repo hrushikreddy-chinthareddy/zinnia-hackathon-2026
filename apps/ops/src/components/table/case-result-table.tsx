@@ -26,7 +26,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getValidFullName } from '@deps/helpers/case-management';
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
@@ -44,9 +43,9 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import styles from './case-result-table.module.css';
-import { formatTimestamp } from '../../../../../packages/utils/src/dates';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
 import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
 import Highlighter from '../highlighter/highlighter';
@@ -398,7 +397,6 @@ interface CaseResultTableProps {
 }
 
 const NoResultsRow = ({
-    searchValues,
     loadingMessage,
     caseSearchLoading,
 }: {
@@ -407,7 +405,6 @@ const NoResultsRow = ({
     caseSearchLoading: boolean;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const hasSearchValue = !isEmptyObject(searchValues);
 
     return (
         <TableRow>

@@ -1,6 +1,5 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { DataDefinition } from '@deps/types/data';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import DescriptionList from './description-list';
 

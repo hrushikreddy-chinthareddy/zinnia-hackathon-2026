@@ -1,9 +1,10 @@
+import { TFunction } from 'next-i18next';
+
 import {
     DisbursementPaymentForm,
     Frequency,
     PaymentForm,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
 
 export const getPaymentType = (
     paymentType: DisbursementPaymentForm | PaymentForm | null,

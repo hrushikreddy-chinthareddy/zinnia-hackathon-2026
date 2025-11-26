@@ -1,7 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -30,6 +28,8 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.

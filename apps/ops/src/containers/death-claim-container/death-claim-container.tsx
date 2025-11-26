@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -16,6 +15,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDeathClaimSupportingDocument } from '@deps/hooks/useDeathClaimSupportingDocument';
 import { UserProfile } from '@deps/models/user-profile';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { RoleType } from './death-claim.types';
 import DocumentSelectionModal from './document-selection/document-selection-modal';

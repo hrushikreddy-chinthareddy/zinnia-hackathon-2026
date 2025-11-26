@@ -1,4 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -17,6 +16,7 @@ import {
 } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 export type DocumentMetadataFilterProps = {
     carrier: string;

@@ -1,6 +1,5 @@
-import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
-
 import { Party } from '@deps/models/policy-sor-touchups/Party';
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 export interface EditableCardProps {
     editable?: boolean;

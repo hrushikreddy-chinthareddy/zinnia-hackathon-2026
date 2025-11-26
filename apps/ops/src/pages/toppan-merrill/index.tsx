@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 import { AxiosResponse } from 'axios';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
@@ -20,6 +19,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface ToppanMerrillProps {

@@ -1,4 +1,3 @@
-import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
@@ -21,12 +20,7 @@ const DtccMethod = ({
     defaultDisbursementInfo,
     setDefaultDisbursementInfo,
 }: CheckMethodProps) => {
-    const { bankDetails, setFormDisbursement, formErrors } =
-        useContext(FormDataContext);
-
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'caseWithdrawal.request.distributionMethod',
-    });
+    const { bankDetails, setFormDisbursement } = useContext(FormDataContext);
 
     const handleTextChange = (value: any, fieldName: string) => {
         setFormDisbursement((pv: any) => ({

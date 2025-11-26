@@ -1,6 +1,5 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
-
 import { SimpleOption } from '@deps/components/autocomplete/autocomplete.types';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import { Correspondence } from './correspondence';
 

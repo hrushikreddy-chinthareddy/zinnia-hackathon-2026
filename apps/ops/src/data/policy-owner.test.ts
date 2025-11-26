@@ -1,3 +1,4 @@
+import { Party } from '@deps/models/policy-sor-touchups/Party';
 import {
     Address,
     PartyType,
@@ -12,8 +13,6 @@ import {
     EmploymentStatus,
     IdentificationType,
 } from '@zinnia/api-types/types/sor';
-
-import { Party } from '@deps/models/policy-sor-touchups/Party';
 
 import { toPolicyOwnerDto } from './policy-owner';
 

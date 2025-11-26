@@ -1,12 +1,12 @@
-import {
-    UserViewsOutputLevel1,
-    UserViewsOutputLevel3,
-} from '@xd/api-types/dist/generated-types/analytics';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
+import {
+    UserViewsOutputLevel1,
+    UserViewsOutputLevel3,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     downloadCSV,

@@ -1,8 +1,3 @@
-import {
-    FeatureType,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
@@ -26,6 +21,11 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    FeatureType,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import {
     isDateAllowed,

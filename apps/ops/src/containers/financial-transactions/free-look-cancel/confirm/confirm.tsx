@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -23,6 +22,7 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helpers';
 

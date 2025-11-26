@@ -1,10 +1,11 @@
+import { TFunction } from 'next-i18next';
+
 import {
     Party,
     Policy,
     ProductType,
     Transaction,
-} from '@xd/api-types/dist/generated-types/sor';
-import { TFunction } from 'next-i18next';
+} from '@zinnia/api-types/types/sor';
 
 export type DataField = string | number | boolean | null;
 

@@ -3018,11 +3018,11 @@ export const farmersTermBlueprintTL0101 = {
                                     ],
                                 },
                                 {
+                                    fieldType: 'checkboxGroup',
                                     answerNodeId:
                                         'chronic-illness-accelerated-death-benefit-rider',
                                     outputPath:
                                         'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
-                                    fieldType: 'checkboxGroup',
                                     id: '80af6907-476e-43e4-a452-4fc6017a3805',
                                     partName:
                                         'custom-6e1ec913-a3ce-43ba-8195-7c9f046811e9',
@@ -3038,6 +3038,14 @@ export const farmersTermBlueprintTL0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
+                                                // Not available for california
+                                                type: 'equalityCondition',
+                                                targetNodeId: 'state-of-issue',
+                                                value: 'CA',
+                                                isEqual: false,
+                                            },
+                                            {
+                                                // Requires ADB rider to also be selected
                                                 type: 'matchesCondition',
                                                 value: ['Rider_ABRTRM'],
                                                 targetNodeId:
@@ -3045,6 +3053,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 quantifier: 'any',
                                             },
                                             {
+                                                // Not available for Juvenile
                                                 type: 'numberComparisonCondition',
                                                 value: 18,
                                                 targetNodeId:
@@ -3052,16 +3061,80 @@ export const farmersTermBlueprintTL0101 = {
                                                 operator: 'greaterThanOrEqual',
                                             },
                                             {
-                                                type: 'numberComparisonCondition',
-                                                value: 70,
-                                                targetNodeId:
-                                                    'insured-issue-age',
-                                                operator: 'lessThanOrEqual',
+                                                // Max age conditions
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        // Term Life 10 & 15 -- age range
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                                value: 15,
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 70,
+                                                                targetNodeId:
+                                                                    'insured-issue-age',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        // Term Life 20 -- age range
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                                value: '20',
+                                                                isEqual: true,
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 65,
+                                                                targetNodeId:
+                                                                    'insured-issue-age',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        // Term Life 30 - age range
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                                value: '30',
+                                                                isEqual: true,
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 50,
+                                                                targetNodeId:
+                                                                    'insured-issue-age',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
                                             },
                                         ],
                                     },
                                     platforms: [],
                                     renderOn: [],
+                                    isCustom: true,
                                     copyable: 'none',
                                     optional: true,
                                     placeholder: {
@@ -3085,7 +3158,93 @@ export const farmersTermBlueprintTL0101 = {
                                             isCustom: true,
                                         },
                                     ],
-                                    hidden: true,
+                                    valid: [
+                                        {
+                                            id: 'b56f8155-65b3-4caf-be3b-46b9891a8958',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'chronic-illness-accelerated-death-benefit-rider',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'chronic-illness-accelerated-death-benefit-rider',
+                                                            },
+                                                            {
+                                                                booleanOperator:
+                                                                    'or',
+                                                                conditions: [
+                                                                    {
+                                                                        type: 'numberComparisonCondition',
+                                                                        value: 150_000,
+                                                                        targetNodeId:
+                                                                            'face-amount',
+                                                                        operator:
+                                                                            'greaterThanOrEqual',
+                                                                    },
+                                                                    {
+                                                                        type: 'emptinessCondition',
+                                                                        isEmpty:
+                                                                            true,
+                                                                        targetNodeId:
+                                                                            'face-amount',
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Minimum Face Amount of Base Policy $150,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '93849e09-017e-4d83-966b-85d4aa13e20a',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'chronic-illness-accelerated-death-benefit-rider',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'chronic-illness-accelerated-death-benefit-rider',
+                                                            },
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'accelerated-death-benefit-rider-for-terminal-illness',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Only available with Accelerated Death Benefit Rider for Terminal Illness.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                             ],
                             displayAsCard: false,

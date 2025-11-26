@@ -1,4 +1,4 @@
-import { BulkCheckTuple, FGA_Tuple } from '@zinnia/utils';
+import { BulkCheckTuple, FGA_Tuple } from '@deps/utils/auth';
 
 export type CheckTupleResponse = {
     allowed: boolean;

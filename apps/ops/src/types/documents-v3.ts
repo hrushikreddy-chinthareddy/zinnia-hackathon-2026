@@ -1,11 +1,10 @@
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import {
     DocumentDownloadResponse,
     MetadataSearchResponse,
     SearchRequest as SearchRequestBody,
     SearchDocumentResponse as SearchResponse,
 } from '@zinnia/api-types/types/documents-v3';
-
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 
 export type DocumentDownloadV3WithMime = DocumentDownloadResponse & {
     mimeType: string;

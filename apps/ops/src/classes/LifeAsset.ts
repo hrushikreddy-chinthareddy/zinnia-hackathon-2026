@@ -1,16 +1,15 @@
 import {
-    LineOfBusiness,
-    Policy,
-    ProductType,
-    Reason,
-} from '@zinnia/api-types/types/sor';
-
-import {
     checkEligibilityOneTimePremium,
     checkEligibilityPartialWithdrawalOneTime,
     checkEligibilitySystematicPrograms,
     TransactionResponse,
 } from '@deps/queries/api/bpm';
+import {
+    LineOfBusiness,
+    Policy,
+    ProductType,
+    Reason,
+} from '@zinnia/api-types/types/sor';
 
 export abstract class LifeAsset {
     policy: Policy;

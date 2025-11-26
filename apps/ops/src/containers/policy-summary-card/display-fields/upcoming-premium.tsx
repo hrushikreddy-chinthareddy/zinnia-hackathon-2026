@@ -1,4 +1,3 @@
-import { SystematicProgram, Reason } from '@zinnia/api-types/types/sor';
 import { PopoverPlacement } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -23,6 +22,7 @@ import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
+import { SystematicProgram, Reason } from '@zinnia/api-types/types/sor';
 
 const getAmountAndDate = (program?: SystematicProgram): string => {
     if (!program) {
