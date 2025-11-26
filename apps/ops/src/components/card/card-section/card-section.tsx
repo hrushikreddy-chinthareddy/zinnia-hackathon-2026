@@ -11,7 +11,7 @@ import {
 } from '@deps/components/responsive-flex/responsive-flex.types';
 import { JestProps } from '@deps/types/props';
 
-import FooterAction from '../card-footer-action/card-footer.action';
+import FooterAction from '../card-footer-action/card-footer-action';
 
 enum SectionCardTest {
     Container = 'section-card-container-test-id',

@@ -1,8 +1,8 @@
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 
+import styles from './card-footer-action.module.css';
 import { FooterContent } from '../card-section/card-section';
-
 export interface FooterActionPros {
     footerContent: FooterContent;
 }
@@ -24,7 +24,7 @@ const FooterAction = ({ footerContent }: FooterActionPros) => {
                         key={`${text}-tooltip`}
                     >
                         <span
-                            className="cursor-not-allowed font-primary  font-semibold text-gray-300"
+                            className={styles.footerActionText}
                             key={`${text}-link`}
                         >
                             {text}
@@ -32,7 +32,7 @@ const FooterAction = ({ footerContent }: FooterActionPros) => {
                     </Tooltip>
                 ) : (
                     <span
-                        className="cursor-not-allowed font-primary font-semibold text-gray-300"
+                        className={styles.footerActionText}
                         key={`${text}-link`}
                     >
                         {text}
@@ -42,7 +42,7 @@ const FooterAction = ({ footerContent }: FooterActionPros) => {
                 <a
                     href={href}
                     key={`${text}-link`}
-                    className="font-primary text-links-sm font-semibold text-cerulean-600"
+                    className={styles.footerActionLink}
                     data-testid={text}
                     onClick={onClick}
                 >

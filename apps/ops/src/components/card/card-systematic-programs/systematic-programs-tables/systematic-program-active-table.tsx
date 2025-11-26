@@ -17,7 +17,7 @@ import {
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
 
-import FooterAction from '../../card-footer-action/card-footer.action';
+import FooterAction from '../../card-footer-action/card-footer-action';
 import {
     arrangmentTypesDictionary,
     arrangmentTypesMsgDictionary,

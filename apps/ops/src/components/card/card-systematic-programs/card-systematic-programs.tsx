@@ -15,7 +15,7 @@ import {
     SystematicProgramsCardTest,
 } from './card-systematic-programs.types';
 import styles from './systematic-programs-table.module.css';
-import FooterAction from '../card-footer-action/card-footer.action';
+import FooterAction from '../card-footer-action/card-footer-action';
 import CardSection from '../card-section/card-section';
 import SystematicProgramsActiveTable from './systematic-programs-tables/systematic-program-active-table';
 import SystematicProgramsTerminatedTable from './systematic-programs-tables/systematic-program-terminated-table';

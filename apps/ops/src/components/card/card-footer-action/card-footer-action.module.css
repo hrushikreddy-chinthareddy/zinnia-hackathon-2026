@@ -1,0 +1,15 @@
+.footerActionText {
+    cursor: not-allowed;
+    font-family: var(--string-core-typography-font-family-font-family-primary);
+    font-weight: 600;
+    --tw-text-opacity: 1;
+    color: rgb(var(--color-300-gray) / var(--tw-text-opacity, 1));
+}
+
+.footerActionLink {
+    font-family: var(--string-core-typography-font-family-font-family-primary);
+    font-size: var(--measure-font-sizing-type-tokens-nav-sm-font-size);
+    font-weight: 600;
+    --tw-text-opacity: 1;
+    color: rgb(var(--color-600-cerulean) / var(--tw-text-opacity, 1));
+}
