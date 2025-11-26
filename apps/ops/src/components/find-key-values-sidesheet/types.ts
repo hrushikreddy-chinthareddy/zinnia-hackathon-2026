@@ -1,5 +1,6 @@
 import { TFunction } from 'next-i18next';
 
+import { Collapse, Expand } from '@deps/hooks/useTreeState';
 import {
     Party,
     Policy,
@@ -106,12 +107,24 @@ export type Primitive = string | number | boolean;
 const FIELD = Symbol('FIELD');
 const SECTION = Symbol('SECTION');
 const GROUP = Symbol('GROUP');
+const POLICY = Symbol('POLICY');
+const CONTRACT = Symbol('CONTRACT');
+const TRANSACTION = Symbol('TRANSACTION');
 
 export const FieldType = {
     field: FIELD,
     section: SECTION,
     group: GROUP,
 } as const;
+
+export const DocumentFormat = {
+    policy: POLICY,
+    contract: CONTRACT,
+    transaction: TRANSACTION,
+} as const;
+
+export type DocumentFormatType =
+    (typeof DocumentFormat)[keyof typeof DocumentFormat];
 
 export type DataField = {
     type: typeof FieldType.field;

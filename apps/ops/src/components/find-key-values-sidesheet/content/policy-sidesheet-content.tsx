@@ -11,9 +11,18 @@ import {
     FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+    convertNode,
+    applyTransformationsToNodes,
+    groupBasics,
+    groupSectionsForPolicy,
+    excludeNodesByLabel,
+    formatSectionLabels,
+    searchNodes,
+} from '@deps/components/find-key-values-sidesheet/transformations';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -21,11 +30,11 @@ import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { convertNode } from '../transformations';
-import { FindAllKeyValuesSidebarProps } from '../types';
+import { FindAllKeyValuesSidebarProps, DocumentFormat } from '../types';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -34,9 +43,9 @@ export const PolicySidesheetContent = ({
     handleCalendarOpen,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
-    const { treeState, setTreeState } = useTreeState();
+    const { treeState, setTreeState, searchValue, setSearchValue } =
+        useTreeState();
     const [fieldError, setFieldError] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
     const queryClient = useQueryClient();
     const [enableQuery, setEnableQuery] = useState(false);
     const { t } = useTranslation();
@@ -77,6 +86,28 @@ export const PolicySidesheetContent = ({
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
+    console.log('.....first step of convertions......', convertNode(policy, t));
+    const nomenclature =
+        policy?.product?.lineOfBusiness === LineOfBusiness.LIFE
+            ? t('policy.nomenclature.policy')
+            : t('policy.nomenclature.contract');
+    const nodes = applyTransformationsToNodes(
+        (data) => convertNode(data, t),
+        (data) => groupBasics(data, t, DocumentFormat.policy),
+        (data) =>
+            groupSectionsForPolicy(
+                data,
+                t,
+                DocumentFormat.policy,
+                planCode,
+                policyNumber
+            ),
+        (data) => excludeNodesByLabel(data, t, nomenclature),
+        (data) => formatSectionLabels(data, t, nomenclature)
+    )(policy);
+
+    const matches = searchNodes(nodes, debouncedSearchValue);
+
     // If the search value changes to non-empty, expand the tree
     // (the tree will be cropped to matching search results)
     useEffect(() => {
@@ -89,11 +120,17 @@ export const PolicySidesheetContent = ({
             planCode: planCode,
         });
         setTreeState(Expand);
-    }, [debouncedSearchValue, authSessionId, planCode, policyNumber]);
+        setSearchValue(debouncedSearchValue);
+    }, [
+        debouncedSearchValue,
+        authSessionId,
+        planCode,
+        policyNumber,
+        setTreeState,
+        setSearchValue,
+    ]);
 
-    const nodes = convertNode(policy, t);
-
-    if (!nodes) return null; //TODO: DEPU-XXXX add loading state
+    if (!nodes || !policy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
             <FieldDateSingle
@@ -108,7 +145,9 @@ export const PolicySidesheetContent = ({
                     new Date(policy?.policyDates?.issueDate || '')
                 }
                 defaultDate={new Date()}
-                onDateSelect={(date) => handleDateChange(date)}
+                onDateSelect={(date: Date | undefined) =>
+                    handleDateChange(date)
+                }
                 container={container}
                 fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
                 formatErrorMsg={t('allFields.invalidDateFormat') || ''}
@@ -116,7 +155,9 @@ export const PolicySidesheetContent = ({
                 handleCalendarOpen={handleCalendarOpen}
             />
             <FieldData
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setSearchValue(e.target.value)
+                }
                 handleClear={() => setSearchValue('')}
                 value={searchValue}
                 fieldType={FieldTypes.Search}
@@ -145,8 +186,8 @@ export const PolicySidesheetContent = ({
                                 : 'Expand all'}
                         </Button>
                     </div>
-                    <DataNodeRenderer nodes={nodes} />
-                    {!nodes.length && (
+                    <DataNodeRenderer nodes={matches} />
+                    {!matches.length && (
                         <div className={styles.emptySearch}>
                             <Label>
                                 <Icon

@@ -1,43 +1,28 @@
 import { TFunction } from 'next-i18next';
 
 import { typedEntries } from '@deps/utils/objects';
-import {
-    Policy,
-    LineOfBusiness,
-    LoanSegment,
-    Fund,
-    FundAllocation,
-    Party,
-    ProductType,
-    Transaction,
-} from '@zinnia/api-types/types/sor';
+import { Policy, Party } from '@zinnia/api-types/types/sor';
 
-import {
-    formatDataField,
-    formatAsSectionLabel,
-    removeExcludedAndEmptyFields,
-    formatAsDataValue,
-    combinedTransform,
-} from './formatters';
-import { sectionVisibility } from './translations/section-visibility';
+import { combinedTransform, formatSectionLabel } from './formatters';
+import { excludeFields } from './translations/exclude-fields';
 import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
-    NestedData,
     label,
-    tags,
     link,
     linkedField,
-    MetaData,
-    DataSection,
-    FormatterType,
     FieldType,
     DataNode,
     Primitive,
+    DataField,
+    DataSection,
+    DataGroup,
+    DocumentFormat,
+    DocumentFormatType,
 } from './types';
 
 // pipe needs to take the first arg as Policy/Transaction -> DataNode[]
 // and the rest as DataNode[] -> DataNode[]
-export const convertToDataNode =
+export const applyTransformationsToNodes =
     <T>(
         initialTransformFn: (data: T, t?: TFunction) => DataNode[],
         ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
@@ -111,7 +96,7 @@ function convertTuple(
 
                     return {
                         type: FieldType.section,
-                        label: t(sectionLabel) ?? sectionLabel,
+                        label: sectionLabel,
                         children: fields, // TODO: recurse?
                     };
                 })
@@ -119,7 +104,7 @@ function convertTuple(
 
             return {
                 type: FieldType.section,
-                label: t(key) ?? key,
+                label: key,
                 children: sections,
             };
         } else {
@@ -131,7 +116,7 @@ function convertTuple(
 
             return {
                 type: FieldType.section,
-                label: t(key) ?? key,
+                label: key,
                 children: [
                     // In some instances the array will also contain fields and sections
                     {
@@ -163,53 +148,286 @@ export const transformObject = (
     node: DataNode,
     transform: (node: DataNode) => DataNode | null
 ): DataNode | null => {
-    const transformed = transform(node);
-    // If the transform says "remove this node", we stop here.
-    if (transformed === null) return null;
-
     switch (node.type) {
         case FieldType.field:
-            return transformed;
+            return transform(node);
         case FieldType.section: {
-            const newChildren = transformed.children
+            const newChildren = node.children
                 .map((child) => transformObject(child, transform))
                 .filter((n): n is DataNode => n !== null);
 
             return transform({
-                ...transformed,
+                ...node,
                 children: newChildren,
             });
         }
         case FieldType.group: {
-            const newGroups = transformed.children.map((group) =>
+            const newGroups = node.children.map((group) =>
                 group
                     .map((child) => transformObject(child, transform))
                     .filter((n): n is DataNode => n !== null)
             );
             return transform({
-                ...transformed,
+                ...node,
                 children: newGroups,
             });
         }
         default:
-            return transformed;
+            return transform(node);
     }
 };
 
-export const groupBasics = (data: DataNode[], t: TFunction): DataNode[] => {
+export const groupBasics = (
+    data: DataNode[],
+    t: TFunction,
+    type: DocumentFormatType
+): DataNode[] => {
     const filterByField = data.filter((node) => node.type === FieldType.field);
     const filterBySectionOrList = data.filter(
         (node) => node.type !== FieldType.field
     );
+    DocumentFormat.transaction;
+    const label =
+        type === DocumentFormat.transaction
+            ? 'transactionDetails'
+            : 'policyBasics';
 
     return [
         {
             type: FieldType.section,
-            label: t('basics'),
+            label,
             children: filterByField,
         },
         ...filterBySectionOrList,
     ];
+};
+
+export const groupSectionsForPolicy = (
+    nodes: DataNode[],
+    t: TFunction,
+    documentType: DocumentFormatType,
+    planCode: string,
+    policyNumber: string
+): DataNode[] => {
+    const sectionMap = nodes.reduce(
+        (acc: Record<string, DataSection>, node) => {
+            if (node.type !== FieldType.section) return acc;
+            return {
+                ...acc,
+                [node.label]: node,
+            };
+        },
+        {}
+    );
+
+    // with type 'transaction' or 'policy'
+    const partyRoles: DataSection[] =
+        nodes
+            .filter(isDataSection)
+            .find((node) => node.label === 'partyRoles')
+            ?.children.filter(isDataSection) ?? [];
+
+    /*
+    const payorsAndPayees = [
+        ...(nodes.find(
+            (node): node is DataSection =>
+                node.type === FieldType.section && node.label === 'payors'
+        )?.children ?? []),
+        ...(nodes.find(
+            (node): node is DataSection =>
+                node.type === FieldType.section &&
+                node.label === 'payeeOrBeneficiaries'
+        )?.children ?? []),
+    ];
+    */
+
+    const roleMap: Record<string, string[]> = partyRoles.reduce<
+        Record<string, string[]>
+    >((acc, role) => {
+        const partyRole = findValueInNode({
+            node: role,
+            key: 'partyRole',
+        });
+
+        if (!partyRole) return acc;
+
+        const currentPartyIdRoles = acc[role.label] || [];
+
+        const combinedPartyRoles = {
+            [role.label]: [...currentPartyIdRoles, partyRole],
+        };
+
+        return {
+            ...acc,
+            ...combinedPartyRoles,
+        };
+    }, {});
+
+    const allParties =
+        nodes
+            .filter(isDataSection)
+            // Parties node should always be present
+            .find((partiesNode) => partiesNode.label === 'parties')
+            // Children should always be DataSection's
+            ?.children.filter(isDataSection)
+            .map((partyNode): DataSection => {
+                const partyId = findValueInNode({
+                    node: partyNode,
+                    key: 'partyId',
+                });
+
+                if (!partyId) return partyNode;
+
+                const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyId}`;
+
+                const partyFirstName = findValueInNode({
+                    node: partyNode,
+                    key: 'firstName',
+                });
+                const partyLastName = findValueInNode({
+                    node: partyNode,
+                    key: 'lastName',
+                });
+
+                const partyFullName = findValueInNode({
+                    node: partyNode,
+                    key: 'fullName',
+                });
+
+                const partyAgentExternalId = findValueInNode({
+                    node: partyNode,
+                    key: 'agentExternalId',
+                });
+
+                const partyName =
+                    `${partyFirstName ?? ''} ${partyLastName ?? ''}`.trim() ||
+                    partyFullName ||
+                    partyAgentExternalId ||
+                    partyId;
+
+                const ssn = findValueInNode({
+                    node: partyNode,
+                    key: 'identifications.SSN.identificationValue',
+                });
+
+                const dob = findValueInNode({
+                    node: partyNode,
+                    key: 'dateOfBirth',
+                });
+
+                console.log('ssnField.......', ssn, dob);
+
+                // Bank info
+
+                const personSection: DataSection = {
+                    label: partyId,
+                    type: FieldType.section,
+
+                    // Selectively populated below
+                    children: [
+                        {
+                            type: FieldType.field,
+                            label: 'partyName',
+                            value: partyName,
+                            link: partyLink,
+                        },
+                    ],
+
+                    // This is the default, can be overridden by section-specific roles
+                    tags: roleMap[partyId],
+                };
+
+                if (ssn) {
+                    personSection.children.push({
+                        type: FieldType.field,
+                        label: 'ssn',
+                        value: ssn,
+                    });
+                }
+
+                if (dob) {
+                    personSection.children.push({
+                        type: FieldType.field,
+                        label: 'dob',
+                        value: dob,
+                    });
+                }
+                console.log('personSection..........', personSection);
+                return personSection;
+            }) ?? [];
+
+    // Key each section to partyId
+    const allPartiesById =
+        allParties.reduce(
+            (acc: Record<string, DataSection | undefined>, party) => {
+                if (party.type !== FieldType.section) return acc;
+                return {
+                    ...acc,
+                    [party.label]: party,
+                };
+            },
+            {}
+        ) ?? {};
+
+    // Aggregated sections will be filled in later
+    const loans: DataSection = {
+        type: FieldType.section,
+        label: 'loans',
+        children: [],
+    };
+
+    // Additional sections with aggregated data
+    const people: DataSection = {
+        type: FieldType.section,
+        label: 'people',
+        children: allParties,
+    };
+
+    const combinedSections: DataNode[] = nodes.map((node) => {
+        if (node.type !== FieldType.section) return node;
+
+        // Combine sections
+        switch (node.label) {
+            case 'allocation': {
+                // Extract loan segments and push to loans
+                const loans = node.children
+                    .filter(isDataSection)
+                    .find((node) => node.label === 'loansSegments');
+
+                if (loans) {
+                    loans.children.push(...node.children);
+                }
+
+                return parseAllocation({
+                    allocation: node,
+                });
+            }
+
+            case 'systematicPrograms':
+                return parseSystematicPrograms({
+                    systematicPrograms: node,
+                    allPartiesById,
+                });
+
+            case 'riders':
+                return parseRiders({
+                    riders: node,
+                    allPartiesById,
+                });
+
+            case 'loanValues':
+                // Extract loan values and push to loans
+                loans.children.push(...node.children);
+                return node;
+            default:
+                return node;
+        }
+    });
+
+    console.log('......combinedSections', combinedSections);
+    return [...combinedSections, loans, people];
+    //const subSectionTitleField =
+    //    sectionTypeToSubSectionTitleFields[sectionTitle];
 };
 
 export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
@@ -264,14 +482,37 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     return nodes.map(filterNode).filter((n): n is DataNode => n !== null);
 }
 
-export const excludeNodesByLabel = (data: DataNode[], t: TFunction) => {
+export const formatSectionLabels = (
+    data: DataNode[],
+    t: TFunction,
+    nomenclature?: string
+) => {
+    return data
+        .map((node: DataNode) =>
+            transformObject(
+                node,
+                formatSectionLabel({
+                    t,
+                    nomenclature,
+                })
+            )
+        )
+        .filter((n): n is DataNode => n !== null);
+};
+
+export const excludeNodesByLabel = (
+    data: DataNode[],
+    t: TFunction,
+    policyNomenclature?: string
+) => {
     return data
         .map((node: DataNode) =>
             transformObject(
                 node,
                 combinedTransform({
                     t,
-                    exclude: ['timestamp', 'id', 'transactionAmounts'],
+                    exclude: Array.from(excludeFields),
+                    policyNomenclature,
                 })
             )
         )
@@ -390,230 +631,6 @@ const fillInBankAndAddressInfo = (
 };
 
 /**
- * Given a section name and section data, returns a nested data tuple containing the fields and subsections.
- * If the section data is an array, each item is treated as a subsection.
- * The title of each subsection will map from a defined field *within* that subsection
- * If the section data is an object, and a value within it is a nested object,
- * also treat it as a subsection, but map the subsection title to the object key
- * @param sectionName The name of the section
- * @param sectionData The data of the section
- * @param lineOfBusiness The line of business of the policy
- * @param t The translation function
- * @param searchValue The search value to highlight
- * @returns A nested data tuple containing the fields and subsections
- */
-export const toFieldsAndSubsections = ({
-    tuple: [sectionName, sectionData],
-    lineOfBusiness,
-    t,
-    type,
-    searchValue,
-}: {
-    tuple: [string, unknown[] | Record<string, unknown>];
-    lineOfBusiness: LineOfBusiness;
-    t: TFunction;
-    type: FormatterType;
-    searchValue?: string;
-}): {
-    fields?: NestedData;
-    subSections?: NestedData;
-} => {
-    const subSectionTitleField =
-        sectionTypeToSubSectionTitleFields[sectionName];
-
-    // If sectionData is an array, treat each item as a subsection.
-    // The title of each subsection will map from a defined field *within* that subsection
-    if (sectionData instanceof Array) {
-        const subSections = sectionData
-            .map((subSection) => {
-                if (subSection == null) {
-                    return null;
-                }
-                const subSectionLabel =
-                    (subSection as MetaData)[label] ??
-                    (subSection as Record<string, unknown>)[
-                        subSectionTitleField
-                    ];
-                const subSectionLink = (subSection as MetaData)[link];
-                const subSectionLinkedField = (subSection as MetaData)[
-                    linkedField
-                ];
-                const subSectionTags = (subSection as MetaData)[tags];
-                const subSectionEntries = removeExcludedAndEmptyFields({
-                    tuples: Object.entries(subSection),
-                    lineOfBusiness,
-                    t,
-                    type,
-                    fieldLink: subSectionLink,
-                    linkedField: subSectionLinkedField,
-                    searchValue,
-                    additionalFieldsToExclude: [subSectionTitleField],
-                });
-
-                if (!subSectionEntries?.length) {
-                    return null;
-                }
-
-                const subSectionTuple = [
-                    subSectionLabel
-                        ? formatAsDataValue({
-                              fieldData: String(subSectionLabel),
-                              t,
-                          })
-                        : undefined,
-                    subSectionEntries,
-                ];
-                (subSectionTuple as MetaData)[tags] = subSectionTags;
-
-                return subSectionTuple;
-            })
-            .filter((subSection) => subSection !== null);
-
-        return subSections.length
-            ? {
-                  subSections: subSections as NestedData,
-              }
-            : {};
-    } else {
-        const fields = Object.entries(sectionData)
-            .map(([subSectionName, fieldData]) => {
-                // If sectionData is an object, and a value within it is a nested object,
-                // also treat it as a subsection, but map the subsection title to the object key
-                if (fieldData instanceof Array) {
-                    const fieldEntries = fieldData
-                        .map((fieldObj) => {
-                            if (
-                                typeof fieldObj !== 'object' ||
-                                fieldObj == null ||
-                                !(subSectionTitleField in fieldObj)
-                            ) {
-                                return null;
-                            }
-                            const fieldLabel = fieldObj[subSectionTitleField];
-                            const fieldEntry = Object.entries(fieldObj);
-                            const subSectionData = removeExcludedAndEmptyFields(
-                                {
-                                    tuples: fieldEntry as NestedData,
-                                    lineOfBusiness,
-                                    t,
-                                    type,
-                                    fieldLink: undefined,
-                                    linkedField: undefined,
-                                    searchValue,
-                                }
-                            );
-
-                            if (subSectionData == null) {
-                                return null;
-                            }
-
-                            (subSectionData as MetaData)[label] = fieldLabel;
-                            return subSectionData;
-                        })
-                        .filter((fieldEntry) => fieldEntry !== null);
-
-                    // Only show non-empty subsections
-                    if (fieldEntries?.length) {
-                        return fieldEntries;
-                    }
-
-                    return null;
-                } else if (typeof fieldData === 'object' && fieldData != null) {
-                    // In some cases the data is a nested object, so it needs a label
-                    (fieldData as MetaData)[label] = formatAsSectionLabel({
-                        label: subSectionName,
-                        lineOfBusiness,
-                        t,
-                    });
-                }
-
-                // Otherwise, the value is meant to be displayed, so just append the key-value pair
-                return formatDataField({
-                    tuple: [subSectionName, fieldData] as NestedData,
-                    lineOfBusiness,
-                    t,
-                    type,
-                    searchValue,
-                });
-            })
-            .filter((field) => field !== null);
-        return {
-            fields,
-        };
-    }
-};
-
-/**
- * Maps a list of subsections to a map with the title of each subsection as the key.
- * The title of each subsection is determined by the first value of the subsection
- * represented by the subSectionTitleField, or the fallbackTitle if the subsection does not
- * contain the subSectionTitleField.
- * @param {{subSectionList, subSectionTitleField, fallbackTitle}} params
- * @param {TFunction} t The translation function
- * @returns {Record<string, T>} A map of subsections with the title as the key
- */
-const convertListToMap = <T>({
-    subSectionList,
-    subSectionTitleField,
-    fallbackTitle,
-}: {
-    subSectionList: T[];
-    subSectionTitleField: string;
-    fallbackTitle: string;
-}) => {
-    const subSectionMap = subSectionList?.reduce<Record<string, T>>(
-        (acc, currentSubSection, i) => {
-            // Grab the first value to represent the title of the segment
-
-            const subSectionTitle =
-                (currentSubSection as Record<string, T>)[
-                    subSectionTitleField
-                ] ??
-                Object.values(currentSubSection as T[])[0] ??
-                `${fallbackTitle} ${i + 1}`;
-
-            return {
-                ...acc,
-                [String(subSectionTitle)]: currentSubSection, // FIXME
-            };
-        },
-        {}
-    );
-
-    return subSectionMap;
-};
-
-/**
- * Given a section label, a line of business, and optionally a plan code and product type,
- * determines whether the section should be shown.
- *
- * @param sectionLabel The section label to check
- * @param lineOfBusiness The line of business for the policy
- * @param planCode The plan code for the policy, if applicable
- * @param productType The product type for the policy, if applicable
- * @returns {boolean} Whether the section should be shown
- */
-const shouldShowSection = ({
-    sectionLabel,
-    lineOfBusiness,
-    planCode,
-    productType,
-}: {
-    sectionLabel: string;
-    lineOfBusiness: LineOfBusiness;
-    planCode?: string;
-    productType?: ProductType;
-}): boolean | undefined => {
-    const sectionRule = sectionVisibility[sectionLabel];
-
-    return (
-        !sectionRule ||
-        (planCode && sectionRule.has(planCode)) ||
-        sectionRule.has(lineOfBusiness) ||
-        (productType && sectionRule.has(productType))
-    );
-};
-/**
  * Given a policy, a map of party IDs to party roles.
  *
  * @param policy The policy to transform
@@ -622,419 +639,414 @@ const shouldShowSection = ({
  * @param lineOfBusiness The line of business for the policy
  * @returns A nested data tuple containing the policy's People section
  */
-function parsePeople({
-    roleMap,
-    policy,
-    allPartiesById,
-    t,
-}: {
-    roleMap?: {
-        partyRole?: string;
-        partyId?: string;
-    }[];
-    policy: Policy;
-    allPartiesById: Record<string, Party> | undefined;
-    t: TFunction;
-}) {
-    // Make a map of party roles to reference as tags for the People section
-    const partyRoleMap = roleMap?.reduce<Record<string, string[]>>(
-        (acc, currentPartyRole) => {
-            const currentPartyIdRoles =
-                (currentPartyRole.partyId && acc[currentPartyRole.partyId]) ||
-                [];
-            const combinedPartyRoles = {
-                ...(currentPartyRole.partyId &&
-                    currentPartyRole.partyRole && {
-                        [currentPartyRole.partyId]: [
-                            ...currentPartyIdRoles,
-                            currentPartyRole.partyRole,
-                        ],
-                    }),
-            };
-            return {
-                ...acc,
-                ...combinedPartyRoles,
-            };
-        },
-        {}
-    );
+// function parsePeople({
+//     roleMap,
+//     policy,
+//     allPartiesById,
+//     t,
+// }: {
+//     roleMap?: {
+//         partyRole?: string;
+//         partyId?: string;
+//     }[];
+//     policy: Policy;
+//     allPartiesById: Record<string, Party> | undefined;
+//     t: TFunction;
+// }) {
 
-    // Populate the People section
-    const people = policy.parties
-        ?.map((party) => {
-            const requiredPartyData = fillInRequiredPartyDetails({
-                partyId: party.partyId,
-                policy,
-                idFieldName: 'partyName',
-                allPartiesById,
-            });
+//     // Populate the People section
+//     const people = policy.parties
+//         ?.map((party) => {
+//             const requiredPartyData = fillInRequiredPartyDetails({
+//                 partyId: party.partyId,
+//                 policy,
+//                 idFieldName: 'partyName',
+//                 allPartiesById,
+//             });
 
-            if (!requiredPartyData) {
-                return undefined;
-            }
+//             if (!requiredPartyData) {
+//                 return undefined;
+//             }
 
-            const partyTags = party.partyId && partyRoleMap?.[party.partyId];
-            const ssn = party.identifications?.find(
-                (id) => id.identificationType === 'SSN'
-            )?.identificationValue;
-            const partyDetails = {
-                ...requiredPartyData,
-                ...(party.dateOfBirth && { dob: party.dateOfBirth }),
-                ...(ssn && { ssn }),
-                ...(partyTags && {
-                    [tags]: partyTags.map((tag) =>
-                        formatAsDataValue({ fieldData: tag, t })
-                    ),
-                }),
-            };
-
-            return partyDetails;
-        })
-        .filter((p) => {
-            if (p) {
-                return p !== null && partyRoleMap?.[p?.partyId];
-            }
-        });
-    return people;
-}
+//         })
+//         .filter((p) => {
+//             if (p) {
+//                 return p !== null && partyRoleMap?.[p?.partyId];
+//             }
+//         });
+//     return people;
+// }
 
 /**
  * Transforms the transaction's tax information into a nested data tuple.
  * Combines the transaction's tax basis, tax withholding instructions and tax withholding amounts into a single object.
  * @returns A nested data tuple containing the transaction's tax information
  */
-function parseTransactionTaxes({
-    transaction,
-    policy,
-    allPartiesById,
-    t,
-}: {
-    transaction: Transaction;
-    policy: Policy;
-    allPartiesById: Record<string, Party> | undefined;
-    t: TFunction;
-}): Record<string, unknown> {
-    const taxWithholdingInstructionsMap =
-        transaction.taxWithholdingInstructions?.reduce(
-            (acc, withholdingInstruction) => {
-                const additionalPartyData = fillInRequiredPartyDetails({
-                    partyId: withholdingInstruction.partyId,
-                    allPartiesById,
-                    policy,
-                    idFieldName: 'partyName',
-                });
+// function parseTransactionTaxes({
+//     transaction,
+//     policy,
+//     allPartiesById,
+//     t,
+// }: {
+//     transaction: Transaction;
+//     policy: Policy;
+//     allPartiesById: Record<string, Party> | undefined;
+//     t: TFunction;
+// }): Record<string, unknown> {
+//     const taxWithholdingInstructionsMap =
+//         transaction.taxWithholdingInstructions?.reduce(
+//             (acc, withholdingInstruction) => {
+//                 const additionalPartyData = fillInRequiredPartyDetails({
+//                     partyId: withholdingInstruction.partyId,
+//                     allPartiesById,
+//                     policy,
+//                     idFieldName: 'partyName',
+//                 });
 
-                return {
-                    ...acc,
-                    [`${t('withholdingInstructions')} – ${
-                        withholdingInstruction.taxWithholdingType
-                    } – ${withholdingInstruction.taxJurisdiction}`]: {
-                        ...additionalPartyData,
-                        ...withholdingInstruction,
-                        ...(withholdingInstruction.partyRole && {
-                            [tags]: [
-                                formatAsDataValue({
-                                    fieldData: withholdingInstruction.partyRole,
-                                    t,
-                                }),
-                            ],
-                        }),
-                    },
-                };
-            },
-            {}
-        );
+//                 return {
+//                     ...acc,
+//                     [`${t('withholdingInstructions')} – ${
+//                         withholdingInstruction.taxWithholdingType
+//                     } – ${withholdingInstruction.taxJurisdiction}`]: {
+//                         ...additionalPartyData,
+//                         ...withholdingInstruction,
+//                         ...(withholdingInstruction.partyRole && {
+//                             [tags]: [
+//                                 formatAsDataValue({
+//                                     fieldData: withholdingInstruction.partyRole,
+//                                     t,
+//                                 }),
+//                             ],
+//                         }),
+//                     },
+//                 };
+//             },
+//             {}
+//         );
 
-    const taxWithheldAmountsMap = transaction.taxWithheldAmounts?.reduce(
-        (acc, withholdingAmounts) => {
-            const additionalPartyData = fillInRequiredPartyDetails({
-                partyId: withholdingAmounts.partyId,
-                allPartiesById,
-                policy,
-                idFieldName: 'partyName',
-            });
+//     const taxWithheldAmountsMap = transaction.taxWithheldAmounts?.reduce(
+//         (acc, withholdingAmounts) => {
+//             const additionalPartyData = fillInRequiredPartyDetails({
+//                 partyId: withholdingAmounts.partyId,
+//                 allPartiesById,
+//                 policy,
+//                 idFieldName: 'partyName',
+//             });
 
-            return {
-                ...acc,
-                [`${t('withholdingAmounts')} - ${t(
-                    withholdingAmounts.taxWithholdingType ?? ''
-                )}`]: {
-                    ...additionalPartyData,
-                    ...withholdingAmounts,
-                    ...(withholdingAmounts.partyRole && {
-                        [tags]: [
-                            formatAsDataValue({
-                                fieldData: withholdingAmounts.partyRole,
-                                t,
-                            }),
-                        ],
-                    }),
-                },
-            };
-        }
-    );
-    return {
-        ...transaction.taxBasis,
-        ...taxWithholdingInstructionsMap,
-        ...taxWithheldAmountsMap,
-    };
-}
+//             return {
+//                 ...acc,
+//                 [`${t('withholdingAmounts')} - ${t(
+//                     withholdingAmounts.taxWithholdingType ?? ''
+//                 )}`]: {
+//                     ...additionalPartyData,
+//                     ...withholdingAmounts,
+//                     ...(withholdingAmounts.partyRole && {
+//                         [tags]: [
+//                             formatAsDataValue({
+//                                 fieldData: withholdingAmounts.partyRole,
+//                                 t,
+//                             }),
+//                         ],
+//                     }),
+//                 },
+//             };
+//         }
+//     );
+//     return {
+//         ...transaction.taxBasis,
+//         ...taxWithholdingInstructionsMap,
+//         ...taxWithheldAmountsMap,
+//     };
+// }
 
-/**
- * Maps the LoanValues section of the policy into a nested data tuple.
- * Combines loanSegments into a flat map.
- * @param policy The policy to transform
- * @param subSectionTitleField The field that maps to the subsection title
- * @param sectionTitle The title of the section
- * @param t The translation function
- * @param acc The accumulator object containing the policyBasics and policySections
- * @param currentVal The current value of the LoanValues section
- * @returns The updated accumulator object containing the policyBasics and policySections
- */
-function parseLoanValues({
-    policy,
-    subSectionTitleField,
-    sectionTitle,
-    acc,
-    currentVal,
-}: {
-    policy: Policy;
-    subSectionTitleField: string;
-    sectionTitle: string;
-    t: TFunction;
-    acc: ToSections;
-    currentVal: object;
-}) {
-    const loanSegments = policy.allocation?.loanSegments
-        ? convertListToMap<LoanSegment>({
-              subSectionList: policy.allocation?.loanSegments,
-              subSectionTitleField,
-              fallbackTitle: sectionTitle,
-          })
-        : undefined;
-    return {
-        ...acc,
-        sections: [
-            ...acc.sections,
-            [
-                'loans',
-                {
-                    ...currentVal,
-                    ...loanSegments,
-                },
-            ] as DataSection,
-        ],
-    };
-}
-
-/**
- * Maps the Riders section of the policy into a nested data tuple.
- * Combines riders and riderParticipants into a flat map.
- * @param policy The policy to transform
- * @param allPartiesById The mapping of party IDs to party objects
- * @param t The translation function
- * @param acc The accumulator object containing the policyBasics and policySections
- * @param currentKey The current key being processed
- * @param currentVal The current value of the Riders section
- * @returns The updated accumulator object containing the policyBasics and policySections
- */
 function parseRiders({
-    policy,
+    riders,
     allPartiesById,
-    acc,
-    currentKey,
-    currentVal,
 }: {
-    policy: Policy;
-    allPartiesById: Record<string, Party> | undefined;
-    t: TFunction;
-    acc: ToSections;
-    currentKey: string;
-    currentVal: object;
+    riders: DataSection;
+    allPartiesById: Record<string, DataSection | undefined>;
 }) {
-    const ridersAndParticipants = policy.riders?.map((rider) => {
-        // Party name is mapped from the partyId-to-party map
-        // on the PreparedPolicy
-        const parties = rider.riderParticipants?.map((partyData) => {
-            const requiredPartyData = fillInRequiredPartyDetails({
-                partyId: partyData.partyId,
-                policy,
-                idFieldName: 'coveredParty',
-                allPartiesById,
-            });
+    const ridersAndParties = riders.children.map((rider) => {
+        if (rider.type !== FieldType.section) {
+            return rider;
+        }
 
-            if (!requiredPartyData) {
-                return undefined;
-            }
+        // Party name and address are mapped from
+        // the partyId-to-party map on the PreparedPolicy
 
-            const completePartyData = {
-                ...requiredPartyData,
-                partyAgeAtIssue: partyData.partyAgeAtIssue,
-            };
+        const partiesSection = rider.children
+            .filter(isDataSection)
+            .find((child) => child.label === 'riderParticipants');
+        console.log('ridersSection', partiesSection);
+        const parties: DataSection[] =
+            partiesSection?.children
+                .filter((party): party is DataSection => {
+                    return party.type === FieldType.section;
+                })
+                .map((party) => {
+                    // Before translations are applied party label is partyId
+                    const partyId = party.label;
+                    const partyReference = allPartiesById[partyId];
+                    console.log('reference?....', partyId, partyReference);
+                    const partyName = //FIXME
+                        partyReference &&
+                        'partyName' in partyReference &&
+                        typeof partyReference.partyName === 'string'
+                            ? partyReference.partyName
+                            : partyId;
 
-            return completePartyData;
-        });
+                    // FIXME: fill in party details and bank and address info
+                    /*
+                        const requiredPartyData = fillInRequiredPartyDetails({
+                            partyId: partyId,
+                            policy,
+                            idFieldName: 'partyName',
+                            allPartiesById,
+                        });
 
-        return {
+                        if (!requiredPartyData) {
+                            return undefined;
+                        }
+                        */
+
+                    const retainedFields = ['partyAgeAtIssue'];
+                    const hydratedParty: DataSection = {
+                        ...party,
+                        label: partyName,
+                        children: [
+                            ...party.children
+                                .filter(isDataField)
+                                .filter((partyField) =>
+                                    retainedFields.includes(partyField.label)
+                                ),
+                        ],
+                    };
+
+                    return hydratedParty;
+                }) ?? [];
+
+        const hydratedRider: DataSection = {
             ...rider,
-            ...parties,
+            children: [
+                ...rider.children,
+                {
+                    type: FieldType.section,
+                    label: 'coveredParty',
+                    children: parties,
+                },
+            ],
         };
+
+        return hydratedRider;
     });
 
     return {
-        ...acc,
-        sections: [
-            ...acc.sections,
-            [currentKey, ridersAndParticipants ?? currentVal] as DataSection,
-        ],
+        ...riders,
+        children: ridersAndParties,
     };
 }
 
-/**
- * Given a policy, returns a list of systematic programs and their associated parties.
- *
- * The returned list contains the following fields:
- * - systematicPrograms: an array of SystematicProgram objects
- * - systematicProgramParties: an array of party objects associated with each systematic program
- *
- * @param policy The policy to transform
- * @param allPartiesById The mapping of party IDs to party objects
- * @param t The translation function
- * @param lineOfBusiness The line of business to apply filtering rules to
- * @param acc The accumulator object for the policy sections and baselines
- * @param currentKey The current key being processed
- * @param currentVal The current value being processed
- * @returns An object containing the transformed policy sections and baselines
- */
 function parseSystematicPrograms({
-    policy,
+    systematicPrograms,
     allPartiesById,
-    t,
-    acc,
-    currentKey,
-    currentVal,
 }: {
-    policy: Policy;
-    allPartiesById: Record<string, Party> | undefined;
-    t: TFunction;
-    acc: ToSections;
-    currentKey: string;
-    currentVal: object;
-}) {
-    const systematicProgramsAndParties = policy.systematicPrograms?.map(
+    systematicPrograms: DataSection;
+    allPartiesById: Record<string, DataSection | undefined>;
+}): DataSection {
+    const systematicProgramsAndParties = systematicPrograms.children.map(
         (systematicProgram) => {
+            if (systematicProgram.type !== FieldType.section) {
+                return systematicProgram;
+            }
             // Party name, bank info, and address are mapped from
             // the partyId-to-party map on the PreparedPolicy
-            const parties = systematicProgram.parties?.map((partyData) => {
-                const requiredPartyData = fillInRequiredPartyDetails({
-                    partyId: partyData.partyId,
-                    policy,
-                    idFieldName: 'partyName',
-                    allPartiesById,
-                });
+            const partiesSection = systematicProgram.children
+                .filter(isDataSection)
+                .find((child) => child.label === 'parties');
 
-                if (!requiredPartyData) {
-                    return undefined;
-                }
+            const parties: DataSection[] =
+                partiesSection?.children.filter(isDataSection).map((party) => {
+                    // Before translations are applied party label is partyId
+                    const partyId = party.label;
+                    const partyReference = allPartiesById[partyId];
+                    const partyName = //FIXME
+                        partyReference &&
+                        'partyName' in partyReference &&
+                        typeof partyReference.partyName === 'string'
+                            ? partyReference.partyName
+                            : partyId;
+                    const tag = findValueInNode({
+                        node: party,
+                        key: 'partyRole',
+                    });
 
-                const partyBankAndAddress = fillInBankAndAddressInfo(
-                    {
-                        partyId: partyData.partyId,
-                        allPartiesById,
-                    },
-                    t
-                );
+                    // FIXME: fill in party details and bank and address info
+                    /*
+                        const requiredPartyData = fillInRequiredPartyDetails({
+                            partyId: partyId,
+                            policy,
+                            idFieldName: 'partyName',
+                            allPartiesById,
+                        });
 
-                const completePartyData = {
-                    ...requiredPartyData,
-                    ...partyBankAndAddress,
-                    percentage: partyData.percentage,
-                    paymentForm: partyData.paymentForm,
-                    ...(partyData.partyRole && {
-                        [tags]: [
-                            formatAsDataValue({
-                                fieldData: partyData.partyRole,
-                                t,
-                            }),
+                        if (!requiredPartyData) {
+                            return undefined;
+                        }
+
+                        const partyBankAndAddress = fillInBankAndAddressInfo(
+                            {
+                                partyId: partyData.partyId,
+                                allPartiesById,
+                            },
+                            t
+                        );
+                        */
+
+                    const retainedFields = ['percentage', 'paymentForm'];
+                    const hydratedParty: DataSection = {
+                        ...party,
+                        label: partyName,
+                        children: [
+                            ...party.children
+                                .filter(isDataField)
+                                .filter((partyField) =>
+                                    retainedFields.includes(partyField.label)
+                                ),
                         ],
-                    }),
-                };
+                        tags: tag ? [tag] : undefined,
+                    };
 
-                return completePartyData;
-            });
+                    return hydratedParty;
+                }) ?? [];
 
-            return {
+            const hydratedSystematicProgram: DataSection = {
                 ...systematicProgram,
-                ...parties,
+                children: [
+                    ...systematicProgram.children,
+                    {
+                        type: FieldType.section,
+                        label: 'hydratedParties',
+                        children: parties,
+                    },
+                ],
             };
+
+            return hydratedSystematicProgram;
         }
     );
+
     return {
-        ...acc,
-        sections: [
-            ...acc.sections,
-            [
-                currentKey,
-                systematicProgramsAndParties ?? currentVal,
-            ] as DataSection,
-        ],
+        ...systematicPrograms,
+        children: systematicProgramsAndParties,
     };
 }
 
-/**
- * Maps the Allocation section of the policy into a nested data tuple.
- * Combines fundAllocationsInvestments and funds into a flat map.
- * @param policy The policy to transform
- * @param subSectionTitleField The field that maps to the subsection title
- * @param sectionTitle The title of the section
- * @param t The translation function
- * @param acc The accumulator object containing the policyBasics and policySections
- * @param currentVal The current value of the Allocation section
- * @returns The updated accumulator object containing the policyBasics and policySections
- */
 function parseAllocation({
-    policy,
-    subSectionTitleField,
-    sectionTitle,
-    acc,
-    currentVal,
+    allocation,
 }: {
-    policy: Policy;
-    subSectionTitleField: string;
-    sectionTitle: string;
-    acc: ToSections;
-    currentVal: Policy['allocation'];
-}) {
+    allocation: DataSection;
+}): DataSection {
     // Funds are mapped from the Allocation section, minus the loanSegments subsections
     // Combine fundAllocationsInvestments and funds into a flat map
 
-    const combinedFunds = policy.allocation?.funds?.map((fund, i) => {
-        return {
-            ...policy.allocation?.fundAllocationsInvestments?.[i],
-            ...fund,
-        };
-    });
-    const funds = combinedFunds?.length
-        ? convertListToMap<Fund & FundAllocation>({
-              subSectionList: combinedFunds,
-              subSectionTitleField,
-              fallbackTitle: sectionTitle,
-          })
-        : undefined;
+    const fundsSectionNames = ['fundAllocationsInvestments', 'funds'];
+    const combinedFunds = allocation.children
+        .filter(isDataSection)
+        .filter((child) => fundsSectionNames.includes(child.label))
+        .reduce((acc: DataNode[], child) => [...acc, ...child.children], []);
 
     return {
-        ...acc,
-        ...(funds && {
-            sections: [
-                ...acc.sections,
-                [
-                    'combinedFunds',
-                    {
-                        ...currentVal,
-                        ...funds,
-                    },
-                ] as DataSection,
-            ],
-        }),
+        type: FieldType.section,
+        label: 'combinedFunds',
+        children: [
+            ...allocation.children.filter(isDataField),
+            ...combinedFunds,
+        ],
     };
+}
+
+function isDataSection(node: DataNode): node is DataSection {
+    return node.type === FieldType.section;
+}
+
+function isDataSectionOrField(node: DataNode): node is DataSection | DataField {
+    return node.type === FieldType.section || node.type === FieldType.field;
+}
+
+function isDataField(node: DataNode): node is DataField {
+    return node.type === FieldType.field;
+}
+
+function isDataGroup(node: DataNode): node is DataGroup {
+    return node.type === FieldType.group;
+}
+
+function findInNode({
+    node,
+    key,
+}: {
+    node: DataNode;
+    key: string;
+}): DataNode | undefined {
+    if (node.type === FieldType.field && node.label === key) {
+        return node;
+    } else if (node.type === FieldType.section) {
+        return findInNodes({
+            nodes: node.children,
+            key,
+        });
+    }
+}
+function findSectionInNodes({
+    nodes,
+    key,
+}: {
+    nodes: DataNode[];
+    key: string;
+}): DataSection | undefined {
+    return findInNodes({
+        nodes,
+        key,
+        predicate: isDataSection,
+    }) as DataSection | undefined;
+}
+
+function findInNodes({
+    nodes,
+    key,
+    predicate = isDataSectionOrField,
+}: {
+    nodes: DataNode[];
+    key: string;
+    predicate?:
+        | typeof isDataSection
+        | typeof isDataSectionOrField
+        | typeof isDataField;
+}): DataNode | undefined {
+    const pathFragments = key.split('.');
+    const [firstFragment, ...rest] = pathFragments;
+    const firstNode = nodes
+        .filter(predicate)
+        .find((child) => child.label === firstFragment);
+
+    if (rest.length) {
+        if (firstNode) {
+            return findInNode({ node: firstNode, key: rest.join('.') });
+        }
+    } else {
+        return firstNode;
+    }
+}
+
+function findValueInNode({
+    node,
+    key,
+}: {
+    node: DataNode;
+    key: string;
+}): string | undefined {
+    const foundNode = findInNode({ node, key });
+    if (foundNode && foundNode.type === FieldType.field) {
+        return foundNode.value;
+    }
 }

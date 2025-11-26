@@ -10,22 +10,10 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
-import { excludeFields } from './translations/exclude-fields';
 import { grammarCorrections } from './translations/grammar-corrections';
 import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
 import { percentageFields } from './translations/percentage-fields';
-import {
-    label,
-    tags,
-    link,
-    linkedField,
-    NestedData,
-    NestedDataTuple,
-    toolTip,
-    FormatterType,
-    DataNode,
-    FieldType,
-} from './types';
+import { NestedDataTuple, DataNode, FieldType } from './types';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition
@@ -195,10 +183,12 @@ export const formatAsDataValue = ({
     fieldName,
     fieldData,
     t,
+    policyNomenclature,
 }: {
     fieldData: string;
     t: TFunction;
     fieldName: string;
+    policyNomenclature?: string;
 }) => {
     let value = fieldData;
     // Empty values
@@ -223,59 +213,82 @@ export const formatAsDataValue = ({
     if (fieldName && dateFields.has(fieldName))
         value = convertKebabedDateString(String(fieldData) || undefined);
 
-    return { value: String(value), label: t(`allFields.${fieldName}`) };
+    return {
+        value: String(value),
+        label: t(`allFields.${fieldName}`, { policyNomenclature }),
+    };
 };
 
-export const excludeNodes =
-    ({
-        exclude,
-    }: {
-        exclude: string[]; // e.g. ["Salary", "secret-info"]
-    }) =>
-    (node: DataNode): DataNode | null => {
-        // SECTION or FIELD nodes have a label
-        if ('label' in node && exclude.includes(node.label)) {
-            return null;
+export const excludeNodes = (
+    node: DataNode,
+    exclude: string[]
+): DataNode | null => {
+    if ('label' in node && exclude.includes(node.label)) {
+        return null;
+    }
+    return node;
+};
+
+export const formatSectionLabel = ({
+    t,
+    nomenclature,
+}: {
+    t: TFunction;
+    nomenclature?: string;
+}) => {
+    return (node: DataNode): DataNode => {
+        if (node.type === FieldType.section) {
+            return {
+                ...node,
+                label:
+                    t(`allFields.${node.label}`, {
+                        defaultValue: null,
+                        policyNomenclature: nomenclature,
+                    }) ?? node.label,
+            };
         }
         return node;
     };
+};
 
-export const formatNode =
-    ({ t }: { t: TFunction }) =>
-    (node: DataNode): DataNode => {
-        if (node.type !== FieldType.field) {
-            return node;
-        }
-        // Apply your formatting to the leaf field value
-        const formattedValue = formatAsDataValue({
-            fieldData: node.value,
-            fieldName: node.label,
-            t,
-        });
+export const formatNode = (
+    node: DataNode,
+    t: TFunction,
+    policyNomenclature?: string
+): DataNode => {
+    if (node.type !== FieldType.field) {
+        return node;
+    }
 
-        return {
-            ...node,
-            value: formattedValue.value,
-            label: formattedValue.label,
-        };
+    const formattedValue = formatAsDataValue({
+        fieldData: node.value,
+        fieldName: node.label,
+        t,
+        policyNomenclature,
+    });
+
+    return {
+        ...node,
+        value: formattedValue.value,
+        label: formattedValue.label,
     };
+};
 
 // Removes excluded sections or nodes and formats labels / values
 export const combinedTransform = ({
     t,
     exclude,
+    policyNomenclature,
 }: {
     t: TFunction;
     exclude: string[];
+    policyNomenclature?: string;
 }) => {
-    const format = formatNode({ t });
-    const excludeNode = excludeNodes({ exclude });
-
     return (node: DataNode): DataNode | null => {
-        const afterExclude = excludeNode(node);
+        const afterExclude = excludeNodes(node, exclude);
         if (afterExclude === null) return null;
 
-        return format(afterExclude);
+        return formatNode(afterExclude, t, policyNomenclature);
     };
 };
 
@@ -291,106 +304,106 @@ export const combinedTransform = ({
  * @param type The
  * @returns The formatted data field tuple
  */
-export const formatDataField = ({
-    tuple,
-    lineOfBusiness,
-    t,
-    type,
-    searchValue,
-    fieldLink,
-    fieldLinkedField,
-}: {
-    tuple: NestedData | NestedDataTuple;
-    lineOfBusiness: LineOfBusiness;
-    t: TFunction;
-    type: FormatterType;
-    searchValue?: string;
-    fieldLink?: string;
-    fieldLinkedField?: string;
-}): NestedData => {
-    if (!isTuple(tuple)) {
-        return null;
-    }
+// export const formatDataField = ({
+//     tuple,
+//     lineOfBusiness,
+//     t,
+//     type,
+//     searchValue,
+//     fieldLink,
+//     fieldLinkedField,
+// }: {
+//     tuple: NestedData | NestedDataTuple;
+//     lineOfBusiness: LineOfBusiness;
+//     t: TFunction;
+//     type: FormatterType;
+//     searchValue?: string;
+//     fieldLink?: string;
+//     fieldLinkedField?: string;
+// }): NestedData => {
+//     if (!isTuple(tuple)) {
+//         return null;
+//     }
 
-    const [key, data] = tuple;
-    const include =
-        key != null &&
-        typeof key === 'string' &&
-        data != null &&
-        !excludeFields.has(key);
+//     const [key, data] = tuple;
+//     const include =
+//         key != null &&
+//         typeof key === 'string' &&
+//         data != null &&
+//         !excludeFields.has(key);
 
-    if (!include) {
-        return null;
-    }
+//     if (!include) {
+//         return null;
+//     }
 
-    const formattedLabel = formatAsDataLabel({ label: key, lineOfBusiness, t });
-    const formattedData = formatAsDataValue({
-        fieldData: data,
-        t,
-        fieldName: key,
-    });
+//     const formattedLabel = formatAsDataLabel({ label: key, lineOfBusiness, t });
+//     const formattedData = formatAsDataValue({
+//         fieldData: data,
+//         t,
+//         fieldName: key,
+//     });
 
-    if (typeof formattedData === 'object' && formattedData != null) {
-        const fieldTags = formattedData[tags];
-        const fieldLabel = formattedData[label] ?? formattedLabel;
-        const fieldLink = formattedData[link];
-        const fieldLinkedField = formattedData[linkedField];
-        const formattedEntries = removeExcludedAndEmptyFields({
-            tuples:
-                formattedData instanceof Array
-                    ? (formattedData.map((v, i) => [
-                          `${key} ${i + 1}`,
-                          v,
-                      ]) as NestedData)
-                    : (Object.entries<NestedData>(formattedData) as NestedData),
-            lineOfBusiness,
-            t,
-            type,
-            fieldLink,
-            linkedField: fieldLinkedField,
-            searchValue,
-        });
+//     if (typeof formattedData === 'object' && formattedData != null) {
+//         const fieldTags = formattedData[tags];
+//         const fieldLabel = formattedData[label] ?? formattedLabel;
+//         const fieldLink = formattedData[link];
+//         const fieldLinkedField = formattedData[linkedField];
+//         const formattedEntries = removeExcludedAndEmptyFields({
+//             tuples:
+//                 formattedData instanceof Array
+//                     ? (formattedData.map((v, i) => [
+//                           `${key} ${i + 1}`,
+//                           v,
+//                       ]) as NestedData)
+//                     : (Object.entries<NestedData>(formattedData) as NestedData),
+//             lineOfBusiness,
+//             t,
+//             type,
+//             fieldLink,
+//             linkedField: fieldLinkedField,
+//             searchValue,
+//         });
 
-        if (formattedEntries == null) {
-            return null;
-        }
+//         if (formattedEntries == null) {
+//             return null;
+//         }
 
-        formattedEntries[tags] = fieldTags;
-        formattedEntries[label] = fieldLabel;
-        formattedEntries[link] = fieldLink;
-        formattedEntries[linkedField] = fieldLinkedField;
+//         formattedEntries[tags] = fieldTags;
+//         formattedEntries[label] = fieldLabel;
+//         formattedEntries[link] = fieldLink;
+//         formattedEntries[linkedField] = fieldLinkedField;
 
-        return formattedEntries;
-    }
+//         return formattedEntries;
+//     }
 
-    const displayIfSearched =
-        include &&
-        formattedLabel &&
-        (!searchValue ||
-            formattedLabel.toLowerCase().includes(searchValue.toLowerCase()) ||
-            formattedData.toLowerCase().includes(searchValue.toLowerCase()));
+//     const displayIfSearched =
+//         include &&
+//         formattedLabel &&
+//         (!searchValue ||
+//             formattedLabel.toLowerCase().includes(searchValue.toLowerCase()) ||
+//             formattedData.toLowerCase().includes(searchValue.toLowerCase()));
 
-    if (!displayIfSearched) {
-        return null;
-    }
+//     if (!displayIfSearched) {
+//         return null;
+//     }
 
-    const dataTuple: NestedData = [formattedLabel, formattedData];
+//     const dataTuple: NestedData = [formattedLabel, formattedData];
 
-    if (fieldLinkedField === key) {
-        dataTuple[link] = fieldLink;
-    }
+//     if (fieldLinkedField === key) {
+//         dataTuple[link] = fieldLink;
+//     }
 
-    dataTuple[toolTip] =
-        t(`${type}.toolTips.${key}`, {
-            defaultValue: null,
-            policyNomenclature:
-                lineOfBusiness === LineOfBusiness.LIFE
-                    ? t('policy.nomenclature.policy')
-                    : t('policy.nomenclature.contract'),
-        }) ?? undefined;
+//     dataTuple[toolTip] =
+//         t(`${type}.toolTips.${key}`, {
+//             defaultValue: null,
+//             policyNomenclature:
+//                 lineOfBusiness === LineOfBusiness.LIFE
+//                     ? t('policy.nomenclature.policy')
+//                     : t('policy.nomenclature.contract'),
+//         }) ?? undefined;
 
-    return dataTuple;
-};
+//     return dataTuple;
+// };
 
 /**
  * Remove excluded and empty fields from a nested data tuple.
@@ -404,50 +417,50 @@ export const formatDataField = ({
  * @param additionalFieldsToExclude Additional fields to exclude from the filtered result.
  * @returns The filtered nested data tuple.
  */
-export const removeExcludedAndEmptyFields = ({
-    tuples,
-    lineOfBusiness,
-    t,
-    type,
-    fieldLink,
-    linkedField,
-    searchValue,
-    additionalFieldsToExclude,
-}: {
-    tuples: NestedData;
-    lineOfBusiness: LineOfBusiness;
-    t: TFunction;
-    type: FormatterType;
-    fieldLink?: string;
-    linkedField?: string;
-    searchValue?: string;
-    additionalFieldsToExclude?: string[];
-}): NestedData => {
-    const filteredTuples = tuples
-        ?.map((tuple) => {
-            // Ensure tuple is valid
-            if (!isTuple(tuple)) {
-                return null;
-            }
+// export const removeExcludedAndEmptyFields = ({
+//     tuples,
+//     lineOfBusiness,
+//     t,
+//     type,
+//     fieldLink,
+//     linkedField,
+//     searchValue,
+//     additionalFieldsToExclude,
+// }: {
+//     tuples: NestedData;
+//     lineOfBusiness: LineOfBusiness;
+//     t: TFunction;
+//     type: FormatterType;
+//     fieldLink?: string;
+//     linkedField?: string;
+//     searchValue?: string;
+//     additionalFieldsToExclude?: string[];
+// }): NestedData => {
+//     const filteredTuples = tuples
+//         ?.map((tuple) => {
+//             // Ensure tuple is valid
+//             if (!isTuple(tuple)) {
+//                 return null;
+//             }
 
-            return !(
-                additionalFieldsToExclude &&
-                new Set(additionalFieldsToExclude).has(tuple[0])
-            )
-                ? formatDataField({
-                      tuple,
-                      lineOfBusiness,
-                      t,
-                      type,
-                      searchValue,
-                      fieldLink,
-                      fieldLinkedField: linkedField,
-                  })
-                : null;
-        })
-        .filter((tuple) => tuple !== null);
-    return filteredTuples?.length ? filteredTuples : null;
-};
+//             return !(
+//                 additionalFieldsToExclude &&
+//                 new Set(additionalFieldsToExclude).has(tuple[0])
+//             )
+//                 ? formatDataField({
+//                       tuple,
+//                       lineOfBusiness,
+//                       t,
+//                       type,
+//                       searchValue,
+//                       fieldLink,
+//                       fieldLinkedField: linkedField,
+//                   })
+//                 : null;
+//         })
+//         .filter((tuple) => tuple !== null);
+//     return filteredTuples?.length ? filteredTuples : null;
+// };
 
 export const isTuple = (tuple: any): tuple is NestedDataTuple =>
     tuple != null &&

@@ -7,7 +7,7 @@ import {
     FieldSize as BloomFieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
-import { useEffect } from 'react';
+import { useEffect, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@deps/hooks/useDebounce';
@@ -18,11 +18,13 @@ import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
     convertNode,
-    convertToDataNode,
+    applyTransformationsToNodes,
     excludeNodesByLabel,
+    formatSectionLabels,
     groupBasics,
     searchNodes,
 } from '../transformations';
+import { DocumentFormat } from '../types';
 
 export const TransactionSidesheetContent = ({
     transaction,
@@ -33,13 +35,11 @@ export const TransactionSidesheetContent = ({
         useTreeState();
     const { t } = useTranslation();
     const debouncedSearchValue = useDebounce(searchValue, 200);
-    const nodes = convertToDataNode(
+    const nodes = applyTransformationsToNodes(
         (data) => convertNode(data, t),
-        (data) => groupBasics(data, t),
-        // remove groupSections
-        // show / hide sections
-        // translate section labels
-        (data) => excludeNodesByLabel(data, t)
+        (data) => groupBasics(data, t, DocumentFormat.transaction),
+        (data) => excludeNodesByLabel(data, t),
+        (data) => formatSectionLabels(data, t)
     )(transaction);
 
     const matches = searchNodes(nodes, debouncedSearchValue);
@@ -53,7 +53,9 @@ export const TransactionSidesheetContent = ({
     return (
         <div className={styles.keyValuesContainer}>
             <FieldData
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setSearchValue(e.target.value)
+                }
                 handleClear={() => setSearchValue('')}
                 value={searchValue}
                 fieldType={FieldTypes.Search}

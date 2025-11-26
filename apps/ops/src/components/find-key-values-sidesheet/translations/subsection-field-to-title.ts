@@ -11,6 +11,8 @@ export const sectionTypeToSubSectionTitleFields: Record<string, string> = {
     parties: 'partyId',
     funds: 'fundName', // FIXME: should be keyed to combinedFunds
     loans: 'loanType',
+    partyRoles: 'partyId',
+    identifications: 'identificationType',
     people: 'FIXME',
     systematicPrograms: 'arrangementType',
     loanSegments: 'segmentId',
