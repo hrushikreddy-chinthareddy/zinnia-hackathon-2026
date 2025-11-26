@@ -56,10 +56,12 @@ const SystematicProgramsActiveTable = ({
                     <TableHeaderCell className={styles.nextPaymentCell}>
                         {t('allFields.nextPayment')}
                     </TableHeaderCell>
-                    <TableHeaderCell className={styles.paymentTypeCell}>
+                    <TableHeaderCell>
                         {t('allFields.paymentType')}
                     </TableHeaderCell>
-                    <TableHeaderCell>{t('allFields.actions')}</TableHeaderCell>
+                    <TableHeaderCell className={styles.actionCell}>
+                        {t('allFields.actions')}
+                    </TableHeaderCell>
                 </TableRow>
             </TableHeader>
             {
@@ -120,11 +122,7 @@ const SystematicProgramsActiveTable = ({
                                             >
                                                 {date}
                                             </TableCell>
-                                            <TableCell
-                                                className={
-                                                    styles.paymentTypeCell
-                                                }
-                                            >
+                                            <TableCell>
                                                 {paymentType
                                                     ? paymentFormDictionary[
                                                           paymentType

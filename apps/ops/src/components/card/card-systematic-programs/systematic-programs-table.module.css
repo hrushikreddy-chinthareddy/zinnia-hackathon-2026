@@ -93,10 +93,6 @@
     width: 132px;
 }
 
-.paymentTypeCell {
-    width: 322px;
-}
-
 .statusCell {
     width: 132px;
     display: flex;
@@ -113,6 +109,10 @@
 }
 
 .actionCell {
+    width: 172px;
+}
+
+td.actionCell {
     display: flex;
     gap: 8px;
     a {
