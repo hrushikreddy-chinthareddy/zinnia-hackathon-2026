@@ -108,19 +108,19 @@ export const submitRoleChange = async (
 
 export const deleteTPDRole = async (
     planCode: string | undefined,
-    policyNumber: string | undefined,
+    id: string | undefined,
     role: PolicyRole,
     partyId: string,
     query: any
 ): Promise<TransactionResponse> => {
     const method = HttpMethod.DELETE;
-    const url = `${baseUrl}/policies/${planCode}/${policyNumber}/parties/${partyId}/${role}`;
+    const url = `${baseAppUrl}/api/policies/${planCode}/${id}/parties/${partyId}/${role}`;
 
     browserLogInfo(`deleteRole::Starting deletion for ${role}`, {
         method,
         url,
         planCode,
-        policyNumber,
+        id,
         partyId,
         role,
         payload: JSON.stringify(query),
@@ -128,16 +128,15 @@ export const deleteTPDRole = async (
     });
 
     try {
-        const response = await client[method]<any>(url, {
-            data: query,
-        });
+        const response = await client.delete<any>(url, { data: query });
+
         return { status: response.status, data: response.data };
     } catch (error: any) {
         browserLogError('deleteRole::an error occurred during deletion', {
             ...parseErrorInformation(error),
             method,
             planCode,
-            policyNumber,
+            id,
             partyId,
             role,
         });

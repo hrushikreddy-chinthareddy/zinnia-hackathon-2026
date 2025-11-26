@@ -28,7 +28,10 @@ import {
 } from '@deps/types/segment-analytics';
 import { Policy } from '@zinnia/api-types/types/sor';
 
-import { buildRoleChangeRequestBody } from '../../role-change-helper';
+import {
+    buildDeleteTPDRequestBody,
+    buildRoleChangeRequestBody,
+} from '../../role-change-helper';
 
 interface ConfirmStepProps {
     policy: Policy;
@@ -75,10 +78,7 @@ const ConfirmStep = ({
         // Determine if this is a TPD removal operation
         const isTpdRemoval = isTpdRole && removedTpdIndex !== null && addRole;
 
-        const roleBody = buildRoleChangeRequestBody(roleData, role);
-
         if (isTpdRemoval) {
-            // TPD Removal: Use DELETE API
             const removedTpdPartyId =
                 existingRoleData?.[removedTpdIndex]?.party?.partyId;
             if (!removedTpdPartyId) {
@@ -87,14 +87,7 @@ const ConfirmStep = ({
                 return;
             }
 
-            const { effectiveDate, party, signatures, correlationId } =
-                roleBody || {};
-            const deleteRoleBody = {
-                effectiveDate,
-                party,
-                signatures,
-                correlationId,
-            };
+            const deleteRoleBody = buildDeleteTPDRequestBody(roleData);
 
             response = await deleteTPDRole(
                 policy.product?.planCode,
@@ -108,6 +101,8 @@ const ConfirmStep = ({
                 isTpdRole && removedTpdIndex === null && !addRole
                     ? ''
                     : partyId;
+
+            const roleBody = buildRoleChangeRequestBody(roleData, role);
 
             response = await submitRoleChange(
                 policy.product?.planCode,
