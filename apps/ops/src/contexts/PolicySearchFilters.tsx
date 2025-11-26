@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { createContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
@@ -8,6 +8,8 @@ import {
     isResetQueryParam,
 } from '@deps/types/constants';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+
+import { SearchBarContext } from './SearchBarContext';
 export interface PolicySearchFilters {
     searchValue: SearchViewQuery;
     limit: number;
@@ -42,9 +44,10 @@ export const PolicySearchFiltersContext =
     });
 
 export const PolicySearchFiltersProvider = ({ children }: any) => {
+    const { showFieldErrorMessage, setShowFieldErrorMessage } =
+        useContext(SearchBarContext);
     const [policySearchFilters, setPolicySearchFilters] =
         useState(initialFilters);
-    const [showFieldErrorMessage, setShowFieldErrorMessage] = useState(false);
     const router = useRouter();
 
     const clearFilters = () => {
