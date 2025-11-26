@@ -46,7 +46,7 @@ enum SortByOptions {
     MIN_TIME = 'secondLow',
 }
 
-export const ICON_COLOR = 'var(--color-secondary-color-secondary)';
+const ICON_COLOR = 'var(--color-secondary-color-secondary)';
 
 export const CompletedTaskTimesTable = () => {
     const [offset, setOffset] = useState(0);
