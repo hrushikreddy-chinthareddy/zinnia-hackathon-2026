@@ -7,7 +7,10 @@
     td {
         padding: var(--measure-dimension-padding-lg)
             var(--measure-dimension-padding-2xl);
-        font-size: 14px;
+        font: var(--typography-content-body-sm);
+    }
+    th {
+        font-weight: 700;
     }
 }
 
@@ -23,6 +26,20 @@
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
+    a {
+        font: var(--typography-content-body-sm);
+        font-weight: 700;
+    }
+}
+
+.toggle,
+.toggleInactive {
+    button {
+        border: 2px solid;
+    }
+    p {
+        font: var(--typography-content-body-sm) !important;
+    }
 }
 
 .toggle {
@@ -31,27 +48,32 @@
             --toggle-default-surface-toggle-selected-fill,
             #00628b
         );
-        border: 2px solid
-            var(--toggle-default-surface-toggle-selected-fill, #00628b);
+        border-color: var(
+            --toggle-default-surface-toggle-selected-fill,
+            #00628b
+        );
         span {
-            background: var(--base-surface-surface-carrier, #f8f8f8);
+            background-color: var(--base-surface-surface-carrier, #f8f8f8);
         }
     }
-    p {
-        font-size: 14px !important;
-    }
 }
+
 .toggleInactive {
     button {
-        background: var(--toggle-default-surface-toggle-default-fill, #ededed);
-        border: 2px solid
-            var(--toggledDefault-border-toggle-default-border, #676767);
-    }
-    span {
-        background: var(--toggledDefault-border-toggle-default-border, #676767);
-    }
-    p {
-        font-size: 14px !important;
+        background-color: var(
+            --toggle-default-surface-toggle-default-fill,
+            #ededed
+        );
+        border-color: var(
+            --toggledDefault-border-toggle-default-border,
+            #676767
+        );
+        span {
+            background-color: var(
+                --toggledDefault-border-toggle-default-border,
+                #676767
+            );
+        }
     }
 }
 
@@ -74,6 +96,7 @@
 .paymentTypeCell {
     width: 322px;
 }
+
 .statusCell {
     width: 132px;
     display: flex;

@@ -9,7 +9,6 @@ import {
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
-import Content, { ContentVariant } from '@deps/components/content/content';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     DEFAULT_ERROR_STRING,
@@ -46,43 +45,21 @@ const SystematicProgramsActiveTable = ({
             <TableHeader>
                 <TableRow>
                     <TableHeaderCell className={styles.typeCell}>
-                        <Content
-                            details={t('allFields.type') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.type')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.paymentAmountCell}>
-                        <Content
-                            details={t('allFields.paymentAmount') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.paymentAmount')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.frecuencyCell}>
-                        <div className={styles.tableHeaderContainer}>
-                            <Content
-                                details={t('allFields.frequency') as string}
-                                variant={ContentVariant.BodyBold}
-                            />
-                        </div>
+                        {t('allFields.frequency')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.nextPaymentCell}>
-                        <Content
-                            details={t('allFields.nextPayment') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.nextPayment')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.paymentTypeCell}>
-                        <Content
-                            details={t('allFields.paymentType') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.paymentType')}
                     </TableHeaderCell>
-                    <TableHeaderCell>
-                        <Content
-                            details={t('allFields.actions') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
-                    </TableHeaderCell>
+                    <TableHeaderCell>{t('allFields.actions')}</TableHeaderCell>
                 </TableRow>
             </TableHeader>
             {
@@ -111,19 +88,12 @@ const SystematicProgramsActiveTable = ({
                                             <TableCell
                                                 className={styles.typeCell}
                                             >
-                                                <Content
-                                                    details={
-                                                        program.arrangementType
-                                                            ? arrangmentTypesDictionary[
-                                                                  program
-                                                                      .arrangementType
-                                                              ]
-                                                            : DEFAULT_ERROR_STRING
-                                                    }
-                                                    variant={
-                                                        ContentVariant.BodySm
-                                                    }
-                                                />
+                                                {program.arrangementType
+                                                    ? arrangmentTypesDictionary[
+                                                          program
+                                                              .arrangementType
+                                                      ]
+                                                    : DEFAULT_ERROR_STRING}
                                             </TableCell>
 
                                             <TableCell
@@ -131,59 +101,35 @@ const SystematicProgramsActiveTable = ({
                                                     styles.paymentAmountCell
                                                 }
                                             >
-                                                <Content
-                                                    details={amount}
-                                                    variant={
-                                                        ContentVariant.BodySm
-                                                    }
-                                                />
+                                                {amount}
                                             </TableCell>
                                             <TableCell
                                                 className={styles.frecuencyCell}
                                             >
-                                                <Content
-                                                    details={
-                                                        activeProgram.frequency
-                                                            ? frequencyDictionary[
-                                                                  activeProgram
-                                                                      .frequency
-                                                              ]
-                                                            : DEFAULT_ERROR_STRING
-                                                    }
-                                                    variant={
-                                                        ContentVariant.BodySm
-                                                    }
-                                                />
+                                                {activeProgram.frequency
+                                                    ? frequencyDictionary[
+                                                          activeProgram
+                                                              .frequency
+                                                      ]
+                                                    : DEFAULT_ERROR_STRING}
                                             </TableCell>
                                             <TableCell
                                                 className={
                                                     styles.nextPaymentCell
                                                 }
                                             >
-                                                <Content
-                                                    details={date}
-                                                    variant={
-                                                        ContentVariant.BodySm
-                                                    }
-                                                />
+                                                {date}
                                             </TableCell>
                                             <TableCell
                                                 className={
                                                     styles.paymentTypeCell
                                                 }
                                             >
-                                                <Content
-                                                    details={
-                                                        paymentType
-                                                            ? paymentFormDictionary[
-                                                                  paymentType
-                                                              ]
-                                                            : DEFAULT_ERROR_STRING
-                                                    }
-                                                    variant={
-                                                        ContentVariant.BodySm
-                                                    }
-                                                />
+                                                {paymentType
+                                                    ? paymentFormDictionary[
+                                                          paymentType
+                                                      ]
+                                                    : DEFAULT_ERROR_STRING}
                                             </TableCell>
                                             <TableCell
                                                 className={styles.actionCell}
@@ -218,10 +164,7 @@ const SystematicProgramsActiveTable = ({
                         <TableRow>
                             <TableCell colSpan={6}>
                                 <div className={styles.emptyTableCell}>
-                                    <Content
-                                        details={`There are currently no ${getEmptyLabel()} systematic programs.`}
-                                        variant={ContentVariant.BodySm}
-                                    />
+                                    {`There are currently no ${getEmptyLabel()} systematic programs.`}
                                 </div>
                             </TableCell>
                         </TableRow>

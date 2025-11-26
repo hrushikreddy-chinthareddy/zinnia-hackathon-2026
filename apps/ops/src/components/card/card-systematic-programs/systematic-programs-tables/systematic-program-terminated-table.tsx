@@ -11,7 +11,6 @@ import {
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
-import Content, { ContentVariant } from '@deps/components/content/content';
 import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
@@ -39,39 +38,19 @@ const SystematicProgramsTerminatedTable = ({
             <TableHeader>
                 <TableRow>
                     <TableHeaderCell className={styles.typeCell}>
-                        <Content
-                            details={t('allFields.type') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.type')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.paymentAmountCell}>
-                        <Content
-                            details={t('allFields.lastPaymentDate') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.lastPaymentDate')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.frecuencyCell}>
-                        <div className={styles.tableHeaderContainer}>
-                            <Content
-                                details={t('allFields.frequency') as string}
-                                variant={ContentVariant.BodyBold}
-                            />
-                        </div>
+                        {t('allFields.frequency')}
                     </TableHeaderCell>
                     <TableHeaderCell className={styles.nextPaymentCell}>
-                        <Content
-                            details={
-                                t('allFields.systemProgramStatus') as string
-                            }
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.systemProgramStatus')}
                     </TableHeaderCell>
-
                     <TableHeaderCell>
-                        <Content
-                            details={t('allFields.terminationDate') as string}
-                            variant={ContentVariant.BodyBold}
-                        />
+                        {t('allFields.terminationDate')}
                     </TableHeaderCell>
                 </TableRow>
             </TableHeader>
@@ -91,38 +70,24 @@ const SystematicProgramsTerminatedTable = ({
                                     key={`program-${tosProgram.arrangementId}-${index}`}
                                 >
                                     <TableCell className={styles.typeCell}>
-                                        <Content
-                                            details={
-                                                program.arrangementType
-                                                    ? arrangmentTypesDictionary[
-                                                          program
-                                                              .arrangementType
-                                                      ]
-                                                    : DEFAULT_ERROR_STRING
-                                            }
-                                            variant={ContentVariant.BodySm}
-                                        />
+                                        {program.arrangementType
+                                            ? arrangmentTypesDictionary[
+                                                  program.arrangementType
+                                              ]
+                                            : DEFAULT_ERROR_STRING}
                                     </TableCell>
 
                                     <TableCell
                                         className={styles.paymentAmountCell}
                                     >
-                                        <Content
-                                            details={lastPaymentDate}
-                                            variant={ContentVariant.BodySm}
-                                        />
+                                        {lastPaymentDate}
                                     </TableCell>
                                     <TableCell className={styles.frecuencyCell}>
-                                        <Content
-                                            details={
-                                                tosProgram.frequency
-                                                    ? frequencyDictionary[
-                                                          tosProgram.frequency
-                                                      ]
-                                                    : DEFAULT_ERROR_STRING
-                                            }
-                                            variant={ContentVariant.BodySm}
-                                        />
+                                        {tosProgram.frequency
+                                            ? frequencyDictionary[
+                                                  tosProgram.frequency
+                                              ]
+                                            : DEFAULT_ERROR_STRING}
                                     </TableCell>
                                     <TableCell className={styles.statusCell}>
                                         <Icon
@@ -131,23 +96,13 @@ const SystematicProgramsTerminatedTable = ({
                                             width={16}
                                             height={16}
                                         />
-                                        <Content
-                                            details={
-                                                tosProgram.status
-                                                    ? programStatusDictionary[
-                                                          tosProgram.status
-                                                      ]
-                                                    : DEFAULT_ERROR_STRING
-                                            }
-                                            variant={ContentVariant.BodySm}
-                                        />
+                                        {tosProgram.status
+                                            ? programStatusDictionary[
+                                                  tosProgram.status
+                                              ]
+                                            : DEFAULT_ERROR_STRING}
                                     </TableCell>
-                                    <TableCell>
-                                        <Content
-                                            details={lastPaymentDate}
-                                            variant={ContentVariant.BodySm}
-                                        />
-                                    </TableCell>
+                                    <TableCell>{lastPaymentDate}</TableCell>
                                 </TableRow>
                             );
                         }
