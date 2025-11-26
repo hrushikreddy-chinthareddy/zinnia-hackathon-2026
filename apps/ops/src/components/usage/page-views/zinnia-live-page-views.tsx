@@ -26,16 +26,16 @@ import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { tooltipFormatter } from './page-views-tooltip';
-import {
-    generateSeries,
-    PrepareUserViewsCSV,
-    roles,
-    startDates,
-    TimeframeFilterOptions,
-} from './utils';
+import { generateSeries, PrepareUserViewsCSV, roles } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName, PageType } from '../utils';
+import {
+    colors,
+    generateCSVFileName,
+    PageType,
+    startDates,
+    TimeframeFilterOptions,
+} from '../utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const { t } = useTranslation();
