@@ -185,7 +185,7 @@ export const getCompletedTaskTimeQuery = async (
                     )
                     .map((value) => {
                         // Handle empty or missing task names
-                        if (value.name === '' || !value.name) {
+                        if (!value?.name) {
                             value.name = 'Unknown task';
                         }
                         return value;
