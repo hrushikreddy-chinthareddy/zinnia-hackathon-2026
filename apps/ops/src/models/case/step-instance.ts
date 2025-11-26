@@ -25,6 +25,7 @@ type BaseStepInstance = {
     stepStatus: Statuses;
     tasks?: null;
     updatedAt: string;
+    aiEnabled?: boolean;
 };
 
 export interface SingleStepInstance extends BaseStepInstance {

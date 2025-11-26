@@ -209,9 +209,6 @@ const Step = ({
 
     const hasPii = step.parentStage.id === ParentStageIds.AgentValidation;
 
-    // Temporary hardcoded flag for testing AI indicator
-    const aiEnabled = true;
-
     const handleClick = () => {
         if (transactionEntity?.entity?.tabs) {
             openDynamicSideSheetWithTabs();
@@ -235,8 +232,7 @@ const Step = ({
                             details={step.name}
                             pii={hasPii}
                         />
-                        {/* aiEnabled testing */}
-                        {aiEnabled && (
+                        {step.aiEnabled && (
                             <Tooltip
                                 placement={PopoverPlacement.TopRight}
                                 body={t('caseOverview.tabs.aiIndicatorTooltip')}
