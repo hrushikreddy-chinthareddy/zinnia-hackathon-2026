@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { toTitleCase } from '@xd/utils/dist';
 import {
     Icon,
     IconType,
@@ -23,6 +22,7 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import { toTitleCase } from '@deps/utils/strings';
 import { allowTestHarness } from '@deps/utils/test-harness/utils';
 import nextI18nextConfig from 'next-i18next.config';
 

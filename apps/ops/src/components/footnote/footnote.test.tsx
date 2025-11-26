@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+
 import { ProductType } from '@zinnia/api-types/types/sor';
 
 import Footnote, { FootnoteProps } from './footnote';

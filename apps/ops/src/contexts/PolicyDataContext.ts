@@ -1,7 +1,7 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { createContext, useContext } from 'react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};

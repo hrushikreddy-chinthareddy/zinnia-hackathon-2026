@@ -1,5 +1,6 @@
-import { DisbursementPaymentForm } from '@zinnia/api-types/types/sor';
 import { t } from 'i18next';
+
+import { DisbursementPaymentForm } from '@zinnia/api-types/types/sor';
 
 import { getPaymentType } from './systematic-program.helpers';
 

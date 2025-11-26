@@ -1,8 +1,8 @@
-import { PreferredCommunicationType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { TranslationFiles } from '@deps/config/translations';
+import { PreferredCommunicationType } from '@zinnia/api-types/types/sor';
 
 export default function ContactInfo() {
     const { t } = useTranslation(TranslationFiles.COMMON, {

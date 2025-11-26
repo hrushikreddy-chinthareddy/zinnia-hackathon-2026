@@ -1,6 +1,5 @@
 /* eslint-disable import/no-unresolved */
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRelation } from '@xd/utils/dist';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +19,7 @@ import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { FgaUiEntity } from '@deps/types/fga';
+import { FgaRelation } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -55,10 +55,6 @@ type UserTuple = {
     key: {
         object: string;
     };
-};
-
-type AssigneeUser = {
-    email: string;
 };
 
 type FGATuple = {
@@ -210,10 +206,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     userTuplesData?.tuples
                 );
             }
-
-            const selectedCarrier =
-                taskListingParams.carriers[1]?.toLowerCase();
-            const selectedQueue = taskListingParams.queues[1]?.toLowerCase();
 
             //needed to generate assignee list for sidesheet
             // const searchUsersFromQueue =

@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import { FC } from 'react';
 
@@ -7,6 +6,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import { oneYearAgoISO } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import styles from './nigo-overview.module.css';
 import { PieChart } from '../../charts/pie-charts/pie-chart';

@@ -1,8 +1,3 @@
-import {
-    ArrangementType,
-    Policy,
-    SystematicProgram,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
@@ -27,6 +22,11 @@ import {
     TransactionSuccessfulEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import {
+    ArrangementType,
+    Policy,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 
 import {
     buildSystematicProgramUpdateRequestBody,

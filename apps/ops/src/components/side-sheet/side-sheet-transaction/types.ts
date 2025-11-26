@@ -1,5 +1,6 @@
-import { AccountType, Policy, Transaction } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
+
+import { AccountType, Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalSideSheetValues } from './withdrawal/types';
 

@@ -1,4 +1,3 @@
-import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import {
     ChipX,
     Label,
@@ -19,6 +18,7 @@ import { PartyAddressCard } from '@deps/containers/address-change-container/comp
 import { AllowedRoleTypesEmail } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { browserLogWarn } from '@deps/utils/browser-logging';
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import { validateEmail } from '../correspondence';
 

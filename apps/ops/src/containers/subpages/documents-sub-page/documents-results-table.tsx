@@ -1,4 +1,3 @@
-import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -42,6 +41,7 @@ import {
     CaseDocumentClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
 import { DocumentWithSource } from './documents-sub-page';
@@ -63,7 +63,6 @@ const DownloadItem = ({
     doc: DocumentWithSource | MetadataSearchResponse;
     carrierCode: string;
 }) => {
-    const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
     const docId =
         doc.documentId || ((doc as DocumentWithSource).documentID as string);
@@ -119,7 +118,6 @@ export const createViewDownloadAction = (
     t: TFunction,
     label?: string
 ) => {
-    const { featureFlags } = useOptimizely();
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
             className={clsx('!underline-offset-2', styles.actionPadding)}

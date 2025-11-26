@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
@@ -28,7 +26,9 @@ import {
     checkPartialWithdrawalOneTimeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
 
 interface WithdrawalsPageHeaderContainerProps {
     isNavDrawerOpen?: boolean;
@@ -90,7 +90,6 @@ const WithdrawalsPageHeaderContainer = ({
     const {
         amountEligibleForWithdrawal,
         netSurrenderValue,
-        maximumWithdrawalAmount,
         freeWithdrawalAmount,
         annualWithdrawalsRemaining,
         annualWithdrawalsTaken,

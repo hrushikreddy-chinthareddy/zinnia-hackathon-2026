@@ -46,7 +46,6 @@ function TaskQueueDrawer({
     const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
     const [date, setDate] = useState(tomorrow);
     const [startLoader, setStartLoader] = useState(false);
-    const [timer] = useState(performance.now());
     const [pendingReason, setPendingReason] = useState('');
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: '' });
     const [notes, setNotes] = useState('');
@@ -168,8 +167,7 @@ function TaskQueueDrawer({
             const response = await updateTask(
                 taskData.caseId,
                 taskData.id,
-                body,
-                timer
+                body
             );
 
             if (response) {

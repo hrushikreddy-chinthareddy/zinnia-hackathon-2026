@@ -1,9 +1,9 @@
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
-
 import {
-    searchTransactionsByPaymentRecordId,
     SearchTransactionFilters,
-} from '../../../../queries/api/transaction-search';
+    searchTransactionsByPaymentRecordId,
+} from '@deps/queries/api/transaction-search';
+
 import { TaskHandler } from '../types';
 
 interface PaymentFollowUpPayload {

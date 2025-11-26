@@ -1,4 +1,5 @@
 import { cleanup } from '@testing-library/react';
+
 import { Frequency } from '@zinnia/api-types/types/sor';
 
 import { getFrequency, getPaymentType } from './systematic-program.helpers';

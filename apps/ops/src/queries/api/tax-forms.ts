@@ -1,5 +1,4 @@
 import { datadogLogs } from '@datadog/browser-logs';
-import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 import { AxiosError, AxiosRequestConfig, AxiosResponse, isCancel } from 'axios';
 
 import { DocumentDownloadV2 } from '@deps/models/case/document';
@@ -9,6 +8,7 @@ import {
 } from '@deps/models/case/send-tax-forms';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
+import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 
 import { baseAppUrl } from '../api-config';
 

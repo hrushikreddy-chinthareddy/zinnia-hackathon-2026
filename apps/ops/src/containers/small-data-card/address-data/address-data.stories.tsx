@@ -1,12 +1,13 @@
 import { Meta } from '@storybook/react';
+import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
+
 import {
     Address,
     AddressType,
     State,
     Country,
 } from '@zinnia/api-types/types/sor';
-import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 
 import AddressDataCard from './address-data';
 

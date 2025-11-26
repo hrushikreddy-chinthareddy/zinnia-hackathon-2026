@@ -1,5 +1,3 @@
-import { SearchRequest as DocsSearchRequest } from '@zinnia/api-types/types/documents-v3';
-
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { PolicyDocumentApiRequest } from '@deps/models/case/document';
@@ -12,6 +10,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
 import { b64ToBlob } from '@deps/utils/blob';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { SearchRequest as DocsSearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 const buildV2SearchArgs = ({
     searchBody,

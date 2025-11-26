@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -8,6 +7,7 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
 import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import ConfirmStep from './confirm-step';
 import ContactEstablishedStep from './contact-established-step';

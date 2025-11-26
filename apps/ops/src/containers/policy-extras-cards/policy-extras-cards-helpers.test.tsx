@@ -1,9 +1,8 @@
-import { RiderType } from '@xd/api-types/dist/generated-types/sor';
-
 import { filterNullAndUndefined } from '@deps/components/dynamic-form/helpers/object.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Rider, Status } from '@deps/models/policy/sor-policy';
 import { mockT as t } from '@deps/setupTests';
+import { RiderType } from '@zinnia/api-types/types/sor';
 
 import {
     cardFieldReducer,

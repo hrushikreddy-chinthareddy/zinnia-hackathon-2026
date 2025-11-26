@@ -1,6 +1,5 @@
-import { Phone } from '@zinnia/api-types/types/sor';
-
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 import {
     calculateAge,

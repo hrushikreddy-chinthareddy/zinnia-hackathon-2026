@@ -1,4 +1,3 @@
-import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 import { AxiosResponse } from 'axios';
 
 import { hasFilter } from '@deps/components/history/filters/filter.helpers';
@@ -8,6 +7,7 @@ import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
+import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 
 interface GetTransactionsProps {
     historyFilters: HistoryFilters;

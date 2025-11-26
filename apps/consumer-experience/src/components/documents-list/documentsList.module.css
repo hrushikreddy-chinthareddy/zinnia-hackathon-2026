@@ -1,8 +1,0 @@
-.content {
-  align-items: center;
-  display: flex;
-}
-
-.documentsListContainer {
-  margin-top: var(--measure-dimension-gap-md);
-}

@@ -1,5 +1,4 @@
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
-import { AddressType } from '@zinnia/api-types/types/sor';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -13,6 +12,7 @@ import { DynamicKey } from '@deps/containers/task-container/components/steps/cla
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { AddressType } from '@zinnia/api-types/types/sor';
 
 import { formatValueByDataType } from '../card-templates/card-template';
 

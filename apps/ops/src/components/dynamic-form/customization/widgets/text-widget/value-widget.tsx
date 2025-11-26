@@ -17,7 +17,6 @@ export const ValueWidget = function (props: WidgetProps) {
         required,
         onChange,
         placeholder,
-        schema,
         rawErrors,
     } = props;
     const [inputVal, setInputVal] = useState<string>(value);

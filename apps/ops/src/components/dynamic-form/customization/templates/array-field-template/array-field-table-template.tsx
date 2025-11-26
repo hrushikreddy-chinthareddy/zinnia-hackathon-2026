@@ -103,7 +103,7 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
                         <TableHeader>
                             <TableRow>
                                 {Object.entries(columns).map(
-                                    ([property, title], index) => (
+                                    ([property, title]) => (
                                         <TableHeaderCell
                                             key={property}
                                             className="typography-content-body-sm-bold"

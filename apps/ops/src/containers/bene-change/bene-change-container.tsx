@@ -1,5 +1,4 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useEffect, useCallback } from 'react';
@@ -16,6 +15,7 @@ import { validateBeneChangeTransaction } from '@deps/queries/api/web-non-financi
 import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { useBeneChange } from './bene-change-provider';
 import PeopleSubPage from '../people-sub-page';

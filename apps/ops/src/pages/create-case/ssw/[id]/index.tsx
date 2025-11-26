@@ -217,7 +217,7 @@ export default function SSWCase({
             router.push('/create-case');
             return;
         }
-    }, [document]);
+    }, [document, router]);
 
     // If the user has manually opened or closed the nav drawer, we want to override the default behavior
     const isNavDrawerOpen = useMemo(() => {

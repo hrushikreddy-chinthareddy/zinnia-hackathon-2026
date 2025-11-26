@@ -1,10 +1,3 @@
-import {
-    PartyRole,
-    PartyStatus,
-    PartyType,
-    Party,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -25,6 +18,13 @@ import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    PartyRole,
+    PartyStatus,
+    PartyType,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
 import { NameCard } from '../people-data-cards/name-card/name-card';
@@ -89,8 +89,7 @@ const InteriorPeoplePageHeaderContainer = ({
     // for header text siblings group two
     // date of birth
     const getDateOfBirth = (
-        partyType: string | undefined,
-        editable: boolean
+        partyType: string | undefined
     ): JSX.Element | null => {
         if (!partyType || partyType !== PartyType.INDIVIDUAL || isAgent) {
             return null;
@@ -186,12 +185,12 @@ const InteriorPeoplePageHeaderContainer = ({
                 editable={editable}
                 isUserPermissionedToEditCards={isUserPermissionedToEditCards}
             >
-                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+                {getDateOfBirth(selectedPolicyParty?.partyType)}
             </HeaderInfoCard>
         ) : (
             <div className="flex items-start align-baseline">
                 {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
-                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+                {getDateOfBirth(selectedPolicyParty?.partyType)}
             </div>
         );
     const belowHeaderTextChildren = partyRoleTags;

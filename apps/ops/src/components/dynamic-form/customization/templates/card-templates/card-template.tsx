@@ -1,6 +1,4 @@
 import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
-import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
-import { toTitleCase } from '@xd/utils/dist';
 import { Icon, IconType, Loader } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -40,6 +38,8 @@ import {
     DataFormattingTypes,
     TaskFieldTypes,
 } from '@deps/models/case/task';
+import { toTitleCase } from '@deps/utils/strings';
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import style from './card-template.module.css';
 

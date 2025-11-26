@@ -5,7 +5,6 @@ import {
     WidgetProps,
     getUiOptions,
 } from '@rjsf/utils';
-import { ENTERPRISE_DATE_FORMAT } from '@xd/utils/src/dates';
 import dayjs from 'dayjs';
 import React from 'react';
 
@@ -15,6 +14,7 @@ import {
     FieldVariant,
 } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import { ENTERPRISE_DATE_FORMAT } from '@deps/utils/dates';
 
 export default function NewDateWidget<
     T = any,

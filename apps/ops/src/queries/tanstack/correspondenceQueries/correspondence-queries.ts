@@ -1,4 +1,3 @@
-import { Document as DocumentResponse } from '@zinnia/api-types/types/correspondence';
 import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '@deps/queries/api-config';
@@ -6,6 +5,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { Document as DocumentResponse } from '@zinnia/api-types/types/correspondence';
 
 export const getCorrespondenceDocuments = async (
     planCode: string,

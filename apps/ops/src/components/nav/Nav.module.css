@@ -1,0 +1,225 @@
+.navContainer {
+    --nav-expanded-width: 240px;
+    background-color: var(--color-base-surface-surface-carrier);
+    /* for the sake of the animation hiding text properly we're using a border instead of padding */
+    /* that way whatever is overflowing behind the border is hidden */
+    border: var(--measure-dimension-z-space-2) solid
+        var(--color-base-surface-surface-carrier);
+    height: 100vh;
+    position: sticky;
+    transition: 300ms ease-in-out;
+    text-wrap: nowrap;
+    top: 0;
+    width: var(--nav-expanded-width);
+    z-index: 20;
+
+    &.collapsed {
+        width: 48px;
+    }
+}
+
+/* this is necessary because an element cannot effectively be overflow:hidden and position:relative */
+/* without it the toggleTarget button below gets clipped by the overflow completely */
+.navOverflowContainer {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.toggleTarget {
+    position: absolute;
+    top: -8px;
+    right: -16px;
+    width: 16px;
+    height: 100%;
+}
+
+.toggleButton {
+    justify-content: flex-end;
+    transform: rotate(90deg);
+    &:hover:not(:disabled):after {
+        content: none;
+    }
+}
+
+.logoRow {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin-block-end: var(--measure-dimension-z-space-2);
+    padding-inline: var(--measure-dimension-z-space-1-5);
+    padding-block: var(--measure-dimension-z-space-2);
+}
+
+.logo {
+    align-items: center;
+    display: flex;
+    height: 24px;
+    min-width: 90px;
+    & img {
+        height: 24px;
+    }
+}
+
+.carrierLogo {
+    border-radius: 100%;
+}
+
+.searchBar {
+    margin-block-end: var(--measure-dimension-z-space-4);
+    margin-block-start: var(--measure-dimension-z-space-2);
+}
+
+.searchInput {
+    border-radius: var(--measure-dimension-z-space-6);
+    border-width: var(--measure-dimension-stroke-xs);
+    /* padding + icon width + gap */
+    padding-inline-start: calc(
+        var(--measure-dimension-z-space-2) + var(--measure-dimension-z-space-4) +
+            var(--measure-dimension-z-space-3)
+    );
+    padding-block: var(--measure-dimension-z-space-1);
+    position: relative;
+
+    &::placeholder {
+        color: var(--color-grayscale-color-300-gray);
+    }
+
+    &:focus,
+    :focus-visible {
+        border-width: var(--measure-dimension-stroke-xs);
+    }
+}
+
+/* grabbing the parent of searchInput (aka the inputContainer) */
+div:has(> .searchInput)::before {
+    content: url(../../styles/images/icons/search.svg);
+    position: absolute;
+    top: 6px;
+    left: 8px;
+    height: 16px;
+    width: 16px;
+    z-index: 1;
+}
+
+.searchIcon {
+    padding: var(--measure-dimension-z-space-1-5);
+}
+
+.nav {
+    flex: 1;
+    width: calc(var(--nav-expanded-width) - 16px);
+    transition: width 300ms ease-in-out;
+    transition-delay: 300ms;
+}
+
+.navContainer.collapsed .nav {
+    width: 100%;
+    transition: width 1ms;
+    transition-delay: 300ms;
+}
+
+.navList {
+    color: var(--color-base-text-text-secondary);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.navSection {
+    &:not(:last-of-type) {
+        border-bottom: var(--measure-dimension-stroke-xs) solid
+            var(--color-grayscale-color-100-gray);
+        margin-bottom: var(--measure-dimension-z-space-2);
+        padding-block-end: var(--measure-dimension-z-space-2);
+    }
+
+    &.alignEnd {
+        margin-top: auto;
+    }
+}
+
+/* remove the separation border from the second to last nav section if the last one is aligned to the end */
+.navList:has(.alignEnd) .navSection:nth-last-child(2) {
+    border-bottom: none;
+}
+
+.navSection__heading {
+    padding-block: var(--measure-dimension-z-space-1);
+    padding-inline: var(--measure-dimension-z-space-2);
+}
+
+.listItem {
+    list-style: none;
+}
+
+.navSection__heading {
+    transition: opacity 300ms ease-in-out;
+
+    &.hidden {
+        opacity: 0;
+    }
+}
+
+.tooltip {
+    width: max-content;
+    display: none;
+}
+
+.tooltip.visible {
+    display: block;
+}
+
+.tooltipTrigger {
+    /* to do - double check that is is really doing what i want it to for a11y */
+    display: contents;
+    width: 100%;
+}
+
+.navContainer.collapsed .tooltipTrigger {
+    display: flex;
+}
+
+.listItem__link {
+    display: flex;
+    align-items: center;
+    border: var(--measure-dimension-stroke-xs) solid transparent;
+    gap: var(--measure-dimension-z-space-2);
+    padding: var(--measure-dimension-z-space-1);
+    width: 100%;
+    height: 32px;
+
+    &:hover {
+        background-color: var(--color-grayscale-color-white);
+        border-radius: var(--measure-dimension-z-space-1);
+    }
+
+    /* Actively selected navigation item */
+    &[aria-current='page'] {
+        background-color: var(--color-grayscale-color-white);
+        border-radius: var(--measure-dimension-z-space-1);
+        box-shadow: var(--shadow-elevation-elevation-light-xs);
+        border-color: var(--color-nav-drawer-2-nav-drawer-item-2-active-border);
+        color: var(--color-grayscale-color-900-gray);
+        svg {
+            color: var(--color-nav-drawer-2-nav-drawer-item-2-active-icon-fill);
+        }
+    }
+}
+
+.listItem__iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 1px; /* This aligns the icon correctly in collapsed state */
+}
+
+/* Since we're using max width it needs to be the change value (1024px) minus 1 */
+@media (max-width: 1023px) {
+    .toggleTarget {
+        display: none;
+    }
+}

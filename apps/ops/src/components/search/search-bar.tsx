@@ -5,7 +5,6 @@ import { TFunction, useTranslation } from 'next-i18next';
 import { HTMLAttributes, useCallback, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
 
@@ -106,8 +105,6 @@ const SearchBar = ({
         },
         [activeToggleBtn, getToggleLabel, onToggle]
     );
-
-    const { featureFlags } = useOptimizely();
 
     const dropdownLabels = toggleLabels(t);
 

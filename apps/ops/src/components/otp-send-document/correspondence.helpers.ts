@@ -1,5 +1,4 @@
 import { UserProfile } from '@auth0/nextjs-auth0/client';
-import { Policy } from '@zinnia/api-types/types/sor';
 
 import {
     AttachmentDetails,
@@ -10,6 +9,7 @@ import {
     CommunicationTypes,
     SendDocumentFormType,
 } from '@deps/models/case/send-document';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export const generateCommunicationRequest = (
     policy: Policy,

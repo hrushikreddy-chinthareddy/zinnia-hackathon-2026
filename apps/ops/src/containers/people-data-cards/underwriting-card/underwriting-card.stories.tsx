@@ -1,11 +1,4 @@
 import { Meta } from '@storybook/react';
-import {
-    EmploymentStatus,
-    Gender,
-    PolicyCoverage,
-    RiskClass,
-    SubStandardRating,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import {
@@ -15,6 +8,13 @@ import {
     getSexAtBirth,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
+import {
+    EmploymentStatus,
+    Gender,
+    PolicyCoverage,
+    RiskClass,
+    SubStandardRating,
+} from '@zinnia/api-types/types/sor';
 
 import UnderwritingCard from './underwriting-card';
 

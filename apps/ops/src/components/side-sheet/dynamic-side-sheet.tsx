@@ -10,9 +10,7 @@ export default function useDynamicSideSheet(
 ) {
     const tabs: DynamicSideSheetDataType['tabs'] = sideSheetData?.tabs ?? [];
 
-    const [activeTab, setActiveTab] = useState(
-        tabs.length > 0 ? tabs[0] : null
-    );
+    const [activeTab] = useState(tabs.length > 0 ? tabs[0] : null);
     const sideSheet = useSideSheetContext();
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(

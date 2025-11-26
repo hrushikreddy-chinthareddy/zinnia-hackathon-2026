@@ -5,7 +5,6 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "dev:ops": "turbo dev --filter ops",
-    "dev:cui": "turbo dev --filter consumer-experience",
     "lint": "turbo lint",
     "clean": "node ./scripts/clean.mjs .next node_modules dist .turbo build",
     "test": "turbo test",
@@ -14,7 +13,6 @@
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@zinnia/typescript-config": "workspace:*",
     "husky": "^8.0.3",
     "prettier": "^3.1.1",
     "turbo": "^2.6.0"

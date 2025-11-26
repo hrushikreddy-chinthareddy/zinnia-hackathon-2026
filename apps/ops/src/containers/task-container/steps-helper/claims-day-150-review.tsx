@@ -13,13 +13,8 @@ import {
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getDay150ReviewSteps = ({
-    taskType,
-    taskInfoLink,
-    t,
-    task,
-    taskMetadata,
-}: GetStepsProps) => {
+// Wrapper component for ClaimBeneStatus that manages its own state
+const ClaimBeneStatusWithState = ({ task }: { task: any }) => {
     const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>(
         task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
             ?.beneficiaryChangeDetail || {
@@ -32,7 +27,56 @@ export const getDay150ReviewSteps = ({
             beneDeathDate: null,
         }
     );
+    const readOnly = task.status === TaskStatus.Completed;
 
+    return (
+        <ClaimBeneStatus
+            beneficiary={beneficiary}
+            setBeneficiary={setBeneficiary}
+            readOnly={readOnly}
+        />
+    );
+};
+
+// Wrapper component for Claims150Call that manages its own state
+const Claims150CallWithState = ({
+    task,
+    taskType,
+}: {
+    task: any;
+    taskType: any;
+}) => {
+    const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>(
+        task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
+            ?.beneficiaryChangeDetail || {
+            notificationPreferences:
+                task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
+                    ?.beneficiary?.notificationPreferences,
+            changeRequire: null,
+            changeType: null,
+            beneDeceased: false,
+            beneDeathDate: null,
+        }
+    );
+    const readOnly = task.status === TaskStatus.Completed;
+
+    return (
+        <Claims150Call
+            beneficiary={beneficiary}
+            setBeneficiary={setBeneficiary}
+            taskType={taskType}
+            readOnly={readOnly}
+        />
+    );
+};
+
+export const getDay150ReviewSteps = ({
+    taskType,
+    taskInfoLink,
+    t,
+    task,
+    taskMetadata,
+}: GetStepsProps) => {
     const readOnly = task.status === TaskStatus.Completed;
 
     const beneAttempt =
@@ -48,13 +92,7 @@ export const getDay150ReviewSteps = ({
             isVisible: () => {
                 return true;
             },
-            component: (
-                <ClaimBeneStatus
-                    beneficiary={beneficiary}
-                    setBeneficiary={setBeneficiary}
-                    readOnly={readOnly}
-                />
-            ),
+            component: <ClaimBeneStatusWithState task={task} />,
             text: t('tabs.beneficiaryStatus'),
             index: 0,
             isCompleted: true,
@@ -87,12 +125,7 @@ export const getDay150ReviewSteps = ({
                 return stepTwoIsVisible;
             },
             component: (
-                <Claims150Call
-                    beneficiary={beneficiary}
-                    setBeneficiary={setBeneficiary}
-                    taskType={taskType}
-                    readOnly={readOnly}
-                />
+                <Claims150CallWithState task={task} taskType={taskType} />
             ),
             text: t('tabs.call'),
             index: 2,

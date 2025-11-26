@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address as SorAddress } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -27,6 +26,7 @@ import {
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Address as SorAddress } from '@zinnia/api-types/types/sor';
 
 import {
     DeathNotificationData,
