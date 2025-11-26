@@ -1,9 +1,10 @@
+import { AxiosResponse } from 'axios';
+
 import {
     UserIllustrationActivityInput,
     UserIllustrationActivityOutput,
     HTTPValidationError,
 } from '@zinnia/api-types/types/analytics';
-import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
