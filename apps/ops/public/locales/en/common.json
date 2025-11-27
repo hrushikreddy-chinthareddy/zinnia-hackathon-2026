@@ -2274,7 +2274,10 @@
                 "ssn": "Enter a Social Security number to return search results",
                 "firstName": "Enter a first name to return search results",
                 "lastName": "Enter a last name to return search results",
-                "fullName": "Enter a trust or organization to return search results"
+                "fullName": "Enter a trust or organization to return search results",
+                "caseId": "Enter a Case Id to return search results",
+                "firmName": "Enter a firm name to return search results",
+                "documentNumber": "Enter a document number to return search results"
             },
             "buttons": {
                 "policyNumber": "Policy or contract number",

@@ -2329,7 +2329,11 @@
                 "policyNumber": "Entrez un numéro de police pour obtenir les résultats de recherche",
                 "ssn": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
                 "firstName": "Entrez un prénom pour obtenir les résultats de recherche",
-                "lastName": "Entrez un nom de famille pour obtenir les résultats de recherche"
+                "lastName": "Entrez un nom de famille pour obtenir les résultats de recherche",
+                "fullName": "Entrez le nom d'une fiducie ou d'une organisation pour obtenir les résultats de recherche",
+                "caseId": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
+                "firmName": "Entrez le nom d'une entreprise pour obtenir les résultats de recherche",
+                "documentNumber": "Entrez un numéro de document pour obtenir les résultats de recherche"
             },
             "buttons": {
                 "policyNumber": "Numéro de police",
