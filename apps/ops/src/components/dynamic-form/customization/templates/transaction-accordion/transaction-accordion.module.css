@@ -15,3 +15,9 @@
     font-weight: 700;
     line-height: 22px;
 }
+.disabledAccordion {
+    opacity: 0.5;
+}
+.disabledContent {
+    opacity: 0.5;
+}

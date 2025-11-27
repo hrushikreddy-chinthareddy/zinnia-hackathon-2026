@@ -1,0 +1,27 @@
+.animate-slide-up {
+    animation: slideUpFade 0.35s ease-out;
+}
+
+@keyframes slideUpFade {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.flash-highlight {
+    animation: highlightFlash 1.2s ease-out;
+}
+
+@keyframes highlightFlash {
+    0% {
+        box-shadow: 0 0 0px 3px rgba(0, 150, 255, 0.45);
+    }
+    100% {
+        box-shadow: none;
+    }
+}

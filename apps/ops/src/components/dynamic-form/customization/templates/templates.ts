@@ -11,11 +11,14 @@ import { ChangeAddressTemplate } from './change-address-templete/change-address-
 import DifferenceTemplate from './difference-template/difference-template';
 import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
+import { PartyCardFieldTemplate } from './field-template/party-card-field-template';
 import InstructionsTemplate from './instructions-template/instructions-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
 import ObjectRowFieldTemplate from './object-field-template/object-row-template';
+import PartyInfoListTemplate from './party-info-list-template/party-info-list';
 import TextListTemplate from './text-list-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
+import TransactionAccordionTemplate from './transaction-accordion/transaction-accordion';
 export function generateTemplates() {
     return {
         TitleFieldTemplate,
@@ -33,6 +36,9 @@ export function generateTemplates() {
         ObjectRowFieldTemplate,
         DifferenceTemplate,
         ChangeAddressTemplate,
+        TransactionAccordionTemplate,
+        PartyCardFieldTemplate,
+        PartyInfoListTemplate,
         ButtonTemplates: { AddButton, RemoveButton, SubmitButton },
     };
 }
