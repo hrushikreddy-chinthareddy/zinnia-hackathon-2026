@@ -91,7 +91,6 @@ function TransactionAccordionTemplate(
     console.log('TransactionAccordionTemplate props ', props);
     return (
         <div>
-            {<div className={styles.title}>{overrideTitle || title}</div>}
             {items.map((element, index) => {
                 // console.log('element inside accordion', element);
                 const formData = element.children?.props?.formData || {};

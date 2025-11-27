@@ -1952,6 +1952,9 @@
                                 "orderable": false,
                                 "removable": false,
                                 "label": false,
+                                "showAddBtn": false,
+                                "showDeleteBtn": false,
+                                "showRemoveItemBtn": false,
                                 "tabTitle": "Signature"
                             },
                             "items": {
