@@ -46,6 +46,7 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { useLoadingTime } from '@deps/hooks/useLoadingTime';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { LOADING_TIME_CONFIG, Statuses } from '@deps/models/case/case';
@@ -398,6 +399,32 @@ const CaseManagementDashboard = ({
                     userId: user.partyId,
                 }
             );
+
+            // The api treats an empty string as a valid search value. Searching with an empty string in firstName and a correct
+            // value in lastName will return 0 results.
+            // This removes all falsy values from the search query
+            // This feels like the wrong location to strip the values but I'm isolating to Policy.
+            Object.keys(value).forEach((key) => {
+                const trimmedValue = value[key as keyof typeof value]?.trim();
+                value[key as keyof typeof value] = trimmedValue;
+
+                if (isNullEmptyOrUndefined(value[key as keyof typeof value])) {
+                    delete value[key as keyof typeof value];
+                }
+            });
+
+            const hasSearchValue =
+                value &&
+                !!Object.keys(value).length &&
+                !(value.ssn && !/\d/.test(value.ssn));
+
+            // Show the field error message if the search button is clicked and nothing have been entered into the field
+            if (!hasSearchValue) {
+                setShowFieldErrorMessage(true);
+            } else {
+                setShowFieldErrorMessage(false);
+            }
+
             setCaseManagementFilters((prevFilters) => ({
                 ...prevFilters,
                 searchValue: value,
