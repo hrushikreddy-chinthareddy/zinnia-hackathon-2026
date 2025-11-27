@@ -75,6 +75,9 @@ const ConfirmStep = ({
         let response;
         const isTpdRole = role === PolicyRole.THIRDPARTYDESIGNEE;
 
+        const roleBody = buildRoleChangeRequestBody(roleData, role);
+        const deleteRoleBody = buildDeleteTPDRequestBody(roleData);
+
         // Determine if this is a TPD removal operation
         const isTpdRemoval = isTpdRole && removedTpdIndex !== null && addRole;
 
@@ -87,8 +90,6 @@ const ConfirmStep = ({
                 return;
             }
 
-            const deleteRoleBody = buildDeleteTPDRequestBody(roleData);
-
             response = await deleteTPDRole(
                 policy.product?.planCode,
                 policy.policyNumber,
@@ -97,12 +98,20 @@ const ConfirmStep = ({
                 deleteRoleBody
             );
         } else {
-            const currentPartyId =
-                isTpdRole && removedTpdIndex === null && !addRole
-                    ? ''
-                    : partyId;
-
-            const roleBody = buildRoleChangeRequestBody(roleData, role);
+            let currentPartyId = '';
+            if (isTpdRole) {
+                // TPD post api partyID
+                if (!addRole && removedTpdIndex === null) {
+                    currentPartyId = '';
+                } else if (!addRole && removedTpdIndex !== null) {
+                    // TPD put method partyId
+                    currentPartyId =
+                        existingRoleData?.[removedTpdIndex]?.party?.partyId ||
+                        '';
+                }
+            } else {
+                currentPartyId = partyId;
+            }
 
             response = await submitRoleChange(
                 policy.product?.planCode,
@@ -153,14 +162,7 @@ const ConfirmStep = ({
                 SegmentTrackedEventName.TransactionSubmitted,
                 buildNonFinancialTransactionsSubmittedEvent({
                     transactionSubmittedEventType: transactionType,
-                    query: isTpdRemoval
-                        ? {
-                              operation: 'delete',
-                              partyId:
-                                  existingRoleData?.[removedTpdIndex]?.party
-                                      ?.partyId,
-                          }
-                        : buildRoleChangeRequestBody(roleData, role),
+                    query: isTpdRemoval ? deleteRoleBody : roleBody,
                     caseId: response?.data?.caseId,
                     policy,
                     sessionId,
@@ -170,16 +172,7 @@ const ConfirmStep = ({
         }
 
         setIsLoading(false);
-    }, [
-        policy,
-        userId,
-        sessionId,
-        role,
-        removedTpdIndex,
-        addRole,
-        existingRoleData,
-        roleData,
-    ]);
+    }, [policy, userId, sessionId]);
 
     const hasAutoSubmittedRef = useRef(false);
 

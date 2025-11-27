@@ -80,8 +80,6 @@ const RoleDetailsStep = ({
         t,
     ]);
 
-    console.log('roleData => ', roleData, existingRoleData);
-
     return (
         <WorkflowCard
             title={t('header', { roleLabel }) as string}
