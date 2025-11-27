@@ -172,6 +172,10 @@ export const PolicyIndexCardView = ({
     };
 
     useEffect(() => {
+        setShowFieldErrorMessage(false);
+    }, [setShowFieldErrorMessage]);
+
+    useEffect(() => {
         const { policyNumber = '' } = router.query;
 
         if (isSetSearchFromUrl(policyNumber)) {

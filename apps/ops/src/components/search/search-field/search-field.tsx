@@ -33,8 +33,7 @@ export const SearchFieldContainer = ({
     inputClasses,
 }: SearchFieldProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const { showFieldErrorMessage, setShowFieldErrorMessage } =
-        useContext(SearchBarContext);
+    const { showFieldErrorMessage } = useContext(SearchBarContext);
     const {
         value: policyKey,
         label = '',
@@ -63,10 +62,6 @@ export const SearchFieldContainer = ({
     };
 
     const [hasValue, setHasValue] = useState(false);
-
-    useEffect(() => {
-        setShowFieldErrorMessage(false);
-    }, [setShowFieldErrorMessage]);
 
     useEffect(() => {
         setHasValue(!!inputValue);

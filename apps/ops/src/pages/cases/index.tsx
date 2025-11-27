@@ -121,6 +121,10 @@ const CaseManagementDashboard = ({
 
     const { setShowFieldErrorMessage } = useContext(SearchBarContext);
 
+    useEffect(() => {
+        setShowFieldErrorMessage(false);
+    }, [setShowFieldErrorMessage]);
+
     const handleCreatedBySort = useCallback(
         (key: 'createdAt') => {
             setCaseManagementFilters((prevFilters) => {
