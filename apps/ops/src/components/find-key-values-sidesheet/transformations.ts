@@ -5,6 +5,7 @@ import { Policy, Party } from '@zinnia/api-types/types/sor';
 
 import {
     combinedTransform,
+    formatPartyLink,
     formatSectionLabel,
     formatToolTip,
 } from './formatters';
@@ -564,6 +565,22 @@ export const formatSectionLabels = (
                     t,
                     nomenclature,
                 })
+            )
+        )
+        .filter((n): n is DataNode => n !== null);
+};
+
+export const formatPartyIdLink = (
+    data: DataNode[],
+    planCode: string,
+    policyNumber: string,
+    policy: Policy
+) => {
+    return data
+        .map((node: DataNode) =>
+            transformObject(
+                node,
+                formatPartyLink({ planCode, policyNumber, policy })
             )
         )
         .filter((n): n is DataNode => n !== null);

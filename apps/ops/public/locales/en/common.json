@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "affectedParty": "Affected party",
         "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",
         "policyBasics": "{{policyNomenclature, capitalize}} basics",

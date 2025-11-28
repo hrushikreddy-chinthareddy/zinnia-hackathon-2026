@@ -6,7 +6,7 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, Policy } from '@zinnia/api-types/types/sor';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
@@ -260,7 +260,6 @@ export const formatToolTip = ({
 }) => {
     return (node: DataNode): DataNode => {
         if (node.type === FieldType.field) {
-            console.log(`${nomenclature}.${node.label}`);
             return {
                 ...node,
                 toolTip:
@@ -312,6 +311,36 @@ export const combinedTransform = ({
         if (afterExclude === null) return null;
 
         return formatNode(afterExclude, t, policyNomenclature);
+    };
+};
+
+export const formatPartyLink = ({
+    planCode,
+    policyNumber,
+    policy,
+}: {
+    planCode: string;
+    policyNumber: string;
+    policy: Policy;
+}) => {
+    return (node: DataNode): DataNode | null => {
+        if (node.type === FieldType.field && node.label === 'partyId') {
+            const partyLink = `/policies/${planCode}/${policyNumber}/people/${node.value}`;
+            const partyData = policy.parties?.find(
+                (party) => party.partyId === node.value
+            );
+            const name =
+                partyData?.firstName && partyData?.lastName
+                    ? `${partyData.firstName} ${partyData.lastName}`
+                    : node.value;
+            return {
+                ...node,
+                label: 'affectedParty',
+                value: name,
+                link: partyLink,
+            };
+        }
+        return node;
     };
 };
 

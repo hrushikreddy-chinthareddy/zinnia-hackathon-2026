@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     FieldData,
@@ -7,11 +8,15 @@ import {
     FieldSize as BloomFieldSize,
     FieldTypes,
 } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import { useEffect, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@deps/hooks/useDebounce';
+import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import useQueryStore from '@deps/utils/queryStore';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
@@ -24,6 +29,7 @@ import {
     groupBasics,
     searchNodes,
     addToolTips,
+    formatPartyIdLink,
 } from '../transformations';
 import { DocumentFormat } from '../types';
 
@@ -35,14 +41,33 @@ export const TransactionSidesheetContent = ({
     const { treeState, setTreeState, searchValue, setSearchValue } =
         useTreeState();
     const { t } = useTranslation();
+    const queryClient = useQueryClient();
+    const [params] = useQueryStore();
+    const { planCode, id } = params;
+    const {
+        data: policy,
+        isFetching,
+        isError,
+    } = usePolicyQuery(
+        planCode as string,
+        id as string,
+        dayjs(new Date()).format(NUMERIC_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
+        queryClient,
+        true
+    );
+
     const debouncedSearchValue = useDebounce(searchValue, 200);
     const nodes = applyTransformationsToNodes(
         (data) => convertNode(data, t),
         (data) => groupBasics(data, t, DocumentFormat.transaction),
+        (data) =>
+            formatPartyIdLink(data, planCode as string, id as string, policy),
         (data) => addToolTips(data, t, DocumentFormat.transaction),
         (data) => excludeNodesByLabel(data, t),
         (data) => formatSectionLabels(data, t)
     )(transaction);
+
+    console.log(transaction);
 
     const matches = searchNodes(nodes, debouncedSearchValue);
 

@@ -14,7 +14,6 @@ export const excludeFields = new Set<string>([
     'parties',
     'partyRole',
     'partyRoles',
-    'partyId',
     'fundAllocationsInvestments',
     'fundSegments',
     'matchSegment',
