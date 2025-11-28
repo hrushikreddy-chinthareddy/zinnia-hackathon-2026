@@ -315,9 +315,69 @@ export const groupSectionsForPolicy = (
                     key: 'dateOfBirth',
                 });
 
-                console.log('ssnField.......', ssn, dob);
-
                 // Bank info
+                const firstBank = findInNode({
+                    node: partyNode,
+                    key: 'bankDetails.0.0',
+                });
+
+                const bankBranchName = findValueInNode({
+                    node: firstBank,
+                    key: 'branchName',
+                });
+                const bankAccountType = findValueInNode({
+                    node: firstBank,
+                    key: 'accountType',
+                });
+                const bankAccountNumber = findValueInNode({
+                    node: firstBank,
+                    key: 'accountNumber',
+                });
+
+                const bankInfo = firstBank
+                    ? [
+                          bankBranchName ?? '',
+                          bankAccountType ?? '',
+                          t('policy.commonPhrases.endingIn'),
+                          bankAccountNumber?.slice(-4) ?? '****',
+                      ].join(' ')
+                    : undefined;
+
+                // Address info
+                const firstAddress = findInNode({
+                    node: partyNode,
+                    key: 'addresses.0.0',
+                });
+
+                const addressLine1 = findValueInNode({
+                    node: firstAddress,
+                    key: 'addressLine1',
+                });
+
+                const city = findValueInNode({
+                    node: firstAddress,
+                    key: 'city',
+                });
+
+                const state = findValueInNode({
+                    node: firstAddress,
+                    key: 'state',
+                });
+
+                const zipCode = findValueInNode({
+                    node: firstAddress,
+                    key: 'zipCode',
+                });
+
+                const addressInfo = firstAddress
+                    ? [
+                          addressLine1 ?? '',
+                          city ?? '',
+                          `${state ?? ''} ${zipCode ?? ''}`,
+                      ]
+                          .join(', ')
+                          .trim()
+                    : undefined;
 
                 const personSection: DataSection = {
                     label: partyId,
@@ -352,6 +412,21 @@ export const groupSectionsForPolicy = (
                         value: dob,
                     });
                 }
+                if (bankInfo) {
+                    personSection.children.push({
+                        type: FieldType.field,
+                        label: 'bankInfo',
+                        value: bankInfo,
+                    });
+                }
+                if (addressInfo) {
+                    personSection.children.push({
+                        type: FieldType.field,
+                        label: 'addressInfo',
+                        value: addressInfo,
+                    });
+                }
+
                 console.log('personSection..........', personSection);
                 return personSection;
             }) ?? [];
@@ -985,10 +1060,10 @@ function findInNode({
     node,
     key,
 }: {
-    node: DataNode;
+    node?: DataNode;
     key: string;
 }): DataNode | undefined {
-    if (node.type === FieldType.field && node.label === key) {
+    if (node == null || (node.type === FieldType.field && node.label === key)) {
         return node;
     } else if (node.type === FieldType.section) {
         return findInNodes({
@@ -1025,9 +1100,11 @@ function findInNodes({
 }): DataNode | undefined {
     const pathFragments = key.split('.');
     const [firstFragment, ...rest] = pathFragments;
-    const firstNode = nodes
-        .filter(predicate)
-        .find((child) => child.label === firstFragment);
+    const firstNode = !isNaN(Number(firstFragment))
+        ? nodes[Number(firstFragment)]
+        : nodes
+              .filter(predicate)
+              .find((child) => child.label === firstFragment);
 
     if (rest.length) {
         if (firstNode) {
@@ -1042,7 +1119,7 @@ function findValueInNode({
     node,
     key,
 }: {
-    node: DataNode;
+    node?: DataNode;
     key: string;
 }): string | undefined {
     const foundNode = findInNode({ node, key });
