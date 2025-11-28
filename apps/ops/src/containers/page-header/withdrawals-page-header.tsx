@@ -465,8 +465,7 @@ const WithdrawalsPageHeaderContainer = ({
                         {t('withdrawals.freeLookCancel')}
                     </NavElement>
                 ) : (
-                    freeLookEnabled &&
-                    policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
+                    freeLookEnabled && (
                         <TempNavInactive
                             tooltipBody={t(
                                 'withdrawals.rules.permissionDeniedTooltip',
