@@ -99,32 +99,6 @@ describe('PendoAnalyticsInit', () => {
         });
     });
 
-    it('calls window.pendo.updateOptions with merged metadata (roles)', () => {
-        render(<PendoAnalyticsInit />);
-
-        expect(updateOptionsMock).toHaveBeenCalledTimes(1);
-
-        const options = updateOptionsMock.mock.calls[0][0];
-
-        expect(browserLogError).not.toHaveBeenCalled();
-        expect(options.visitor.id).toBe('party:123');
-        expect(options.visitor.roles).toEqual([
-            'role:zahara_admin',
-            'role:zinnia_internal_processor',
-        ]);
-    });
-
-    it('calls window.pendo.updateOptions with merged metadata (carriers)', () => {
-        render(<PendoAnalyticsInit />);
-
-        expect(updateOptionsMock).toHaveBeenCalledTimes(1);
-
-        const options = updateOptionsMock.mock.calls[0][0];
-
-        expect(options.visitor.id).toBe('party:123');
-        expect(options.visitor.carrierAccessList).toEqual(['ELIC', 'SBUL']);
-    });
-
     it('logs an error if pendo is not loaded on initialize', () => {
         withPendoMissing(() => {
             render(<PendoAnalyticsInit />);

@@ -10,7 +10,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { Case } from '@deps/models/case/case';
+import { Case, shouldShowEscalationBadge } from '@deps/models/case/case';
 import { baseAppUrl } from '@deps/queries/api-config';
 import {
     getCaseDetailsQuery,
@@ -110,6 +110,10 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         t,
         issueDate: policy?.issueDate,
     });
+    const showBadge = shouldShowEscalationBadge(
+        caseDetailsModel?.escalated ?? false,
+        caseDetailsModel?.caseStatus
+    );
     return (
         <div className={styles.container}>
             <CasePageHeader
@@ -119,7 +123,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
                 status={statusDetails.statusText}
                 statusTooltip={statusDetails.statusTooltip}
                 statusVariant={statusDetails.statusVariant as BadgeVariant}
-                escalated={caseDetailsModel?.escalated ?? false}
+                escalated={showBadge ?? false}
                 hasPermissionToPrioritizeCases={hasPermissionToPrioritizeCases}
                 caseProcessingDetails={caseDetailsModel.caseProcessingDetails}
             />

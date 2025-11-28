@@ -89,30 +89,32 @@ const CedingCompanySignature = ({
     }, [selectedRegReasons]);
 
     useEffect(() => {
-        setFormSurrenderingCompany({
-            qualType: {
-                text: '',
-            },
-            multipleQualType: {
-                text: false,
-            },
-            authorizedOfficerSignature: {
-                text: null,
-            },
-            loa: {
-                text: null,
-            },
-            registrationType: {
-                text: null,
-            },
-            nonRegTypeReason: [],
-            isTitlePresent: {
-                text: null,
-            },
-            loaSignDate: null,
-            corporateResolution: { text: null },
-            authorizedOfficerSignatureDate: { text: null },
-        });
+        if (!isFormStateReadOnly) {
+            setFormSurrenderingCompany({
+                qualType: {
+                    text: '',
+                },
+                multipleQualType: {
+                    text: false,
+                },
+                authorizedOfficerSignature: {
+                    text: null,
+                },
+                loa: {
+                    text: null,
+                },
+                registrationType: {
+                    text: null,
+                },
+                nonRegTypeReason: [],
+                isTitlePresent: {
+                    text: null,
+                },
+                loaSignDate: null,
+                corporateResolution: { text: null },
+                authorizedOfficerSignatureDate: { text: null },
+            });
+        }
     }, []);
 
     return (

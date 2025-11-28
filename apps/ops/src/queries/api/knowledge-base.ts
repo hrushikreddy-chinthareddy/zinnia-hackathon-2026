@@ -10,7 +10,11 @@ import {
     SortBy,
     SortDirection,
 } from '@deps/types/knowledge-base';
-import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogTrace,
+} from '@deps/utils/browser-logging';
 import {
     logError,
     LoggingContext,
@@ -18,10 +22,11 @@ import {
     parseErrorInformation,
 } from '@deps/utils/server-logging';
 import {
-    ClientDetailsDto,
     FollowUpChainResponse,
     FollowUpResponse,
     UserResponse,
+    ClientDetailsDto,
+    QuizSubmissionResponse,
 } from '@zinnia/api-types/types/knowledgebase';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
@@ -529,6 +534,56 @@ export const searchUser = async (
             ...parseErrorInformation(error),
             url,
             function: 'knowledgeBase.searchUser',
+        });
+        return null;
+    }
+};
+
+export const getQuizQuestions = async (clientId: string) => {
+    if (!clientId) {
+        browserLogError('Error getting quiz questions:: missing clientId');
+        return null;
+    }
+    const url = `${baseAppUrl}/api/knowledge-base/quiz/get-quiz-questions?clientId=${clientId}`;
+    browserLogInfo(`Loading quiz questions...`);
+    try {
+        const { data } = await client.get(url);
+        return data ?? null;
+    } catch (error) {
+        browserLogError('knowledge-base::Failed to get quiz questions', {
+            ...parseErrorInformation(error),
+            url,
+            function: 'knowledgeBase.getQuizQuestions',
+        });
+        return null;
+    }
+};
+
+export const submitQuizAnswers = async (
+    clientId: string,
+    userId: string,
+    answers: { questionId: string; selectedAnswerIndex: number }[]
+): Promise<QuizSubmissionResponse | null> => {
+    if (!clientId || !userId || !answers || answers.length === 0) {
+        browserLogError(
+            'Error submitting quiz answers:: missing clientId, userId or answers'
+        );
+        return null;
+    }
+    const url = `${baseAppUrl}/api/knowledge-base/quiz/submit-quiz-questions`;
+    browserLogInfo(`Submitting quiz questions...`);
+    try {
+        const { data } = await client.post(url, {
+            clientId,
+            userId,
+            answers,
+        });
+        return (data as QuizSubmissionResponse) ?? null;
+    } catch (error) {
+        browserLogError('knowledge-base::Failed to submit quiz answers', {
+            ...parseErrorInformation(error),
+            url,
+            function: 'knowledgeBase.submitQuizAnswers',
         });
         return null;
     }

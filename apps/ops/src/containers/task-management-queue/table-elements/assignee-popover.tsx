@@ -5,12 +5,16 @@ import {
     TooltipPlacement,
 } from '@zinnia/bloom/components';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Avatar from '@deps/components/avatar/avatar';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import IconButton from '@deps/components/icon-button/icon-button';
+import { TranslationFiles } from '@deps/config/translations';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
+
+import styles from './assignee-popover.module.css';
 
 export function useOnClickOutside(
     ref: React.RefObject<HTMLElement>,
@@ -54,6 +58,10 @@ const AssigneePopover = ({
     const [positionReady, setPositionReady] = useState(false);
     const buttonRef = useRef<HTMLButtonElement>(null);
     const popoverRef = useRef<HTMLDivElement>(null);
+
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'taskManagementQueue',
+    });
 
     useOnClickOutside(popoverRef, () => setOpen(false));
 
@@ -152,21 +160,23 @@ const AssigneePopover = ({
 
     return (
         <div className="w-full relative block" ref={popoverRef}>
-            <button
-                ref={buttonRef}
-                type="button"
-                className={assigneePopoverBtnClassName}
-                onClick={handlePopoverToggle}
-                aria-label="Open assignee popover"
-            >
-                {hasAssignee() && (
+            {hasAssignee() ? (
+                <button
+                    ref={buttonRef}
+                    type="button"
+                    className={`${assigneePopoverBtnClassName} ${
+                        task?.status === TaskStatus.Completed
+                            ? styles.assigneeBtnCompletedTask
+                            : ''
+                    }`}
+                    onClick={handlePopoverToggle}
+                    aria-label="Open assignee popover"
+                >
                     <Avatar
                         className="!mr-0"
                         name={assignee || ''}
                         size="small"
                     />
-                )}
-                {hasAssignee() ? (
                     <Content
                         className="!z-10 !ml-0 min-h-8"
                         contentClassName="text-left flex-1"
@@ -179,31 +189,53 @@ const AssigneePopover = ({
                         }
                         variant={ContentVariant.BodySm}
                     />
-                ) : (
+                    {isPopoverAllowed && (
+                        <Tooltip
+                            placement={TooltipPlacement.TopRight}
+                            tooltipClassName="!w-auto"
+                            triggerClassName={triggerClassName}
+                            trigger={
+                                <IconButton
+                                    aria-label="Unassign"
+                                    className="text-secondary"
+                                    onClick={handleUnassignClick}
+                                >
+                                    <CancelIcon height={18} width={18} />
+                                </IconButton>
+                            }
+                        >
+                            <span className="text-md">Unassign</span>
+                        </Tooltip>
+                    )}
+                </button>
+            ) : (
+                <div className="w-full flex justify-between !cursor-default">
                     <Content
+                        contentClassName="text-sm !cursor-default"
                         details={assignee}
                         variant={ContentVariant.ArticleReferences}
                     />
-                )}
-                {hasAssignee() && isPopoverAllowed && (
-                    <Tooltip
-                        placement={TooltipPlacement.TopRight}
-                        tooltipClassName="!w-auto"
-                        triggerClassName={triggerClassName}
-                        trigger={
-                            <IconButton
-                                aria-label="Unassign"
-                                className="text-secondary"
-                                onClick={handleUnassignClick}
-                            >
-                                <CancelIcon height={18} width={18} />
-                            </IconButton>
+                    <button
+                        tabIndex={
+                            task?.status === TaskStatus.Completed ? -1 : 0
                         }
+                        ref={buttonRef}
+                        type="button"
+                        onClick={handlePopoverToggle}
+                        aria-label="Open assignee popover"
                     >
-                        <span className="text-md">Unassign</span>
-                    </Tooltip>
-                )}
-            </button>
+                        <Content
+                            className={
+                                task?.status === TaskStatus.Completed
+                                    ? styles.completed
+                                    : styles.active
+                            }
+                            details={t('assign') as string | undefined}
+                            variant={ContentVariant.BodySm}
+                        />
+                    </button>
+                </div>
+            )}
 
             {open && positionReady && (
                 <div

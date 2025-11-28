@@ -13,6 +13,7 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -158,6 +159,7 @@ function FileUploadComponent({
     setAttachments,
     widgetProps,
 }: FileAttachmentProps) {
+    const correlationId = uuidv4();
     const {
         disabled,
         readonly,
@@ -168,6 +170,7 @@ function FileUploadComponent({
         registry,
         formContext,
     } = widgetProps;
+
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'general',
     });
@@ -204,7 +207,8 @@ function FileUploadComponent({
                         zinniaLiveCaseId: formContext?.customData?.caseId,
                         parentCarrierCode:
                             formContext?.customData?.carrier ?? '',
-                        correlationId: formContext?.correlationId || '',
+                        correlationId:
+                            formContext?.correlationId || correlationId,
                     };
                     browserLogInfo('FileWidget: Uploading document:', {
                         ...metaData,

@@ -338,3 +338,11 @@ export enum LOADING_TIME_CONFIG {
     GATHERING_THRESHOLD = 2000,
     ORGANIZING_THRESHOLD = 5000,
 }
+const BADGE_EXCLUDED_STATUSES = new Set([
+    Statuses.Completed,
+    Statuses.Canceled,
+]);
+export const shouldShowEscalationBadge = (
+    escalated: boolean,
+    status: Statuses
+): boolean => escalated && !BADGE_EXCLUDED_STATUSES.has(status);
