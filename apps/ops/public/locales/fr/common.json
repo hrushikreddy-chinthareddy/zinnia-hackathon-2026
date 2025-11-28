@@ -45,6 +45,7 @@
     },
     "allFields": {
         "emptySearch": "Aucun résultat trouvé",
+        "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
         "transactionDetails": "Détails de la transaction",
         "effectiveDate": "Date d'effet",
@@ -4321,7 +4322,6 @@
             "endingIn": "se terminant par"
         },
         "toolTips": {
-            "emptySearch": "Aucun résultat trouvé",
             "preTaxEquityAndFiscalResponsibilityActBasis": "Ceci est le coût de base antérieur à l’adoption de la Loi sur l’équité fiscale et la responsabilité.",
             "preTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi sur l’équité fiscale et la responsabilité en 1982.",
             "postTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi technique et sur les recettes diverses en 1988.",
@@ -9012,10 +9012,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
+            "startingMessageBetaPrefix": "Bonjour, {{name}}",
+            "startingMessageBetaSuffix": "Comment puis-je vous assister ?",
             "inputPlaceholder": "Demande-moi n'importe quoi",
-            "footerText": "Avertissement:Le chat Zinnia peut faire des erreurs.",
+            "footerText": "Avertissement: Zinnia AI peut faire des erreurs.",
             "errorMsg": "Désolé, je n'ai pas obtenu de réponse. Veuillez réessayer plus tard.",
             "send": "Envoyer",
             "stop": "Arrêt",
@@ -9066,7 +9070,13 @@
             "followUpButton": "Posez vos questions complémentaires ici",
             "definitiveAnswerNotFound": "Je n’ai pas trouvé de réponse définitive dans les documents spécifiques au client. Voulez-vous que je vérifie également la référence commune ?",
             "yes": "Oui",
-            "no": "Non"
+            "no": "Non",
+            "answerMode": "Mode de réponse",
+            "client": "Client",
+            "answerModeOptions": {
+                "short": "Court et concis",
+                "long": "Long et détaillé"
+            }
         },
         "documents": {
             "recentlyAdded": "Fichiers récemment ajoutés",
@@ -9118,11 +9128,23 @@
             "recentlyModified": "Récemment modifiés",
             "allDocs": "Tous les documents",
             "recentChat": "Chat récent",
-            "search": "Rechercher",
+            "search": "Rechercher chats récents",
             "noResultsFound": "Aucun résultat trouvé",
             "noRecentChats": "Aucune discussion récente",
             "loadingChats": "Chargement des discussions...",
-            "settings": "Paramètres"
+            "settings": "Paramètres",
+            "quiz": {
+                "header": "Passer un quiz",
+                "noQuestionsAvailable": "Aucune question de quiz disponible.",
+                "quizPassed": "Félicitations, vous avez réussi",
+                "quizFailed": "Désolé, vous n’avez pas atteint le score requis de {{passPercentage}}%.",
+                "correctAnswer": "Bonne réponse",
+                "wrongAnswer": "Mauvaise réponse",
+                "yourScore": "Vous avez obtenu {{score}} sur {{total}}",
+                "readMore": "Lisez ce document pour approfondir vos connaissances sur le sujet",
+                "submit": "Soumettre",
+                "tryAgain": "Réessayer"
+            }
         }
     },
     "updateSuitabilityDataEntry": {

@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 
 import { HttpMethod } from '@deps/constants/policy';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { SSEEventType } from '@deps/types/knowledge-base';
+import { AnswerMode, SSEEventType } from '@deps/types/knowledge-base';
 import {
     logError,
     parseErrorInformation,
@@ -33,6 +33,7 @@ export default withAuthAndLogging(
             followUpQuestion,
             parentFollowUpId = null,
             clientId,
+            responseType = AnswerMode.Short,
         } = req.query;
         if (!messageId || !followUpQuestion || !clientId) {
             logError(
@@ -59,6 +60,7 @@ export default withAuthAndLogging(
                     followUpQuestion,
                     clientId,
                     parentFollowUpId,
+                    responseType,
                 }),
             });
             if (!upstream.ok || !upstream.body) {

@@ -8970,10 +8970,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Hola, soy agente virtual. Tenga en cuenta que esta función está actualmente en fase beta.\n¿Cómo puedo ayudarle?",
             "inputPlaceholder": "Pregúntame cualquier cosa",
-            "footerText": "Descargo de responsabilidad: El chat de zinnia puede cometer errores.",
+            "startingMessageBetaPrefix": "Hola, {{name}}",
+            "startingMessageBetaSuffix": "¿Cómo puedo asistirte hoy?",
+            "footerText": "Descargo de responsabilidad: Zinnia AI puede cometer errores.",
             "errorMsg": "Lo siento, no obtuve respuesta. Inténtalo de nuevo más tarde.",
             "send": "Enviar",
             "stop": "Detener",
@@ -9024,7 +9028,13 @@
             "followUpButton": "Haga sus preguntas de seguimiento aquí",
             "definitiveAnswerNotFound": "No encontré una respuesta definitiva en los documentos específicos del cliente. ¿Quieres que revise también la referencia común?",
             "yes": "Sí",
-            "no": "No"
+            "no": "No",
+            "answerMode": "Modo de respuesta",
+            "client": "Cliente",
+            "answerModeOptions": {
+                "short": "Breve y conciso",
+                "long": "Largo y detallado"
+            }
         },
         "documents": {
             "recentlyAdded": "Archivos añadidos recientemente",
@@ -9076,11 +9086,23 @@
             "recentlyModified": "Recientemente modificados",
             "allDocs": "Todos los documentos",
             "recentChat": "Chat reciente",
-            "search": "Buscar",
+            "search": "Buscar chats recientes",
             "noResultsFound": "No se encontraron resultados",
             "noRecentChats": "No hay chats recientes",
             "loadingChats": "Cargando más chats...",
-            "settings": "Configuraciones"
+            "settings": "Configuraciones",
+            "quiz": {
+                "header": "Realizar un cuestionario",
+                "noQuestionsAvailable": "No hay preguntas disponibles para el cuestionario.",
+                "quizPassed": "Felicidades, has aprobado",
+                "quizFailed": "Lo siento, no has alcanzado la puntuación mínima de {{passPercentage}}%",
+                "correctAnswer": "Respuesta correcta",
+                "wrongAnswer": "Respuesta incorrecta",
+                "yourScore": "Has obtenido {{score}} de {{total}}",
+                "readMore": "Lee este documento para obtener más información sobre el tema",
+                "submit": "Enviar",
+                "tryAgain": "Intentar de nuevo"
+            }
         }
     },
     "updateSuitabilityDataEntry": {

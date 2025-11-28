@@ -6,6 +6,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { baseAppUrl } from '@deps/queries/api-config';
 import {
+    AnswerMode,
     BOT_ERROR_MESSAGE_ID,
     MessageRole,
     SSEEventType,
@@ -41,16 +42,14 @@ type SSEConfig = {
     assignRef?: boolean;
 };
 
-export const useChatStream = (clientId: string) => {
+export const useChatStream = (
+    selectedClientId: string,
+    commonClientId: string
+) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const {
-        selectedClientId,
-        setCurrentMessages,
-        currentMessages,
-        commonClientId,
-    } = useKnowledgeBaseContext();
+    const { setCurrentMessages, currentMessages } = useKnowledgeBaseContext();
     const [status, setStatus] = useState<string | null>(null);
     const [isStreaming, setIsStreaming] = useState(false);
     const [response, setResponse] = useState<string | null>(null);
@@ -63,6 +62,43 @@ export const useChatStream = (clientId: string) => {
     >(null);
     const botMsgIdRef = useRef<string | null>(null);
     const eventSourceRef = useRef<EventSource | null>(null);
+
+    const isATag = (chunk: string) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(chunk, 'text/html');
+        return (
+            doc.body.childElementCount === 1 &&
+            doc.body.firstElementChild?.tagName === 'A'
+        );
+    };
+
+    const parseATag = (html: string) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const aTag = doc.body.firstElementChild as HTMLAnchorElement | null;
+        if (aTag?.tagName === 'A') {
+            return {
+                web_url: aTag.href,
+                file_name: aTag.textContent?.trim() || '',
+            };
+        }
+        return null;
+    };
+
+    const filterSourceDocs = (
+        docs: SourceDocument[],
+        anchors: {
+            web_url: string;
+            file_name: string;
+        }[]
+    ) => {
+        return docs.filter((doc) =>
+            anchors.some(
+                (a) =>
+                    a.web_url === doc.web_url && a.file_name === doc.file_name
+            )
+        );
+    };
 
     const setErrorMessage = useCallback(
         (id: string) => {
@@ -178,7 +214,12 @@ export const useChatStream = (clientId: string) => {
     };
 
     const sendMessage = useCallback(
-        async (sessionId: string, question: string, userMsgId: string) => {
+        async (
+            sessionId: string,
+            question: string,
+            userMsgId: string,
+            responseType: AnswerMode
+        ) => {
             resetData();
             const botMsgId = uuidv4();
             botMsgIdRef.current = botMsgId;
@@ -194,11 +235,17 @@ export const useChatStream = (clientId: string) => {
             const queryParams = new URLSearchParams({
                 sessionId,
                 question,
-                clientId,
+                clientId: selectedClientId,
+                responseType,
             }).toString();
 
             const url = `${baseAppUrl}/api/knowledge-base/chat-stream?${queryParams}`;
             let hasClearedAfterStatus = false;
+
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
 
             initSSE({
                 url,
@@ -241,10 +288,18 @@ export const useChatStream = (clientId: string) => {
                                 : msg
                         )
                     );
+                    if (isATag(chunk)) {
+                        const parsedDoc = parseATag(chunk);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
                 },
                 onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
                     setResponse(data.full_response);
-                    setSources(docs);
+                    setSources(filtered_source_docs);
                     setQuestionId(data.questionId ?? null);
                     setResponseId(data.responseId ?? null);
                     if (selectedClientId !== commonClientId) {
@@ -260,7 +315,10 @@ export const useChatStream = (clientId: string) => {
                                     content: data.full_response,
                                     ...(data.definitiveAnswerFound === false
                                         ? { sourceDocuments: [] }
-                                        : { sourceDocuments: docs }),
+                                        : {
+                                              sourceDocuments:
+                                                  filtered_source_docs,
+                                          }),
                                     id: data.responseId ?? botMsgId,
                                     questionId: data.questionId,
                                     ...(selectedClientId !== commonClientId && {
@@ -287,7 +345,6 @@ export const useChatStream = (clientId: string) => {
             });
         },
         [
-            clientId,
             initSSE,
             t,
             setCurrentMessages,
@@ -301,6 +358,7 @@ export const useChatStream = (clientId: string) => {
         async (
             questionId: string,
             followUpQuestion: string,
+            responseType: AnswerMode,
             parentFollowUpId?: string | null
         ) => {
             resetData();
@@ -309,21 +367,36 @@ export const useChatStream = (clientId: string) => {
                 followUpQuestion,
                 parentFollowUpId: parentFollowUpId ?? '',
                 clientId: selectedClientId,
+                responseType,
             }).toString();
 
             const url = `${baseAppUrl}/api/knowledge-base/follow-up/sendFollowUpStream?${queryParams}`;
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
 
             initSSE({
                 url,
                 logPrefix: 'sendFollowUp',
                 onStatus: setStatus,
-                onToken: (c) => setResponse((prev) => (prev ?? '') + c),
+                onToken: (c) => {
+                    setResponse((prev) => (prev ?? '') + c);
+                    if (isATag(c)) {
+                        const parsedDoc = parseATag(c);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
+                },
                 onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
                     setResponse(data.full_response);
                     if (data.definitiveAnswerFound === false) {
                         setSources([]);
                     } else {
-                        setSources(docs);
+                        setSources(filtered_source_docs);
                     }
                     setFollowUpId(data.followUpID ?? null);
                     if (selectedClientId !== commonClientId) {
@@ -342,7 +415,12 @@ export const useChatStream = (clientId: string) => {
     );
 
     const getCommonClientResponse = useCallback(
-        async (sessionId: string, questionId: string, messageId: string) => {
+        async (
+            sessionId: string,
+            questionId: string,
+            messageId: string,
+            responseType: AnswerMode
+        ) => {
             resetData();
             setCurrentMessages((prev) => prev.slice(0, -1));
 
@@ -365,10 +443,15 @@ export const useChatStream = (clientId: string) => {
                 question,
                 messageId,
                 commonClientId: commonClientId || '',
+                responseType,
             }).toString();
 
             const url = `${baseAppUrl}/api/knowledge-base/common-client-response?${queryParams}`;
             let hasClearedAfterStatus = false;
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
 
             initSSE({
                 url,
@@ -411,10 +494,18 @@ export const useChatStream = (clientId: string) => {
                                 : msg
                         )
                     );
+                    if (isATag(chunk)) {
+                        const parsedDoc = parseATag(chunk);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
                 },
                 onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
                     setResponse(data.full_response);
-                    setSources(docs);
+                    setSources(filtered_source_docs);
                     setQuestionId(data.questionId ?? null);
                     setResponseId(data.responseId ?? null);
                     setCurrentMessages((prev) =>
@@ -425,7 +516,10 @@ export const useChatStream = (clientId: string) => {
                                       content: data.full_response,
                                       ...(data.definitiveAnswerFound === false
                                           ? { sourceDocuments: [] }
-                                          : { sourceDocuments: docs }),
+                                          : {
+                                                sourceDocuments:
+                                                    filtered_source_docs,
+                                            }),
                                       id: data.responseId ?? botMsgId,
                                       questionId: data.questionId,
                                   }
@@ -451,27 +545,46 @@ export const useChatStream = (clientId: string) => {
     );
 
     const getCommonClientFollowUp = useCallback(
-        async (followUpId: string, followUpQuestion: string) => {
+        async (
+            followUpId: string,
+            followUpQuestion: string,
+            responseType: AnswerMode
+        ) => {
             resetData();
             const queryParams = new URLSearchParams({
                 followUpId,
                 followUpQuestion,
                 commonClientId: commonClientId || '',
+                responseType,
             }).toString();
 
             const url = `${baseAppUrl}/api/knowledge-base/follow-up/commonClientFollowUp?${queryParams}`;
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
 
             initSSE({
                 url,
                 logPrefix: 'commonClientFollowUp',
                 onStatus: setStatus,
-                onToken: (c) => setResponse((prev) => (prev ?? '') + c),
+                onToken: (c) => {
+                    setResponse((prev) => (prev ?? '') + c);
+                    if (isATag(c)) {
+                        const parsedDoc = parseATag(c);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
+                },
                 onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
                     setResponse(data.full_response);
                     if (data.definitiveAnswerFound === false) {
                         setSources([]);
                     } else {
-                        setSources(docs);
+                        setSources(filtered_source_docs);
                     }
                 },
                 onError: () => {
