@@ -404,10 +404,6 @@ const CaseManagementDashboard = ({
                 }
             );
 
-            // The api treats an empty string as a valid search value. Searching with an empty string in firstName and a correct
-            // value in lastName will return 0 results.
-            // This removes all falsy values from the search query
-            // This feels like the wrong location to strip the values but I'm isolating to Policy.
             Object.keys(value).forEach((key) => {
                 const trimmedValue = value[key as keyof typeof value]?.trim();
                 value[key as keyof typeof value] = trimmedValue;
