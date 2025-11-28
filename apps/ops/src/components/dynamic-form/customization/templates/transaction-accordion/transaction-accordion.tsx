@@ -1,5 +1,5 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
-import { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action } from '@deps/constants/policy';
@@ -10,29 +10,22 @@ import { getTitle } from './utils';
 function TransactionAccordionTemplate(
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
 ) {
-    const {
-        canAdd,
-        items,
-        onAddClick,
-        readonly,
-        title,
-        uiSchema,
-        formContext,
-    } = props;
+    const { canAdd, items, onAddClick, readonly, uiSchema, formContext } =
+        props;
 
     const uiOptions = getUiOptions(uiSchema);
+    const { customData, setCustomData } = formContext;
+
     const {
         tabTitle,
         showAddBtn = true,
         showDeleteBtn = true,
         showRemoveItemBtn = true,
         addButtonCTA = 'Add',
-        title: overrideTitle,
     } = uiOptions;
 
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
-    const [heights, setHeights] = useState<Record<number, number>>({});
     const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     const [disabledIndices, setDisabledIndices] = useState<Set<number>>(
@@ -41,8 +34,40 @@ function TransactionAccordionTemplate(
 
     const prevLengthRef = useRef(items.length);
 
-    const isIrrevocable =
-        formContext?.customData?.signatureData?.isIrrevocableBene || false;
+    const isIrrevocable = customData?.signatureData?.isIrrevocable ?? false;
+
+    // const isJointOwnerPresent =
+    //     customData?.contractInfo?.parties?.some(
+    //         (party: any) => party.partyRole === Roles.JOINTOWNER
+    //     ) ?? false;
+
+    // useEffect(() => {
+    //     const originalSignatures = customData?.signatureData?.signatures ?? [];
+
+    //     const filteredSignatures = originalSignatures.filter((sig: any) => {
+    //         if (!isJointOwnerPresent && sig.signType === Roles.JOINT_OWNER)
+    //             return false;
+    //         if (!isIrrevocable && sig.signType === Roles.IRREVOCABLE)
+    //             return false;
+    //         return true;
+    //     });
+
+    //     customData.signatureData.signatures = filteredSignatures;
+
+    //     const signaturesChanged =
+    //         filteredSignatures.length !== originalSignatures.length ||
+    //         filteredSignatures.some(
+    //             (s: any, i: number) =>
+    //                 s.signType !== originalSignatures[i]?.signType
+    //         );
+    //     if (signaturesChanged) {
+    //         setCustomData({
+    //             signatureData: {
+    //                 signatures: filteredSignatures,
+    //             },
+    //         });
+    //     }
+    // }, [isIrrevocable, isJointOwnerPresent, customData.signatureData]);
 
     const toggleIndex = (index: number) => {
         if (disabledIndices.has(index)) return;
@@ -56,20 +81,6 @@ function TransactionAccordionTemplate(
             return n;
         });
     };
-
-    useLayoutEffect(() => {
-        if (activeIndex !== null) {
-            const el = contentRefs.current[activeIndex];
-            if (el) {
-                requestAnimationFrame(() => {
-                    setHeights((prev) => ({
-                        ...prev,
-                        [activeIndex]: el.scrollHeight,
-                    }));
-                });
-            }
-        }
-    }, [activeIndex, items.length]);
 
     useEffect(() => {
         const prevLen = prevLengthRef.current;
@@ -88,21 +99,23 @@ function TransactionAccordionTemplate(
 
         prevLengthRef.current = newLen;
     }, [items.length]);
-    console.log('TransactionAccordionTemplate props ', props);
+
+    const handleAddClick = () => {
+        setCustomData({ requestType: 'ADD' });
+        onAddClick();
+    };
+
+    console.log('customData now:', customData);
+
     return (
         <div>
             {items.map((element, index) => {
-                // console.log('element inside accordion', element);
                 const formData = element.children?.props?.formData || {};
                 const itemTitle = getTitle(formData, index, tabTitle);
-                //  const hideIrrevocableSignType =
-                //     element?.signType === Roles.IRREVOCABLE && !isIrrevocableBene;
-
                 const isActive = activeIndex === index;
                 const isDisabled = disabledIndices.has(index);
                 const isNewItem = formData?.action === Action.ADD;
 
-                const panelHeight = heights[index] || 0;
                 const showRemove =
                     showRemoveItemBtn &&
                     !readonly &&
@@ -192,7 +205,6 @@ function TransactionAccordionTemplate(
                                     isDisabled ? styles.disabledContent : ''
                                 }`}
                                 style={{
-                                    // maxHeight: isActive ? panelHeight : 0,
                                     padding: isActive ? '1rem' : '0',
                                 }}
                             >
@@ -207,7 +219,7 @@ function TransactionAccordionTemplate(
                 <div className="flex justify-start mt-3">
                     <button
                         type="button"
-                        onClick={onAddClick}
+                        onClick={handleAddClick}
                         className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
                     >
                         {` + ${addButtonCTA}`}
