@@ -166,11 +166,11 @@ const SideSheetCancelAutopay = ({
         if (!confirmCancel) {
             localErrors = {
                 ...localErrors,
-                confirmCancel: `${t(
+                confirmCancel: `${
                     systematicProgramTablesEnabled
-                        ? 'confirmCancelErrorSP'
-                        : 'confirmCancelError'
-                )}`,
+                        ? defaultT('confirmCancelProgram')
+                        : t('confirmCancelError')
+                }`,
             };
         }
 
@@ -310,6 +310,14 @@ const SideSheetCancelAutopay = ({
         }
     };
 
+    const proceedCancelData = {
+        frequency: getFrequency(
+            systematicProgram?.frequency as Frequency,
+            defaultT
+        ),
+        amount: numberFormatify(systematicProgram?.amount),
+    };
+
     switch (viewState) {
         case ViewState.BpmError:
             if (isFromWithdrawals) {
@@ -322,20 +330,9 @@ const SideSheetCancelAutopay = ({
                         showEdit={!errorContent}
                         date={effectiveDate}
                         label={
-                            t(
-                                systematicProgramTablesEnabled
-                                    ? 'proceedCancelSP'
-                                    : 'proceedCancel',
-                                {
-                                    frequency: getFrequency(
-                                        systematicProgram?.frequency as Frequency,
-                                        defaultT
-                                    ),
-                                    amount: numberFormatify(
-                                        systematicProgram?.amount
-                                    ),
-                                }
-                            ) ?? ''
+                            (systematicProgramTablesEnabled
+                                ? defaultT('proceedCancel', proceedCancelData)
+                                : t('proceedCancel', proceedCancelData)) || ''
                         }
                     >
                         {errorContent ?? <></>}
@@ -442,11 +439,9 @@ const SideSheetCancelAutopay = ({
                 className="mt-10"
                 mainCta={{
                     onClick: validateAndSubmitUpdate,
-                    text: t(
-                        systematicProgramTablesEnabled
-                            ? 'cancelAutopaySP'
-                            : 'cancelAutopay'
-                    ),
+                    text: systematicProgramTablesEnabled
+                        ? defaultT('cancelProgram')
+                        : t('cancelAutopay'),
                 }}
                 secondaryCta={{
                     onClick: onCancel,

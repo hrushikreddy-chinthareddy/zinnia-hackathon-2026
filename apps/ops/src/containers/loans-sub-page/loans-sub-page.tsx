@@ -148,11 +148,9 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
-                {t(
-                    systematicProgramTablesEnabled
-                        ? 'cancelLoanAutopayTitleSP'
-                        : 'cancelLoanAutopayTitle'
-                )}
+                {systematicProgramTablesEnabled
+                    ? defaultT('cancelLoanProgram')
+                    : t('cancelLoanAutopayTitle')}
             </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.LOANREPAYMENT}

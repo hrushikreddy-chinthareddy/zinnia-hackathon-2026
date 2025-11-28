@@ -458,7 +458,13 @@
         "timeliness": "Cronología",
         "taxes": "Impuestos",
         "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
-        "selectDateInRange": "Seleccione una fecha dentro del rango:"
+        "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "cancelProgram": "Cancelar programa",
+        "confirmCancelProgram": "Confirmar antes de cancelar el programa sistemático.",
+        "proceedCancel": "Proceder con la cancelación del programa sistemático {{frequency}} de {{amount}}",
+        "cancelLoanProgram": "Cancelar programa de préstamo",
+        "cancelPremiumProgram": "Cancelar programa de prima",
+        "systematicProgramPendingBannerText": "Una actualización de los detalles del programa sistemático de esta póliza está pendiente. Para más información, "
     },
     "enums": {
         "LIFE": "Vida",

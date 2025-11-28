@@ -208,11 +208,9 @@ export const PremiumsSubPage = () => {
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
-                {t(
-                    systematicProgramTablesEnabled
-                        ? 'cancelPremiumAutopayTitleSP'
-                        : 'cancelPremiumAutopayTitle'
-                )}
+                {systematicProgramTablesEnabled
+                    ? tRoot('cancelPremiumAutopayTitleSP')
+                    : t('cancelPremiumAutopayTitle')}
             </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.PAYMENT}

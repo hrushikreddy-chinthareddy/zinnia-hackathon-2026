@@ -458,7 +458,13 @@
         "timeline": "Timeline",
         "taxes": "Taxes",
         "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
-        "selectDateInRange": "Please select a date within range:"
+        "selectDateInRange": "Please select a date within range:",
+        "cancelProgram": "Cancel program",
+        "confirmCancelProgram": "Confirm before canceling systematic program.",
+        "proceedCancel": "Proceed with canceling {{frequency}} systematic program of {{amount}}",
+        "cancelLoanProgram": "Cancel Loan Program",
+        "cancelPremiumProgram": "Cancel Premium Program",
+        "systematicProgramPendingBannerText": "An update to this policy's systematic program details is pending. For more information, "
     },
     "enums": {
         "LIFE": "Life",

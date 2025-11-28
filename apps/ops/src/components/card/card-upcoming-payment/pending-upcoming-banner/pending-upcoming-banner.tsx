@@ -20,6 +20,7 @@ const PendingUpcomingBanner = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'autopay.pendingBanner',
     });
+    const { t: defaultT } = useTranslation();
 
     const { featureFlags } = useOptimizely();
 
@@ -71,9 +72,11 @@ const PendingUpcomingBanner = ({
                 <BannerAlert
                     key={caseId}
                     variant={BannerVariant.Information}
-                    bodyText={t(
-                        systematicProgramTablesEnabled ? 'textSP' : 'text'
-                    )}
+                    bodyText={
+                        systematicProgramTablesEnabled
+                            ? defaultT('systematicProgramPendingBannerText')
+                            : t('text')
+                    }
                     cta={{
                         href: `/cases/${caseId}`,
                         text: t('caseLinkText'),

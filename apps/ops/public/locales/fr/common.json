@@ -458,7 +458,13 @@
         "timeline": "Ponctualité",
         "taxes": "Impôts",
         "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
-        "selectDateInRange": "Sélectionnez une date dans la plage:"
+        "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "cancelProgram": "Annuler le programme",
+        "confirmCancelProgram": "Confirmer avant d'annuler le programme systématique.",
+        "proceedCancel": "Procéder à l'annulation du programme systématique {{frequency}} de {{amount}}",
+        "cancelLoanProgram": "Annuler le programme de prêt",
+        "cancelPremiumProgram": "Annuler le programme de prime",
+        "systematicProgramPendingBannerText": "Une mise à jour des détails du programme systématique de cette police est en attente. Pour plus d'informations, "
     },
     "enums": {
         "LIFE": "Vie",
