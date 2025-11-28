@@ -17,9 +17,9 @@ import {
     PolicySearchFilters,
     PolicySearchFiltersContext,
 } from '@deps/contexts/PolicySearchFilters';
+import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { getPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { LabelValue } from '@deps/types/data';
@@ -135,8 +135,10 @@ export const PolicyIndexCardView = ({
         policySearchFilters,
         setPolicySearchFilters,
         clearPolicySearchFilters,
-        setShowFieldErrorMessage,
     } = useContext(PolicySearchFiltersContext);
+
+    const { setShowFieldErrorMessage, validateValueToSearch } =
+        useSearchBarcontext();
 
     const { searchValue, limit, offset } = policySearchFilters;
 
@@ -231,30 +233,7 @@ export const PolicyIndexCardView = ({
             }
         );
 
-        // The api treats an empty string as a valid search value. Searching with an empty string in firstName and a correct
-        // value in lastName will return 0 results.
-        // This removes all falsy values from the search query
-        // This feels like the wrong location to strip the values but I'm isolating to Policy.
-        Object.keys(value).forEach((key) => {
-            const trimmedValue = value[key as keyof typeof value]?.trim();
-            value[key as keyof typeof value] = trimmedValue;
-
-            if (isNullEmptyOrUndefined(value[key as keyof typeof value])) {
-                delete value[key as keyof typeof value];
-            }
-        });
-
-        const hasSearchValue =
-            value &&
-            !!Object.keys(value).length &&
-            !(value.ssn && !/\d/.test(value.ssn));
-
-        // Show the field error message if the search button is clicked and nothing have been entered into the field
-        if (!hasSearchValue) {
-            setShowFieldErrorMessage(true);
-        } else {
-            setShowFieldErrorMessage(false);
-        }
+        validateValueToSearch(value);
 
         const newSearchValues: PolicySearchFilters = {
             ...policySearchFilters,

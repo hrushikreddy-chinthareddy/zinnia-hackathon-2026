@@ -45,7 +45,6 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { useLoadingTime } from '@deps/hooks/useLoadingTime';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { LOADING_TIME_CONFIG, Statuses } from '@deps/models/case/case';
@@ -118,7 +117,8 @@ const CaseManagementDashboard = ({
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
-    const { setShowFieldErrorMessage } = useSearchBarcontext();
+    const { setShowFieldErrorMessage, validateValueToSearch } =
+        useSearchBarcontext();
 
     useEffect(() => {
         setShowFieldErrorMessage(false);
@@ -403,26 +403,7 @@ const CaseManagementDashboard = ({
                 }
             );
 
-            Object.keys(value).forEach((key) => {
-                const trimmedValue = value[key as keyof typeof value]?.trim();
-                value[key as keyof typeof value] = trimmedValue;
-
-                if (isNullEmptyOrUndefined(value[key as keyof typeof value])) {
-                    delete value[key as keyof typeof value];
-                }
-            });
-
-            const hasSearchValue =
-                value &&
-                !!Object.keys(value).length &&
-                !(value.ssn && !/\d/.test(value.ssn));
-
-            // Show the field error message if the search button is clicked and nothing have been entered into the field
-            if (!hasSearchValue) {
-                setShowFieldErrorMessage(true);
-            } else {
-                setShowFieldErrorMessage(false);
-            }
+            validateValueToSearch(value);
 
             setCaseManagementFilters((prevFilters) => ({
                 ...prevFilters,
