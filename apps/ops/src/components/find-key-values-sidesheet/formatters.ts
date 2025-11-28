@@ -335,7 +335,7 @@ export const formatPartyLink = ({
                     : node.value;
             return {
                 ...node,
-                label: 'affectedParty',
+                label: 'impactedParty',
                 value: name,
                 link: partyLink,
             };

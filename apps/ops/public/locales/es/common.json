@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partido impactado",
         "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
         "policyBasics": "Básicos de {{policyNomenclature}}",

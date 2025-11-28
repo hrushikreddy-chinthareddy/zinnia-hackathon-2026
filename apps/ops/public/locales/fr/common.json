@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partie concernée",
         "emptySearch": "Aucun résultat trouvé",
         "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
