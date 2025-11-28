@@ -1,6 +1,5 @@
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -205,12 +204,12 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             updateSelectedCarriers,
         ]);
 
-        const path = usePathname();
-
-        // Clear filters on page change
+        // Clear filters on component unmount
         useEffect(() => {
-            clearFilters();
-        }, [path, clearFilters]);
+            return () => {
+                clearFilters();
+            };
+        }, [clearFilters]);
 
         const clearFiltersDisabled =
             Object.keys({
