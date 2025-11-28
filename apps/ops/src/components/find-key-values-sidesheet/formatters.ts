@@ -251,6 +251,29 @@ export const formatSectionLabel = ({
     };
 };
 
+export const formatToolTip = ({
+    t,
+    nomenclature,
+}: {
+    t: TFunction;
+    nomenclature?: string;
+}) => {
+    return (node: DataNode): DataNode => {
+        if (node.type === FieldType.field) {
+            console.log(`${nomenclature}.${node.label}`);
+            return {
+                ...node,
+                toolTip:
+                    t(`${nomenclature}.toolTips.${node.label}`, {
+                        defaultValue: null,
+                        policyNomenclature: nomenclature,
+                    }) ?? undefined,
+            };
+        }
+        return node;
+    };
+};
+
 export const formatNode = (
     node: DataNode,
     t: TFunction,

@@ -22,6 +22,7 @@ import {
     excludeNodesByLabel,
     formatSectionLabels,
     searchNodes,
+    addToolTips,
 } from '@deps/components/find-key-values-sidesheet/transformations';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -94,6 +95,7 @@ export const PolicySidesheetContent = ({
     const nodes = applyTransformationsToNodes(
         (data) => convertNode(data, t),
         (data) => groupBasics(data, t, DocumentFormat.policy),
+        (data) => addToolTips(data, t),
         (data) =>
             groupSectionsForPolicy(
                 data,

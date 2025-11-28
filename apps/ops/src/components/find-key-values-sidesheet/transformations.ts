@@ -3,7 +3,11 @@ import { TFunction } from 'next-i18next';
 import { typedEntries } from '@deps/utils/objects';
 import { Policy, Party } from '@zinnia/api-types/types/sor';
 
-import { combinedTransform, formatSectionLabel } from './formatters';
+import {
+    combinedTransform,
+    formatSectionLabel,
+    formatToolTip,
+} from './formatters';
 import { excludeFields } from './translations/exclude-fields';
 import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
@@ -50,25 +54,18 @@ const isNonNullishObject = (v: unknown): v is Record<string, unknown> =>
 const isNonEmptyString = (v: unknown): v is string =>
     typeof v === 'string' && v !== ''; // TODO: more specific TS type
 
-export function convertNode(
-    obj: unknown,
-    t: TFunction,
-    overrides?: Record<string, string>
-): DataNode[] {
+export function convertNode(obj: unknown, t: TFunction): DataNode[] {
     if (!isNonNullishObject(obj)) return [];
 
     return typedEntries(obj)
-        .map(([key, value]) => convertTuple(key, value, t, overrides))
+        .map(([key, value]) => convertTuple(key, value, t))
         .filter((n): n is DataNode => n != null);
 }
 function convertTuple(
     key: string,
     value: unknown,
-    t: TFunction,
-    overrides?: Record<string, string>
+    t: TFunction
 ): DataNode | undefined {
-    const label = overrides?.[key] ?? key;
-
     // Skip nullish values
     if (value === null || value === '') return;
 
@@ -76,7 +73,7 @@ function convertTuple(
     if (isPrimitive(value)) {
         return {
             type: FieldType.field,
-            label: label,
+            label: key,
             value: String(value),
         };
     }
@@ -92,7 +89,7 @@ function convertTuple(
                     const sectionLabel = item[sectionLabelFieldName];
                     if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
                     // TODO: filter out fields that are not visible, including the title field
-                    const fields: DataNode[] = convertNode(item, t, overrides);
+                    const fields: DataNode[] = convertNode(item, t);
 
                     return {
                         type: FieldType.section,
@@ -110,7 +107,7 @@ function convertTuple(
         } else {
             // value is list of groups
             const groups: DataNode[][] = value.map((item) =>
-                convertNode(item, t, overrides)
+                convertNode(item, t)
             );
             if (groups.length === 0) return;
 
@@ -130,13 +127,13 @@ function convertTuple(
 
     // Object → Section
     if (typeof value === 'object' && !Array.isArray(value)) {
-        const children = convertNode(value, t, overrides);
+        const children = convertNode(value, t);
 
         if (children.length === 0) return;
 
         return {
             type: FieldType.section,
-            label,
+            label: key,
             children,
         };
     }
@@ -186,7 +183,6 @@ export const groupBasics = (
     const filterBySectionOrList = data.filter(
         (node) => node.type !== FieldType.field
     );
-    DocumentFormat.transaction;
     const label =
         type === DocumentFormat.transaction
             ? 'transactionDetails'
@@ -519,7 +515,6 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
         }
 
         if (node.type === FieldType.section) {
-            // Recursively filter children
             const filteredChildren = node.children
                 .map(filterNode)
                 .filter((n): n is DataNode => n !== null);
@@ -553,7 +548,6 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
         return null;
     };
 
-    // Apply filtering to the top-level array
     return nodes.map(filterNode).filter((n): n is DataNode => n !== null);
 }
 
@@ -588,6 +582,26 @@ export const excludeNodesByLabel = (
                     t,
                     exclude: Array.from(excludeFields),
                     policyNomenclature,
+                })
+            )
+        )
+        .filter((n): n is DataNode => n !== null);
+};
+
+export const addToolTips = (
+    data: DataNode[],
+    t: TFunction,
+    type?: DocumentFormatType
+) => {
+    const nomenclature =
+        type === DocumentFormat.transaction ? 'transaction' : 'policy';
+    return data
+        .map((node: DataNode) =>
+            transformObject(
+                node,
+                formatToolTip({
+                    t,
+                    nomenclature,
                 })
             )
         )

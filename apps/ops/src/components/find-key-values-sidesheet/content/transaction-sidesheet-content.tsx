@@ -23,6 +23,7 @@ import {
     formatSectionLabels,
     groupBasics,
     searchNodes,
+    addToolTips,
 } from '../transformations';
 import { DocumentFormat } from '../types';
 
@@ -38,6 +39,7 @@ export const TransactionSidesheetContent = ({
     const nodes = applyTransformationsToNodes(
         (data) => convertNode(data, t),
         (data) => groupBasics(data, t, DocumentFormat.transaction),
+        (data) => addToolTips(data, t, DocumentFormat.transaction),
         (data) => excludeNodesByLabel(data, t),
         (data) => formatSectionLabels(data, t)
     )(transaction);
