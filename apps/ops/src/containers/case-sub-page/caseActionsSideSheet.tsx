@@ -1,3 +1,4 @@
+import { HttpStatusCode } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -37,10 +38,16 @@ function CaseActionSideSheet({ caseId, action }: Props) {
             if (response) {
                 const content = (
                     <SuccessErrorSideSheet
-                        t={t}
                         response={response}
                         sideSheet={sideSheet}
-                        caseId={caseId}
+                        successMessage={t('successMessage', { caseId })}
+                        errorMessage={
+                            response.status === HttpStatusCode.Forbidden
+                                ? t('errorForbidden')
+                                : t('errorMessage', {
+                                      error: response.data?.message ?? '',
+                                  })
+                        }
                     />
                 );
                 sideSheet.changeSideSheetContent(t('title'), content);

@@ -15,7 +15,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import TaskManagerActiveFilters from '@deps/containers/task-manager-active-filters/';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import useTaskManagementQueue from '@deps/hooks/useTaskManagementQueue';
-import { MessageType } from '@deps/models/case/task';
+import { FilterKeys, MessageType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
@@ -45,6 +45,7 @@ type TaskManagementQueueProps = {
         authorizedCarriers?: string[];
         taskListingParams?: TaskListingParams;
         assigneeList?: string[];
+        escalated?: boolean;
     };
     isOpsManagerView?: boolean;
 };
@@ -55,6 +56,7 @@ type SearchParamsPayload = {
     carriers?: string[];
     queues?: string[];
     statuses?: string[];
+    escalated?: boolean | null | undefined;
 };
 
 // type TaskSearchKeys = 'caseId' | 'taskName';
@@ -114,7 +116,7 @@ const TaskManagementQueue = ({
     );
 
     const getSafeSearchParams = (searchParams: SearchParamsPayload) => {
-        const { carriers, queues } = searchParams;
+        const { carriers, queues, escalated } = searchParams;
         const safeSearchParams = {
             ...searchParams,
             ...(carriers && carriers.length > 0
@@ -123,6 +125,7 @@ const TaskManagementQueue = ({
             ...(queues && queues.length > 0
                 ? { queues }
                 : { queues: additionalData?.taskListingParams?.queues }),
+            ...(escalated !== undefined && { escalated }),
         };
 
         return safeSearchParams;
@@ -164,6 +167,7 @@ const TaskManagementQueue = ({
                 ),
                 statuses: additionalFilters.taskStatus,
                 queues: additionalFilters.group,
+                escalated: additionalFilters.escalated,
             };
 
             const copy = { ...searchValue };
@@ -176,32 +180,34 @@ const TaskManagementQueue = ({
     );
 
     const handleFilterRemove = useCallback(
-        (filterName: string, filterValueToRemove: string) => {
-            if (!searchValue?.additionalFilters?.[filterName]) return;
+        (filterName: string, value: string) => {
+            const updated = { ...searchValue.additionalFilters };
 
-            const updatedFilterValues = searchValue.additionalFilters[
-                filterName
-            ].filter((value: string) => value !== filterValueToRemove);
+            if (filterName === FilterKeys.escalated) {
+                updated[filterName] = undefined;
+            } else {
+                const current = updated[filterName];
+                if (!current) return;
+                updated[filterName] = current.filter(
+                    (v: string) => v !== value
+                );
+            }
 
             const newSearchValue = {
                 ...searchValue,
-                additionalFilters: {
-                    ...searchValue.additionalFilters,
-                    [filterName]: updatedFilterValues,
-                },
+                additionalFilters: updated,
             };
 
             const payload = {
                 ...newSearchValue,
-                ...newSearchValue.additionalFilters,
+                ...updated,
             };
-
             delete payload.additionalFilters;
 
             setSearchValue(newSearchValue);
             getTasks(true, getSafeSearchParams(payload));
         },
-        [searchValue, setSearchValue]
+        [searchValue]
     );
 
     const handleReset = useCallback(() => {
@@ -209,7 +215,11 @@ const TaskManagementQueue = ({
 
         if (newSearchValue.additionalFilters) {
             Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                newSearchValue.additionalFilters[key] = [];
+                if (key === FilterKeys.escalated) {
+                    newSearchValue.additionalFilters[key] = undefined;
+                } else {
+                    newSearchValue.additionalFilters[key] = [];
+                }
             });
         }
 
@@ -227,7 +237,6 @@ const TaskManagementQueue = ({
         const newSearchValue = {
             ...searchValue,
         };
-        // remove old toggle key
         delete newSearchValue[toggleValue];
 
         setToggleValue(newToggleValue);
@@ -257,7 +266,11 @@ const TaskManagementQueue = ({
 
         if (newSearchValue?.additionalFilters) {
             Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                newSearchValue.additionalFilters[key] = [];
+                if (key === FilterKeys.escalated) {
+                    newSearchValue.additionalFilters[key] = undefined;
+                } else {
+                    newSearchValue.additionalFilters[key] = [];
+                }
             });
 
             setSearchValue(newSearchValue);
@@ -301,7 +314,6 @@ const TaskManagementQueue = ({
         },
         [openRefineResultsSidesheet]
     );
-
     return (
         <>
             {isOpsManagerView && (

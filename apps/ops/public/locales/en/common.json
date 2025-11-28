@@ -2465,11 +2465,11 @@
             "taskStatus": "Task Status",
             "group": "Group",
             "assignee": "Assignee",
-            "priority": "Priority",
+            "priority": "Priority status",
             "selectPriority": "Select priority",
-            "onlyPrioritized": "Only Prioritized",
-            "any": "Any",
-            "notPrioritized": "Not Prioritized"
+            "onlyPrioritized": "Prioritized cases",
+            "any": "All cases",
+            "notPrioritized": "Regular cases"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -2479,6 +2479,7 @@
             "ariaLabel": {
                 "clearFilter": "Clear {{filter}} filter"
             },
+
             "dateCreated": "Date created",
             "dateUpdated": "Date last updated",
             "type": "Type",
@@ -2492,9 +2493,9 @@
                 "Renewal": "Renewals"
             },
             "escalated": {
-                "true": "Only Prioritized",
-                "false": "Not Prioritized",
-                "any": "Any"
+                "onlyPrioritized": "Prioritized cases",
+                "allCases": "All cases",
+                "notPrioritized": "Regular cases"
             }
         },
         "selectStatus": "Select status",
@@ -2881,7 +2882,8 @@
             "close": "Close",
             "error": "Error",
             "errorMessage": "Error: {{error}}",
-            "successMessage": "Case ID: {{caseId}} was prioritized",
+            "errorForbidden": "You do not have permission to perform this action.",
+            "successMessage": "Case ID: {{caseId}} has been prioritized.",
             "simpleTooltipBody": "This case is prioritized.",
             "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
         },
@@ -9320,5 +9322,10 @@
         "environment": "Environment",
         "variableSearchPlaceholder": "Search feature variables...",
         "flagQueueSearchPlaceholder": "Search feature flags..."
+    },
+    "successErrorSidesheet": {
+        "successTitle": "Success",
+        "errorTitle": "Error",
+        "closeButton": "Close"
     }
 }

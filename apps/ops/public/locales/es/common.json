@@ -2472,9 +2472,9 @@
             "assignee": "Cesionario",
             "priority": "Prioridad",
             "selectPriority": "Seleccionar prioridad",
-            "onlyPrioritized": "Seulement priorité",
-            "any": "Tout",
-            "notPrioritized": "Non priorisé"
+            "onlyPrioritized": "Cas prioritaires",
+            "any": "Tous les cas",
+            "notPrioritized": "Cas ordinaires"
         },
         "refineResultsErrors": {
             "caseType": "Por favor, seleccione al menos un tipo de caso",
@@ -2497,9 +2497,9 @@
                 "Renewal": "Renovaciones"
             },
             "escalated": {
-                "true": "Solo priorizado",
-                "false": "No priorizado",
-                "any": "Cualquiera"
+                "onlyPrioritized": "Cas prioritaires",
+                "allCases": "Tous les cas",
+                "notPrioritized": "Cas ordinaires"
             }
         },
         "selectStatus": "Seleccionar estado",
@@ -2884,7 +2884,8 @@
             "close": "Close",
             "error": "Error",
             "errorMessage": "Error: {{error}}",
-            "successMessage": "Caso ID: {{caseId}} priorizado exitosamente",
+            "errorForbidden": " No tiene permiso para priorizar este caso.",
+            "successMessage": "Caso ID: {{caseId}} ha sido priorizada.",
             "simpleTooltipBody": "Este caso está priorizado.",
             "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
         },
@@ -9016,7 +9017,7 @@
                     "reasonForSubmittingRequest": "Describa por qué está enviando esta solicitud",
                     "outcomeExpected": "¿Cuál es el resultado que espera lograr?",
                     "smeEmail": "Proporcione el correo electrónico del experto en la materia o del contacto de su equipo con quien puede trabajar el BA.",
-                    "priority": "Prioridad",
+                    "priority": "Prioridad de la solicitud",
                     "requestFrequency": "¿Con qué frecuencia se realiza esta solicitud? (diaria, semanal, mensual, anual)",
                     "requestFrequencyAssistiveText": "Si está solicitando que un proceso manual sea automatizado, nos gustaría entender la frecuencia de ese proceso manual.",
                     "benefitMetrics": "Cualquier métrica sobre cómo este cambio beneficiará a Operaciones",
@@ -9154,5 +9155,10 @@
         "environment": "Environment",
         "variableSearchPlaceholder": "Buscar variables de funcionalidad...",
         "flagQueueSearchPlaceholder": "Buscar variables de funcionalidad..."
+    },
+    "successErrorSidesheet": {
+        "successTitle": "Éxito",
+        "errorTitle": "Error",
+        "closeButton": "Cerrar"
     }
 }
