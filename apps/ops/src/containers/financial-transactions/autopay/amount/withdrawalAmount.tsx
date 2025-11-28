@@ -25,6 +25,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -35,6 +36,7 @@ import {
 } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     Policy,
     Frequency,
@@ -79,6 +81,11 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `${translationKeyPrefix}.amount`,
     });
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
+
     const [errors, setErrors] = useState<Errors>({});
     const { systematicPrograms, policyDates, policyNumber, product } = policy;
 
@@ -204,9 +211,23 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
         }
 
         if (isNullEmptyOrUndefined(paymentAmount)) {
-            errors = { ...errors, paymentAmount: `${t('missingAmountError')}` };
+            errors = {
+                ...errors,
+                paymentAmount: `${t(
+                    systematicProgramTablesEnabled
+                        ? 'missingAmountErrorSP'
+                        : 'missingAmountError'
+                )}`,
+            };
         } else if (Number(paymentAmount) < 1) {
-            errors = { ...errors, paymentAmount: `${t('invalidAmountError')}` };
+            errors = {
+                ...errors,
+                paymentAmount: `${t(
+                    systematicProgramTablesEnabled
+                        ? 'invalidAmountErrorSP'
+                        : 'invalidAmountError'
+                )}`,
+            };
         }
 
         setErrors(errors);

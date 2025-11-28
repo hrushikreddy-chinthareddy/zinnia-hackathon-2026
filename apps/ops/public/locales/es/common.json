@@ -5263,13 +5263,18 @@
         "cancelAutopay": {
             "cancel": "Cancelar",
             "cancelAutopay": "Cancelar autopago",
+            "cancelAutopaySP": "Cancelar programa",
             "confirmCancelError": "Confirma antes de cancelar el autopago.",
+            "confirmCancelErrorSP": "Confirmar antes de cancelar el programa sistemático.",
             "effectiveDate": "Fecha efectiva",
             "invalidEffectiveDate": "Introduce una fecha efectiva válida.",
             "loanAutopayCancellation": "Cancelación de autopago de préstamo",
+            "loanAutopayCancellationSP": "Cancelación sistemática del pago de préstamos",
             "missingCaseDocument": "Selecciona un documento (o procede sin él) para continuar.",
             "premiumAutopayCancellation": "Cancelación de autopago de prima",
-            "proceedCancel": "Proceder con la cancelación del autopago de {{frequency}} de {{amount}}"
+            "premiumAutopayCancellationSP": "Cancelación sistemática de primas",
+            "proceedCancel": "Proceder con la cancelación del autopago {{frequency}} de {{amount}}",
+            "proceedCancelSP": "Proceder con la cancelación del programa sistemático {{frequency}} de {{amount}}"
         },
         "loans": {
             "header": {
@@ -6275,8 +6280,11 @@
             "setUpAutopay": "Configurar pago automático",
             "oneTimePaymentText": "Hacer pago único",
             "cancelAutopay": "Cancelar pago automático",
+            "cancelAutopaySP": "Cancelar programa",
             "cancelLoanAutopayTitle": "Cancelar Pago Automático del Préstamo",
+            "cancelLoanAutopayTitleSP": "Cancelar Programa de Préstamo",
             "cancelPremiumAutopayTitle": "Cancelar Pago Automático de la Prima",
+            "cancelPremiumAutopayTitleSP": "Cancelar Programa de Prima",
             "noAdditionalCharges": "Ninguno",
             "flatCharges": {
                 "text": "Extra fijo",
@@ -6453,7 +6461,8 @@
     "autopay": {
         "pendingBanner": {
             "caseLinkText": "ir al caso",
-            "text": "Una actualización de los detalles de pago automático de esta póliza está pendiente. Para más información, "
+            "text": "Una actualización de los detalles de pago automático de esta póliza está pendiente. Para más información, ",
+            "textSP": "Se encuentra pendiente una actualización de los detalles sistemáticos del programa de esta política. Para más información, "
         }
     },
     "financialTransaction": {
@@ -6642,6 +6651,7 @@
             "rmdAutopay": "Pago automático de RMD próximo",
             "cancelWithdrawalAutopayTitle": "Cancelar sistemáticamente {{type}}",
             "cancelAutopay": "Cancelar pago automático",
+            "cancelAutopaySP": "Cancelar programa",
             "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
             "paymentType": {
                 "payment": "pago"
@@ -6683,11 +6693,14 @@
         "start": {
             "label": "Iniciar",
             "titleStart": "Configurar Pago Automático de Préstamo",
-            "titleManage": "Gestionar Pago Automático de Préstamo"
+            "titleStartSP": "Crear programa sistemático de reembolso de préstamos",
+            "titleManage": "Gestionar Pago Automático de Préstamo",
+            "titleManageSP": "Manage Systematic Loan Repayment Program"
         },
         "amount": {
             "label": "Monto",
             "paymentAmount": "Monto de pago automático de préstamo",
+            "paymentAmountSP": "Monto de reembolso sistemático del préstamo",
             "paymentFrequency": "Frecuencia de pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "nextPaymentDate": "Fecha del próximo pago",
@@ -6698,7 +6711,9 @@
             "missingStartDateError": "Falta la fecha de inicio de pago.",
             "invalidStartDateError": "Ingresa una fecha válida de inicio de pago.",
             "missingAmountError": "Falta el monto del pago automático de préstamo.",
+            "missingAmountErrorSP": "Falta el monto sistemático de reembolso del préstamo.",
             "invalidAmountError": "El monto del pago automático de préstamo debe ser mayor a $1.00",
+            "invalidAmountErrorSP": "El monto de reembolso sistemático del préstamo debe ser mayor a $1.00",
             "annually": "Anualmente",
             "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",
@@ -6718,7 +6733,9 @@
             "paymentFrequency": "Frecuencia de pago",
             "label": "Resumen",
             "autopayAmount": "Monto de pago automático de préstamo",
+            "autopayAmountSP": "Monto del préstamo sistemático",
             "newAutopayDetails": "Nuevos detalles de pago automático de préstamo",
+            "newAutopayDetailsSP": "Nuevos detalles del reembolso sistemático",
             "nextPaymentDate": "Fecha del próximo pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "payor": "Pagador",
@@ -6726,6 +6743,7 @@
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
             "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
             "updateAutopay": "Actualizar pago automático de préstamo",
+            "updateAutopaySP": "Actualizar programa",
             "validationStatusLabel": "Estado de validación",
             "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
@@ -6901,13 +6919,16 @@
     "premiumAutopay": {
         "start": {
             "label": "Iniciar",
-            "subtitleManage": "Realiza cambios en el calendario, el monto o el método de pago del pago automático de prima de esta póliza. Primero, asegurémonos de poder hacer un seguimiento de esta transacción en OnBase.",
+            "subtitleManage": "Realizar cambios en el cronograma, monto o método de pago de la prima sistemática de esta póliza.",
             "titleStart": "Configurar Pago Automático de Prima",
-            "titleManage": "Gestionar Pago Automático de Prima"
+            "titleStartSP": "Configurar Prima del Programa Sistemático",
+            "titleManage": "Gestionar Pago Automático de Prima",
+            "titleManageSP": "Administrar Prima del Programa Sistemático"
         },
         "amount": {
             "label": "Monto",
             "paymentAmount": "Monto del pago automático de prima",
+            "paymentAmountSP": "Importe de la prima sistemática",
             "paymentFrequency": "Frecuencia de pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "nextPaymentDate": "Fecha del próximo pago",
@@ -6918,7 +6939,9 @@
             "missingStartDateError": "Falta la fecha de inicio de pago.",
             "invalidStartDateError": "Ingresa una fecha válida de inicio de pago.",
             "missingAmountError": "Falta el monto del pago automático de prima.",
+            "missingAmountErrorSP": "Falta el importe de la prima sistemática.",
             "invalidAmountError": "El monto del pago automático de prima debe ser mayor a $1.00",
+            "invalidAmountErrorSP": "El monto de la prima sistemática debe ser mayor a $1.00",
             "annually": "Anualmente",
             "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",
@@ -6939,7 +6962,9 @@
             "paymentFrequency": "Frecuencia de pago",
             "label": "Resumen",
             "autopayAmount": "Monto del pago automático de prima",
+            "autopayAmountSP": "Importe de la prima sistemática",
             "newAutopayDetails": "Nuevos detalles del pago automático de prima",
+            "newAutopayDetailsSP": "Nuevos detalles del programa premium",
             "nextPaymentDate": "Fecha del próximo pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "payor": "Pagador",
@@ -6947,6 +6972,7 @@
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
             "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
             "updateAutopay": "Actualizar pago automático de prima",
+            "updateAutopaySP": "Actualizar programa",
             "validationStatusLabel": "Estado de validación",
             "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
@@ -6954,6 +6980,87 @@
         "confirm": {
             "label": "Confirmar",
             "type": "pago automático de primas"
+        }
+    },
+    "withdrawalAutopay": {
+        "start": {
+            "label": "Inicio",
+            "title": "Configurar retiro sistemático",
+            "titleStart": "Configurar retiro sistemático",
+            "titleManage": "Actualizar sistemático"
+        },
+        "amount": {
+            "label": "Monto",
+            "dollar": "Dólar",
+            "earnings": "Solo ganancias",
+            "paymentAmount": "Monto",
+            "paymentAmountSP": "Monto",
+            "paymentFrequency": "Frecuencia de pago",
+            "paymentStartDate": "Fecha de inicio de pago",
+            "nextPaymentDate": "Fecha del próximo pago",
+            "casesLabel": "Seleccionar un caso",
+            "missingFrequencyError": "Falta la frecuencia de pago.",
+            "missingNextPaymentDateError": "Falta la fecha del próximo pago.",
+            "invalidNextPaymentDateError": "Ingresa una fecha de próximo pago válida.",
+            "missingStartDateError": "Falta la fecha de inicio de pago.",
+            "invalidStartDateError": "Ingresa una fecha de inicio de pago válida.",
+            "missingAmountError": "Falta el monto.",
+            "missingAmountErrorSP": "Falta el monto.",
+            "invalidAmountError": "El monto debe ser mayor a $1.00",
+            "invalidAmountErrorSP": "El monto debe ser mayor a $1.00",
+            "annually": "Anualmente",
+            "semiAnnually": "Semestralmente",
+            "monthly": "Mensualmente",
+            "quarterly": "Trimestralmente",
+            "withdrawal": "Retiro",
+            "RMD": "DMR",
+            "distributionType": "Tipo de distribución",
+            "type": "Tipo",
+            "withdrawalTypeLabel": "¿Qué tipo de retiro es este?",
+            "customFunds": "Fondos personalizados",
+            "proRata": "Prorrateo",
+            "fundDisbursementType": "Tipo de desembolso de fondos",
+            "fundDisbursementTypeLabel": "¿Cómo se tomará este monto de los fondos?",
+            "fundDisbursementTypeTooltip": "El valor de la cuenta está invertido en uno o más fondos de inversión. Cuando retiramos el dinero, necesitamos saber cómo tomar el monto de cada fondo de inversión. Prorrateo significa tomar una cantidad igual de cada fondo de inversión. Personalizado permite al propietario elegir una cantidad específica de cada fondo de inversión.",
+            "missingDistributionError": "Falta el tipo de distribución."
+        },
+        "payor": {
+            "label": "Beneficiario"
+        },
+        "payment": {
+            "label": "Método de pago"
+        },
+        "summary": {
+            "amount": "Monto",
+            "bpm500Error": "Error BPM 500",
+            "current": "Actual",
+            "frequency": "Frecuencia",
+            "paymentFrequency": "Frecuencia de pago",
+            "label": "Resumen",
+            "autopayAmount": "Monto",
+            "newAutopayDetails": "Nuevos detalles de retiro sistemático",
+            "nextPaymentDate": "Fecha del próximo pago",
+            "paymentStartDate": "Fecha de inicio de pago",
+            "payor": "Beneficiario",
+            "submit": "Enviar pago",
+            "status200subtitle": "¡Se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
+            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "updateAutopay": "Actualizar pago automático de prima",
+            "updateAutopaySP": "Actualizar programa",
+            "validationStatusLabel": "Estado de validación",
+            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente le dé seguimiento.",
+            "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO.",
+            "distributionType": "Tipo de distribución",
+            "type": "Tipo",
+            "dollar": "Dólar",
+            "fbo": "FBO/FFC",
+            "paymentMethod": "Método de pago",
+            "fundDisbursementType": "Tipo de desembolso de fondos",
+            "fundAllocation": "Asignación de fondos"
+        },
+        "confirm": {
+            "label": "Confirmar",
+            "type": "{{program}} sistemático "
         }
     },
     "fundTransfer": {

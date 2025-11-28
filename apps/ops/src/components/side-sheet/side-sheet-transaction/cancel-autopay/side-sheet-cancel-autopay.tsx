@@ -17,6 +17,7 @@ import {
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
@@ -41,6 +42,7 @@ import {
     TransactionStep,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     AdhocSystematicProgram,
     AmountType,
@@ -94,6 +96,10 @@ const SideSheetCancelAutopay = ({
         keyPrefix: 'transactions.cancelAutopay',
     });
     const { t: defaultT } = useTranslation();
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const INITIAL_BODY: CancelSystematicProgramBody = {
         correlationId: uuidV4(),
@@ -160,7 +166,11 @@ const SideSheetCancelAutopay = ({
         if (!confirmCancel) {
             localErrors = {
                 ...localErrors,
-                confirmCancel: `${t('confirmCancelError')}`,
+                confirmCancel: `${t(
+                    systematicProgramTablesEnabled
+                        ? 'confirmCancelErrorSP'
+                        : 'confirmCancelError'
+                )}`,
             };
         }
 
@@ -284,9 +294,13 @@ const SideSheetCancelAutopay = ({
     const getArrangementTranslationKey = (type: ArrangementType): string => {
         switch (type) {
             case ArrangementType.PAYMENT:
-                return 'premiumAutopayCancellation';
+                return systematicProgramTablesEnabled
+                    ? 'premiumAutopayCancellationSP'
+                    : 'premiumAutopayCancellation';
             case ArrangementType.LOANREPAYMENT:
-                return 'loanAutopayCancellation';
+                return systematicProgramTablesEnabled
+                    ? 'loanAutopayCancellationSP'
+                    : 'loanAutopayCancellation';
             case ArrangementType.WITHDRAWAL:
                 return 'withdrawalAutopayCancellation';
             case ArrangementType.REQUIREDMINIMUMDISTRIBUTION:
@@ -308,15 +322,20 @@ const SideSheetCancelAutopay = ({
                         showEdit={!errorContent}
                         date={effectiveDate}
                         label={
-                            t('proceedCancel', {
-                                frequency: getFrequency(
-                                    systematicProgram?.frequency as Frequency,
-                                    defaultT
-                                ),
-                                amount: numberFormatify(
-                                    systematicProgram?.amount
-                                ),
-                            }) ?? ''
+                            t(
+                                systematicProgramTablesEnabled
+                                    ? 'proceedCancelSP'
+                                    : 'proceedCancel',
+                                {
+                                    frequency: getFrequency(
+                                        systematicProgram?.frequency as Frequency,
+                                        defaultT
+                                    ),
+                                    amount: numberFormatify(
+                                        systematicProgram?.amount
+                                    ),
+                                }
+                            ) ?? ''
                         }
                     >
                         {errorContent ?? <></>}
@@ -403,13 +422,18 @@ const SideSheetCancelAutopay = ({
                             : undefined
                     }
                     checked={confirmCancel}
-                    label={t('proceedCancel', {
-                        frequency: getFrequency(
-                            systematicProgram?.frequency as Frequency,
-                            defaultT
-                        ),
-                        amount: numberFormatify(systematicProgram?.amount),
-                    })}
+                    label={t(
+                        systematicProgramTablesEnabled
+                            ? 'proceedCancelSP'
+                            : 'proceedCancel',
+                        {
+                            frequency: getFrequency(
+                                systematicProgram?.frequency as Frequency,
+                                defaultT
+                            ),
+                            amount: numberFormatify(systematicProgram?.amount),
+                        }
+                    )}
                     onChange={() => setConfirmCancel(!confirmCancel)}
                 />
             </div>
@@ -418,7 +442,11 @@ const SideSheetCancelAutopay = ({
                 className="mt-10"
                 mainCta={{
                     onClick: validateAndSubmitUpdate,
-                    text: t('cancelAutopay'),
+                    text: t(
+                        systematicProgramTablesEnabled
+                            ? 'cancelAutopaySP'
+                            : 'cancelAutopay'
+                    ),
                 }}
                 secondaryCta={{
                     onClick: onCancel,

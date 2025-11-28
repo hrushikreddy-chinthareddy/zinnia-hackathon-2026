@@ -19,6 +19,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -30,6 +31,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { toTitleCase } from '@deps/utils/strings';
 import {
     Address,
@@ -51,6 +53,10 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     });
     const { t: defaultT } = useTranslation();
     const { policyNumber, product } = policy;
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const [showSelectionError, setShowSelectionError] =
         useState<boolean>(false);
@@ -138,7 +144,11 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     <div className="flex flex-col gap-1">
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('autopayAmount')}
+                            label={t(
+                                systematicProgramTablesEnabled
+                                    ? 'autopayAmountSP'
+                                    : 'autopayAmount'
+                            )}
                         />
                         <Typography variant={TypographyVariant.Value}>
                             {numberFormatify(paymentAmount)}

@@ -55,6 +55,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const loanPaymentEnabled =
         featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
     const loanCancelEnabled = featureFlags[FEATURE_FLAGS.LOAN_CANCEL_AUTOPAY];
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const {
         allocation,
@@ -146,7 +148,11 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
-                {t('cancelLoanAutopayTitle')}
+                {t(
+                    systematicProgramTablesEnabled
+                        ? 'cancelLoanAutopayTitleSP'
+                        : 'cancelLoanAutopayTitle'
+                )}
             </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.LOANREPAYMENT}

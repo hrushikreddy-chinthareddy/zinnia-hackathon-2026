@@ -79,6 +79,8 @@ const AutopayContainer = ({
     const { featureFlags } = useOptimizely();
     const wireCheckPaymentsEnabled =
         featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     useEffect(() => {
         setAutopay((prevState) => ({
@@ -174,8 +176,16 @@ const AutopayContainer = ({
                     }
                     title={
                         isSetUp
-                            ? t('start.titleStart')
-                            : `${t('start.titleManage')}${
+                            ? t(
+                                  systematicProgramTablesEnabled
+                                      ? 'start.titleStartSP'
+                                      : 'start.titleStart'
+                              )
+                            : `${t(
+                                  systematicProgramTablesEnabled
+                                      ? 'start.titleManageSP'
+                                      : 'start.titleManage'
+                              )}${
                                   parentPage === ParentPage.Withdrawals
                                       ? ` ${
                                             autopay.arrangementType ===

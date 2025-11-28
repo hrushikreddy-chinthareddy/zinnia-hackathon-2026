@@ -6,6 +6,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 type PendingUpcomingBannerProps = {
     policyNumber?: string;
@@ -21,6 +22,9 @@ const PendingUpcomingBanner = ({
     });
 
     const { featureFlags } = useOptimizely();
+
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const [caseIds, setCaseIds] = useState<string[]>([]);
 
@@ -67,7 +71,9 @@ const PendingUpcomingBanner = ({
                 <BannerAlert
                     key={caseId}
                     variant={BannerVariant.Information}
-                    bodyText={t('text')}
+                    bodyText={t(
+                        systematicProgramTablesEnabled ? 'textSP' : 'text'
+                    )}
                     cta={{
                         href: `/cases/${caseId}`,
                         text: t('caseLinkText'),

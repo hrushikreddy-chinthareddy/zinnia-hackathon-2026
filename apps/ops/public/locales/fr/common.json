@@ -5210,13 +5210,18 @@
         "cancelAutopay": {
             "cancel": "Annuler",
             "cancelAutopay": "Annuler le prélèvement automatique",
+            "cancelAutopaySP": "Annuler le programme",
             "confirmCancelError": "Confirmez avant d'annuler le prélèvement automatique.",
+            "confirmCancelErrorSP": "Veuillez confirmer avant d'annuler un programme systématique.",
             "effectiveDate": "Date d'effet",
             "invalidEffectiveDate": "Entrez une date d'effet valide.",
             "loanAutopayCancellation": "Annulation du prélèvement automatique de prêt",
+            "loanAutopayCancellationSP": "Annulation systématique du remboursement des prêts",
             "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
             "premiumAutopayCancellation": "Annulation du paiement automatique de la prime",
+            "premiumAutopayCancellationSP": "Annulation systématique des primes",
             "proceedCancel": "Procédez à l'annulation du prélèvement automatique {{frequency}} de {{amount}}",
+            "proceedCancelSP": "Procéder à l'annulation du programme systématique {{frequency}} de {{amount}}",
             "withdrawalAutopayCancellation": "Annulation systématique des retraits",
             "minimumDistributionAutopayCancellation": "Annulation systématique des Rmd"
         },
@@ -6235,8 +6240,11 @@
             "setUpAutopay": "Configurer paiement automatique",
             "oneTimePaymentText": "Effectuer un paiement ponctuel",
             "cancelAutopay": "Annuler le prélèvement automatique",
+            "cancelAutopaySP": "Annuler le programme",
             "cancelLoanAutopayTitle": "Annuler le paiement automatique du prêt",
+            "cancelLoanAutopayTitleSP": "Annulation du programme de prêts",
             "cancelPremiumAutopayTitle": "Annuler le paiement automatique premium",
+            "cancelPremiumAutopayTitleSP": "Annulation du programme Premium",
             "noAdditionalCharges": "Aucun",
             "flatCharges": {
                 "text": "Charge fixe",
@@ -6415,7 +6423,8 @@
     "autopay": {
         "pendingBanner": {
             "caseLinkText": "aller au dossier",
-            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, "
+            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, ",
+            "textSP": "Une mise à jour des détails systématiques de ce programme est en cours. Pour plus d'informations,"
         }
     },
     "financialTransaction": {
@@ -6602,6 +6611,7 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
+            "cancelAutopaySP": "Annuler le programme",
             "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
             "paymentType": {
                 "payment": "paiement"
@@ -6646,11 +6656,14 @@
         "start": {
             "label": "Commencer",
             "titleStart": "Configurer le paiement automatique du prêt",
-            "titleManage": "Gérer le paiement automatique du prêt"
+            "titleStartSP": "Mettre en place un programme de remboursement de prêt systématique",
+            "titleManage": "Gérer le paiement automatique du prêt",
+            "titleManageSP": "Gérer un programme de remboursement systématique de prêts"
         },
         "amount": {
             "label": "Montant",
             "paymentAmount": "Montant de paiement automatique du prêt",
+            "paymentAmountSP": "Montant de remboursement systématique du prêt",
             "paymentFrequency": "Fréquence de paiement",
             "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Date du prochain paiement",
@@ -6661,7 +6674,9 @@
             "missingStartDateError": "La date de début de paiement est manquante.",
             "invalidStartDateError": "Entrez une date de début de paiement valide.",
             "missingAmountError": "Le montant de paiement automatique du prêt est manquant.",
+            "missingAmountErrorSP": "Le montant des remboursements systématiques du prêt est manquant.",
             "invalidAmountError": "Le montant de paiement automatique du prêt doit être supérieur à 1,00 $",
+            "invalidAmountErrorSP": "Le montant du remboursement systématique du prêt doit être supérieur à 1,00 $.",
             "annually": "Annuellement",
             "semiAnnually": "Semi-annuellement",
             "monthly": "Mensuellement",
@@ -6680,8 +6695,11 @@
             "frequency": "Fréquence",
             "paymentFrequency": "Fréquence des paiements",
             "label": "Résumé",
+            "autopayAmount": "Montant de paiement automatique de prêt",
             "loanAutopayAmount": "Montant de paiement automatique de prêt",
+            "autopayAmountSP": "Montant du prêt systématique",
             "newAutopayDetails": "Nouveaux détails du paiement automatique du prêt",
+            "newAutopayDetailsSP": "Nouveaux détails de remboursement systématique",
             "nextPaymentDate": "Date du prochain paiement",
             "paymentStartDate": "Date de début du paiement",
             "payor": "Payeur",
@@ -6689,6 +6707,7 @@
             "status200subtitle": "Tout est bon! Assurez-vous de revoir vos informations avant de soumettre.",
             "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Veuillez revoir l'erreur ci-dessous.",
             "updateAutopay": "Mettre à jour le paiement automatique du prêt",
+            "updateAutopaySP": "Mise à jour du prélèvement automatique du prêt",
             "validationStatusLabel": "Statut de validation",
             "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
@@ -6863,13 +6882,16 @@
     "premiumAutopay": {
         "start": {
             "label": "Démarrer",
-            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police.",
+            "subtitleManage": "Make changes to the schedule, amount, or payment method for this policy's systematic premium.",
             "titleStart": "Configurer le prélèvement automatique de la prime",
-            "titleManage": "Gérer le prélèvement automatique de la prime"
+            "titleStartSP": "Configurer le programme systématique Premium",
+            "titleManage": "Gérer le prélèvement automatique de la prime",
+            "titleManageSP": "Gestion du programme systématique Premium"
         },
         "amount": {
             "label": "Montant",
             "paymentAmount": "Montant du prélèvement automatique de la prime",
+            "paymentAmountSP": "Montant de prime systématique",
             "paymentFrequency": "Fréquence de paiement",
             "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Prochaine date de paiement",
@@ -6880,7 +6902,9 @@
             "missingStartDateError": "La date de début de paiement est manquante.",
             "invalidStartDateError": "Entrez une date de début de paiement valide.",
             "missingAmountError": "Le montant du prélèvement automatique de la prime est manquant.",
+            "missingAmountErrorSP": "Le montant de la prime systématique est manquant.",
             "invalidAmountError": "Le montant du prélèvement automatique de la prime doit être supérieur à 1,00 $",
+            "invalidAmountErrorSP": "Le montant de la prime systématique doit être supérieur à 1,00 $.",
             "annually": "Annuellement",
             "semiAnnually": "Semestriellement",
             "monthly": "Mensuellement",
@@ -6901,7 +6925,9 @@
             "paymentFrequency": "Fréquence de paiement",
             "label": "Résumé",
             "autopayAmount": "Montant du prélèvement automatique de la prime",
+            "autopayAmountSP": "Montant de prime systématique",
             "newAutopayDetails": "Nouveaux détails du prélèvement automatique de la prime",
+            "newAutopayDetailsSP": "Détails du nouveau programme premium",
             "nextPaymentDate": "Prochaine date de paiement",
             "paymentStartDate": "Date de début de paiement",
             "payor": "Payeur",
@@ -6909,6 +6935,7 @@
             "status200subtitle": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
             "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette police. Consultez l'erreur ci-dessous.",
             "updateAutopay": "Mettre à jour le prélèvement automatique de la prime",
+            "updateAutopaySP": "Programme de mise à jour",
             "validationStatusLabel": "État de validation",
             "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
@@ -6930,6 +6957,7 @@
             "dollar": "Dollar",
             "earnings": "Versements",
             "paymentAmount": "Montant",
+            "paymentAmountSP": "Montant",
             "paymentFrequency": "Fréquence de paiement",
             "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Prochaine date de paiement",
@@ -6940,7 +6968,9 @@
             "missingStartDateError": "La date de début de paiement est manquante.",
             "invalidStartDateError": "Entrez une date de paiement valide.",
             "missingAmountError": "Le montant est manquant.",
+            "missingAmountErrorSP": "Le montant est manquant.",
             "invalidAmountError": "Le montant doit être supérieur à 1,00 $",
+            "invalidAmountErrorSP": "Le montant doit être supérieur à 1,00 $",
             "annually": "Annuellement",
             "semiAnnually": "Semestriellement",
             "monthly": "Mensuellement",
@@ -6979,6 +7009,7 @@
             "status200subtitle": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
             "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette police. Consultez l'erreur ci-dessous.",
             "updateAutopay": "Mettre à jour le prélèvement automatique de la prime",
+            "updateAutopaySP": "Programme de mise à jour",
             "validationStatusLabel": "État de validation",
             "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO.",

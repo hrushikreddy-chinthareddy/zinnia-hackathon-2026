@@ -51,6 +51,8 @@ export const PremiumsSubPage = () => {
     const { featureFlags } = useOptimizely();
     const premiumSetOrCancelAutopayEnabled =
         featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const {
         accountValues,
@@ -206,7 +208,11 @@ export const PremiumsSubPage = () => {
     const openCancelSideSheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
-                {t('cancelPremiumAutopayTitle')}
+                {t(
+                    systematicProgramTablesEnabled
+                        ? 'cancelPremiumAutopayTitleSP'
+                        : 'cancelPremiumAutopayTitle'
+                )}
             </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.PAYMENT}

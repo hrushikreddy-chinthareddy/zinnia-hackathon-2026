@@ -17,6 +17,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -34,6 +35,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     ArrangementType,
     Frequency,
@@ -69,6 +71,10 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         keyPrefix: `${translationKeyPrefix}.summary`,
     });
     const { t: defaultT } = useTranslation();
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const [showSelectionError, setShowSelectionError] =
         useState<boolean>(false);
@@ -107,7 +113,11 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     const comparisonData = [
         {
             header: '',
-            new: t('newAutopayDetails'),
+            new: t(
+                systematicProgramTablesEnabled
+                    ? 'newAutopayDetailsSP'
+                    : 'newAutopayDetails'
+            ),
             current: t('current'),
         },
         ...(isWithdrawalAutopay
@@ -264,7 +274,11 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     policyNumber={policyNumber}
                     submitLabel={
                         validationSucceeded
-                            ? (t('updateAutopay') as string)
+                            ? (t(
+                                  systematicProgramTablesEnabled
+                                      ? 'updateAutopaySP'
+                                      : 'updateAutopay'
+                              ) as string)
                             : (t('submit') as string)
                     }
                     trackEventProps={{
