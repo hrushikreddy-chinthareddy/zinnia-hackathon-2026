@@ -11,7 +11,6 @@ import {
     useMemo,
     useState,
     useEffect,
-    useContext,
 } from 'react';
 
 import { PageHead } from '@deps/components/page-title';
@@ -30,7 +29,7 @@ import {
     initialFilters,
 } from '@deps/contexts/CaseManagementFilters';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { SearchBarContext } from '@deps/contexts/SearchBarContext';
+import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -119,7 +118,7 @@ const CaseManagementDashboard = ({
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
-    const { setShowFieldErrorMessage } = useContext(SearchBarContext);
+    const { setShowFieldErrorMessage } = useSearchBarcontext();
 
     useEffect(() => {
         setShowFieldErrorMessage(false);

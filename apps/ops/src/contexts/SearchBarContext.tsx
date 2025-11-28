@@ -1,4 +1,4 @@
-import { createContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 interface SearchBarProps {
     showFieldErrorMessage: boolean;
@@ -12,6 +12,18 @@ export const SearchBarContext = createContext<SearchBarProps>({
     setShowFieldErrorMessage: noop,
     showFieldErrorMessage: false,
 });
+
+export const useSearchBarcontext = () => {
+    const context = useContext(SearchBarContext);
+
+    if (!context) {
+        throw new Error(
+            'useSearchBarContext must be used within a SearchBarProvider'
+        );
+    }
+
+    return context;
+};
 
 export const SearchBarProvider = ({ children }: any) => {
     const [showFieldErrorMessage, setShowFieldErrorMessage] = useState(false);
