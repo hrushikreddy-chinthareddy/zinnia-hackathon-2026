@@ -1431,7 +1431,8 @@
                     "married": "Mariée",
                     "widowed": "Veuve"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Date de confiance"
             },
             "jointOwner": {
                 "title": "Informations sur le copropriétaire"

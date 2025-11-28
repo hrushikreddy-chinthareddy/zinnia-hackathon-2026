@@ -3269,7 +3269,8 @@
                     "married": "Married",
                     "widowed": "Widowed"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Trust date"
             },
             "jointOwner": {
                 "title": "Joint Owner Information"

@@ -3272,7 +3272,8 @@
                     "married": "Casado",
                     "widowed": "Viudo"
                 },
-                "ssn": "NSS"
+                "ssn": "SSN",
+                "trustDate": "Fecha de confianza"
             },
             "jointOwner": {
                 "title": "Información del Propietario Conjunto"
