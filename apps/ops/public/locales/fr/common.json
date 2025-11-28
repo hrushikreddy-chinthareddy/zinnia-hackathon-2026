@@ -1314,6 +1314,7 @@
         "fetchTaskError": "Impossible de récupérer les tâches.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassign": "Annuler l'attribution",
+        "assign": "Attribuer",
         "unassignTaskError": "Erreur de désattribution de tâche",
         "assignTaskError": "Erreur d'affectation de tâche",
         "startTask": "Démarrer la tâche",
@@ -7332,7 +7333,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Ajouter un filtre"
+                "addFilter": "Ajouter un filtre",
+                "addFilters": "Ajouter des filtres"
             },
             "headers": {
                 "title": "Affiner les résultats"

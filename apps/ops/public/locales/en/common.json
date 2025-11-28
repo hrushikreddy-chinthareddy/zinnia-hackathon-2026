@@ -2325,6 +2325,7 @@
         "assignTaskError": "Assign task error",
         "unassignTask": "Unassign Task",
         "unassign": "Unassign",
+        "assign": "Assign",
         "startTask": "Start Task",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
@@ -7439,7 +7440,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Add filter"
+                "addFilter": "Add filter",
+                "addFilters": "Add filters"
             },
             "headers": {
                 "title": "Refine Results"

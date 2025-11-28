@@ -2329,6 +2329,7 @@
         "assignTaskError": "Error al asignar tarea",
         "unassignTask": "Desasignar Tarea",
         "unassign": "Desasignar",
+        "assign": "Asignar",
         "startTask": "Iniciar Tarea",
         "assignTask": "Asignar Tarea",
         "transaction": "Transacción: {{transactionType}}",
@@ -7292,7 +7293,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Añadir un filtro"
+                "addFilter": "Añadir un filtro",
+                "addFilters": "Agregar filtros"
             },
             "headers": {
                 "title": "Refinar resultados"

@@ -83,7 +83,6 @@ export default function SideSheetTasksResults({
     searchValue,
     handleApplyFilters,
     clearFilters,
-    assigneeList,
     allGroups,
 }: SideSheetTasksResultsProps) {
     const { t } = useTranslation();
@@ -165,10 +164,6 @@ export default function SideSheetTasksResults({
         handleFilterToggle(FILTER_KEYS.GROUP, selectedGroup);
     };
 
-    const handleAssigneeChange = (selectedAssignee: string) => {
-        handleFilterToggle(FILTER_KEYS.ASSIGNEES, selectedAssignee);
-    };
-
     const handleSubmit = useCallback(() => {
         const { carriers, taskStatus, group } = additionalFilters;
         const payload = {
@@ -180,10 +175,6 @@ export default function SideSheetTasksResults({
         handleApplyFilters(additionalFilters, payload);
         closeSideSheet();
     }, [additionalFilters]);
-    const handleReset = () => {
-        handleClear();
-        clearFilters();
-    };
 
     const handleClear = () => {
         const newAdditionalFilters = { ...additionalFilters };
@@ -192,6 +183,17 @@ export default function SideSheetTasksResults({
         newAdditionalFilters.group = [];
         newAdditionalFilters.assignees = [];
         setAdditionalFilters(newAdditionalFilters);
+    };
+
+    const handleReset = () => {
+        handleClear();
+        if (
+            (additionalFilters?.taskStatus || []).length > 0 ||
+            (additionalFilters?.group || []).length > 0 ||
+            Object.keys(additionalFilters?.carriers || {}).length > 0
+        ) {
+            clearFilters();
+        }
     };
 
     const selectedCarriers = additionalFilters.carriers ?? {};
@@ -226,6 +228,11 @@ export default function SideSheetTasksResults({
             }
         }
     }, []);
+
+    const hasActiveFilters =
+        (additionalFilters?.taskStatus || []).length > 0 ||
+        (additionalFilters?.group || []).length > 0 ||
+        Object.keys(additionalFilters?.carriers || {}).length > 0;
 
     return (
         <div className="flex flex-col px-8">
@@ -265,7 +272,7 @@ export default function SideSheetTasksResults({
                         name="carrier-dropdown-btn"
                     />
 
-                    <MultiselectField
+                    {/* <MultiselectField
                         isLoading={false}
                         label={
                             t(`${REFINE_RESULTS_BASE_KEY}assignee`) as string
@@ -274,7 +281,7 @@ export default function SideSheetTasksResults({
                         value={new Set(additionalFilters.assignees)}
                         handleChange={handleAssigneeChange}
                         disabled={true}
-                    />
+                    /> */}
                 </div>
             </>
             <div className="flex flex-col gap-12 py-8">
@@ -290,6 +297,7 @@ export default function SideSheetTasksResults({
                         </p>
                     </Button>
                     <NavElement
+                        disabled={!hasActiveFilters}
                         type={NavElementType.Button}
                         className="flex self-center whitespace-nowrap"
                         onClick={handleReset}

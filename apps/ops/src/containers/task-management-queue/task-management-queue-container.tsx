@@ -8,6 +8,7 @@ import Button, {
     ButtonType,
     ButtonVariant,
 } from '@deps/components/button/button';
+import Content, { ContentVariant } from '@deps/components/content/content';
 import SearchBar from '@deps/components/search/search-bar';
 import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { TranslationFiles } from '@deps/config/translations';
@@ -18,7 +19,7 @@ import { MessageType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
-import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
+import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -254,16 +255,20 @@ const TaskManagementQueue = ({
 
         delete searchParams?.additionalFilters;
 
-        Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-            newSearchValue.additionalFilters[key] = [];
-        });
+        if (newSearchValue?.additionalFilters) {
+            Object.keys(newSearchValue.additionalFilters).forEach((key) => {
+                newSearchValue.additionalFilters[key] = [];
+            });
 
-        setSearchValue(newSearchValue);
+            setSearchValue(newSearchValue);
 
-        getTasks(true, {
-            ...searchParams,
-            ...additionalData?.taskListingParams,
-        });
+            getTasks(true, {
+                ...searchParams,
+                ...additionalData?.taskListingParams,
+            });
+        } else {
+            return;
+        }
     }, [handleApplyFilters, handleClear]);
 
     const handleCloseSideSheet = useCallback(() => {
@@ -313,14 +318,27 @@ const TaskManagementQueue = ({
                     <Button
                         onClick={openRefineResultsSidesheet}
                         data-testid="search-btn"
+                        aria-label="Add filters"
                         type={ButtonType.Secondary}
                         size={ButtonSize.Small}
-                        className="flex items-center whitespace-nowrap mt-5 mb-5"
+                        className="flex items-center whitespace-nowrap mt-5 mb-5 !border-none !bg-white"
                         onKeyDown={handleKeyDownToOpenRefineResultsSidesheeet}
                         disabled={isLoading}
                     >
-                        <AddIcon width={12} height={12} />
-                        {tTaskView('filters.buttons.addFilter')}
+                        <FilterIcon
+                            className="text-secondary"
+                            width={16}
+                            height={16}
+                        />
+                        <Content
+                            contentClassName="text-secondary"
+                            variant={ContentVariant.BodyBold}
+                            details={
+                                tTaskView(
+                                    'filters.buttons.addFilters'
+                                ) as string
+                            }
+                        />
                     </Button>
                     <TaskManagerActiveFilters
                         authorizedCarriers={
