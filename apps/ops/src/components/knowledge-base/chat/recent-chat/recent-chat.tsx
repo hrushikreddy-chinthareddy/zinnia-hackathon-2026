@@ -4,6 +4,10 @@ import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Field from '@deps/components/fields/field';
+import NavElement, {
+    NavElementSize,
+    NavElementType,
+} from '@deps/components/nav-element/nav-element';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -13,7 +17,7 @@ import {
     listChatSessionsByClientId,
     searchChatHistory,
 } from '@deps/queries/api/knowledge-base';
-import { KeyboardEvents, KnowledgeBasePages } from '@deps/types/knowledge-base';
+import { KnowledgeBasePages } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { formatDateTime } from '@deps/utils/dates';
 import {
@@ -27,14 +31,15 @@ import { KnowledgeBasePaths } from '../../knowledge-base-sidenav/knowledge-base-
 
 type RecentChatsProps = {
     opsUserData: MeResponse;
+    isSearchFocused: boolean;
 };
 
 const PAGE_SIZE = 10;
 const START_PAGE_NUM = 0;
 const DEBOUNCE_DELAY = 300;
-const SESSION_TITLE_MAX_LEN = 22;
+const SESSION_TITLE_MAX_LEN = 27;
 
-const RecentChat = ({ opsUserData }: RecentChatsProps) => {
+const RecentChat = ({ opsUserData, isSearchFocused }: RecentChatsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
@@ -210,17 +215,26 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
     ]);
 
     return (
-        <div className="text-gray-500 border-t border-gray-100 mt-4">
-            <div className="flex flex-col gap-2 my-4">
+        <div className="w-full text-gray-500 border-t border-gray-100 mt-4 transition-width duration-100">
+            <div className="flex flex-row gap-2 items-center justify-between my-4">
                 <Typography variant={TypographyVariant.BodySmBold}>
                     {t('sidenav.recentChat')}
                 </Typography>
-                <Typography variant={TypographyVariant.BodySm}>
-                    {clientName
-                        .replace(/\.aspx$/i, '')
-                        .replace(/-/g, ' ')
-                        .replace(/([a-z])([A-Z])/g, '$1 $2')}
-                </Typography>
+                <div className="flex items-center">
+                    <div
+                        className={`bg-black rounded-lg ${styles.selectedClient}`}
+                    >
+                        <Typography
+                            variant={TypographyVariant.Label}
+                            className="tracking-normal no-underline typography-labels-field-label block truncate overflow-hidden text-ellipsis w-[112px] text-center max-w-[112px]"
+                        >
+                            {clientName
+                                .replace(/\.aspx$/i, '')
+                                .replace(/-/g, ' ')
+                                .replace(/([a-z])([A-Z])/g, '$1 $2')}
+                        </Typography>
+                    </div>
+                </div>
             </div>
 
             <Field
@@ -230,9 +244,10 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                     handleSearchTermChange(e.target.value)
                 }
                 startIcon={<Icon type={IconType.SEARCH} className="mr-1" />}
-                className="py-1 mb-4"
+                className="my-2 ml-2"
                 onClear={handleSearchClear}
                 isClearable
+                autoFocus={isSearchFocused}
             />
 
             <div
@@ -241,66 +256,64 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                 onScroll={handleScroll}
             >
                 {chatsToRender.length > 0 ? (
-                    chatsToRender?.map((chat) => {
+                    chatsToRender?.map((chat, index) => {
                         const {
                             sessionId: itemSessionId,
                             sessionTitle,
                             lastActivity,
                         } = chat;
                         return (
-                            <div
-                                tabIndex={0}
-                                key={itemSessionId}
-                                className={`flex gap-2 items-center py-2 cursor-pointer ${
-                                    styles.itemhover
-                                } ${
-                                    itemSessionId === sessionId
-                                        ? styles.activeItem
-                                        : ''
-                                }`}
-                                onClick={() =>
-                                    handleViewChatHistory(itemSessionId || '')
-                                }
-                                onKeyDown={(e) => {
-                                    if (
-                                        e.key === KeyboardEvents.Enter ||
-                                        e.key === KeyboardEvents.Space
-                                    ) {
-                                        e.preventDefault();
+                            <div key={itemSessionId} className="ml-2">
+                                <NavElement
+                                    key={itemSessionId}
+                                    tabIndex={index}
+                                    size={NavElementSize.Small}
+                                    type={NavElementType.Button}
+                                    className="w-full items-center flex whitespace-nowrap mt-1"
+                                    onClick={() => {
                                         handleViewChatHistory(
                                             itemSessionId || ''
                                         );
-                                    }
-                                }}
-                            >
-                                <Icon type={IconType.ANNOTATION} />
-                                <div className="flex flex-col">
-                                    <Typography
-                                        variant={TypographyVariant.BodySmBold}
-                                    >
-                                        {sessionTitle &&
-                                        sessionTitle?.length <=
-                                            SESSION_TITLE_MAX_LEN
-                                            ? sessionTitle
-                                            : `${sessionTitle?.slice(
-                                                  0,
+                                    }}
+                                >
+                                    <div className="flex mt-0.5 flex-row w-full items-center">
+                                        <Icon
+                                            className="mr-1 mt-1"
+                                            width={16}
+                                            height={16}
+                                            color="var(--color-nav-drawer-2-nav-drawer-item-2-active-border)"
+                                            type={IconType.ANNOTATION}
+                                        />
+                                        <Typography
+                                            variant={
+                                                TypographyVariant.BodySmBold
+                                            }
+                                        >
+                                            {sessionTitle
+                                                ? sessionTitle.length >
                                                   SESSION_TITLE_MAX_LEN
-                                              )}...`}
-                                    </Typography>
-                                    <Typography
-                                        variant={TypographyVariant.BodySm}
-                                        className="text-gray-200"
-                                    >
-                                        {formatDateTime(lastActivity || '')}
-                                    </Typography>
-                                </div>
+                                                    ? sessionTitle.slice(
+                                                          0,
+                                                          SESSION_TITLE_MAX_LEN
+                                                      ) + '...'
+                                                    : sessionTitle
+                                                : ''}
+                                        </Typography>
+                                    </div>
+                                </NavElement>
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className="ml-2 mb-2 text-gray-200"
+                                >
+                                    {formatDateTime(lastActivity || '')}
+                                </Typography>
                             </div>
                         );
                     })
                 ) : !loading ? (
                     <Typography
                         variant={TypographyVariant.BodySm}
-                        className="px-2"
+                        className="px-2 flex items-center justify-center"
                     >
                         {isSearchActive
                             ? t('sidenav.noResultsFound')
@@ -310,7 +323,7 @@ const RecentChat = ({ opsUserData }: RecentChatsProps) => {
                 {loading && (
                     <Typography
                         variant={TypographyVariant.BodySm}
-                        className="py-2"
+                        className="py-2 flex items-center justify-center"
                     >
                         {t('sidenav.loadingChats')}
                     </Typography>

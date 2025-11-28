@@ -29,7 +29,11 @@ import { getValidFullName } from '@deps/helpers/case-management';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { Case, Processes } from '@deps/models/case/case';
+import {
+    Case,
+    Processes,
+    shouldShowEscalationBadge,
+} from '@deps/models/case/case';
 import {
     CaseDetailsTabValues,
     DEFAULT_ERROR_STRING,
@@ -238,7 +242,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             </>
         );
     };
-
+    const showBadge = shouldShowEscalationBadge(
+        singleCase.escalated ?? false,
+        singleCase.caseStatus
+    );
     return (
         <TableRow className={styles.row}>
             <TableCell className={styles.caseLinkContainer}>
@@ -269,7 +276,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <CaseDetailField
                         text={singleCase.id}
                         className={styles.detail}
-                        escalated={singleCase.escalated ?? false}
+                        escalated={showBadge}
                         highlights={
                             searchValues?.caseId ? [searchValues.caseId] : null
                         }
@@ -503,7 +510,6 @@ export const CaseResultTable = ({
                     </TableHeaderCell>
                 </TableRow>
             </TableHeader>
-
             <TableBody>
                 {cases && cases.length ? (
                     cases.map((singleCase) => (

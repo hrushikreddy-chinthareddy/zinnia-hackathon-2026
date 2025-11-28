@@ -1,0 +1,13 @@
+.completed {
+    color: #9ca3af;
+    cursor: not-allowed !important;
+}
+
+.active {
+    color: var(--color-secondary-color-secondary);
+    cursor: pointer;
+}
+
+.assigneeBtnCompletedTask {
+    cursor: not-allowed !important;
+}

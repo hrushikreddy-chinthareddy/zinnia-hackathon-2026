@@ -1,11 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { PendoOptions } from 'globals';
 import { useEffect, useMemo } from 'react';
 
 import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import { UserProfile as ZinniaUserProfile } from '@deps/models/user-profile';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { PendoOptions } from 'globals';
 
 // Account for additional properties on the user profile
 declare module '@auth0/nextjs-auth0/client' {

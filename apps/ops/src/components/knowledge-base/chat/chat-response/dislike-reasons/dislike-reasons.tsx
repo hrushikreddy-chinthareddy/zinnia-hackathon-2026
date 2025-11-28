@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import { ButtonSize } from '@deps/components/button/button';
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
-import { Modal } from '@deps/components/modal/modal';
 import Radio from '@deps/components/radio/radio';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     DislikeReasonsPayload,
     OpsIntakeFormPayload,
@@ -39,10 +39,11 @@ const DislikeReasons = ({
     };
     const [reason, setReason] = useState<string>('');
     const [linksString, setLinksString] = useState<string>('');
-    const [openOpsIntakeForm, setOpenOpsIntakeForm] = useState<boolean>(false);
     const [metadata, setMetadata] = useState<OpsIntakeFormPayload>(
         {} as OpsIntakeFormPayload
     );
+
+    const sidesheet = useSideSheetContext();
 
     const documentLinks = linksString && linksString.split(',');
 
@@ -74,6 +75,25 @@ const DislikeReasons = ({
             metadata: null,
         };
         onDislikeReasonChange(newDislikeReasonPayload);
+    };
+
+    const handleCloseOpsIntakeForm = () => {
+        sidesheet.handleOpen(false);
+    };
+
+    const handleOpenOpsIntakeForm = () => {
+        sidesheet.changeSideSheetContent(
+            t('chat.feedback.opsIntakeForm.heading'),
+            <OpsIntakeForm
+                metadata={metadata}
+                setMetadata={setMetadata}
+                dislikeReason={dislikeReason}
+                onDislikeReasonChange={onDislikeReasonChange}
+                onClose={handleCloseOpsIntakeForm}
+            />,
+            true
+        );
+        sidesheet.handleOpen(true, 1100);
     };
 
     const radioOptions = [
@@ -154,7 +174,7 @@ const DislikeReasons = ({
                             aria-label="ops-intake-form-btn"
                             mode="link"
                             size={ButtonSize.Small}
-                            onClick={() => setOpenOpsIntakeForm(true)}
+                            onClick={handleOpenOpsIntakeForm}
                         >
                             {Object.keys(metadata).length > 0 && (
                                 <Icon
@@ -184,21 +204,6 @@ const DislikeReasons = ({
                 onChange={handleChangeRadio}
                 className="text-sm"
                 alignItems="items-stretch"
-            />
-            <Modal
-                open={openOpsIntakeForm}
-                onCancel={() => setOpenOpsIntakeForm(false)}
-                closeIcon="X"
-                bigSize
-                content={
-                    <OpsIntakeForm
-                        metadata={metadata}
-                        setOpenOpsIntakeForm={setOpenOpsIntakeForm}
-                        setMetadata={setMetadata}
-                        dislikeReason={dislikeReason}
-                        onDislikeReasonChange={onDislikeReasonChange}
-                    />
-                }
             />
         </div>
     );

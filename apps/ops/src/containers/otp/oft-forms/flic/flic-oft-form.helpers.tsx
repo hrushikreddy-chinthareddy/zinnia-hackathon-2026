@@ -56,7 +56,7 @@ import {
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
 import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
-import { getQualTypeOptions } from '../oft-form-helpers';
+import { getQualTypeOptions, isMorganStanleyFirm } from '../oft-form-helpers';
 
 export default function getFlicOftConfig(t: TFunction, qualType: string) {
     const formValidation = ({
@@ -116,6 +116,7 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
             formESignatureData,
             t,
             validateDesignationPresent: true,
+            validateAnnuitant: true,
         });
 
         return { ...errors, ...signESignValidate };
@@ -166,6 +167,8 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean =>
+                !isMorganStanleyFirm(formParty),
         },
         {
             key: `sig-val-joint`,
@@ -194,7 +197,30 @@ export default function getFlicOftConfig(t: TFunction, qualType: string) {
                 );
             },
         },
-
+        {
+            key: `sig-val-annuitant`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'annuitant-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'annuitant-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureDesignation,
+                    key: 'annuitant-designation',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'annuitant-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Annuitant,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean =>
+                isMorganStanleyFirm(formParty),
+        },
         {
             key: `sig-val-spouse`,
             bonusField: SignatureBonusFields.SpousalConsent,
