@@ -315,9 +315,8 @@ export const groupSectionsForPolicy = (
                 // Bank info
                 const firstBank = findInNode({
                     node: partyNode,
-                    key: 'bankDetails.0.0',
+                    key: 'bankDetails.0',
                 });
-
                 const bankBranchName = findValueInNode({
                     node: firstBank,
                     key: 'branchName',
@@ -343,7 +342,7 @@ export const groupSectionsForPolicy = (
                 // Address info
                 const firstAddress = findInNode({
                     node: partyNode,
-                    key: 'addresses.0.0',
+                    key: 'addresses.0',
                 });
 
                 const addressLine1 = findValueInNode({
@@ -424,7 +423,6 @@ export const groupSectionsForPolicy = (
                     });
                 }
 
-                console.log('personSection..........', personSection);
                 return personSection;
             }) ?? [];
 
@@ -1101,8 +1099,56 @@ function findInNode({
             nodes: node.children,
             key,
         });
+    } else if (node.type === FieldType.group) {
+        return findInGroup({
+            nodes: node.children,
+            key,
+        });
     }
 }
+
+function findInGroup({
+    nodes,
+    key,
+}: {
+    nodes: DataNode[][];
+    key: string;
+}): DataNode | undefined {
+    const pathFragments = key.split('.');
+    const [firstFragment, ...rest] = pathFragments;
+
+    // Case 1: numeric index into the group-of-groups
+    if (!isNaN(Number(firstFragment))) {
+        const index = Number(firstFragment);
+        const firstNodeOrNodes = nodes[index];
+
+        if (!firstNodeOrNodes) {
+            return undefined;
+        }
+
+        if (rest.length) {
+            return findInNodes({
+                nodes: firstNodeOrNodes,
+                key: rest.join('.'),
+            });
+        }
+
+        //TODO: future provision, return list of nodes
+    }
+
+    // Case 2: non-numeric – search each inner array for the first match by label
+    for (const innerNodes of nodes) {
+        const candidate = findInNodes({
+            nodes: innerNodes,
+            key, // whole key, so findInNodes will handle rest of path
+        });
+
+        if (candidate !== undefined) {
+            return candidate;
+        }
+    }
+}
+
 function findSectionInNodes({
     nodes,
     key,
