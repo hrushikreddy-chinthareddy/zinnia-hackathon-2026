@@ -207,15 +207,11 @@ const TaxFormsListing = ({
                                             isNewPage={false}
                                             size={NavElementSize.Small}
                                             target="_blank"
-                                            title={`${t(
-                                                'sendDocument.formSelection.view'
-                                            )} `}
+                                            title={`${t('allFields.view')} `}
                                             type={NavElementType.Link}
                                             onClick={() => setCookies(form)}
                                         >
-                                            {t(
-                                                'sendDocument.formSelection.view'
-                                            )}
+                                            {t('allFields.view')}
                                         </NavElement>
                                     </TableCell>
                                 </TableRow>

@@ -13,12 +13,10 @@ type FaxNumberProps = {
     isDisabled?: boolean;
 };
 const FaxNumber = ({ fax, setFax, isDisabled }: FaxNumberProps) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'sendDocument.correspondence',
-    });
+    const { t } = useTranslation();
     return (
         <Field
-            label={t('fax') as string}
+            label={t('allFields.fax') as string}
             onChange={(e) => {
                 setFax(xss(e?.target?.value));
             }}

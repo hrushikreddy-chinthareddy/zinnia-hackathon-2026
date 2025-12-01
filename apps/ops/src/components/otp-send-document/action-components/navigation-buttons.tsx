@@ -28,9 +28,7 @@ const SendDocumentNavigationButtons = ({
     handleCancel,
     trackEventProps,
 }: SendDocumentNavigationButtonsProps) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'sendDocument.formActions',
-    });
+    const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
 
     const onContinueClick = useCallback(() => {
@@ -66,21 +64,21 @@ const SendDocumentNavigationButtons = ({
     return (
         <div className={clsx('flex flex-row justify-start gap-6')}>
             <Button
-                aria-label={t('continue') as string}
+                aria-label={t('allFields.continue') as string}
                 onClick={onContinueClick}
                 size={ButtonSize.Small}
                 type={'submit'}
             >
-                {t('continue')}
+                {t('allFields.continue')}
             </Button>
             <NavElement
                 onClick={onCancelClick}
-                aria-label={t('cancel') as string}
+                aria-label={t('allFields.cancel') as string}
                 size={NavElementSize.Small}
                 type={NavElementType.Button}
                 variant={NavElementVariant.Default}
             >
-                {t('cancel')}
+                {t('allFields.cancel')}
             </NavElement>
         </div>
     );

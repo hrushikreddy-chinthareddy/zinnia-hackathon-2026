@@ -38,7 +38,7 @@ const CorrespondenceCard = ({
     setError,
     setCorrespondenceData,
 }: CorrespondenceProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     const selectedCommunicationType = correspondenceData?.type;
     const recipients = correspondenceData?.recipients || [];
@@ -67,15 +67,15 @@ const CorrespondenceCard = ({
 
     const communicationTypes = [
         {
-            label: t('correspondence.email'),
+            label: t('allFields.email'),
             value: CommunicationTypes.Email,
         },
         {
-            label: t('correspondence.fax'),
+            label: t('allFields.fax'),
             value: CommunicationTypes.Fax,
         },
         {
-            label: t('correspondence.mail'),
+            label: t('allFields.mail'),
             value: CommunicationTypes.Mail,
         },
     ];
@@ -130,7 +130,7 @@ const CorrespondenceCard = ({
         <div className="flex flex-col gap-4">
             <Radio
                 items={communicationOptions ?? communicationTypes}
-                label={t('correspondence.label') as string}
+                label={t('allFields.whereShouldDocsBeSent') as string}
                 onChange={(event) => {
                     setCommunicationType(
                         event.target.value as CommunicationTypes

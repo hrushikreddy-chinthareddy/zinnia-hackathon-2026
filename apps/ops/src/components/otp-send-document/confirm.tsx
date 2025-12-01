@@ -15,7 +15,7 @@ type ConfirmProps = {
 };
 
 const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
     const { state } = useCorrespondence();
     const recipients = state?.correspondence?.recipients || [];
     const ccList = state?.correspondence?.ccList || [];
@@ -32,7 +32,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                               action: () => {
                                   router.push(`/cases/${state.confirm.caseId}`);
                               },
-                              text: t('confirm.cta'),
+                              text: t('allFields.goToCase'),
                           }
                         : undefined
                 }
@@ -45,7 +45,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                 }
                 subtitle={
                     <>
-                        {t('confirm.subtitle.0')}
+                        {t('allFields.theDocumentsHaveBeen')}
                         <span className="font-bold">
                             {' '}
                             {formNames
@@ -60,7 +60,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                                 <PiiWrapper>
                                     <span>
                                         {t(
-                                            `confirm.channel.${communicationType.toLowerCase()}`
+                                            `allFields.sendChannel_${communicationType.toLowerCase()}`
                                         )}
                                     </span>
                                     <span className="font-bold">
@@ -90,7 +90,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                                     <PiiWrapper>
                                         <span>
                                             {t(
-                                                `confirm.channel.${communicationType.toLowerCase()}`
+                                                `allFields.sendChannel_${communicationType.toLowerCase()}`
                                             )}
                                         </span>{' '}
                                         <span className="font-bold">
@@ -106,7 +106,7 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                             )}
                     </>
                 }
-                title={t('confirm.title')}
+                title={t('allFields.submitted')}
             />
         </div>
     );
