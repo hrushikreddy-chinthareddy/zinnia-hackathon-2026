@@ -274,6 +274,8 @@
         "marketValueAdjustmentIndicator": "Indicador de ajuste de valor de mercado",
         "marketValueAdjustmentAmount": "Monto del ajuste de valor de mercado",
         "marketValueAdjustmentPeriod": "Período del ajuste de valor de mercado",
+        "marketValueAdjustmentBaseRate": "Tasa base del ajuste de valor de mercado",
+        "marketValueAdjustmentTransactionRate": "Tasa de transacción del ajuste de valor de mercado",
         "requiredMinimumDistribution": "Distribución mínima requerida",
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "totalRequiredMinimumDistributionAnnualAmount": "Monto anual total de RMD",
@@ -2470,7 +2472,6 @@
             "organizingYourResults": "Organizando tus resultados…",
             "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
         },
-
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -8595,7 +8596,9 @@
             "no": "No",
             "yes": "Sí"
         },
-        "errors": { "beneDeceased": "Por favor seleccione una opción" }
+        "errors": {
+            "beneDeceased": "Por favor seleccione una opción"
+        }
     },
     "claimsMatchBeneDocument": {
         "confirmStep": {

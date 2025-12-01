@@ -274,6 +274,8 @@
         "marketValueAdjustmentIndicator": "MVA indicator",
         "marketValueAdjustmentAmount": "MVA amount",
         "marketValueAdjustmentPeriod": "MVA period",
+        "marketValueAdjustmentBaseRate": "MVA base rate",
+        "marketValueAdjustmentTransactionRate": "MVA transaction rate",
         "requiredMinimumDistribution": "Required minimum distribution",
         "priorYearRequiredMinimumDistributionAmount": "Prior year RMD amount",
         "totalRequiredMinimumDistributionAnnualAmount": "Total RMD annual amount ",

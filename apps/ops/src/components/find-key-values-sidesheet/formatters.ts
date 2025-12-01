@@ -31,17 +31,14 @@ const splitIntoWords = (label: string) => {
  * instances of "policy" replaced with "contract" for non-life policies.
  *
  * @param words The string to modify
- * @param lineOfBusiness The line of business
+ * @param policyNomenclature The policy nomenclature
  * @returns "policy" if life policy, otherwise "contract"
  */
 const replaceLineOfBusinessWords = (
     words: string,
-    lineOfBusiness: LineOfBusiness
+    policyNomenclature: string
 ) => {
-    if (lineOfBusiness !== LineOfBusiness.LIFE) {
-        return words.replace(/(\bpolicy\b)/gi, 'contract');
-    }
-    return words;
+    return words.replace(/(\bpolicy\b)/gi, policyNomenclature);
 };
 
 /**
@@ -123,19 +120,16 @@ export const formatAsSectionLabel = ({
  */
 export const formatAsDataLabel = ({
     label,
-    lineOfBusiness,
+    policyNomenclature = 'policy',
     t,
 }: {
     label: string;
-    lineOfBusiness: LineOfBusiness;
+    policyNomenclature?: string;
     t: TFunction;
 }) => {
     const exactTranslation = t(`allFields.${label}`, {
         defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
-        policyNomenclature:
-            lineOfBusiness === LineOfBusiness.LIFE
-                ? t('policy.nomenclature.policy')
-                : t('policy.nomenclature.contract'),
+        policyNomenclature: t(`policy.nomenclature.${policyNomenclature}`),
     });
 
     if (exactTranslation) {
@@ -147,7 +141,7 @@ export const formatAsDataLabel = ({
     // Replace "policy" with "contract" if not a life policy
     const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
         words,
-        lineOfBusiness
+        policyNomenclature
     );
 
     // Apply industry term abbreviations and grammar corrections
@@ -231,7 +225,11 @@ export const formatDataField = ({
             fieldName,
             t,
         }),
-        label: t(`allFields.${fieldName}`, { policyNomenclature }),
+        label: formatAsDataLabel({
+            label: fieldName,
+            policyNomenclature,
+            t,
+        }),
     };
 };
 
