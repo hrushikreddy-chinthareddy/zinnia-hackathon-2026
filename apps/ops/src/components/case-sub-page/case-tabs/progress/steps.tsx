@@ -232,7 +232,7 @@ const Step = ({
                             details={step.name}
                             pii={hasPii}
                         />
-                        {step.aiEnabled && (
+                        {stepAdditional?.value && (
                             <Tooltip
                                 placement={PopoverPlacement.TopRight}
                                 body={t('caseOverview.tabs.aiIndicatorTooltip')}

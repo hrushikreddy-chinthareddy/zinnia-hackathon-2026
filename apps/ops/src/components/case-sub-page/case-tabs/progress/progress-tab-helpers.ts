@@ -159,7 +159,6 @@ const groupExceptionsByTask = (
 };
 
 export class TransformedStep {
-    aiEnabled: boolean = false;
     additionalData: CaseAdditionalData = {};
     stepAdditionalData: CaseAdditionalStepData[] = [];
     description?: string;
@@ -188,7 +187,6 @@ export class TransformedStep {
         this.id = step.id;
         this.status = step.stepStatus;
         this.updatedAt = step.updatedAt;
-        this.aiEnabled = step.aiEnabled ?? false;
         this.documents =
             step?.mappedDocuments?.map((docId) => {
                 return this?.parentStage?.parentCase?.documentsMap?.[docId];
