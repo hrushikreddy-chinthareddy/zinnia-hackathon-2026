@@ -27,7 +27,7 @@ import {
     DocumentFormatType,
 } from './types';
 
-import { sectionVisibility } from './translations/section-visibility';
+import { sectionVisibility } from './translations/carrier-rules';
 
 // pipe needs to take the first arg as Policy/Transaction -> DataNode[]
 // and the rest as DataNode[] -> DataNode[]
