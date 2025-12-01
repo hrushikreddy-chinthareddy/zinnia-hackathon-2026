@@ -147,10 +147,10 @@ export default function ActiveFilters({
                     }
                     label={
                         filters.escalated == null
-                            ? t('escalated.any')
+                            ? t('escalated.allCases')
                             : filters.escalated
-                            ? t('escalated.true')
-                            : t('escalated.false')
+                            ? t('escalated.onlyPrioritized')
+                            : t('escalated.notPrioritized')
                     }
                     onDelete={handleRemoveEscalatedFilter}
                 />

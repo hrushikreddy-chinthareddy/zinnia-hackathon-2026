@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import clsx from 'clsx';
-import dayjs from 'dayjs';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -48,14 +47,8 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { deStringifyTrueFalseNull } from '@deps/helpers/string.helpers';
-import {
-    TransactionType,
-    TypeDesc,
-    useTransactionsHistory,
-} from '@deps/hooks/otp-withdrawal/transaction-history';
 import { useContractAccountInfo } from '@deps/hooks/otp-withdrawal/useContractAccountInfo';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
-import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { ProcessType } from '@deps/models/case/enums';
@@ -65,9 +58,7 @@ import {
     ActiveWithdrawalCase,
     Carrier,
     QualTypes,
-    SortOrder,
     FASTQualTypes,
-    TransactionStatus,
 } from '@deps/models/case/withdrawal/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { initializeOTPTaskSSR } from '@deps/operations/tasks/v2/initialize';
@@ -79,14 +70,8 @@ import {
     getPolicyPartiesSSR,
     searchPolicySSR,
 } from '@deps/queries/api/policies';
-import {
-    SCREEN_BREAKPOINTS,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
-import {
-    SegmentPageName,
-    SegmentTrackedPageProps,
-} from '@deps/types/segment-analytics';
+import { SCREEN_BREAKPOINTS } from '@deps/types/constants';
+import { SegmentTrackedPageProps } from '@deps/types/segment-analytics';
 import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
@@ -152,7 +137,6 @@ export default function WithdrawalCase({
     isNigoCase,
     featureFlagDecisions,
     parties,
-    user,
     partyRoles,
     planCode,
     isLC = false,
@@ -179,25 +163,6 @@ export default function WithdrawalCase({
 
     const showTransactions =
         featureFlagDecisions?.[FEATURE_FLAGS.TRANSACTION_HISTORY];
-
-    const { transactions } = useTransactionsHistory({
-        contract: document.contract,
-        clientId: clientId as string,
-        typeDesc: TypeDesc.Withdrawal,
-        transactionType: TransactionType.Withdrawals,
-        fromDate: dayjs(document.documentDate).format(ZAHARA_API_DATE_FORMAT),
-        filter: {
-            count: 5,
-            sortBy: SortOrder.Desc,
-            statuses: [TransactionStatus.Done, TransactionStatus.Pending],
-        },
-    });
-
-    useSegmentPageTracker(user, SegmentPageName.WithdrawalCase, {
-        documentNumber: document.documentNumber,
-        formTaskId: form.taskId,
-        transactions: JSON.stringify(transactions),
-    });
 
     const [transactionDetail, setTransactionDetail] = useState<SidebarContent>(
         DefaultSidebarContent
@@ -237,19 +202,11 @@ export default function WithdrawalCase({
             contractValue: document?.contractValue || '',
             contractStatusCode: document?.contractStatusCode || '',
             caseId: form.caseId || '',
-            transactions: showTransactions ? transactions : [],
+            transactions: [],
             qualType,
             issueDate,
         });
-    }, [
-        qualType,
-        document,
-        form,
-        transactions,
-        clientId,
-        issueDate,
-        showTransactions,
-    ]);
+    }, [qualType, document, form, clientId, issueDate, showTransactions]);
 
     useEffect(() => {
         if (!document) {

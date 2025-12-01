@@ -9,7 +9,7 @@ import {
     EDSDocumentResponse,
     EDSDocumentRequestBody,
 } from '@deps/models/case/document';
-import { browserLogWarn } from '@deps/utils/browser-logging';
+import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import {
     LoggingContext,
@@ -46,22 +46,37 @@ export const uploadDocumentV2 = async (
     metadata: EDSDocumentRequestBody,
     document: any
 ): Promise<EDSDocumentResponse | null> => {
+    const url = `${baseAppUrl}/api/documents/upload`;
     try {
-        const url = `${baseAppUrl}/api/documents/upload`;
-
         const fileData = {
             file: document,
             metadata,
         };
 
+        browserLogInfo(
+            `documents::Uploading document: correlationID=${metadata.correlationId}`,
+            {
+                url,
+                file: 'queries/api/documents',
+                correlationId: metadata.correlationId,
+                function: 'uploadDocument',
+                metadata,
+            }
+        );
+
         const { data } = await client.post<any, AxiosResponse>(url, fileData);
         return data;
     } catch (error: any) {
-        browserLogWarn('An error occurred while uploading document', {
-            ...parseErrorInformation(error),
-            file: 'queries/api/documents',
-            function: 'uploadDocument',
-        });
+        browserLogWarn(
+            `documents::An error occurred while uploading document: correlationID=${metadata.correlationId}`,
+            {
+                ...parseErrorInformation(error),
+                url,
+                file: 'queries/api/documents',
+                correlationId: metadata.correlationId,
+                function: 'uploadDocument',
+            }
+        );
 
         return error.response;
     }

@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 
+import { PaymentMethodError } from '@deps/pages/api/aggregation/paymentmethods';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { BankDetailList } from '@zinnia/api-types/types/aggregation';
@@ -30,11 +31,22 @@ type GetPaymentMethodsResponse =
               message: string;
           };
       };
+export type IError = {
+    data: unknown;
+    error: {
+        status: number;
+        name: string;
+        message: string;
+    };
+};
+
 export const getPaymentMethods = async ({
     planCode,
     policyNumber,
     partyId,
-}: GetPaymentMethodsProps): Promise<BankDetailList | Error> => {
+}: GetPaymentMethodsProps): Promise<
+    BankDetailList | Error | PaymentMethodError
+> => {
     try {
         browserLogInfo('aggregation::getPaymentMethods', {
             policyNumber,
@@ -73,9 +85,7 @@ export const getPaymentMethods = async ({
             file: 'queries/api/aggregation.ts',
         });
 
-        return new Error(
-            `Error fetching payment methods for ${planCode} ${policyNumber}`
-        );
+        throw (e as IError).data as PaymentMethodError;
     }
 };
 

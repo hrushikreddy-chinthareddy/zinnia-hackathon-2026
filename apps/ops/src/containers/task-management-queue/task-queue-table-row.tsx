@@ -462,6 +462,10 @@ const TaskQueueTableRow = ({
             handleLinkClick(undefined);
         }
     };
+    const showBadge =
+        task.escalated &&
+        task.status !== TaskStatus.Canceled &&
+        task.status !== TaskStatus.Completed;
 
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
@@ -568,7 +572,7 @@ const TaskQueueTableRow = ({
                                     variant={ContentVariant.BodySm}
                                 />
                             )}
-                            {task.escalated && (
+                            {showBadge && (
                                 <div>
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}

@@ -9,12 +9,12 @@ import {
     TableHeader,
     TableHeaderCell,
     TableRow,
+    TableStickyColumn,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 
 import Field from '@deps/components/fields/field';
-import { Modal } from '@deps/components/modal/modal';
 import PaginationControls from '@deps/components/pagination/pagination';
 import SelectComponent from '@deps/components/select/select';
 import Typography, {
@@ -22,6 +22,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     getDocumentsByClientId,
     searchDocuments,
@@ -64,12 +65,11 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
     const [searchTotal, setSearchTotal] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
     const [pageSize, setPageSize] = useState(10);
-    const [openDocumentPreview, setOpenDocumentPreview] = useState(false);
-    const [currentDocument, setCurrentDocument] =
-        useState<ClientDocumentDto | null>(null);
     const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
 
     const MIN_SEARCH_TERM_LENGTH = 3;
+
+    const sidesheet = useSideSheetContext();
 
     const pageSizeOptions = [
         {
@@ -248,6 +248,30 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
         );
     };
 
+    const handleOpenDocumentPreview = ({
+        name,
+        webUrl,
+        createdAt,
+        updatedAt,
+        itemId,
+        driveId,
+    }: ClientDocumentDto) => {
+        const newDocment = {
+            name,
+            webUrl,
+            createdAt,
+            updatedAt,
+            itemId,
+            driveId,
+        };
+        sidesheet.changeSideSheetContent(
+            t('documents.docPreview'),
+            <DocumentPreview document={newDocment} />,
+            true
+        );
+        sidesheet.handleOpen(true, 1380);
+    };
+
     const renderDocuments = (
         docsToRender: ClientDocumentDto[],
         totalCount: number,
@@ -258,7 +282,10 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
         <div className="mt-6">
             {docsToRender.length > 0 ? (
                 <>
-                    <Table>
+                    <Table
+                        stickyColumn={TableStickyColumn.End}
+                        className="h-[52vh]"
+                    >
                         <TableHeader>
                             <TableRow>
                                 <TableHeaderCell
@@ -313,8 +340,7 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
                                             data-testid="document-name"
                                             className="typography-content-body-sm text-[--color-base-text-text-link] cursor-pointer"
                                             onClick={() => {
-                                                setOpenDocumentPreview(true);
-                                                setCurrentDocument({
+                                                handleOpenDocumentPreview({
                                                     name,
                                                     webUrl,
                                                     createdAt,
@@ -331,10 +357,7 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
                                                         KeyboardEvents.Space
                                                 ) {
                                                     e.preventDefault();
-                                                    setOpenDocumentPreview(
-                                                        true
-                                                    );
-                                                    setCurrentDocument({
+                                                    handleOpenDocumentPreview({
                                                         name,
                                                         webUrl,
                                                         createdAt,
@@ -364,13 +387,6 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
                             )}
                         </TableBody>
                     </Table>
-                    <Modal
-                        open={openDocumentPreview}
-                        closeIcon="X"
-                        content={<DocumentPreview document={currentDocument} />}
-                        onCancel={() => setOpenDocumentPreview(false)}
-                        bigSize={true}
-                    />
 
                     {paginated && totalCount > pageSize && (
                         <div className="pt-4 flex gap-8 items-end justify-center">
@@ -437,7 +453,7 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
                 <Divider direction="horizontal" color="default" />
 
                 {docs === DocumentsDisplayType.All && (
-                    <div className="flex justify-end my-4">
+                    <div className="flex justify-end mt-6">
                         <Field
                             placeholder={t('documents.search') || ''}
                             value={searchTerm}

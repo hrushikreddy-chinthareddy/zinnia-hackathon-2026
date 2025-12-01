@@ -490,3 +490,37 @@ export const validateNonFinancialTransaction = async ({
         return error;
     }
 };
+
+export const checkEligibilityExistingNameChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    partyId: string | undefined
+): Promise<NonFinancialTransactionResponse> => {
+    try {
+        browserLogInfo(
+            'validateNonFinancialTransaction::checkEligibilityExistingNameChange:: plancode, policyNumber, partyId',
+            {
+                planCode,
+                policyNumber,
+                partyId,
+            }
+        );
+        const { data } = await client.post<
+            NonFinancialTransactionResponse,
+            AxiosResponse
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/parties/${partyId}/partyname/eligibilitycheck`
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'checkEligibilityExistingNameChange::an error occurred during eligibility check',
+            {
+                ...parseErrorInformation(error),
+                payload: { planCode, policyNumber, partyId },
+                function: 'webnonfinancial.checkEligibilityExistingNameChange',
+            }
+        );
+        return error?.data;
+    }
+};

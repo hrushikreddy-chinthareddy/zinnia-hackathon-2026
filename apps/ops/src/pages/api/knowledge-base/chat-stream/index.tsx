@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 
 import { HttpMethod } from '@deps/constants/policy';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { SSEEventType } from '@deps/types/knowledge-base';
+import { AnswerMode, SSEEventType } from '@deps/types/knowledge-base';
 import {
     logError,
     logTrace,
@@ -30,7 +30,12 @@ export default withAuthAndLogging(
                 .json({ error: 'Method not allowed' });
         }
 
-        const { sessionId, question, clientId } = req.query;
+        const {
+            sessionId,
+            question,
+            clientId,
+            responseType = AnswerMode.Short,
+        } = req.query;
         if (!sessionId || !question || !clientId) {
             logError(
                 `Missing sessionId, question, or clientId:: sessionId=${sessionId}, question=${question}, clientId=${clientId}`,
@@ -52,7 +57,7 @@ export default withAuthAndLogging(
                     'content-type': 'application/json',
                     Authorization: `Bearer ${accessToken}`,
                 },
-                body: JSON.stringify({ question, clientId }),
+                body: JSON.stringify({ question, clientId, responseType }),
             });
 
             logTrace('Upstream response received', {

@@ -16,6 +16,7 @@ import {
     checkEligibilityBeneficiary,
     checkEligibilityCommunicationPreferenceChange,
     checkEligibilityEmailChange,
+    checkEligibilityExistingNameChange,
     checkEligibilityPhoneChange,
 } from '@deps/queries/api/bpm-non-financial';
 import { initialDeathClaimExists } from '@deps/queries/api/web-non-financial';
@@ -155,4 +156,16 @@ export const checkFreelookCancellation = async (
     policyNumber: string
 ) => {
     return await checkEligibilityFreelookCancellation(planCode, policyNumber);
+};
+
+export const checkExistingNameChangeEligibilityQuery = async (
+    planCode: string,
+    policyNumber: string,
+    partyId: string
+) => {
+    return await checkEligibilityExistingNameChange(
+        planCode,
+        policyNumber,
+        partyId
+    );
 };

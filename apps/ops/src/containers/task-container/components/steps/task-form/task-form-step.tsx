@@ -47,7 +47,7 @@ const TaskFormStep = ({
     isSaveAsDraftEnabled = false,
     isContinueButtonEnabled,
     stepIndex,
-    overrideTitle = false,
+    overrideTitle = true,
 }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `taskManagement.taskForm`,
