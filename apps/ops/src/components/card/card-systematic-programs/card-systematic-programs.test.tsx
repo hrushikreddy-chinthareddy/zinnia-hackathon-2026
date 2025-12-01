@@ -49,7 +49,6 @@ describe('SystematicProgramsCard', () => {
     });
 
     const defaultProps: SystematicProgramsCardProps = {
-        title: pageTitle,
         programs: [
             {
                 arrangementType: ArrangementType.PAYMENT,
@@ -89,10 +88,6 @@ describe('SystematicProgramsCard', () => {
         it('has correct colors', () => {
             expect(element).toHaveClass('bg-white', 'border-gray-100');
         });
-
-        it('renders title correctly', () => {
-            expect(element).toHaveTextContent(pageTitle);
-        });
     });
 
     describe('setup action', () => {
@@ -103,7 +98,7 @@ describe('SystematicProgramsCard', () => {
                 setUpAction: { text: setUpActionText, href: '#' },
             };
             const { container } = renderComponent(props);
-            expect(container).toHaveTextContent(`+ setUp`);
+            expect(container).toHaveTextContent(`setUp`);
         });
 
         it('does not render setup button when setUpAction is not provided', () => {
@@ -146,8 +141,12 @@ describe('SystematicProgramsCard', () => {
             fireEvent.click(toggle);
 
             // Verify terminated programs section appears
-            expect(screen.getByText('status')).toBeInTheDocument();
-            expect(screen.getByText('terminationDate')).toBeInTheDocument();
+            expect(
+                screen.getByText('allFields.systemProgramStatus')
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText('allFields.terminationDate')
+            ).toBeInTheDocument();
         });
     });
 
@@ -226,8 +225,12 @@ describe('SystematicProgramsCard', () => {
 
             fireEvent.click(toggle);
 
-            expect(screen.getByText('status')).toBeInTheDocument();
-            expect(screen.getByText('terminationDate')).toBeInTheDocument();
+            expect(
+                screen.getByText('allFields.systemProgramStatus')
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText('allFields.terminationDate')
+            ).toBeInTheDocument();
         });
 
         it('displays terminated program status', () => {

@@ -28,11 +28,12 @@ import styles from '../systematic-programs-table.module.css';
 const SystematicProgramsActiveTable = ({
     programs,
     hasActivePrograms,
+    isLife,
 }: SystematicProgramsActiveTableProps) => {
     const { t } = useTranslation();
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
-        if (programs.length === 1)
+        if (programs.length === 1 || isLife)
             return arrangmentTypesMsgDictionary[programs[0].arrangementType];
         if (programs.length === 2)
             return `${

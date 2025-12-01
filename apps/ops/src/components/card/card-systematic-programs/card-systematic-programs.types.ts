@@ -19,11 +19,13 @@ export interface SystematicProgramsDetails {
 export interface SystematicProgramsCardProps {
     programs: SystematicProgramsDetails[];
     setUpAction?: FooterContent;
+    isLife?: boolean;
 }
 
 export interface SystematicProgramsActiveTableProps {
     programs: SystematicProgramsDetails[];
     hasActivePrograms: boolean;
+    isLife?: boolean;
 }
 export interface SystematicProgramsTerminatedTableProps {
     programs: SystematicProgramsDetails[];

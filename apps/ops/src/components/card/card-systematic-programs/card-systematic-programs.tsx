@@ -22,6 +22,7 @@ import SystematicProgramsTerminatedTable from './systematic-programs-tables/syst
 const SystematicProgramsCard = ({
     programs,
     setUpAction,
+    isLife,
 }: SystematicProgramsCardProps) => {
     const { t } = useTranslation();
     const [showTerminatedOrSuspended, setShowTerminatedOrSuspended] =
@@ -85,6 +86,7 @@ const SystematicProgramsCard = ({
                 <SystematicProgramsActiveTable
                     programs={programs}
                     hasActivePrograms={hasActivePrograms}
+                    isLife={isLife}
                 />
                 <SystematicProgramsTerminatedTable
                     programs={programs}

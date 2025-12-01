@@ -54,13 +54,14 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     });
     const { t: defaultT } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
+
     const { systematicPrograms } = policyDetails;
     const getPayout = (type: ArrangementType) => {
         return systematicPrograms.getNextProgramByType(type);
     };
 
     const { parties } = policy;
-    const { planCode, policyNumber, isAnnuity } = policyDetails;
+    const { planCode, policyNumber, isAnnuity, isLife } = policyDetails;
 
     const { featureFlags } = useOptimizely();
 
@@ -411,6 +412,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                         },
                     ]}
                     setUpAction={setUpAutopay}
+                    isLife={isLife}
                 />
             )}
         </>
