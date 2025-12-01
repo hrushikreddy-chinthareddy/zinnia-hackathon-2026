@@ -59,7 +59,9 @@ export const aggregateByCategory = (
     const result = Array.from(categoryTotals.entries())
         .map(([category, count], idx) => ({
             category,
-            displayName: TRANSACTION_CATEGORY_DISPLAY_MAP[category] || category,
+            displayName:
+                TRANSACTION_CATEGORY_DISPLAY_MAP[category.toLowerCase()] ||
+                category,
             count,
             color: colors[idx],
         }))
@@ -98,7 +100,8 @@ export const getTransactionTypesByCategory = (
     return Array.from(typeTotals.entries())
         .map(([type, count]) => ({
             type,
-            displayName: TRANSACTION_TYPE_DISPLAY_MAP[type] || type,
+            displayName:
+                TRANSACTION_TYPE_DISPLAY_MAP[type.toLowerCase()] || type,
             count,
         }))
         .sort((a, b) => b.count - a.count);
