@@ -196,44 +196,25 @@ export const groupBasics = (
     ];
 };
 
-export const groupSectionsForPolicy = (
-    nodes: DataNode[],
-    t: TFunction,
-    documentType: DocumentFormatType,
-    planCode: string,
-    policyNumber: string
-): DataNode[] => {
-    const sectionMap = nodes.reduce(
-        (acc: Record<string, DataSection>, node) => {
-            if (node.type !== FieldType.section) return acc;
-            return {
-                ...acc,
-                [node.label]: node,
-            };
-        },
-        {}
-    );
-
-    // with type 'transaction' or 'policy'
+export const getAllParties = ({
+    nodes,
+    t,
+    planCode,
+    policyNumber,
+}: {
+    nodes: DataNode[];
+    t: TFunction;
+    planCode: string;
+    policyNumber: string;
+}): {
+    allParties: DataSection[];
+    allPartiesById: Record<string, DataSection | undefined>;
+} => {
     const partyRoles: DataSection[] =
         nodes
             .filter(isDataSection)
             .find((node) => node.label === 'partyRoles')
             ?.children.filter(isDataSection) ?? [];
-
-    /*
-    const payorsAndPayees = [
-        ...(nodes.find(
-            (node): node is DataSection =>
-                node.type === FieldType.section && node.label === 'payors'
-        )?.children ?? []),
-        ...(nodes.find(
-            (node): node is DataSection =>
-                node.type === FieldType.section &&
-                node.label === 'payeeOrBeneficiaries'
-        )?.children ?? []),
-    ];
-    */
 
     const roleMap: Record<string, string[]> = partyRoles.reduce<
         Record<string, string[]>
@@ -422,7 +403,7 @@ export const groupSectionsForPolicy = (
 
                 return personSection;
             }) ?? [];
-    console.log('allParties', allParties);
+
     // Key each section to partyId
     const allPartiesById =
         allParties.reduce(
@@ -435,6 +416,26 @@ export const groupSectionsForPolicy = (
             },
             {}
         ) ?? {};
+
+    return {
+        allParties,
+        allPartiesById,
+    };
+};
+
+export const groupSectionsForPolicy = (
+    nodes: DataNode[],
+    t: TFunction,
+    documentType: DocumentFormatType,
+    planCode: string,
+    policyNumber: string
+): DataNode[] => {
+    const { allParties, allPartiesById } = getAllParties({
+        nodes,
+        t,
+        planCode,
+        policyNumber,
+    });
 
     // Aggregated sections will be filled in later
     const loans: DataSection = {
