@@ -2,19 +2,17 @@ import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
-import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
-import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import { TextButton } from '@deps/components/quick-actions-menu/quick-action-text-button';
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
@@ -22,13 +20,16 @@ import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { caseProcessingDetails, Statuses } from '@deps/models/case/case';
 import { CaseAction } from '@deps/models/case/enums';
 import { PolicyStatus } from '@deps/models/policy/sor-policy';
+import { checkCaseQualityAuditEligibility } from '@deps/queries/api/bpm';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import { buildQualityAuditEligibilityPayload } from './case-helpers';
 import CaseActionSideSheet from './caseActionsSideSheet';
+import CaseQuickActions from './CaseQuickActions';
 import styles from './styles.module.css';
 interface CasePageHeaderProps {
     caseId: string;
@@ -70,6 +71,9 @@ const CasePageHeader = ({
         lastName: '',
         id: '',
     });
+    const { caseDetails } = useCaseActivityContext();
+    const [isCaseEligibleForQualityAudit, setIsCaseEligibleForQualityAudit] =
+        useState(false);
 
     const isCasePrioritizationEnabled =
         featureFlags[FEATURE_FLAGS.CASE_PRIORITIZATION];
@@ -111,6 +115,27 @@ const CasePageHeader = ({
         fetchPartyData();
     }, [caseProcessingDetails]);
 
+    useEffect(() => {
+        const {
+            contractNumber,
+            process,
+            processSubType = '',
+            clientCode,
+        } = buildQualityAuditEligibilityPayload(caseDetails);
+        const fetchQualityAuditEligibility = async () => {
+            const response = await checkCaseQualityAuditEligibility(
+                contractNumber,
+                process,
+                processSubType,
+                clientCode
+            );
+
+            if (response?.status === 200)
+                setIsCaseEligibleForQualityAudit(true);
+        };
+        fetchQualityAuditEligibility();
+    }, [caseId, isCaseEligibleForQualityAudit]);
+
     const openSideSheet = useCallback(
         (action: CaseAction) => {
             const content = (
@@ -125,15 +150,11 @@ const CasePageHeader = ({
         [caseId, sideSheet, t]
     );
 
-    const handleDeprioritize = useCallback(
-        () => openSideSheet(CaseAction.Deprioritize),
-        [openSideSheet]
-    );
-
-    const handlePrioritize = useCallback(
-        () => openSideSheet(CaseAction.Prioritize),
-        [openSideSheet]
-    );
+    const handleCasePrioritize = useCallback(() => {
+        openSideSheet(
+            escalated ? CaseAction.Deprioritize : CaseAction.Prioritize
+        );
+    }, [openSideSheet]);
 
     return (
         <div className="flex items-center justify-between rounded-t border-b-2 border-gray-100 bg-white pb-4 md:items-center md:pb-8">
@@ -242,33 +263,12 @@ const CasePageHeader = ({
                 </div>
             </div>
 
-            {canShowPriorityActions && (
-                <div>
-                    <MenuContextual
-                        trigger={
-                            <TextButton
-                                label={t(
-                                    'caseOverview.prioritizeCase.quickActions'
-                                )}
-                            />
-                        }
-                    >
-                        <MenuContextualItem
-                            content={
-                                escalated
-                                    ? t('caseOverview.deprioritizeCase.title')
-                                    : t('caseOverview.prioritizeCase.title')
-                            }
-                            onClick={
-                                escalated
-                                    ? handleDeprioritize
-                                    : handlePrioritize
-                            }
-                            type={NavElementType.Button}
-                        />
-                    </MenuContextual>
-                </div>
-            )}
+            <CaseQuickActions
+                isCaseEligibleForQualityAudit={isCaseEligibleForQualityAudit}
+                escalated={escalated}
+                canShowPriorityActions={canShowPriorityActions}
+                handleCasePrioritize={handleCasePrioritize}
+            />
         </div>
     );
 };

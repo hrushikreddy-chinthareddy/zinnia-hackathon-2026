@@ -17,8 +17,9 @@ import { Case } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { CaseDetailsTabValues } from '@deps/types/constants';
-import { FgaRelation } from '@deps/types/fga';
+import { FgaRelation, UserTuplesData } from '@deps/types/fga';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
@@ -39,6 +40,7 @@ interface BaseCaseDetailsPageProps {
     caseDetails: Case;
     id?: string;
     tab?: string;
+    userTuplesData: UserTuplesData;
 }
 
 type CaseDetailsPageProps = BaseCaseDetailsPageProps & SegmentTrackedPageProps;
@@ -48,11 +50,15 @@ const CaseDetailsPage = ({
     id,
     tab,
     user,
+    userTuplesData,
 }: CaseDetailsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.CaseDetails, { caseId: id });
 
     return (
-        <CaseActivityProvider caseDetails={caseDetails}>
+        <CaseActivityProvider
+            caseDetails={caseDetails}
+            userTuplesData={userTuplesData}
+        >
             <PageHead titleKey="caseOverview" />
 
             <CaseOverview caseDetails={caseDetails} tab={tab} />
@@ -76,6 +82,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
+
+            const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
+            const userTuplesData: any = await readUserTuplesPage(
+                context,
+                tuplesQuery,
+                loggingContext
+            );
+
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
                     user.sub,
@@ -170,6 +184,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     id,
                     tab,
                     user,
+                    userTuplesData,
                 },
             };
         },

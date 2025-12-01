@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { CaseActivityContextProps } from '@deps/contexts/CaseActivityContext';
@@ -329,4 +330,60 @@ export const getEstimatedCompletionAt = (
     const estimatedTime = createdTime + caseTimePrediction.secondsIGO * 1000;
 
     return new Date(estimatedTime).toISOString();
+};
+
+export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
+    const auditRequestId = uuidv4();
+    const {
+        id: caseId,
+        process,
+        processSubType,
+        carrier,
+        correlationId,
+        updatedAt,
+    } = caseDetails;
+    return {
+        parentCaseId: caseId,
+        processType: process,
+        processSubType: processSubType || '',
+        clientCode: carrier,
+        source: 'zinnia-live',
+        correlationId: correlationId,
+        processEndDate: dayjs(updatedAt).format('MM/DD/YYYY'),
+        auditRequestId: auditRequestId,
+    };
+};
+
+type QualityAuditEligibilityPayload = {
+    contractNumber: string;
+    process: string;
+    processSubType: string | undefined;
+    clientCode: string;
+};
+
+export const buildQualityAuditEligibilityPayload = (
+    caseDetails: Case
+): QualityAuditEligibilityPayload => {
+    return {
+        contractNumber: caseDetails?.policyNumber,
+        process: caseDetails?.process,
+        processSubType: caseDetails?.processSubType,
+        clientCode: caseDetails?.carrier,
+    };
+};
+
+export const validateCaseQualityAudit = (
+    caseDetails: Case,
+    qualityAuditCaseDetails: Case
+) => {
+    const { processSubType, process, correlationId } = caseDetails;
+    const {
+        processSubType: qualityAuditProcessSubType,
+        correlationId: qualityAuditCorrelationId,
+    } = qualityAuditCaseDetails;
+    return (
+        processSubType === qualityAuditProcessSubType &&
+        process === 'Quality Audit' &&
+        correlationId === qualityAuditCorrelationId
+    );
 };

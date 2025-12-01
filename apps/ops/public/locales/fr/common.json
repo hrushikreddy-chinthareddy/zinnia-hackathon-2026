@@ -3116,6 +3116,18 @@
             "scheduledTooltip": "{{followup}} tentatives restantes avant le début du processus d'escheatment sauf si un contact est établi.",
             "finalTooltip": "Dernière tentative restante sauf si un contact est établi.",
             "notificationRestarted": "Notification redémarrée {{date}}"
+        },
+        "quickActions": {
+            "quickActions": "Actions Rapides",
+            "createQualityAudit": "Créer un Audit de Qualité",
+            "viewQualityAudit": "Voir l'Audit de Qualité",
+            "createQualityAuditTooltip": "Initier un Audit de Qualité pour ce cas.",
+            "createQualityAuditTooltipDisabled": "Non disponible : cas non éligible ou permission refusée.",
+            "viewQualityAuditTooltip": "L’audit qualité existe déjà ({{caseId}})."
+        },
+        "qualityAuditToastMessages": {
+            "qualityAuditSuccess": "Audit de Qualité créé.",
+            "qualityAuditError": "Impossible de créer l'Audit de Qualité."
         }
     },
     "caseRenewal": {

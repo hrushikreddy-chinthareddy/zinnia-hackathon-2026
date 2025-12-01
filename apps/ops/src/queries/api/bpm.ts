@@ -135,6 +135,17 @@ export enum TransactionResponseStatus {
     Success = 'success',
 }
 
+export interface CaseQualityAuditEligibilityRequest {
+    contractNumber: string;
+    process: string;
+    processSubType: string;
+    clientCode: string;
+}
+export interface CaseQualityAuditEligibilityResponse {
+    status: string | number;
+    data: any;
+}
+
 export const checkEligibilityLoanRepaymentOneTime = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
@@ -825,6 +836,59 @@ export const checkEligibilityFreelookCancellation = async (
             url: `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/eligibilitycheck`,
             function: 'checkEligibilityFreelookCancellation',
         });
+        return error?.data;
+    }
+};
+
+export const checkCaseQualityAuditEligibility = async (
+    contractNumber: string,
+    process: string,
+    processSubType: string,
+    clientCode: string
+): Promise<CaseQualityAuditEligibilityResponse> => {
+    const caseQualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit/eligibilitycheck`;
+    const qualityAuditPayload = {
+        contractNumber,
+        process,
+        processSubType,
+        clientCode,
+    };
+
+    try {
+        browserLogInfo(
+            'CaseQualityAuditEligibility::Initiating eligibility check',
+            {
+                payload: {
+                    contractNumber,
+                    process,
+                    processSubType,
+                    clientCode,
+                },
+                url: caseQualityAuditUrl,
+                function: 'checCaseQualityAuditEligibility',
+            }
+        );
+
+        const response = await client.post<
+            CaseQualityAuditEligibilityRequest,
+            AxiosResponse
+        >(caseQualityAuditUrl, qualityAuditPayload);
+        return { status: response.status, data: response.data };
+    } catch (error: any) {
+        browserLogError(
+            'CaseQualityAuditEligibility::Eligibility check failed',
+            {
+                ...parseErrorInformation(error),
+                payload: {
+                    contractNumber,
+                    process,
+                    processSubType,
+                    clientCode,
+                },
+                url: caseQualityAuditUrl,
+                function: 'checCaseQualityAuditEligibility',
+            }
+        );
         return error?.data;
     }
 };
