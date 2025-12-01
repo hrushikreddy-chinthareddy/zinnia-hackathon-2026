@@ -92,7 +92,10 @@ function convertTuple(
 
                     return {
                         type: FieldType.section,
-                        label: sectionLabel,
+                        label: formatAsDataValue({
+                            fieldData: sectionLabel,
+                            t,
+                        }),
                         children: fields, // TODO: recurse?
                     };
                 })
@@ -235,7 +238,6 @@ export const getAllParties = ({
                 ...currentPartyIdRoles,
                 formatAsDataValue({
                     fieldData: partyRole,
-                    fieldName: 'partyRole',
                     t,
                 }),
             ],
@@ -500,6 +502,7 @@ export const groupSectionsForPolicy = (
                 return parseSystematicPrograms({
                     systematicPrograms: node,
                     allPartiesById,
+                    t,
                 });
 
             case 'riders':
@@ -797,9 +800,11 @@ function parseRiders({
 function parseSystematicPrograms({
     systematicPrograms,
     allPartiesById,
+    t,
 }: {
     systematicPrograms: DataSection;
     allPartiesById: Record<string, DataSection | undefined>;
+    t: TFunction;
 }): DataSection {
     const systematicProgramsAndParties = systematicPrograms.children.map(
         (systematicProgram) => {
@@ -843,7 +848,14 @@ function parseSystematicPrograms({
                                     retainedFields.includes(partyField.label)
                                 ),
                         ],
-                        tags: tag ? [tag] : undefined,
+                        tags: tag
+                            ? [
+                                  formatAsDataValue({
+                                      fieldData: tag,
+                                      t,
+                                  }),
+                              ]
+                            : undefined,
                     };
 
                     const bankInfoField = findFieldInNode({
