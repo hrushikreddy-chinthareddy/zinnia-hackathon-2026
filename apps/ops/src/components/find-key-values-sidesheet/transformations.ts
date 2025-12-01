@@ -881,7 +881,7 @@ function parseSystematicPrograms({
 
             const hydratedSystematicProgram: DataSection = {
                 ...systematicProgram,
-                children: parties,
+                children: [...systematicProgram.children, ...parties],
             };
 
             return hydratedSystematicProgram;
