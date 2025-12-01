@@ -5,6 +5,7 @@ import { typedEntries } from '@deps/utils/objects';
 
 import {
     combinedTransform,
+    formatAsDataValue,
     formatPartyLink,
     formatSectionLabel,
     formatToolTip,
@@ -228,8 +229,16 @@ export const getAllParties = ({
 
         const currentPartyIdRoles = acc[role.label] || [];
 
+        // List of role strings keyed by partyId
         const combinedPartyRoles = {
-            [role.label]: [...currentPartyIdRoles, partyRole],
+            [role.label]: [
+                ...currentPartyIdRoles,
+                formatAsDataValue({
+                    fieldData: partyRole,
+                    fieldName: 'partyRole',
+                    t,
+                }),
+            ],
         };
 
         return {

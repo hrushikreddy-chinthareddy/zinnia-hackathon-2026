@@ -1,3 +1,4 @@
+import { LineOfBusiness, Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -6,7 +7,6 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { LineOfBusiness, Policy } from '@zinnia/api-types/types/sor';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
@@ -183,12 +183,10 @@ export const formatAsDataValue = ({
     fieldName,
     fieldData,
     t,
-    policyNomenclature,
 }: {
     fieldData: string;
     t: TFunction;
-    fieldName: string;
-    policyNomenclature?: string;
+    fieldName?: string;
 }) => {
     let value = fieldData;
     // Empty values
@@ -213,8 +211,26 @@ export const formatAsDataValue = ({
     if (fieldName && dateFields.has(fieldName))
         value = convertKebabedDateString(String(fieldData) || undefined);
 
+    return value;
+};
+
+export const formatDataField = ({
+    fieldName,
+    fieldData,
+    t,
+    policyNomenclature,
+}: {
+    fieldData: string;
+    t: TFunction;
+    fieldName: string;
+    policyNomenclature?: string;
+}) => {
     return {
-        value: String(value),
+        value: formatAsDataValue({
+            fieldData,
+            fieldName,
+            t,
+        }),
         label: t(`allFields.${fieldName}`, { policyNomenclature }),
     };
 };
@@ -282,7 +298,7 @@ export const formatNode = (
         return node;
     }
 
-    const formattedValue = formatAsDataValue({
+    const formattedValue = formatDataField({
         fieldData: node.value,
         fieldName: node.label,
         t,
