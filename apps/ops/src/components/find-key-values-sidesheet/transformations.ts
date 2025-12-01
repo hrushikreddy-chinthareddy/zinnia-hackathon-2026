@@ -1,4 +1,8 @@
-import { Policy } from '@zinnia/api-types/types/sor';
+import {
+    LineOfBusiness,
+    Policy,
+    ProductType,
+} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { typedEntries } from '@deps/utils/objects';
@@ -22,6 +26,8 @@ import {
     DocumentFormat,
     DocumentFormatType,
 } from './types';
+
+import { sectionVisibility } from './translations/section-visibility';
 
 // pipe needs to take the first arg as Policy/Transaction -> DataNode[]
 // and the rest as DataNode[] -> DataNode[]
@@ -434,13 +440,17 @@ export const getAllParties = ({
     };
 };
 
-export const groupSectionsForPolicy = (
-    nodes: DataNode[],
-    t: TFunction,
-    documentType: DocumentFormatType,
-    planCode: string,
-    policyNumber: string
-): DataNode[] => {
+export const groupSectionsForPolicy = ({
+    nodes,
+    t,
+    planCode,
+    policyNumber,
+}: {
+    nodes: DataNode[];
+    t: TFunction;
+    planCode: string;
+    policyNumber: string;
+}): DataNode[] => {
     const { allParties, allPartiesById } = getAllParties({
         nodes,
         t,
@@ -623,6 +633,54 @@ export const excludeNodesByLabel = (
                     t,
                     exclude: Array.from(excludeFields),
                     policyNomenclature,
+                })
+            )
+        )
+        .filter((n): n is DataNode => n !== null);
+};
+
+export const isNodeVisibileByCarrierRules = ({
+    node,
+    lineOfBusiness,
+    productType,
+    planCode,
+}: {
+    node: DataNode;
+    lineOfBusiness?: LineOfBusiness;
+    productType?: ProductType;
+    planCode?: string;
+}) => {
+    if (node.type === FieldType.section || node.type === FieldType.field) {
+        const sectionRule = sectionVisibility[node.label];
+        return !sectionRule ||
+            (lineOfBusiness && sectionRule.has(lineOfBusiness)) ||
+            (productType && sectionRule.has(productType)) ||
+            (planCode && sectionRule.has(planCode))
+            ? node
+            : null;
+    }
+    return node;
+};
+
+export const excludeNodesByCarrierRules = ({
+    nodes,
+    lineOfBusiness,
+    productType,
+    planCode,
+}: {
+    nodes: DataNode[];
+    lineOfBusiness?: LineOfBusiness;
+    productType?: ProductType;
+    planCode?: string;
+}) => {
+    return nodes
+        .map((node: DataNode) =>
+            transformObject(node, (node: DataNode) =>
+                isNodeVisibileByCarrierRules({
+                    node,
+                    lineOfBusiness,
+                    productType,
+                    planCode,
                 })
             )
         )

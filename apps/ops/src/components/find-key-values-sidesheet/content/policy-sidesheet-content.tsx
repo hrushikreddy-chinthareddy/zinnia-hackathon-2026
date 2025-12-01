@@ -23,6 +23,7 @@ import {
     formatSectionLabels,
     searchNodes,
     addToolTips,
+    excludeNodesByCarrierRules,
 } from '@deps/components/find-key-values-sidesheet/transformations';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -88,8 +89,10 @@ export const PolicySidesheetContent = ({
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
     console.log('.....first step of convertions......', convertNode(policy, t));
+    const lineOfBusiness = policy?.product?.lineOfBusiness;
+    const productType = policy?.product?.productType;
     const nomenclature =
-        policy?.product?.lineOfBusiness === LineOfBusiness.LIFE
+        lineOfBusiness === LineOfBusiness.LIFE
             ? t('policy.nomenclature.policy')
             : t('policy.nomenclature.contract');
     const nodes = applyTransformationsToNodes(
@@ -97,13 +100,19 @@ export const PolicySidesheetContent = ({
         (data) => groupBasics(data, t, DocumentFormat.policy),
         (data) => addToolTips(data, t),
         (data) =>
-            groupSectionsForPolicy(
-                data,
+            groupSectionsForPolicy({
+                nodes: data,
                 t,
-                DocumentFormat.policy,
                 planCode,
-                policyNumber
-            ),
+                policyNumber,
+            }),
+        (data) =>
+            excludeNodesByCarrierRules({
+                nodes: data,
+                lineOfBusiness,
+                productType,
+                planCode,
+            }),
         (data) => excludeNodesByLabel(data, t, nomenclature),
         (data) => formatSectionLabels(data, t, nomenclature)
     )(policy);
