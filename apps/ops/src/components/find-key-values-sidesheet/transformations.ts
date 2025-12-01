@@ -1,7 +1,7 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { typedEntries } from '@deps/utils/objects';
-import { Policy, Party } from '@zinnia/api-types/types/sor';
 
 import {
     combinedTransform,
@@ -12,9 +12,6 @@ import {
 import { excludeFields } from './translations/exclude-fields';
 import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
-    label,
-    link,
-    linkedField,
     FieldType,
     DataNode,
     Primitive,
@@ -425,7 +422,7 @@ export const groupSectionsForPolicy = (
 
                 return personSection;
             }) ?? [];
-
+    console.log('allParties', allParties);
     // Key each section to partyId
     const allPartiesById =
         allParties.reduce(
@@ -450,7 +447,23 @@ export const groupSectionsForPolicy = (
     const people: DataSection = {
         type: FieldType.section,
         label: 'people',
-        children: allParties,
+        children: allParties.map((party) => {
+            return {
+                type: FieldType.section,
+                // Remap label to partyName for rendering
+                label:
+                    findValueInNode({
+                        node: party,
+                        key: 'partyName',
+                    }) ?? party.label,
+                children: party.children.filter(
+                    (child) =>
+                        child.type === FieldType.field &&
+                        ['partyName', 'dob', 'ssn'].includes(child.label)
+                ),
+                tags: party.tags,
+            };
+        }),
     };
 
     const combinedSections: DataNode[] = nodes.map((node) => {
@@ -624,164 +637,6 @@ export const addToolTips = (
 };
 
 /**
- * Given a party ID, a map of party IDs to party objects, a policy, and the name of the field
- * that the party ID is associated with, returns an object containing the party name and a link to the
- * party's details page.
- *
- * @param {object} obj containing the following properties:
- * @param {string} [obj.partyId] the ID of the party to fetch
- * @param {object} [obj.allPartiesById] a map of party IDs to party objects
- * @param {object} obj.policy the policy that the party is associated with
- * @param {string} obj.idFieldName the name of the field that the party ID is associated with
- * @param {function} t the translation function
- * @returns an object containing the party name and a link to the party's details page, or undefined if
- * the party ID or map of party IDs is null
- */
-const fillInRequiredPartyDetails = ({
-    partyId,
-    allPartiesById,
-    policy,
-    idFieldName,
-}: {
-    partyId?: string;
-    allPartiesById?: Record<string, Party>;
-    policy: Policy;
-    idFieldName: string;
-}) => {
-    if (partyId == null || allPartiesById == null) {
-        return undefined;
-    }
-    const partyObj = allPartiesById[partyId];
-    if (!partyObj) {
-        return undefined;
-    }
-    const partyName =
-        `${partyObj.firstName ?? ''} ${partyObj.lastName ?? ''}`.trim() ||
-        partyObj.fullName ||
-        partyObj.agentExternalId;
-
-    if (!partyName) {
-        return undefined;
-    }
-
-    const planCode = policy.product?.planCode;
-    const policyNumber = policy.policyNumber;
-    const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyObj.partyId}`;
-
-    const additionalPartyData = {
-        partyId, // TODO: review: I don't think we want to show partyId here
-        // but it's unintentionally controlling visibility of People
-
-        [idFieldName]: partyName,
-        [label]: partyName,
-        [link]: partyLink,
-        [linkedField]: idFieldName,
-    };
-    return additionalPartyData;
-};
-
-/**
- * Given a party ID and a map of party IDs to party objects, returns an object containing the first bank's
- * information and the first address's information, or undefined if the party ID or map of party IDs is null.
- *
- * @param {object} obj containing the following properties:
- * @param {string} [obj.partyId] the ID of the party to fetch
- * @param {object} [obj.allPartiesById] a map of party IDs to party objects
- * @param {function} t the translation function
- * @returns an object containing the first bank's information and the first address's information, or undefined if
- * the party ID or map of party IDs is null
- */
-const fillInBankAndAddressInfo = (
-    {
-        partyId,
-        allPartiesById,
-    }: {
-        partyId?: string;
-        allPartiesById?: Record<string, Party>;
-    },
-    t: TFunction
-) => {
-    if (partyId == null || allPartiesById == null) {
-        return undefined;
-    }
-    const partyObj = allPartiesById[partyId];
-
-    if (!partyObj) {
-        return undefined;
-    }
-
-    const firstBank = partyObj.bankDetails?.[0];
-    const bankInfo = firstBank
-        ? [
-              firstBank.branchName,
-              firstBank.accountType ?? null,
-              t('policy.commonPhrases.endingIn'),
-              firstBank.accountNumber?.slice(-4),
-          ].join(' ')
-        : undefined;
-    const firstAddress = partyObj.addresses?.[0];
-    const addressInfo = firstAddress
-        ? [
-              firstAddress.addressLine1,
-              firstAddress.city,
-              `${firstAddress.state} ${firstAddress.zipCode}`,
-          ].join(', ')
-        : undefined;
-
-    return {
-        bankInfo,
-        addressInfo,
-    };
-};
-
-/**
- * Given a policy, a map of party IDs to party roles.
- *
- * @param policy The policy to transform
- * @param allPartiesById The mapping of party IDs to party objects
- * @param t The translation function
- * @param lineOfBusiness The line of business for the policy
- * @returns A nested data tuple containing the policy's People section
- */
-// function parsePeople({
-//     roleMap,
-//     policy,
-//     allPartiesById,
-//     t,
-// }: {
-//     roleMap?: {
-//         partyRole?: string;
-//         partyId?: string;
-//     }[];
-//     policy: Policy;
-//     allPartiesById: Record<string, Party> | undefined;
-//     t: TFunction;
-// }) {
-
-//     // Populate the People section
-//     const people = policy.parties
-//         ?.map((party) => {
-//             const requiredPartyData = fillInRequiredPartyDetails({
-//                 partyId: party.partyId,
-//                 policy,
-//                 idFieldName: 'partyName',
-//                 allPartiesById,
-//             });
-
-//             if (!requiredPartyData) {
-//                 return undefined;
-//             }
-
-//         })
-//         .filter((p) => {
-//             if (p) {
-//                 return p !== null && partyRoleMap?.[p?.partyId];
-//             }
-//         });
-//     return people;
-// }
-
-/**
  * Transforms the transaction's tax information into a nested data tuple.
  * Combines the transaction's tax basis, tax withholding instructions and tax withholding amounts into a single object.
  * @returns A nested data tuple containing the transaction's tax information
@@ -875,13 +730,10 @@ function parseRiders({
             return rider;
         }
 
-        // Party name and address are mapped from
-        // the partyId-to-party map on the PreparedPolicy
-
         const partiesSection = rider.children
             .filter(isDataSection)
             .find((child) => child.label === 'riderParticipants');
-        console.log('ridersSection', partiesSection);
+
         const parties: DataSection[] =
             partiesSection?.children
                 .filter((party): party is DataSection => {
@@ -891,33 +743,22 @@ function parseRiders({
                     // Before translations are applied party label is partyId
                     const partyId = party.label;
                     const partyReference = allPartiesById[partyId];
-                    console.log('reference?....', partyId, partyReference);
-                    const partyName = //FIXME
-                        partyReference &&
-                        'partyName' in partyReference &&
-                        typeof partyReference.partyName === 'string'
-                            ? partyReference.partyName
-                            : partyId;
-
-                    // FIXME: fill in party details and bank and address info
-                    /*
-                        const requiredPartyData = fillInRequiredPartyDetails({
-                            partyId: partyId,
-                            policy,
-                            idFieldName: 'partyName',
-                            allPartiesById,
-                        });
-
-                        if (!requiredPartyData) {
-                            return undefined;
-                        }
-                        */
+                    const partyNameField = findFieldInNode({
+                        node: partyReference,
+                        key: 'partyName',
+                    });
 
                     const retainedFields = ['partyAgeAtIssue'];
                     const hydratedParty: DataSection = {
                         ...party,
-                        label: partyName,
+                        label: partyNameField?.value ?? partyId,
                         children: [
+                            {
+                                type: FieldType.field,
+                                label: 'coveredParty',
+                                value: partyNameField?.value ?? partyId,
+                                link: partyNameField?.link,
+                            },
                             ...party.children
                                 .filter(isDataField)
                                 .filter((partyField) =>
@@ -931,14 +772,7 @@ function parseRiders({
 
         const hydratedRider: DataSection = {
             ...rider,
-            children: [
-                ...rider.children,
-                {
-                    type: FieldType.section,
-                    label: 'coveredParty',
-                    children: parties,
-                },
-            ],
+            children: [...rider.children, ...parties],
         };
 
         return hydratedRider;
@@ -970,47 +804,29 @@ function parseSystematicPrograms({
 
             const parties: DataSection[] =
                 partiesSection?.children.filter(isDataSection).map((party) => {
-                    // Before translations are applied party label is partyId
-                    const partyId = party.label;
-                    const partyReference = allPartiesById[partyId];
-                    const partyName = //FIXME
-                        partyReference &&
-                        'partyName' in partyReference &&
-                        typeof partyReference.partyName === 'string'
-                            ? partyReference.partyName
-                            : partyId;
                     const tag = findValueInNode({
                         node: party,
                         key: 'partyRole',
                     });
+                    // Before translations are applied party label is partyId
+                    const partyId = party.label;
+                    const partyReference = allPartiesById[partyId];
+                    const partyNameField = findFieldInNode({
+                        node: partyReference,
+                        key: 'partyName',
+                    });
 
-                    // FIXME: fill in party details and bank and address info
-                    /*
-                        const requiredPartyData = fillInRequiredPartyDetails({
-                            partyId: partyId,
-                            policy,
-                            idFieldName: 'partyName',
-                            allPartiesById,
-                        });
-
-                        if (!requiredPartyData) {
-                            return undefined;
-                        }
-
-                        const partyBankAndAddress = fillInBankAndAddressInfo(
-                            {
-                                partyId: partyData.partyId,
-                                allPartiesById,
-                            },
-                            t
-                        );
-                        */
-
-                    const retainedFields = ['percentage', 'paymentForm'];
+                    const retainedFields = ['paymentForm'];
                     const hydratedParty: DataSection = {
                         ...party,
-                        label: partyName,
+                        label: partyNameField?.value ?? partyId,
                         children: [
+                            {
+                                type: FieldType.field,
+                                label: 'partyName',
+                                value: partyNameField?.value ?? partyId,
+                                link: partyNameField?.link,
+                            },
                             ...party.children
                                 .filter(isDataField)
                                 .filter((partyField) =>
@@ -1020,19 +836,30 @@ function parseSystematicPrograms({
                         tags: tag ? [tag] : undefined,
                     };
 
+                    const bankInfoField = findFieldInNode({
+                        node: partyReference,
+                        key: 'bankInfo',
+                    });
+
+                    const addressInfoField = findFieldInNode({
+                        node: partyReference,
+                        key: 'addressInfo',
+                    });
+
+                    if (bankInfoField) {
+                        hydratedParty.children.push(bankInfoField);
+                    }
+
+                    if (addressInfoField) {
+                        hydratedParty.children.push(addressInfoField);
+                    }
+
                     return hydratedParty;
                 }) ?? [];
 
             const hydratedSystematicProgram: DataSection = {
                 ...systematicProgram,
-                children: [
-                    ...systematicProgram.children,
-                    {
-                        type: FieldType.section,
-                        label: 'hydratedParties',
-                        children: parties,
-                    },
-                ],
+                children: parties,
             };
 
             return hydratedSystematicProgram;
@@ -1189,6 +1016,18 @@ function findInNodes({
         }
     } else {
         return firstNode;
+    }
+}
+function findFieldInNode({
+    node,
+    key,
+}: {
+    node?: DataNode;
+    key: string;
+}): DataField | undefined {
+    const foundNode = findInNode({ node, key });
+    if (foundNode && foundNode.type === FieldType.field) {
+        return foundNode;
     }
 }
 

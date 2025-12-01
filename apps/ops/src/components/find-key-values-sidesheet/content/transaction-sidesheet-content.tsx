@@ -49,12 +49,17 @@ export const TransactionSidesheetContent = ({
         isFetching,
         isError,
     } = usePolicyQuery(
-        planCode as string,
-        id as string,
+        String(planCode),
+        String(id),
         dayjs(new Date()).format(NUMERIC_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
         queryClient,
         true
     );
+
+    if (policy == null) {
+        // FIXME: loading state
+        return null;
+    }
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
     const nodes = applyTransformationsToNodes(
