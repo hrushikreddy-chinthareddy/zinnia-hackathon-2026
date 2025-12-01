@@ -26,7 +26,6 @@ jest.mock('react-i18next', () => ({
 describe('SystematicProgramsCard', () => {
     let props: SystematicProgramsCardProps;
     let element: HTMLElement;
-    const pageTitle = faker.lorem.words();
 
     const generateMockActiveProgram = (): SystematicProgram => ({
         status: Status.ACTIVE,
