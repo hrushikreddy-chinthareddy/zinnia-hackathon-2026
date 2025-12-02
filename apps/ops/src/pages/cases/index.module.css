@@ -26,14 +26,13 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    margin-top: var(--measure-dimension-padding-5xl);
+    margin-top: calc(
+        var(--measure-dimension-padding-5xl) +
+            var(--measure-dimension-padding-sm)
+    );
     @media (min-width: 768px) {
         width: auto;
     }
-}
-
-.filterButton {
-    margin-top: var(--measure-dimension-padding-sm);
 }
 
 .statusRow {

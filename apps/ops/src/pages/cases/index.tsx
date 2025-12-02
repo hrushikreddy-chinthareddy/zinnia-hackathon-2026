@@ -573,7 +573,6 @@ const CaseManagementDashboard = ({
                     <div className={styles.searchActions}>
                         <Button
                             type="button"
-                            className={styles.filterButton}
                             onClick={openRefineResultsSidesheet}
                             tabIndex={0}
                             size={'small'}
