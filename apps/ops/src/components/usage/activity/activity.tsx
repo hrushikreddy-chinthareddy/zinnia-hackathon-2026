@@ -23,7 +23,7 @@ import {
     PrepareTransactionActivityCSV,
     buildTopLevelSeries,
     buildDrilldownSeries,
-} from './utlis';
+} from './utils';
 import UsageHeaderLayout from '../usage-common-header';
 import {
     ApiRoles,
