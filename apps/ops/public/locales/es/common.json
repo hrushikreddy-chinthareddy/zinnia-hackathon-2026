@@ -458,7 +458,10 @@
         "timeliness": "Cronología",
         "taxes": "Impuestos",
         "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
-        "selectDateInRange": "Seleccione una fecha dentro del rango:"
+        "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
+        "illustrationCalcUnreachableSolveFailed": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "La cláusula adicional solicitada no se incluyó porque no cumple con los requisitos de monto nominal."
     },
     "enums": {
         "LIFE": "Vida",
@@ -8874,9 +8877,7 @@
             "addProductAriaLabel": "Boton para agregar un producto",
             "editIllustration": "Editar ilustración",
             "initialDeathBenefitOption": "Opción de beneficio por muerte inicial",
-            "archive": "Archivar",
-            "unsatisfiedSolveMessage": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
-            "unreachDesiredSolutionMessage": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló."
+            "archive": "Archivar"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",
