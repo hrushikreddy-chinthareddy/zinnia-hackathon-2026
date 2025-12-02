@@ -3,7 +3,7 @@
     "caseId": "CA0000395559",
     "source": "BPM.IndexationOrkestr",
     "templateId": "2470c5ff-0ee8-40eb-ba66-a91d6ce1fa43",
-    "process": "Qualification",
+    "process": "Matching",
     "carrier": "FLIC",
     "taskType": "STANDARD_DOCUMENT_MATCHING",
     "taskName": "Standard document matching",

@@ -282,7 +282,16 @@ export const getCaseDetailsSSR = async (
 
         return caseSanitizer(data);
     } catch (error: any) {
-        logError('getCaseDetailsSSR', {
+        let logAppropriateLevel = logError;
+        switch (error?.status) {
+            case 403:
+                logAppropriateLevel = logWarn;
+                break;
+            case 404:
+                logAppropriateLevel = logInfo;
+                break;
+        }
+        logAppropriateLevel('getCaseDetailsSSR', {
             ...parseErrorInformation(error),
             ...loggingContext,
             file: 'queries/api/cases',

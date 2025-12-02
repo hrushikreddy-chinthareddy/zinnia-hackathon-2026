@@ -264,7 +264,10 @@ export function usePartyFields(
                 return (
                     <div key={field.fieldName}>
                         {dobField({
-                            label: field.fieldLabel,
+                            label:
+                                party.partyType == PartyType.TRUST
+                                    ? (t('trustDate') as string)
+                                    : field.fieldLabel,
                             isFormStateReadOnly,
                         })}
                     </div>

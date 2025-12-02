@@ -272,7 +272,9 @@ export default function RMDMethod({
                 disableAllPrograms={true}
                 isLC={isLC}
             />
-            {rmdMethod === RMDType.CalculateRMD && <RMDCalculator />}
+            {rmdMethod === RMDType.CalculateRMD && (
+                <RMDCalculator isFormStateReadOnly />
+            )}
             {!isQCD && (
                 <div className="p-2">
                     <Typography

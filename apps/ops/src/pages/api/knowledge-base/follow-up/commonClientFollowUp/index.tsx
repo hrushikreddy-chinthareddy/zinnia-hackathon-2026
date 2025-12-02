@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 
 import { HttpMethod } from '@deps/constants/policy';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { SSEEventType } from '@deps/types/knowledge-base';
+import { AnswerMode, SSEEventType } from '@deps/types/knowledge-base';
 import {
     logError,
     parseErrorInformation,
@@ -28,7 +28,12 @@ export default withAuthAndLogging(
                 .json({ error: 'Method not allowed' });
         }
 
-        const { followUpId, followUpQuestion, commonClientId } = req.query;
+        const {
+            followUpId,
+            followUpQuestion,
+            commonClientId,
+            responseType = AnswerMode.Short,
+        } = req.query;
         if (!followUpId || !followUpQuestion || !commonClientId) {
             logError(
                 `Missing followUpId, followUpQuestion or commonClientId:: followUpId=${followUpId}, followUpQuestion=${followUpQuestion}, commonClientId=${commonClientId}`,
@@ -53,6 +58,7 @@ export default withAuthAndLogging(
                 body: JSON.stringify({
                     followUpQuestion,
                     clientId: commonClientId,
+                    responseType,
                 }),
             });
             if (!upstream.ok || !upstream.body) {

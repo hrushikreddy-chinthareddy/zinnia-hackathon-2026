@@ -1,0 +1,26 @@
+.knowledgeBaseContainer {
+    height: calc(
+        100vh -
+            (
+                (var(--measure-dimension-z-space-2) * 2) +
+                    (var(--measure-dimension-z-space-12) * 2)
+            )
+    );
+}
+
+.knowledgeBaseContainerCollapsed {
+    width: calc(100% - var(--knowledge-base-sidenav-collapsed-width));
+}
+
+.knowledgeBaseContainerExpanded {
+    width: calc(100% - var(--knowledge-base-sidenav-expanded-width));
+}
+
+@media screen and (max-width: 1023px) {
+    .knowledgeBaseContainerCollapsed {
+        width: 100%;
+    }
+    .knowledgeBaseContainerExpanded {
+        width: 100%;
+    }
+}
