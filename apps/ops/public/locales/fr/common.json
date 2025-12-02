@@ -464,7 +464,10 @@
         "proceedCancel": "Procéder à l'annulation du programme systématique {{frequency}} de {{amount}}",
         "cancelLoanProgram": "Annuler le programme de prêt",
         "cancelPremiumProgram": "Annuler le programme de prime",
-        "systematicProgramPendingBannerText": "Une mise à jour des détails du programme systématique de cette police est en attente. Pour plus d'informations, "
+        "systematicProgramPendingBannerText": "Une mise à jour des détails du programme systématique de cette police est en attente. Pour plus d'informations, ",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
+        "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."
     },
     "enums": {
         "LIFE": "Vie",
@@ -8884,9 +8887,7 @@
             "addProductAriaLabel": "Bouton pour ajouter un produit",
             "editIllustration": "Modifier l'illustration",
             "initialDeathBenefitOption": "Option de prestation de décès",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
-            "unreachDesiredSolutionMessage": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",

@@ -464,7 +464,10 @@
         "proceedCancel": "Proceed with canceling {{frequency}} systematic program of {{amount}}",
         "cancelLoanProgram": "Cancel Loan Program",
         "cancelPremiumProgram": "Cancel Premium Program",
-        "systematicProgramPendingBannerText": "An update to this policy's systematic program details is pending. For more information, "
+        "systematicProgramPendingBannerText": "An update to this policy's systematic program details is pending. For more information, ",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+        "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
     },
     "enums": {
         "LIFE": "Life",
@@ -9069,9 +9072,7 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
-            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
