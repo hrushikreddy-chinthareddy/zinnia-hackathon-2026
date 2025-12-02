@@ -19,11 +19,7 @@ export const CompletedTaskTime = () => {
             defaultValue={SectionTabValues.TABLE}
         >
             <CompletedTaskTimeProvider>
-                <TabContent
-                    forceMount
-                    className="data-[state=inactive]:hidden w-full"
-                    value={SectionTabValues.TABLE}
-                >
+                <TabContent className="w-full" value={SectionTabValues.TABLE}>
                     <CompletedTaskTimesTable />
                 </TabContent>
             </CompletedTaskTimeProvider>
