@@ -34,8 +34,6 @@ export const DocumentFormat = {
 export type DocumentFormatType =
     (typeof DocumentFormat)[keyof typeof DocumentFormat];
 
-export type CustomSectionGroups = [string, string[]];
-
 export type DataField = {
     type: typeof FieldType.field;
     label: string;
