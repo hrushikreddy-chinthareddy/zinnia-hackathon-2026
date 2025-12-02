@@ -20,9 +20,10 @@ import useQueryStore from '@deps/utils/queryStore';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
+import { convertNode } from '../data-node-helpers/mutations';
+import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
-    convertNode,
     excludeNodesByLabel,
     formatSectionLabels,
     groupBasics,
@@ -30,7 +31,6 @@ import {
     addToolTips,
     formatPartyIdLink,
 } from '../transformations';
-import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
 import { DocumentFormat } from '../types';
 
 export const TransactionSidesheetContent = ({

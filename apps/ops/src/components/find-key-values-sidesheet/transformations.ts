@@ -1,20 +1,13 @@
 import { TFunction } from 'next-i18next';
 
-import { typedEntries } from '@deps/utils/objects';
 import {
     LineOfBusiness,
     Policy,
     ProductType,
 } from '@zinnia/api-types/types/sor';
 
-import {
-    isDataSection,
-    isDataField,
-    isNonEmptyString,
-    isNonNullishObject,
-    isPrimitive,
-    isUnknownArray,
-} from './data-node-helpers/predicates';
+import { transformObject } from './data-node-helpers/mutations';
+import { isDataSection, isDataField } from './data-node-helpers/predicates';
 import {
     findValueInNode,
     findInNode,
@@ -29,7 +22,6 @@ import {
 } from './formatters';
 import { sectionVisibility } from './translations/carrier-rules';
 import { excludeFields } from './translations/exclude-fields';
-import { sectionTypeToSubSectionTitleFields } from './translations/subsection-field-to-title';
 import {
     FieldType,
     DataNode,
@@ -37,129 +29,6 @@ import {
     DocumentFormat,
     DocumentFormatType,
 } from './types';
-
-export function convertNode(obj: unknown, t: TFunction): DataNode[] {
-    if (!isNonNullishObject(obj)) return [];
-
-    return typedEntries(obj)
-        .map(([key, value]) => convertTuple(key, value, t))
-        .filter((n): n is DataNode => n != null);
-}
-function convertTuple(
-    key: string,
-    value: unknown,
-    t: TFunction
-): DataNode | undefined {
-    // Skip nullish values
-    if (value === null || value === '') return;
-
-    // Primitive → Field
-    if (isPrimitive(value)) {
-        return {
-            type: FieldType.field,
-            label: key,
-            value: String(value),
-        };
-    }
-
-    // Array → Section -> subsection-field-to-title.ts
-    if (isUnknownArray(value)) {
-        const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
-        if (sectionLabelFieldName) {
-            const sections: DataSection[] = value
-                .map((item): DataSection | undefined => {
-                    //object within each array item
-                    if (!isNonNullishObject(item)) return;
-                    const sectionLabel = item[sectionLabelFieldName];
-                    if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
-                    // TODO: filter out fields that are not visible, including the title field
-                    const fields: DataNode[] = convertNode(item, t);
-
-                    return {
-                        type: FieldType.section,
-                        label: formatAsDataValue({
-                            fieldData: sectionLabel,
-                            t,
-                        }),
-                        children: fields, // TODO: recurse?
-                    };
-                })
-                .filter((n) => n != null);
-
-            return {
-                type: FieldType.section,
-                label: key,
-                children: sections,
-            };
-        } else {
-            // value is list of groups
-            const groups: DataNode[][] = value.map((item) =>
-                convertNode(item, t)
-            );
-            if (groups.length === 0) return;
-
-            return {
-                type: FieldType.section,
-                label: key,
-                children: [
-                    // In some instances the array will also contain fields and sections
-                    {
-                        type: FieldType.group,
-                        children: groups,
-                    },
-                ],
-            };
-        }
-    }
-
-    // Object → Section
-    if (typeof value === 'object' && !Array.isArray(value)) {
-        const children = convertNode(value, t);
-
-        if (children.length === 0) return;
-
-        return {
-            type: FieldType.section,
-            label: key,
-            children,
-        };
-    }
-
-    return;
-}
-
-export const transformObject = (
-    node: DataNode,
-    transform: (node: DataNode) => DataNode | null
-): DataNode | null => {
-    switch (node.type) {
-        case FieldType.field:
-            return transform(node);
-        case FieldType.section: {
-            const newChildren = node.children
-                .map((child) => transformObject(child, transform))
-                .filter((n): n is DataNode => n !== null);
-
-            return transform({
-                ...node,
-                children: newChildren,
-            });
-        }
-        case FieldType.group: {
-            const newGroups = node.children.map((group) =>
-                group
-                    .map((child) => transformObject(child, transform))
-                    .filter((n): n is DataNode => n !== null)
-            );
-            return transform({
-                ...node,
-                children: newGroups,
-            });
-        }
-        default:
-            return transform(node);
-    }
-};
 
 export const groupBasics = (
     data: DataNode[],
@@ -515,6 +384,13 @@ export const groupSectionsForPolicy = ({
     //    sectionTypeToSubSectionTitleFields[sectionTitle];
 };
 
+/**
+ * Filters nodes based on user-defined search string
+ *
+ * @param nodes - nodes to filter
+ * @param search - search string
+ * @returns filtered nodes
+ */
 export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     // should only filter on fields, still highlight section labels
     // if there are no fields in section | group, remove the section / group
@@ -768,6 +644,13 @@ export const addToolTips = (
 //     };
 // }
 
+/**
+ * Parses riders section to add rider participants to each rider
+ *
+ * @param riders - riders section
+ * @param allPartiesById - all parties by id
+ * @returns parsed riders section
+ */
 function parseRiders({
     riders,
     allPartiesById,

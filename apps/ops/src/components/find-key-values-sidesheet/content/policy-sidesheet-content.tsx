@@ -15,7 +15,6 @@ import { useEffect, useState, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
-    convertNode,
     groupBasics,
     groupSectionsForPolicy,
     excludeNodesByLabel,
@@ -24,7 +23,6 @@ import {
     addToolTips,
     excludeNodesByCarrierRules,
 } from '@deps/components/find-key-values-sidesheet/transformations';
-import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -35,6 +33,8 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
+import { convertNode } from '../data-node-helpers/mutations';
+import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import { FindAllKeyValuesSidebarProps, DocumentFormat } from '../types';
 
