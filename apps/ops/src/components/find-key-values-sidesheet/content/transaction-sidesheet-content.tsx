@@ -9,7 +9,7 @@ import {
     FieldTypes,
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
-import { useEffect, ChangeEvent } from 'react';
+import { useEffect, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useDebounce } from '@deps/hooks/useDebounce';
@@ -29,6 +29,7 @@ import {
     searchNodes,
     addToolTips,
     formatPartyIdLink,
+    groupTaxesSection,
 } from '../transformations';
 import { DocumentFormat } from '../types';
 
@@ -43,11 +44,7 @@ export const TransactionSidesheetContent = ({
     const queryClient = useQueryClient();
     const [params] = useQueryStore();
     const { planCode, id } = params;
-    const {
-        data: policy,
-        isFetching,
-        isError,
-    } = usePolicyQuery(
+    const { data: policy } = usePolicyQuery(
         String(planCode),
         String(id),
         dayjs(new Date()).format(NUMERIC_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
@@ -56,103 +53,31 @@ export const TransactionSidesheetContent = ({
     );
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
-    const nodes = applyTransformationsToNodes(
-        (data) => convertNode(data, t),
-        (data) => groupBasics(data, DocumentFormat.transaction),
-        (data) =>
-            formatPartyIdLink({
-                data,
-                t,
-                planCode: String(planCode),
-                policyNumber: String(id),
-                policy,
-            }),
-        (data) => addToolTips(data, t, DocumentFormat.transaction),
-        (data) => excludeNodesByLabel(data, t)
-    )({
-        ...transaction,
-        taxWithholdingInstructions: [
-            {
-                partyId: 'Party_PI_1',
-                taxWithholdingType: 'FEDERAL',
-                taxRateToUse: 'NOWITHHOLDINGELECTED',
-                filingStatus: 'SINGLE',
-                dollar: 0,
-                percentage: 0,
-                exemptions: 0,
-                taxJurisdiction: 'USA_WY',
-                contribution: 'NOTAPPLICABLE',
-                taxFormType: 'T1035COSTBASIS',
-                w4p: {
-                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
-                    totalAmountOfClaimsAndOtherCredits: 213.73,
-                    otherIncome: 144.53,
-                    otherDeduction: 42.83,
-                },
-                partyRole: 'OWNER',
-            },
-            {
-                partyId: 'Party_Agent_1',
-                taxWithholdingType: 'STATE',
-                taxRateToUse: 'NOWITHHOLDINGELECTED',
-                filingStatus: 'SINGLE',
-                dollar: 0,
-                percentage: 0,
-                exemptions: 0,
-                taxJurisdiction: 'USA_WY',
-                contribution: 'NOTAPPLICABLE',
-                taxFormType: 'T1035COSTBASIS',
-                w4p: {
-                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
-                    totalAmountOfClaimsAndOtherCredits: 213.73,
-                    otherIncome: 144.53,
-                    otherDeduction: 42.83,
-                },
-                partyRole: 'AGENT',
-            },
-            {
-                partyId: 'Party_Agent_1',
-                taxWithholdingType: 'STATE',
-                taxRateToUse: 'NOWITHHOLDINGELECTED',
-                filingStatus: 'SINGLE',
-                dollar: 0,
-                percentage: 0,
-                exemptions: 0,
-                taxJurisdiction: 'USA_NY',
-                contribution: 'NOTAPPLICABLE',
-                taxFormType: 'T1035COSTBASIS',
-                w4p: {
-                    totalAmountOfOtherIncomeAndOtherPensionsOrAnnuities: 12.12,
-                    totalAmountOfClaimsAndOtherCredits: 213.73,
-                    otherIncome: 144.53,
-                    otherDeduction: 42.83,
-                },
-                partyRole: 'AGENT',
-            },
-        ],
-        taxWithheldAmounts: [
-            {
-                partyRole: 'AGENT',
-                partyId: 'Party_Agent_1',
-                taxWithholdingType: 'FEDERAL',
-                withheldAmount: 100,
-                withheldTaxableAmount: 100,
-                taxableFlag: true,
-                appliedTaxRate: 100,
-            },
-            {
-                partyRole: 'OWNER',
-                partyId: 'Party_Annuitant_1',
-                taxWithholdingType: 'STATE',
-                withheldAmount: 100,
-                withheldTaxableAmount: 100,
-                taxableFlag: true,
-                appliedTaxRate: 100,
-            },
-        ],
-    });
+    const nodes = useMemo(() => {
+        if (!policy) {
+            return [];
+        }
+        return applyTransformationsToNodes(
+            (data) => convertNode(data, t),
+            (data) => groupBasics(data, DocumentFormat.transaction),
+            (data) =>
+                formatPartyIdLink({
+                    data,
+                    t,
+                    planCode: String(planCode),
+                    policyNumber: String(id),
+                    policy,
+                }),
+            (data) => addToolTips(data, t, DocumentFormat.transaction),
+            (data) => groupTaxesSection(data),
+            (data) => excludeNodesByLabel(data, t)
+        )(transaction);
+    }, [transaction, policy, planCode, id, t]);
 
-    const matches = searchNodes(nodes, debouncedSearchValue);
+    const matches = useMemo(
+        () => searchNodes(nodes, debouncedSearchValue),
+        [nodes, debouncedSearchValue]
+    );
 
     useEffect(() => {
         if (!debouncedSearchValue) return;

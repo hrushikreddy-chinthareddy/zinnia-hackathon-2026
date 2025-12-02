@@ -17,7 +17,6 @@ import {
     combinedTransform,
     formatAsDataValue,
     formatPartyLink,
-    formatSectionLabel,
     formatToolTip,
 } from './formatters';
 import { sectionVisibility } from './translations/carrier-rules';
@@ -69,6 +68,48 @@ export const groupBasics = (
         },
         ...filterBySectionOrList,
     ];
+};
+
+export const groupTaxesSection = (data: DataNode[]): DataNode[] => {
+    const taxBasisFields =
+        data
+            .filter(isDataSection)
+            .find((node) => node.label === 'taxBasis')
+            ?.children.filter(isDataField) ?? [];
+
+    const taxWithholdingInstructions = data
+        .filter(isDataSection)
+        .find((node) => node.label === 'taxWithholdingInstructions');
+
+    const taxWithheldAmounts = data
+        .filter(isDataSection)
+        .find((node) => node.label === 'taxWithheldAmounts');
+
+    const filterByNonTaxes = data
+        .filter(isDataSection)
+        .filter(
+            (node) =>
+                ![
+                    'taxBasis',
+                    'taxWithholdingInstructions',
+                    'taxWithheldAmounts',
+                ].includes(node.label)
+        );
+
+    const combinedTaxes: DataSection = {
+        type: FieldType.section,
+        label: 'taxes',
+        children: [...taxBasisFields],
+    };
+
+    if (taxWithholdingInstructions) {
+        combinedTaxes.children.push(taxWithholdingInstructions);
+    }
+
+    if (taxWithheldAmounts) {
+        combinedTaxes.children.push(taxWithheldAmounts);
+    }
+    return [...filterByNonTaxes, combinedTaxes];
 };
 
 export const getAllParties = ({
@@ -401,8 +442,6 @@ export const groupSectionsForPolicy = ({
 
     console.log('......combinedSections', combinedSections);
     return [...combinedSections, loans, people];
-    //const subSectionTitleField =
-    //    sectionTypeToSubSectionTitleFields[sectionTitle];
 };
 
 /**
@@ -462,24 +501,6 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     return nodes.map(filterNode).filter((n): n is DataNode => n !== null);
 }
 
-export const formatSectionLabels = (
-    data: DataNode[],
-    t: TFunction,
-    nomenclature?: string
-) => {
-    return data
-        .map((node: DataNode) =>
-            transformObject(
-                node,
-                formatSectionLabel({
-                    t,
-                    nomenclature,
-                })
-            )
-        )
-        .filter((n): n is DataNode => n !== null);
-};
-
 export const formatPartyIdLink = ({
     data,
     t,
@@ -499,6 +520,7 @@ export const formatPartyIdLink = ({
         planCode,
         policyNumber,
     });
+
     return data
         .map((node: DataNode) =>
             transformObject(node, (node) => {

@@ -63,48 +63,6 @@ const formatAsSentenceCase = (words: string) => {
 };
 
 /**
- * Given a label, a line of business, and a translation function, returns a formatted string for the section label.
- * If an exact translation is available, it will be used. Otherwise, the function will replace "policy" with "contract" if not a life policy,
- * apply industry term abbreviations and grammar corrections, and finally capitalize the first letter of the sentence.
- *
- * @param label The label to format
- * @param lineOfBusiness The line of business
- * @param t The translation function
- * @returns The formatted section label string
- */
-export const formatAsSectionLabel = ({
-    label,
-    lineOfBusiness,
-    t,
-}: {
-    label: string;
-    lineOfBusiness: LineOfBusiness;
-    t: TFunction;
-}) => {
-    const exactTranslation = t(`allFields.${label}`, {
-        defaultValue: null, // Explicitly return null (not undefined) to infer the value from the key
-        policyNomenclature:
-            lineOfBusiness === LineOfBusiness.LIFE
-                ? t('policy.nomenclature.policy')
-                : t('policy.nomenclature.contract'),
-    });
-
-    if (exactTranslation !== null) {
-        return exactTranslation;
-    }
-
-    const words = splitIntoWords(label);
-
-    // Replace "policy" with "contract" if not a life policy
-    const lineOfBusinessSpecificWords = replaceLineOfBusinessWords(
-        words,
-        lineOfBusiness
-    );
-
-    return formatAsSentenceCase(lineOfBusinessSpecificWords);
-};
-
-/**
  * Formats a data label as a human-readable string, taking into account
  * industry-specific abbreviations and grammar corrections.
  *
