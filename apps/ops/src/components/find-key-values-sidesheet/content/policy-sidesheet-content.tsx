@@ -16,7 +16,6 @@ import { useTranslation } from 'react-i18next';
 
 import {
     convertNode,
-    applyTransformationsToNodes,
     groupBasics,
     groupSectionsForPolicy,
     excludeNodesByLabel,
@@ -25,6 +24,7 @@ import {
     addToolTips,
     excludeNodesByCarrierRules,
 } from '@deps/components/find-key-values-sidesheet/transformations';
+import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';

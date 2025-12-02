@@ -4,6 +4,7 @@ import {
     FieldType,
     DataField,
     DataGroup,
+    Primitive,
 } from '../types';
 
 export function isDataSection(node: DataNode): node is DataSection {
@@ -20,3 +21,13 @@ export function isDataField(node: DataNode): node is DataField {
 export function isDataGroup(node: DataNode): node is DataGroup {
     return node.type === FieldType.group;
 }
+export const isPrimitive = (v: any): v is Primitive => {
+    return (
+        typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
+    );
+};
+export const isUnknownArray = (v: unknown): v is unknown[] => Array.isArray(v);
+export const isNonNullishObject = (v: unknown): v is Record<string, unknown> =>
+    typeof v === 'object' && v != null;
+export const isNonEmptyString = (v: unknown): v is string =>
+    typeof v === 'string' && v !== ''; // TODO: more specific TS type

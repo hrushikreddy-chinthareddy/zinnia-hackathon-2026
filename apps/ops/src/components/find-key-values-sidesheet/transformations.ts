@@ -7,7 +7,14 @@ import {
     ProductType,
 } from '@zinnia/api-types/types/sor';
 
-import { isDataSection, isDataField } from './data-node-helpers/predicates';
+import {
+    isDataSection,
+    isDataField,
+    isNonEmptyString,
+    isNonNullishObject,
+    isPrimitive,
+    isUnknownArray,
+} from './data-node-helpers/predicates';
 import {
     findValueInNode,
     findInNode,
@@ -26,41 +33,10 @@ import { sectionTypeToSubSectionTitleFields } from './translations/subsection-fi
 import {
     FieldType,
     DataNode,
-    Primitive,
     DataSection,
     DocumentFormat,
     DocumentFormatType,
 } from './types';
-
-// pipe needs to take the first arg as Policy/Transaction -> DataNode[]
-// and the rest as DataNode[] -> DataNode[]
-export const applyTransformationsToNodes =
-    <T>(
-        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
-        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
-    ) =>
-    (initialValue: T) => {
-        const initialTransformedData = initialTransformFn(initialValue);
-        const v = fns.reduce((acc, fn) => {
-            const ret = fn(acc);
-            return ret;
-        }, initialTransformedData);
-        return v;
-    };
-
-const isPrimitive = (v: any): v is Primitive => {
-    return (
-        typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean'
-    );
-};
-
-const isUnknownArray = (v: unknown): v is unknown[] => Array.isArray(v);
-
-const isNonNullishObject = (v: unknown): v is Record<string, unknown> =>
-    typeof v === 'object' && v != null;
-
-const isNonEmptyString = (v: unknown): v is string =>
-    typeof v === 'string' && v !== ''; // TODO: more specific TS type
 
 export function convertNode(obj: unknown, t: TFunction): DataNode[] {
     if (!isNonNullishObject(obj)) return [];

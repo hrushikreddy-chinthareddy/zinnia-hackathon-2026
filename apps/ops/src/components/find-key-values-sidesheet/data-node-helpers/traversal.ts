@@ -1,3 +1,5 @@
+import { TFunction } from 'next-i18next';
+
 import { DataNode, FieldType, DataSection, DataField } from '../types';
 import { isDataSection, isDataSectionOrField, isDataField } from './predicates';
 
@@ -127,4 +129,19 @@ export function findValueInNode({
     if (foundNode && foundNode.type === FieldType.field) {
         return foundNode.value;
     }
-}
+} // pipe needs to take the first arg as Policy/Transaction -> DataNode[]
+// and the rest as DataNode[] -> DataNode[]
+
+export const applyTransformationsToNodes =
+    <T>(
+        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
+        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
+    ) =>
+    (initialValue: T) => {
+        const initialTransformedData = initialTransformFn(initialValue);
+        const v = fns.reduce((acc, fn) => {
+            const ret = fn(acc);
+            return ret;
+        }, initialTransformedData);
+        return v;
+    };

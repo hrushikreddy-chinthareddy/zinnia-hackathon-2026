@@ -23,7 +23,6 @@ import { DataNodeRenderer } from '../components/data-node-renderer';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
     convertNode,
-    applyTransformationsToNodes,
     excludeNodesByLabel,
     formatSectionLabels,
     groupBasics,
@@ -31,6 +30,7 @@ import {
     addToolTips,
     formatPartyIdLink,
 } from '../transformations';
+import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
 import { DocumentFormat } from '../types';
 
 export const TransactionSidesheetContent = ({
