@@ -3,11 +3,24 @@ import { TFunction } from 'next-i18next';
 
 import { combinedTransform } from './formatters';
 import { transformNodes } from '../data-node-helpers/mutations';
-import { isNotNullish } from '../data-node-helpers/predicates';
+import {
+    isDataField,
+    isDataGroup,
+    isDataSection,
+    isNotNullish,
+} from '../data-node-helpers/predicates';
 import { sectionVisibility } from '../translations/carrier-rules';
 import { excludeFields } from '../translations/exclude-fields';
 import { DataNode, FieldType } from '../types';
 
+/**
+ * Filters nodes based on exclude fields from exclude-fields
+ *
+ * @param nodes - nodes to filter
+ * @param t - translation function
+ * @param policyNomenclature - policy nomenclature
+ * @returns filtered nodes
+ */
 export const excludeNodesByLabel = (
     nodes: DataNode[],
     t: TFunction,
@@ -23,6 +36,15 @@ export const excludeNodesByLabel = (
     );
 };
 
+/**
+ * Filters nodes based on carrier-rules
+ *
+ * @param nodes - nodes to filter
+ * @param lineOfBusiness - line of business
+ * @param productType - product type
+ * @param planCode - plan code
+ * @returns filtered nodes
+ */
 export const excludeNodesByCarrierRules = ({
     nodes,
     lineOfBusiness,
@@ -35,7 +57,7 @@ export const excludeNodesByCarrierRules = ({
     planCode?: string;
 }) => {
     return transformNodes(nodes, (node: DataNode) =>
-        isNodeVisibileByCarrierRules({
+        excludeNodeByCarrierRules({
             node,
             lineOfBusiness,
             productType,
@@ -44,7 +66,16 @@ export const excludeNodesByCarrierRules = ({
     );
 };
 
-export const isNodeVisibileByCarrierRules = ({
+/**
+ * Filters a single node based on carrier rules
+ *
+ * @param node - node to filter
+ * @param lineOfBusiness - line of business
+ * @param productType - product type
+ * @param planCode - plan code
+ * @returns filtered node
+ */
+export const excludeNodeByCarrierRules = ({
     node,
     lineOfBusiness,
     productType,
@@ -66,6 +97,7 @@ export const isNodeVisibileByCarrierRules = ({
     }
     return node;
 };
+
 /**
  * Filters nodes based on user-defined search string
  *
@@ -73,24 +105,23 @@ export const isNodeVisibileByCarrierRules = ({
  * @param search - search string
  * @returns filtered nodes
  */
-
 export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     // should only filter on fields, still highlight section labels
     // if there are no fields in section | group, remove the section / group
     const lower = search.toLowerCase();
 
-    const filterNode = (node: DataNode): DataNode | undefined => {
-        if (node.type === FieldType.field) {
+    return transformNodes(nodes, (node: DataNode) => {
+        // If it's a field, check if it matches the search string
+        if (isDataField(node)) {
             const match =
                 node.label.toLowerCase().includes(lower) ||
                 node.value.toLowerCase().includes(lower);
             return match ? node : undefined;
         }
 
-        if (node.type === FieldType.section) {
-            const filteredChildren = node.children
-                .map(filterNode)
-                .filter(isNotNullish);
+        // If it's a section, check if it's empty
+        if (isDataSection(node)) {
+            const filteredChildren = node.children.filter(isNotNullish);
 
             if (filteredChildren.length > 0) {
                 return {
@@ -101,10 +132,11 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
             return undefined;
         }
 
-        if (node.type === FieldType.group) {
-            const filteredGroups = node.children
-                .map((group) => group.map(filterNode).filter(isNotNullish))
-                .filter((subGroup) => subGroup.length > 0);
+        // If it's a group, check if it's empty
+        if (isDataGroup(node)) {
+            const filteredGroups = node.children.filter(
+                (group) => group.length > 0
+            );
 
             if (filteredGroups.length > 0) {
                 return {
@@ -112,9 +144,10 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
                     children: filteredGroups,
                 };
             }
+            return undefined;
         }
-        return undefined;
-    };
 
-    return nodes.map(filterNode).filter(isNotNullish);
+        // Otherwise, return the node as-is
+        return node;
+    });
 }
