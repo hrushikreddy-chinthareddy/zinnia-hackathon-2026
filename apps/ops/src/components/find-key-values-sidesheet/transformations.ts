@@ -6,7 +6,7 @@ import {
     ProductType,
 } from '@zinnia/api-types/types/sor';
 
-import { transformObject } from './data-node-helpers/mutations';
+import { convertNode, transformObject } from './data-node-helpers/mutations';
 import { isDataSection, isDataField } from './data-node-helpers/predicates';
 import {
     findValueInNode,
@@ -28,6 +28,7 @@ import {
     DataSection,
     DocumentFormat,
     DocumentFormatType,
+    DataField,
 } from './types';
 
 export const groupBasics = (
@@ -55,12 +56,12 @@ export const groupBasics = (
 };
 
 export const getAllParties = ({
-    nodes,
+    policyNodes,
     t,
     planCode,
     policyNumber,
 }: {
-    nodes: DataNode[];
+    policyNodes: DataNode[];
     t: TFunction;
     planCode: string;
     policyNumber: string;
@@ -69,7 +70,7 @@ export const getAllParties = ({
     allPartiesById: Record<string, DataSection | undefined>;
 } => {
     const partyRoles: DataSection[] =
-        nodes
+        policyNodes
             .filter(isDataSection)
             .find((node) => node.label === 'partyRoles')
             ?.children.filter(isDataSection) ?? [];
@@ -104,7 +105,7 @@ export const getAllParties = ({
     }, {});
 
     const allParties =
-        nodes
+        policyNodes
             .filter(isDataSection)
             // Parties node should always be present
             .find((partiesNode) => partiesNode.label === 'parties')
@@ -118,7 +119,11 @@ export const getAllParties = ({
 
                 if (!partyId) return partyNode;
 
-                const partyLink = `/policies/${planCode}/${policyNumber}/people/${partyId}`;
+                const partyLink = formatPartyLink({
+                    partyId,
+                    planCode,
+                    policyNumber,
+                });
 
                 const partyFirstName = findValueInNode({
                     node: partyNode,
@@ -300,7 +305,7 @@ export const groupSectionsForPolicy = ({
     policyNumber: string;
 }): DataNode[] => {
     const { allParties, allPartiesById } = getAllParties({
-        nodes,
+        policyNodes: nodes,
         t,
         planCode,
         policyNumber,
@@ -459,18 +464,58 @@ export const formatSectionLabels = (
         .filter((n): n is DataNode => n !== null);
 };
 
-export const formatPartyIdLink = (
-    data: DataNode[],
-    planCode: string,
-    policyNumber: string,
-    policy: Policy
-) => {
+export const formatPartyIdLink = ({
+    data,
+    t,
+    planCode,
+    policyNumber,
+    policy,
+}: {
+    data: DataNode[];
+    t: TFunction;
+    planCode: string;
+    policyNumber: string;
+    policy: Policy;
+}) => {
+    const { allPartiesById } = getAllParties({
+        policyNodes: convertNode(policy, t),
+        t,
+        planCode,
+        policyNumber,
+    });
     return data
         .map((node: DataNode) =>
-            transformObject(
-                node,
-                formatPartyLink({ planCode, policyNumber, policy })
-            )
+            transformObject(node, (node) => {
+                if (
+                    !(node.type === FieldType.field && node.label === 'partyId')
+                ) {
+                    return node;
+                }
+                const partyReference = allPartiesById[node.value];
+
+                if (!partyReference) {
+                    return {
+                        ...node,
+                        link: formatPartyLink({
+                            planCode,
+                            policyNumber,
+                            partyId: node.value,
+                        }),
+                    };
+                }
+
+                const partyNameField = partyReference.children
+                    .filter(isDataField)
+                    .find((field) => field.label === 'partyName');
+
+                const partialPartyField: DataField = {
+                    ...node,
+                    label: 'impactedParty',
+                    value: partyNameField?.value ?? node.value,
+                    link: partyNameField?.link,
+                };
+                return partialPartyField;
+            })
         )
         .filter((n): n is DataNode => n !== null);
 };

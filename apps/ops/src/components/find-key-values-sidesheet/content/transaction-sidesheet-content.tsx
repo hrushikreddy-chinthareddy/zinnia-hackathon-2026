@@ -66,7 +66,13 @@ export const TransactionSidesheetContent = ({
         (data) => convertNode(data, t),
         (data) => groupBasics(data, t, DocumentFormat.transaction),
         (data) =>
-            formatPartyIdLink(data, planCode as string, id as string, policy),
+            formatPartyIdLink({
+                data,
+                t,
+                planCode: String(planCode),
+                policyNumber: String(id),
+                policy,
+            }),
         (data) => addToolTips(data, t, DocumentFormat.transaction),
         (data) => excludeNodesByLabel(data, t),
         (data) => formatSectionLabels(data, t)

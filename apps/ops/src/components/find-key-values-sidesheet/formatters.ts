@@ -1,3 +1,4 @@
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -6,7 +7,6 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { LineOfBusiness, Policy } from '@zinnia/api-types/types/sor';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
@@ -329,31 +329,13 @@ export const combinedTransform = ({
 };
 
 export const formatPartyLink = ({
+    partyId,
     planCode,
     policyNumber,
-    policy,
 }: {
+    partyId: string;
     planCode: string;
     policyNumber: string;
-    policy: Policy;
 }) => {
-    return (node: DataNode): DataNode | null => {
-        if (node.type === FieldType.field && node.label === 'partyId') {
-            const partyLink = `/policies/${planCode}/${policyNumber}/people/${node.value}`;
-            const partyData = policy.parties?.find(
-                (party) => party.partyId === node.value
-            );
-            const name =
-                partyData?.firstName && partyData?.lastName
-                    ? `${partyData.firstName} ${partyData.lastName}`
-                    : node.value;
-            return {
-                ...node,
-                label: 'impactedParty',
-                value: name,
-                link: partyLink,
-            };
-        }
-        return node;
-    };
+    return `/policies/${planCode}/${policyNumber}/people/${partyId}`;
 };
