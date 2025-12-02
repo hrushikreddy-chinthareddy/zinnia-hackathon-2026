@@ -1,31 +1,26 @@
+import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
-import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
-
 import { combinedTransform } from './formatters';
-import { transformObject } from '../data-node-helpers/mutations';
+import { transformNodes } from '../data-node-helpers/mutations';
 import { isNotNullish } from '../data-node-helpers/predicates';
 import { sectionVisibility } from '../translations/carrier-rules';
 import { excludeFields } from '../translations/exclude-fields';
 import { DataNode, FieldType } from '../types';
 
 export const excludeNodesByLabel = (
-    data: DataNode[],
+    nodes: DataNode[],
     t: TFunction,
     policyNomenclature?: string
 ) => {
-    return data
-        .map((node: DataNode) =>
-            transformObject(
-                node,
-                combinedTransform({
-                    t,
-                    exclude: Array.from(excludeFields),
-                    policyNomenclature,
-                })
-            )
-        )
-        .filter(isNotNullish);
+    return transformNodes(
+        nodes,
+        combinedTransform({
+            t,
+            exclude: Array.from(excludeFields),
+            policyNomenclature,
+        })
+    );
 };
 
 export const excludeNodesByCarrierRules = ({
@@ -39,18 +34,14 @@ export const excludeNodesByCarrierRules = ({
     productType?: ProductType;
     planCode?: string;
 }) => {
-    return nodes
-        .map((node: DataNode) =>
-            transformObject(node, (node: DataNode) =>
-                isNodeVisibileByCarrierRules({
-                    node,
-                    lineOfBusiness,
-                    productType,
-                    planCode,
-                })
-            )
-        )
-        .filter(isNotNullish);
+    return transformNodes(nodes, (node: DataNode) =>
+        isNodeVisibileByCarrierRules({
+            node,
+            lineOfBusiness,
+            productType,
+            planCode,
+        })
+    );
 };
 
 export const isNodeVisibileByCarrierRules = ({
@@ -71,7 +62,7 @@ export const isNodeVisibileByCarrierRules = ({
             (productType && sectionRule.has(productType)) ||
             (planCode && sectionRule.has(planCode))
             ? node
-            : null;
+            : undefined;
     }
     return node;
 };

@@ -1,3 +1,4 @@
+import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -6,12 +7,11 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { Policy } from '@zinnia/api-types/types/sor';
 
 import { getAllParties } from './section-grouping';
 import {
     spruceFromSourceData,
-    transformObject,
+    transformNode,
 } from '../data-node-helpers/mutations';
 import { isNotNullish } from '../data-node-helpers/predicates';
 import { findFieldInNode } from '../data-node-helpers/traversal';
@@ -273,9 +273,9 @@ export const combinedTransform = ({
     exclude: string[];
     policyNomenclature?: string;
 }) => {
-    return (node: DataNode): DataNode | null => {
+    return (node: DataNode): DataNode | undefined => {
         const afterExclude = excludeNodes(node, exclude);
-        if (afterExclude === null) return null;
+        if (afterExclude == null) return;
 
         return formatNode(afterExclude, t, policyNomenclature);
     };
@@ -292,6 +292,17 @@ export const formatPartyLink = ({
 }) => {
     return `/policies/${planCode}/${policyNumber}/people/${partyId}`;
 };
+
+/**
+ * Recursively formats partyId display value and link
+ *
+ * @param data - data to format
+ * @param t - translation function
+ * @param planCode - plan code
+ * @param policyNumber - policy number
+ * @param policy - policy
+ * @returns formatted party id link
+ */
 export const formatPartyIdLink = ({
     data,
     t,
@@ -314,7 +325,7 @@ export const formatPartyIdLink = ({
 
     return data
         .map((node: DataNode) =>
-            transformObject(node, (node) => {
+            transformNode(node, (node) => {
                 if (
                     !(node.type === FieldType.field && node.label === 'partyId')
                 ) {
