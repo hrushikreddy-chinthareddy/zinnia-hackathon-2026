@@ -66,6 +66,7 @@
         "currency": "Currency",
         "fixedCostPeriod": "Fixed cost period",
         "totalCoverageAmount": "Total coverage amount",
+        "deathBenefit": "Death benefit",
         "cumulativeGrossDeathBenefitAmount": "Cumulative gross death benefit amount",
         "netDeathBenefit": "Estimated net death benefit",
         "minimumCoverageAmount": "Minimum coverage amount",

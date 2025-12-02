@@ -66,6 +66,7 @@
         "currency": "Moneda",
         "fixedCostPeriod": "Período de costo fijo",
         "totalCoverageAmount": "Monto total de cobertura",
+        "deathBenefit": "Beneficio por fallecimiento",
         "cumulativeGrossDeathBenefitAmount": "Monto acumulado bruto del beneficio por fallecimiento",
         "netDeathBenefit": "Beneficio neto estimado por fallecimiento",
         "minimumCoverageAmount": "Monto mínimo de cobertura",

@@ -66,6 +66,7 @@
         "currency": "Devise",
         "fixedCostPeriod": "Période de coût fixe",
         "totalCoverageAmount": "Montant total de la couverture",
+        "deathBenefit": "Prestation décès",
         "cumulativeGrossDeathBenefitAmount": "Montant brut cumulé de la prestation décès",
         "netDeathBenefit": "Prestation décès nette estimée",
         "minimumCoverageAmount": "Montant minimal de couverture",
