@@ -451,7 +451,6 @@ export const groupSectionsForPolicy = ({
         }
     });
 
-    console.log('......combinedSections', combinedSections);
     return [...combinedSections, loans, people];
 };
 

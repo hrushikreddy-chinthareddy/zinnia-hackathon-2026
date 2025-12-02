@@ -32,8 +32,10 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
-import { spruceFromSourceData } from '../data-node-helpers/mutations';
-import { applyTransformationsToNodes } from '../data-node-helpers/mutations';
+import {
+    spruceFromSourceData,
+    applyTransformationsToNodes,
+} from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import { FindAllKeyValuesSidebarProps } from '../types';
 
@@ -71,7 +73,6 @@ export const PolicySidesheetContent = ({
         if (date === undefined) {
             return;
         }
-
         const day = dayjs(date);
 
         if (day.isValid() && isDateAllowed(day)) {
@@ -117,7 +118,15 @@ export const PolicySidesheetContent = ({
                     }),
                 (data) => excludeNodesByLabel(data, t, nomenclature)
             )(policy),
-        [policy, t, planCode, policyNumber]
+        [
+            policy,
+            t,
+            planCode,
+            policyNumber,
+            lineOfBusiness,
+            nomenclature,
+            productType,
+        ]
     );
 
     const matches = useMemo(
