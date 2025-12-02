@@ -11,7 +11,7 @@ import {
     FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -94,28 +94,35 @@ export const PolicySidesheetContent = ({
         lineOfBusiness === LineOfBusiness.LIFE
             ? t('policy.nomenclature.policy')
             : t('policy.nomenclature.contract');
-    const nodes = applyTransformationsToNodes(
-        (data) => convertNode(data, t),
-        (data) => groupBasics(data, DocumentFormat.policy),
-        (data) => addToolTips(data, t),
-        (data) =>
-            groupSectionsForPolicy({
-                nodes: data,
-                t,
-                planCode,
-                policyNumber,
-            }),
-        (data) =>
-            excludeNodesByCarrierRules({
-                nodes: data,
-                lineOfBusiness,
-                productType,
-                planCode,
-            }),
-        (data) => excludeNodesByLabel(data, t, nomenclature)
-    )(policy);
+    const nodes = useMemo(
+        () =>
+            applyTransformationsToNodes(
+                (data) => convertNode(data, t),
+                (data) => groupBasics(data, DocumentFormat.policy),
+                (data) => addToolTips(data, t),
+                (data) =>
+                    groupSectionsForPolicy({
+                        nodes: data,
+                        t,
+                        planCode,
+                        policyNumber,
+                    }),
+                (data) =>
+                    excludeNodesByCarrierRules({
+                        nodes: data,
+                        lineOfBusiness,
+                        productType,
+                        planCode,
+                    }),
+                (data) => excludeNodesByLabel(data, t, nomenclature)
+            )(policy),
+        [policy, t, planCode, policyNumber]
+    );
 
-    const matches = searchNodes(nodes, debouncedSearchValue);
+    const matches = useMemo(
+        () => searchNodes(nodes, debouncedSearchValue),
+        [nodes, debouncedSearchValue]
+    );
 
     // If the search value changes to non-empty, expand the tree
     // (the tree will be cropped to matching search results)
