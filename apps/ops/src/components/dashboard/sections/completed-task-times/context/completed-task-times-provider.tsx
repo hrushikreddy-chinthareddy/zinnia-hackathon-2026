@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
@@ -61,7 +62,7 @@ export const CompletedTaskTimeProvider: FC<PropsWithChildren> = ({
     const filter = useMemo((): CompletedTaskTimeInputFilter => {
         const baseFilter: CompletedTaskTimeInputFilter = {
             taskCreatedDateStart: timerange.from,
-            taskCreatedDateEnd: timerange.to,
+            taskCreatedDateEnd: dayjs(timerange.to).add(1, 'day').toISOString(),
         };
 
         if (Object.keys(selectedCarriers).length > 0) {
