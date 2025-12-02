@@ -21,15 +21,15 @@ import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import { convertNode } from '../data-node-helpers/mutations';
-import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
+import { applyTransformationsToNodes } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
     excludeNodesByLabel,
-    groupBasics,
     searchNodes,
     addToolTips,
     formatPartyIdLink,
     groupTaxesSection,
+    groupBasicsForTransaction,
 } from '../transformations';
 import { DocumentFormat } from '../types';
 
@@ -59,7 +59,7 @@ export const TransactionSidesheetContent = ({
         }
         return applyTransformationsToNodes(
             (data) => convertNode(data, t),
-            (data) => groupBasics(data, DocumentFormat.transaction),
+            (data) => groupBasicsForTransaction(data),
             (data) =>
                 formatPartyIdLink({
                     data,

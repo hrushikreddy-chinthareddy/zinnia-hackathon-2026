@@ -7,11 +7,16 @@ import {
 } from '@zinnia/api-types/types/sor';
 
 import { convertNode, transformObject } from './data-node-helpers/mutations';
-import { isDataSection, isDataField } from './data-node-helpers/predicates';
+import {
+    isDataSection,
+    isDataField,
+    isDataSectionOrGroup,
+} from './data-node-helpers/predicates';
 import {
     findValueInNode,
     findInNode,
     findFieldInNode,
+    findSectionInNodes,
 } from './data-node-helpers/traversal';
 import {
     combinedTransform,
@@ -46,55 +51,58 @@ export const applyTransformationsToNodes =
         return v;
     };
 
-export const groupBasics = (
-    data: DataNode[],
-    type: DocumentFormatType
-): DataNode[] => {
-    const filterByField = data.filter((node) => node.type === FieldType.field);
-    const filterBySectionOrList = data.filter(
-        (node) => node.type !== FieldType.field
-    );
-
-    const label =
-        type === DocumentFormat.transaction
-            ? 'transactionDetails'
-            : 'policyBasics';
+export const groupBasicsForPolicy = (data: DataNode[]): DataNode[] => {
+    const filterByField = data.filter(isDataField);
+    const filterBySectionOrGroup = data.filter(isDataSectionOrGroup);
 
     return [
         {
             type: FieldType.section,
-            label,
+            label: 'policyBasics',
             children: filterByField,
         },
-        ...filterBySectionOrList,
+        ...filterBySectionOrGroup,
+    ];
+};
+
+export const groupBasicsForTransaction = (data: DataNode[]): DataNode[] => {
+    const filterByField = data.filter(isDataField);
+    const filterBySectionOrGroup = data.filter(isDataSectionOrGroup);
+
+    return [
+        {
+            type: FieldType.section,
+            label: 'transactionDetails',
+            children: filterByField,
+        },
+        ...filterBySectionOrGroup,
     ];
 };
 
 export const groupTaxesSection = (data: DataNode[]): DataNode[] => {
     const taxBasisFields =
-        data
-            .filter(isDataSection)
-            .find((node) => node.label === 'taxBasis')
-            ?.children.filter(isDataField) ?? [];
+        findSectionInNodes({ nodes: data, key: 'taxBasis' })?.children.filter(
+            isDataField
+        ) ?? [];
 
-    const taxWithholdingInstructions = data
-        .filter(isDataSection)
-        .find((node) => node.label === 'taxWithholdingInstructions');
+    const taxWithholdingInstructions = findSectionInNodes({
+        nodes: data,
+        key: 'taxWithholdingInstructions',
+    });
 
-    const taxWithheldAmounts = data
-        .filter(isDataSection)
-        .find((node) => node.label === 'taxWithheldAmounts');
+    const taxWithheldAmounts = findSectionInNodes({
+        nodes: data,
+        key: 'taxWithheldAmounts',
+    });
 
+    const excludeSections = [
+        'taxBasis',
+        'taxWithholdingInstructions',
+        'taxWithheldAmounts',
+    ];
     const filterByNonTaxes = data
         .filter(isDataSection)
-        .filter(
-            (node) =>
-                ![
-                    'taxBasis',
-                    'taxWithholdingInstructions',
-                    'taxWithheldAmounts',
-                ].includes(node.label)
-        );
+        .filter((node) => !excludeSections.includes(node.label));
 
     const combinedTaxes: DataSection = {
         type: FieldType.section,
@@ -127,10 +135,10 @@ export const getAllParties = ({
     allPartiesById: Record<string, DataSection | undefined>;
 } => {
     const partyRoles: DataSection[] =
-        policyNodes
-            .filter(isDataSection)
-            .find((node) => node.label === 'partyRoles')
-            ?.children.filter(isDataSection) ?? [];
+        findSectionInNodes({
+            nodes: policyNodes,
+            key: 'partyRoles',
+        })?.children.filter(isDataSection) ?? [];
 
     const roleMap: Record<string, string[]> = partyRoles.reduce<
         Record<string, string[]>
@@ -162,11 +170,10 @@ export const getAllParties = ({
     }, {});
 
     const allParties =
-        policyNodes
-            .filter(isDataSection)
-            // Parties node should always be present
-            .find((partiesNode) => partiesNode.label === 'parties')
-            // Children should always be DataSection's
+        findSectionInNodes({
+            nodes: policyNodes,
+            key: 'parties',
+        })
             ?.children.filter(isDataSection)
             .map((partyNode): DataSection => {
                 const partyId = findValueInNode({
@@ -380,6 +387,7 @@ export const groupSectionsForPolicy = ({
         type: FieldType.section,
         label: 'people',
         children: allParties.map((party) => {
+            const includeFields = ['partyName', 'dob', 'ssn'];
             return {
                 type: FieldType.section,
                 // Remap label to partyName for rendering
@@ -388,11 +396,9 @@ export const groupSectionsForPolicy = ({
                         node: party,
                         key: 'partyName',
                     }) ?? party.label,
-                children: party.children.filter(
-                    (child) =>
-                        child.type === FieldType.field &&
-                        ['partyName', 'dob', 'ssn'].includes(child.label)
-                ),
+                children: party.children
+                    .filter(isDataField)
+                    .filter((child) => includeFields.includes(child.label)),
                 tags: party.tags,
             };
         }),
@@ -405,9 +411,10 @@ export const groupSectionsForPolicy = ({
         switch (node.label) {
             case 'allocation': {
                 // Extract loan segments and push to loans
-                const loans = node.children
-                    .filter(isDataSection)
-                    .find((node) => node.label === 'loansSegments');
+                const loans = findSectionInNodes({
+                    nodes: node.children,
+                    key: 'loansSegments',
+                });
 
                 if (loans) {
                     loans.children.push(...node.children);
@@ -542,9 +549,10 @@ export const formatPartyIdLink = ({
                     };
                 }
 
-                const partyNameField = partyReference.children
-                    .filter(isDataField)
-                    .find((field) => field.label === 'partyName');
+                const partyNameField = findFieldInNode({
+                    node: partyReference,
+                    key: 'partyName',
+                });
 
                 const partialPartyField: DataField = {
                     ...node,
@@ -664,45 +672,42 @@ function parseRiders({
             return rider;
         }
 
-        const partiesSection = rider.children
-            .filter(isDataSection)
-            .find((child) => child.label === 'riderParticipants');
+        const partiesSection = findSectionInNodes({
+            nodes: rider.children,
+            key: 'riderParticipants',
+        });
 
         const parties: DataSection[] =
-            partiesSection?.children
-                .filter((party): party is DataSection => {
-                    return party.type === FieldType.section;
-                })
-                .map((party) => {
-                    // Before translations are applied party label is partyId
-                    const partyId = party.label;
-                    const partyReference = allPartiesById[partyId];
-                    const partyNameField = findFieldInNode({
-                        node: partyReference,
-                        key: 'partyName',
-                    });
+            partiesSection?.children.filter(isDataSection).map((party) => {
+                // Before translations are applied party label is partyId
+                const partyId = party.label;
+                const partyReference = allPartiesById[partyId];
+                const partyNameField = findFieldInNode({
+                    node: partyReference,
+                    key: 'partyName',
+                });
 
-                    const retainedFields = ['partyAgeAtIssue'];
-                    const hydratedParty: DataSection = {
-                        ...party,
-                        label: partyNameField?.value ?? partyId,
-                        children: [
-                            {
-                                type: FieldType.field,
-                                label: 'coveredParty',
-                                value: partyNameField?.value ?? partyId,
-                                link: partyNameField?.link,
-                            },
-                            ...party.children
-                                .filter(isDataField)
-                                .filter((partyField) =>
-                                    retainedFields.includes(partyField.label)
-                                ),
-                        ],
-                    };
+                const retainedFields = ['partyAgeAtIssue'];
+                const hydratedParty: DataSection = {
+                    ...party,
+                    label: partyNameField?.value ?? partyId,
+                    children: [
+                        {
+                            type: FieldType.field,
+                            label: 'coveredParty',
+                            value: partyNameField?.value ?? partyId,
+                            link: partyNameField?.link,
+                        },
+                        ...party.children
+                            .filter(isDataField)
+                            .filter((partyField) =>
+                                retainedFields.includes(partyField.label)
+                            ),
+                    ],
+                };
 
-                    return hydratedParty;
-                }) ?? [];
+                return hydratedParty;
+            }) ?? [];
 
         const hydratedRider: DataSection = {
             ...rider,
@@ -734,9 +739,10 @@ function parseSystematicPrograms({
             }
             // Party name, bank info, and address are mapped from
             // the partyId-to-party map on the PreparedPolicy
-            const partiesSection = systematicProgram.children
-                .filter(isDataSection)
-                .find((child) => child.label === 'parties');
+            const partiesSection = findSectionInNodes({
+                nodes: systematicProgram.children,
+                key: 'parties',
+            });
 
             const parties: DataSection[] =
                 partiesSection?.children.filter(isDataSection).map((party) => {
@@ -820,22 +826,23 @@ function parseAllocation({
 }: {
     allocation: DataSection;
 }): DataSection {
-    const fundAllocationsInvestmentsById = allocation.children
-        .filter(isDataSection)
-        .find((section) => section.label === 'fundAllocationsInvestments')
-        ?.children.reduce<Record<string, DataSection>>((acc, fund) => {
-            if (fund.type !== FieldType.section) {
-                return acc;
-            }
-            return {
-                ...acc,
-                [fund.label]: fund,
-            };
-        }, {});
+    const fundAllocationsInvestmentsById = findSectionInNodes({
+        nodes: allocation.children,
+        key: 'fundAllocationsInvestments',
+    })?.children.reduce<Record<string, DataSection>>((acc, fund) => {
+        if (fund.type !== FieldType.section) {
+            return acc;
+        }
+        return {
+            ...acc,
+            [fund.label]: fund,
+        };
+    }, {});
 
-    const combinedFunds: DataNode[] | undefined = allocation.children
-        .filter(isDataSection)
-        .find((section) => section.label === 'funds')
+    const combinedFunds: DataNode[] | undefined = findSectionInNodes({
+        nodes: allocation.children,
+        key: 'funds',
+    })
         ?.children.map((fund) => {
             if (fund.type !== FieldType.section) {
                 return fund;
@@ -870,7 +877,7 @@ function parseAllocation({
 
             return namedFund;
         })
-        .filter((fund) => fund !== undefined);
+        .filter((fund) => fund != null);
 
     const combinedFundsSection: DataSection = {
         type: FieldType.section,

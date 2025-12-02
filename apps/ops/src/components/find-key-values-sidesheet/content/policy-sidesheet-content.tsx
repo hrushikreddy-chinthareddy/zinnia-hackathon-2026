@@ -15,12 +15,12 @@ import { useEffect, useState, ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
-    groupBasics,
     groupSectionsForPolicy,
     excludeNodesByLabel,
     searchNodes,
     addToolTips,
     excludeNodesByCarrierRules,
+    groupBasicsForPolicy,
 } from '@deps/components/find-key-values-sidesheet/transformations';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -33,9 +33,9 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import { convertNode } from '../data-node-helpers/mutations';
-import { applyTransformationsToNodes } from '../data-node-helpers/traversal';
+import { applyTransformationsToNodes } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { FindAllKeyValuesSidebarProps, DocumentFormat } from '../types';
+import { FindAllKeyValuesSidebarProps } from '../types';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -98,7 +98,7 @@ export const PolicySidesheetContent = ({
         () =>
             applyTransformationsToNodes(
                 (data) => convertNode(data, t),
-                (data) => groupBasics(data, DocumentFormat.policy),
+                (data) => groupBasicsForPolicy(data),
                 (data) => addToolTips(data, t),
                 (data) =>
                     groupSectionsForPolicy({

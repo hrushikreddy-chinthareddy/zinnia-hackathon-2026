@@ -1,7 +1,5 @@
-import { TFunction } from 'next-i18next';
-
 import { DataNode, FieldType, DataSection, DataField } from '../types';
-import { isDataSection, isDataSectionOrField, isDataField } from './predicates';
+import { isDataField, isDataSection, isDataSectionOrField } from './predicates';
 
 export function findInNode({
     node,
@@ -65,37 +63,20 @@ export function findInGroup({
         }
     }
 }
-export function findSectionInNodes({
-    nodes,
-    key,
-}: {
-    nodes: DataNode[];
-    key: string;
-}): DataSection | undefined {
-    return findInNodes({
-        nodes,
-        key,
-        predicate: isDataSection,
-    }) as DataSection | undefined;
-}
+
 export function findInNodes({
     nodes,
     key,
-    predicate = isDataSectionOrField,
 }: {
     nodes: DataNode[];
     key: string;
-    predicate?:
-        | typeof isDataSection
-        | typeof isDataSectionOrField
-        | typeof isDataField;
 }): DataNode | undefined {
     const pathFragments = key.split('.');
     const [firstFragment, ...rest] = pathFragments;
     const firstNode = !isNaN(Number(firstFragment))
         ? nodes[Number(firstFragment)]
         : nodes
-              .filter(predicate)
+              .filter(isDataSectionOrField)
               .find((child) => child.label === firstFragment);
 
     if (rest.length) {
@@ -106,6 +87,30 @@ export function findInNodes({
         return firstNode;
     }
 }
+export function findSectionInNode({
+    node,
+    key,
+}: {
+    node?: DataNode;
+    key: string;
+}): DataSection | undefined {
+    const foundNode = findInNode({ node, key });
+    if (foundNode && isDataSection(foundNode)) {
+        return foundNode;
+    }
+}
+export function findSectionInNodes({
+    nodes,
+    key,
+}: {
+    nodes: DataNode[];
+    key: string;
+}): DataSection | undefined {
+    const foundNode = findInNodes({ nodes, key });
+    if (foundNode && isDataSection(foundNode)) {
+        return foundNode;
+    }
+}
 export function findFieldInNode({
     node,
     key,
@@ -114,7 +119,19 @@ export function findFieldInNode({
     key: string;
 }): DataField | undefined {
     const foundNode = findInNode({ node, key });
-    if (foundNode && foundNode.type === FieldType.field) {
+    if (foundNode && isDataField(foundNode)) {
+        return foundNode;
+    }
+}
+export function findFieldInNodes({
+    nodes,
+    key,
+}: {
+    nodes: DataNode[];
+    key: string;
+}): DataField | undefined {
+    const foundNode = findInNodes({ nodes, key });
+    if (foundNode && isDataField(foundNode)) {
         return foundNode;
     }
 }
@@ -125,23 +142,6 @@ export function findValueInNode({
     node?: DataNode;
     key: string;
 }): string | undefined {
-    const foundNode = findInNode({ node, key });
-    if (foundNode && foundNode.type === FieldType.field) {
-        return foundNode.value;
-    }
-} // pipe needs to take the first arg as Policy/Transaction -> DataNode[]
-// and the rest as DataNode[] -> DataNode[]
-
-export const applyTransformationsToNodes =
-    <T>(
-        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
-        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
-    ) =>
-    (initialValue: T) => {
-        const initialTransformedData = initialTransformFn(initialValue);
-        const v = fns.reduce((acc, fn) => {
-            const ret = fn(acc);
-            return ret;
-        }, initialTransformedData);
-        return v;
-    };
+    const foundNode = findFieldInNode({ node, key });
+    return foundNode?.value;
+}

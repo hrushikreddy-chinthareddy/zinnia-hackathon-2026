@@ -135,3 +135,23 @@ export const transformObject = (
             return transform(node);
     }
 };
+
+/**
+ *
+ * @param initialTransformFn Convert source data (e.g. policy/transaction) to DataNode[]
+ * @param fns Additional transformations that apply to DataNode[] and output DataNode[]
+ * @returns A function that takes source data and returns a fully transformed DataNode[]
+ */
+export const applyTransformationsToNodes =
+    <T>(
+        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
+        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
+    ) =>
+    (initialValue: T) => {
+        const initialTransformedData = initialTransformFn(initialValue);
+        const v = fns.reduce((acc, fn) => {
+            const ret = fn(acc);
+            return ret;
+        }, initialTransformedData);
+        return v;
+    };
