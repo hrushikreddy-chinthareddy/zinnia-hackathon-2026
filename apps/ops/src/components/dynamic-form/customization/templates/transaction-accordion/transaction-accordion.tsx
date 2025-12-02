@@ -34,7 +34,7 @@ function TransactionAccordionTemplate(
 
     const prevLengthRef = useRef(items.length);
 
-    const isIrrevocable = customData?.signatureData?.isIrrevocable ?? false;
+    // const isIrrevocable = customData?.signatureData?.isIrrevocable ?? false;
 
     // const isJointOwnerPresent =
     //     customData?.contractInfo?.parties?.some(
