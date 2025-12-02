@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -7,6 +6,7 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
@@ -243,28 +243,6 @@ export const excludeNodes = (
     return node;
 };
 
-export const formatSectionLabel = ({
-    t,
-    nomenclature,
-}: {
-    t: TFunction;
-    nomenclature?: string;
-}) => {
-    return (node: DataNode): DataNode => {
-        if (node.type === FieldType.section) {
-            return {
-                ...node,
-                label:
-                    t(`allFields.${node.label}`, {
-                        defaultValue: null,
-                        policyNomenclature: nomenclature,
-                    }) ?? node.label,
-            };
-        }
-        return node;
-    };
-};
-
 export const formatToolTip = ({
     t,
     nomenclature,
@@ -293,6 +271,16 @@ export const formatNode = (
     policyNomenclature?: string
 ): DataNode => {
     if (node.type !== FieldType.field) {
+        if (node.type === FieldType.section) {
+            return {
+                ...node,
+                label: formatAsDataLabel({
+                    label: node.label,
+                    policyNomenclature,
+                    t,
+                }),
+            };
+        }
         return node;
     }
 
@@ -310,7 +298,7 @@ export const formatNode = (
     };
 };
 
-// Removes excluded sections or nodes and formats labels / values
+// Removes excluded sections or nodes and translates & formats labels / values
 export const combinedTransform = ({
     t,
     exclude,

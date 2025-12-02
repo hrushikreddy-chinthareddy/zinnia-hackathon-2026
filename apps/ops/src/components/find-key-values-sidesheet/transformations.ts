@@ -31,15 +31,31 @@ import {
     DataField,
 } from './types';
 
+// pipe needs to take the first arg as Policy/Transaction -> DataNode[]
+// and the rest as DataNode[] -> DataNode[]
+export const applyTransformationsToNodes =
+    <T>(
+        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
+        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
+    ) =>
+    (initialValue: T) => {
+        const initialTransformedData = initialTransformFn(initialValue);
+        const v = fns.reduce((acc, fn) => {
+            const ret = fn(acc);
+            return ret;
+        }, initialTransformedData);
+        return v;
+    };
+
 export const groupBasics = (
     data: DataNode[],
-    t: TFunction,
     type: DocumentFormatType
 ): DataNode[] => {
     const filterByField = data.filter((node) => node.type === FieldType.field);
     const filterBySectionOrList = data.filter(
         (node) => node.type !== FieldType.field
     );
+
     const label =
         type === DocumentFormat.transaction
             ? 'transactionDetails'
@@ -606,88 +622,6 @@ export const addToolTips = (
         )
         .filter((n): n is DataNode => n !== null);
 };
-
-/**
- * Transforms the transaction's tax information into a nested data tuple.
- * Combines the transaction's tax basis, tax withholding instructions and tax withholding amounts into a single object.
- * @returns A nested data tuple containing the transaction's tax information
- */
-// function parseTransactionTaxes({
-//     transaction,
-//     policy,
-//     allPartiesById,
-//     t,
-// }: {
-//     transaction: Transaction;
-//     policy: Policy;
-//     allPartiesById: Record<string, Party> | undefined;
-//     t: TFunction;
-// }): Record<string, unknown> {
-//     const taxWithholdingInstructionsMap =
-//         transaction.taxWithholdingInstructions?.reduce(
-//             (acc, withholdingInstruction) => {
-//                 const additionalPartyData = fillInRequiredPartyDetails({
-//                     partyId: withholdingInstruction.partyId,
-//                     allPartiesById,
-//                     policy,
-//                     idFieldName: 'partyName',
-//                 });
-
-//                 return {
-//                     ...acc,
-//                     [`${t('withholdingInstructions')} – ${
-//                         withholdingInstruction.taxWithholdingType
-//                     } – ${withholdingInstruction.taxJurisdiction}`]: {
-//                         ...additionalPartyData,
-//                         ...withholdingInstruction,
-//                         ...(withholdingInstruction.partyRole && {
-//                             [tags]: [
-//                                 formatAsDataValue({
-//                                     fieldData: withholdingInstruction.partyRole,
-//                                     t,
-//                                 }),
-//                             ],
-//                         }),
-//                     },
-//                 };
-//             },
-//             {}
-//         );
-
-//     const taxWithheldAmountsMap = transaction.taxWithheldAmounts?.reduce(
-//         (acc, withholdingAmounts) => {
-//             const additionalPartyData = fillInRequiredPartyDetails({
-//                 partyId: withholdingAmounts.partyId,
-//                 allPartiesById,
-//                 policy,
-//                 idFieldName: 'partyName',
-//             });
-
-//             return {
-//                 ...acc,
-//                 [`${t('withholdingAmounts')} - ${t(
-//                     withholdingAmounts.taxWithholdingType ?? ''
-//                 )}`]: {
-//                     ...additionalPartyData,
-//                     ...withholdingAmounts,
-//                     ...(withholdingAmounts.partyRole && {
-//                         [tags]: [
-//                             formatAsDataValue({
-//                                 fieldData: withholdingAmounts.partyRole,
-//                                 t,
-//                             }),
-//                         ],
-//                     }),
-//                 },
-//             };
-//         }
-//     );
-//     return {
-//         ...transaction.taxBasis,
-//         ...taxWithholdingInstructionsMap,
-//         ...taxWithheldAmountsMap,
-//     };
-// }
 
 /**
  * Parses riders section to add rider participants to each rider

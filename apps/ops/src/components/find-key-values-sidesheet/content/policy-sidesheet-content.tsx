@@ -18,7 +18,6 @@ import {
     groupBasics,
     groupSectionsForPolicy,
     excludeNodesByLabel,
-    formatSectionLabels,
     searchNodes,
     addToolTips,
     excludeNodesByCarrierRules,
@@ -97,7 +96,7 @@ export const PolicySidesheetContent = ({
             : t('policy.nomenclature.contract');
     const nodes = applyTransformationsToNodes(
         (data) => convertNode(data, t),
-        (data) => groupBasics(data, t, DocumentFormat.policy),
+        (data) => groupBasics(data, DocumentFormat.policy),
         (data) => addToolTips(data, t),
         (data) =>
             groupSectionsForPolicy({
@@ -113,8 +112,7 @@ export const PolicySidesheetContent = ({
                 productType,
                 planCode,
             }),
-        (data) => excludeNodesByLabel(data, t, nomenclature),
-        (data) => formatSectionLabels(data, t, nomenclature)
+        (data) => excludeNodesByLabel(data, t, nomenclature)
     )(policy);
 
     const matches = searchNodes(nodes, debouncedSearchValue);
