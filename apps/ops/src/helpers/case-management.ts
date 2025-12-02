@@ -276,16 +276,14 @@ export const toggleLabels =
                 value: 'policyNumber',
                 placeholder:
                     t('dashboard.search.buttons.policyPlaceholder') ?? '',
-                errorMessage: t(
-                    'dashboard.search.error.policyNumber'
-                ) as string,
+                errorMessage: t('allFields.policyNumberSearchError') ?? '',
             },
             {
                 label: t('caseManagementDashboard.case.caseId'),
                 value: 'caseId',
                 placeholder:
                     t('dashboard.search.buttons.policyPlaceholder') ?? '',
-                errorMessage: t('dashboard.search.error.caseId') as string,
+                errorMessage: t('allFields.caseIdSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.ownerSsn'),
@@ -294,7 +292,7 @@ export const toggleLabels =
                 placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
                 format: '###-##-####',
                 replaceValue: '-',
-                errorMessage: t('dashboard.search.error.ssn') as string,
+                errorMessage: t('allFields.ssnSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.name'),
@@ -308,25 +306,22 @@ export const toggleLabels =
                                   ),
                                   value: 'ownerFirstName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.firstName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
                                   value: 'ownerLastName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.lastName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.lastNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.fullName'),
                                   value: 'fullName',
                                   placeholder: 'Trust or organization',
-                                  errorMessage: t(
-                                      'dashboard.search.error.fullName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.fullNameSearchError') ?? '',
                               },
                           ],
                       }
@@ -338,17 +333,15 @@ export const toggleLabels =
                                   ),
                                   value: 'firstName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.firstName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
                                   value: 'lastName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.lastName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.lastNameSearchError') ?? '',
                               },
                           ],
                       }),
@@ -361,17 +354,13 @@ export const toggleLabels =
                         label: t('dashboard.search.buttons.firstName'),
                         value: 'agentFirstName',
                         placeholder: '',
-                        errorMessage: t(
-                            'dashboard.search.error.firstName'
-                        ) as string,
+                        errorMessage: t('allFields.firstNameSearchError') ?? '',
                     },
                     {
                         label: t('dashboard.search.buttons.lastName'),
                         value: 'agentLastName',
                         placeholder: '',
-                        errorMessage: t(
-                            'dashboard.search.error.lastName'
-                        ) as string,
+                        errorMessage: t('allFields.lastNameSearchError') ?? '',
                     },
                 ],
             },
@@ -382,21 +371,19 @@ export const toggleLabels =
                 placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
                 format: '###-##-####',
                 replaceValue: '-',
-                errorMessage: t('dashboard.search.error.ssn') as string,
+                errorMessage: t('allFields.ssnSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.firmName'),
                 value: 'firmName',
                 placeholder: t('dashboard.search.buttons.firmName') ?? '',
-                errorMessage: t('dashboard.search.error.firmName') as string,
+                errorMessage: t('allFields.firmNameSearchError') ?? '',
             },
             {
                 label: t('caseManagementDashboard.case.documentNumber'),
                 value: 'documentNumber',
                 placeholder: t('dashboard.search.buttons.documentNumber') ?? '',
-                errorMessage: t(
-                    'dashboard.search.error.documentNumber'
-                ) as string,
+                errorMessage: t('allFields.documentNumberSearchError') ?? '',
             },
         ];
         return labels;

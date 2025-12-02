@@ -461,7 +461,15 @@
         "selectDateInRange": "Please select a date within range:",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
         "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
-        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements.",
+        "policyNumberSearchError": "Enter a policy/contract number to return search results",
+        "ssnSearchError": "Enter a Social Security number to return search results",
+        "firstNameSearchError": "Enter a first name to return search results",
+        "lastNameSearchError": "Enter a last name to return search results",
+        "fullNameSearchError": "Enter a trust or organization to return search results",
+        "caseIdSearchError": "Enter a Case Id to return search results",
+        "firmNameSearchError": "Enter a firm name to return search results",
+        "documentNumberSearchError": "Enter a document number to return search results"
     },
     "enums": {
         "LIFE": "Life",
@@ -2272,15 +2280,7 @@
                     "text": "Still having issues?",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Submit a help desk ticket"
-                },
-                "policyNumber": "Enter a policy/contract number to return search results",
-                "ssn": "Enter a Social Security number to return search results",
-                "firstName": "Enter a first name to return search results",
-                "lastName": "Enter a last name to return search results",
-                "fullName": "Enter a trust or organization to return search results",
-                "caseId": "Enter a Case Id to return search results",
-                "firmName": "Enter a firm name to return search results",
-                "documentNumber": "Enter a document number to return search results"
+                }
             },
             "buttons": {
                 "policyNumber": "Policy or contract number",

@@ -46,9 +46,7 @@ const toggleLabels =
                 label: t('dashboard.search.buttons.policyNumber'),
                 value: 'policyNumber',
                 placeholder: '',
-                errorMessage: t(
-                    'dashboard.search.error.policyNumber'
-                ) as string,
+                errorMessage: t('allFields.policyNumberSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.ssn'),
@@ -57,7 +55,7 @@ const toggleLabels =
                 placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
                 format: '###-##-####',
                 replaceValue: '-',
-                errorMessage: t('dashboard.search.error.ssn') as string,
+                errorMessage: t('allFields.ssnSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.name'),
@@ -71,25 +69,22 @@ const toggleLabels =
                                   ),
                                   value: 'firstName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.firstName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
                                   value: 'lastName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.lastName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.lastNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.fullName'),
                                   value: 'fullName',
                                   placeholder: 'Trust or organization',
-                                  errorMessage: t(
-                                      'dashboard.search.error.fullName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.fullNameSearchError') ?? '',
                               },
                           ],
                       }
@@ -101,17 +96,15 @@ const toggleLabels =
                                   ),
                                   value: 'firstName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.firstName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
                                   value: 'lastName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.lastName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.lastNameSearchError') ?? '',
                               },
                           ],
                       }),
