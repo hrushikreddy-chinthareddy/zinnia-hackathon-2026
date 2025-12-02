@@ -60,7 +60,7 @@ import {
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Party, PartyType, Prefix, Suffix } from '@zinnia/api-types/types/sor';
@@ -271,6 +271,13 @@ export const SidesheetNameCard = ({
                     documentType: '',
                 };
 
+                browserLogInfo(
+                    `sidesheetNameChange: Uploading document: correlationID=${metaData.correlationId}`,
+                    {
+                        metaData,
+                    }
+                );
+
                 try {
                     const response = await uploadDocumentV2(
                         metaData,
@@ -291,9 +298,10 @@ export const SidesheetNameCard = ({
                 } catch (error) {
                     setUploadError('Failed to upload file. Please try again.');
                     browserLogError(
-                        'sidesheet-name-change: Error uploading document:',
+                        `sidesheetNameChange: Error uploading document: correlationID=${metaData.correlationId}`,
                         {
                             ...parseErrorInformation(error),
+                            metaData,
                         }
                     );
                 }

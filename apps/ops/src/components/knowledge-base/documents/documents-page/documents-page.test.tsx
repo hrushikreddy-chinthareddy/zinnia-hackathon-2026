@@ -55,6 +55,23 @@ jest.mock('@deps/utils/browser-logging', () => {
     };
 });
 
+const mockChangeContent = jest.fn();
+
+jest.mock('@deps/contexts/SideSheetContext', () => ({
+    useSideSheetContext: () => ({
+        changeSideSheetContent: mockChangeContent,
+        handleOpen: jest.fn(),
+    }),
+}));
+
+jest.mock('../document-preview/document-preview', () => {
+    const MockDocPreview = () => (
+        <div data-testid="doc-preview">Preview Content</div>
+    );
+    MockDocPreview.displayName = 'MockDocPreview';
+    return MockDocPreview;
+});
+
 describe('Documents', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -257,7 +274,7 @@ describe('Documents', () => {
         });
     });
 
-    it('opens doc preview modal when a document is clicked', async () => {
+    it('opens doc preview sidesheet when a document is clicked', async () => {
         (getDocumentsByClientId as jest.Mock).mockResolvedValue({
             content: mockDocuments,
             last: true,
@@ -266,24 +283,14 @@ describe('Documents', () => {
             <DocumentsPage docs={DocumentsDisplayType.All} />
         );
         await waitFor(() => {
-            expect(getDocumentsByClientId).toHaveBeenCalledWith(
-                'client-123',
-                DocumentsDisplayType.All,
-                0,
-                10
-            );
             expect(getByText(mockDocuments[0].name)).toBeInTheDocument();
         });
 
-        const documentLink = getByText(mockDocuments[0].name);
-        fireEvent.click(documentLink);
-
-        await waitFor(() => {
-            const modalContent = document.querySelector(
-                '[data-testid="doc-preview"]'
-            );
-            expect(modalContent).toBeVisible();
-        });
+        fireEvent.click(getByText(mockDocuments[0].name));
+        expect(mockChangeContent).toHaveBeenCalled();
+        const element = mockChangeContent.mock.calls[0][1];
+        const { getByTestId } = render(element);
+        expect(getByTestId('doc-preview')).toBeVisible();
     });
 
     it('opens a doc modal when enter key is pressed', async () => {
@@ -295,12 +302,6 @@ describe('Documents', () => {
             <DocumentsPage docs={DocumentsDisplayType.All} />
         );
         await waitFor(() => {
-            expect(getDocumentsByClientId).toHaveBeenCalledWith(
-                'client-123',
-                DocumentsDisplayType.All,
-                0,
-                10
-            );
             expect(getByText(mockDocuments[0].name)).toBeInTheDocument();
         });
 
@@ -311,15 +312,10 @@ describe('Documents', () => {
             charCode: 13,
         });
 
-        await waitFor(() => {
-            const modalContent = document.querySelector(
-                '[data-testid="doc-preview"]'
-            );
-            expect(modalContent).toBeVisible();
-        });
-
-        const closeButton = getByText('X');
-        fireEvent.click(closeButton);
+        expect(mockChangeContent).toHaveBeenCalled();
+        const element = mockChangeContent.mock.calls[0][1];
+        const { getByTestId } = render(element);
+        expect(getByTestId('doc-preview')).toBeVisible();
     });
 
     it('sorts result by name, and date', async () => {

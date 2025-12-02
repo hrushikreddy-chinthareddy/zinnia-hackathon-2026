@@ -2,6 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { getFollowupMessages } from '@deps/queries/api/knowledge-base';
+import { AnswerMode } from '@deps/types/knowledge-base';
 
 import FollowUp from './follow-up';
 
@@ -19,6 +20,8 @@ const defaultProps = {
     ],
     submittedFeedbackType: null,
     submittedFeedbackComment: null,
+    selectedClientId: 'session-123',
+    commonClientId: 'common-123',
 };
 
 const mockBrowserLogError = jest.fn();
@@ -33,12 +36,6 @@ jest.mock('@deps/utils/browser-logging', () => {
 
 jest.mock('@deps/queries/api/knowledge-base', () => ({
     getFollowupMessages: jest.fn(),
-}));
-
-jest.mock('@deps/contexts/KnowledgeBaseContext', () => ({
-    useKnowledgeBaseContext: () => ({
-        selectedClientId: 'session-123',
-    }),
 }));
 
 jest.mock('@deps/hooks/knowledge-base/useChatStream', () => ({
@@ -85,7 +82,7 @@ describe('FollowUp', () => {
         mockChatbotResponse = null;
 
         sendFollowUpMock = jest.fn(
-            async (_questionId, _content, _parentFollowUpId) => {
+            async (_questionId, _content, _parentFollowUpId, _answerMode) => {
                 mockFollowUpId = 'followup-1';
                 mockChatbotResponse = 'Answer 1';
             }
@@ -170,6 +167,7 @@ describe('FollowUp', () => {
             expect(sendFollowUpMock).toHaveBeenCalledWith(
                 defaultProps.questionId,
                 'test follow up',
+                AnswerMode.Short,
                 null
             );
         });
@@ -192,6 +190,7 @@ describe('FollowUp', () => {
             expect(sendFollowUpMock).toHaveBeenCalledWith(
                 defaultProps.questionId,
                 'test follow up',
+                AnswerMode.Short,
                 null
             );
         });
@@ -224,9 +223,34 @@ describe('FollowUp', () => {
             expect(sendFollowUpMock).toHaveBeenCalledWith(
                 defaultProps.questionId,
                 'my follow up',
+                AnswerMode.Short,
                 null
             );
             expect(mockBrowserLogError).toHaveBeenCalled();
         });
+    });
+
+    it('calls stopStreaming when stop button is clicked', async () => {
+        (getFollowupMessages as jest.Mock).mockResolvedValue(true);
+
+        const stopStreamingMock = jest.fn();
+
+        (useChatStream as jest.Mock).mockReturnValue({
+            response: '',
+            status: '',
+            sources: [],
+            isStreaming: true,
+            followUpId: null,
+            sendFollowUp: sendFollowUpMock,
+            stopStreaming: stopStreamingMock,
+        });
+
+        const { findByRole } = render(<FollowUp {...defaultProps} />);
+
+        const sendButton = await findByRole('button', {
+            name: /send-followup/i,
+        });
+        fireEvent.click(sendButton);
+        expect(stopStreamingMock).toHaveBeenCalled();
     });
 });

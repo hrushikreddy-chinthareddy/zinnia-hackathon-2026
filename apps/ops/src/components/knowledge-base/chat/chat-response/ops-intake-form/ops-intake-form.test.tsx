@@ -24,15 +24,15 @@ jest.mock('next-i18next', () => ({
 }));
 
 describe('OpsIntakeForm', () => {
-    let setOpenOpsIntakeForm: jest.Mock;
     let setMetadata: jest.Mock;
     let onDislikeReasonChange: jest.Mock;
+    let onClose: jest.Mock;
 
     beforeEach(() => {
         jest.clearAllMocks();
         jest.spyOn(console, 'warn').mockImplementation();
         jest.spyOn(console, 'error').mockImplementation();
-        setOpenOpsIntakeForm = jest.fn();
+        onClose = jest.fn();
         setMetadata = jest.fn();
         onDislikeReasonChange = jest.fn();
     });
@@ -41,7 +41,7 @@ describe('OpsIntakeForm', () => {
         const { getAllByPlaceholderText, getByLabelText } = render(
             <OpsIntakeForm
                 metadata={{} as OpsIntakeFormPayload}
-                setOpenOpsIntakeForm={setOpenOpsIntakeForm}
+                onClose={onClose}
                 dislikeReason={defaultDislikeReason}
                 setMetadata={setMetadata}
                 onDislikeReasonChange={onDislikeReasonChange}
@@ -57,11 +57,11 @@ describe('OpsIntakeForm', () => {
         expect(getByLabelText('Critical')).toBeInTheDocument();
     });
 
-    it('closes the modal and clears metadata when cancel button click', () => {
+    it('closes the ops intake form and clears metadata when cancel button click', () => {
         const { getByLabelText } = render(
             <OpsIntakeForm
                 metadata={{} as OpsIntakeFormPayload}
-                setOpenOpsIntakeForm={setOpenOpsIntakeForm}
+                onClose={onClose}
                 dislikeReason={defaultDislikeReason}
                 setMetadata={setMetadata}
                 onDislikeReasonChange={onDislikeReasonChange}
@@ -72,14 +72,14 @@ describe('OpsIntakeForm', () => {
         fireEvent.click(cancelBtn);
 
         expect(setMetadata).toHaveBeenCalledWith({});
-        expect(setOpenOpsIntakeForm).toHaveBeenCalledWith(false);
+        expect(onClose).toHaveBeenCalledWith();
     });
 
     it('submit button is disabled when form is invalid', () => {
         const { getByLabelText } = render(
             <OpsIntakeForm
                 metadata={{} as OpsIntakeFormPayload}
-                setOpenOpsIntakeForm={setOpenOpsIntakeForm}
+                onClose={onClose}
                 dislikeReason={defaultDislikeReason}
                 setMetadata={setMetadata}
                 onDislikeReasonChange={onDislikeReasonChange}
@@ -96,7 +96,7 @@ describe('OpsIntakeForm', () => {
         const { getByLabelText } = render(
             <OpsIntakeForm
                 metadata={{} as OpsIntakeFormPayload}
-                setOpenOpsIntakeForm={setOpenOpsIntakeForm}
+                onClose={onClose}
                 dislikeReason={defaultDislikeReason}
                 setMetadata={setMetadata}
                 onDislikeReasonChange={onDislikeReasonChange}
@@ -132,7 +132,7 @@ describe('OpsIntakeForm', () => {
         await waitFor(() => {
             expect(setMetadata).toHaveBeenCalled();
             expect(onDislikeReasonChange).toHaveBeenCalled();
-            expect(setOpenOpsIntakeForm).toHaveBeenCalledWith(false);
+            expect(onClose).toHaveBeenCalledWith();
         });
     });
 
@@ -140,7 +140,7 @@ describe('OpsIntakeForm', () => {
         const { getByLabelText } = render(
             <OpsIntakeForm
                 metadata={{} as OpsIntakeFormPayload}
-                setOpenOpsIntakeForm={setOpenOpsIntakeForm}
+                onClose={onClose}
                 dislikeReason={defaultDislikeReason}
                 setMetadata={setMetadata}
                 onDislikeReasonChange={onDislikeReasonChange}
