@@ -9,7 +9,8 @@ export const sectionTypeToSubSectionTitleFields: Record<string, string> = {
     riders: 'riderName',
     riderParticipants: 'partyId',
     parties: 'partyId',
-    funds: 'fundName', // FIXME: should be keyed to combinedFunds
+    funds: 'fundId',
+    fundAllocationsInvestments: 'fundId',
     loans: 'loanType',
     partyRoles: 'partyId',
     identifications: 'identificationType',

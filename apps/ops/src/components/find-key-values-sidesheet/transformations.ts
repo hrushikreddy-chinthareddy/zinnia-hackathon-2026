@@ -957,23 +957,69 @@ function parseAllocation({
 }: {
     allocation: DataSection;
 }): DataSection {
-    // Funds are mapped from the Allocation section, minus the loanSegments subsections
-    // Combine fundAllocationsInvestments and funds into a flat map
-
-    const fundsSectionNames = ['fundAllocationsInvestments', 'funds'];
-    const combinedFunds = allocation.children
+    const fundAllocationsInvestmentsById = allocation.children
         .filter(isDataSection)
-        .filter((child) => fundsSectionNames.includes(child.label))
-        .reduce((acc: DataNode[], child) => [...acc, ...child.children], []);
+        .find((section) => section.label === 'fundAllocationsInvestments')
+        ?.children.reduce<Record<string, DataSection>>((acc, fund) => {
+            if (fund.type !== FieldType.section) {
+                return acc;
+            }
+            return {
+                ...acc,
+                [fund.label]: fund,
+            };
+        }, {});
 
-    return {
+    const combinedFunds: DataNode[] | undefined = allocation.children
+        .filter(isDataSection)
+        .find((section) => section.label === 'funds')
+        ?.children.map((fund) => {
+            if (fund.type !== FieldType.section) {
+                return fund;
+            }
+
+            const fundName = findValueInNode({
+                node: fund,
+                key: 'fundName',
+            });
+
+            const namedFund: DataSection = {
+                ...fund,
+                label: fundName ?? fund.label,
+            };
+
+            const allocationPercentageField = findInNode({
+                node: fundAllocationsInvestmentsById?.[fund.label],
+                key: 'allocationPercentage',
+            });
+            const startDateField = findInNode({
+                node: fundAllocationsInvestmentsById?.[fund.label],
+                key: 'startDate',
+            });
+
+            if (allocationPercentageField) {
+                namedFund.children.push(allocationPercentageField);
+            }
+
+            if (startDateField) {
+                namedFund.children.push(startDateField);
+            }
+
+            return namedFund;
+        })
+        .filter((fund) => fund !== undefined);
+
+    const combinedFundsSection: DataSection = {
         type: FieldType.section,
         label: 'combinedFunds',
-        children: [
-            ...allocation.children.filter(isDataField),
-            ...combinedFunds,
-        ],
+        children: [...allocation.children.filter(isDataField)],
     };
+
+    if (combinedFunds) {
+        combinedFundsSection.children.push(...combinedFunds);
+    }
+
+    return combinedFundsSection;
 }
 
 function isDataSection(node: DataNode): node is DataSection {
