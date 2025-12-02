@@ -1,4 +1,4 @@
-import { EntityTypeValue, Roles } from '@deps/constants/policy';
+import { EntityTypeValue } from '@deps/constants/policy';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
@@ -104,51 +104,60 @@ const getIdentifications = (identifications: any = []) => {
           ];
 };
 
-const formatParty = (policyResponse: any) => {
-    const partyId = policyResponse.partyRoles.find(
-        (role: any) =>
-            role.partyRole === Roles.THIRDPARTYDESIGNEE &&
-            (!role?.endDate || !isEndDated(role?.endDate))
-    )?.partyId;
+const formatPartyData = (policyResponse: any) => {
+    const partyIds = policyResponse.partyRoles
+        .filter(
+            (role: any) =>
+                role.partyRole === 'THIRDPARTYDESIGNEE' &&
+                (!role?.endDate || !isEndDated(role?.endDate))
+        )
+        .map((role: any) => role.partyId);
 
-    const party = policyResponse.parties.find(
-        (p: any) => p.partyId === partyId
-    );
+    const partyData = policyResponse.parties
+        .filter((party: any) => partyIds.includes(party.partyId))
+        .map((party: any) => {
+            return {
+                supportingDocumentAttached:
+                    party.supportingDocumentAttached ?? null,
+                party: {
+                    partyId: party.partyId ?? null,
+                    partyType: party.partyType ?? null,
+                    prefix: getPrefix(party.prefix),
+                    firstName: party.firstName ?? null,
+                    middleName: party.middleName ?? null,
+                    lastName:
+                        party.lastName ||
+                        (party.partyType !== PartyType.INDIVIDUAL
+                            ? party.fullName
+                            : null) ||
+                        null,
+                    fullName: toTitleCase(
+                        [
+                            party.prefix,
+                            party.firstName,
+                            party.middleName,
+                            party.lastName,
+                            party.suffix,
+                        ]
+                            .filter(Boolean)
+                            .join(' ')
+                    ),
+                    entityType: party.entityType ?? EntityTypeValue.Other,
+                    gender: null,
+                    dateOfBirth: null,
+                    trustType: party.trustType ?? null,
+                    trustDate: party.trustDate ?? null,
+                    preferredCommunicationType:
+                        party.preferredCommunicationType ?? null,
+                    addresses: getAddresses(party.addresses),
+                    phones: getPhones(party.phones),
+                    emails: getEmails(party.emails),
+                    identifications: getIdentifications(party.identifications),
+                },
+            };
+        });
 
-    return {
-        partyId: party.partyId ?? null,
-        partyType: party.partyType ?? null,
-        prefix: getPrefix(party.prefix),
-        firstName: party.firstName ?? null,
-        middleName: party.middleName ?? null,
-        lastName:
-            party.lastName ||
-            (party.partyType !== PartyType.INDIVIDUAL
-                ? party.fullName
-                : null) ||
-            null,
-        fullName: toTitleCase(
-            [
-                party.prefix,
-                party.firstName,
-                party.middleName,
-                party.lastName,
-                party.suffix,
-            ]
-                .filter(Boolean)
-                .join(' ')
-        ),
-        entityType: party.entityType ?? EntityTypeValue.Other,
-        gender: null,
-        dateOfBirth: null,
-        trustType: party.trustType ?? null,
-        trustDate: party.trustDate ?? null,
-        preferredCommunicationType: party.preferredCommunicationType ?? null,
-        addresses: getAddresses(party.addresses),
-        phones: getPhones(party.phones),
-        emails: getEmails(party.emails),
-        identifications: getIdentifications(party.identifications),
-    };
+    return partyData;
 };
 
 const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
@@ -257,10 +266,7 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
             Object.assign(task, {
                 data: {
                     ...task.data,
-                    partyId: null,
-                    effectiveDate: null,
-                    requestType: null,
-                    party: formatParty(policyResponse),
+                    partyData: formatPartyData(policyResponse),
                 },
             });
         }

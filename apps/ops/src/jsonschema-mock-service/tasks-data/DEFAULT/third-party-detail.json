@@ -15,20 +15,17 @@
     "data": {
         "caseId": "CA0000402461",
         "process": "Policy Update",
-        "policyNumber": "FIUL844450420",
+        "policyNumber": "ADA2364566",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
         "taskName": "Third Party Data Entry",
         "processSubType": "Third Party Designee Change",
-        "planCode": "IU0101",
+        "planCode": "WBFDAV03",
         "policyStatus": "ACTIVE",
         "transactionName": "ThirdPartyDesignee",
         "businessKey": "",
         "partyRole": "ThirdPartyDesignee",
-        "partyId": "bb55421365184fb29ea820f0840c3db1",
         "deleteRequest": false,
-        "requestType": "ADD",
         "effectiveDate": "2025-11-07",
-        "supportingDocumentAttached": false,
         "documents": [
             {
                 "documentId": "67c1b9655c3f6536d7f2ac69",
@@ -36,77 +33,81 @@
                 "documentExt": "pdf"
             }
         ],
-        "party": {
-            "partyId": "bb55421365184fb29ea820f0840c3db1",
-            "partyType": "INDIVIDUAL",
-            "prefix": "Mr.",
-            "firstName": "first",
-            "middleName": "middle",
-            "lastName": "last",
-            "fullName": "first middle last",
-            "entityType": null,
-            "dateOfBirth": null,
-            "gender": null,
-            "trustDate": null,
-            "trustType": null,
-            "identifications": [
-                {
-                    "identificationValue": "123-45-6789",
-                    "identificationType": "SSN",
-                    "endDate": null,
-                    "issueCountry": null,
-                    "permanentResident": null,
-                    "startDate": "2025-11-21"
+        "partyData": [
+            {
+                "supportingDocumentAttached": false,
+                "party": {
+                    "partyType": "INDIVIDUAL",
+                    "prefix": "Mr.",
+                    "firstName": "first",
+                    "middleName": "middle",
+                    "lastName": "last",
+                    "fullName": "first middle last",
+                    "entityType": null,
+                    "dateOfBirth": null,
+                    "gender": null,
+                    "trustDate": null,
+                    "trustType": null,
+                    "identifications": [
+                        {
+                            "identificationValue": "123-45-6789",
+                            "identificationType": "SSN",
+                            "endDate": null,
+                            "issueCountry": null,
+                            "permanentResident": null,
+                            "startDate": "2025-11-21"
+                        }
+                    ],
+                    "preferredCommunicationType": "EMAIL",
+                    "addresses": [
+                        {
+                            "addressType": "RESIDENCE",
+                            "addressLine1": "123",
+                            "city": "California",
+                            "state": "CA",
+                            "zipCode": "90001",
+                            "isPreferred": true,
+                            "country": "US",
+                            "endDate": null,
+                            "startDate": "2025-11-21",
+                            "zipCodeExtension": ""
+                        },
+                        {
+                            "addressType": "RESIDENCE",
+                            "addressLine1": "456",
+                            "city": "California",
+                            "state": "CA",
+                            "zipCode": "90001",
+                            "isPreferred": false,
+                            "country": "US",
+                            "endDate": null,
+                            "startDate": "2025-11-21",
+                            "zipCodeExtension": ""
+                        }
+                    ],
+                    "phones": [
+                        {
+                            "phoneType": "BUSINESS",
+                            "dialNumber": "1234567890",
+                            "areaCode": "777",
+                            "countryCode": "1",
+                            "endDate": null,
+                            "isPreferred": true,
+                            "startDate": "2025-11-21"
+                        }
+                    ],
+                    "emails": [
+                        {
+                            "emailType": "BUSINESS",
+                            "emailAddress": "1234567890",
+                            "endDate": null,
+                            "isPreferred": true,
+                            "startDate": "2025-11-21"
+                        }
+                    ]
                 }
-            ],
-            "preferredCommunicationType": "EMAIL",
-            "addresses": [
-                {
-                    "addressType": "RESIDENCE",
-                    "addressLine1": "123",
-                    "city": "California",
-                    "state": "CA",
-                    "zipCode": "90001",
-                    "isPreferred": true,
-                    "country": "US",
-                    "endDate": null,
-                    "startDate": "2025-11-21",
-                    "zipCodeExtension": ""
-                },
-                {
-                    "addressType": "RESIDENCE",
-                    "addressLine1": "456",
-                    "city": "California",
-                    "state": "CA",
-                    "zipCode": "90001",
-                    "isPreferred": false,
-                    "country": "US",
-                    "endDate": null,
-                    "startDate": "2025-11-21",
-                    "zipCodeExtension": ""
-                }
-            ],
-            "phones": [
-                {
-                    "phoneType": "BUSINESS",
-                    "dialNumber": "1234567890",
-                    "areaCode": "777",
-                    "countryCode": "1",
-                    "endDate": null,
-                    "isPreferred": true,
-                    "startDate": "2025-11-21"
-                }
-            ],
-            "emails": [
-                {
-                    "emailType": "BUSINESS",
-                    "emailAddress": "1234567890",
-                    "endDate": null,
-                    "isPreferred": true,
-                    "startDate": "2025-11-21"
-                }
-            ]
-        },
+            }
+        ],
         "signatures": [
             {
                 "signType": "OWNER",

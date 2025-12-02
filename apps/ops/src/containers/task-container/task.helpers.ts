@@ -15,6 +15,23 @@ export const updateTask = async (
             taskId: task.id,
         },
     });
+
+    if (task.taskType === 'THIRD_PARTY_DETAIL') {
+        let index = 0;
+        const { partyData, ...restData } = task.data;
+        if (task.data.requestType == 'ADD') {
+            index = partyData.length - 1;
+        }
+        const updatedTask = {
+            ...task,
+            data: {
+                ...restData,
+                ...partyData[index],
+            },
+        };
+        task = updatedTask;
+    }
+
     const taskResponse = await updateCaseTask(task, taskStatus);
     if (!taskResponse) {
         return false;
