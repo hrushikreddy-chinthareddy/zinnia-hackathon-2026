@@ -6,6 +6,7 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { findFieldInNode } from '../data-node-helpers/traversal';
 import { currencyFields } from '../translations/currency-fields';
