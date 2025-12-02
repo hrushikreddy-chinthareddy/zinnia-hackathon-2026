@@ -28,6 +28,7 @@ import {
 } from '@deps/utils/optimizely/optimizely';
 import {
     LoggingContext,
+    logInfo,
     logWarn,
     parseErrorInformation,
     withPageAuthAndLogging,
@@ -165,6 +166,7 @@ const getAuthToken = async (
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
+            const logPrefix = 'ClientCases:New';
             const user = await getUserData(context);
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
@@ -232,7 +234,13 @@ export const getServerSideProps = withPageAuthAndLogging(
             if (hasSingleEappId) {
                 const accessToken = await getAuthToken(context, loggingContext);
 
+                logInfo(`${logPrefix} Got eAppId`, {
+                    ...loggingContext,
+                    eAppId,
+                });
+
                 if (!accessToken) {
+                    logWarn(`${logPrefix} Invalid token`, loggingContext);
                     return serverSidePropsLogout();
                 }
 
