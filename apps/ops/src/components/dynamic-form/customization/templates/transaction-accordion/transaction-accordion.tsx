@@ -69,6 +69,8 @@ function TransactionAccordionTemplate(
         setCustomData({ requestType: 'ADD' });
         onAddClick();
     };
+    //intentional console.log
+    console.log('printing customData', customData);
 
     return (
         <div>
