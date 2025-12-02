@@ -34,41 +34,6 @@ function TransactionAccordionTemplate(
 
     const prevLengthRef = useRef(items.length);
 
-    // const isIrrevocable = customData?.signatureData?.isIrrevocable ?? false;
-
-    // const isJointOwnerPresent =
-    //     customData?.contractInfo?.parties?.some(
-    //         (party: any) => party.partyRole === Roles.JOINTOWNER
-    //     ) ?? false;
-
-    // useEffect(() => {
-    //     const originalSignatures = customData?.signatureData?.signatures ?? [];
-
-    //     const filteredSignatures = originalSignatures.filter((sig: any) => {
-    //         if (!isJointOwnerPresent && sig.signType === Roles.JOINT_OWNER)
-    //             return false;
-    //         if (!isIrrevocable && sig.signType === Roles.IRREVOCABLE)
-    //             return false;
-    //         return true;
-    //     });
-
-    //     customData.signatureData.signatures = filteredSignatures;
-
-    //     const signaturesChanged =
-    //         filteredSignatures.length !== originalSignatures.length ||
-    //         filteredSignatures.some(
-    //             (s: any, i: number) =>
-    //                 s.signType !== originalSignatures[i]?.signType
-    //         );
-    //     if (signaturesChanged) {
-    //         setCustomData({
-    //             signatureData: {
-    //                 signatures: filteredSignatures,
-    //             },
-    //         });
-    //     }
-    // }, [isIrrevocable, isJointOwnerPresent, customData.signatureData]);
-
     const toggleIndex = (index: number) => {
         if (disabledIndices.has(index)) return;
         setActiveIndex((prev) => (prev === index ? null : index));
@@ -104,8 +69,6 @@ function TransactionAccordionTemplate(
         setCustomData({ requestType: 'ADD' });
         onAddClick();
     };
-
-    console.log('customData now:', customData);
 
     return (
         <div>
