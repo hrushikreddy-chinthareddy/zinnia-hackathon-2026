@@ -6,7 +6,6 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { currencyFields } from './translations/currency-fields';
 import { dateFields } from './translations/date-fields';
