@@ -80,7 +80,9 @@ describe('Recent Chat', () => {
     });
 
     it('renders client name and recent chat heading', async () => {
-        const { getByText } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { getByText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         expect(getByText('sidenav.recentChat')).toBeInTheDocument();
         expect(
@@ -93,7 +95,9 @@ describe('Recent Chat', () => {
             content: mockChatSessions,
             last: true,
         });
-        const { getByText } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { getByText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledWith(
@@ -111,7 +115,9 @@ describe('Recent Chat', () => {
     it('logs errors when it fails to fetch selected client chat sessions', async () => {
         const testError = new Error('Network failure');
         (listChatSessionsByClientId as jest.Mock).mockRejectedValue(testError);
-        render(<RecentChat opsUserData={mockOpsUser} />);
+        render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledWith(
@@ -133,7 +139,7 @@ describe('Recent Chat', () => {
             last: true,
         });
         const { getByPlaceholderText, getByText } = render(
-            <RecentChat opsUserData={mockOpsUser} />
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
         );
         const searchInput = getByPlaceholderText('sidenav.search');
 
@@ -155,7 +161,7 @@ describe('Recent Chat', () => {
 
     it('does not perform search if there are less than 3 characters', async () => {
         const { getByPlaceholderText } = render(
-            <RecentChat opsUserData={mockOpsUser} />
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
         );
         const searchInput = getByPlaceholderText('sidenav.search');
 
@@ -170,7 +176,7 @@ describe('Recent Chat', () => {
         const testError = new Error('Network failure');
         (searchChatHistory as jest.Mock).mockRejectedValue(testError);
         const { getByPlaceholderText } = render(
-            <RecentChat opsUserData={mockOpsUser} />
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
         );
         const searchInput = getByPlaceholderText('sidenav.search');
 
@@ -200,7 +206,9 @@ describe('Recent Chat', () => {
             pathname: '/zinnia-ai-assistant/documents',
             push: mockPush,
         });
-        const { getByText } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { getByText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledWith(
@@ -230,7 +238,9 @@ describe('Recent Chat', () => {
             pathname: '/zinnia-ai-assistant/chat',
             push: mockPush,
         });
-        const { getByText } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { getByText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledWith(
@@ -250,7 +260,9 @@ describe('Recent Chat', () => {
     });
 
     it('fetches more chat sessions on scroll when not in search mode', async () => {
-        const { container } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { container } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(async () => {
             expect(listChatSessionsByClientId).toHaveBeenCalledTimes(1);
@@ -288,7 +300,7 @@ describe('Recent Chat', () => {
             last: false,
         });
         const { getByPlaceholderText, container } = render(
-            <RecentChat opsUserData={mockOpsUser} />
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
         );
         const searchInput = getByPlaceholderText('sidenav.search');
         fireEvent.change(searchInput, { target: { value: 'Chat' } });
@@ -326,13 +338,17 @@ describe('Recent Chat', () => {
     });
 
     it('re-fetches the chat sessions when chatHistoryTrigger is changed', async () => {
-        const { rerender } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { rerender } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledTimes(1);
         });
         mockTrigger = 1;
-        rerender(<RecentChat opsUserData={mockOpsUser} />);
+        rerender(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledTimes(2);
@@ -354,7 +370,9 @@ describe('Recent Chat', () => {
             pathname: '/zinnia-ai-assistant/chat',
             push: mockPush,
         });
-        const { getByText } = render(<RecentChat opsUserData={mockOpsUser} />);
+        const { getAllByRole } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
 
         await waitFor(() => {
             expect(listChatSessionsByClientId).toHaveBeenCalledWith(
@@ -365,11 +383,93 @@ describe('Recent Chat', () => {
             );
         });
 
-        const chatItem = getByText(mockChatSessions[0].sessionTitle);
-        fireEvent.keyDown(chatItem, { key: 'Enter' });
+        const buttons = getAllByRole('button');
+        const chatButton = buttons.find((btn) =>
+            btn.textContent?.includes(mockChatSessions[0].sessionTitle)
+        );
+
+        expect(chatButton).toBeTruthy();
+
+        if (chatButton) {
+            chatButton.focus();
+            fireEvent.keyDown(chatButton, {
+                key: 'Enter',
+                code: 'Enter',
+                keyCode: 13,
+            });
+            fireEvent.click(chatButton);
+        }
 
         await waitFor(() => {
             expect(mockViewChatHistory).toHaveBeenCalledWith('1');
+        });
+    });
+
+    it('focuses search input when isSearchFocused is true', async () => {
+        (listChatSessionsByClientId as jest.Mock).mockResolvedValue({
+            content: mockChatSessions,
+            last: true,
+        });
+        const { getByPlaceholderText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={true} />
+        );
+        const searchInput = getByPlaceholderText(
+            'sidenav.search'
+        ) as HTMLInputElement;
+
+        await waitFor(() => {
+            expect(searchInput).toHaveFocus();
+        });
+    });
+
+    it('does not focus search input when isSearchFocused is false', async () => {
+        (listChatSessionsByClientId as jest.Mock).mockResolvedValue({
+            content: mockChatSessions,
+            last: true,
+        });
+        const { getByPlaceholderText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
+        const searchInput = getByPlaceholderText(
+            'sidenav.search'
+        ) as HTMLInputElement;
+
+        await waitFor(() => {
+            expect(searchInput).not.toHaveFocus();
+        });
+    });
+
+    it('focuses search input when isSearchFocused is true', async () => {
+        (listChatSessionsByClientId as jest.Mock).mockResolvedValue({
+            content: mockChatSessions,
+            last: true,
+        });
+        const { getByPlaceholderText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={true} />
+        );
+        const searchInput = getByPlaceholderText(
+            'sidenav.search'
+        ) as HTMLInputElement;
+
+        await waitFor(() => {
+            expect(searchInput).toHaveFocus();
+        });
+    });
+
+    it('does not focus search input when isSearchFocused is false', async () => {
+        (listChatSessionsByClientId as jest.Mock).mockResolvedValue({
+            content: mockChatSessions,
+            last: true,
+        });
+        const { getByPlaceholderText } = render(
+            <RecentChat opsUserData={mockOpsUser} isSearchFocused={false} />
+        );
+        const searchInput = getByPlaceholderText(
+            'sidenav.search'
+        ) as HTMLInputElement;
+
+        await waitFor(() => {
+            expect(searchInput).not.toHaveFocus();
         });
     });
 });

@@ -45,6 +45,7 @@
     },
     "allFields": {
         "emptySearch": "Aucun résultat trouvé",
+        "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
         "transactionDetails": "Détails de la transaction",
         "effectiveDate": "Date d'effet",
@@ -466,7 +467,10 @@
         "actions": "Actions",
         "manage": "Gérer",
         "cancel": "Annuler",
-        "lastPaymentDate": "Date du dernier paiement"
+        "lastPaymentDate": "Date du dernier paiement",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
+        "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."
     },
     "enums": {
         "LIFE": "Vie",
@@ -1322,6 +1326,7 @@
         "fetchTaskError": "Impossible de récupérer les tâches.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassign": "Annuler l'attribution",
+        "assign": "Attribuer",
         "unassignTaskError": "Erreur de désattribution de tâche",
         "assignTaskError": "Erreur d'affectation de tâche",
         "startTask": "Démarrer la tâche",
@@ -1439,7 +1444,8 @@
                     "married": "Mariée",
                     "widowed": "Veuve"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Date de confiance"
             },
             "jointOwner": {
                 "title": "Informations sur le copropriétaire"
@@ -2426,11 +2432,11 @@
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
             "assignee": "Cessionnaire",
-            "priority": "Priorité",
+            "priority": "Priorité du dossier",
             "selectPriority": "Sélectionner la priorité",
-            "onlyPrioritized": "Seulement priorisé",
-            "any": "Tout",
-            "notPrioritized": "Non priorisé"
+            "onlyPrioritized": "Casos prioritarios",
+            "any": "Todos los casos",
+            "notPrioritized": "Casos regulares"
         },
         "refineResultsErrors": {
             "caseType": "Veuillez sélectionner un type de dossier",
@@ -2453,9 +2459,9 @@
                 "Renewal": "Renouvellements"
             },
             "escalated": {
-                "true": "Seulement priorisé",
-                "false": "Non priorisé",
-                "any": "Tout"
+                "onlyPrioritized": "Casos prioritarios",
+                "allCases": "Todos los casos",
+                "notPrioritized": "Casos regulares"
             }
         },
         "selectStatus": "Sélectionner le statut",
@@ -2842,8 +2848,9 @@
             "detailsBody": "Un dossier priorisé sera déplacé en tant qu'élément de travail pour un traitement accéléré.",
             "cancel": "Annuler",
             "submit": "Soumettre",
-            "successMessage": "Dossier ID: {{caseId}} priorisé avec succès",
+            "successMessage": "Dossier ID: {{caseId}} a été priorisé.",
             "errorMessage": "Échec de la priorisation du dossier",
+            "errorForbidden": " Vous n'êtes pas autorisé à prioriser les dossiers.",
             "success": "Success!",
             "close": "Close",
             "error": "Error",
@@ -4330,7 +4337,6 @@
             "endingIn": "se terminant par"
         },
         "toolTips": {
-            "emptySearch": "Aucun résultat trouvé",
             "preTaxEquityAndFiscalResponsibilityActBasis": "Ceci est le coût de base antérieur à l’adoption de la Loi sur l’équité fiscale et la responsabilité.",
             "preTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi sur l’équité fiscale et la responsabilité en 1982.",
             "postTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi technique et sur les recettes diverses en 1988.",
@@ -7340,7 +7346,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Ajouter un filtre"
+                "addFilter": "Ajouter un filtre",
+                "addFilters": "Ajouter des filtres"
             },
             "headers": {
                 "title": "Affiner les résultats"
@@ -8852,9 +8859,7 @@
             "addProductAriaLabel": "Bouton pour ajouter un produit",
             "editIllustration": "Modifier l'illustration",
             "initialDeathBenefitOption": "Option de prestation de décès",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
-            "unreachDesiredSolutionMessage": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",
@@ -9021,10 +9026,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
+            "startingMessageBetaPrefix": "Bonjour, {{name}}",
+            "startingMessageBetaSuffix": "Comment puis-je vous assister ?",
             "inputPlaceholder": "Demande-moi n'importe quoi",
-            "footerText": "Avertissement:Le chat Zinnia peut faire des erreurs.",
+            "footerText": "Avertissement: Zinnia AI peut faire des erreurs.",
             "errorMsg": "Désolé, je n'ai pas obtenu de réponse. Veuillez réessayer plus tard.",
             "send": "Envoyer",
             "stop": "Arrêt",
@@ -9075,7 +9084,13 @@
             "followUpButton": "Posez vos questions complémentaires ici",
             "definitiveAnswerNotFound": "Je n’ai pas trouvé de réponse définitive dans les documents spécifiques au client. Voulez-vous que je vérifie également la référence commune ?",
             "yes": "Oui",
-            "no": "Non"
+            "no": "Non",
+            "answerMode": "Mode de réponse",
+            "client": "Client",
+            "answerModeOptions": {
+                "short": "Court et concis",
+                "long": "Long et détaillé"
+            }
         },
         "documents": {
             "recentlyAdded": "Fichiers récemment ajoutés",
@@ -9127,11 +9142,23 @@
             "recentlyModified": "Récemment modifiés",
             "allDocs": "Tous les documents",
             "recentChat": "Chat récent",
-            "search": "Rechercher",
+            "search": "Rechercher chats récents",
             "noResultsFound": "Aucun résultat trouvé",
             "noRecentChats": "Aucune discussion récente",
             "loadingChats": "Chargement des discussions...",
-            "settings": "Paramètres"
+            "settings": "Paramètres",
+            "quiz": {
+                "header": "Passer un quiz",
+                "noQuestionsAvailable": "Aucune question de quiz disponible.",
+                "quizPassed": "Félicitations, vous avez réussi",
+                "quizFailed": "Désolé, vous n’avez pas atteint le score requis de {{passPercentage}}%.",
+                "correctAnswer": "Bonne réponse",
+                "wrongAnswer": "Mauvaise réponse",
+                "yourScore": "Vous avez obtenu {{score}} sur {{total}}",
+                "readMore": "Lisez ce document pour approfondir vos connaissances sur le sujet",
+                "submit": "Soumettre",
+                "tryAgain": "Réessayer"
+            }
         }
     },
     "updateSuitabilityDataEntry": {
@@ -9179,5 +9206,10 @@
         "Environment": "Environment",
         "variableSearchPlaceholder": "Rechercher des variables de fonctionnalité...",
         "flagQueueSearchPlaceholder": "Rechercher des variables de fonctionnalité..."
+    },
+    "successErrorSidesheet": {
+        "successTitle": "Succès",
+        "errorTitle": "Erreur",
+        "closeButton": "Fermer"
     }
 }

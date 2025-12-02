@@ -1,18 +1,17 @@
-import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
-import Button from '@deps/components/button/button';
+import SelectComponent from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { createNewChatSession } from '@deps/queries/api/knowledge-base';
-import { ReactComponent as SendButton } from '@deps/styles/elements/icons/knowledge-base/send.svg';
-import { ReactComponent as StopButton } from '@deps/styles/elements/icons/knowledge-base/stop.svg';
 import {
+    AnswerMode,
     KeyboardEvents,
     MessageRole,
     UserMessage,
@@ -21,13 +20,16 @@ import { browserLogError } from '@deps/utils/browser-logging';
 import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './chat-input.module.css';
+import ActionButton from '../action-button/action-button';
+import AnswerModeSelect from '../answer-mode-select/answer-mode-select';
 
 type ChatInputProps = {
     opsUserData: MeResponse;
     sendMessage: (
         sessionId: string,
         question: string,
-        userMsgId: string
+        userMsgId: string,
+        responseType: AnswerMode
     ) => void;
     stopStreaming: () => void;
     isStreaming: boolean;
@@ -47,12 +49,39 @@ const ChatInput = ({
         setSessionId,
         selectedClientId,
         setCurrentMessages,
+        setSelectedClient,
+        startNewChatSession,
         setChatHistoryReloadTrigger,
         currentMessages,
+        answerMode,
+        setAnswerMode,
     } = useKnowledgeBaseContext();
     const [message, setMessage] = useState<string>('');
+    const [isFocused, setIsFocused] = useState<boolean>(false);
 
     const lastMessage = useRef<string | null>(null);
+
+    const clientNameCleanup = (name: string) => {
+        return name
+            .replace(/\.aspx$/i, '')
+            .replace(/-/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2');
+    };
+
+    const clientOptions =
+        opsUserData?.client?.map((client) => {
+            const clientOption = {
+                value: client.id || '',
+                textValue: client.name || '',
+                label: clientNameCleanup(client?.name || ''),
+            };
+            return clientOption;
+        }) || [];
+
+    const handleClientChange = (clientId: string) => {
+        setSelectedClient(clientId);
+        startNewChatSession();
+    };
 
     const handleMessageSend = async (message: string) => {
         if (!message.trim()) return;
@@ -87,7 +116,7 @@ const ChatInput = ({
                 newSession = true;
             }
 
-            await sendMessage(currentSessionId, message, userMsgId);
+            await sendMessage(currentSessionId, message, userMsgId, answerMode);
             setMessage('');
 
             if (newSession) {
@@ -109,89 +138,89 @@ const ChatInput = ({
     };
 
     return (
-        <>
-            <div className="w-full">
-                <div className={`${styles.textboxContainer}`}>
-                    <textarea
-                        className={`!outline-none !ring-0 ${styles.textarea}`}
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === KeyboardEvents.Enter) {
-                                handleMessageSend(message);
-                            }
-                        }}
-                        disabled={isStreaming}
-                        placeholder={t('chat.inputPlaceholder') || ''}
-                    ></textarea>
-
-                    <div className="flex gap-2">
-                        {isStreaming ? (
-                            <Tooltip
-                                placement={TooltipPlacement.CenterRight}
-                                triggerClassName="!w-auto"
-                                tooltipClassName="!w-auto !p-0 !px-2"
-                                trigger={
-                                    <Button
-                                        aria-label="stop-button"
-                                        className="!bg-transparent !border-none !pl-2 !p-0"
-                                        onClick={() => handleStopResponse()}
-                                    >
-                                        <StopButton
-                                            className={`!w-[30px] text-gray-700`}
-                                        />
-                                    </Button>
-                                }
-                            >
-                                {t('chat.stop')}
-                            </Tooltip>
-                        ) : (
-                            <Tooltip
-                                placement={TooltipPlacement.CenterRight}
-                                triggerClassName="!w-auto"
-                                tooltipClassName="!w-auto !p-0 !px-2"
-                                trigger={
-                                    <Button
-                                        aria-label="send-button"
-                                        className="!bg-transparent !border-none !pl-2 !p-0"
-                                        onClick={() =>
-                                            handleMessageSend(message)
+        <div className="w-full">
+            <div className="flex items-center justify-center bg-white">
+                <div
+                    className={clsx(
+                        'relative w-full m-2',
+                        styles.rainbowBorder,
+                        {
+                            [styles.rbActive]: !isFocused && !isStreaming,
+                        }
+                    )}
+                >
+                    <div className="relative z-10 h-full text-white">
+                        <div className={`${styles.textboxContainer} flex-col`}>
+                            <div className="w-full flex typography-content-body flex-row items-start justify-start">
+                                <textarea
+                                    className={`!outline-none bg-inherit !ring-0 ${styles.textarea}`}
+                                    value={message}
+                                    onChange={(e) => setMessage(e.target.value)}
+                                    onFocus={() => setIsFocused(true)}
+                                    onBlur={() => setIsFocused(false)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === KeyboardEvents.Enter) {
+                                            handleMessageSend(message);
                                         }
-                                    >
-                                        <SendButton
-                                            className={`!w-[30px] transition-all duration-300 ${
-                                                isStreaming || !message.trim()
-                                                    ? 'text-gray-400'
-                                                    : 'text-gray-700'
-                                            }`}
-                                        />
-                                    </Button>
-                                }
-                            >
-                                {t('chat.send')}
-                            </Tooltip>
-                        )}
-                        {currentMessages?.find(
-                            (message) => message.content === t('chat.errorMsg')
-                        ) && (
-                            <button
-                                aria-label="retry-button"
-                                type="button"
-                                onClick={retryLastMessage}
-                            >
-                                {t('chat.retry')}
-                            </button>
-                        )}
+                                    }}
+                                    disabled={isStreaming}
+                                    placeholder={
+                                        t('chat.inputPlaceholder') || ''
+                                    }
+                                ></textarea>
+                            </div>
+                            <div className="mt-3 flex flex-row justify-between w-full items-end">
+                                <div className="flex gap-4 items-end">
+                                    <SelectComponent
+                                        className="block! !w-[200px]"
+                                        value={selectedClientId}
+                                        options={clientOptions}
+                                        onChange={handleClientChange}
+                                        label={t('chat.client') || ''}
+                                        disabled={isStreaming}
+                                    />
+                                    <AnswerModeSelect
+                                        isStreaming={isStreaming}
+                                        modeSelected={answerMode}
+                                        onModeSelectedChange={setAnswerMode}
+                                    />
+                                </div>
+                                <div className="flex gap-2">
+                                    <ActionButton
+                                        disabled={
+                                            !isStreaming && !message.trim()
+                                        }
+                                        message={message}
+                                        isStreaming={isStreaming}
+                                        handleMessageSend={handleMessageSend}
+                                        handleStopResponse={handleStopResponse}
+                                    />
+                                    {currentMessages?.find(
+                                        (message) =>
+                                            message.content ===
+                                            t('chat.errorMsg')
+                                    ) && (
+                                        <button
+                                            aria-label="retry-button"
+                                            type="button"
+                                            onClick={retryLastMessage}
+                                        >
+                                            {t('chat.retry')}
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <Typography
-                    variant={TypographyVariant.BodySm}
-                    className="text-center mt-4 text-gray-400"
-                >
-                    {t('chat.footerText')}
-                </Typography>
             </div>
-        </>
+            <Typography
+                variant={TypographyVariant.BodySm}
+                className="text-center mt-2 mb-2 text-gray-400 !font-light"
+            >
+                {t('chat.footerText')}
+            </Typography>
+        </div>
     );
 };
 

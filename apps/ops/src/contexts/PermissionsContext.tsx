@@ -221,14 +221,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { data: writeCasePriority } = useQuery({
         queryKey: ['writeCasePriority', partyId],
         queryFn: () =>
-            getCarriersListQuery(
+            doesUserHavePagePermissionQuery(
                 UserPermission.AllowWriteCasePriority,
                 partyId
             ),
         enabled: !!partyId,
-        initialData: [],
         staleTime: FIFTEEN_MINUTES_IN_MS,
-        initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
     });
 
     const {

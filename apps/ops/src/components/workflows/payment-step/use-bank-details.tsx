@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 
 import { isEndDated } from '@deps/helpers/date.helpers';
+import { PaymentMethodError } from '@deps/pages/api/aggregation/paymentmethods';
 import { QueryKeys } from '@deps/pages/cases/caseFilterQueryStore';
 import { getPaymentMethods } from '@deps/queries/api/aggregation';
 import { Policy, Status, ArrangementType } from '@zinnia/api-types/types/sor';
@@ -38,6 +39,7 @@ export const usePaymentMethods = ({
         data = [],
         isLoading,
         isError,
+        error,
     } = useQuery({
         queryKey: [
             QueryKeys.bankDetails,
@@ -77,5 +79,6 @@ export const usePaymentMethods = ({
         data,
         isLoading,
         isError,
+        error: error as unknown as PaymentMethodError,
     };
 };

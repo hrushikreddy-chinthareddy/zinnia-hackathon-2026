@@ -85,17 +85,15 @@ export default function TasksPage({
             <Typography variant={TypographyVariant.H1} className="md:mb-5 mb-4">
                 {t('header.title')}
             </Typography>
-            <div className="bg-white rounded-md shadow-md w-100 p-8 pb-4">
-                <TaskManagementQueue
-                    featureFlagDecisions={featureFlagDecisions}
-                    additionalData={{
-                        ...additionalData,
-                        authorizedCarriers: filteredCarriers,
-                    }}
-                    showClaimTask={false}
-                    isOpsManagerView={isOpsManagerView}
-                />
-            </div>
+            <TaskManagementQueue
+                featureFlagDecisions={featureFlagDecisions}
+                additionalData={{
+                    ...additionalData,
+                    authorizedCarriers: filteredCarriers,
+                }}
+                showClaimTask={false}
+                isOpsManagerView={isOpsManagerView}
+            />
         </>
     );
 }

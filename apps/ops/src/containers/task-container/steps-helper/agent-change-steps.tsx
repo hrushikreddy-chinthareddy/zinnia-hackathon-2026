@@ -25,7 +25,10 @@ export const getAgentChangeSteps = ({
 
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
-        isVisible: () => index === 0 || index === 2 || (index === 1 && isIGO),
+        isVisible: () =>
+            index === 0 ||
+            (index === 2 && issueResolved) ||
+            (index === 1 && isIGO),
         component: (
             <TaskFormStep
                 readonly={readOnly}

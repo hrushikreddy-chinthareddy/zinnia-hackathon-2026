@@ -1,193 +1,267 @@
-import { render, fireEvent, within } from '@testing-library/react';
-import { useRouter } from 'next/router';
+import { act, render, fireEvent, waitFor } from '@testing-library/react';
+import router from 'next/router';
 
-import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
-import { DocumentsDisplayType } from '@deps/types/knowledge-base';
+import KnowledgeBaseContainer from '@deps/containers/knowledge-base/knowledge-base-container';
+import { useScreenSize } from '@deps/hooks/useScreenSize';
 import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
-import KnowledgeBaseSidenav, {
-    KnowledgeBasePaths,
-} from './knowledge-base-sidenav';
-
 jest.mock('next/router', () => ({
-    useRouter: jest.fn(),
-}));
-
-jest.mock('@deps/contexts/KnowledgeBaseContext', () => ({
-    useKnowledgeBaseContext: jest.fn(),
-}));
-
-jest.mock('react-i18next', () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-    }),
-}));
-
-jest.mock('@deps/components/select/select', () => ({
     __esModule: true,
-    default: ({ value, options, onChange }: any) => (
-        <select
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            aria-label="mock-select"
-        >
-            {options.map((o: any) => (
-                <option key={o.value} value={o.value}>
-                    {o.label}
-                </option>
-            ))}
-        </select>
-    ),
+    default: {
+        events: {
+            on: jest.fn(),
+            off: jest.fn(),
+        },
+    },
 }));
 
-const mockOpsUserData = {
+jest.mock('@deps/hooks/useScreenSize', () => ({
+    useScreenSize: jest.fn(),
+}));
+
+jest.mock(
+    '@deps/components/knowledge-base/knowledge-base-sidenav/knowledge-base-sidenav',
+    () => {
+        return function MockKnowledgeBaseSidenav({
+            isNavCollapsed,
+            setIsNavCollapsed,
+        }: {
+            isNavCollapsed: boolean;
+            setIsNavCollapsed: (value: boolean) => void;
+        }) {
+            return (
+                <div data-testid="knowledge-base-sidenav">
+                    <div data-testid="is-nav-collapsed">
+                        {isNavCollapsed ? 'collapsed' : 'expanded'}
+                    </div>
+                    <button
+                        data-testid="toggle-nav"
+                        onClick={() => setIsNavCollapsed(!isNavCollapsed)}
+                    >
+                        Toggle Nav
+                    </button>
+                </div>
+            );
+        };
+    }
+);
+
+jest.mock('@deps/contexts/KnowledgeBaseContext', () => {
+    return {
+        __esModule: true,
+        default: ({ children }: { children: React.ReactNode }) => (
+            <div data-testid="knowledge-base-provider">{children}</div>
+        ),
+    };
+});
+
+const mockOpsUserData: MeResponse = {
+    id: '1234567890',
+    name: 'Test User',
+    email: 'test@zinnia.com',
+    role: MeResponse.role.ASSOCIATE,
     client: [
-        { id: '123', name: 'Client-One', default: true },
-        { id: '456', name: 'Client-Two', default: false },
+        {
+            id: 'client-123',
+            name: 'Test Client',
+            default: true,
+            allowed: true,
+        },
     ],
-    role: MeResponse.role.ADMIN,
 };
 
-describe('KnowledgeBaseSidenav', () => {
-    const mockPush = jest.fn();
-    const mockSetSelectedClient = jest.fn();
-    const mockStartNewChatSession = jest.fn();
+describe('KnowledgeBaseContainer', () => {
+    const mockOn = jest.fn();
+    const mockOff = jest.fn();
 
     beforeEach(() => {
         jest.clearAllMocks();
+        (router.events.on as jest.Mock) = mockOn;
+        (router.events.off as jest.Mock) = mockOff;
+    });
 
-        (useRouter as jest.Mock).mockReturnValue({
-            pathname: '/zinnia-ai-assistant/chat',
-            query: {},
-            push: mockPush,
+    it('renders children and KnowledgeBaseSidenav', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+
+        const { getByText, getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        expect(getByText('Test Children')).toBeInTheDocument();
+        expect(getByTestId('knowledge-base-sidenav')).toBeInTheDocument();
+    });
+
+    it('initializes isNavCollapsed to true when screen is small', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+
+        const { getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('collapsed');
+    });
+
+    it('initializes isNavCollapsed to false when screen is large', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(true);
+
+        const { getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('expanded');
+    });
+
+    it('passes setIsNavCollapsed to KnowledgeBaseSidenav and allows toggling', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(true);
+
+        const { getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        const toggleButton = getByTestId('toggle-nav');
+        const navState = getByTestId('is-nav-collapsed');
+
+        expect(navState).toHaveTextContent('expanded');
+
+        fireEvent.click(toggleButton);
+        expect(navState).toHaveTextContent('collapsed');
+
+        fireEvent.click(toggleButton);
+        expect(navState).toHaveTextContent('expanded');
+    });
+
+    it('sets up route change listener on mount', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+
+        render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        expect(mockOn).toHaveBeenCalledWith(
+            'routeChangeComplete',
+            expect.any(Function)
+        );
+    });
+
+    it('cleans up route change listener on unmount', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+
+        const { unmount } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        unmount();
+
+        expect(mockOff).toHaveBeenCalledWith(
+            'routeChangeComplete',
+            expect.any(Function)
+        );
+    });
+
+    it('collapses nav on route change when screen is small and nav is expanded', async () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+
+        const { getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
+        );
+
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('collapsed');
+
+        // Expand the nav first
+        const toggleButton = getByTestId('toggle-nav');
+        fireEvent.click(toggleButton);
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('expanded');
+
+        const routeChangeHandler = mockOn.mock.calls.find(
+            (call) => call[0] === 'routeChangeComplete'
+        )?.[1];
+
+        act(() => {
+            routeChangeHandler?.();
         });
 
-        (useKnowledgeBaseContext as jest.Mock).mockReturnValue({
-            selectedClientId: '123',
-            setSelectedClient: mockSetSelectedClient,
-            startNewChatSession: mockStartNewChatSession,
+        await waitFor(() => {
+            expect(getByTestId('is-nav-collapsed')).toHaveTextContent(
+                'collapsed'
+            );
         });
     });
 
-    it('renders client select with options', () => {
-        const { getByRole } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData} />
+    it('does not collapse nav on route change when screen is large', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(true);
+
+        const { getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
         );
 
-        const select = getByRole('combobox');
-        expect(select).toBeInTheDocument();
-        expect(within(select).getByText('Client One')).toBeInTheDocument();
-    });
+        const navState = getByTestId('is-nav-collapsed');
+        expect(navState).toHaveTextContent('expanded');
 
-    it('calls setSelectedClient and startNewChatSession on client change', async () => {
-        const { getByRole } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData as any} />
-        );
+        const routeChangeHandler = mockOn.mock.calls.find(
+            (call) => call[0] === 'routeChangeComplete'
+        )?.[1];
 
-        fireEvent.change(getByRole('combobox'), {
-            target: { value: '456' },
+        act(() => {
+            routeChangeHandler?.();
         });
 
-        expect(mockSetSelectedClient).toHaveBeenCalledWith('456');
-        expect(mockStartNewChatSession).toHaveBeenCalled();
+        expect(navState).toHaveTextContent('expanded');
     });
 
-    it('navigates to chat and resets session on "New Chat" click', () => {
-        const { getByRole } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData as any} />
+    it('does not collapse nav on route change when already collapsed', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+
+        const { getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
         );
 
-        fireEvent.click(getByRole('button', { name: /sidenav.newChat/i }));
-        expect(mockPush).toHaveBeenCalledWith(
-            KnowledgeBasePaths.chat,
-            undefined,
-            { shallow: true }
-        );
-        expect(mockStartNewChatSession).toHaveBeenCalled();
-    });
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('collapsed');
 
-    it('navigates to chat if not already on chat page and resets session on "New Chat" click', () => {
-        (useRouter as jest.Mock).mockReturnValue({
-            pathname: '/zinnia-ai-assistant/documents',
-            query: {},
-            push: mockPush,
+        const routeChangeHandler = mockOn.mock.calls.find(
+            (call) => call[0] === 'routeChangeComplete'
+        )?.[1];
+
+        act(() => {
+            routeChangeHandler?.();
         });
 
-        const { getByRole } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData as any} />
-        );
-
-        fireEvent.click(getByRole('button', { name: /sidenav.newChat/i }));
-
-        expect(mockPush).toHaveBeenCalledWith(KnowledgeBasePaths.chat);
-        expect(mockPush).toHaveBeenCalledWith(
-            '/zinnia-ai-assistant/documents',
-            undefined,
-            { shallow: true }
-        );
-        expect(mockStartNewChatSession).toHaveBeenCalled();
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('collapsed');
     });
 
-    it('navigates to recent documents when clicked', () => {
-        const { getByText } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData as any} />
+    it('initializes nav state based on screen size on mount', () => {
+        (useScreenSize as jest.Mock).mockReturnValue(false);
+        const { unmount, getByTestId } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
         );
+        expect(getByTestId('is-nav-collapsed')).toHaveTextContent('collapsed');
+        unmount();
 
-        fireEvent.click(getByText(/sidenav.recentlyAdded/i));
-
-        expect(mockPush).toHaveBeenCalledWith({
-            pathname: KnowledgeBasePaths.documents,
-            query: { docs: DocumentsDisplayType.Recent },
-        });
-    });
-
-    it('navigates to recently modified documents when clicked', () => {
-        const { getByText } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData as any} />
+        (useScreenSize as jest.Mock).mockReturnValue(true);
+        const { getByTestId: getByTestId2 } = render(
+            <KnowledgeBaseContainer opsUserData={mockOpsUserData}>
+                <div>Test Children</div>
+            </KnowledgeBaseContainer>
         );
-
-        fireEvent.click(getByText(/sidenav.recentlyModified/i));
-
-        expect(mockPush).toHaveBeenCalledWith({
-            pathname: KnowledgeBasePaths.documents,
-            query: { docs: DocumentsDisplayType.Updated },
-        });
-    });
-
-    it('navigates to all documents when clicked', () => {
-        const { getByText } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData as any} />
-        );
-
-        fireEvent.click(getByText(/sidenav.allDocs/i));
-
-        expect(mockPush).toHaveBeenCalledWith({
-            pathname: KnowledgeBasePaths.documents,
-            query: { docs: DocumentsDisplayType.All },
-        });
-    });
-
-    it('shows admin button if user is ADMIN', () => {
-        const { getByText } = render(
-            <KnowledgeBaseSidenav opsUserData={mockOpsUserData} />
-        );
-
-        expect(getByText(/sidenav.settings/i)).toBeInTheDocument();
-        fireEvent.click(getByText(/sidenav.settings/i));
-        expect(mockPush).toHaveBeenCalledWith(KnowledgeBasePaths.admin);
-    });
-
-    it('hides admin button if user is not ADMIN', () => {
-        const { queryByText } = render(
-            <KnowledgeBaseSidenav
-                opsUserData={
-                    {
-                        ...mockOpsUserData,
-                        role: MeResponse.role.ASSOCIATE,
-                    } as any
-                }
-            />
-        );
-        expect(queryByText(/sidenav.settings/i)).not.toBeInTheDocument();
+        expect(getByTestId2('is-nav-collapsed')).toHaveTextContent('expanded');
     });
 });
