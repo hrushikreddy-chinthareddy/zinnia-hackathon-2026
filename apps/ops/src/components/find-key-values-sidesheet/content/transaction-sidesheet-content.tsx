@@ -25,14 +25,16 @@ import {
     spruceFromSourceData,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
+import { formatPartyIdLink } from '../transformations/formatters';
 import {
-    excludeNodesByLabel,
     searchNodes,
-    addToolTips,
-    formatPartyIdLink,
+    excludeNodesByLabel,
+} from '../transformations/node-visibility';
+import {
     groupTaxesSection,
     groupBasicsForTransaction,
-} from '../transformations';
+} from '../transformations/section-grouping';
+import { addToolTips } from '../transformations/tooltips';
 import { DocumentFormat } from '../types';
 
 export const TransactionSidesheetContent = ({

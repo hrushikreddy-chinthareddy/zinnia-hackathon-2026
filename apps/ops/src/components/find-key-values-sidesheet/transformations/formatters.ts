@@ -6,13 +6,21 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { Policy } from '@zinnia/api-types/types/sor';
 
-import { currencyFields } from './translations/currency-fields';
-import { dateFields } from './translations/date-fields';
-import { grammarCorrections } from './translations/grammar-corrections';
-import { industryTermToAbbrev } from './translations/industry-term-to-abbrev';
-import { percentageFields } from './translations/percentage-fields';
-import { DataNode, FieldType } from './types';
+import { getAllParties } from './section-grouping';
+import {
+    spruceFromSourceData,
+    transformObject,
+} from '../data-node-helpers/mutations';
+import { isNotNullish } from '../data-node-helpers/predicates';
+import { findFieldInNode } from '../data-node-helpers/traversal';
+import { currencyFields } from '../translations/currency-fields';
+import { dateFields } from '../translations/date-fields';
+import { grammarCorrections } from '../translations/grammar-corrections';
+import { industryTermToAbbrev } from '../translations/industry-term-to-abbrev';
+import { percentageFields } from '../translations/percentage-fields';
+import { DataField, DataNode, FieldType } from '../types';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition
@@ -283,4 +291,61 @@ export const formatPartyLink = ({
     policyNumber: string;
 }) => {
     return `/policies/${planCode}/${policyNumber}/people/${partyId}`;
+};
+export const formatPartyIdLink = ({
+    data,
+    t,
+    planCode,
+    policyNumber,
+    policy,
+}: {
+    data: DataNode[];
+    t: TFunction;
+    planCode: string;
+    policyNumber: string;
+    policy: Policy;
+}) => {
+    const { allPartiesById } = getAllParties({
+        policyNodes: spruceFromSourceData(policy, t),
+        t,
+        planCode,
+        policyNumber,
+    });
+
+    return data
+        .map((node: DataNode) =>
+            transformObject(node, (node) => {
+                if (
+                    !(node.type === FieldType.field && node.label === 'partyId')
+                ) {
+                    return node;
+                }
+                const partyReference = allPartiesById[node.value];
+
+                if (!partyReference) {
+                    return {
+                        ...node,
+                        link: formatPartyLink({
+                            planCode,
+                            policyNumber,
+                            partyId: node.value,
+                        }),
+                    };
+                }
+
+                const partyNameField = findFieldInNode({
+                    node: partyReference,
+                    key: 'partyName',
+                });
+
+                const partialPartyField: DataField = {
+                    ...node,
+                    label: 'impactedParty',
+                    value: partyNameField?.value ?? node.value,
+                    link: partyNameField?.link,
+                };
+                return partialPartyField;
+            })
+        )
+        .filter(isNotNullish);
 };

@@ -2,7 +2,7 @@ import { TFunction } from 'next-i18next';
 
 import { typedEntries } from '@deps/utils/objects';
 
-import { formatAsDataValue } from '../formatters';
+import { formatAsDataValue } from '../transformations/formatters';
 import { sectionTypeToSubSectionTitleFields } from '../translations/subsection-field-to-title';
 import { DataNode, FieldType, DataSection } from '../types';
 import {

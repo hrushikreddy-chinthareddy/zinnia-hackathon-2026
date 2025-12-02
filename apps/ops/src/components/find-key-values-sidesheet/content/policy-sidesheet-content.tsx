@@ -16,12 +16,8 @@ import { useTranslation } from 'react-i18next';
 
 import {
     groupSectionsForPolicy,
-    excludeNodesByLabel,
-    searchNodes,
-    addToolTips,
-    excludeNodesByCarrierRules,
     groupBasicsForPolicy,
-} from '@deps/components/find-key-values-sidesheet/transformations';
+} from '@deps/components/find-key-values-sidesheet/transformations/section-grouping';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -37,6 +33,12 @@ import {
     spruceFromSourceData,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
+import {
+    excludeNodesByLabel,
+    excludeNodesByCarrierRules,
+    searchNodes,
+} from '../transformations/node-visibility';
+import { addToolTips } from '../transformations/tooltips';
 import { FindAllKeyValuesSidebarProps } from '../types';
 
 export const PolicySidesheetContent = ({
