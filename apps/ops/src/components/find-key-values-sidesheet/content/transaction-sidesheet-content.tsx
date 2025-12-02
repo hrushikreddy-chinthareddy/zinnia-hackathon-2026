@@ -21,8 +21,8 @@ import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import {
-    spruceFromSourceData,
     applyTransformationsToNodes,
+    spruceFromSourceData,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {

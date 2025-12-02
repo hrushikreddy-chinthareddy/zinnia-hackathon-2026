@@ -39,22 +39,6 @@ import {
     DataField,
 } from './types';
 
-// pipe needs to take the first arg as Policy/Transaction -> DataNode[]
-// and the rest as DataNode[] -> DataNode[]
-export const applyTransformationsToNodes =
-    <T>(
-        initialTransformFn: (data: T, t?: TFunction) => DataNode[],
-        ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
-    ) =>
-    (initialValue: T) => {
-        const initialTransformedData = initialTransformFn(initialValue);
-        const v = fns.reduce((acc, fn) => {
-            const ret = fn(acc);
-            return ret;
-        }, initialTransformedData);
-        return v;
-    };
-
 export const groupBasicsForPolicy = (data: DataNode[]): DataNode[] => {
     const filterByField = data.filter(isDataField);
     const filterBySectionOrGroup = data.filter(isDataSectionOrGroup);
