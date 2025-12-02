@@ -32,7 +32,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
-import { convertNode } from '../data-node-helpers/mutations';
+import { spruceFromSourceData } from '../data-node-helpers/mutations';
 import { applyTransformationsToNodes } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import { FindAllKeyValuesSidebarProps } from '../types';
@@ -86,8 +86,6 @@ export const PolicySidesheetContent = ({
     };
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
-
-    console.log('.....first step of convertions......', convertNode(policy, t));
     const lineOfBusiness = policy?.product?.lineOfBusiness;
     const productType = policy?.product?.productType;
     const nomenclature =
@@ -97,7 +95,10 @@ export const PolicySidesheetContent = ({
     const nodes = useMemo(
         () =>
             applyTransformationsToNodes(
-                (data) => convertNode(data, t),
+                // Spruce will take an arbitrary data structure, and
+                // convert it into a structure that can be rendered
+                (data) => spruceFromSourceData(data, t),
+
                 (data) => groupBasicsForPolicy(data),
                 (data) => addToolTips(data, t),
                 (data) =>

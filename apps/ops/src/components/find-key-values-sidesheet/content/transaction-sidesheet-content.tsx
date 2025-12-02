@@ -20,7 +20,7 @@ import useQueryStore from '@deps/utils/queryStore';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodeRenderer } from '../components/data-node-renderer';
-import { convertNode } from '../data-node-helpers/mutations';
+import { spruceFromSourceData } from '../data-node-helpers/mutations';
 import { applyTransformationsToNodes } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
@@ -58,7 +58,9 @@ export const TransactionSidesheetContent = ({
             return [];
         }
         return applyTransformationsToNodes(
-            (data) => convertNode(data, t),
+            // Spruce will take an arbitrary data structure, and
+            // convert it into a structure that can be rendered
+            (data) => spruceFromSourceData(data, t),
             (data) => groupBasicsForTransaction(data),
             (data) =>
                 formatPartyIdLink({

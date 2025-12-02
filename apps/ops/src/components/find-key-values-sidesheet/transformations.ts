@@ -6,11 +6,15 @@ import {
     ProductType,
 } from '@zinnia/api-types/types/sor';
 
-import { convertNode, transformObject } from './data-node-helpers/mutations';
+import {
+    spruceFromSourceData,
+    transformObject,
+} from './data-node-helpers/mutations';
 import {
     isDataSection,
     isDataField,
     isDataSectionOrGroup,
+    isNotNullish,
 } from './data-node-helpers/predicates';
 import {
     findValueInNode,
@@ -463,18 +467,18 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     // if there are no fields in section | group, remove the section / group
     const lower = search.toLowerCase();
 
-    const filterNode = (node: DataNode): DataNode | null => {
+    const filterNode = (node: DataNode): DataNode | undefined => {
         if (node.type === FieldType.field) {
             const match =
                 node.label.toLowerCase().includes(lower) ||
                 node.value.toLowerCase().includes(lower);
-            return match ? node : null;
+            return match ? node : undefined;
         }
 
         if (node.type === FieldType.section) {
             const filteredChildren = node.children
                 .map(filterNode)
-                .filter((n): n is DataNode => n !== null);
+                .filter(isNotNullish);
 
             if (filteredChildren.length > 0) {
                 return {
@@ -482,17 +486,13 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
                     children: filteredChildren,
                 };
             }
-            return null;
+            return undefined;
         }
 
         if (node.type === FieldType.group) {
             const filteredGroups = node.children
-                .map((group) =>
-                    group
-                        .map(filterNode)
-                        .filter((n): n is DataNode => n !== null)
-                )
-                .filter((g) => g.length > 0);
+                .map((group) => group.map(filterNode).filter(isNotNullish))
+                .filter((subGroup) => subGroup.length > 0);
 
             if (filteredGroups.length > 0) {
                 return {
@@ -500,12 +500,11 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
                     children: filteredGroups,
                 };
             }
-            return null;
         }
-        return null;
+        return undefined;
     };
 
-    return nodes.map(filterNode).filter((n): n is DataNode => n !== null);
+    return nodes.map(filterNode).filter(isNotNullish);
 }
 
 export const formatPartyIdLink = ({
@@ -522,7 +521,7 @@ export const formatPartyIdLink = ({
     policy: Policy;
 }) => {
     const { allPartiesById } = getAllParties({
-        policyNodes: convertNode(policy, t),
+        policyNodes: spruceFromSourceData(policy, t),
         t,
         planCode,
         policyNumber,
@@ -563,7 +562,7 @@ export const formatPartyIdLink = ({
                 return partialPartyField;
             })
         )
-        .filter((n): n is DataNode => n !== null);
+        .filter(isNotNullish);
 };
 
 export const excludeNodesByLabel = (
@@ -582,7 +581,7 @@ export const excludeNodesByLabel = (
                 })
             )
         )
-        .filter((n): n is DataNode => n !== null);
+        .filter(isNotNullish);
 };
 
 export const isNodeVisibileByCarrierRules = ({
@@ -630,7 +629,7 @@ export const excludeNodesByCarrierRules = ({
                 })
             )
         )
-        .filter((n): n is DataNode => n !== null);
+        .filter(isNotNullish);
 };
 
 export const addToolTips = (
@@ -650,7 +649,7 @@ export const addToolTips = (
                 })
             )
         )
-        .filter((n): n is DataNode => n !== null);
+        .filter(isNotNullish);
 };
 
 /**

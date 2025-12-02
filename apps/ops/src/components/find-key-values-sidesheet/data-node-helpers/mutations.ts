@@ -10,14 +10,15 @@ import {
     isPrimitive,
     isUnknownArray,
     isNonEmptyString,
+    isNotNullish,
 } from './predicates';
 
-export function convertNode(obj: unknown, t: TFunction): DataNode[] {
+export function spruceFromSourceData(obj: unknown, t: TFunction): DataNode[] {
     if (!isNonNullishObject(obj)) return [];
 
     return typedEntries(obj)
         .map(([key, value]) => convertTuple(key, value, t))
-        .filter((n): n is DataNode => n != null);
+        .filter(isNotNullish);
 }
 function convertTuple(
     key: string,
@@ -48,7 +49,7 @@ function convertTuple(
                     if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
 
                     // TODO: filter out fields that are not visible, including the title field
-                    const fields: DataNode[] = convertNode(item, t);
+                    const fields: DataNode[] = spruceFromSourceData(item, t);
 
                     return {
                         type: FieldType.section,
@@ -59,7 +60,7 @@ function convertTuple(
                         children: fields, // TODO: recurse?
                     };
                 })
-                .filter((n) => n != null);
+                .filter(isNotNullish);
 
             return {
                 type: FieldType.section,
@@ -69,7 +70,7 @@ function convertTuple(
         } else {
             // value is list of groups
             const groups: DataNode[][] = value.map((item) =>
-                convertNode(item, t)
+                spruceFromSourceData(item, t)
             );
             if (groups.length === 0) return;
 
@@ -89,7 +90,7 @@ function convertTuple(
 
     // Object → Section
     if (typeof value === 'object' && !Array.isArray(value)) {
-        const children = convertNode(value, t);
+        const children = spruceFromSourceData(value, t);
 
         if (children.length === 0) return;
 
@@ -113,7 +114,7 @@ export const transformObject = (
         case FieldType.section: {
             const newChildren = node.children
                 .map((child) => transformObject(child, transform))
-                .filter((n): n is DataNode => n !== null);
+                .filter(isNotNullish);
 
             return transform({
                 ...node,
@@ -124,7 +125,7 @@ export const transformObject = (
             const newGroups = node.children.map((group) =>
                 group
                     .map((child) => transformObject(child, transform))
-                    .filter((n): n is DataNode => n !== null)
+                    .filter(isNotNullish)
             );
             return transform({
                 ...node,
@@ -136,12 +137,8 @@ export const transformObject = (
     }
 };
 
-/**
- *
- * @param initialTransformFn Convert source data (e.g. policy/transaction) to DataNode[]
- * @param fns Additional transformations that apply to DataNode[] and output DataNode[]
- * @returns A function that takes source data and returns a fully transformed DataNode[]
- */
+// pipe needs to take the first arg as Policy/Transaction -> DataNode[]
+// and the rest as DataNode[] -> DataNode[]
 export const applyTransformationsToNodes =
     <T>(
         initialTransformFn: (data: T, t?: TFunction) => DataNode[],
