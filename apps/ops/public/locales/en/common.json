@@ -6824,7 +6824,7 @@
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
             "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
             "updateAutopay": "Update loan autopay",
-            "updateAutopaySP": "Update loan autopay",
+            "updateAutopaySP": "Update program",
             "validationStatusLabel": "Validation status",
             "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
