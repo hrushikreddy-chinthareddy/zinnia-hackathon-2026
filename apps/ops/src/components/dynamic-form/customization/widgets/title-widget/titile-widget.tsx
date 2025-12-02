@@ -1,6 +1,6 @@
 import { WidgetProps } from '@rjsf/utils';
 
-import classes from '../../templates/transaction-accordion/transaction-accordion.module.css';
+import classes from '../bene-transaction-accordion/bene-transaction-accordion.module.css';
 
 //TODO: refactor code
 

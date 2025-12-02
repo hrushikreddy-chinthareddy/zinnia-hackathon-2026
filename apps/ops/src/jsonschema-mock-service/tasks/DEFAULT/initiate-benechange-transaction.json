@@ -534,19 +534,14 @@
                             "label": false
                         },
                         "parties": {
-                            "type": "array",
+                            "ui:widget": "BeneTransactionAccordion",
                             "ui:options": {
-                                "ArrayFieldTemplate": "TransactionAccordionTemplate",
                                 "addable": false,
                                 "orderable": false,
                                 "label": false,
-                                "showDeleteBtn": false,
-                                "showAddBtn": false,
-                                "showRemoveItemBtn": false,
                                 "tabTitle": "Owner Details"
                             },
                             "items": {
-                                "type": "object",
                                 "ui:order": [
                                     "partyType",
                                     "partyRole",
@@ -561,7 +556,6 @@
                                     "addresses"
                                 ],
                                 "ui:options": {
-                                    "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                     "label": false,
                                     "title": "{{partyRole}}",
                                     "nobackground": true,
@@ -796,58 +790,6 @@
                             "title": "Beneficiaries",
                             "items": {
                                 "type": "object",
-                                "default": {
-                                    "action": "ADD",
-                                    "actionType": "BENE_CHANGE",
-                                    "isIrrevocable": false,
-                                    "isPerStirpes": false,
-                                    "preferredCommunicationType": null,
-                                    "party": {
-                                        "partyType": "INDIVIDUAL",
-                                        "firstName": "",
-                                        "lastName": "",
-                                        "middleName": null,
-                                        "gender": null,
-                                        "dateOfBirth": null,
-                                        "endDate": null,
-                                        "entityType": "Other",
-                                        "prefix": null,
-                                        "suffix": null,
-                                        "emails": [
-                                            {
-                                                "emailAddress": null,
-                                                "emailType": "PERSONAL"
-                                            }
-                                        ],
-                                        "phones": [
-                                            {
-                                                "dialNumber": null,
-                                                "phoneType": "HOME"
-                                            }
-                                        ],
-                                        "addresses": [
-                                            {
-                                                "addressType": "RESIDENCE",
-                                                "addressLine1": "",
-                                                "addressLine2": null,
-                                                "city": "",
-                                                "state": "",
-                                                "zipCode": "",
-                                                "zipCodeExtension": null
-                                            }
-                                        ],
-                                        "identifications": [
-                                            {
-                                                "identificationValue": null,
-                                                "identificationType": "SSN"
-                                            }
-                                        ]
-                                    },
-                                    "partyRole": {
-                                        "partyRole": "PRIMARYBENEFICIARY",
-                                        "relationshipToParty": "OTHER"
-                                    }
-                                },
                                 "properties": {
                                     "action": {
                                         "type": "string",
@@ -1358,7 +1300,50 @@
                                         "required": ["relationshipToParty"]
                                     }
                                 }
-                            }
+                            },
+                            "default": [
+                                {
+                                    "isIrrevocable": false,
+                                    "isPerStirpes": false,
+                                    "party": {
+                                        "partyType": "INDIVIDUAL",
+                                        "gender": "MALE",
+                                        "preferredCommunicationType": "EMAIL",
+                                        "identifications": [
+                                            {
+                                                "identificationValue": ""
+                                            }
+                                        ],
+                                        "addresses": [
+                                            {
+                                                "addressLine1": null,
+                                                "addressLine2": null,
+                                                "addressLine3": null,
+                                                "addressType": "RESIDENCE",
+                                                "city": null,
+                                                "state": null,
+                                                "zipCode": null,
+                                                "zipCodeExtension": null
+                                            }
+                                        ],
+                                        "phones": [
+                                            {
+                                                "phoneType": "HOME",
+                                                "dialNumber": ""
+                                            }
+                                        ],
+                                        "emails": [
+                                            {
+                                                "emailAddress": ""
+                                            }
+                                        ]
+                                    },
+                                    "partyRole": {
+                                        "partyRole": "PRIMARYBENEFICIARY",
+                                        "relationshipToParty": "OTHER"
+                                    }
+                                }
+                            ]
                         }
                     }
                 },
@@ -1373,15 +1358,14 @@
                         "norender": true
                     },
                     "actionData": {
+                        "ui:widget": "BeneTransactionAccordion",
                         "ui:options": {
-                            "ArrayFieldTemplate": "TransactionAccordionTemplate",
                             "label": false,
                             "addable": true,
                             "defaultItemLabel": "New Beneficiary",
                             "showDeleteBtn": true,
                             "showAddBtn": true,
                             "tabTitle": "Beneficiary Details",
-                            "addButtonCTA": "Add Beneficiary",
                             "showRemoveItemBtn": true
                         },
                         "items": {
@@ -1394,7 +1378,6 @@
                                 "isIrrevocable"
                             ],
                             "ui:options": {
-                                "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                 "label": false,
                                 "title": "{{partyRole.partyRole}}",
                                 "defaultItemLabel": "New Beneficiary",
@@ -1578,21 +1561,14 @@
                                 },
                                 "addresses": {
                                     "ui:options": {
-                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
-                                        "addable": true,
+                                        "addable": false,
                                         "orderable": false,
-                                        "removable": true,
-                                        "addButtonCTA": "Add Address",
+                                        "removable": false,
                                         "label": true,
-                                        "title": "Address",
-                                        "showDeleteBtn": true,
-                                        "showAddBtn": true,
-                                        "showRemoveItemBtn": true,
-                                        "prefferedCTA": "Preferred Address"
+                                        "title": "Address"
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
@@ -1689,21 +1665,14 @@
                                 },
                                 "phones": {
                                     "ui:options": {
-                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
-                                        "addable": true,
+                                        "addable": false,
                                         "orderable": false,
-                                        "removable": true,
-                                        "addButtonCTA": "Add Phone",
+                                        "removable": false,
                                         "label": true,
-                                        "title": "Phone",
-                                        "showDeleteBtn": true,
-                                        "showAddBtn": true,
-                                        "showRemoveItemBtn": true,
-                                        "prefferedCTA": "Preferred Phone"
+                                        "title": "Phone"
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
@@ -1731,21 +1700,14 @@
                                 },
                                 "emails": {
                                     "ui:options": {
-                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
-                                        "addable": true,
+                                        "addable": false,
                                         "orderable": false,
-                                        "removable": true,
-                                        "addButtonCTA": "Add Email",
-                                        "label": true,
-                                        "title": "Email",
-                                        "showDeleteBtn": true,
-                                        "showAddBtn": true,
-                                        "showRemoveItemBtn": true,
-                                        "prefferedCTA": "Preferred Email"
+                                        "removable": false,
+                                        "label": false,
+                                        "title": "Email"
                                     },
                                     "items": {
                                         "ui:options": {
-                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
@@ -1946,20 +1908,17 @@
                             }
                         },
                         "signatures": {
+                            "ui:widget": "BeneTransactionAccordion",
                             "ui:options": {
-                                "ArrayFieldTemplate": "TransactionAccordionTemplate",
                                 "addable": false,
                                 "orderable": false,
                                 "removable": false,
                                 "label": false,
-                                "showAddBtn": false,
-                                "showDeleteBtn": false,
-                                "showRemoveItemBtn": false,
-                                "tabTitle": "Signature"
+                                "tabTitle": "Signature",
+                                "hideAccordion": true
                             },
                             "items": {
                                 "ui:options": {
-                                    "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                     "title": "Signature",
                                     "label": false,
                                     "expandable": false,
