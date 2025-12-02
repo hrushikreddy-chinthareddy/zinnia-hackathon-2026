@@ -6719,7 +6719,7 @@
             "status200subtitle": "Tout est bon! Assurez-vous de revoir vos informations avant de soumettre.",
             "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Veuillez revoir l'erreur ci-dessous.",
             "updateAutopay": "Mettre à jour le paiement automatique du prêt",
-            "updateAutopaySP": "Mise à jour du prélèvement automatique du prêt",
+            "updateAutopaySP": "Programme de mise à jour",
             "validationStatusLabel": "Statut de validation",
             "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
