@@ -14,17 +14,20 @@ import {
 } from './predicates';
 
 /**
- * Converts an arbitrary source data object to a Spruce tree
- * Spruce data trees will categorize everything into 3 node types:
+ * Converts an arbitrary source data object to a render tree
+ * Render tree will categorize everything into 3 node types:
  * - DataField - a simple key-value pair
- * - DataSection - a named (and optionally tagged) collection of nested Spruce nodes
- * - DataGroup - an unnamed collection of subgroups of Spruce nodes
+ * - DataSection - a named (and optionally tagged) collection of nested nodes
+ * - DataGroup - an unnamed collection of subgroups of nodes
  *
  * @param obj - the source data object
  * @param t - the translation function
  * @returns the data node
  */
-export function spruceFromSourceData(obj: unknown, t: TFunction): DataNode[] {
+export function buildRenderTreeFromSourceData(
+    obj: unknown,
+    t: TFunction
+): DataNode[] {
     if (!isNonNullishObject(obj)) return [];
 
     return typedEntries(obj)
@@ -33,7 +36,7 @@ export function spruceFromSourceData(obj: unknown, t: TFunction): DataNode[] {
 }
 
 /**
- * Converts a tuple of key-value pairs to a Spruce node
+ * Converts a tuple of key-value pairs to a render tree node
  *
  * @param key - the key of the tuple
  * @param value - the value of the tuple
@@ -69,7 +72,10 @@ export function convertTuple(
                     if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
 
                     // TODO: filter out fields that are not visible, including the title field
-                    const fields: DataNode[] = spruceFromSourceData(item, t);
+                    const fields: DataNode[] = buildRenderTreeFromSourceData(
+                        item,
+                        t
+                    );
 
                     return {
                         type: FieldType.section,
@@ -90,7 +96,7 @@ export function convertTuple(
         } else {
             // value is list of groups
             const groups: DataNode[][] = value.map((item) =>
-                spruceFromSourceData(item, t)
+                buildRenderTreeFromSourceData(item, t)
             );
             if (groups.length === 0) return;
 
@@ -110,7 +116,7 @@ export function convertTuple(
 
     // Object → Section
     if (typeof value === 'object' && !Array.isArray(value)) {
-        const children = spruceFromSourceData(value, t);
+        const children = buildRenderTreeFromSourceData(value, t);
 
         if (children.length === 0) return;
 

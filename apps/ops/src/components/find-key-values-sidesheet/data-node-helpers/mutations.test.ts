@@ -11,7 +11,7 @@ import {
 import {
     applyTransformationsToNodes,
     convertTuple,
-    spruceFromSourceData,
+    buildRenderTreeFromSourceData,
     transformNode,
     transformNodes,
 } from './mutations';
@@ -29,16 +29,16 @@ jest.mock('../translations/subsection-field-to-title', () => ({
 
 const t: TFunction = ((key: string) => key) as unknown as TFunction;
 
-describe('spruceFromSourceData', () => {
+describe('renderTreeFromSourceData', () => {
     it('returns empty array for non-object input', () => {
-        expect(spruceFromSourceData(null, t)).toEqual([]);
-        expect(spruceFromSourceData(undefined, t)).toEqual([]);
-        expect(spruceFromSourceData('string', t)).toEqual([]);
-        expect(spruceFromSourceData(123, t)).toEqual([]);
+        expect(buildRenderTreeFromSourceData(null, t)).toEqual([]);
+        expect(buildRenderTreeFromSourceData(undefined, t)).toEqual([]);
+        expect(buildRenderTreeFromSourceData('string', t)).toEqual([]);
+        expect(buildRenderTreeFromSourceData(123, t)).toEqual([]);
     });
 
     it('converts a flat object with primitive values to field nodes', () => {
-        const result = spruceFromSourceData({ a: 1, b: 'two' }, t);
+        const result = buildRenderTreeFromSourceData({ a: 1, b: 'two' }, t);
 
         expect(result).toEqual([
             { type: FieldType.field, label: 'a', value: '1' },
@@ -47,7 +47,10 @@ describe('spruceFromSourceData', () => {
     });
 
     it('skips nullish and empty string values', () => {
-        const result = spruceFromSourceData({ a: null, b: '', c: 0 }, t);
+        const result = buildRenderTreeFromSourceData(
+            { a: null, b: '', c: 0 },
+            t
+        );
 
         expect(result).toEqual([
             { type: FieldType.field, label: 'c', value: '0' },
@@ -61,7 +64,7 @@ describe('spruceFromSourceData', () => {
             },
         };
 
-        const result = spruceFromSourceData(source, t);
+        const result = buildRenderTreeFromSourceData(source, t);
 
         expect(result).toEqual([
             {

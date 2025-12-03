@@ -22,7 +22,7 @@ import { Transaction } from '@zinnia/api-types/types/sor';
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import {
     applyTransformationsToNodes,
-    spruceFromSourceData,
+    buildRenderTreeFromSourceData,
     transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
@@ -67,7 +67,7 @@ export const TransactionSidesheetContent = ({
         if (!policy) {
             return undefined;
         }
-        const policyNodes = spruceFromSourceData(policy, t);
+        const policyNodes = buildRenderTreeFromSourceData(policy, t);
         const { allPartiesById } = getAllParties({
             //FIXME: shoudln't run this often
             policyNodes,
@@ -85,9 +85,9 @@ export const TransactionSidesheetContent = ({
 
         // Chains transformations for the entire tree
         return applyTransformationsToNodes(
-            // Spruce will take an arbitrary data structure, and
+            // buildRenderTreeFromSourceData will take an arbitrary data structure, and
             // convert it into a structure that can be rendered
-            (nodes) => spruceFromSourceData(nodes, t),
+            (nodes) => buildRenderTreeFromSourceData(nodes, t),
             (nodes) => groupBasicsForTransaction(nodes),
             (nodes) => groupTaxesSection(nodes),
             (nodes) =>

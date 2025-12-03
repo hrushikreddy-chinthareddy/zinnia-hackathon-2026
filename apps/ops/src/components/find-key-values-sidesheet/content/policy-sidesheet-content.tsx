@@ -30,17 +30,17 @@ import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import { DataNodeRenderer } from '../components/data-node-renderer';
 import {
     applyTransformationsToNodes,
-    spruceFromSourceData,
+    buildRenderTreeFromSourceData,
     transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { addToolTip, formatNode } from '../transformations/formatters';
 import {
     excludeNodeByCarrierRules,
     excludeNodesByLabel,
     searchNodes,
 } from '../transformations/node-visibility';
 import { FindAllKeyValuesSidebarProps } from '../types';
+import { addToolTip, formatNode } from '../transformations/formatters';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -101,9 +101,9 @@ export const PolicySidesheetContent = ({
         () =>
             // Chains transformations for the entire tree
             applyTransformationsToNodes(
-                // Spruce will take an arbitrary data structure, and
+                // buildRenderTreeFromSourceData will take an arbitrary data structure, and
                 // convert it into a structure that can be rendered
-                (nodes) => spruceFromSourceData(nodes, t),
+                (nodes) => buildRenderTreeFromSourceData(nodes, t),
                 (nodes) => groupBasicsForPolicy(nodes),
                 (nodes) =>
                     groupSectionsForPolicy({
