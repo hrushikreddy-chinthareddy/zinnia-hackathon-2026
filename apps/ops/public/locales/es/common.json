@@ -8319,6 +8319,9 @@
             "allocationErr": "Las asignaciones deben ser iguales al 100%"
         }
     },
+    "transactionAccordion": {
+        "remove": "Eliminar"
+    },
     "fundAllocation": {
         "submitted": "¡Enviado!",
         "editAllocationNigoSummary1": "Hemos enviado esta solicitud para ",

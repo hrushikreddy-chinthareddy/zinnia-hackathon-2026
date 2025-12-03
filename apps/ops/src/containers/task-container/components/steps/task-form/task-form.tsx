@@ -94,12 +94,22 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     const [formSchema, setFormSchema] = useState(taskMetadata);
     const prevFormDataRef = useRef<any>(null);
 
-    const formContext = {
+    const [customData, setCustomData] = useState({
         carrier: task.carrier,
         caseId: task.caseId,
+        correlationId,
         taskType: task.taskType,
-        correlationId: correlationId,
-    };
+        ...task.data,
+        task,
+    });
+
+    useEffect(() => {
+        setCustomData((prev: any) => ({
+            ...prev,
+            ...task.data,
+        }));
+    }, [task.data]);
+
     const fetchData = async () => {
         const correlationId = task.data.matchingResult;
 
@@ -301,15 +311,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         },
         [setTask, formSchema]
     );
-    const setFormContext = (dynamicData: any) => {
-        setTask((ogTask: any) => ({
-            ...ogTask,
-            data: {
-                ...ogTask.data,
-                ...dynamicData,
-            },
-        }));
-    };
 
     const updateSchemaHandler = (dynamicData: any) => {
         Object.keys(dynamicData).forEach((key) => {
@@ -399,6 +400,32 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         setMappedDocuments(documents);
     };
 
+    const mergedFormContext = useMemo(
+        () => ({
+            customData,
+            setCustomData: (patch: any) => {
+                setCustomData((prev: any) => ({
+                    ...prev,
+                    ...patch,
+                }));
+            },
+            updateSchema: updateSchemaHandler,
+            isReadOnlyOverride: readonly,
+            mappedDocuments,
+            setMappedDocuments: handleSetMappedDocuments,
+            setSubmitEnabled,
+            setValidationSummary,
+        }),
+        [
+            customData,
+            mappedDocuments,
+            readonly,
+            updateSchemaHandler,
+            setSubmitEnabled,
+            setValidationSummary,
+        ]
+    );
+
     return (
         <DynamicForm
             ref={forwardedRef}
@@ -411,16 +438,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{
-                customData: { ...formContext, ...task.data, task },
-                setCustomData: setFormContext,
-                updateSchema: updateSchemaHandler,
-                isReadOnlyOverride: readonly,
-                mappedDocuments,
-                setMappedDocuments: handleSetMappedDocuments,
-                setSubmitEnabled: setSubmitEnabled,
-                setValidationSummary: setValidationSummary,
-            }}
+            formContext={mergedFormContext}
         ></DynamicForm>
     );
 });
