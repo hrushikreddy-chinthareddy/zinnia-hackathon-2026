@@ -167,8 +167,14 @@ export interface IndexUniversalLifeScenario extends BaseScenario {
 
 type Severity = 'INFO' | 'WARNING' | 'ERROR';
 
+export enum IllustrationMessageCode {
+    UnreachDesiredSolution = 4000,
+    UnsatisfiedSolve = 4001,
+    UnsatisfiedRider = 4002,
+}
+
 export type responseMessage = {
-    code: number;
+    code: IllustrationMessageCode | (number & Record<never, never>);
     severity: Severity;
     text: string;
 };

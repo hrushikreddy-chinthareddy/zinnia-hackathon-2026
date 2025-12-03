@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
@@ -46,6 +46,12 @@ const WithdrawalsPageHeaderContainer = ({
 
     const freeLookEnabled =
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
+
+    const isFreeLookPeriodExpired = useMemo(() => {
+        return policyDetails.freeLookPeriodDetails?.endDate
+            ? new Date() > new Date(policyDetails.freeLookPeriodDetails.endDate)
+            : false;
+    }, [policyDetails.freeLookPeriodDetails?.endDate]);
 
     const {
         data: partialWithdrawalOneTimeEligibility,
@@ -442,6 +448,7 @@ const WithdrawalsPageHeaderContainer = ({
                 )}
                 {freeLookEnabled &&
                 policyDetails.freeLookPeriodDetails.isInFreeLookPeriod &&
+                !isFreeLookPeriodExpired &&
                 isUserPermissionedToWithdraw ? (
                     <NavElement
                         href={
@@ -457,8 +464,7 @@ const WithdrawalsPageHeaderContainer = ({
                         {t('withdrawals.freeLookCancel')}
                     </NavElement>
                 ) : (
-                    freeLookEnabled &&
-                    policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
+                    freeLookEnabled && (
                         <TempNavInactive
                             tooltipBody={t(
                                 'withdrawals.rules.permissionDeniedTooltip',
