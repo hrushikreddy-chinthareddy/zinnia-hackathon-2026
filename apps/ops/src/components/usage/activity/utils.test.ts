@@ -5,7 +5,7 @@ import {
     getTransactionTypesByCategory,
     buildTopLevelSeries,
     buildDrilldownSeries,
-} from './utlis';
+} from './utils';
 import { colors } from '../utils';
 
 const mockTransactionData: UserTransactionOutputLevel1[] = [

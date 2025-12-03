@@ -458,7 +458,10 @@
         "timeline": "Ponctualité",
         "taxes": "Impôts",
         "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
-        "selectDateInRange": "Sélectionnez une date dans la plage:"
+        "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
+        "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."
     },
     "enums": {
         "LIFE": "Vie",
@@ -7872,7 +7875,8 @@
                 "addressChange": "Changement d'adresse",
                 "call": "Appel",
                 "formReview": "Examen du formulaire"
-            }
+            },
+            "summaryNigoError": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi."
         }
     },
     "initiateBenechangeTransaction": {
@@ -8850,9 +8854,7 @@
             "addProductAriaLabel": "Bouton pour ajouter un produit",
             "editIllustration": "Modifier l'illustration",
             "initialDeathBenefitOption": "Option de prestation de décès",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
-            "unreachDesiredSolutionMessage": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",
@@ -9204,5 +9206,22 @@
         "successTitle": "Succès",
         "errorTitle": "Erreur",
         "closeButton": "Fermer"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Ajouté",
+            "none": "Aucun",
+            "removed": "Supprimé",
+            "updated": "Mis à jour"
+        },
+        "noSummary": "Aucun récapitulatif de transaction disponible.",
+        "primaryBene": "Bénéficiaire principal",
+        "contingentBene": "Bénéficiaire conditionnel",
+        "loading": "L'API de validation est en cours d'exécution...",
+        "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
+        "errorMessage": "Hm, nous avons détecté un problème lors de la vérification des règles de cette politique. Veuillez consulter l'erreur ci-dessous.",
+        "submitWithErrorsText": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi.",
+        "internalServerError": "Erreur interne du serveur",
+        "failedToFetch": "Impossible de récupérer le résumé de validation"
     }
 }

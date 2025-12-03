@@ -458,7 +458,10 @@
         "timeline": "Timeline",
         "taxes": "Taxes",
         "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
-        "selectDateInRange": "Please select a date within range:"
+        "selectDateInRange": "Please select a date within range:",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+        "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
     },
     "enums": {
         "LIFE": "Life",
@@ -7988,7 +7991,8 @@
                 "call": "Call",
                 "formReview": "Form Review"
             },
-            "nextTask": "Continue to Next Task"
+            "nextTask": "Continue to Next Task",
+            "summaryNigoError": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
         },
         "formErrors": {
             "caseNotFound": "Case not found",
@@ -9036,9 +9040,7 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
-            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
@@ -9330,5 +9332,22 @@
         "successTitle": "Success",
         "errorTitle": "Error",
         "closeButton": "Close"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Added",
+            "none": "None",
+            "removed": "Removed",
+            "updated": "Updated"
+        },
+        "noSummary": "No transaction summary available.",
+        "primaryBene": "Primary beneficiary",
+        "contingentBene": "Contingent beneficiary",
+        "loading": "Validation API is Running....",
+        "successMessage": "Looking good! Be sure to review your entries before submitting",
+        "errorMessage": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+        "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "internalServerError": "Internal Server Error",
+        "failedToFetch": "Failed to fetch validation summary"
     }
 }

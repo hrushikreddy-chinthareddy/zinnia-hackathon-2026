@@ -60,18 +60,24 @@ const TaskFormStep = ({
     const [loading, setLoading] = useState(false);
     const [isValidForm, setIsValidForm] = useState(false);
     const [submitEnabled, setSubmitEnabled] = useState(true);
+    const [validationSummary, setValidationSummary] = useState<any>(null);
 
     const handleStepContinue = useCallback(async () => {
         if (formRef.current) {
-            setIsValidForm(formRef?.current?.validateForm() || false);
-            if (isValidForm) {
+            const valid = formRef.current.validateForm() || false;
+            setIsValidForm(valid);
+            const hasValidationErrors =
+                validationSummary && validationSummary.status !== 'success';
+            if (valid && !hasValidationErrors) {
                 formRef.current.submit();
+            } else if (hasValidationErrors) {
+                setError(t('summaryNigoError') as string);
             }
         }
         if (readonly && !isSubmit) {
             goToNext();
         }
-    }, [formRef]);
+    }, [formRef, readonly, isSubmit, goToNext, validationSummary]);
 
     useEffect(() => {
         if (!isContinueButtonEnabled) {
@@ -150,6 +156,7 @@ const TaskFormStep = ({
                         readonly={readonly}
                         ref={formRef}
                         onSubmit={handleSubmit}
+                        setValidationSummary={setValidationSummary}
                         isSubmit={isSubmit}
                         taskMetadata={taskMetadata}
                         setSubmitEnabled={setSubmitEnabled}

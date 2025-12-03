@@ -18,16 +18,21 @@ import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserTransactionGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    TimeframeFilterOptions,
     aggregateByCategory,
-    startDates,
     getTransactionTypesByCategory,
     PrepareTransactionActivityCSV,
     buildTopLevelSeries,
     buildDrilldownSeries,
-} from './utlis';
+} from './utils';
 import UsageHeaderLayout from '../usage-common-header';
-import { ApiRoles, colors, generateCSVFileName, ROLE_OPTIONS } from '../utils';
+import {
+    ApiRoles,
+    colors,
+    generateCSVFileName,
+    ROLE_OPTIONS,
+    TimeframeFilterOptions,
+    startDates,
+} from '../utils';
 import { ActivityTooltip, activityTooltipFormatter } from './activity-tooltip';
 
 export const Activity = () => {
