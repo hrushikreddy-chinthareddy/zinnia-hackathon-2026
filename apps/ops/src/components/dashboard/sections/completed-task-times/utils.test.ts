@@ -11,10 +11,6 @@ jest.mock('@deps/components/dashboard/utils', () => ({
     defaultDateFormat: 'MMM D, YYYY',
 }));
 
-jest.mock('i18next', () => ({
-    t: (key: string) => key.replace(/allFields\./, ''),
-}));
-
 describe('Completed Task Time Utils', () => {
     describe('getCarrierName', () => {
         it('should return "All Carriers" when no carriers selected', () => {
@@ -38,6 +34,12 @@ describe('Completed Task Time Utils', () => {
 
     describe('formatTaskTimeFromArray', () => {
         it('formats a flattened completed task array', () => {
+            const t = jest
+                .fn()
+                .mockImplementation((key: string) =>
+                    key.replace(/allFields\./, '')
+                );
+
             const array = [
                 {
                     caseType: 'New Business',
@@ -53,7 +55,7 @@ describe('Completed Task Time Utils', () => {
                 },
             ];
 
-            expect(formatTaskTimeFromArray(array)).toEqual([
+            expect(formatTaskTimeFromArray(array, t)).toEqual([
                 {
                     caseType: 'New Business',
                     secondMedian: '31.6 minutes',

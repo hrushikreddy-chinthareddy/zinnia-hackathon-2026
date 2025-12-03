@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { t } from 'i18next';
+import { TFunction } from 'next-i18next';
 
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { formatTaskTime } from '@deps/utils/dates';
@@ -54,7 +54,8 @@ export const getCarrierName = (selectedCarriers: {
  * @returns Array with stats values converted into a human-readble string
  */
 export const formatTaskTimeFromArray = (
-    processingTimesData: FlattenedCompletedTaskTimeData[]
+    processingTimesData: FlattenedCompletedTaskTimeData[],
+    t: TFunction
 ): FlattenedCompletedTaskTimeData[] => {
     if (!processingTimesData) return [];
 

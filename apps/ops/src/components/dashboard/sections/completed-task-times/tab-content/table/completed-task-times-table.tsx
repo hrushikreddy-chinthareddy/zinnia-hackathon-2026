@@ -62,6 +62,8 @@ export const CompletedTaskTimesTable = () => {
 
     const { selectedCarriers } = useDashboardStore((state) => state);
 
+    const { t } = useTranslation();
+
     const carrierName = useMemo(
         () => getCarrierName(selectedCarriers),
         [selectedCarriers]
@@ -70,9 +72,10 @@ export const CompletedTaskTimesTable = () => {
     const flattenedData = useMemo(
         () =>
             formatTaskTimeFromArray(
-                flattenCompletedTaskTimeData(completedTaskTimeData)
+                flattenCompletedTaskTimeData(completedTaskTimeData),
+                t
             ),
-        [completedTaskTimeData]
+        [completedTaskTimeData, t]
     );
 
     const csvFileName = useMemo(
@@ -125,7 +128,6 @@ export const CompletedTaskTimesTable = () => {
     const handleExportCSV = useCallback(() => {
         downloadCSV(flattenedData, csvFileName, CSV_COLUMNS);
     }, [flattenedData, csvFileName]);
-    const { t } = useTranslation();
 
     return (
         <CardContainer>
