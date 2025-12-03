@@ -281,7 +281,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                             systematicProgramTablesEnabled
                                 ? 'paymentAmountSP'
                                 : 'paymentAmount'
-                        ) as string
+                        ) ?? ''
                     }
                     size={FieldSize.Small}
                     className="max-w-[160px]"
@@ -290,7 +290,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                             systematicProgramTablesEnabled
                                 ? 'paymentAmountSP'
                                 : 'paymentAmount'
-                        ) as string
+                        ) ?? ''
                     }
                     leading="$"
                     type={FieldType.BaseActive}

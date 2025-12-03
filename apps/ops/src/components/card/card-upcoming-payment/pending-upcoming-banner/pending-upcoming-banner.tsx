@@ -2,7 +2,6 @@ import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
-import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
@@ -17,10 +16,7 @@ const PendingUpcomingBanner = ({
     policyNumber,
     requestSubTypes,
 }: PendingUpcomingBannerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'autopay.pendingBanner',
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
 
     const { featureFlags } = useOptimizely();
 
@@ -74,12 +70,12 @@ const PendingUpcomingBanner = ({
                     variant={BannerVariant.Information}
                     bodyText={
                         systematicProgramTablesEnabled
-                            ? defaultT('systematicProgramPendingBannerText')
-                            : t('text')
+                            ? t('systematicProgramPendingBannerText')
+                            : t('autopay.pendingBanner.text')
                     }
                     cta={{
                         href: `/cases/${caseId}`,
-                        text: t('caseLinkText'),
+                        text: t('autopay.pendingBanner.caseLinkText'),
                         target: '_blank',
                     }}
                 />

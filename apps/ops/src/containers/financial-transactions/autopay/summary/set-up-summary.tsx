@@ -16,7 +16,6 @@ import TransactionNavigationButtons, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import PayeeSummaryCard from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -48,10 +47,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
     const { autopay } = useAutopay();
     const { parentPage, translationKeyPrefix } = autopay;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: `${translationKeyPrefix}.summary`,
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
     const { policyNumber, product } = policy;
 
     const { featureFlags } = useOptimizely();
@@ -110,21 +106,25 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
         <div>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
                 <Typography variant={TypographyVariant.H1}>
-                    {t('label')}
+                    {t(`${translationKeyPrefix}.summary.label`)}
                 </Typography>
                 <Typography
                     className="mb-4 mt-2"
                     variant={TypographyVariant.Body}
                 >
                     {validationSucceeded
-                        ? t('status200subtitle')
-                        : t('status400subtitle')}
+                        ? t(`${translationKeyPrefix}.summary.status200subtitle`)
+                        : t(
+                              `${translationKeyPrefix}.summary.status400subtitle`
+                          )}
                 </Typography>
                 <div className="flex w-full flex-row gap-8">
                     <div className={conditionalClass}>
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('distributionType')}
+                            label={t(
+                                `${translationKeyPrefix}.summary.distributionType`
+                            )}
                         />
                         <Typography variant={TypographyVariant.Value}>
                             {arrangementType == ArrangementType.WITHDRAWAL
@@ -135,7 +135,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     <div className={conditionalClass}>
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('type')}
+                            label={t(`${translationKeyPrefix}.summary.type`)}
                         />
                         <Typography variant={TypographyVariant.Value}>
                             {'Dollar'}
@@ -146,8 +146,8 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                             variant={LabelVariant.FieldLabel}
                             label={t(
                                 systematicProgramTablesEnabled
-                                    ? 'autopayAmountSP'
-                                    : 'autopayAmount'
+                                    ? `${translationKeyPrefix}.summary.autopayAmountSP`
+                                    : `${translationKeyPrefix}.summary.autopayAmount`
                             )}
                         />
                         <Typography variant={TypographyVariant.Value}>
@@ -157,16 +157,20 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     <div className="flex flex-col gap-1">
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('paymentFrequency')}
+                            label={t(
+                                `${translationKeyPrefix}.summary.paymentFrequency`
+                            )}
                         />
                         <Typography variant={TypographyVariant.Value}>
-                            {toTitleCase(getFrequency(frequency, defaultT))}
+                            {toTitleCase(getFrequency(frequency, t))}
                         </Typography>
                     </div>
                     <div className="flex flex-col gap-1">
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('paymentStartDate')}
+                            label={t(
+                                `${translationKeyPrefix}.summary.paymentStartDate`
+                            )}
                         />
                         <Typography variant={TypographyVariant.Value}>
                             {dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(
@@ -177,7 +181,9 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     <div className={conditionalClass}>
                         <Label
                             variant={LabelVariant.FieldLabel}
-                            label={t('fundDisbursementType')}
+                            label={t(
+                                `${translationKeyPrefix}.summary.fundDisbursementType`
+                            )}
                         />
                         <Typography variant={TypographyVariant.Value}>
                             {'Pro rata'}
@@ -193,7 +199,7 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                         width={24}
                     />
                     <Typography variant={TypographyVariant.H2} className="mr-5">
-                        {t('payor')}
+                        {t(`${translationKeyPrefix}.summary.payor`)}
                     </Typography>
                 </div>
                 {isWithdrawalAutopay ? (
@@ -241,12 +247,18 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                                 canDismiss={false}
                                 variant={BannerVariant.Error}
                             >
-                                <b>{t('bpm500Error')}</b>
+                                <b>
+                                    {t(
+                                        `${translationKeyPrefix}.summary.bpm500Error`
+                                    )}
+                                </b>
                             </BannerAlert>
                         )}
                         <div className="flex flex-row">
                             <CheckboxText
-                                label={t('submitWithErrorsText')}
+                                label={t(
+                                    `${translationKeyPrefix}.summary.submitWithErrorsText`
+                                )}
                                 checked={isChecked}
                                 onChange={() => setIsChecked(!isChecked)}
                             />
@@ -258,7 +270,9 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     <AssistiveText
                         className="mt-2"
                         variant={AssistiveTextVariant.Error}
-                        text={t('missingCheckToConfirm')}
+                        text={t(
+                            `${translationKeyPrefix}.summary.missingCheckToConfirm`
+                        )}
                     />
                 )}
 
@@ -269,7 +283,9 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     parentPage={parentPage as ParentPage}
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
-                    submitLabel={t('submit') as string}
+                    submitLabel={
+                        t(`${translationKeyPrefix}.summary.submit`) ?? ''
+                    }
                     trackEventProps={{
                         type: transactionType,
                         step: TransactionStep.Summary,

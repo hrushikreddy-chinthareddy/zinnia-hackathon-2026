@@ -358,7 +358,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                 </div>
                 <SelectSimple
                     className="flex max-w-[246px] placeholder:text-gray-400 mt-2"
-                    label={t('type') as string}
+                    label={t('type') ?? ''}
                     options={amountOptions}
                     onChange={(value) =>
                         setAutopay({
@@ -373,10 +373,10 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                 />
                 {
                     <Field
-                        data-testid={t('paymentAmount') as string}
+                        data-testid={t('paymentAmount') ?? ''}
                         size={FieldSize.Small}
                         className="max-w-[160px]"
-                        label={t('paymentAmount') as string}
+                        label={t('paymentAmount') ?? ''}
                         leading="$"
                         type={FieldType.BaseActive}
                         value={String(numberFormatify(autopay.paymentAmount))}
@@ -428,11 +428,9 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                     {t('fundDisbursementTypeLabel')}
                 </Typography>
                 <FieldLabel
-                    label={t('fundDisbursementType') as string}
-                    labelTooltip={t('fundDisbursementType') as string}
-                    labelTooltipBody={
-                        t('fundDisbursementTypeTooltip') as string
-                    }
+                    label={t('fundDisbursementType') ?? ''}
+                    labelTooltip={t('fundDisbursementType') ?? ''}
+                    labelTooltipBody={t('fundDisbursementTypeTooltip') ?? ''}
                 />
                 <div className="flex">
                     <input

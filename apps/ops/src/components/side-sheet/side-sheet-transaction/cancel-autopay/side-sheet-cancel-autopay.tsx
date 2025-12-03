@@ -16,7 +16,6 @@ import {
 } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -92,10 +91,7 @@ const SideSheetCancelAutopay = ({
     isFromWithdrawals = false,
     errorContent,
 }: SideSheetCancelAutopayProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'transactions.cancelAutopay',
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
 
     const { featureFlags } = useOptimizely();
     const systematicProgramTablesEnabled =
@@ -152,14 +148,18 @@ const SideSheetCancelAutopay = ({
         if (caseId == undefined) {
             localErrors = {
                 ...localErrors,
-                caseId: errors.caseId || `${t('missingCaseDocument')}`,
+                caseId:
+                    errors.caseId ||
+                    `${t('transactions.cancelAutopay.missingCaseDocument')}`,
             };
         }
 
         if (isNullEmptyOrUndefined(effectiveDate)) {
             localErrors = {
                 ...localErrors,
-                effectiveDate: `${t('invalidEffectiveDate')}`,
+                effectiveDate: `${t(
+                    'transactions.cancelAutopay.invalidEffectiveDate'
+                )}`,
             };
         }
 
@@ -168,8 +168,8 @@ const SideSheetCancelAutopay = ({
                 ...localErrors,
                 confirmCancel: `${
                     systematicProgramTablesEnabled
-                        ? defaultT('confirmCancelProgram')
-                        : t('confirmCancelError')
+                        ? t('confirmCancelProgram')
+                        : t('transactions.cancelAutopay.confirmCancelError')
                 }`,
             };
         }
@@ -311,10 +311,7 @@ const SideSheetCancelAutopay = ({
     };
 
     const proceedCancelData = {
-        frequency: getFrequency(
-            systematicProgram?.frequency as Frequency,
-            defaultT
-        ),
+        frequency: getFrequency(systematicProgram?.frequency as Frequency, t),
         amount: numberFormatify(systematicProgram?.amount),
     };
 
@@ -331,8 +328,11 @@ const SideSheetCancelAutopay = ({
                         date={effectiveDate}
                         label={
                             (systematicProgramTablesEnabled
-                                ? defaultT('proceedCancel', proceedCancelData)
-                                : t('proceedCancel', proceedCancelData)) || ''
+                                ? t('proceedCancel', proceedCancelData)
+                                : t(
+                                      'transactions.cancelAutopay.proceedCancel',
+                                      proceedCancelData
+                                  )) ?? ''
                         }
                     >
                         {errorContent ?? <></>}
@@ -367,7 +367,9 @@ const SideSheetCancelAutopay = ({
                 <SuccessState
                     caseId={newCaseId}
                     transactionType={t(
-                        getArrangementTranslationKey(arrangementType)
+                        `transactions.cancelAutopay.${getArrangementTranslationKey(
+                            arrangementType
+                        )}`
                     )}
                     isNigo={!!validationResults?.length}
                     onCancel={onCancel}
@@ -393,9 +395,11 @@ const SideSheetCancelAutopay = ({
                     setViewState={setViewState}
                 />
                 <FieldDateSelect
-                    data-testid={t('effectiveDate') as string}
+                    data-testid={
+                        t('transactions.cancelAutopay.effectiveDate') ?? ''
+                    }
                     className="flex max-w-[160px]"
-                    label={t('effectiveDate') as string}
+                    label={t('transactions.cancelAutopay.effectiveDate') ?? ''}
                     value={String(effectiveDate)}
                     onChange={handleDateChange}
                     size={FieldSize.Small}
@@ -419,18 +423,14 @@ const SideSheetCancelAutopay = ({
                             : undefined
                     }
                     checked={confirmCancel}
-                    label={t(
+                    label={
                         systematicProgramTablesEnabled
-                            ? 'proceedCancelSP'
-                            : 'proceedCancel',
-                        {
-                            frequency: getFrequency(
-                                systematicProgram?.frequency as Frequency,
-                                defaultT
-                            ),
-                            amount: numberFormatify(systematicProgram?.amount),
-                        }
-                    )}
+                            ? t('proceedCancel', proceedCancelData) ?? ''
+                            : t(
+                                  'transactions.cancelAutopay.proceedCancel',
+                                  proceedCancelData
+                              ) ?? ''
+                    }
                     onChange={() => setConfirmCancel(!confirmCancel)}
                 />
             </div>
@@ -440,12 +440,12 @@ const SideSheetCancelAutopay = ({
                 mainCta={{
                     onClick: validateAndSubmitUpdate,
                     text: systematicProgramTablesEnabled
-                        ? defaultT('cancelProgram')
-                        : t('cancelAutopay'),
+                        ? t('cancelProgram')
+                        : t('transactions.cancelAutopay.cancelAutopay'),
                 }}
                 secondaryCta={{
                     onClick: onCancel,
-                    text: t('cancel'),
+                    text: t('transactions.cancelAutopay.cancel'),
                 }}
                 stopLoading={!loading}
                 newSpinner={true}

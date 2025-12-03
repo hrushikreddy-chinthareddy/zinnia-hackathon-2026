@@ -171,7 +171,7 @@ const AutopayContainer = ({
                     state={autopay}
                     subtitle={
                         !isSetUp && parentPage === ParentPage.Premiums
-                            ? (t('start.subtitleManage') as string)
+                            ? t('start.subtitleManage') ?? ''
                             : undefined
                     }
                     title={

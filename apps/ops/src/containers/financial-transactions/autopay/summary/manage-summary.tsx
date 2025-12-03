@@ -274,12 +274,12 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     policyNumber={policyNumber}
                     submitLabel={
                         validationSucceeded
-                            ? (t(
+                            ? t(
                                   systematicProgramTablesEnabled
                                       ? 'updateAutopaySP'
                                       : 'updateAutopay'
-                              ) as string)
-                            : (t('submit') as string)
+                              ) ?? ''
+                            : t('submit') ?? ''
                     }
                     trackEventProps={{
                         type: transactionType,
