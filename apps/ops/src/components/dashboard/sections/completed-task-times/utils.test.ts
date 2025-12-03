@@ -11,6 +11,10 @@ jest.mock('@deps/components/dashboard/utils', () => ({
     defaultDateFormat: 'MMM D, YYYY',
 }));
 
+jest.mock('i18next', () => ({
+    t: (key: string) => key.replace(/allFields\./, ''),
+}));
+
 describe('Completed Task Time Utils', () => {
     describe('getCarrierName', () => {
         it('should return "All Carriers" when no carriers selected', () => {
