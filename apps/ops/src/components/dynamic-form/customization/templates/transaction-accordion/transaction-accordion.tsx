@@ -1,15 +1,18 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import { TranslationFiles } from '@deps/config/translations';
 import { Action } from '@deps/constants/policy';
 
 import styles from './transaction-accordion.module.css';
 import { getTitle } from './utils';
 
-function TransactionAccordionTemplate(
+export const TransactionAccordionTemplate = (
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
-) {
+) => {
     const { canAdd, items, onAddClick, readonly, uiSchema, formContext } =
         props;
 
@@ -31,6 +34,9 @@ function TransactionAccordionTemplate(
     const [disabledIndices, setDisabledIndices] = useState<Set<number>>(
         new Set()
     );
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactionAccordion',
+    });
 
     const prevLengthRef = useRef(items.length);
 
@@ -153,7 +159,7 @@ function TransactionAccordionTemplate(
                                 {!readonly && showDeleteBtn && !isNewItem && (
                                     <CheckboxText
                                         id={`remove-${index}`}
-                                        label="Remove"
+                                        label={t('remove')}
                                         checked={isDisabled}
                                         onChange={() =>
                                             handleCheckboxChange(index)
@@ -187,12 +193,11 @@ function TransactionAccordionTemplate(
                         onClick={handleAddClick}
                         className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
                     >
-                        {` + ${addButtonCTA}`}
+                        <Icon type={IconType.ADD} small />
+                        <>{addButtonCTA}</>
                     </button>
                 </div>
             )}
         </div>
     );
-}
-
-export default TransactionAccordionTemplate;
+};

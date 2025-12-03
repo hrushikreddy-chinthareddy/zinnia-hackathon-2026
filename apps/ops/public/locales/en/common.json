@@ -8468,6 +8468,9 @@
             "allocationErr": "Allocations must equal 100%"
         }
     },
+    "transactionAccordion": {
+        "remove": "Remove"
+    },
     "fundAllocation": {
         "submitted": "Submitted!",
         "editAllocationNigoSummary1": "We submitted this request for ",

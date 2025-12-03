@@ -1,7 +1,7 @@
-import { FieldTemplateProps } from '@rjsf/utils';
+import { FieldTemplateProps, ObjectFieldTemplateProps } from '@rjsf/utils';
 
 type PartyCardFieldTemplateProps = FieldTemplateProps & {
-    properties: any[];
+    properties: NonNullable<ObjectFieldTemplateProps['properties']>;
 };
 
 export function PartyCardFieldTemplate(props: PartyCardFieldTemplateProps) {

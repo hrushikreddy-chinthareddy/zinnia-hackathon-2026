@@ -1,4 +1,5 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import { useState, useRef, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
@@ -46,23 +47,6 @@ export default function PartyInfoListTemplate(
                 copy.add(addedIndex);
                 return copy;
             });
-        }
-
-        prevLengthRef.current = newLen;
-    }, [items.length]);
-
-    useEffect(() => {
-        const prevLen = prevLengthRef.current;
-        const newLen = items.length;
-
-        if (newLen > prevLen) {
-            const addedIndex = newLen - 1;
-
-            setNewlyAddedSet((prev) => {
-                const copy = new Set(prev);
-                copy.add(addedIndex);
-                return copy;
-            });
 
             requestAnimationFrame(() => {
                 const el = itemRefs.current[addedIndex];
@@ -86,7 +70,9 @@ export default function PartyInfoListTemplate(
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
-                    {overrideTitle || title}
+                    <span className={styles.title}>
+                        {overrideTitle || title}
+                    </span>
 
                     {!readonly && canAdd && (
                         <button
@@ -94,7 +80,8 @@ export default function PartyInfoListTemplate(
                             onClick={onAddClick}
                             className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
                         >
-                            {`+ ${addButtonCTA}`}
+                            <Icon type={IconType.ADD} small />
+                            <>{addButtonCTA}</>
                         </button>
                     )}
                 </div>
@@ -110,7 +97,7 @@ export default function PartyInfoListTemplate(
                             ref={(el) => {
                                 itemRefs.current[index] = el;
                             }}
-                            className={`bg-[#F8F8F8] border border-[#e5e5e5] rounded-lg p-4 mb-4 shadow-sm ${
+                            className={`${styles.card} ${
                                 newlyAddedSet.has(index)
                                     ? styles.animateSlideUp
                                     : ''
