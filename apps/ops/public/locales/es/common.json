@@ -7839,7 +7839,8 @@
                 "addressChange": "Cambio de Dirección",
                 "call": "Llamar",
                 "formReview": "Revisión del formulario"
-            }
+            },
+            "summaryNigoError": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento."
         },
         "formErrors": {
             "caseNotFound": "Caso no encontrado",
@@ -8318,6 +8319,9 @@
         "agentDetails": {
             "allocationErr": "Las asignaciones deben ser iguales al 100%"
         }
+    },
+    "transactionAccordion": {
+        "remove": "Eliminar"
     },
     "fundAllocation": {
         "submitted": "¡Enviado!",
@@ -9162,5 +9166,22 @@
         "successTitle": "Éxito",
         "errorTitle": "Error",
         "closeButton": "Cerrar"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Agregada",
+            "none": "Ninguna",
+            "removed": "Remota",
+            "updated": "actualizado"
+        },
+        "noSummary": "No hay resumen de transacción disponible.",
+        "primaryBene": "Beneficiario principal",
+        "contingentBene": "Beneficiario contingente",
+        "loading": "La API de validación se está ejecutando...",
+        "successMessage": "¡Se ve bien! Asegúrate de revisar tus participaciones antes de enviarlas.",
+        "errorMessage": "Encontramos un problema al revisar las reglas de esta política. Revisa el error a continuación.",
+        "submitWithErrorsText": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento.",
+        "internalServerError": "Error Interno del Servidor",
+        "failedToFetch": "No se pudo obtener el resumen de validación"
     }
 }

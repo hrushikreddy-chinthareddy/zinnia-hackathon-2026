@@ -1,8 +1,6 @@
 import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
 
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
-import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import {
     UserViewsOutputLevel1,
     UserViewsOutputLevel3,
@@ -15,26 +13,6 @@ import {
     ROLE_OPTIONS,
     toUiRole,
 } from '../utils';
-
-export enum TimeframeFilterOptions {
-    Last6Months = '6M',
-    Last3Months = '3M',
-    Last1Month = '1M',
-}
-
-export const startDates: Record<TimeframeFilterOptions, string> = {
-    [TimeframeFilterOptions.Last6Months]: dayjs()
-        .subtract(6, 'month')
-        .format(ZAHARA_DATE_FORMAT),
-    [TimeframeFilterOptions.Last3Months]: dayjs()
-        .subtract(3, 'month')
-        .format(ZAHARA_DATE_FORMAT),
-    [TimeframeFilterOptions.Last1Month]: dayjs()
-        .subtract(1, 'month')
-        .format(ZAHARA_DATE_FORMAT),
-};
-
-dayjs.extend(isoWeek);
 
 export const roles = ROLE_OPTIONS;
 
