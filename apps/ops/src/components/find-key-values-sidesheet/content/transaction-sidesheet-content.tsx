@@ -27,6 +27,11 @@ import {
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
+    addLinkToPartyId,
+    addToolTip,
+    formatNode,
+} from '../transformations/formatters';
+import {
     excludeNodesByLabel,
     searchNodes,
 } from '../transformations/node-visibility';
@@ -35,11 +40,6 @@ import {
     groupBasicsForTransaction,
     getAllParties,
 } from '../transformations/section-grouping';
-import {
-    addLinkToPartyId,
-    addToolTip,
-    formatNode,
-} from '../transformations/formatters';
 
 export const TransactionSidesheetContent = ({
     transaction,

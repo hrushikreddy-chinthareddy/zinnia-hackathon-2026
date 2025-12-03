@@ -34,13 +34,13 @@ import {
     transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
+import { addToolTip, formatNode } from '../transformations/formatters';
 import {
     excludeNodeByCarrierRules,
     excludeNodesByLabel,
     searchNodes,
 } from '../transformations/node-visibility';
 import { FindAllKeyValuesSidebarProps } from '../types';
-import { addToolTip, formatNode } from '../transformations/formatters';
 
 export const PolicySidesheetContent = ({
     planCode,
