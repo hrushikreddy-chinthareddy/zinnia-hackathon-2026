@@ -43,10 +43,7 @@ interface LoansContainerProps {
 }
 
 export const LoansSubPage = ({ policy }: LoansContainerProps) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'premium.upcoming',
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const sideSheet = useSideSheetContext();
 
@@ -149,8 +146,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {systematicProgramTablesEnabled
-                    ? defaultT('cancelLoanProgram')
-                    : t('cancelLoanAutopayTitle')}
+                    ? t('cancelLoanProgram')
+                    : t('premium.upcoming.cancelLoanAutopayTitle')}
             </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.LOANREPAYMENT}
@@ -169,7 +166,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
 
         if (permissionRequired) {
             return !isUserPermissionedToEditLoan
-                ? t('transactions.permissionDeniedTooltip', {
+                ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
                       carrier: policyDetails.carrierName,
                   })
                 : undefined;
@@ -181,7 +178,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     };
     const getLoanTooltipsetUpAutoPay = () => {
         return !isUserPermissionedToEditLoan
-            ? t('transactions.permissionDeniedTooltip', {
+            ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
                   carrier: policyDetails.carrierName,
               })
             : undefined;
@@ -193,7 +190,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
 
         if (permissionRequired) {
             return !isUserPermissionedToEditLoan
-                ? t('transactions.permissionDeniedTooltip', {
+                ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
                       carrier: policyDetails.carrierName,
                   })
                 : undefined;
@@ -219,23 +216,23 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                     bankDetails={payorBankDetails}
                     additionalCharges={addCharges}
                     paymentFrequencyText={
-                        t('paymentFrequencyText', {
+                        t('premium.upcoming.paymentFrequencyText', {
                             paymentMode: getFrequency(
                                 upcomingLoanRepayment?.frequency as Frequency,
-                                defaultT
+                                t
                             ),
-                            paymentType: t('paymentType.loan'),
+                            paymentType: t('premium.upcoming.paymentType.loan'),
                         }) || undefined
                     }
                     paymentDateText={
                         (!!upcomingLoanRepayment?.nextProgramDate &&
-                            t('paymentDateText')) ||
+                            t('premium.upcoming.paymentDateText')) ||
                         undefined
                     }
                     footerLinks={[
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/start-loan-payment`,
-                            text: t('setUpAutopay'),
+                            text: t('premium.upcoming.setUpAutopay'),
                             isDisabled:
                                 !loanPaymentEnabled ||
                                 upcomingLoanRepayment?.nextProgramDate !==
@@ -245,7 +242,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         },
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/manage-loan-payment`,
-                            text: t('manageAutopay'),
+                            text: t('premium.upcoming.manageAutopay'),
                             isDisabled:
                                 !loanPaymentEnabled ||
                                 !systematicProgramsEligibility?.isEligibleManageAutopay ||
@@ -260,12 +257,12 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                                 !loanPaymentEnabled ||
                                 !upcomingLoanRepayment?.nextProgramDate ||
                                 !isUserPermissionedToEditLoan,
-                            text: t('cancelAutopay'),
+                            text: t('premium.upcoming.cancelAutopay'),
                             onClick: openCancelSideSheet,
                         },
                         {
                             href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/loans/loan-payment`,
-                            text: t('oneTimePaymentText'),
+                            text: t('premium.upcoming.oneTimePaymentText'),
                             isDisabled:
                                 !loanRepaymentOneTimeEligibility?.isEligibleLoanRepaymentOneTime ||
                                 !isUserPermissionedToEditLoan,

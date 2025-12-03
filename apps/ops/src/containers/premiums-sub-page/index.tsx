@@ -9,7 +9,6 @@ import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-trans
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -43,10 +42,7 @@ import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 
 export const PremiumsSubPage = () => {
     const { policy, policyDetails } = useContext(PolicyData);
-    const { t: tRoot } = useTranslation(TranslationFiles.COMMON);
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'premium.upcoming',
-    });
+    const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
     const premiumSetOrCancelAutopayEnabled =
@@ -148,7 +144,7 @@ export const PremiumsSubPage = () => {
 
         if (permissionRequired) {
             return !isUserPermissionedToAutopay
-                ? t('transactions.permissionDeniedTooltip', {
+                ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
                       carrier: policyDetails.carrierName,
                   })
                 : undefined;
@@ -165,7 +161,7 @@ export const PremiumsSubPage = () => {
 
         if (permissionRequired) {
             return !isUserPermissionedToAutopay
-                ? t('transactions.permissionDeniedTooltip', {
+                ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
                       carrier: policyDetails.carrierName,
                   })
                 : undefined;
@@ -209,8 +205,8 @@ export const PremiumsSubPage = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {systematicProgramTablesEnabled
-                    ? tRoot('cancelPremiumAutopayTitleSP')
-                    : t('cancelPremiumAutopayTitle')}
+                    ? t('cancelPremiumAutopayTitleSP')
+                    : t('premium.upcoming.cancelPremiumAutopayTitle')}
             </Typography>,
             <SideSheetCancelAutopay
                 arrangementType={ArrangementType.PAYMENT}
@@ -224,7 +220,7 @@ export const PremiumsSubPage = () => {
 
     const footerContent = [
         {
-            text: t('startAutopay'),
+            text: t('premium.upcoming.startAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
             isDisabled:
                 !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
@@ -232,13 +228,13 @@ export const PremiumsSubPage = () => {
                 upcomingPayment?.nextProgramDate ||
                 !isUserPermissionedToAutopay,
             tooltip: !isUserPermissionedToAutopay
-                ? t('transactions.permissionDeniedTooltip', {
+                ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
                       carrier: policyDetails.carrierName,
                   })
                 : undefined,
         },
         {
-            text: t('manageAutopay'),
+            text: t('premium.upcoming.manageAutopay'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
             isDisabled:
                 !systematicProgramsEligibility?.isEligibleManageAutopay ||
@@ -254,11 +250,11 @@ export const PremiumsSubPage = () => {
                 !systematicProgramsEligibility?.isEligibleManageAutopay ||
                 !upcomingPayment?.nextProgramDate ||
                 !isUserPermissionedToAutopay,
-            text: t('cancelAutopay'),
+            text: t('premium.upcoming.cancelAutopay'),
             onClick: openCancelSideSheet,
         },
         {
-            text: t('oneTimePaymentText'),
+            text: t('premium.upcoming.oneTimePaymentText'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium`,
             isDisabled:
                 !oneTimePremiumEligibility?.isEligibleOneTimePremium ||
@@ -289,15 +285,15 @@ export const PremiumsSubPage = () => {
                 paymentDate={upcomingPayment?.nextProgramDate}
                 paymentDateText={
                     (!!upcomingPayment?.nextProgramDate &&
-                        t('paymentDateText')) ||
+                        t('premium.upcoming.paymentDateText')) ||
                     undefined
                 }
                 paymentFrequencyText={
-                    t('paymentFrequencyText', {
+                    t('premium.upcoming.paymentFrequencyText', {
                         paymentMode: upcomingPayment?.frequency
-                            ? getFrequency(upcomingPayment?.frequency, tRoot)
+                            ? getFrequency(upcomingPayment?.frequency, t)
                             : '',
-                        paymentType: t('paymentType.premium'),
+                        paymentType: t('premium.upcoming.paymentType.premium'),
                     }) || undefined
                 }
                 requestSubTypes={[
