@@ -33,9 +33,6 @@
     right: -16px;
     width: 16px;
     height: 100%;
-    &:focus-visible {
-        outline-width: 0;
-    }
 }
 
 .toggleButton {
