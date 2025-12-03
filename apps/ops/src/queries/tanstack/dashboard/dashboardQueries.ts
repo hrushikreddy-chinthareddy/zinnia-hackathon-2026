@@ -1,3 +1,5 @@
+import { TFunction } from 'i18next';
+
 import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { Statuses } from '@deps/models/case/case';
 import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
@@ -17,7 +19,6 @@ import {
 } from '@zinnia/api-types/types/analytics';
 
 import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
-
 export const getCaseDashboardStatsQuery = async (
     baseFilter: CaseCountInputFilter,
     groupBy: CaseCountGroupByEnum[]
@@ -153,7 +154,8 @@ export const getTaskCountQuery = async (
 
 export const getCompletedTaskTimeQuery = async (
     baseFilter: CompletedTaskTimeInputFilter,
-    groupBy: CompletedTaskTimeGroupByEnum[]
+    groupBy: CompletedTaskTimeGroupByEnum[],
+    t: TFunction
 ) => {
     const completedTaskTimesResponse = await getCompletedTaskTimeData({
         filter: baseFilter,
@@ -186,7 +188,7 @@ export const getCompletedTaskTimeQuery = async (
                     .map((value) => {
                         // Handle empty or missing task names
                         if (!value?.name) {
-                            value.name = 'Unknown task';
+                            value.name = t('allFields.unknownTask');
                         }
                         return value;
                     });

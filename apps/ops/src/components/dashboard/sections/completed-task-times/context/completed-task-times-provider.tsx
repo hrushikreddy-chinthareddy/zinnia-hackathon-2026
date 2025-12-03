@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FC, PropsWithChildren, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { CompletedTaskTimeData } from '@deps/components/dashboard/sections/completed-task-times/utils';
@@ -48,6 +49,8 @@ export const CompletedTaskTimeProvider: FC<PropsWithChildren> = ({
         (state) => state
     );
 
+    const { t } = useTranslation();
+
     const {
         timeframeRadio,
         timerange,
@@ -86,13 +89,17 @@ export const CompletedTaskTimeProvider: FC<PropsWithChildren> = ({
         isLoading: completedTaskTimeDataLoading,
         isError: completedTaskTimeDataError,
     } = useQuery({
-        queryKey: ['completedTaskTimeData', filter],
+        queryKey: ['completedTaskTimeData', filter, t],
         placeholderData: (previousData) => previousData,
         queryFn: () =>
-            getCompletedTaskTimeQuery(filter, [
-                CompletedTaskTimeGroupByEnum.PROCESS,
-                CompletedTaskTimeGroupByEnum.TASK_NAME,
-            ]),
+            getCompletedTaskTimeQuery(
+                filter,
+                [
+                    CompletedTaskTimeGroupByEnum.PROCESS,
+                    CompletedTaskTimeGroupByEnum.TASK_NAME,
+                ],
+                t
+            ),
         enabled: !!timerange.from && !!timerange.to,
     });
 

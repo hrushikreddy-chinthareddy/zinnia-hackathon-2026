@@ -469,6 +469,10 @@
         "totalTasks": "Nombre total de tâches",
         "allTasks": "Toutes les tâches",
         "exportCSV": "Exporter en CSV",
+        "unknownTask": "Tâche inconnue",
+        "minute": "minute",
+        "hour": "heure",
+        "day": "jour",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
         "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."

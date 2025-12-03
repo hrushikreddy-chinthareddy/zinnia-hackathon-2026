@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
+import { t } from 'i18next';
 
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { formatTaskTime } from '@deps/utils/dates';
-
 // Flattened data structure for CSV export
 export interface FlattenedCompletedTaskTimeData {
     caseType: string;
@@ -61,7 +61,7 @@ export const formatTaskTimeFromArray = (
     return processingTimesData.map((caseType) => {
         return {
             caseType: caseType.caseType,
-            secondMedian: formatTaskTime(caseType.secondMedian),
+            secondMedian: formatTaskTime(caseType.secondMedian, t),
             taskName: caseType.taskName,
             count: caseType.count,
         };

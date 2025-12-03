@@ -140,39 +140,43 @@ describe('startOfTomorrowLocalIso', () => {
 });
 
 describe('formatTaskTime', () => {
+    const t = jest
+        .fn()
+        .mockImplementation((key: string) => key.replace(/allFields\./, ''));
+
     it('formats 30 minutes correctly', () => {
-        expect(formatTaskTime(30 * ONE_MINUTE)).toBe('30 minutes');
+        expect(formatTaskTime(30 * ONE_MINUTE, t)).toBe('30 minutes');
     });
 
     it('formats exactly 1 minute', () => {
-        expect(formatTaskTime(1 * ONE_MINUTE)).toBe('1 minute');
+        expect(formatTaskTime(1 * ONE_MINUTE, t)).toBe('1 minute');
     });
 
     it('formats 3599 seconds to 1 hour', () => {
-        expect(formatTaskTime(3599)).toBe('1 hour');
+        expect(formatTaskTime(3599, t)).toBe('1 hour');
     });
 
     it('formats 59 minutes correctly', () => {
-        expect(formatTaskTime(59 * ONE_MINUTE)).toBe('59 minutes');
+        expect(formatTaskTime(59 * ONE_MINUTE, t)).toBe('59 minutes');
     });
 
     it('formats fractionals hours (2.5h)', () => {
-        expect(formatTaskTime(2.5 * ONE_HOUR)).toBe('2.5 hours');
+        expect(formatTaskTime(2.5 * ONE_HOUR, t)).toBe('2.5 hours');
     });
 
     it('formats exactly 1 day', () => {
-        expect(formatTaskTime(1 * ONE_DAY)).toBe('1 day');
+        expect(formatTaskTime(1 * ONE_DAY, t)).toBe('1 day');
     });
 
     it('formats 86399 seconds to 1 days', () => {
-        expect(formatTaskTime(86399)).toBe('1 day');
+        expect(formatTaskTime(86399, t)).toBe('1 day');
     });
 
     it('formats exactly (1.5 d)', () => {
-        expect(formatTaskTime(1.5 * ONE_DAY)).toBe('1.5 days');
+        expect(formatTaskTime(1.5 * ONE_DAY, t)).toBe('1.5 days');
     });
 
     it('formats 0ms as 0 minutes', () => {
-        expect(formatTaskTime(0)).toBe('0 minutes');
+        expect(formatTaskTime(0, t)).toBe('0 minutes');
     });
 });
