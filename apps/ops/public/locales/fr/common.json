@@ -8352,6 +8352,9 @@
             "allocationErr": "Les allocations doivent être égales à 100 %"
         }
     },
+    "transactionAccordion": {
+        "remove": "Supprimer"
+    },
     "fundAllocation": {
         "submitted": "Soumis!",
         "editAllocationNigoSummary1": "Nous avons soumis cette demande pour",

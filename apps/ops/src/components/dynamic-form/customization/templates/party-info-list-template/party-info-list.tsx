@@ -1,8 +1,10 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useState, useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import { TranslationFiles } from '@deps/config/translations';
 
 import styles from './party-info-list.module.css';
 
@@ -26,6 +28,10 @@ export default function PartyInfoListTemplate(
     const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactionAccordion',
+    });
 
     const toggleDisable = (index: number) => {
         setDisabledSet((prev) => {
@@ -118,7 +124,7 @@ export default function PartyInfoListTemplate(
                                         !newlyAddedSet.has(index) && (
                                             <CheckboxText
                                                 id={`remove-address-${index}`}
-                                                label="Remove"
+                                                label={t('remove')}
                                                 checked={isDisabled}
                                                 onChange={() =>
                                                     toggleDisable(index)
