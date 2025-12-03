@@ -55,3 +55,5 @@ export type DataGroup = {
 };
 
 export type DataNode = DataField | DataSection | DataGroup;
+
+export type TransformFunction = (node: DataNode) => DataNode | undefined;

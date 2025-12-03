@@ -4,7 +4,7 @@ import { typedEntries } from '@deps/utils/objects';
 
 import { formatAsDataValue } from '../transformations/formatters';
 import { sectionTypeToSubSectionTitleFields } from '../translations/subsection-field-to-title';
-import { DataNode, FieldType, DataSection } from '../types';
+import { DataNode, FieldType, DataSection, TransformFunction } from '../types';
 import {
     isNonNullishObject,
     isPrimitive,
@@ -123,7 +123,6 @@ function convertTuple(
 
     return;
 }
-
 /**
  * Recursively transforms an array of nodes
  *
@@ -131,12 +130,26 @@ function convertTuple(
  * @param transform - the transform function
  * @returns the transformed nodes
  */
-export const transformNodes = (
-    nodes: DataNode[],
-    transform: (node: DataNode) => DataNode | undefined
-): DataNode[] => {
+export const transformNodes = ({
+    nodes,
+    transforms,
+}: {
+    nodes: DataNode[];
+    transforms: TransformFunction | TransformFunction[];
+}): DataNode[] => {
+    if (!Array.isArray(transforms)) {
+        transforms = [transforms];
+    }
     return nodes
-        .map((node) => transformNode(node, transform))
+        .map((node) => {
+            const ret = transforms.reduce<DataNode | undefined>(
+                (acc, transform) => {
+                    return acc ? transformNode(acc, transform) : undefined;
+                },
+                node
+            );
+            return ret;
+        })
         .filter(isNotNullish);
 };
 

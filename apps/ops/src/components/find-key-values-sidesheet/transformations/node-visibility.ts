@@ -1,12 +1,11 @@
 import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
 
-import { combinedTransform } from './formatters';
 import { transformNodes } from '../data-node-helpers/mutations';
 import {
     isDataField,
     isDataGroup,
     isDataSection,
+    isDataSectionOrField,
     isNotNullish,
 } from '../data-node-helpers/predicates';
 import { sectionVisibility } from '../translations/carrier-rules';
@@ -21,49 +20,15 @@ import { DataNode, FieldType } from '../types';
  * @param policyNomenclature - policy nomenclature
  * @returns filtered nodes
  */
-export const excludeNodesByLabel = (
-    nodes: DataNode[],
-    t: TFunction,
-    policyNomenclature?: string
-) => {
-    return transformNodes(
-        nodes,
-        combinedTransform({
-            t,
-            exclude: Array.from(excludeFields),
-            policyNomenclature,
-        })
-    );
-};
-
-/**
- * Filters nodes based on carrier-rules
- *
- * @param nodes - nodes to filter
- * @param lineOfBusiness - line of business
- * @param productType - product type
- * @param planCode - plan code
- * @returns filtered nodes
- */
-export const excludeNodesByCarrierRules = ({
-    nodes,
-    lineOfBusiness,
-    productType,
-    planCode,
+export const excludeNodesByLabel = ({
+    node,
 }: {
-    nodes: DataNode[];
-    lineOfBusiness?: LineOfBusiness;
-    productType?: ProductType;
-    planCode?: string;
-}) => {
-    return transformNodes(nodes, (node: DataNode) =>
-        excludeNodeByCarrierRules({
-            node,
-            lineOfBusiness,
-            productType,
-            planCode,
-        })
-    );
+    node: DataNode;
+}): DataNode | undefined => {
+    if (isDataSectionOrField(node) && excludeFields.has(node.label)) {
+        return undefined;
+    }
+    return node;
 };
 
 /**
@@ -110,44 +75,47 @@ export function searchNodes(nodes: DataNode[], search: string): DataNode[] {
     // if there are no fields in section | group, remove the section / group
     const lower = search.toLowerCase();
 
-    return transformNodes(nodes, (node: DataNode) => {
-        // If it's a field, check if it matches the search string
-        if (isDataField(node)) {
-            const match =
-                node.label.toLowerCase().includes(lower) ||
-                node.value.toLowerCase().includes(lower);
-            return match ? node : undefined;
-        }
-
-        // If it's a section, check if it's empty
-        if (isDataSection(node)) {
-            const filteredChildren = node.children.filter(isNotNullish);
-
-            if (filteredChildren.length > 0) {
-                return {
-                    ...node,
-                    children: filteredChildren,
-                };
+    return transformNodes({
+        nodes,
+        transforms: (node: DataNode) => {
+            // If it's a field, check if it matches the search string
+            if (isDataField(node)) {
+                const match =
+                    node.label.toLowerCase().includes(lower) ||
+                    node.value.toLowerCase().includes(lower);
+                return match ? node : undefined;
             }
-            return undefined;
-        }
 
-        // If it's a group, check if it's empty
-        if (isDataGroup(node)) {
-            const filteredGroups = node.children.filter(
-                (group) => group.length > 0
-            );
+            // If it's a section, check if it's empty
+            if (isDataSection(node)) {
+                const filteredChildren = node.children.filter(isNotNullish);
 
-            if (filteredGroups.length > 0) {
-                return {
-                    ...node,
-                    children: filteredGroups,
-                };
+                if (filteredChildren.length > 0) {
+                    return {
+                        ...node,
+                        children: filteredChildren,
+                    };
+                }
+                return undefined;
             }
-            return undefined;
-        }
 
-        // Otherwise, return the node as-is
-        return node;
+            // If it's a group, check if it's empty
+            if (isDataGroup(node)) {
+                const filteredGroups = node.children.filter(
+                    (group) => group.length > 0
+                );
+
+                if (filteredGroups.length > 0) {
+                    return {
+                        ...node,
+                        children: filteredGroups,
+                    };
+                }
+                return undefined;
+            }
+
+            // Otherwise, return the node as-is
+            return node;
+        },
     });
 }

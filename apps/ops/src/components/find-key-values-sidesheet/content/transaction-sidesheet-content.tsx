@@ -23,19 +23,23 @@ import { DataNodeRenderer } from '../components/data-node-renderer';
 import {
     applyTransformationsToNodes,
     spruceFromSourceData,
+    transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { formatPartyIdLink } from '../transformations/formatters';
 import {
-    searchNodes,
     excludeNodesByLabel,
+    searchNodes,
 } from '../transformations/node-visibility';
 import {
     groupTaxesSection,
     groupBasicsForTransaction,
+    getAllParties,
 } from '../transformations/section-grouping';
-import { addToolTips } from '../transformations/tooltips';
-import { DocumentFormat } from '../types';
+import {
+    addLinkToPartyId,
+    addToolTip,
+    formatNode,
+} from '../transformations/formatters';
 
 export const TransactionSidesheetContent = ({
     transaction,
@@ -57,32 +61,69 @@ export const TransactionSidesheetContent = ({
     );
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
-    const nodes = useMemo(() => {
+
+    // the map of partyId to party data is used to link party names within parties fields
+    const allPartiesById = useMemo(() => {
         if (!policy) {
+            return undefined;
+        }
+        const policyNodes = spruceFromSourceData(policy, t);
+        const { allPartiesById } = getAllParties({
+            //FIXME: shoudln't run this often
+            policyNodes,
+            t,
+            planCode: String(planCode),
+            policyNumber: String(id),
+        });
+        return allPartiesById;
+    }, [policy, t]);
+
+    const transactionNodes = useMemo(() => {
+        if (!allPartiesById) {
             return [];
         }
+
+        // Chains transformations for the entire tree
         return applyTransformationsToNodes(
             // Spruce will take an arbitrary data structure, and
             // convert it into a structure that can be rendered
-            (data) => spruceFromSourceData(data, t),
-            (data) => groupBasicsForTransaction(data),
-            (data) =>
-                formatPartyIdLink({
-                    data,
-                    t,
-                    planCode: String(planCode),
-                    policyNumber: String(id),
-                    policy,
-                }),
-            (data) => addToolTips(data, t, DocumentFormat.transaction),
-            (data) => groupTaxesSection(data),
-            (data) => excludeNodesByLabel(data, t)
+            (nodes) => spruceFromSourceData(nodes, t),
+            (nodes) => groupBasicsForTransaction(nodes),
+            (nodes) => groupTaxesSection(nodes),
+            (nodes) =>
+                // Transforms the entire tree, chaining transformations on *each node*
+                transformNodes({
+                    nodes,
+                    transforms: [
+                        (node) =>
+                            excludeNodesByLabel({
+                                node,
+                            }),
+                        (node) =>
+                            addLinkToPartyId({
+                                node,
+                                planCode: String(planCode),
+                                policyNumber: String(id),
+                                allPartiesById,
+                            }),
+                        (node) =>
+                            addToolTip({
+                                node,
+                                t,
+                            }),
+                        (node) =>
+                            formatNode({
+                                node,
+                                t,
+                            }),
+                    ],
+                })
         )(transaction);
-    }, [transaction, policy, planCode, id, t]);
+    }, [transaction, allPartiesById, planCode, id, t]);
 
     const matches = useMemo(
-        () => searchNodes(nodes, debouncedSearchValue),
-        [nodes, debouncedSearchValue]
+        () => searchNodes(transactionNodes, debouncedSearchValue),
+        [transactionNodes, debouncedSearchValue]
     );
 
     useEffect(() => {
@@ -90,11 +131,6 @@ export const TransactionSidesheetContent = ({
         setTreeState(Expand);
         setSearchValue(debouncedSearchValue);
     }, [debouncedSearchValue, setTreeState, setSearchValue]);
-
-    if (policy == null) {
-        // FIXME: loading state
-        return null;
-    }
 
     return (
         <div className={styles.keyValuesContainer}>

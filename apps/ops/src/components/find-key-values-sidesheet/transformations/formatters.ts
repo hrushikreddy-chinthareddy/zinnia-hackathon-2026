@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -8,19 +7,13 @@ import {
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
-import { getAllParties } from './section-grouping';
-import {
-    spruceFromSourceData,
-    transformNode,
-} from '../data-node-helpers/mutations';
-import { isNotNullish } from '../data-node-helpers/predicates';
 import { findFieldInNode } from '../data-node-helpers/traversal';
 import { currencyFields } from '../translations/currency-fields';
 import { dateFields } from '../translations/date-fields';
 import { grammarCorrections } from '../translations/grammar-corrections';
 import { industryTermToAbbrev } from '../translations/industry-term-to-abbrev';
 import { percentageFields } from '../translations/percentage-fields';
-import { DataField, DataNode, FieldType } from '../types';
+import { DataField, DataNode, DataSection, FieldType } from '../types';
 
 /**
  * Given a camel-cased string, returns the same string with each camel-case transition
@@ -198,43 +191,37 @@ export const formatDataField = ({
     };
 };
 
-export const excludeNodes = (
-    node: DataNode,
-    exclude: string[]
-): DataNode | null => {
-    if ('label' in node && exclude.includes(node.label)) {
-        return null;
+export const addToolTip = ({
+    node,
+    t,
+    policyNomenclature,
+}: {
+    node: DataNode;
+    t: TFunction;
+    policyNomenclature?: string;
+}) => {
+    if (node.type === FieldType.field) {
+        return {
+            ...node,
+            toolTip:
+                t(`${policyNomenclature}.toolTips.${node.label}`, {
+                    defaultValue: null,
+                    policyNomenclature,
+                }) ?? undefined,
+        };
     }
     return node;
 };
 
-export const formatToolTip = ({
+export const formatNode = ({
+    node,
     t,
-    nomenclature,
+    policyNomenclature,
 }: {
+    node: DataNode;
     t: TFunction;
-    nomenclature?: string;
-}) => {
-    return (node: DataNode): DataNode => {
-        if (node.type === FieldType.field) {
-            return {
-                ...node,
-                toolTip:
-                    t(`${nomenclature}.toolTips.${node.label}`, {
-                        defaultValue: null,
-                        policyNomenclature: nomenclature,
-                    }) ?? undefined,
-            };
-        }
-        return node;
-    };
-};
-
-export const formatNode = (
-    node: DataNode,
-    t: TFunction,
-    policyNomenclature?: string
-): DataNode => {
+    policyNomenclature?: string;
+}): DataNode => {
     if (node.type !== FieldType.field) {
         if (node.type === FieldType.section) {
             return {
@@ -263,22 +250,45 @@ export const formatNode = (
     };
 };
 
-// Removes excluded sections or nodes and translates & formats labels / values
-export const combinedTransform = ({
-    t,
-    exclude,
-    policyNomenclature,
+export const addLinkToPartyId = ({
+    node,
+    planCode,
+    policyNumber,
+    allPartiesById,
 }: {
-    t: TFunction;
-    exclude: string[];
-    policyNomenclature?: string;
+    node: DataNode;
+    planCode: string;
+    policyNumber: string;
+    allPartiesById: Record<string, DataSection | undefined>;
 }) => {
-    return (node: DataNode): DataNode | undefined => {
-        const afterExclude = excludeNodes(node, exclude);
-        if (afterExclude == null) return;
+    if (!(node.type === FieldType.field && node.label === 'partyId')) {
+        return node;
+    }
+    const partyReference = allPartiesById[node.value];
 
-        return formatNode(afterExclude, t, policyNomenclature);
+    if (!partyReference) {
+        return {
+            ...node,
+            link: formatPartyLink({
+                planCode,
+                policyNumber,
+                partyId: node.value,
+            }),
+        };
+    }
+
+    const partyNameField = findFieldInNode({
+        node: partyReference,
+        key: 'partyName',
+    });
+
+    const partialPartyField: DataField = {
+        ...node,
+        label: 'impactedParty',
+        value: partyNameField?.value ?? node.value,
+        link: partyNameField?.link,
     };
+    return partialPartyField;
 };
 
 export const formatPartyLink = ({
@@ -291,72 +301,4 @@ export const formatPartyLink = ({
     policyNumber: string;
 }) => {
     return `/policies/${planCode}/${policyNumber}/people/${partyId}`;
-};
-
-/**
- * Recursively formats partyId display value and link
- *
- * @param data - data to format
- * @param t - translation function
- * @param planCode - plan code
- * @param policyNumber - policy number
- * @param policy - policy
- * @returns formatted party id link
- */
-export const formatPartyIdLink = ({
-    data,
-    t,
-    planCode,
-    policyNumber,
-    policy,
-}: {
-    data: DataNode[];
-    t: TFunction;
-    planCode: string;
-    policyNumber: string;
-    policy: Policy;
-}) => {
-    const { allPartiesById } = getAllParties({
-        policyNodes: spruceFromSourceData(policy, t),
-        t,
-        planCode,
-        policyNumber,
-    });
-
-    return data
-        .map((node: DataNode) =>
-            transformNode(node, (node) => {
-                if (
-                    !(node.type === FieldType.field && node.label === 'partyId')
-                ) {
-                    return node;
-                }
-                const partyReference = allPartiesById[node.value];
-
-                if (!partyReference) {
-                    return {
-                        ...node,
-                        link: formatPartyLink({
-                            planCode,
-                            policyNumber,
-                            partyId: node.value,
-                        }),
-                    };
-                }
-
-                const partyNameField = findFieldInNode({
-                    node: partyReference,
-                    key: 'partyName',
-                });
-
-                const partialPartyField: DataField = {
-                    ...node,
-                    label: 'impactedParty',
-                    value: partyNameField?.value ?? node.value,
-                    link: partyNameField?.link,
-                };
-                return partialPartyField;
-            })
-        )
-        .filter(isNotNullish);
 };

@@ -31,15 +31,16 @@ import { DataNodeRenderer } from '../components/data-node-renderer';
 import {
     applyTransformationsToNodes,
     spruceFromSourceData,
+    transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
 import {
+    excludeNodeByCarrierRules,
     excludeNodesByLabel,
-    excludeNodesByCarrierRules,
     searchNodes,
 } from '../transformations/node-visibility';
-import { addToolTips } from '../transformations/tooltips';
 import { FindAllKeyValuesSidebarProps } from '../types';
+import { addToolTip, formatNode } from '../transformations/formatters';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -91,34 +92,56 @@ export const PolicySidesheetContent = ({
     const debouncedSearchValue = useDebounce(searchValue, 200);
     const lineOfBusiness = policy?.product?.lineOfBusiness;
     const productType = policy?.product?.productType;
-    const nomenclature =
+    const policyNomenclature =
         lineOfBusiness === LineOfBusiness.LIFE
             ? t('policy.nomenclature.policy')
             : t('policy.nomenclature.contract');
-    const nodes = useMemo(
+
+    const policyNodes = useMemo(
         () =>
+            // Chains transformations for the entire tree
             applyTransformationsToNodes(
                 // Spruce will take an arbitrary data structure, and
                 // convert it into a structure that can be rendered
-                (data) => spruceFromSourceData(data, t),
-
-                (data) => groupBasicsForPolicy(data),
-                (data) => addToolTips(data, t),
-                (data) =>
+                (nodes) => spruceFromSourceData(nodes, t),
+                (nodes) => groupBasicsForPolicy(nodes),
+                (nodes) =>
                     groupSectionsForPolicy({
-                        nodes: data,
+                        nodes,
                         t,
                         planCode,
                         policyNumber,
                     }),
-                (data) =>
-                    excludeNodesByCarrierRules({
-                        nodes: data,
-                        lineOfBusiness,
-                        productType,
-                        planCode,
-                    }),
-                (data) => excludeNodesByLabel(data, t, nomenclature)
+                (nodes) =>
+                    // Transforms the entire tree, chaining transformations on *each node*
+                    transformNodes({
+                        nodes,
+                        transforms: [
+                            (node) =>
+                                excludeNodeByCarrierRules({
+                                    node,
+                                    lineOfBusiness,
+                                    productType,
+                                    planCode,
+                                }),
+                            (node) =>
+                                excludeNodesByLabel({
+                                    node,
+                                }),
+                            (node) =>
+                                addToolTip({
+                                    node,
+                                    t,
+                                    policyNomenclature,
+                                }),
+                            (node) =>
+                                formatNode({
+                                    node,
+                                    t,
+                                    policyNomenclature,
+                                }),
+                        ],
+                    })
             )(policy),
         [
             policy,
@@ -126,14 +149,14 @@ export const PolicySidesheetContent = ({
             planCode,
             policyNumber,
             lineOfBusiness,
-            nomenclature,
+            policyNomenclature,
             productType,
         ]
     );
 
     const matches = useMemo(
-        () => searchNodes(nodes, debouncedSearchValue),
-        [nodes, debouncedSearchValue]
+        () => searchNodes(policyNodes, debouncedSearchValue),
+        [policyNodes, debouncedSearchValue]
     );
 
     // If the search value changes to non-empty, expand the tree
@@ -158,7 +181,6 @@ export const PolicySidesheetContent = ({
         setSearchValue,
     ]);
 
-    if (!nodes || !policy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
             <FieldDateSingle
