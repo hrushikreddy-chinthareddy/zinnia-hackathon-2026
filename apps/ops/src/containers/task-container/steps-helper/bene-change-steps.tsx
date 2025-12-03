@@ -1,3 +1,4 @@
+import { TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { GetStepsProps } from './types';
@@ -23,7 +24,14 @@ export const getBeneChangeSteps = ({
             <TaskFormStep
                 readonly={readOnly}
                 taskInfoLink={taskInfoLink}
-                isSubmit={(index === 3 && !readOnly) || !isIssueResolved}
+                isSubmit={
+                    (index ===
+                        (taskType === TaskType.Initiate_BeneChange_Transaction
+                            ? 4
+                            : 3) &&
+                        !readOnly) ||
+                    !isIssueResolved
+                }
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}
