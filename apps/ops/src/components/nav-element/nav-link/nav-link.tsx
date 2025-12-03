@@ -1,5 +1,8 @@
 import NextLink from 'next/link';
-import { AnchorHTMLAttributes } from 'react';
+import { AnchorHTMLAttributes, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { transformChildrenToString } from '@deps/utils/nav-link';
 
 export type NavLinkProps = {
     isNewPage?: boolean;
@@ -26,13 +29,15 @@ export default function NavLink({
     replace = false,
     ...rest
 }: NavLinkProps) {
+    const { t } = useTranslation();
     const clickEvent = !disabled && onClick ? onClick : () => undefined;
     const focusEvent = !disabled && onFocus ? onFocus : () => undefined;
     const blurEvent = !disabled && onBlur ? onBlur : () => undefined;
-    const newPageAnnounce =
-        target === '_blank'
-            ? `${children as string} open in new window`
-            : undefined;
+    const newPageAnnounce = useRef<string | undefined>(undefined);
+    const linkText = transformChildrenToString(children);
+    newPageAnnounce.current = `${linkText}${
+        target === '_blank' ? ` ${t('allFields.openInNewWindow') ?? ''}` : ''
+    }`;
 
     if (isNewPage) {
         return (
@@ -44,7 +49,7 @@ export default function NavLink({
                 onClick={clickEvent}
                 onFocus={focusEvent}
                 onBlur={blurEvent}
-                aria-label={newPageAnnounce}
+                aria-label={newPageAnnounce.current}
                 {...rest}
             >
                 {startIcon}
@@ -63,7 +68,7 @@ export default function NavLink({
                 onClick={() => window.location.reload()}
                 onFocus={focusEvent}
                 onBlur={blurEvent}
-                aria-label={newPageAnnounce}
+                aria-label={newPageAnnounce.current}
                 {...rest}
             >
                 {startIcon}
@@ -83,7 +88,7 @@ export default function NavLink({
             onBlur={blurEvent}
             replace={replace}
             aria-disabled={disabled}
-            aria-label={newPageAnnounce}
+            aria-label={newPageAnnounce.current}
             {...rest}
         >
             {startIcon}
