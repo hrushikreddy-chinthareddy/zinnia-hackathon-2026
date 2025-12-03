@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 
 import { PolicyRole } from '@deps/constants/policy';
 import * as RoleChangeContext from '@deps/contexts/RoleChangeContext';
-import documents from '@deps/pages/api/document/v2/documents';
 
 import ContactDetailsComponent from './contact-details-component';
 jest.mock('@deps/contexts/RoleChangeContext');

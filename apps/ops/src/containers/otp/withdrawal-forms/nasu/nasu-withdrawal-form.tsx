@@ -1,4 +1,3 @@
-import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
@@ -19,6 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { isAllowedState } from '@deps/utils/renderStateW4';
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import useNasuConfig from './nasu-withdrawal-form-helpers';
 import { FormSubtype } from '../flic-withdrawal-form.helpers';

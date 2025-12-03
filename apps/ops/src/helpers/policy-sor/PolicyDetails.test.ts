@@ -1,10 +1,9 @@
+import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 import {
     PartyRole,
     PolicyStatus,
     ProductType,
 } from '@zinnia/api-types/types/sor';
-
-import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
 
 import { PolicyDetails } from './PolicyDetails';
 

@@ -46,7 +46,7 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
-import { getQualTypeOptions } from '../oft-form-helpers';
+import { getQualTypeOptions, isMorganStanleyFirm } from '../oft-form-helpers';
 
 export default function useGdmnOftConfig(t: TFunction) {
     const formValidation = ({
@@ -106,6 +106,7 @@ export default function useGdmnOftConfig(t: TFunction) {
             formESignatureData,
             t,
             validateDesignationPresent: false,
+            validateAnnuitant: true,
         });
 
         return { ...errors, ...signESignValidate };
@@ -337,6 +338,8 @@ export default function useGdmnOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean =>
+                !isMorganStanleyFirm(formParty),
         },
         {
             key: `sig-val-joint`,
@@ -361,6 +364,26 @@ export default function useGdmnOftConfig(t: TFunction) {
                     (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
                 );
             },
+        },
+        {
+            key: `sig-val-annuitant`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'annuitant-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'annuitant-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'annuitant-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Annuitant,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean =>
+                isMorganStanleyFirm(formParty),
         },
     ];
 

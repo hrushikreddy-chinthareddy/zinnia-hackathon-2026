@@ -93,7 +93,7 @@ export const Assignee = ({
     const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
-    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = async () => {
         if (task.status === TaskStatus.Completed) {
             return;
         }
@@ -201,22 +201,16 @@ export const Assignee = ({
 const TaskQueueTableRow = ({
     task,
     featureFlagDecisions,
-    tabIndex,
     getTasks,
     setErrorMessage,
     isOpsManagerView,
     manageTableAfterAction,
-    setTaskDetails,
 }: TaskQueueTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
     });
     const router = useRouter();
     const [_timer] = useState(performance.now());
-    const policyNumber = getCaseIdentifierValue(
-        task.identifiers,
-        CaseIdentifier.PolicyNumber
-    );
     const _documentNumber = getCaseIdentifierValue(
         task.identifiers,
         CaseIdentifier.DocumentNumber
@@ -224,15 +218,7 @@ const TaskQueueTableRow = ({
     const [actionLoader, setActionLoader] = useState(false);
 
     const [_loader, setLoader] = useState(false);
-    const {
-        taskName,
-        taskType: _taskType,
-        createdAt,
-        status: _status,
-        carrier,
-        assignee,
-        queue,
-    } = task;
+    const { taskType: _taskType, status: _status, carrier } = task;
     const carrierName =
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
@@ -476,6 +462,10 @@ const TaskQueueTableRow = ({
             handleLinkClick(undefined);
         }
     };
+    const showBadge =
+        task.escalated &&
+        task.status !== TaskStatus.Canceled &&
+        task.status !== TaskStatus.Completed;
 
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
@@ -582,7 +572,7 @@ const TaskQueueTableRow = ({
                                     variant={ContentVariant.BodySm}
                                 />
                             )}
-                            {task.escalated && (
+                            {showBadge && (
                                 <div>
                                     <Tooltip
                                         placement={TooltipPlacement.TopRight}

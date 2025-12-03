@@ -1,12 +1,4 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import {
-    ArrangementType,
-    Frequency,
-    Policy,
-    Reason,
-    Status,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useContext } from 'react';
 
@@ -32,7 +24,15 @@ import {
     checkLoanRepaymentOneTimeEligibilityQuery,
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    ArrangementType,
+    Frequency,
+    Policy,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 import LoanRulesCard from './cards/loan-rules-card';
 import OutstandingLoansCard from './cards/outstanding-loans-card';

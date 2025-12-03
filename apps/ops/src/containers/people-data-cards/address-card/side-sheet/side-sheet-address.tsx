@@ -1,13 +1,4 @@
 import { Transition } from '@headlessui/react';
-import {
-    Address,
-    AddressType,
-    Country,
-    Party,
-    Policy,
-    State,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -76,6 +67,15 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    Address,
+    AddressType,
+    Country,
+    Party,
+    Policy,
+    State,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 export interface SideSheetAddressProps {
     isCurrentMailingAddress: boolean;

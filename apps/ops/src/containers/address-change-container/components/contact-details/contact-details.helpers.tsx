@@ -1,9 +1,9 @@
-import { Address, AddressType, State } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'i18next';
 import { useCallback, useState } from 'react';
 
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { validateAddress } from '@deps/queries/api/validation';
+import { Address, AddressType, State } from '@zinnia/api-types/types/sor';
 
 import { PolicyAddress } from './contact-details.types';
 

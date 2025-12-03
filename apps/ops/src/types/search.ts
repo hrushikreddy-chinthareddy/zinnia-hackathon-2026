@@ -1,7 +1,6 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { Case } from '@deps/models/case/case';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { Order, SortObject } from './sort';
 

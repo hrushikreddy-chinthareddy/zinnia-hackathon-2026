@@ -1,31 +1,11 @@
-import { FieldTemplateProps } from '@rjsf/utils';
-import { useEffect, useRef } from 'react';
+import { FieldTemplateProps, ObjectFieldTemplateProps } from '@rjsf/utils';
 
 type PartyCardFieldTemplateProps = FieldTemplateProps & {
-    properties: any[];
+    properties: NonNullable<ObjectFieldTemplateProps['properties']>;
 };
 
 export function PartyCardFieldTemplate(props: PartyCardFieldTemplateProps) {
-    const { properties, formContext, onChange } = props;
-
-    const deepEqual = (obj1: any, obj2: any): boolean => {
-        return JSON.stringify(obj1) === JSON.stringify(obj2);
-    };
-
-    const prevFormContextRef = useRef(formContext);
-
-    useEffect(() => {
-        const prev = prevFormContextRef.current;
-        const curr = formContext;
-        if (!deepEqual(prev, curr)) {
-            console.log(
-                'PartyCardFieldTemplate formContext DEEP updated:',
-                curr
-            );
-        }
-        prevFormContextRef.current = curr;
-    }, [formContext]);
-
+    const { properties } = props;
     return (
         <>
             <div className="p-2">

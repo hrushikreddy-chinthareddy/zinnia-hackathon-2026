@@ -18,11 +18,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import {
-    QuickQuoteFormState,
-    QuickQuoteParams,
-    quickQuoteParamsSchema,
-} from '@deps/types/quickQuote';
+import { QuickQuoteFormState, QuickQuoteParams } from '@deps/types/quickQuote';
 
 import { buildQuickQuoteParams } from './helpers';
 import styles from './quick-quote-form.module.css';

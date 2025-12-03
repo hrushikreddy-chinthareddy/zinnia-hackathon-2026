@@ -1,10 +1,25 @@
 import { render, screen } from '@testing-library/react';
 
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { Processes } from '@deps/models/case/case';
 
 import CaseDetailsSideNav from './case-details-side-nav';
 
+jest.mock('@deps/contexts/PermissionsContext', () => ({
+    usePermissionsContext: jest.fn(),
+}));
+
+const mockUsePermissions = usePermissionsContext as jest.Mock;
+
 describe('Case Details Side Nav Component', () => {
+    beforeEach(() => {
+        // default: allow showing Case Insights
+        mockUsePermissions.mockReturnValue({ hasCaseInsightPermission: true });
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
     it('should render Case Details Side Nav Component', () => {
         render(
             <CaseDetailsSideNav
@@ -142,6 +157,25 @@ describe('Case Details Side Nav Component', () => {
             expect(
                 screen.getByText('sidenav.estimatedCompletion')
             ).toBeInTheDocument();
+        });
+        it('should hide estimated completion when permission is false', () => {
+            mockUsePermissions.mockReturnValueOnce({
+                hasCaseInsightPermission: false,
+            });
+
+            render(
+                <CaseDetailsSideNav
+                    carrier="WELB"
+                    CaseAdditionalDetails={{}}
+                    process={Processes.NewBusiness}
+                    applicationType="Electronic"
+                    estimatedCompletionAt="2025-10-26T18:26:51.588417Z"
+                />
+            );
+
+            expect(
+                screen.queryByText('sidenav.estimatedCompletion')
+            ).not.toBeInTheDocument();
         });
     });
 });

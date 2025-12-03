@@ -1,4 +1,3 @@
-import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import {
     FieldData,
     FieldSize,
@@ -34,6 +33,7 @@ import {
     useTableOptions,
 } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 enum SortByOptions {
     NAME = 'name',

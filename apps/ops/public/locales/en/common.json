@@ -456,7 +456,12 @@
         "disbursementAmount": "Disbursement amount",
         "payeeGrossAmount": "Payee gross amount",
         "timeline": "Timeline",
-        "taxes": "Taxes"
+        "taxes": "Taxes",
+        "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
+        "selectDateInRange": "Please select a date within range:",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+        "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
     },
     "enums": {
         "LIFE": "Life",
@@ -1837,6 +1842,7 @@
             "custodian": "Custodian",
             "guardian": "Guardian",
             "attorneyInFact": "Attorney-in-fact",
+            "authorizedSignatory": "Authorized signatory",
             "assignee": "Assignee",
             "poa": "POA",
             "na": "NA",
@@ -2102,6 +2108,7 @@
         "preview": "Preview",
         "rate": "rate",
         "draft": "Save as Draft",
+        "send": "Send",
         "submitPayment": "Submit payment",
         "successExclamation": "Success!",
         "total": "Total",
@@ -2321,6 +2328,7 @@
         "assignTaskError": "Assign task error",
         "unassignTask": "Unassign Task",
         "unassign": "Unassign",
+        "assign": "Assign",
         "startTask": "Start Task",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
@@ -2406,6 +2414,11 @@
     "caseManagementDashboard": {
         "h1": "Cases",
         "h2": "Search Results",
+        "loadingMessage": {
+            "gatheringYourResults": "Gathering your results…",
+            "organizingYourResults": "Organizing your results…",
+            "takingLongerThanUsual": "This is taking longer than usual. Try adjusting your filters."
+        },
         "case": {
             "createdAt": "Created",
             "updatedAt": "Updated",
@@ -2431,6 +2444,7 @@
         "results": "Results",
         "refineResults": "Refine results",
         "addFilters": "Add filters",
+        "filters": "Filters",
         "refineResultsOptions": {
             "carrier": "Carriers",
             "caseType": "Case type",
@@ -2454,11 +2468,11 @@
             "taskStatus": "Task Status",
             "group": "Group",
             "assignee": "Assignee",
-            "priority": "Priority",
+            "priority": "Priority status",
             "selectPriority": "Select priority",
-            "onlyPrioritized": "Only Prioritized",
-            "any": "Any",
-            "notPrioritized": "Not Prioritized"
+            "onlyPrioritized": "Prioritized cases",
+            "any": "All cases",
+            "notPrioritized": "Regular cases"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -2468,6 +2482,7 @@
             "ariaLabel": {
                 "clearFilter": "Clear {{filter}} filter"
             },
+
             "dateCreated": "Date created",
             "dateUpdated": "Date last updated",
             "type": "Type",
@@ -2481,9 +2496,9 @@
                 "Renewal": "Renewals"
             },
             "escalated": {
-                "true": "Only Prioritized",
-                "false": "Not Prioritized",
-                "any": "Any"
+                "onlyPrioritized": "Prioritized cases",
+                "allCases": "All cases",
+                "notPrioritized": "Regular cases"
             }
         },
         "selectStatus": "Select status",
@@ -2514,8 +2529,7 @@
                 }
             },
             "empty": {
-                "title": "We couldn't find a case that matches your search.",
-                "titleFilters": "We couldn't find a case that matches your filters.",
+                "title": "Nothing to show.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",
@@ -2871,9 +2885,23 @@
             "close": "Close",
             "error": "Error",
             "errorMessage": "Error: {{error}}",
-            "successMessage": "Case ID: {{caseId}} was prioritized",
+            "errorForbidden": "You do not have permission to perform this action.",
+            "successMessage": "Case ID: {{caseId}} has been prioritized.",
             "simpleTooltipBody": "This case is prioritized.",
             "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
+        },
+        "deprioritizeCase": {
+            "title": "De-prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A de-prioritized case will be moved back as a regular work item for normal processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Case ID: {{caseId}} was deprioritized",
+            "tooltipBody": "This case is deprioritized."
         },
         "navDrawer": {
             "topStatus": "Top Status",
@@ -3247,7 +3275,8 @@
                     "married": "Married",
                     "widowed": "Widowed"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Trust date"
             },
             "jointOwner": {
                 "title": "Joint Owner Information"
@@ -3495,13 +3524,17 @@
                 "cedingCompanySignature": {
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
-                    "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
+                    "multipleQualType": "Unable to determine the Qualification type",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
+                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
                     "isLoaAttached": "Is letter of acceptance attached?",
-                    "validOwnerRegType": "Valid owner/registration type",
+                    "registrationType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
-                    "loaSignDate": "LOA Sign Date"
+                    "loaSignDate": "LOA Sign Date",
+                    "authPersonSignPresent": "Authorized Person’s signature is present",
+                    "isCorporateResolutionPresent": "Is corporate resolution present?",
+                    "isAuthSignValid": "Is signature of authorized officer valid based on corporate resolution?",
+                    "signDate": "Signature date"
                 },
                 "nonRegTypeReason": {
                     "jointOwnerAbsent": "Joint Owner/Annuitant absence on paperwork or in the contract",
@@ -4600,7 +4633,8 @@
                 "policyLengthTooltip": "Policy length is just what it sounds like: it's how long the policy lasts. Some policies have a set term (shown in number of years) and end date, while others last until death of the insured.",
                 "policyTimeline": "Policy Timeline",
                 "freeLookExpiration": "Free look expiration",
-                "freeLookEndDate": "Free look end date"
+                "freeLookEndDate": "Free look end date",
+                "deliveryDate": "Acknowledgement date"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Agent email address",
@@ -7411,7 +7445,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Add filter"
+                "addFilter": "Add filter",
+                "addFilters": "Add filters"
             },
             "headers": {
                 "title": "Refine Results"
@@ -7956,7 +7991,8 @@
                 "call": "Call",
                 "formReview": "Form Review"
             },
-            "nextTask": "Continue to Next Task"
+            "nextTask": "Continue to Next Task",
+            "summaryNigoError": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
         },
         "formErrors": {
             "caseNotFound": "Case not found",
@@ -8435,6 +8471,9 @@
         "agentDetails": {
             "allocationErr": "Allocations must equal 100%"
         }
+    },
+    "transactionAccordion": {
+        "remove": "Remove"
     },
     "fundAllocation": {
         "submitted": "Submitted!",
@@ -9001,9 +9040,7 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
-            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
@@ -9105,10 +9142,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
+            "startingMessageBetaPrefix": "Hello, {{name}}",
+            "startingMessageBetaSuffix": "How can I assist you today?",
             "inputPlaceholder": "Ask me anything",
-            "footerText": "Disclaimer: Zinnia chat can make mistakes.",
+            "footerText": "Disclaimer: Zinnia AI can make mistakes.",
             "errorMsg": "Sorry, I couldn’t get a response. Please try again later.",
             "send": "Send",
             "stop": "Stop",
@@ -9159,7 +9200,13 @@
             "followUpButton": "Ask your follow up questions here",
             "definitiveAnswerNotFound": "I couldn’t find a definitive answer in the client-specific documents. Would you like me to check the common reference also?",
             "yes": "Yes",
-            "no": "No"
+            "no": "No",
+            "answerMode": "Answer Mode",
+            "client": "Client",
+            "answerModeOptions": {
+                "short": "Short and Crisp",
+                "long": "Long and Detailed"
+            }
         },
         "documents": {
             "recentlyAdded": "Recently added files",
@@ -9211,11 +9258,23 @@
             "recentlyModified": "Recently modified",
             "allDocs": "All documents",
             "recentChat": "Recent chat",
-            "search": "Search",
+            "search": "Search recent chats",
             "noResultsFound": "No results found",
             "noRecentChats": "No recent chats",
             "loadingChats": "Loading chats...",
-            "settings": "Settings"
+            "settings": "Settings",
+            "quiz": {
+                "header": "Take a Quiz",
+                "noQuestionsAvailable": "No quiz questions available.",
+                "quizPassed": "Congratulations, you have passed",
+                "quizFailed": "Sorry, you have not achieved the passing score of {{passPercentage}}%",
+                "correctAnswer": "Correct Answer",
+                "wrongAnswer": "Wrong Answer",
+                "yourScore": "You have scored {{score}} out of {{total}}",
+                "readMore": "Read this document to gain knowledge on the topic",
+                "submit": "Submit",
+                "tryAgain": "Try Again"
+            }
         }
     },
     "updateSuitabilityDataEntry": {
@@ -9269,8 +9328,30 @@
         "variableSearchPlaceholder": "Search feature variables...",
         "flagQueueSearchPlaceholder": "Search feature flags..."
     },
-    "thirdPartyDetail":{
-        "confirmStep" : {
+    "successErrorSidesheet": {
+        "successTitle": "Success",
+        "errorTitle": "Error",
+        "closeButton": "Close"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Added",
+            "none": "None",
+            "removed": "Removed",
+            "updated": "Updated"
+        },
+        "noSummary": "No transaction summary available.",
+        "primaryBene": "Primary beneficiary",
+        "contingentBene": "Contingent beneficiary",
+        "loading": "Validation API is Running....",
+        "successMessage": "Looking good! Be sure to review your entries before submitting",
+        "errorMessage": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+        "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "internalServerError": "Internal Server Error",
+        "failedToFetch": "Failed to fetch validation summary"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
             "title": "Got It!",
             "subTitle": "Name change/correction form was submitted successfully.",
             "cta": "Go to case",

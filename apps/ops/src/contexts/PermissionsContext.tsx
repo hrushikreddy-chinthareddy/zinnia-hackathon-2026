@@ -1,18 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
-import { PartyReferenceDataModel } from '@xd/api-types/dist/generated-types/partyreference';
-import {
-    BulkCheckTuple,
-    checkIfUserHasAdvisorsExcel,
-    checkIfUserHasCaseInsightsAccess,
-    checkIfUserHasDashboardAccess,
-    checkIfUserHasPolicyIndexAccess,
-    checkIfUserHasUsageAccess,
-    checkIfUserIsSuperAdmin,
-    checkRelation,
-    createBulkCheckBodyRequest,
-    FgaRoles,
-} from '@zinnia/utils';
 import { createContext, ReactNode, useContext } from 'react';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -26,8 +13,21 @@ import {
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
+import {
+    BulkCheckTuple,
+    checkIfUserHasAdvisorsExcel,
+    checkIfUserHasCaseInsightsAccess,
+    checkIfUserHasDashboardAccess,
+    checkIfUserHasPolicyIndexAccess,
+    checkIfUserHasUsageAccess,
+    checkIfUserIsSuperAdmin,
+    checkRelation,
+    createBulkCheckBodyRequest,
+    FgaRoles,
+} from '@deps/utils/auth';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 
 import { useOptimizely } from './OptimizelyContext';
 
@@ -221,14 +221,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { data: writeCasePriority } = useQuery({
         queryKey: ['writeCasePriority', partyId],
         queryFn: () =>
-            getCarriersListQuery(
+            doesUserHavePagePermissionQuery(
                 UserPermission.AllowWriteCasePriority,
                 partyId
             ),
         enabled: !!partyId,
-        initialData: [],
         staleTime: FIFTEEN_MINUTES_IN_MS,
-        initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
     });
 
     const {

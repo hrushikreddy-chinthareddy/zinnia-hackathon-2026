@@ -1,11 +1,11 @@
 import { WidgetProps } from '@rjsf/utils';
-import { toTitleCase } from '@xd/utils/dist';
 import dayjs from 'dayjs';
 import { useRef, useState, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { PartyType } from '@deps/models/policy/sor-policy';
+import { toTitleCase } from '@deps/utils/strings';
 
 import styles from './agent-transaction-accordion.module.css';
 import { Action } from './agent-transaction-accordion.types';

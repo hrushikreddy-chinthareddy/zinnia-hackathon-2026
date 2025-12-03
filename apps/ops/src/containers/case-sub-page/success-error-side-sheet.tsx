@@ -1,12 +1,13 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
-import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 import Button, {
     ButtonSize,
     ButtonVariant,
 } from '@deps/components/button/button';
 import CardInfo from '@deps/components/card/card-info/card-info';
+import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 interface SideSheetContext {
@@ -22,17 +23,20 @@ interface ApiResponse {
 }
 
 interface SuccessErrorSideSheetProps {
-    t: TFunction;
     response: ApiResponse;
     sideSheet: SideSheetContext;
-    caseId: string;
+    successMessage: string;
+    errorMessage: string;
 }
 function SuccessErrorSideSheet({
-    t,
     response,
     sideSheet,
-    caseId,
+    successMessage,
+    errorMessage,
 }: SuccessErrorSideSheetProps) {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'successErrorSidesheet',
+    });
     return (
         <div>
             <CardInfo
@@ -55,28 +59,26 @@ function SuccessErrorSideSheet({
                 }
                 secondaryCta={
                     <Button
-                        aria-label={t('close') as string}
+                        aria-label={t('closeButton') as string}
                         onClick={() => sideSheet.handleOpen(false)}
                         variant={ButtonVariant.Default}
                         size={ButtonSize.Small}
                         className="font-semibold text-secondary mt-8"
                     >
-                        {t('close')}
+                        {t('closeButton')}
                     </Button>
                 }
                 subtitle={
                     <span>
                         {response.status === HttpStatusCode.Ok
-                            ? t('successMessage', { caseId })
-                            : t('errorMessage', {
-                                  error: response?.data?.message ?? '',
-                              })}
+                            ? successMessage
+                            : errorMessage}
                     </span>
                 }
                 title={
                     response.status === HttpStatusCode.Ok
-                        ? t('success')
-                        : t('error')
+                        ? t('successTitle')
+                        : t('errorTitle')
                 }
             />
         </div>

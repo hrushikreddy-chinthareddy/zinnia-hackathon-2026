@@ -17,6 +17,13 @@ const defaultProps = {
     task: { id: 't1', status: TaskStatus.InProgress, assigneePartyId: '0' },
 };
 
+jest.mock('react-i18next', () => ({
+    useTranslation: () => ({
+        t: (key: string) => key, // or return some dummy text
+        i18n: { changeLanguage: jest.fn() },
+    }),
+}));
+
 describe('AssigneePopover', () => {
     it('does not open popover when status is Completed', () => {
         render(
@@ -25,7 +32,9 @@ describe('AssigneePopover', () => {
                 task={{ id: 't1', status: TaskStatus.Completed }}
             />
         );
+
         fireEvent.click(screen.getByRole('button'));
+
         expect(
             screen.queryByPlaceholderText(/Find a person/i)
         ).not.toBeInTheDocument();

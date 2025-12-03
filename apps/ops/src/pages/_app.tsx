@@ -16,6 +16,7 @@ import { appWithTranslation, useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 
 import GaMouseflowTrackingScript from '@deps/components/analytics/GaMouseflowTrackingScript';
+import PendoAnalyticsInit from '@deps/components/analytics/PendoAnalyticsInit';
 import SegmentAnalyticsScript from '@deps/components/analytics/SegmentAnalyticsScript';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
@@ -137,6 +138,7 @@ const App = (props: AppProps) => {
                         NODE_ENV_PRODUCTION && (
                         <GoogleAnalytics gaId="G-1NY7KTG7T3" />
                     )}
+                    <PendoAnalyticsInit />
                 </UserProvider>
                 <SegmentAnalyticsScript />
             </section>

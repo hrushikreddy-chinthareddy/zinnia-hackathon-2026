@@ -1,4 +1,14 @@
-import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
+import { I18n, i18n, TFunction } from 'next-i18next';
+
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user.svg';
+import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
+import { ReactComponent as OfficeBuildingIcon } from '@deps/styles/elements/icons/icons_outlined/office-building.svg';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import {
     AccountType,
     Address,
@@ -15,16 +25,6 @@ import {
     RiskClass,
     SubStandardRating,
 } from '@zinnia/api-types/types/sor';
-import { I18n, i18n, TFunction } from 'next-i18next';
-
-import AssistiveText, {
-    AssistiveTextVariant,
-} from '@deps/components/assistive-text/assistive-text';
-import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user.svg';
-import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
-import { ReactComponent as OfficeBuildingIcon } from '@deps/styles/elements/icons/icons_outlined/office-building.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { getCountryByCode } from './countries.helpers';
 import { isEndDated } from './date.helpers';

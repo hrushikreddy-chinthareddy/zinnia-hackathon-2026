@@ -52,6 +52,11 @@ export interface SideSheetRefineResultsProps {
     authorizedCarriers: string[];
     currentSearchValue?: SearchViewQuery;
 }
+export enum Priority {
+    ANY = 'any',
+    PRIORITY = 'true',
+    NOT_PRIORITY = 'false',
+}
 
 export default function SideSheetRefineResults({
     filters,
@@ -62,11 +67,6 @@ export default function SideSheetRefineResults({
 }: SideSheetRefineResultsProps) {
     const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
-    enum Priority {
-        ANY = 'any',
-        PRIORITY = 'true',
-        NOT_PRIORITY = 'false',
-    }
 
     const carrierFilterItems = authorizedCarriers.map((carrierCode: string) => {
         const valueAndDisplay =
@@ -116,8 +116,6 @@ export default function SideSheetRefineResults({
         );
         return uniqueCarrierFilterItems;
     };
-
-    // update ProductName when carrier changes
     useEffect(() => {
         const selectedCarriers = getSelectedCarriers(
             additionalFilters.carriers
@@ -158,7 +156,6 @@ export default function SideSheetRefineResults({
         }
     }, [authorizedCarriers, additionalFilters.carriers, filters.products]);
 
-    // update ProcessList when Carriers changes
     useEffect(() => {
         setLoadingProcessList(true);
 
@@ -193,7 +190,6 @@ export default function SideSheetRefineResults({
         getProcessListRefData().then(() => setLoadingProcessList(false));
     }, [authorizedCarriers, additionalFilters.carriers, filters.processTypes]);
 
-    // update RequestSubType when processList changes (which changes if Carrier Changes)
     useEffect(() => {
         const selectedProcesses = Array.from(additionalFilters.processTypes);
 

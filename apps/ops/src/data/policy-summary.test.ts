@@ -1,7 +1,6 @@
-import { AccountStatus, AccountType } from '@zinnia/api-types/types/sor';
-
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { mockT as t } from '@deps/setupTests';
+import { AccountStatus, AccountType } from '@zinnia/api-types/types/sor';
 
 import { PolicySummaryColDto, toPolicySummaryColDto } from './policy-summary';
 

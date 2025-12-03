@@ -1,6 +1,5 @@
-import { ProductType } from '@zinnia/api-types/types/sor';
-
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { ProductType } from '@zinnia/api-types/types/sor';
 
 import {
     planCodeProductOverrides,

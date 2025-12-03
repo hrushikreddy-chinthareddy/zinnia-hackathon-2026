@@ -1,8 +1,3 @@
-import {
-    ExceptionCountGroupByEnum,
-    ExceptionCountOutput,
-    ExceptionCountOutputLevel1,
-} from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import * as Highcharts from 'highcharts';
 import HC_ACCESSIBILITY from 'highcharts/modules/accessibility';
@@ -28,6 +23,11 @@ import styles from '@deps/pages/dashboard/Dashboard.module.css';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
+import {
+    ExceptionCountGroupByEnum,
+    ExceptionCountOutput,
+    ExceptionCountOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 const CHART_HEIGHT = 500;
 

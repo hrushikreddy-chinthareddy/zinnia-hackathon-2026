@@ -1,4 +1,7 @@
 import { Meta } from '@storybook/react';
+
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import {
     AllocationOption,
     ArrangementType,
@@ -19,9 +22,6 @@ import {
     Frequency,
     AmountType,
 } from '@zinnia/api-types/types/sor';
-
-import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
 import { PolicyQuickView } from './policy-summary-card';
 

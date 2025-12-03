@@ -1,14 +1,6 @@
-import {
-    Policy,
-    Frequency,
-    ArrangementType,
-    AmountType as AutopayAmountType,
-    Status,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
-import { TFunction, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 
 import ButtonGroup from '@deps/components/button-group/button-group';
@@ -43,6 +35,14 @@ import {
 } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    Policy,
+    Frequency,
+    ArrangementType,
+    AmountType as AutopayAmountType,
+    Status,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
     policy: Policy;
@@ -246,7 +246,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
         // {label:t('earnings'), value: AutopayAmountType.EARNINGSONLY}
     ];
 
-    const toggleLabels = (t: TFunction): LabelValue<ArrangementType>[] => [
+    const toggleLabels = (): LabelValue<ArrangementType>[] => [
         {
             label: 'Withdrawal',
             value: ArrangementType.WITHDRAWAL,
@@ -298,7 +298,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                         <>
                             <ButtonGroup
                                 activeValue={arrangementType as any}
-                                labels={toggleLabels(t)}
+                                labels={toggleLabels()}
                                 toggle={(value) => {
                                     const {
                                         distributionType,

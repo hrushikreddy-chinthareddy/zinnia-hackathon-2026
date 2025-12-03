@@ -320,3 +320,10 @@ export type AuditDetail = {
     historicalReworkDetails?: ReworkItem[];
     historicalAuditDetails?: AuditItem[];
 };
+
+export enum FilterKeys {
+    escalated = 'escalated',
+    carriers = 'carriers',
+    queues = 'queues',
+    statuses = 'statuses',
+}

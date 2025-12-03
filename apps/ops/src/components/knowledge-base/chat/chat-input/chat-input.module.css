@@ -1,12 +1,14 @@
 .textboxContainer {
-    border: var(--color-fields-border-field-default-border) solid 1px;
     padding: var(--measure-dimension-z-space-4);
-    border-radius: var(--measure-dimension-z-space-3);
     display: flex;
     align-items: start;
+    color: var(--color-base-text-text-primary);
+    border-radius: var(--measure-dimension-z-space-3);
+    box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.075),
+        0px 0px 8px 0px rgba(0, 0, 0, 0.15);
 }
 .textarea {
-    height: var(--measure-dimension-z-space-20);
+    height: var(--measure-dimension-z-space-10);
     width: 100%;
     border: none;
     outline: none !important;
@@ -15,4 +17,65 @@
 .textarea:focus {
     outline: none;
     border: none;
+}
+@property --angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes sweep {
+    to {
+        --angle: 360deg;
+    }
+}
+
+.rainbowBorder {
+    --ring: 2px;
+    --rb-o: 0;
+    --rb-play: paused;
+    position: relative;
+    border-radius: 1rem;
+    isolation: isolate;
+}
+
+.rainbowBorder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--measure-dimension-z-space-3);
+    padding: var(--ring);
+    background: conic-gradient(
+        from var(--angle),
+        #6ee7ff,
+        #7c3aed,
+        #f472b6,
+        #f59e0b,
+        #10b981,
+        #6ee7ff
+    );
+
+    -webkit-mask: linear-gradient(hsl(var(--color-black)) 0 0) content-box,
+        linear-gradient(hsl(var(--color-black)) 0 0);
+    mask: linear-gradient(hsl(var(--color-black)) 0 0) content-box,
+        linear-gradient(hsl(var(--color-black)) 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    display: block;
+    pointer-events: none;
+    opacity: var(--rb-o);
+    animation: sweep 6s linear infinite;
+    animation-play-state: var(--rb-play);
+    transition: opacity 220ms ease, padding 220ms ease;
+}
+
+.rbActive {
+    --rb-o: 1;
+    --rb-play: running;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rainbowBorder::before {
+        animation: none;
+    }
 }

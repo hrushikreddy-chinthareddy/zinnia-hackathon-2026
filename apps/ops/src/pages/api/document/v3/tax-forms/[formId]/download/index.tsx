@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -11,6 +10,7 @@ import {
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 

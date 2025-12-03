@@ -1,11 +1,4 @@
 import { Transition } from '@headlessui/react';
-import {
-    Phone,
-    PhoneType,
-    Party,
-    TransactionType,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -74,6 +67,13 @@ import {
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import {
+    Phone,
+    PhoneType,
+    Party,
+    TransactionType,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
 

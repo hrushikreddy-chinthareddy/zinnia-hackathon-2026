@@ -1,7 +1,7 @@
-import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 import { AxiosResponse } from 'axios';
 
 import { browserLogError } from '@deps/utils/browser-logging';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';

@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { PartialDeep } from 'type-fest';
 import { v4 as uuid4 } from 'uuid';
 
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     CreateNewTermLineIllustrationPayload,
@@ -34,7 +35,7 @@ import {
 export type SingleTermProductQuickQuoteParams = {
     planCode: 'TR0101' | 'TL0101';
     termLength: TermFixedCostPeriod;
-    classCode: string;
+    classCode: UnderwritingClass | undefined;
     available: boolean;
     notAvailabilityReasonField: NotAvailabilityReasonField;
     riders: ProductClassResultRiders;
@@ -223,14 +224,14 @@ export const expandQuickQuoteVariants = (
                       notAvailabilityReasonField,
                       riders,
                   }))
-                : {
+                : ({
                       planCode,
                       termLength,
-                      classCode: 'None',
+                      classCode: undefined,
                       available: false,
                       notAvailabilityReasonField,
                       riders,
-                  }
+                  } as SingleTermProductQuickQuoteParams)
     );
 
 export const buildNewTermQuickQuotePayload = (

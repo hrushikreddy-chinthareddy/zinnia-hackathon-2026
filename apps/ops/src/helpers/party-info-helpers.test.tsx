@@ -1,4 +1,6 @@
 import { cleanup, render } from '@testing-library/react';
+
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     AccountType,
     AddressType,
@@ -12,8 +14,6 @@ import {
     RiskClass,
     SubStandardRating,
 } from '@zinnia/api-types/types/sor';
-
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 jest.mock('@deps/components/pii/PiiWrapper', () => ({
     PiiWrapper: ({ children }: any) => (

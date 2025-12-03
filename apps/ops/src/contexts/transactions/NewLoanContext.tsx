@@ -1,9 +1,3 @@
-import {
-    DisbursementType,
-    FilingStatus,
-    TaxWithholdingInstructions,
-    TaxWithholdingType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import {
     Dispatch,
@@ -18,6 +12,12 @@ import { PayeesType } from '@deps/components/workflows/payees-step/payees-step';
 import { PaymentMethodType } from '@deps/components/workflows/payment-step/types';
 import { AmountType } from '@deps/containers/financial-transactions/loan/new-loan/amount/types';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DisbursementType,
+    FilingStatus,
+    TaxWithholdingInstructions,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/sor';
 
 export interface NewLoan extends AmountType, PayeesType, PaymentMethodType {
     caseId?: string;

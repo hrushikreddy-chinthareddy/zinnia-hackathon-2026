@@ -1,11 +1,10 @@
+import { DataDefinition } from '@deps/types/data';
 import {
     CoverageLayer,
     CoverageParticipants,
     FlatExtra,
     Policy,
 } from '@zinnia/api-types/types/sor';
-
-import { DataDefinition } from '@deps/types/data';
 
 export interface PolicyCoverageLayerDto {
     id?: number;

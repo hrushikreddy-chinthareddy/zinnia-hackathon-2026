@@ -1,45 +1,42 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
-import dayjs from 'dayjs';
-import { useRef, useState, useEffect, useLayoutEffect } from 'react';
+import { Icon, IconType } from '@zinnia/bloom/components';
+import { useRef, useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import { TranslationFiles } from '@deps/config/translations';
 import { Action } from '@deps/constants/policy';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import styles from './transaction-accordion.module.css';
 import { getTitle } from './utils';
 
-function TransactionAccordionTemplate(
+export const TransactionAccordionTemplate = (
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
-) {
-    const {
-        canAdd,
-        items,
-        onAddClick,
-        readonly,
-        title,
-        uiSchema,
-        formContext,
-    } = props;
+) => {
+    const { canAdd, items, onAddClick, readonly, uiSchema, formContext } =
+        props;
 
     const uiOptions = getUiOptions(uiSchema);
+    const { customData, setCustomData } = formContext;
+
     const {
         tabTitle,
         showAddBtn = true,
         showDeleteBtn = true,
         showRemoveItemBtn = true,
         addButtonCTA = 'Add',
-        title: overrideTitle,
     } = uiOptions;
 
     const [activeIndex, setActiveIndex] = useState<number | null>(0);
 
-    const [heights, setHeights] = useState<Record<number, number>>({});
     const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
     const [disabledIndices, setDisabledIndices] = useState<Set<number>>(
         new Set()
     );
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'transactionAccordion',
+    });
 
     const prevLengthRef = useRef(items.length);
 
@@ -48,113 +45,13 @@ function TransactionAccordionTemplate(
         setActiveIndex((prev) => (prev === index ? null : index));
     };
 
-    const { customData, setCustomData } = formContext;
-    const isTpdAdded = customData.requestType === Action.ADD;
-    const isTpdUpdated = customData.requestType === Action.UPDATE;
-    const [isAdd, setIsAdd] = useState(false);
-    const [isDelete, setIsDelete] = useState(false);
-    const [deletedIndex, setDeletedIndex] = useState<number | null>(null);
-
-    useEffect(() => {
-        if (customData.requestType === Action.ADD) {
-            const lastIndex = customData.partyData.length - 1;
-            customData.partyData[lastIndex] = {
-                ...customData.partyData[lastIndex],
-                party: {
-                    ...customData.partyData[lastIndex].party,
-                    partyId: null,
-                },
-            };
-        }
-
-        if (customData.requestType === Action.DELETE && deletedIndex !== null) {
-            customData.partyData[deletedIndex] = {
-                ...customData.partyData[deletedIndex],
-                party: {
-                    ...customData.partyData[deletedIndex].party,
-                    endDate:
-                        deletedIndex !== null
-                            ? dayjs.utc().format(ZAHARA_API_DATE_FORMAT)
-                            : null,
-                },
-            };
-        }
-    }, [customData, deletedIndex]);
-
-    useEffect(() => {
-        let newRequestType: string | null = null;
-        let partyId: string | null = null;
-
-        if (isAdd && isDelete) {
-            newRequestType = Action.UPDATE;
-            partyId =
-                deletedIndex !== null
-                    ? customData.partyData[deletedIndex]?.party?.partyId
-                    : null;
-        } else if (isAdd) {
-            newRequestType = Action.ADD;
-        } else if (isDelete) {
-            newRequestType = Action.DELETE;
-            partyId =
-                deletedIndex !== null
-                    ? customData.partyData[deletedIndex]?.party?.partyId
-                    : null;
-        }
-
-        setCustomData({
-            ...customData,
-            requestType: newRequestType,
-            partyId,
+    const handleCheckboxChange = (index: number) => {
+        setDisabledIndices((prev) => {
+            const n = new Set(prev);
+            n.has(index) ? n.delete(index) : n.add(index);
+            return n;
         });
-    }, [isAdd, isDelete, deletedIndex]);
-
-    const handleAdd = () => {
-        onAddClick();
-        setIsAdd(true);
     };
-
-    const handleRemove = () => {
-        setIsAdd(false);
-    };
-
-    const handleCheckboxChange = (index: number, checked: boolean) => {
-        if (customData.taskType === 'THIRD_PARTY_DETAIL') {
-            //To allow only 1 remove to be checked at a time
-            setDisabledIndices((prev) => {
-                const n = new Set(prev);
-                if (checked) {
-                    n.clear();
-                    n.add(index);
-                } else {
-                    n.delete(index);
-                }
-                return n;
-            });
-        } else {
-            setDisabledIndices((prev) => {
-                const n = new Set(prev);
-                n.has(index) ? n.delete(index) : n.add(index);
-                return n;
-            });
-        }
-
-        setIsDelete(checked);
-        setDeletedIndex(index);
-    };
-
-    useLayoutEffect(() => {
-        if (activeIndex !== null) {
-            const el = contentRefs.current[activeIndex];
-            if (el) {
-                requestAnimationFrame(() => {
-                    setHeights((prev) => ({
-                        ...prev,
-                        [activeIndex]: el.scrollHeight,
-                    }));
-                });
-            }
-        }
-    }, [activeIndex, items.length]);
 
     useEffect(() => {
         const prevLen = prevLengthRef.current;
@@ -174,23 +71,26 @@ function TransactionAccordionTemplate(
         prevLengthRef.current = newLen;
     }, [items.length]);
 
+    const handleAddClick = () => {
+        setCustomData({ requestType: 'ADD' });
+        onAddClick();
+    };
+    //intentional console.log
+    console.log('printing customData', customData);
+
     return (
         <div>
             {items.map((element, index) => {
                 const formData = element.children?.props?.formData || {};
                 const itemTitle = getTitle(formData, index, tabTitle);
-                const isTpdAdded = customData.requestType === Action.ADD;
-                const isTpdUpdated = customData.requestType === Action.UPDATE;
-
                 const isActive = activeIndex === index;
                 const isDisabled = disabledIndices.has(index);
+                const isNewItem = formData?.action === Action.ADD;
 
-                const isNewItem =
-                    ((isTpdAdded || isTpdUpdated) &&
-                        index === customData.partyData.length - 1) ||
+                const showRemove =
+                    showRemoveItemBtn &&
+                    !readonly &&
                     formData?.action === Action.ADD;
-
-                const showRemove = showRemoveItemBtn && !readonly && isNewItem;
 
                 return (
                     <div
@@ -232,15 +132,13 @@ function TransactionAccordionTemplate(
                                         </span>
                                     </button>
                                 }
+
                                 {showRemove && (
                                     <button
                                         type="button"
-                                        onClick={() => {
-                                            element.onDropIndexClick(
-                                                element.index
-                                            )();
-                                            handleRemove();
-                                        }}
+                                        onClick={element.onDropIndexClick(
+                                            element.index
+                                        )}
                                     >
                                         <svg
                                             className="w-5 h-5"
@@ -257,13 +155,14 @@ function TransactionAccordionTemplate(
                                         </svg>
                                     </button>
                                 )}
+
                                 {!readonly && showDeleteBtn && !isNewItem && (
                                     <CheckboxText
                                         id={`remove-${index}`}
-                                        label="Remove"
+                                        label={t('remove')}
                                         checked={isDisabled}
-                                        onChange={(checked) =>
-                                            handleCheckboxChange(index, checked)
+                                        onChange={() =>
+                                            handleCheckboxChange(index)
                                         }
                                     />
                                 )}
@@ -287,23 +186,18 @@ function TransactionAccordionTemplate(
                 );
             })}
 
-            {!readonly &&
-                showAddBtn &&
-                canAdd &&
-                !isTpdAdded &&
-                !isTpdUpdated && (
-                    <div className="flex justify-start mt-3">
-                        <button
-                            type="button"
-                            onClick={handleAdd}
-                            className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
-                        >
-                            {` + ${addButtonCTA}`}
-                        </button>
-                    </div>
-                )}
+            {!readonly && showAddBtn && canAdd && (
+                <div className="flex justify-start mt-3">
+                    <button
+                        type="button"
+                        onClick={handleAddClick}
+                        className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
+                    >
+                        <Icon type={IconType.ADD} small />
+                        <>{addButtonCTA}</>
+                    </button>
+                </div>
+            )}
         </div>
     );
-}
-
-export default TransactionAccordionTemplate;
+};

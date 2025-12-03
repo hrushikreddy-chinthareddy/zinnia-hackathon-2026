@@ -1,9 +1,9 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { Layout } from '@xd/components/Layout/Layout';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import React, { PropsWithChildren } from 'react';
 
+import { Layout } from '@deps/components/layout/Layout';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useMainNavItems } from '@deps/hooks/useMainNavItems';
 

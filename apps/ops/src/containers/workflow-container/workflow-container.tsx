@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -14,6 +13,7 @@ import {
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import styles from './workflow-container.module.css';
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';

@@ -1,4 +1,3 @@
-import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 
@@ -9,6 +8,7 @@ import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { Correspondence } from '@deps/models/case/correspondence';
 import { CommunicationTypes } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 const getPrimaryEmail = (policy: Policy) => {
     const eDeliveryRoleId = policy.partyRoles?.find(
@@ -35,8 +35,6 @@ const CorrespondenceCard = ({
     policy,
     communicationOptions,
     correspondenceData,
-    error,
-    showAdditionalRecipient,
     setError,
     setCorrespondenceData,
 }: CorrespondenceProps) => {
@@ -65,7 +63,7 @@ const CorrespondenceCard = ({
             : []
     );
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
-    const [ccEmails, setCCEmails] = useState<string[]>([]);
+    const [ccEmails] = useState<string[]>([]);
 
     const communicationTypes = [
         {

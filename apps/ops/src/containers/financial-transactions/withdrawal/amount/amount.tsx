@@ -1,5 +1,3 @@
-import { DisbursementType } from '@zinnia/api-types/types/bpm';
-import { TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -29,6 +27,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { DisbursementType } from '@zinnia/api-types/types/bpm';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalContainerProps } from '../types';
 import PartialViewContainer from './partial-view-container/partial-view-container';

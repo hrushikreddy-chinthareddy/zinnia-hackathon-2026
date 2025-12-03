@@ -19,47 +19,94 @@ jest.mock('next-i18next', () => ({
 }));
 
 // Mock all child components
-jest.mock('@deps/components/otp-withdrawal-form/amount-details', () => () => (
-    <div data-testid="amount-details" />
-));
-jest.mock(
-    '@deps/components/otp-withdrawal-form/form-party/form-party',
-    () => () => <div data-testid="form-party" />
-);
+jest.mock('@deps/components/otp-withdrawal-form/amount-details', () => {
+    const AmountDetailsMock = () => <div data-testid="amount-details" />;
+    AmountDetailsMock.displayName = 'AmountDetailsMock';
+    return AmountDetailsMock;
+});
+jest.mock('@deps/components/otp-withdrawal-form/form-party/form-party', () => {
+    const FormPartyMock = () => <div data-testid="form-party" />;
+    FormPartyMock.displayName = 'FormPartyMock';
+    return FormPartyMock;
+});
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal',
-    () => () => <div data-testid="form-program-partial-withdrawal" />
+    () => {
+        const FormProgramPartialWithdrawalMock = () => (
+            <div data-testid="form-program-partial-withdrawal" />
+        );
+        FormProgramPartialWithdrawalMock.displayName =
+            'FormProgramPartialWithdrawalMock';
+        return FormProgramPartialWithdrawalMock;
+    }
 );
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason',
-    () => () => <div data-testid="distribution-reason" />
+    () => {
+        const DistributionReasonMock = () => (
+            <div data-testid="distribution-reason" />
+        );
+        DistributionReasonMock.displayName = 'DistributionReasonMock';
+        return DistributionReasonMock;
+    }
 );
 jest.mock(
     '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution',
-    () => () => <div data-testid="form-distribution" />
+    () => {
+        const FormDistributionMock = () => (
+            <div data-testid="form-distribution" />
+        );
+        FormDistributionMock.displayName = 'FormDistributionMock';
+        return FormDistributionMock;
+    }
 );
-jest.mock('@deps/components/otp-withdrawal-form/tax-withholdings', () => () => (
-    <div data-testid="tax-withholdings" />
-));
-jest.mock('@deps/components/otp-withdrawal-form/irs-withholdings', () => () => (
-    <div data-testid="irs-withholding" />
-));
+jest.mock('@deps/components/otp-withdrawal-form/tax-withholdings', () => {
+    const TaxWithholdingsMock = () => <div data-testid="tax-withholdings" />;
+    TaxWithholdingsMock.displayName = 'TaxWithholdingsMock';
+    return TaxWithholdingsMock;
+});
+jest.mock('@deps/components/otp-withdrawal-form/irs-withholdings', () => {
+    const IrsWithholdingsMock = () => <div data-testid="irs-withholding" />;
+    IrsWithholdingsMock.displayName = 'IrsWithholdingsMock';
+    return IrsWithholdingsMock;
+});
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2',
-    () => () => <div data-testid="form-disbursement-v2" />
+    () => {
+        const FormDisbursementV2Mock = () => (
+            <div data-testid="form-disbursement-v2" />
+        );
+        FormDisbursementV2Mock.displayName = 'FormDisbursementV2Mock';
+        return FormDisbursementV2Mock;
+    }
 );
 jest.mock(
     '@deps/components/otp-withdrawal-form/signature-validation/signature-validations',
-    () => () => <div data-testid="signature-validations" />
+    () => {
+        const SignatureValidationsMock = () => (
+            <div data-testid="signature-validations" />
+        );
+        SignatureValidationsMock.displayName = 'SignatureValidationsMock';
+        return SignatureValidationsMock;
+    }
 );
 jest.mock(
     '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation',
-    () => () => <div data-testid="esignature-validation" />
+    () => {
+        const ESignatureValidationMock = () => (
+            <div data-testid="esignature-validation" />
+        );
+        ESignatureValidationMock.displayName = 'ESignatureValidationMock';
+        return ESignatureValidationMock;
+    }
 );
-jest.mock(
-    '@deps/components/side-sheet/diary-notes/diary-notes-alert',
-    () => () => <div data-testid="diary-notes-warning" />
-);
+jest.mock('@deps/components/side-sheet/diary-notes/diary-notes-alert', () => {
+    const DiaryNotesWarningMock = () => (
+        <div data-testid="diary-notes-warning" />
+    );
+    DiaryNotesWarningMock.displayName = 'DiaryNotesWarningMock';
+    return DiaryNotesWarningMock;
+});
 
 const data = CaseDetails.data.formRequest;
 const contextValue = {

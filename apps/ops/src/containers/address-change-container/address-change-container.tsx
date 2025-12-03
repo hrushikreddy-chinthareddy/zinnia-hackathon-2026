@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -12,6 +11,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { Processes } from '@deps/models/case/case';
 import { DocumentData } from '@deps/models/case/document';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { useAddressChange } from './address-change-provider';
 import { ConfirmStep } from './components/confirm/confirm-step';

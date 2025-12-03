@@ -1,10 +1,10 @@
-import { Email, EmailType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { SortEmailsByType } from '@deps/containers/people-data-cards/email-card/email-card.helpers';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { Email, EmailType } from '@zinnia/api-types/types/sor';
 
 interface GetEmailTypes {
     t: TFunction;

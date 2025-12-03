@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo, useState } from 'react';
@@ -13,6 +12,7 @@ import { ChannelType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormSignature } from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import Amount from './steps/amount';
 import Start from './steps/start';
@@ -47,7 +47,6 @@ const SswUpdate = ({
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState(false);
-    const [timer] = useState(performance.now());
     const source = getDocumentSource(document.documentNumber);
 
     let oldProgram: Program[] = [];
@@ -86,8 +85,7 @@ const SswUpdate = ({
                     updateProgram,
                     document,
                     operationType
-                ),
-                timer
+                )
             );
         }
         if (operationType === SswUpdateType.PROGRAM_UPDATE) {
@@ -102,8 +100,7 @@ const SswUpdate = ({
                     updateProgram,
                     document,
                     operationType
-                ),
-                timer
+                )
             );
         }
 

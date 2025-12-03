@@ -28,6 +28,7 @@ import {
 import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import {
@@ -43,6 +44,7 @@ type TaskFormProps = {
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
     setSubmitEnabled: (enabled: boolean) => void;
+    setValidationSummary?: (summary: any) => void;
 };
 
 const getPaymentCards = (
@@ -54,8 +56,12 @@ const getPaymentCards = (
         value: transaction.entity.paymentRecordId,
         subElement: {
             ...transaction,
-            firstName: task?.data?.details?.payerDetails?.firstName || '',
-            lastName: task?.data?.details?.payerDetails?.lastName || '',
+            firstName:
+                task?.data?.details?.payerDetails?.firstName ||
+                DEFAULT_ERROR_STRING,
+            lastName:
+                task?.data?.details?.payerDetails?.lastName ||
+                DEFAULT_ERROR_STRING,
             title: transaction?.entity?.payment?.companyName,
         },
     }));
@@ -68,6 +74,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         isSubmit,
         taskMetadata,
         setSubmitEnabled,
+        setValidationSummary,
     }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
@@ -395,28 +402,19 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
 
     const mergedFormContext = useMemo(
         () => ({
-            customData: customData,
+            customData,
             setCustomData: (patch: any) => {
-                setCustomData((prev: any) => {
-                    const updated = {
-                        ...prev,
-                        ...patch,
-                    };
-                    setTask((prevTask: any) => ({
-                        ...prevTask,
-                        data: {
-                            ...prevTask.data,
-                            ...updated,
-                        },
-                    }));
-                    return updated;
-                });
+                setCustomData((prev: any) => ({
+                    ...prev,
+                    ...patch,
+                }));
             },
             updateSchema: updateSchemaHandler,
             isReadOnlyOverride: readonly,
             mappedDocuments,
             setMappedDocuments: handleSetMappedDocuments,
             setSubmitEnabled,
+            setValidationSummary,
         }),
         [
             customData,
@@ -424,7 +422,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             readonly,
             updateSchemaHandler,
             setSubmitEnabled,
-            task,
+            setValidationSummary,
         ]
     );
 

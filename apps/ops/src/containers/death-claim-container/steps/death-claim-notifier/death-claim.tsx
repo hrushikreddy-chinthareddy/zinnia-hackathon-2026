@@ -1,4 +1,3 @@
-import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import { useTranslation } from 'next-i18next';
@@ -22,6 +21,7 @@ import {
 } from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 
 import { AddBeneficiaryCard } from './add-beneficiary-card';
 import getDeathClaimConfig from './death-claim.config';

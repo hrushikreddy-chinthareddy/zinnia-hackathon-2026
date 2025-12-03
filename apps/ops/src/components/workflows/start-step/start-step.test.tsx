@@ -1,14 +1,13 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import { PolicyStatus } from '@xd/api-types/dist/generated-types/sor/models/PolicyStatus';
-
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Processes } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import StartStep from './start-step';
 
@@ -125,6 +124,7 @@ describe('StartStep Component', () => {
         // Silence console.error for Optimizely initialization errors
         jest.spyOn(console, 'error').mockImplementation((message) => {
             if (!message?.includes('OPTIMIZELY')) {
+                // do nothing
             }
         });
     });

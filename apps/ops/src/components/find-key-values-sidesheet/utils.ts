@@ -1,4 +1,3 @@
-import { Policy, LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'i18next';
 
 import {
@@ -16,6 +15,7 @@ import {
 } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { DataDefinition } from '@deps/types/data';
+import { Policy, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 /**
  * Takes in a policy and generates the key values search fields for that policy

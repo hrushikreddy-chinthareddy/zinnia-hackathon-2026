@@ -1,7 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { FgaRelation, FgaRoles } from '@xd/utils';
-import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMemo } from 'react';
@@ -53,6 +51,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRelation, FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -64,6 +63,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party, Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
@@ -227,7 +227,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 break;
             case 'activity':
                 if (
-                    featureFlags.revised_history_table &&
+                    featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE] &&
                     slug[1] === 'transactions'
                 ) {
                     subPageContent = <FilterTransactions />;

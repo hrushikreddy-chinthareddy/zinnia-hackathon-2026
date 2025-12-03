@@ -1,11 +1,10 @@
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     DisbursementType,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
-
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export const calculateProcessedAmount = (
     transaction: Transaction

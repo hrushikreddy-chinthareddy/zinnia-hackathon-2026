@@ -1,5 +1,4 @@
 import { Skeleton } from '@radix-ui/themes';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
@@ -17,6 +16,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import { CarrierCode } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';

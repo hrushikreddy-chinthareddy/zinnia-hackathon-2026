@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils';
+import { Button, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -13,15 +13,6 @@ import {
     useEffect,
 } from 'react';
 
-import FilterButton from '@deps/components/filter-button/filter-button';
-import NavElement, {
-    NavElementSize,
-    NavElementType,
-} from '@deps/components/nav-element/nav-element';
-import {
-    PageLoader,
-    PageLoaderVariant,
-} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
@@ -47,15 +38,15 @@ import {
     getSearchValueObject,
     toggleLabels,
 } from '@deps/helpers/case-management';
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import {
     doesUserHavePagePermissions,
     getUserData,
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
+import { useLoadingTime } from '@deps/hooks/useLoadingTime';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { Statuses } from '@deps/models/case/case';
+import { LOADING_TIME_CONFIG, Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
@@ -72,6 +63,7 @@ import {
     SegmentTrackedEventName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -81,7 +73,7 @@ import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
-
+import styles from './index.module.css';
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(
     () =>
@@ -123,6 +115,7 @@ const CaseManagementDashboard = ({
     ] = useCaseFilterQueryStore();
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
+
     const handleCreatedBySort = useCallback(
         (key: 'createdAt') => {
             setCaseManagementFilters((prevFilters) => {
@@ -247,10 +240,34 @@ const CaseManagementDashboard = ({
         queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
         enabled: loadedStoredFilters,
     });
+    const loadingTime = useLoadingTime(caseSearchLoading, {
+        incrementInterval: 100,
+        noMessageThreshold: LOADING_TIME_CONFIG.NO_MESSAGE_THRESHOLD,
+        gatheringThreshold: LOADING_TIME_CONFIG.GATHERING_THRESHOLD,
+        organizingThreshold: LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD,
+    });
+
+    const loadingMessage = useMemo(() => {
+        if (loadingTime < LOADING_TIME_CONFIG.NO_MESSAGE_THRESHOLD) return '';
+        if (loadingTime < LOADING_TIME_CONFIG.GATHERING_THRESHOLD)
+            return t(
+                'caseManagementDashboard.loadingMessage.gatheringYourResults'
+            );
+        if (loadingTime < LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD)
+            return t(
+                'caseManagementDashboard.loadingMessage.organizingYourResults'
+            );
+        return t(
+            'caseManagementDashboard.loadingMessage.takingLongerThanUsual'
+        );
+    }, [loadingTime, t]);
 
     const hasResults = !!caseSearchData?.data?.length;
 
     const liveResultsMessage = useMemo(() => {
+        if (caseSearchLoading) {
+            return loadingMessage;
+        }
         if (hasResults) {
             return t('policy.documents.xToYOfZ', {
                 x: caseManagementFilters.offset + 1,
@@ -263,9 +280,7 @@ const CaseManagementDashboard = ({
                 }`,
             });
         } else {
-            return !isEmptyObject(caseManagementFilters.searchValue)
-                ? t('caseManagementDashboard.search.empty.title')
-                : t('caseManagementDashboard.search.empty.titleFilters');
+            return t('caseManagementDashboard.search.empty.title');
         }
     }, [
         caseSearchData,
@@ -444,8 +459,6 @@ const CaseManagementDashboard = ({
     ]);
 
     const tableContent = useMemo(() => {
-        if (caseSearchLoading)
-            return <PageLoader variant={PageLoaderVariant.Center} />;
         if (caseSearchError) return <SearchResultsErrorCard />;
 
         const numberOfItems = caseManagementFilters.offset + 1;
@@ -464,6 +477,8 @@ const CaseManagementDashboard = ({
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
                     sortBy={caseManagementFilters.sortBy}
+                    caseSearchLoading={caseSearchLoading}
+                    loadingMessage={loadingMessage}
                 />
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography
@@ -534,15 +549,36 @@ const CaseManagementDashboard = ({
                 {t('caseManagementDashboard.h1')}
             </Typography>
             <>
-                <SearchBar
-                    searchValue={caseManagementFilters.searchValue}
-                    onSearch={handleSearch}
-                    toggleLabels={toggleLabels(featureFlags)}
-                    initialToggleValue={caseManagementFilters.toggleValue}
-                    onToggle={handleToggle}
-                    onClear={handleClear}
-                    onChangeCallback={handleSearchInputChange}
-                />
+                <div className={styles.searchContainer}>
+                    <SearchBar
+                        searchValue={caseManagementFilters.searchValue}
+                        onSearch={handleSearch}
+                        toggleLabels={toggleLabels(featureFlags)}
+                        initialToggleValue={caseManagementFilters.toggleValue}
+                        onToggle={handleToggle}
+                        onClear={handleClear}
+                        onChangeCallback={handleSearchInputChange}
+                    />
+                    <div className={styles.searchActions}>
+                        <Button
+                            type="button"
+                            onClick={openRefineResultsSidesheet}
+                            tabIndex={0}
+                            size={'small'}
+                            mode="secondary"
+                            iconPosition="start"
+                            iconType={IconType.FILTER}
+                            aria-label={
+                                t('ariaLabel.openRefineResultsButton') as string
+                            }
+                            onKeyDown={() => handleKeyDown}
+                        >
+                            {t('caseManagementDashboard.filters')}
+                        </Button>
+                        <div></div> {/* to add date range picker here */}
+                    </div>
+                </div>
+
                 <fieldset form="search-form">
                     <legend>
                         <label
@@ -552,7 +588,7 @@ const CaseManagementDashboard = ({
                             {t('caseOverview.tasks.status')}
                         </label>
                     </legend>
-                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <div className={styles.statusRow}>
                         <StatusFilter
                             caseTotals={caseTotals}
                             onChange={(vals) =>
@@ -586,20 +622,6 @@ const CaseManagementDashboard = ({
                                     .caseStatus
                             }
                         />
-                        <NavElement
-                            tabIndex={0}
-                            size={NavElementSize.Small}
-                            type={NavElementType.Button}
-                            startIcon={<FilterButton />}
-                            className="flex items-center whitespace-nowrap"
-                            aria-label={
-                                t('ariaLabel.openRefineResultsButton') as string
-                            }
-                            onClick={openRefineResultsSidesheet}
-                            onKeyDown={handleKeyDown}
-                        >
-                            {t('caseManagementDashboard.addFilters')}
-                        </NavElement>
                         <ActiveFilters
                             authorizedCarriers={authorizedCarriers}
                             filters={caseManagementFilters.additionalFilters}

@@ -1,4 +1,3 @@
-import { PaymentForm } from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { v4 as uuidV4 } from 'uuid';
@@ -8,6 +7,7 @@ import {
     ZAHARA_API_DATE_FORMAT,
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
+import { PaymentForm } from '@zinnia/api-types/types/bpm';
 
 import { Premium } from './amount/types';
 

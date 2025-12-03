@@ -1,3 +1,5 @@
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import {
     Policy,
     EmailType,
@@ -5,9 +7,6 @@ import {
     PartyRole,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 
 import { ClaimActionTypes, NotificationMethod } from '../../death-claim.types';
 

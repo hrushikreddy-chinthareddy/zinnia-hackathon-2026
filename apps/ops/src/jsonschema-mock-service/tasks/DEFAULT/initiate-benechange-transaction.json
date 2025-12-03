@@ -1849,6 +1849,7 @@
                                                     "Guardian",
                                                     "Attorney-in-fact",
                                                     "Assignee",
+                                                    "AUTHORIZEDSIGNATORY",
                                                     "NA"
                                                 ]
                                             },
@@ -1952,6 +1953,7 @@
                                             "Guardian",
                                             "Attorney-in-fact",
                                             "Assignee",
+                                            "Authorized signatory",
                                             "NA"
                                         ]
                                     },
@@ -1962,6 +1964,95 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            {
+                "title": "Summary",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {
+                            "type": "string"
+                        },
+                        "validationUrl": {
+                            "type": "string",
+                            "default": "/api/nonfinancial/beneChangeTransaction"
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:hideFooter": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "summary": {
+                        "ui:options": {
+                            "label": false,
+                            "dataKey": "actionData",
+                            "templateType": "summaryCard",
+                            "ObjectFieldTemplate": "TransactionSummaryTemplate",
+                            "sections": [
+                                {
+                                    "label": "Identification",
+                                    "fields": [
+                                        { "key": "gender", "label": "Gender" },
+                                        { "key": "ssn", "label": "SSN" },
+                                        {
+                                            "key": "dateOfBirth",
+                                            "label": "Date of birth"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "Allocation",
+                                    "fields": [
+                                        {
+                                            "key": "beneficiaryPercentage",
+                                            "label": "Allocation"
+                                        },
+                                        {
+                                            "key": "relationshipToParty",
+                                            "label": "Relationship to party"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "Contact Info",
+                                    "fields": [
+                                        {
+                                            "key": "address",
+                                            "label": "Address"
+                                        },
+                                        { "key": "phone", "label": "Phone" },
+                                        { "key": "email", "label": "Email" }
+                                    ]
+                                },
+                                {
+                                    "label": "",
+                                    "fields": [
+                                        {
+                                            "key": "isPerStirpes",
+                                            "label": "Per stirpes"
+                                        },
+                                        {
+                                            "key": "isIrrevocable",
+                                            "label": "Irrevocable"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "validationUrl": {
+                        "ui:widget": "hidden"
                     }
                 }
             }

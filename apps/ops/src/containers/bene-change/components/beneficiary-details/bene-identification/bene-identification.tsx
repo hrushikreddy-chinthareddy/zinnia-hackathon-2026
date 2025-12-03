@@ -1,5 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
-import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -39,8 +37,10 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import {
     Errors,
@@ -289,6 +289,13 @@ const BeneficiaryIdentification = ({
                     documentType: '',
                 };
 
+                browserLogInfo(
+                    `BeneIdentification: Uploading document: correlationID=${metaData.correlationId}`,
+                    {
+                        metaData,
+                    }
+                );
+
                 try {
                     const response = await uploadDocumentV2(
                         metaData,
@@ -310,9 +317,10 @@ const BeneficiaryIdentification = ({
                 } catch (error) {
                     setUploadError('Failed to upload file. Please try again.');
                     browserLogError(
-                        'sidesheet-name-change: Error uploading document:',
+                        `BeneIdentification: Error uploading document: correlationID=${metaData.correlationId}`,
                         {
                             ...parseErrorInformation(error),
+                            metaData,
                         }
                     );
                 }

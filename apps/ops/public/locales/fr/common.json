@@ -45,6 +45,7 @@
     },
     "allFields": {
         "emptySearch": "Aucun résultat trouvé",
+        "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
         "transactionDetails": "Détails de la transaction",
         "effectiveDate": "Date d'effet",
@@ -455,7 +456,12 @@
         "disbursementAmount": "Monto del desembolso",
         "payeeGrossAmount": "Monto bruto del beneficiario",
         "timeline": "Ponctualité",
-        "taxes": "Impôts"
+        "taxes": "Impôts",
+        "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
+        "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
+        "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."
     },
     "enums": {
         "LIFE": "Vie",
@@ -1311,6 +1317,7 @@
         "fetchTaskError": "Impossible de récupérer les tâches.",
         "unassignTask": "Annuler l'attribution d'une tâche",
         "unassign": "Annuler l'attribution",
+        "assign": "Attribuer",
         "unassignTaskError": "Erreur de désattribution de tâche",
         "assignTaskError": "Erreur d'affectation de tâche",
         "startTask": "Démarrer la tâche",
@@ -1428,7 +1435,8 @@
                     "married": "Mariée",
                     "widowed": "Veuve"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Date de confiance"
             },
             "jointOwner": {
                 "title": "Informations sur le copropriétaire"
@@ -1893,6 +1901,7 @@
             "custodian": "Tuteur",
             "guardian": "Tuteur",
             "attorneyInFact": "Procuration",
+            "authorizedSignatory": "Representant autorisé",
             "assignee": "Cessionnaire",
             "poa": "Procuration",
             "na": "NA",
@@ -2159,6 +2168,7 @@
         "rate": "taux",
         "submitPayment": "Soumettre le paiement",
         "draft": "Sauvegarder en tant que brouillon",
+        "send": "Envoyer",
         "successExclamation": "Succès!",
         "total": "Total",
         "view": "Afficher",
@@ -2359,6 +2369,11 @@
     "caseManagementDashboard": {
         "h1": "Dossiers",
         "h2": "Résultats de recherche",
+        "loadingMessage": {
+            "gatheringYourResults": "Collecte de vos résultats…",
+            "organizingYourResults": "Organisation de vos résultats…",
+            "takingLongerThanUsual": "Cette opération prend plus de temps que d'habitude. Veuillez ajuster vos filtres."
+        },
         "case": {
             "createdAt": "Créé",
             "updatedAt": "Mis à jour",
@@ -2384,6 +2399,7 @@
         "results": "Résultats",
         "refineResults": "Affiner les résultats",
         "addFilters": "Ajouter des filtres",
+        "filters": "Filtres",
         "refineResultsOptions": {
             "carriers": "Assureur",
             "caseType": "Type de dossier",
@@ -2407,11 +2423,11 @@
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
             "assignee": "Cessionnaire",
-            "priority": "Priorité",
+            "priority": "Priorité du dossier",
             "selectPriority": "Sélectionner la priorité",
-            "onlyPrioritized": "Seulement priorisé",
-            "any": "Tout",
-            "notPrioritized": "Non priorisé"
+            "onlyPrioritized": "Casos prioritarios",
+            "any": "Todos los casos",
+            "notPrioritized": "Casos regulares"
         },
         "refineResultsErrors": {
             "caseType": "Veuillez sélectionner un type de dossier",
@@ -2434,9 +2450,9 @@
                 "Renewal": "Renouvellements"
             },
             "escalated": {
-                "true": "Seulement priorisé",
-                "false": "Non priorisé",
-                "any": "Tout"
+                "onlyPrioritized": "Casos prioritarios",
+                "allCases": "Todos los casos",
+                "notPrioritized": "Casos regulares"
             }
         },
         "selectStatus": "Sélectionner le statut",
@@ -2467,8 +2483,7 @@
                 }
             },
             "empty": {
-                "title": "Nous n’avons pas trouvé de cas correspondant à votre recherche.",
-                "titleFilters": "Nous n'avons pas pu trouver de cas correspondant à vos filtres.",
+                "title": "Rien à montrer.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
                     "text": "Vous rencontrez toujours des problèmes ? ",
@@ -2824,13 +2839,27 @@
             "detailsBody": "Un dossier priorisé sera déplacé en tant qu'élément de travail pour un traitement accéléré.",
             "cancel": "Annuler",
             "submit": "Soumettre",
-            "successMessage": "Dossier ID: {{caseId}} priorisé avec succès",
+            "successMessage": "Dossier ID: {{caseId}} a été priorisé.",
             "errorMessage": "Échec de la priorisation du dossier",
+            "errorForbidden": " Vous n'êtes pas autorisé à prioriser les dossiers.",
             "success": "Success!",
             "close": "Close",
             "error": "Error",
             "simpleTooltipBody": "Ce dossier est priorisé.",
             "tooltipBody": "Ce dossier a été priorisé le {{date}} par {{userName}} pour traitement."
+        },
+        "deprioritizeCase": {
+            "title": "De-prioriser le Dossier",
+            "detailsHeader": "Détails",
+            "detailsBody": "Un dossier dépriorisé sera déplacé en tant qu'élément de travail pour un traitement normal.",
+            "cancel": "Annuler",
+            "submit": "Soumettre",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Dossier ID: {{caseId}} a été dépriorisé",
+            "tooltipBody": "Ce dossier est dépriorisé."
         },
         "navDrawer": {
             "topStatus": "Statut supérieur",
@@ -3455,14 +3484,15 @@
                     "title": "Signature de la société cédante",
                     "qualType": "type de qualification",
                     "isQualTypeNotValid": "Impossible de déterminer le type de qualification",
-                    "isCorporateResolutionPresent": "La résolution de l'entreprise est-elle présente ?",
                     "isSignatureValid": "La signature du dirigeant autorisé est-elle valide sur la base de la résolution de l'entreprise?",
                     "isSignatureAuthorized": "La signature du responsable autorisé est-elle valide?",
                     "isLoaAttached": "La lettre d'acceptation est-elle jointe?",
-                    "validOwnerRegType": "Propriétaire/Type d'enregistrement valide",
+                    "registrationType": "Propriétaire/Type d'enregistrement valide",
                     "isTitlePresent": "Le titre est-il présent?",
                     "loaSignDate": "Date de signature de la LOA",
-                    "authPersonSignPresent": "Signature de la personne autorisée présente",
+                    "authPersonSignPresent": "La signature de la personne autorisée est présente",
+                    "isCorporateResolutionPresent": "La résolution de l'entreprise est-elle présente?",
+                    "isAuthSignValid": "La signature de l'officier autorisé est-elle valide selon la résolution de l'entreprise?",
                     "signDate": "Date de la signature"
                 },
                 "nonRegTypeReason": {
@@ -4298,7 +4328,6 @@
             "endingIn": "se terminant par"
         },
         "toolTips": {
-            "emptySearch": "Aucun résultat trouvé",
             "preTaxEquityAndFiscalResponsibilityActBasis": "Ceci est le coût de base antérieur à l’adoption de la Loi sur l’équité fiscale et la responsabilité.",
             "preTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi sur l’équité fiscale et la responsabilité en 1982.",
             "postTechnicalAndMiscellaneousRevenueActAmount": "Ceci est le coût de base après l’adoption de la Loi technique et sur les recettes diverses en 1988.",
@@ -4540,7 +4569,8 @@
                 "policyYear": "Año de póliza",
                 "policyLengthTooltip": "La durée de la police correspond à sa durée de validité. Certaines polices ont une durée déterminée (exprimée en nombre d'années) et une date de fin, tandis que d'autres durent jusqu'au décès de l'assuré.",
                 "policyTimeline": "Chronologie de la police",
-                "freeLookEndDate": "Date de fin de la consultation gratuite"
+                "freeLookEndDate": "Date de fin de la consultation gratuite",
+                "deliveryDate": "Date de réception"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Adresse e-mail de l'agent",
@@ -7307,7 +7337,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Ajouter un filtre"
+                "addFilter": "Ajouter un filtre",
+                "addFilters": "Ajouter des filtres"
             },
             "headers": {
                 "title": "Affiner les résultats"
@@ -7844,7 +7875,8 @@
                 "addressChange": "Changement d'adresse",
                 "call": "Appel",
                 "formReview": "Examen du formulaire"
-            }
+            },
+            "summaryNigoError": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi."
         }
     },
     "initiateBenechangeTransaction": {
@@ -8323,6 +8355,9 @@
         "agentDetails": {
             "allocationErr": "Les allocations doivent être égales à 100 %"
         }
+    },
+    "transactionAccordion": {
+        "remove": "Supprimer"
     },
     "fundAllocation": {
         "submitted": "Soumis!",
@@ -8819,9 +8854,7 @@
             "addProductAriaLabel": "Bouton pour ajouter un produit",
             "editIllustration": "Modifier l'illustration",
             "initialDeathBenefitOption": "Option de prestation de décès",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
-            "unreachDesiredSolutionMessage": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Cette illustration sera envoyée pour s'associer à une demande.",
@@ -8988,10 +9021,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Bonjour, je suis agent virtuel. Veuillez noter que cette fonctionnalité est actuellement en version bêta.\nComment puis-je vous aider ?",
+            "startingMessageBetaPrefix": "Bonjour, {{name}}",
+            "startingMessageBetaSuffix": "Comment puis-je vous assister ?",
             "inputPlaceholder": "Demande-moi n'importe quoi",
-            "footerText": "Avertissement:Le chat Zinnia peut faire des erreurs.",
+            "footerText": "Avertissement: Zinnia AI peut faire des erreurs.",
             "errorMsg": "Désolé, je n'ai pas obtenu de réponse. Veuillez réessayer plus tard.",
             "send": "Envoyer",
             "stop": "Arrêt",
@@ -9042,7 +9079,13 @@
             "followUpButton": "Posez vos questions complémentaires ici",
             "definitiveAnswerNotFound": "Je n’ai pas trouvé de réponse définitive dans les documents spécifiques au client. Voulez-vous que je vérifie également la référence commune ?",
             "yes": "Oui",
-            "no": "Non"
+            "no": "Non",
+            "answerMode": "Mode de réponse",
+            "client": "Client",
+            "answerModeOptions": {
+                "short": "Court et concis",
+                "long": "Long et détaillé"
+            }
         },
         "documents": {
             "recentlyAdded": "Fichiers récemment ajoutés",
@@ -9094,11 +9137,23 @@
             "recentlyModified": "Récemment modifiés",
             "allDocs": "Tous les documents",
             "recentChat": "Chat récent",
-            "search": "Rechercher",
+            "search": "Rechercher chats récents",
             "noResultsFound": "Aucun résultat trouvé",
             "noRecentChats": "Aucune discussion récente",
             "loadingChats": "Chargement des discussions...",
-            "settings": "Paramètres"
+            "settings": "Paramètres",
+            "quiz": {
+                "header": "Passer un quiz",
+                "noQuestionsAvailable": "Aucune question de quiz disponible.",
+                "quizPassed": "Félicitations, vous avez réussi",
+                "quizFailed": "Désolé, vous n’avez pas atteint le score requis de {{passPercentage}}%.",
+                "correctAnswer": "Bonne réponse",
+                "wrongAnswer": "Mauvaise réponse",
+                "yourScore": "Vous avez obtenu {{score}} sur {{total}}",
+                "readMore": "Lisez ce document pour approfondir vos connaissances sur le sujet",
+                "submit": "Soumettre",
+                "tryAgain": "Réessayer"
+            }
         }
     },
     "updateSuitabilityDataEntry": {
@@ -9147,7 +9202,29 @@
         "variableSearchPlaceholder": "Rechercher des variables de fonctionnalité...",
         "flagQueueSearchPlaceholder": "Rechercher des variables de fonctionnalité..."
     },
-     "thirdPartyDetail":{
+    "successErrorSidesheet": {
+        "successTitle": "Succès",
+        "errorTitle": "Erreur",
+        "closeButton": "Fermer"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Ajouté",
+            "none": "Aucun",
+            "removed": "Supprimé",
+            "updated": "Mis à jour"
+        },
+        "noSummary": "Aucun récapitulatif de transaction disponible.",
+        "primaryBene": "Bénéficiaire principal",
+        "contingentBene": "Bénéficiaire conditionnel",
+        "loading": "L'API de validation est en cours d'exécution...",
+        "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
+        "errorMessage": "Hm, nous avons détecté un problème lors de la vérification des règles de cette politique. Veuillez consulter l'erreur ci-dessous.",
+        "submitWithErrorsText": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi.",
+        "internalServerError": "Erreur interne du serveur",
+        "failedToFetch": "Impossible de récupérer le résumé de validation"
+    },
+    "thirdPartyDetail": {
         "confirmStep": {
             "title": "Compris!",
             "subTitle": "Le formulaire de changement/correction de nom a été soumis avec succès.",

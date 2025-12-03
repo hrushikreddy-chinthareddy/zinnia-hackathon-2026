@@ -15,7 +15,7 @@ import ObjectRowFieldTemplate from '../customization/templates/object-field-temp
 import PartyInfoListTemplate from '../customization/templates/party-info-list-template/party-info-list';
 import TextListTemplate from '../customization/templates/text-list-template';
 import { TitleFieldTemplate } from '../customization/templates/title-field-template/title-field-template';
-import TransactionAccordionTemplate from '../customization/templates/transaction-accordion/transaction-accordion';
+import { TransactionAccordionTemplate } from '../customization/templates/transaction-accordion/transaction-accordion';
 
 export const UIArrayTemplateMap: Record<
     string,

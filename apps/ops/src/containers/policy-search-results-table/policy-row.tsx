@@ -1,10 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-    PartyRole,
-    PolicyStatus,
-} from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils/dist';
-import {
     Icon,
     IconType,
     TableCell,
@@ -50,6 +45,8 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { toSentenceCase } from '@deps/utils/strings';
+import { PartyRole, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { PolicyActionCell } from './policy-action-cell';
 import styles from './policy-row.module.css';

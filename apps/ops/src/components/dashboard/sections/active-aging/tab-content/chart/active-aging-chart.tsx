@@ -1,4 +1,3 @@
-import { generateNewColor } from '@zinnia/utils';
 import clsx from 'clsx';
 import { SeriesOptionsType } from 'highcharts';
 import { useContext, useMemo } from 'react';
@@ -13,6 +12,7 @@ import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css
 import { Legend } from '@deps/components/dashboard/legend/legend';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { generateNewColor } from '@deps/utils/colors';
 
 import { ActiveAgingContext } from '../../context/active-aging-context';
 import { generateActiveAgingCategories } from '../../utils';
