@@ -48,7 +48,7 @@ export interface SingleYearValuesIUL extends SingleYearValuesBase {
     sevenPayPremiumAmount: number;
 }
 
-export type OutputCoverageValues = {
+export interface BaseOutputCoverageValues {
     policyFee: number;
     modalPolicyFee: number;
     premium: number;
@@ -57,35 +57,39 @@ export type OutputCoverageValues = {
     flatExtraPremium: number;
     modalFlatExtraPremium: number;
     faceAmount: number;
-};
+}
+
+export interface RiderOutputCoverageValues extends BaseOutputCoverageValues {
+    isIncludedInQuote: boolean;
+}
 
 export interface BaseScenario {}
 
 export interface ScenarioCoveragesBase {
-    base: OutputCoverageValues;
+    base: BaseOutputCoverageValues;
 }
 
 export interface TermLifeCoverages extends ScenarioCoveragesBase {
-    acceleratedDeathBenefitForTerminalIllness?: OutputCoverageValues;
-    acceleratedDeathBenefitForChronicIllness?: OutputCoverageValues;
-    acceleratedDeathBenefitForCriticalIllness?: OutputCoverageValues;
-    accidentalDeathBenefit?: OutputCoverageValues;
-    charitableGiving?: OutputCoverageValues;
-    childrensTerm?: OutputCoverageValues;
-    waiverOfPremium?: OutputCoverageValues;
+    acceleratedDeathBenefitForTerminalIllness?: RiderOutputCoverageValues;
+    acceleratedDeathBenefitForChronicIllness?: RiderOutputCoverageValues;
+    acceleratedDeathBenefitForCriticalIllness?: RiderOutputCoverageValues;
+    accidentalDeathBenefit?: RiderOutputCoverageValues;
+    charitableGiving?: RiderOutputCoverageValues;
+    childrensTerm?: RiderOutputCoverageValues;
+    waiverOfPremium?: RiderOutputCoverageValues;
 }
 
 export interface IndexedUniversalLifeCoverages extends ScenarioCoveragesBase {
-    acceleratedDeathBenefitForTerminalIllness?: OutputCoverageValues;
-    acceleratedDeathBenefitForChronicIllness?: OutputCoverageValues;
-    acceleratedDeathBenefitForCriticalIllness?: OutputCoverageValues;
-    accidentalDeathBenefit?: OutputCoverageValues;
-    charitableGiving?: OutputCoverageValues;
-    childrensTerm?: OutputCoverageValues;
-    guaranteedInsurabilityBenefit?: OutputCoverageValues;
-    overloanProtection?: OutputCoverageValues;
-    ownerWaiverOfDeduction?: OutputCoverageValues;
-    waiverOfDeduction?: OutputCoverageValues;
+    acceleratedDeathBenefitForTerminalIllness?: RiderOutputCoverageValues;
+    acceleratedDeathBenefitForChronicIllness?: RiderOutputCoverageValues;
+    acceleratedDeathBenefitForCriticalIllness?: RiderOutputCoverageValues;
+    accidentalDeathBenefit?: RiderOutputCoverageValues;
+    charitableGiving?: RiderOutputCoverageValues;
+    childrensTerm?: RiderOutputCoverageValues;
+    guaranteedInsurabilityBenefit?: RiderOutputCoverageValues;
+    overloanProtection?: RiderOutputCoverageValues;
+    ownerWaiverOfDeduction?: RiderOutputCoverageValues;
+    waiverOfDeduction?: RiderOutputCoverageValues;
 }
 
 export type Options = {

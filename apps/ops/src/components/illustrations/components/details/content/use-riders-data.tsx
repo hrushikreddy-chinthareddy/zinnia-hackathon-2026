@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { OutputCoverageValues } from '@deps/queries/api/v3/illustrations/types';
+import { RiderOutputCoverageValues } from '@deps/queries/api/v3/illustrations/types';
 
 import { formatIllustrationDetailYearlyCurrency } from './illustration-details-helpers';
 import { useRidersLabelMap } from './use-riders-label-map';
@@ -26,14 +26,23 @@ export const useIllustrationRidersData = () => {
     type Keys<T> = T extends any ? keyof T : never;
 
     return (Object.keys(coverages) as Keys<typeof coverages>[])
-        .filter((k) => k !== 'base')
+        .filter((key): key is Exclude<typeof key, 'base'> => key !== 'base')
         .map((riderName) => {
-            const { premium } = (
+            const { premium, isIncludedInQuote } = (
                 coverages as unknown as Record<
                     string,
-                    OutputCoverageValues | undefined
+                    RiderOutputCoverageValues | undefined
                 >
-            )[riderName] ?? { premium: null };
+            )[riderName] ?? { premium: null, isIncludedInQuote: false };
+
+            return {
+                riderName,
+                premium,
+                isIncludedInQuote,
+            };
+        })
+        .filter(({ isIncludedInQuote }) => isIncludedInQuote)
+        .map(({ riderName, premium }) => {
             return {
                 label: ridersLabelMap?.[riderName] ?? riderName,
                 format: () =>
