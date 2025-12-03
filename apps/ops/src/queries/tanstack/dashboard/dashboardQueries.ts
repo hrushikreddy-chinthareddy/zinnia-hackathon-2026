@@ -2,6 +2,10 @@ import { TFunction } from 'i18next';
 
 import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { Statuses } from '@deps/models/case/case';
+import {
+    getCaseDashboardStats,
+    getCaseTimingData,
+} from '@deps/queries/api/cases';
 import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
 import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
 import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
@@ -18,7 +22,6 @@ import {
     CompletedTaskTimeGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
 
-import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 export const getCaseDashboardStatsQuery = async (
     baseFilter: CaseCountInputFilter,
     groupBy: CaseCountGroupByEnum[]
