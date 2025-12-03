@@ -121,6 +121,7 @@ export const TRANSACTION_TYPE_DISPLAY_MAP: Record<string, string> = {
     bank_info: 'Bank Info',
     beneficiary: 'Beneficiary',
     newloan: 'New Loan',
+    joint_owner: 'Joint Owner',
 };
 
 export const PageType = {

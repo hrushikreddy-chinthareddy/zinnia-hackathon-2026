@@ -39,7 +39,9 @@ export const aggregateByCategory = (
     const result = Array.from(categoryTotals.entries())
         .map(([category, count], idx) => ({
             category,
-            displayName: TRANSACTION_CATEGORY_DISPLAY_MAP[category] || category,
+            displayName:
+                TRANSACTION_CATEGORY_DISPLAY_MAP[category?.toLowerCase()] ||
+                category,
             count,
             color: colors[idx],
         }))
@@ -78,7 +80,8 @@ export const getTransactionTypesByCategory = (
     return Array.from(typeTotals.entries())
         .map(([type, count]) => ({
             type,
-            displayName: TRANSACTION_TYPE_DISPLAY_MAP[type] || type,
+            displayName:
+                TRANSACTION_TYPE_DISPLAY_MAP[type?.toLowerCase()] || type,
             count,
         }))
         .sort((a, b) => b.count - a.count);
@@ -116,7 +119,9 @@ export function buildDrilldownSeries(
     return Object.entries(dataByCategory).map(([categoryKey, items]) => ({
         type: 'column',
         id: categoryKey,
-        name: TRANSACTION_CATEGORY_DISPLAY_MAP[categoryKey] ?? categoryKey,
+        name:
+            TRANSACTION_CATEGORY_DISPLAY_MAP[categoryKey?.toLowerCase()] ??
+            categoryKey,
         data: items.map((t) => ({
             name: t.displayName,
             y: t.count,
