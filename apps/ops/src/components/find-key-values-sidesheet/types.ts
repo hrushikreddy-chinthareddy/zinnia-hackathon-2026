@@ -11,9 +11,9 @@ export interface FindAllKeyValuesSidebarProps {
 
 export type Primitive = string | number | boolean;
 
-const FIELD = Symbol('FIELD');
-const SECTION = Symbol('SECTION');
-const GROUP = Symbol('GROUP');
+export const FIELD = Symbol('FIELD');
+export const SECTION = Symbol('SECTION');
+export const GROUP = Symbol('GROUP');
 
 export const FieldType = {
     field: FIELD,

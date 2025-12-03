@@ -80,7 +80,7 @@
 .subSectionContainer > .subSectionStd {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--measure-dimension-gap-md);
 }
 
 .subSectionStd > .subSection {

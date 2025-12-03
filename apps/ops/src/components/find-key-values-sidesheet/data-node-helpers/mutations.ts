@@ -40,7 +40,7 @@ export function spruceFromSourceData(obj: unknown, t: TFunction): DataNode[] {
  * @param t - the translation function
  * @returns the data node
  */
-function convertTuple(
+export function convertTuple(
     key: string,
     value: unknown,
     t: TFunction

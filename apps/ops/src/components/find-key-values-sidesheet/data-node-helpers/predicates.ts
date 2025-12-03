@@ -10,11 +10,13 @@ import {
 export const isNotNullish = <T>(v: T | null | undefined): v is T => v != null;
 export function isDataNode(node: unknown): node is DataNode {
     return (
-        node != null &&
+        node !== null &&
         typeof node === 'object' &&
         'type' in node &&
         typeof node.type === 'symbol' &&
-        node.type in FieldType
+        Object.values(FieldType).includes(
+            (node as any).type as (typeof FieldType)[keyof typeof FieldType]
+        )
     );
 }
 export function isDataSection(node: DataNode): node is DataSection {
