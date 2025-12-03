@@ -13,7 +13,7 @@ import TransactionInstructionTemplate from '../customization/templates/instructi
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import PartyInfoListTemplate from '../customization/templates/party-info-list-template/party-info-list';
 import TextListTemplate from '../customization/templates/text-list-template';
-import TransactionAccordionTemplate from '../customization/templates/transaction-accordion/transaction-accordion';
+import { TransactionAccordionTemplate } from '../customization/templates/transaction-accordion/transaction-accordion';
 
 export const UIArrayTemplateMap: Record<
     string,

@@ -36,6 +36,7 @@ type DynamicFormProps = {
         onCancel?: () => void;
         updateSchema?: (data: any) => void;
         setSubmitEnabled?: (data: any) => void;
+        setValidationSummary?: (summary: any) => void;
     };
 };
 

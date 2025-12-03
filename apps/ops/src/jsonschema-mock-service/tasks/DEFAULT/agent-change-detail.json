@@ -414,6 +414,10 @@
                     "properties": {
                         "summary": {
                             "type": "string"
+                        },
+                        "validationUrl": {
+                            "type": "string",
+                            "default": "/api/bpm/v1/policies/{{customData.planCode}}/{{customData.policyNumber}}/multi-agent/validation"
                         }
                     }
                 },
@@ -430,10 +434,34 @@
                         "norender": true
                     },
                     "summary": {
-                        "ui:widget": "SummaryWidget",
                         "ui:options": {
-                            "label": false
+                            "label": false,
+                            "dataKey": "partyUpdates",
+                            "templateType": "summaryCard",
+                            "ObjectFieldTemplate": "TransactionSummaryTemplate",
+                            "sections": [
+                                {
+                                    "label": "",
+                                    "fields": [
+                                        {
+                                            "key": "agentExternalId",
+                                            "label": "External ID"
+                                        },
+                                        {
+                                            "key": "agentType",
+                                            "label": "Agent type"
+                                        },
+                                        {
+                                            "key": "allocation",
+                                            "label": "Allocation"
+                                        }
+                                    ]
+                                }
+                            ]
                         }
+                    },
+                    "validationUrl": {
+                        "ui:widget": "hidden"
                     }
                 }
             }

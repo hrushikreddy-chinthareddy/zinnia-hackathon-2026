@@ -16,8 +16,6 @@ import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    startDates,
-    TimeframeFilterOptions,
     toProcessRoleRows,
     top5ProcessesByVisibleRoles,
     toGroupedBarSeriesFromRows,
@@ -26,7 +24,13 @@ import {
 } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName, ApiRoles } from '../utils';
+import {
+    colors,
+    generateCSVFileName,
+    ApiRoles,
+    startDates,
+    TimeframeFilterOptions,
+} from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,

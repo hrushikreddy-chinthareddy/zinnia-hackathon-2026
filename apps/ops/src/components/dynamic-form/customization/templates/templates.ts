@@ -18,7 +18,8 @@ import ObjectRowFieldTemplate from './object-field-template/object-row-template'
 import PartyInfoListTemplate from './party-info-list-template/party-info-list';
 import TextListTemplate from './text-list-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
-import TransactionAccordionTemplate from './transaction-accordion/transaction-accordion';
+import { TransactionAccordionTemplate } from './transaction-accordion/transaction-accordion';
+import { TransactionSummaryTemplate } from './transaction-summary-template/transaction-summary-template';
 export function generateTemplates() {
     return {
         TitleFieldTemplate,
@@ -40,6 +41,7 @@ export function generateTemplates() {
         PartyCardFieldTemplate,
         PartyInfoListTemplate,
         ButtonTemplates: { AddButton, RemoveButton, SubmitButton },
+        TransactionSummaryTemplate,
     };
 }
 

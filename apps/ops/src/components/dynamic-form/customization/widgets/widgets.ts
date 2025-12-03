@@ -47,6 +47,7 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         DateWidgetV2,
         TitleWidget,
+        BeneTransactionAccordion,
     };
 }
 

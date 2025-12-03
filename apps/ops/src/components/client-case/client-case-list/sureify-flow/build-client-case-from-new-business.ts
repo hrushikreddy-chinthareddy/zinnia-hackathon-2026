@@ -5,12 +5,12 @@ import { NEW_BUSINESS_API_ORIGIN } from '@deps/queries/api/server/v2/new-busines
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { NewBusiness, party, Policy } from '@deps/types/new-business';
-import { LoggingContext } from '@deps/utils/server-logging';
+import { LoggingContext, logInfo, logTrace } from '@deps/utils/server-logging';
 import { toTitleCase } from '@deps/utils/strings';
 
 import { buildConversionData } from './conversions';
 import { getAgencyIdFromHierarchy } from './get-agency-id-from-hierarchy';
-import { getSellingcodeFromPartyReference } from './get-selling-code-from-party-reference';
+import { getAgentSellingCode } from './get-agent-selling-code';
 import { validateRequiredFields } from './validate-required-fields';
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
@@ -20,10 +20,6 @@ enum AgentBusinessLabel {
     ADDITIONAL_SERVICING_AGENT = 'ADDITIONALSERVICINGAGENT',
     ADDITIONAL_WRITING_AGENT = 'ADDITIONALWRITINGAGENT',
 }
-
-const AOR_IDENTIFIER_LABEL = 'AOR';
-const UPN_IDENTIFIER_LABEL = 'UPN';
-export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 
 export const isAgentBusinessLabel = (
     value: string
@@ -114,6 +110,12 @@ export const buildAgentDetailsFromNewBusiness = async (
     parties: party[],
     loggingContext: LoggingContext
 ) => {
+    const logPrefix = `ClientCases:New:Sureify:buildAgentDetails`;
+    const logCtx = {
+        ...loggingContext,
+        file: 'build-client-case-from-new-business',
+        function: 'buildAgentDetailsFromNewBusiness',
+    };
     const agentParties = parties.filter((party) =>
         isAgentBusinessLabel(party.partyRole)
     );
@@ -126,12 +128,17 @@ export const buildAgentDetailsFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     }
+
     const {
         personalInformation: agentPersonalInformation,
         email: agentEmailObject,
-        identifiers,
         partyId,
     } = agentParty;
+
+    logInfo(`${logPrefix} Found agent partyId`, {
+        ...logCtx,
+        partyId,
+    });
 
     if (!agentEmailObject) {
         throwTypedError(
@@ -166,43 +173,13 @@ export const buildAgentDetailsFromNewBusiness = async (
         );
     }
 
-    // get Identifiers from newBusiness
-    // Selling code resolution strategy:
-    //
-    // Priority 1: New Business identifiers (AOR + UPN)
-    // Priority 2: PartyReference API lookup
-    //
-    // Some carriers provide both identifiers directly, others only store them in PartyReference.
-    // FMWL build selling codes based on AOR + UPN
-    // This dual path ensures support across integrations.
-    let agentSellingCode: string | null = null;
+    const agentSellingCode = await getAgentSellingCode(agentParty, logCtx);
 
-    if (identifiers) {
-        const aorIdentifier = identifiers.find(
-            ({ key }) => key === AOR_IDENTIFIER_LABEL
-        );
-        const upnIdentifier = identifiers.find(
-            ({ key }) => key === UPN_IDENTIFIER_LABEL
-        );
-        if (upnIdentifier?.value && aorIdentifier?.value) {
-            // For Farmers: AOR + UPN = SELLING_CODE
-            agentSellingCode = aorIdentifier.value + upnIdentifier.value;
-        }
-    }
-
-    if (!agentSellingCode) {
-        agentSellingCode = await getSellingcodeFromPartyReference(
-            partyId,
-            loggingContext
-        );
-    }
-
-    if (!agentSellingCode) {
-        return throwTypedError(
-            'Agent Selling Code was not able to be obtained',
-            NEW_BUSINESS_API_ORIGIN
-        );
-    }
+    logInfo(`${logPrefix} Found selling Code for agent`, {
+        ...logCtx,
+        partyId,
+        agentSellingCode,
+    });
 
     return {
         firstName,
@@ -247,6 +224,13 @@ export const buildClientCaseFromNewBusiness = async (
     eAppId: string,
     loggingContext: LoggingContext
 ): Promise<Partial<IllustrationsClientCase>> => {
+    const logPrefix = `ClientCases:New:Sureify`;
+    const logCtx = {
+        ...loggingContext,
+        file: 'build-client-case-from-new-business',
+        function: 'buildClientCaseFromNewBusiness',
+    };
+
     const { parties, caseId } = newBusinessObject;
     if (!parties) {
         throwTypedError(
@@ -285,6 +269,8 @@ export const buildClientCaseFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     }
+
+    logTrace(`${logPrefix} Found agencyId for eApp`, { ...logCtx, agencyId });
 
     // Extract conversion data (if available)
     const conversionData = buildConversionData(newBusinessObject);
