@@ -1,6 +1,14 @@
 import { DataNode, FieldType, DataSection, DataField } from '../types';
 import { isDataField, isDataSection, isDataSectionOrField } from './predicates';
 
+/**
+ * Find a node by either matching a numeric index into the group-of-groups
+ * or matching a string key to a label in a sub-group
+ *
+ * @param node - node to search
+ * @param key - key to match
+ * @returns node if found, undefined otherwise
+ */
 export function findInNode({
     node,
     key,
@@ -22,6 +30,15 @@ export function findInNode({
         });
     }
 }
+
+/**
+ * Find a node in a group by either matching a numeric index into the group-of-groups
+ * or matching a string key to a label in a sub-group
+ *
+ * @param nodes - nodes to search
+ * @param key - key to match
+ * @returns node if found, undefined otherwise
+ */
 export function findInGroup({
     nodes,
     key,
@@ -64,6 +81,14 @@ export function findInGroup({
     }
 }
 
+/**
+ * Find a node in a list of DataNode's by either matching a numeric index into the list
+ * or matching a string key to a label in a node
+ *
+ * @param nodes - nodes to search
+ * @param key - key to match
+ * @returns node if found, undefined otherwise
+ */
 export function findInNodes({
     nodes,
     key,
@@ -87,6 +112,15 @@ export function findInNodes({
         return firstNode;
     }
 }
+
+/**
+ * Find a section in a node by either matching a numeric index into the list
+ * or matching a string key to a label in a node
+ *
+ * @param node - node to search
+ * @param key - key to match
+ * @returns section if found, undefined otherwise
+ */
 export function findSectionInNode({
     node,
     key,
@@ -99,6 +133,15 @@ export function findSectionInNode({
         return foundNode;
     }
 }
+
+/**
+ * Find a section in a list of DataNode's by either matching a numeric index into the list
+ * or matching a string key to a label in a node
+ *
+ * @param nodes - nodes to search
+ * @param key - key to match
+ * @returns section if found, undefined otherwise
+ */
 export function findSectionInNodes({
     nodes,
     key,
@@ -111,6 +154,15 @@ export function findSectionInNodes({
         return foundNode;
     }
 }
+
+/**
+ * Find a field in a node by either matching a numeric index into the list
+ * or matching a string key to a label in a node
+ *
+ * @param node - node to search
+ * @param key - key to match
+ * @returns field if found, undefined otherwise
+ */
 export function findFieldInNode({
     node,
     key,
@@ -123,6 +175,15 @@ export function findFieldInNode({
         return foundNode;
     }
 }
+
+/**
+ * Find a field in a list of DataNode's by either matching a numeric index into the list
+ * or matching a string key to a label in a node
+ *
+ * @param nodes - nodes to search
+ * @param key - key to match
+ * @returns field if found, undefined otherwise
+ */
 export function findFieldInNodes({
     nodes,
     key,
@@ -135,6 +196,15 @@ export function findFieldInNodes({
         return foundNode;
     }
 }
+
+/**
+ * Find a value in a node by either matching a numeric index into the list
+ * or matching a string key to a label in a node
+ *
+ * @param node - node to search
+ * @param key - key to match
+ * @returns value if found, undefined otherwise
+ */
 export function findValueInNode({
     node,
     key,

@@ -14,14 +14,20 @@ const ANNUITY_UL_IUL = new Set([
     ProductType.UNIVERSALLIFE,
     ProductType.INDEXEDUNIVERSALLIFE,
 ]);
+
 /**
- * Fields that should not be displayed
+ * Controls section visibility based on line of business, product type, and plan code
+ *
+ * @param node - node to filter
+ * @param lineOfBusiness - line of business
+ * @param productType - product type
+ * @param planCode - plan code as string
+ * @returns filtered node
  */
 export const sectionVisibility: Record<
     string,
     Set<LineOfBusiness | ProductType | ExceptionalPlanCode> | undefined
 > = {
-    // policy
     loans: UL_IUL_TR0101,
     marketValueAdjustment: ANNUITY_ONLY,
     withdrawalValues: ANNUITY_UL_IUL,

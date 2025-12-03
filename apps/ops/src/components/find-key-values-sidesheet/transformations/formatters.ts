@@ -6,7 +6,6 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { Policy } from '@zinnia/api-types/types/sor';
 
 import { findFieldInNode } from '../data-node-helpers/traversal';
 import { currencyFields } from '../translations/currency-fields';
@@ -72,9 +71,9 @@ const formatAsSentenceCase = (words: string) => {
  * apply industry term abbreviations and grammar corrections, and finally
  * capitalize the first letter of the sentence.
  *
- * @param {string} label The data label to format
- * @param {LineOfBusiness} lineOfBusiness The line of business
- * @param {TFunction} t The translation function
+ * @param label The data label to format
+ * @param policyNomenclature The policy nomenclature
+ * @param t The translation function
  * @returns The formatted data label
  */
 export const formatAsDataLabel = ({
@@ -126,10 +125,9 @@ export const formatAsDataLabel = ({
  * If the field data is an object, returns the object as is
  * Otherwise, returns the field data as a string
  *
- * @param fieldData The nested data tuple or the data field to format
- * @param lineOfBusiness The line of business
- * @param t The translation function
  * @param fieldName The field name (optional)
+ * @param fieldData The field data
+ * @param t The translation function
  * @returns The formatted field data as a string
  */
 export const formatAsDataValue = ({
@@ -167,6 +165,15 @@ export const formatAsDataValue = ({
     return value;
 };
 
+/**
+ * Formats a DataField label and value
+ *
+ * @param fieldName The field name
+ * @param fieldData The field data
+ * @param t The translation function
+ * @param policyNomenclature "policy" or "contract"
+ * @returns The formatted data field
+ */
 export const formatDataField = ({
     fieldName,
     fieldData,
@@ -192,6 +199,14 @@ export const formatDataField = ({
     };
 };
 
+/**
+ * Adds a tooltip to a DataNode if it is a field
+ *
+ * @param node The node to add the tooltip to
+ * @param t The translation function
+ * @param policyNomenclature "policy" or "contract"
+ * @returns The node with the tooltip added
+ */
 export const addToolTip = ({
     node,
     t,
@@ -214,6 +229,14 @@ export const addToolTip = ({
     return node;
 };
 
+/**
+ * Formats a DataNode's label and value (if it is a field)
+ *
+ * @param node The node to format
+ * @param t The translation function
+ * @param policyNomenclature "policy" or "contract"
+ * @returns The formatted node
+ */
 export const formatNode = ({
     node,
     t,
@@ -251,6 +274,15 @@ export const formatNode = ({
     };
 };
 
+/**
+ * Adds a link to the party's profile for a partyId DataField
+ *
+ * @param node The node to add the link to
+ * @param planCode The plan code
+ * @param policyNumber The policy number
+ * @param allPartiesById The parties by ID
+ * @returns The node with the link added
+ */
 export const addLinkToPartyId = ({
     node,
     planCode,
@@ -292,6 +324,14 @@ export const addLinkToPartyId = ({
     return partialPartyField;
 };
 
+/**
+ * Constructs a link to the party's profile
+ *
+ * @param partyId The party ID
+ * @param planCode The plan code
+ * @param policyNumber The policy number
+ * @returns The link to the party's profile
+ */
 export const formatPartyLink = ({
     partyId,
     planCode,

@@ -15,10 +15,8 @@ import { DataNode, FieldType } from '../types';
 /**
  * Filters nodes based on exclude fields from exclude-fields
  *
- * @param nodes - nodes to filter
- * @param t - translation function
- * @param policyNomenclature - policy nomenclature
- * @returns filtered nodes
+ * @param node - node to filter
+ * @returns filtered node
  */
 export const excludeNodesByLabel = ({
     node,
