@@ -76,7 +76,7 @@ export const TransactionSidesheetContent = ({
             policyNumber: String(id),
         });
         return allPartiesById;
-    }, [policy, t]);
+    }, [policy, t, id, planCode]);
 
     const transactionNodes = useMemo(() => {
         if (!allPartiesById) {
