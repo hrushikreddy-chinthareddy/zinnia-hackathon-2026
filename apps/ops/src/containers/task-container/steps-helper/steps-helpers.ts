@@ -112,6 +112,7 @@ export const getFormSteps = (
             break;
         case TaskType.Third_Party_Detail:
             steps = getThirdPartyDetailSteps(props);
+            break;
         case TaskType.Initiate_BeneChange_Transaction:
             steps = getBeneChangeSteps(props);
             break;
