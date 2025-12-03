@@ -1,5 +1,7 @@
 import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
 
+import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
@@ -26,6 +28,25 @@ export const friendlyGroupByNameForUserViews: Record<
     [UserViewsGroupByEnum.PROCESS_SUB_TYPE]: 'Process Sub Type',
     [UserViewsGroupByEnum.USER_ROLE]: 'User Role',
 };
+
+export enum TimeframeFilterOptions {
+    Last1Month = '1M',
+    Last3Months = '3M',
+    Last6Months = '6M',
+}
+
+export const startDates: Record<TimeframeFilterOptions, string> = {
+    [TimeframeFilterOptions.Last6Months]: dayjs()
+        .subtract(6, 'month')
+        .format(ZAHARA_DATE_FORMAT),
+    [TimeframeFilterOptions.Last3Months]: dayjs()
+        .subtract(3, 'month')
+        .format(ZAHARA_DATE_FORMAT),
+    [TimeframeFilterOptions.Last1Month]: dayjs()
+        .subtract(1, 'month')
+        .format(ZAHARA_DATE_FORMAT),
+};
+dayjs.extend(isoWeek);
 
 // === Roles (API + UI) ===============================================
 
@@ -100,6 +121,7 @@ export const TRANSACTION_TYPE_DISPLAY_MAP: Record<string, string> = {
     bank_info: 'Bank Info',
     beneficiary: 'Beneficiary',
     newloan: 'New Loan',
+    joint_owner: 'Joint Owner',
 };
 
 export const PageType = {

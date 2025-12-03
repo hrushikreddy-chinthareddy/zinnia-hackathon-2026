@@ -40,7 +40,6 @@ export function generateWidgets(): RegistryWidgetsType {
         NotesWidget,
         AttachmentWidget,
         ArithmeticOperationWidget,
-        BeneTransactionAccordion,
         AllocationPercentageWidget,
         AgentTransactionAccordion,
         AgentPercentageWidget,
@@ -49,6 +48,7 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         DateWidgetV2,
         TitleWidget,
+        BeneTransactionAccordion,
     };
 }
 
