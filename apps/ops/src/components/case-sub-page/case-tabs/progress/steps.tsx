@@ -188,6 +188,11 @@ const Step = ({
     const hasSidesheet = doesStepHaveSidesheet(step);
 
     const stepAdditional = step.stepAdditionalData?.[0];
+
+    const isAiEnabled =
+        stepAdditional?.label === 'AIEnabledFlag' &&
+        String(stepAdditional.value).toLowerCase() === 'true';
+
     const entityId = stepAdditional ? stepAdditional.value : undefined;
 
     const { data: transactionEntity } = useQuery({
@@ -232,7 +237,7 @@ const Step = ({
                             details={step.name}
                             pii={hasPii}
                         />
-                        {stepAdditional?.value && (
+                        {isAiEnabled && (
                             <Tooltip
                                 placement={PopoverPlacement.TopRight}
                                 body={t('caseOverview.tabs.aiIndicatorTooltip')}

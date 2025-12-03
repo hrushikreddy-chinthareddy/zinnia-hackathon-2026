@@ -3045,7 +3045,7 @@
             "standardDocumentMatching": "Coincidencia de Documentos",
             "toaNigo": "Revisar Problemas de Transferencia",
             "applicationReview": "Validar Detalles de la Solicitud",
-            "aiIndicatorTooltip": "Este formulario fue capturado automáticamente con IA para acelerar el proceso."
+            "aiIndicatorTooltip": "Capturado automáticamente y procesado de forma sistemática."
         },
         "processDate": {
             "canceled": "Cancelado el",
