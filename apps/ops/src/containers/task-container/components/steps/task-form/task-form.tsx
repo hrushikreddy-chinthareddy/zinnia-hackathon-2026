@@ -44,6 +44,7 @@ type TaskFormProps = {
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
     setSubmitEnabled: (enabled: boolean) => void;
+    setValidationSummary?: (summary: any) => void;
 };
 
 const getPaymentCards = (
@@ -73,6 +74,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         isSubmit,
         taskMetadata,
         setSubmitEnabled,
+        setValidationSummary,
     }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
@@ -417,6 +419,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 mappedDocuments,
                 setMappedDocuments: handleSetMappedDocuments,
                 setSubmitEnabled: setSubmitEnabled,
+                setValidationSummary: setValidationSummary,
             }}
         ></DynamicForm>
     );

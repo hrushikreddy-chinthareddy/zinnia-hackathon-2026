@@ -16,6 +16,7 @@ import { ObjectFieldTemplate } from './object-field-template/object-field-templa
 import ObjectRowFieldTemplate from './object-field-template/object-row-template';
 import TextListTemplate from './text-list-template';
 import { TitleFieldTemplate } from './title-field-template/title-field-template';
+import { TransactionSummaryTemplate } from './transaction-summary-template/transaction-summary-template';
 export function generateTemplates() {
     return {
         TitleFieldTemplate,
@@ -34,6 +35,7 @@ export function generateTemplates() {
         DifferenceTemplate,
         ChangeAddressTemplate,
         ButtonTemplates: { AddButton, RemoveButton, SubmitButton },
+        TransactionSummaryTemplate,
     };
 }
 
