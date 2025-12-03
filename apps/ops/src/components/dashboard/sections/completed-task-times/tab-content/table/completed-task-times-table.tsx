@@ -155,6 +155,12 @@ export const CompletedTaskTimesTable = () => {
                         <NoDataMessage />
                     ) : (
                         <Table>
+                            <colgroup>
+                                <col style={{ width: '30%' }} />
+                                <col style={{ width: '25%' }} />
+                                <col style={{ width: '30%' }} />
+                                <col style={{ width: '15%' }} />
+                            </colgroup>
                             <caption className="sr-only">
                                 {t('allFields.completedTaskTimesTitle')}
                             </caption>
@@ -192,7 +198,7 @@ export const CompletedTaskTimesTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    <TableHeaderCell width={256}>
+                                    <TableHeaderCell>
                                         {t('allFields.task')}
                                     </TableHeaderCell>
                                     <TableHeaderCell
