@@ -10,9 +10,6 @@ import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
 import { validateEmail } from '@deps/components/otp-send-document/correspondence';
 import Radio from '@deps/components/radio/radio';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     DislikeReasonsPayload,
@@ -56,10 +53,10 @@ const TextField = ({
 
 type OpsIntakeFormProps = {
     metadata: OpsIntakeFormPayload;
-    setOpenOpsIntakeForm: (open: boolean) => void;
     dislikeReason: DislikeReasonsPayload;
     setMetadata: (metadata: OpsIntakeFormPayload) => void;
     onDislikeReasonChange: (payload: DislikeReasonsPayload) => void;
+    onClose: () => void;
 };
 
 enum Priority {
@@ -78,10 +75,10 @@ enum RequestFrequency {
 
 const OpsIntakeForm = ({
     metadata,
-    setOpenOpsIntakeForm,
     dislikeReason,
     setMetadata,
     onDislikeReasonChange,
+    onClose,
 }: OpsIntakeFormProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant.chat.feedback',
@@ -124,7 +121,7 @@ const OpsIntakeForm = ({
 
     const handleOnClose = () => {
         setMetadata({} as OpsIntakeFormPayload);
-        setOpenOpsIntakeForm(false);
+        onClose();
     };
 
     const handleOnSubmit = () => {
@@ -146,7 +143,7 @@ const OpsIntakeForm = ({
                 metadata: newMetadata,
             };
             onDislikeReasonChange(newDislikeReasonPayload);
-            setOpenOpsIntakeForm(false);
+            onClose();
         }
     };
 
@@ -165,11 +162,7 @@ const OpsIntakeForm = ({
     );
 
     return (
-        <div className="h-full overflow-y-auto my-4 mx-4">
-            <Typography variant={TypographyVariant.H2} className="mb-4">
-                {t('opsIntakeForm.heading')}
-            </Typography>
-
+        <div className="h-full px-4 py-4">
             <div className="flex flex-col gap-6">
                 <TextField
                     label={'opsIntakeForm.processName'}

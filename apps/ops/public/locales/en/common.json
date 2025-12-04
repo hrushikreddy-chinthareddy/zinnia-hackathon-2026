@@ -465,7 +465,10 @@
         "illustrationsActivityTitle": "Illustrations Activity",
         "illustrationsActivityDescription": "Compares illustrations created with those selected for application over time.",
         "illustrationsActivityTooltip": "This chart compares illustrations created with those selected for application. 'Selected' may be higher than 'Created' because an illustration was created earlier but selected in the displayed timeframe.",
-        "exportToCsv": "Export to CSV"
+        "exportToCsv": "Export to CSV",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+        "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
     },
     "enums": {
         "LIFE": "Life",
@@ -2332,6 +2335,7 @@
         "assignTaskError": "Assign task error",
         "unassignTask": "Unassign Task",
         "unassign": "Unassign",
+        "assign": "Assign",
         "startTask": "Start Task",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
@@ -2471,11 +2475,11 @@
             "taskStatus": "Task Status",
             "group": "Group",
             "assignee": "Assignee",
-            "priority": "Priority",
+            "priority": "Priority status",
             "selectPriority": "Select priority",
-            "onlyPrioritized": "Only Prioritized",
-            "any": "Any",
-            "notPrioritized": "Not Prioritized"
+            "onlyPrioritized": "Prioritized cases",
+            "any": "All cases",
+            "notPrioritized": "Regular cases"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -2485,6 +2489,7 @@
             "ariaLabel": {
                 "clearFilter": "Clear {{filter}} filter"
             },
+
             "dateCreated": "Date created",
             "dateUpdated": "Date last updated",
             "type": "Type",
@@ -2498,9 +2503,9 @@
                 "Renewal": "Renewals"
             },
             "escalated": {
-                "true": "Only Prioritized",
-                "false": "Not Prioritized",
-                "any": "Any"
+                "onlyPrioritized": "Prioritized cases",
+                "allCases": "All cases",
+                "notPrioritized": "Regular cases"
             }
         },
         "selectStatus": "Select status",
@@ -2887,7 +2892,8 @@
             "close": "Close",
             "error": "Error",
             "errorMessage": "Error: {{error}}",
-            "successMessage": "Case ID: {{caseId}} was prioritized",
+            "errorForbidden": "You do not have permission to perform this action.",
+            "successMessage": "Case ID: {{caseId}} has been prioritized.",
             "simpleTooltipBody": "This case is prioritized.",
             "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
         },
@@ -3276,7 +3282,8 @@
                     "married": "Married",
                     "widowed": "Widowed"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Trust date"
             },
             "jointOwner": {
                 "title": "Joint Owner Information"
@@ -7445,7 +7452,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Add filter"
+                "addFilter": "Add filter",
+                "addFilters": "Add filters"
             },
             "headers": {
                 "title": "Refine Results"
@@ -7990,7 +7998,8 @@
                 "call": "Call",
                 "formReview": "Form Review"
             },
-            "nextTask": "Continue to Next Task"
+            "nextTask": "Continue to Next Task",
+            "summaryNigoError": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
         },
         "formErrors": {
             "caseNotFound": "Case not found",
@@ -8469,6 +8478,9 @@
         "agentDetails": {
             "allocationErr": "Allocations must equal 100%"
         }
+    },
+    "transactionAccordion": {
+        "remove": "Remove"
     },
     "fundAllocation": {
         "submitted": "Submitted!",
@@ -9026,9 +9038,7 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
-            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
@@ -9130,10 +9140,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
+            "startingMessageBetaPrefix": "Hello, {{name}}",
+            "startingMessageBetaSuffix": "How can I assist you today?",
             "inputPlaceholder": "Ask me anything",
-            "footerText": "Disclaimer: Zinnia chat can make mistakes.",
+            "footerText": "Disclaimer: Zinnia AI can make mistakes.",
             "errorMsg": "Sorry, I couldn’t get a response. Please try again later.",
             "send": "Send",
             "stop": "Stop",
@@ -9184,7 +9198,13 @@
             "followUpButton": "Ask your follow up questions here",
             "definitiveAnswerNotFound": "I couldn’t find a definitive answer in the client-specific documents. Would you like me to check the common reference also?",
             "yes": "Yes",
-            "no": "No"
+            "no": "No",
+            "answerMode": "Answer Mode",
+            "client": "Client",
+            "answerModeOptions": {
+                "short": "Short and Crisp",
+                "long": "Long and Detailed"
+            }
         },
         "documents": {
             "recentlyAdded": "Recently added files",
@@ -9236,11 +9256,23 @@
             "recentlyModified": "Recently modified",
             "allDocs": "All documents",
             "recentChat": "Recent chat",
-            "search": "Search",
+            "search": "Search recent chats",
             "noResultsFound": "No results found",
             "noRecentChats": "No recent chats",
             "loadingChats": "Loading chats...",
-            "settings": "Settings"
+            "settings": "Settings",
+            "quiz": {
+                "header": "Take a Quiz",
+                "noQuestionsAvailable": "No quiz questions available.",
+                "quizPassed": "Congratulations, you have passed",
+                "quizFailed": "Sorry, you have not achieved the passing score of {{passPercentage}}%",
+                "correctAnswer": "Correct Answer",
+                "wrongAnswer": "Wrong Answer",
+                "yourScore": "You have scored {{score}} out of {{total}}",
+                "readMore": "Read this document to gain knowledge on the topic",
+                "submit": "Submit",
+                "tryAgain": "Try Again"
+            }
         }
     },
     "updateSuitabilityDataEntry": {
@@ -9293,5 +9325,27 @@
         "environment": "Environment",
         "variableSearchPlaceholder": "Search feature variables...",
         "flagQueueSearchPlaceholder": "Search feature flags..."
+    },
+    "successErrorSidesheet": {
+        "successTitle": "Success",
+        "errorTitle": "Error",
+        "closeButton": "Close"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Added",
+            "none": "None",
+            "removed": "Removed",
+            "updated": "Updated"
+        },
+        "noSummary": "No transaction summary available.",
+        "primaryBene": "Primary beneficiary",
+        "contingentBene": "Contingent beneficiary",
+        "loading": "Validation API is Running....",
+        "successMessage": "Looking good! Be sure to review your entries before submitting",
+        "errorMessage": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+        "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "internalServerError": "Internal Server Error",
+        "failedToFetch": "Failed to fetch validation summary"
     }
 }

@@ -1,0 +1,23 @@
+.title {
+    font-family: Lato;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+}
+
+.text {
+    margin-bottom: 8px;
+    margin-top: 0px;
+    font-family: Lato;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 22px;
+}
+.disabledAccordion {
+    opacity: 0.5;
+}
+.disabledContent {
+    opacity: 0.5;
+}

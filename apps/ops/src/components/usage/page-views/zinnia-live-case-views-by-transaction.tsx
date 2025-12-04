@@ -13,20 +13,24 @@ import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { TotalCount } from '@deps/components/usage//total-count';
 import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
+import {
+    colors,
+    generateCSVFileName,
+    ApiRoles,
+    startDates,
+    TimeframeFilterOptions,
+} from '@deps/components/usage/utils';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    startDates,
-    TimeframeFilterOptions,
     toProcessRoleRows,
     top5ProcessesByVisibleRoles,
     toGroupedBarSeriesFromRows,
     PrepareTop5CaseViewsCSV,
     categoryValueTooltip,
 } from './utils';
-import { colors, generateCSVFileName, ApiRoles } from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,

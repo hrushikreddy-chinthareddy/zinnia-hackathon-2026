@@ -26,6 +26,8 @@ import {
     generateIllustrationsCSVFileName,
     PRODUCT_TYPE_OPTIONS,
     ProductType,
+    startDates,
+    TimeframeFilterOptions,
 } from '@deps/components/usage/utils';
 import { getUserIllustrationActivityCountQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
@@ -40,8 +42,6 @@ import {
     generateSeries,
     mergeDuplicatedIntoCreated,
     prepareIllustrationsActivityCSV,
-    startDates,
-    TimeframeFilterOptions,
 } from './utils';
 
 type ProductTypeOption = (typeof ProductType)[keyof typeof ProductType];

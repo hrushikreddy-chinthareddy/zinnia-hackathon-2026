@@ -27,19 +27,15 @@ import {
     colors,
     generateCSVFileName,
     PageType,
+    startDates,
+    TimeframeFilterOptions,
 } from '@deps/components/usage/utils';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { tooltipFormatter } from './page-views-tooltip';
-import {
-    generateSeries,
-    PrepareUserViewsCSV,
-    roles,
-    startDates,
-    TimeframeFilterOptions,
-} from './utils';
+import { generateSeries, PrepareUserViewsCSV, roles } from './utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const { t } = useTranslation();

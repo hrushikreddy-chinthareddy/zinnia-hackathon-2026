@@ -132,7 +132,7 @@ export const createViewDownloadAction = (
             }
             activeDocType={doc.documentSource}
         >
-            {label ? t(label) : t('policy.documents.view')}
+            {label ? t(label) : t('view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />

@@ -1,18 +1,17 @@
 openapi: 3.0.1
 info:
   title: Knowledge Base AI API
-  description: >-
-    API documentation for Knowledge Base AI application. APIs marked with
-    'hidden' tag are internal and excluded from Kong gateway.
+  description: API documentation for Knowledge Base AI application. APIs marked
+    with 'hidden' tag are internal and excluded from Kong gateway.
   contact:
     name: Zinnia
     email: support@zinnia.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
-  version: '1.0'
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1.0"
 servers:
-  - url: 'https://knowledgebase-staging.zinnia.com/backend'
+  - url: https://knowledgebase-staging.zinnia.com/backend
 tags:
   - name: users
     description: User management operations
@@ -21,7 +20,7 @@ tags:
   - name: clients
     description: Client management operations
 paths:
-  '/api/v1/chat/sessions/{sessionId}':
+  /api/v1/chat/sessions/{sessionId}:
     put:
       tags:
         - chat
@@ -36,16 +35,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateSessionTitleRequest'
+              $ref: "#/components/schemas/UpdateSessionTitleRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseString'
-  '/api/v1/chat/sessions/{sessionId}/messages/{messageId}':
+                $ref: "#/components/schemas/ApiResponseString"
+  /api/v1/chat/sessions/{sessionId}/messages/{messageId}:
     put:
       tags:
         - chat
@@ -65,16 +64,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateChatMessageRequest'
+              $ref: "#/components/schemas/UpdateChatMessageRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseChatMessageResponse'
-  '/api/v1/chat/sessions/{sessionId}/messages/{messageId}/stream':
+                $ref: "#/components/schemas/ApiResponseChatMessageResponse"
+  /api/v1/chat/sessions/{sessionId}/messages/{messageId}/stream:
     put:
       tags:
         - chat
@@ -97,16 +96,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateChatMessageRequest'
+              $ref: "#/components/schemas/UpdateChatMessageRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/StreamingResponseBody'
-  '/api/v1/chat/follow-ups/{followUpId}':
+                $ref: "#/components/schemas/StreamingResponseBody"
+  /api/v1/chat/follow-ups/{followUpId}:
     put:
       tags:
         - chat
@@ -123,16 +122,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateFollowUpRequest'
+              $ref: "#/components/schemas/UpdateFollowUpRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseFollowUpResponse'
-  '/api/v1/chat/follow-ups/{followUpId}/stream':
+                $ref: "#/components/schemas/ApiResponseFollowUpResponse"
+  /api/v1/chat/follow-ups/{followUpId}/stream:
     put:
       tags:
         - chat
@@ -150,15 +149,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateFollowUpRequest'
+              $ref: "#/components/schemas/UpdateFollowUpRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/StreamingResponseBody'
+                $ref: "#/components/schemas/StreamingResponseBody"
   /api/v1/users/search:
     post:
       tags:
@@ -168,17 +167,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserSearchRequest'
+              $ref: "#/components/schemas/UserSearchRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserResponse'
+                  $ref: "#/components/schemas/UserResponse"
   /api/v1/users/details:
     post:
       tags:
@@ -193,13 +192,13 @@ paths:
                 type: string
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/MeResponse'
-  '/api/v1/sharepoint/pages/{pageId}/embed':
+                $ref: "#/components/schemas/MeResponse"
+  /api/v1/sharepoint/pages/{pageId}/embed:
     post:
       tags:
         - sharepoint
@@ -213,66 +212,121 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
                 type: object
-  '/api/v1/clients/{clientID}/documents/sync':
+  /api/v1/clients/{clientID}/quiz:
+    get:
+      tags:
+        - clients
+      summary: Get random questions for a client
+      description: Returns at most 10 random questions created in the configured recent
+        days (from app.recent-questions.days property) for the specified client.
+        The questions include options but exclude the correct answers.
+      operationId: getRandomQuestions_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: "12345"
+      responses:
+        "200":
+          description: Successfully retrieved random questions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionDto"
+        "404":
+          description: Client not found
+
+    post:
+      tags:
+        - clients
+      summary: Submit quiz answers
+      description: Submit user's answers for the quiz questions. The system will evaluate
+        the answers, save the responses to the database, and return the results
+        with correct answers for each question.
+      operationId: submitQuiz_v2
+      parameters:
+        - name: clientID
+          in: path
+          description: The unique page ID of the client
+          required: true
+          schema:
+            type: string
+          example: "12345"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuizSubmissionRequest"
+        required: true
+      responses:
+        "200":
+          description: Quiz submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuizSubmissionResponse"
+        "400":
+          description: Bad request - invalid submission data
+  /api/v1/clients/{clientID}/documents/sync:
     post:
       tags:
         - clients
       summary: Sync documents for a specific client
-      description: >-
-        Fetches and stores all documents associated with the specified client
-        from SharePoint. This operation will update the document index for the
-        client.
+      description: Fetches and stores all documents associated with the specified
+        client from SharePoint. This operation will update the document index
+        for the client.
       operationId: syncClientDocuments_v2
       parameters:
         - name: clientID
           in: path
-          description: >-
-            The unique page ID of the client whose documents need to be
+          description: The unique page ID of the client whose documents need to be
             synchronized
           required: true
           schema:
             type: string
-          example: '12345'
+          example: "12345"
       responses:
-        '200':
+        "200":
           description: Document synchronization completed successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '400':
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
           description: Bad request - synchronization failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '404':
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
           description: Client not found
   /api/v1/clients/sync:
     post:
       tags:
         - clients
       summary: Sync clients from CSV and SharePoint
-      description: >-
-        Reads a CSV file of clients, fetches extra information from SharePoint,
-        and saves it to the database. This is an administrative operation that
-        synchronizes client data.
+      description: Reads a CSV file of clients, fetches extra information from
+        SharePoint, and saves it to the database. This is an administrative
+        operation that synchronizes client data.
       operationId: syncClients_v2
       responses:
-        '200':
+        "200":
           description: Client synchronization started successfully
           content:
             application/json:
               schema:
                 type: string
                 example: Client synchronization started.
-        '500':
+        "500":
           description: Internal server error during synchronization
           content:
             application/json:
@@ -283,26 +337,43 @@ paths:
       tags:
         - clients
       summary: Sync documents for all processed clients
-      description: >-
-        Fetches and stores documents for all clients with PROCESSED status from
-        SharePoint. This operation will update the document index for all
+      description: Fetches and stores documents for all clients with PROCESSED status
+        from SharePoint. This operation will update the document index for all
         processed clients and track document changes.
       operationId: syncAllProcessedClientDocuments_v2
       responses:
-        '200':
-          description: >-
-            Document synchronization completed successfully for all processed
+        "200":
+          description: Document synchronization completed successfully for all processed
             clients
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '400':
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
           description: Bad request - synchronization failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
+                $ref: "#/components/schemas/ApiResponse"
+  /api/v1/clients/documents/diffs:
+    post:
+      tags:
+        - clients
+      summary: Save document diffs and new documents for configured recent days (all
+        clients)
+      description: "Checks for files created or updated in the configured recent days (from
+        app.recent-documents.days property) across ALL clients and saves them to
+        the ClientDocumentDiffChunks collection. For UPDATED files: compares the
+        2 most recent versions and stores only the inserted/updated lines. For
+        CREATED files: stores the full document content."
+      operationId: saveRecentDocumentDiffs_v2
+      responses:
+        "200":
+          description: Successfully processed and saved document diffs for all clients
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /api/v1/chat/sessions:
     post:
       tags:
@@ -312,16 +383,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateChatSessionRequest'
+              $ref: "#/components/schemas/CreateChatSessionRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseChatSessionResponse'
-  '/api/v1/chat/sessions/{sessionId}/messages':
+                $ref: "#/components/schemas/ApiResponseChatSessionResponse"
+  /api/v1/chat/sessions/{sessionId}/messages:
     get:
       tags:
         - chat
@@ -347,12 +418,12 @@ paths:
             format: int32
             default: 20
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseSessionMessagesResponse'
+                $ref: "#/components/schemas/ApiResponseSessionMessagesResponse"
     post:
       tags:
         - chat
@@ -367,16 +438,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SendMessageRequest'
+              $ref: "#/components/schemas/SendMessageRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseChatMessageResponse'
-  '/api/v1/chat/sessions/{sessionId}/messages/stream':
+                $ref: "#/components/schemas/ApiResponseChatMessageResponse"
+  /api/v1/chat/sessions/{sessionId}/messages/stream:
     post:
       tags:
         - chat
@@ -394,15 +465,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SendMessageRequest'
+              $ref: "#/components/schemas/SendMessageRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/StreamingResponseBody'
+                $ref: "#/components/schemas/StreamingResponseBody"
   /api/v1/chat/sessions/list:
     post:
       tags:
@@ -412,47 +483,43 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/GetUserSessionsRequest'
+              $ref: "#/components/schemas/GetUserSessionsRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: >-
-                  #/components/schemas/ApiResponsePaginatedResponseChatSessionResponse
+                $ref: "#/components/schemas/ApiResponsePaginatedResponseChatSessionResponse"
   /api/v1/chat/search:
     post:
       tags:
         - chat
       summary: Search chat questions
-      description: >-
-        Search through user's chat questions across all sessions for a specific
-        client. Requires minimum 3 characters in search terms.
+      description: Search through user's chat questions across all sessions for a
+        specific client. Requires minimum 3 characters in search terms.
       operationId: searchChatQuestions_v2
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChatSearchRequest'
+              $ref: "#/components/schemas/ChatSearchRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: >-
-                  #/components/schemas/ApiResponsePaginatedResponseChatSearchResponse
-  '/api/v1/chat/messages/{messageId}/followup':
+                $ref: "#/components/schemas/ApiResponsePaginatedResponseChatSearchResponse"
+  /api/v1/chat/messages/{messageId}/followup:
     post:
       tags:
         - chat
       summary: Create follow-up question
-      description: >-
-        Create a follow-up question for an existing question message. Supports
-        chaining up to 5 follow-ups.
+      description: Create a follow-up question for an existing question message.
+        Supports chaining up to 5 follow-ups.
       operationId: createFollowUp_v2
       parameters:
         - name: messageId
@@ -464,16 +531,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFollowUpRequest'
+              $ref: "#/components/schemas/CreateFollowUpRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseFollowUpResponse'
-  '/api/v1/chat/messages/{messageId}/followup/stream':
+                $ref: "#/components/schemas/ApiResponseFollowUpResponse"
+  /api/v1/chat/messages/{messageId}/followup/stream:
     post:
       tags:
         - chat
@@ -491,16 +558,16 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateFollowUpRequest'
+              $ref: "#/components/schemas/CreateFollowUpRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/StreamingResponseBody'
-  '/api/v1/chat/messages/{messageId}/feedback':
+                $ref: "#/components/schemas/StreamingResponseBody"
+  /api/v1/chat/messages/{messageId}/feedback:
     post:
       tags:
         - chat
@@ -517,15 +584,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FeedbackRequest'
+              $ref: "#/components/schemas/FeedbackRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseFeedbackResponse'
+                $ref: "#/components/schemas/ApiResponseFeedbackResponse"
   /api/v1/users/all:
     get:
       tags:
@@ -559,12 +626,12 @@ paths:
             type: string
             default: desc
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/PaginatedResponseUserResponse'
+                $ref: "#/components/schemas/PaginatedResponseUserResponse"
   /api/v1/health:
     get:
       tags:
@@ -573,10 +640,10 @@ paths:
       description: Check if the application is up and running
       operationId: healthCheck_v2
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
                 type: string
   /api/v1/clients:
@@ -584,26 +651,24 @@ paths:
       tags:
         - clients
       summary: Get all clients with their status
-      description: >-
-        Returns a list of all clients and their embedding status. This endpoint
-        provides an overview of all clients in the system along with their
-        current processing status.
+      description: Returns a list of all clients and their embedding status. This
+        endpoint provides an overview of all clients in the system along with
+        their current processing status.
       operationId: getAllClients_v2
       responses:
-        '200':
+        "200":
           description: Successfully retrieved all clients
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDetailsDto'
-  '/api/v1/clients/{clientID}':
+                $ref: "#/components/schemas/ClientDetailsDto"
+  /api/v1/clients/{clientID}:
     get:
       tags:
         - clients
       summary: Get a client by page ID
-      description: >-
-        Returns a specific client and their embedding status by page ID. Use
-        this endpoint to get detailed information about a specific client.
+      description: Returns a specific client and their embedding status by page ID.
+        Use this endpoint to get detailed information about a specific client.
       operationId: getClientById_v2
       parameters:
         - name: clientID
@@ -612,23 +677,22 @@ paths:
           required: true
           schema:
             type: string
-          example: '12345'
+          example: "12345"
       responses:
-        '200':
+        "200":
           description: Successfully retrieved client details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDetailsDto'
-        '404':
+                $ref: "#/components/schemas/ClientDetailsDto"
+        "404":
           description: Client not found
-  '/api/v1/clients/{clientID}/documents/updated':
+  /api/v1/clients/{clientID}/documents/updated:
     get:
       tags:
         - clients
       summary: Get recent updated documents
-      description: >-
-        Returns documents updated within the last 7 days for the specified
+      description: Returns documents updated within the last 7 days for the specified
         client. This helps track recently modified content.
       operationId: getRecentUpdatedDocuments_v2
       parameters:
@@ -638,25 +702,24 @@ paths:
           required: true
           schema:
             type: string
-          example: '12345'
+          example: "12345"
       responses:
-        '200':
+        "200":
           description: Successfully retrieved recent updated documents
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDocumentDto'
-        '404':
+                $ref: "#/components/schemas/ClientDocumentDto"
+        "404":
           description: Client not found
-  '/api/v1/clients/{clientID}/documents/search':
+  /api/v1/clients/{clientID}/documents/search:
     get:
       tags:
         - clients
       summary: Search documents by name with pagination
-      description: >-
-        Returns documents for the specified client that match the search term in
-        their name. Search term must be at least 3 characters long. The search
-        is case-insensitive and matches partial names.
+      description: Returns documents for the specified client that match the search
+        term in their name. Search term must be at least 3 characters long. The
+        search is case-insensitive and matches partial names.
       operationId: searchDocuments_v2
       parameters:
         - name: clientID
@@ -665,7 +728,7 @@ paths:
           required: true
           schema:
             type: string
-          example: '12345'
+          example: "12345"
         - name: searchTerm
           in: query
           description: Search term to filter documents by name (minimum 3 characters)
@@ -692,23 +755,22 @@ paths:
             default: 20
           example: 20
       responses:
-        '200':
+        "200":
           description: Successfully retrieved search results
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResponse'
-        '400':
+                $ref: "#/components/schemas/PaginatedResponse"
+        "400":
           description: Bad request - search term must be at least 3 characters
-        '404':
+        "404":
           description: Client not found
-  '/api/v1/clients/{clientID}/documents/recent':
+  /api/v1/clients/{clientID}/documents/recent:
     get:
       tags:
         - clients
       summary: Get recent created documents
-      description: >-
-        Returns documents created within the last 7 days for the specified
+      description: Returns documents created within the last 7 days for the specified
         client. This helps track newly added content.
       operationId: getRecentCreatedDocuments_v2
       parameters:
@@ -718,25 +780,24 @@ paths:
           required: true
           schema:
             type: string
-          example: '12345'
+          example: "12345"
       responses:
-        '200':
+        "200":
           description: Successfully retrieved recent created documents
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ClientDocumentDto'
-        '404':
+                $ref: "#/components/schemas/ClientDocumentDto"
+        "404":
           description: Client not found
-  '/api/v1/clients/{clientID}/documents/all':
+  /api/v1/clients/{clientID}/documents/all:
     get:
       tags:
         - clients
       summary: Get all documents with pagination
-      description: >-
-        Returns all documents for the specified client with pagination support.
-        Use this endpoint to browse through all documents associated with a
-        client.
+      description: Returns all documents for the specified client with pagination
+        support. Use this endpoint to browse through all documents associated
+        with a client.
       operationId: getAllDocuments_v2
       parameters:
         - name: clientID
@@ -745,7 +806,7 @@ paths:
           required: true
           schema:
             type: string
-          example: '12345'
+          example: "12345"
         - name: page
           in: query
           description: Page number for pagination (0-based)
@@ -765,24 +826,23 @@ paths:
             default: 20
           example: 20
       responses:
-        '200':
+        "200":
           description: Successfully retrieved paginated documents
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedResponse'
-        '404':
+                $ref: "#/components/schemas/PaginatedResponse"
+        "404":
           description: Client not found
   /api/v1/clients/documents/download:
     get:
       tags:
         - clients
       summary: Download document from SharePoint
-      description: >-
-        Downloads a document from SharePoint using the drive ID, item ID, and
-        document type. The site ID is automatically taken from configuration.
-        The document content is returned as binary data that can be viewed
-        online by the frontend.
+      description: Downloads a document from SharePoint using the drive ID, item ID,
+        and document type. The site ID is automatically taken from
+        configuration. The document content is returned as binary data that can
+        be viewed online by the frontend.
       operationId: downloadDocument_v2
       parameters:
         - name: driveId
@@ -807,26 +867,24 @@ paths:
             type: string
           example: pdf
       responses:
-        '200':
+        "200":
           description: Document downloaded successfully
           content:
             application/octet-stream: {}
-        '400':
+        "400":
           description: Failed to download document
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiResponse'
-        '404':
+                $ref: "#/components/schemas/ApiResponse"
+        "404":
           description: Document not found
-  '/api/v1/chat/messages/{messageId}/followups':
+  /api/v1/chat/messages/{messageId}/followups:
     get:
       tags:
         - chat
       summary: Get follow-up chain
-      description: >-
-        Retrieve the complete follow-up conversation chain for a specific
-        message
+      description: Retrieve the complete follow-up conversation chain for a specific message
       operationId: getFollowUpChain_v2
       parameters:
         - name: messageId
@@ -835,12 +893,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
-            '*/*':
+            "*/*":
               schema:
-                $ref: '#/components/schemas/ApiResponseFollowUpChainResponse'
+                $ref: "#/components/schemas/ApiResponseFollowUpChainResponse"
 components:
   schemas:
     UpdateSessionTitleRequest:
@@ -866,13 +924,18 @@ components:
           type: string
         clientId:
           type: string
+        responseType:
+          type: string
+          enum:
+            - SHORT_AND_CRISP
+            - LONG_AND_DETAILED
     ApiResponseChatMessageResponse:
       type: object
       properties:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/ChatMessageResponse'
+          $ref: "#/components/schemas/ChatMessageResponse"
         success:
           type: boolean
     ChatMessageResponse:
@@ -889,7 +952,7 @@ components:
         sourceDocuments:
           type: array
           items:
-            $ref: '#/components/schemas/SourceDocument'
+            $ref: "#/components/schemas/SourceDocument"
         responseTimeMs:
           type: integer
           format: int64
@@ -911,7 +974,7 @@ components:
         feedbackComment:
           type: string
         dislikeReason:
-          $ref: '#/components/schemas/DislikeReason'
+          $ref: "#/components/schemas/DislikeReason"
         feedbackTimestamp:
           type: string
           format: date-time
@@ -954,13 +1017,18 @@ components:
           type: string
         clientId:
           type: string
+        responseType:
+          type: string
+          enum:
+            - SHORT_AND_CRISP
+            - LONG_AND_DETAILED
     ApiResponseFollowUpResponse:
       type: object
       properties:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/FollowUpResponse'
+          $ref: "#/components/schemas/FollowUpResponse"
         success:
           type: boolean
     FollowUpResponse:
@@ -979,7 +1047,7 @@ components:
         sourceDocuments:
           type: array
           items:
-            $ref: '#/components/schemas/SourceDocument'
+            $ref: "#/components/schemas/SourceDocument"
         responseTimeMs:
           type: integer
           format: int64
@@ -1046,7 +1114,62 @@ components:
         client:
           type: array
           items:
-            $ref: '#/components/schemas/ClientInfo'
+            $ref: "#/components/schemas/ClientInfo"
+    QuestionAnswerDto:
+      type: object
+      properties:
+        questionId:
+          type: string
+        selectedAnswerIndex:
+          type: integer
+          format: int32
+    QuizSubmissionRequest:
+      type: object
+      properties:
+        userId:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionAnswerDto"
+      description: Quiz submission containing user ID and list of question answers
+    QuestionResultDto:
+      type: object
+      properties:
+        questionId:
+          type: string
+        selectedAnswerIndex:
+          type: integer
+          format: int32
+        correctAnswerIndex:
+          type: integer
+          format: int32
+        isCorrect:
+          type: boolean
+        documentWebUrl:
+          type: string
+        documentName:
+          type: string
+    QuizSubmissionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        totalQuestions:
+          type: integer
+          format: int32
+        correctAnswers:
+          type: integer
+          format: int32
+        scorePercentage:
+          type: number
+          format: double
+        results:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuestionResultDto"
     ApiResponse:
       type: object
       properties:
@@ -1071,7 +1194,7 @@ components:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/ChatSessionResponse'
+          $ref: "#/components/schemas/ChatSessionResponse"
         success:
           type: boolean
     ChatSessionResponse:
@@ -1101,6 +1224,11 @@ components:
           type: string
         clientId:
           type: string
+        responseType:
+          type: string
+          enum:
+            - SHORT_AND_CRISP
+            - LONG_AND_DETAILED
     GetUserSessionsRequest:
       type: object
       properties:
@@ -1124,7 +1252,7 @@ components:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/PaginatedResponseChatSessionResponse'
+          $ref: "#/components/schemas/PaginatedResponseChatSessionResponse"
         success:
           type: boolean
     PaginatedResponseChatSessionResponse:
@@ -1133,7 +1261,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/ChatSessionResponse'
+            $ref: "#/components/schemas/ChatSessionResponse"
         page:
           type: integer
           format: int32
@@ -1177,7 +1305,7 @@ components:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/PaginatedResponseChatSearchResponse'
+          $ref: "#/components/schemas/PaginatedResponseChatSearchResponse"
         success:
           type: boolean
     ChatSearchResponse:
@@ -1212,7 +1340,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/ChatSearchResponse'
+            $ref: "#/components/schemas/ChatSearchResponse"
         page:
           type: integer
           format: int32
@@ -1243,6 +1371,11 @@ components:
           type: string
         parentFollowUpId:
           type: string
+        responseType:
+          type: string
+          enum:
+            - SHORT_AND_CRISP
+            - LONG_AND_DETAILED
     FeedbackRequest:
       type: object
       properties:
@@ -1256,14 +1389,14 @@ components:
         comment:
           type: string
         dislikeReason:
-          $ref: '#/components/schemas/DislikeReason'
+          $ref: "#/components/schemas/DislikeReason"
     ApiResponseFeedbackResponse:
       type: object
       properties:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/FeedbackResponse'
+          $ref: "#/components/schemas/FeedbackResponse"
         success:
           type: boolean
     FeedbackResponse:
@@ -1279,7 +1412,7 @@ components:
         feedbackComment:
           type: string
         dislikeReason:
-          $ref: '#/components/schemas/DislikeReason'
+          $ref: "#/components/schemas/DislikeReason"
         feedbackTimestamp:
           type: string
           format: date-time
@@ -1289,7 +1422,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/UserResponse'
+            $ref: "#/components/schemas/UserResponse"
         page:
           type: integer
           format: int32
@@ -1357,13 +1490,24 @@ components:
       type: object
       properties:
         client:
-          $ref: '#/components/schemas/Client'
+          $ref: "#/components/schemas/Client"
         status:
           type: string
           enum:
             - PENDING
             - PROCESSING
             - PROCESSED
+    QuestionDto:
+      type: object
+      properties:
+        question:
+          type: string
+        questionId:
+          type: string
+        options:
+          type: object
+          additionalProperties:
+            type: string
     ClientDocumentDto:
       type: object
       properties:
@@ -1412,7 +1556,7 @@ components:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/SessionMessagesResponse'
+          $ref: "#/components/schemas/SessionMessagesResponse"
         success:
           type: boolean
     PaginatedResponseChatMessageResponse:
@@ -1421,7 +1565,7 @@ components:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/ChatMessageResponse'
+            $ref: "#/components/schemas/ChatMessageResponse"
         page:
           type: integer
           format: int32
@@ -1453,16 +1597,16 @@ components:
       type: object
       properties:
         sessionInfo:
-          $ref: '#/components/schemas/SessionInfo'
+          $ref: "#/components/schemas/SessionInfo"
         messages:
-          $ref: '#/components/schemas/PaginatedResponseChatMessageResponse'
+          $ref: "#/components/schemas/PaginatedResponseChatMessageResponse"
     ApiResponseFollowUpChainResponse:
       type: object
       properties:
         message:
           type: string
         body:
-          $ref: '#/components/schemas/FollowUpChainResponse'
+          $ref: "#/components/schemas/FollowUpChainResponse"
         success:
           type: boolean
     FollowUpChainResponse:
@@ -1477,7 +1621,7 @@ components:
         followUpChain:
           type: array
           items:
-            $ref: '#/components/schemas/FollowUpResponse'
+            $ref: "#/components/schemas/FollowUpResponse"
         totalFollowUps:
           type: integer
           format: int32

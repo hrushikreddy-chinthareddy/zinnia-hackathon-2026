@@ -8,6 +8,7 @@ import NavElement, {
 } from '@deps/components/nav-element/nav-element';
 import Select from '@deps/components/select/select';
 import MultiselectField from '@deps/components/side-sheet/side-sheet-refine-results/multiselect-field';
+import { Priority } from '@deps/components/side-sheet/side-sheet-refine-results/side-sheet-refine-results';
 import { TaskLabel, TaskStatus } from '@deps/models/case/task-instance';
 import {
     getCarrierListItem,
@@ -15,6 +16,7 @@ import {
     getClientIdsByCarrierName,
 } from '@deps/utils/carriers';
 
+import styles from './side-sheet-tasks-filters.module.css';
 import { FILTER_KEYS } from './utils';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
@@ -44,6 +46,7 @@ type FilterPayload = {
     carriers: string[];
     statuses: string[];
     queues: string[];
+    escalated?: boolean | null;
 };
 
 export interface SideSheetTasksResultsProps {
@@ -68,6 +71,7 @@ type AdditionalFilters = {
     taskStatus: string[];
     group: string[];
     assignees: string[];
+    escalated?: boolean | null;
 };
 
 const initialAdditionalFilters: AdditionalFilters = {
@@ -83,7 +87,6 @@ export default function SideSheetTasksResults({
     searchValue,
     handleApplyFilters,
     clearFilters,
-    assigneeList,
     allGroups,
 }: SideSheetTasksResultsProps) {
     const { t } = useTranslation();
@@ -121,8 +124,6 @@ export default function SideSheetTasksResults({
         );
         return uniqueCarrierFilterItems;
     };
-
-    // update ProductName when carrier changes
 
     const updateCarrierFilters = (
         clickedCarrier: string,
@@ -165,25 +166,18 @@ export default function SideSheetTasksResults({
         handleFilterToggle(FILTER_KEYS.GROUP, selectedGroup);
     };
 
-    const handleAssigneeChange = (selectedAssignee: string) => {
-        handleFilterToggle(FILTER_KEYS.ASSIGNEES, selectedAssignee);
-    };
-
     const handleSubmit = useCallback(() => {
-        const { carriers, taskStatus, group } = additionalFilters;
+        const { carriers, taskStatus, group, escalated } = additionalFilters;
         const payload = {
             carriers: Object.keys(carriers),
             statuses: taskStatus,
             queues: group,
+            escalated: escalated,
         };
 
         handleApplyFilters(additionalFilters, payload);
         closeSideSheet();
     }, [additionalFilters]);
-    const handleReset = () => {
-        handleClear();
-        clearFilters();
-    };
 
     const handleClear = () => {
         const newAdditionalFilters = { ...additionalFilters };
@@ -191,17 +185,29 @@ export default function SideSheetTasksResults({
         newAdditionalFilters.taskStatus = [];
         newAdditionalFilters.group = [];
         newAdditionalFilters.assignees = [];
+        newAdditionalFilters.escalated = undefined;
         setAdditionalFilters(newAdditionalFilters);
+    };
+
+    const handleReset = () => {
+        handleClear();
+        if (
+            (additionalFilters?.taskStatus || []).length > 0 ||
+            (additionalFilters?.group || []).length > 0 ||
+            Object.keys(additionalFilters?.carriers || {}).length > 0
+        ) {
+            clearFilters();
+        }
     };
 
     const selectedCarriers = additionalFilters.carriers ?? {};
 
     useEffect(() => {
-        const { carriers, queues, statuses } =
+        const { carriers, queues, statuses, escalated } =
             searchValue.additionalFilters || {};
         const carrierFilterItems = getUniqueCarrierFilterItems();
 
-        if (carriers || queues || statuses) {
+        if (carriers || queues || statuses || escalated !== undefined) {
             const selectedCarriers = Array.isArray(carriers)
                 ? carriers?.map((carrier: string) => carrier.toUpperCase())
                 : Object.keys(carriers).map((carrier: string) =>
@@ -218,6 +224,7 @@ export default function SideSheetTasksResults({
                     },
                     {}
                 ),
+                escalated: escalated,
                 group: queues || [],
                 taskStatus: statuses || [],
             }));
@@ -226,11 +233,38 @@ export default function SideSheetTasksResults({
             }
         }
     }, []);
+    const handlePriorityChange = (value: string) => {
+        setAdditionalFilters((prevFilters) => ({
+            ...prevFilters,
+            escalated:
+                value === Priority.ANY ? null : value === Priority.PRIORITY,
+        }));
+    };
+    const priorityOptions = [
+        {
+            label: `${t(`${REFINE_RESULTS_BASE_KEY}any`)}`,
+            value: Priority.ANY,
+        },
+        {
+            label: `${t(`${REFINE_RESULTS_BASE_KEY}onlyPrioritized`)}`,
+            value: Priority.PRIORITY,
+        },
+        {
+            label: `${t(`${REFINE_RESULTS_BASE_KEY}notPrioritized`)}`,
+            value: Priority.NOT_PRIORITY,
+        },
+    ];
+
+    const hasActiveFilters =
+        (additionalFilters?.taskStatus || []).length > 0 ||
+        (additionalFilters?.group || []).length > 0 ||
+        Object.keys(additionalFilters?.carriers || {}).length > 0 ||
+        additionalFilters.escalated !== undefined;
 
     return (
-        <div className="flex flex-col px-8">
+        <div className={styles.sideSheetContainer}>
             <>
-                <div className="py-8">
+                <div className={styles.section}>
                     <MultiselectField
                         isLoading={false}
                         label={
@@ -249,7 +283,7 @@ export default function SideSheetTasksResults({
                         handleChange={handleGroupChange}
                     />
                     <Select
-                        className="mt-6"
+                        className={styles.fieldGroup}
                         isMultiselect
                         label={t(`${REFINE_RESULTS_BASE_KEY}carrier`) as string}
                         options={getUniqueCarrierFilterItems()}
@@ -265,7 +299,7 @@ export default function SideSheetTasksResults({
                         name="carrier-dropdown-btn"
                     />
 
-                    <MultiselectField
+                    {/* <MultiselectField
                         isLoading={false}
                         label={
                             t(`${REFINE_RESULTS_BASE_KEY}assignee`) as string
@@ -275,23 +309,45 @@ export default function SideSheetTasksResults({
                         handleChange={handleAssigneeChange}
                         disabled={true}
                     />
+                          /> */}
+
+                    <Select
+                        options={priorityOptions}
+                        onChange={handlePriorityChange}
+                        value={
+                            additionalFilters.escalated === null
+                                ? Priority.ANY
+                                : additionalFilters?.escalated?.toString()
+                        }
+                        size={FieldSize.Small}
+                        label={
+                            t(`${REFINE_RESULTS_BASE_KEY}priority`) as string
+                        }
+                        placeholder={
+                            t(
+                                `${REFINE_RESULTS_BASE_KEY}selectPriority`
+                            ) as string
+                        }
+                        className="!w-[198px] mt-6"
+                    />
                 </div>
             </>
-            <div className="flex flex-col gap-12 py-8">
-                <div className="flex flex-row">
+            <div className={styles.actions}>
+                <div className={styles.actionsRow}>
                     <Button
                         type={ButtonType.Primary}
                         onClick={handleSubmit}
                         aria-label={t('ariaLabel.applyFilters') as string}
-                        className="mr-6"
+                        className={styles.applyBtn}
                     >
-                        <p className="font-primary text-[18px] font-semibold leading-6.5">
+                        <p className={styles.applyBtnText}>
                             {t(`${REFINE_RESULTS_BASE_KEY}applyFilters`)}
                         </p>
                     </Button>
                     <NavElement
+                        disabled={!hasActiveFilters}
                         type={NavElementType.Button}
-                        className="flex self-center whitespace-nowrap"
+                        className={styles.clearAllBtn}
                         onClick={handleReset}
                         aria-label={t('ariaLabel.clearAllFilters') as string}
                     >

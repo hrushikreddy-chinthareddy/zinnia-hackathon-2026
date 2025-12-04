@@ -12,31 +12,12 @@ import {
     TRANSACTION_CATEGORY_DISPLAY_MAP,
     TRANSACTION_TYPE_DISPLAY_MAP,
 } from '@deps/components/usage/utils';
-import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import {
     UserIllustrationActivityOutputLevel1,
     UserIllustrationActivityOutputLevel3,
     UserTransactionOutputLevel1,
     UserTransactionOutputLevel3,
 } from '@zinnia/api-types/types/analytics';
-
-export enum TimeframeFilterOptions {
-    Last6Months = '6M',
-    Last3Months = '3M',
-    Last1Month = '1M',
-}
-
-export const startDates: Record<TimeframeFilterOptions, string> = {
-    [TimeframeFilterOptions.Last6Months]: dayjs()
-        .subtract(6, 'month')
-        .format(ZAHARA_DATE_FORMAT),
-    [TimeframeFilterOptions.Last3Months]: dayjs()
-        .subtract(3, 'month')
-        .format(ZAHARA_DATE_FORMAT),
-    [TimeframeFilterOptions.Last1Month]: dayjs()
-        .subtract(1, 'month')
-        .format(ZAHARA_DATE_FORMAT),
-};
 
 export const aggregateByCategory = (
     data: UserTransactionOutputLevel1[],
@@ -64,7 +45,9 @@ export const aggregateByCategory = (
     const result = Array.from(categoryTotals.entries())
         .map(([category, count], idx) => ({
             category,
-            displayName: TRANSACTION_CATEGORY_DISPLAY_MAP[category] || category,
+            displayName:
+                TRANSACTION_CATEGORY_DISPLAY_MAP[category?.toLowerCase()] ||
+                category,
             count,
             color: colors[idx],
         }))
@@ -103,7 +86,8 @@ export const getTransactionTypesByCategory = (
     return Array.from(typeTotals.entries())
         .map(([type, count]) => ({
             type,
-            displayName: TRANSACTION_TYPE_DISPLAY_MAP[type] || type,
+            displayName:
+                TRANSACTION_TYPE_DISPLAY_MAP[type?.toLowerCase()] || type,
             count,
         }))
         .sort((a, b) => b.count - a.count);
@@ -141,7 +125,9 @@ export function buildDrilldownSeries(
     return Object.entries(dataByCategory).map(([categoryKey, items]) => ({
         type: 'column',
         id: categoryKey,
-        name: TRANSACTION_CATEGORY_DISPLAY_MAP[categoryKey] ?? categoryKey,
+        name:
+            TRANSACTION_CATEGORY_DISPLAY_MAP[categoryKey?.toLowerCase()] ??
+            categoryKey,
         data: items.map((t) => ({
             name: t.displayName,
             y: t.count,

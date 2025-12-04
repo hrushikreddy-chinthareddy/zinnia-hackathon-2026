@@ -68,6 +68,7 @@ const PaymentStepMoneyOut = ({
         data: bankDetails,
         isLoading: bankDetailsLoading,
         isError: bankDetailsError,
+        error: paymentMethodsError,
     } = usePaymentMethods({
         state,
         policy,
@@ -351,6 +352,9 @@ const PaymentStepMoneyOut = ({
                                     <BankDetailsCards
                                         bankDetails={bankDetails}
                                         bankDetailsError={bankDetailsError}
+                                        bankDetailsErrorDetails={
+                                            paymentMethodsError
+                                        }
                                         bankDetailsLoading={bankDetailsLoading}
                                         paymentBankId={paymentBankId}
                                         dataTestid="payment-methods-money-out"

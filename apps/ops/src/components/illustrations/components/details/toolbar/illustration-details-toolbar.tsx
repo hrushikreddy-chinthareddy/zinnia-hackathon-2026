@@ -9,12 +9,11 @@ import {
     BannerVariant,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
-import { useIllustrationDetail } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { useSubmit } from '@deps/components/illustrations/providers/SubmitProvider';
 import { TranslationFiles } from '@deps/config/translations';
@@ -26,11 +25,12 @@ import {
 } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
+import StatusBadge from 'components/illustrations/components/case-details/illustration-item/status-badge';
+import { EditSidesheet } from 'components/illustrations/components/details/edit-sidesheet/edit-sidesheet';
+import { IllustrationCalcEngineWarnings as CalcEngineWarnings } from 'components/illustrations/components/details/toolbar/IllustrationCalcEngineWarnings';
 
 import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
-import StatusBadge from '../../case-details/illustration-item/status-badge';
-import { EditSidesheet } from '../edit-sidesheet/edit-sidesheet';
 
 type IllustrationDetailsToolbarProps = {
     isLoading?: boolean;
@@ -59,7 +59,6 @@ export default function IllustrationDetailsToolbar({
     const { onNewSubmit } = useSubmit();
     const handleSelectForApplication = useSelectIllustrationForApplication();
     const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
-    const illustrationDetail = useIllustrationDetail();
 
     const { product } = selectedIllustration ?? {};
 
@@ -164,27 +163,6 @@ export default function IllustrationDetailsToolbar({
         }
     }, [isError]);
 
-    const warningMessage = useMemo((): string => {
-        const unsatisfiedSolveMessage =
-            illustrationDetail?.response.messages.some(
-                (message) => message.code === 4001
-            );
-        if (unsatisfiedSolveMessage) {
-            return t('clientCase.illustrationDetails.unsatisfiedSolveMessage');
-        }
-        const unreachDesiredSolutionMessage =
-            illustrationDetail?.response.messages.some(
-                (message) => message.code === 4000
-            );
-
-        if (unreachDesiredSolutionMessage) {
-            return t(
-                'clientCase.illustrationDetails.unreachDesiredSolutionMessage'
-            );
-        }
-        return '';
-    }, [illustrationDetail?.response.messages, t]);
-
     return (
         <>
             <div className={styles.toolbarContainer}>
@@ -261,14 +239,7 @@ export default function IllustrationDetailsToolbar({
                         </span>
                     )}
                 </div>
-                {warningMessage && (
-                    <div className={styles.bannerWrapperWarning}>
-                        <BannerAlert
-                            bodyText={warningMessage}
-                            variant={BannerVariant.Warning}
-                        />
-                    </div>
-                )}
+                <CalcEngineWarnings />
             </div>
             {isPdfGenerationErrorVisible && (
                 <div className={styles.bannerWrapper}>
