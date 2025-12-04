@@ -57,6 +57,15 @@ export interface BeneficiaryTaskPayload {
     logCtx?: LoggingContext;
 }
 
+export interface AssigneeTaskPayload {
+    category: string[];
+    businessProcess: string;
+    carrier?: string;
+    policyNumber: string;
+    planCode: string;
+    logCtx?: LoggingContext;
+}
+
 export interface PartyRole {
     partyRole: string;
     partyId: string;

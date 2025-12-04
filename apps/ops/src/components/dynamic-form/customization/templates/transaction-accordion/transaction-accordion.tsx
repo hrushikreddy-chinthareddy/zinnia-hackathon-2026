@@ -46,11 +46,34 @@ export const TransactionAccordionTemplate = (
     };
 
     const handleCheckboxChange = (index: number) => {
+        const isCurrentlyDisabled = disabledIndices.has(index);
+
         setDisabledIndices((prev) => {
             const n = new Set(prev);
-            n.has(index) ? n.delete(index) : n.add(index);
+            if (isCurrentlyDisabled) {
+                n.delete(index);
+            } else {
+                n.add(index);
+            }
             return n;
         });
+
+        const item = items[index];
+        if (item?.children?.props?.formData) {
+            const formData = item.children.props.formData;
+
+            if (isCurrentlyDisabled) {
+                item.children.props.onChange({
+                    ...formData,
+                    action: Action.NONE,
+                });
+            } else {
+                item.children.props.onChange({
+                    ...formData,
+                    action: Action.DELETE,
+                });
+            }
+        }
     };
 
     useEffect(() => {
