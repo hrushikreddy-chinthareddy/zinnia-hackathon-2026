@@ -116,7 +116,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                         : 'newAutopayDetails'
                 }`
             ),
-            current: t(`${translationKeyPrefix}.summary.curren`),
+            current: t(`${translationKeyPrefix}.summary.current`),
         },
         ...(isWithdrawalAutopay
             ? [
