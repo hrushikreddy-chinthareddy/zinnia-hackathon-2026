@@ -168,7 +168,7 @@ const SideSheetCancelAutopay = ({
                 ...localErrors,
                 confirmCancel: `${
                     systematicProgramTablesEnabled
-                        ? t('confirmCancelProgram')
+                        ? t('allFields.confirmCancelProgram')
                         : t('transactions.cancelAutopay.confirmCancelError')
                 }`,
             };
@@ -328,7 +328,10 @@ const SideSheetCancelAutopay = ({
                         date={effectiveDate}
                         label={
                             (systematicProgramTablesEnabled
-                                ? t('proceedCancel', proceedCancelData)
+                                ? t(
+                                      'allFields.proceedCancel',
+                                      proceedCancelData
+                                  )
                                 : t(
                                       'transactions.cancelAutopay.proceedCancel',
                                       proceedCancelData
@@ -425,7 +428,8 @@ const SideSheetCancelAutopay = ({
                     checked={confirmCancel}
                     label={
                         systematicProgramTablesEnabled
-                            ? t('proceedCancel', proceedCancelData) ?? ''
+                            ? t('allFields.proceedCancel', proceedCancelData) ??
+                              ''
                             : t(
                                   'transactions.cancelAutopay.proceedCancel',
                                   proceedCancelData
@@ -440,7 +444,7 @@ const SideSheetCancelAutopay = ({
                 mainCta={{
                     onClick: validateAndSubmitUpdate,
                     text: systematicProgramTablesEnabled
-                        ? t('cancelProgram')
+                        ? t('allFields.cancelProgram')
                         : t('transactions.cancelAutopay.cancelAutopay'),
                 }}
                 secondaryCta={{

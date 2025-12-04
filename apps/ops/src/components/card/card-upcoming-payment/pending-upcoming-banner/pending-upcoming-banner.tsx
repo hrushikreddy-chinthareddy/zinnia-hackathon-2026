@@ -70,7 +70,7 @@ const PendingUpcomingBanner = ({
                     variant={BannerVariant.Information}
                     bodyText={
                         systematicProgramTablesEnabled
-                            ? t('systematicProgramPendingBannerText')
+                            ? t('allFields.systematicProgramPendingBannerText')
                             : t('autopay.pendingBanner.text')
                     }
                     cta={{

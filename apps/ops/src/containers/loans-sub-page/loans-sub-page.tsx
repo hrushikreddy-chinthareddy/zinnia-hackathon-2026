@@ -146,7 +146,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {systematicProgramTablesEnabled
-                    ? t('cancelLoanProgram')
+                    ? t('allFields.cancelLoanProgram')
                     : t('premium.upcoming.cancelLoanAutopayTitle')}
             </Typography>,
             <SideSheetCancelAutopay
