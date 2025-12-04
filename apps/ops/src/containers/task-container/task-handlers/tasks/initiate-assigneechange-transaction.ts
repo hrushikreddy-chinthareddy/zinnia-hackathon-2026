@@ -34,7 +34,7 @@ type notarySignatures = {
     commissionExpiredDate: string | null;
     signDate: string | null;
     isSealPresent: boolean;
-    signedPresent: boolean;
+    isSignedPresent: boolean;
     signTypeForUI: string | null;
 };
 
@@ -132,6 +132,7 @@ const formatAssignees = (policyResponse: PolicyResponse) => {
                             party.countryOfCitizenship ?? null,
                         relationshipToTheCurrentOwner:
                             party.relationshipToTheCurrentOwner ?? null,
+                        collateralAmount: party.collateralAmount ?? null,
                         preferredCommunicationType:
                             party.preferredCommunicationType ?? null,
                         emails:
@@ -359,51 +360,57 @@ const assigneeChangeHandler: TaskHandler<AssigneeTaskPayload, any> = {
                 })
             );
 
+            const normalizedSignatures =
+                task.data?.signatures?.length > 0
+                    ? task.data.signatures.map(
+                          (sig: signatures): signatures => ({
+                              signType: sig.signType || null,
+                              signDate: sig.signDate || null,
+                              signDesignation: sig.signDesignation || null,
+                              isSignedPresent: sig.isSignedPresent || false,
+                          })
+                      )
+                    : [
+                          {
+                              signType: null,
+                              signDate: null,
+                              signDesignation: null,
+                              isSignedPresent: false,
+                          },
+                      ];
+
+            const normalizedNotarySignatures =
+                task.data?.notarySignatures?.length > 0
+                    ? task.data.notarySignatures.map(
+                          (sig: notarySignatures): notarySignatures => ({
+                              commissionExpiredDate:
+                                  sig.commissionExpiredDate || null,
+                              signDate: sig.signDate || null,
+                              isSealPresent: sig.isSealPresent || false,
+                              isSignedPresent: sig.isSignedPresent || false,
+                              signTypeForUI: sig.signTypeForUI || null,
+                          })
+                      )
+                    : [
+                          {
+                              commissionExpiredDate: null,
+                              signDate: null,
+                              isSealPresent: false,
+                              isSignedPresent: false,
+                              signTypeForUI: null,
+                          },
+                      ];
+
             const taskData = {
                 ...task.data,
                 partyUpdates:
                     task.status === TaskStatus.Completed
                         ? task.data.partyUpdates
                         : formattedAssignees,
-                signatures:
-                    task.data?.signatures?.length > 0
-                        ? task.data.signatures.map(
-                              (sig: signatures): signatures => ({
-                                  signType: sig.signType || null,
-                                  signDate: sig.signDate || null,
-                                  signDesignation: sig.signDesignation || null,
-                                  isSignedPresent: sig.isSignedPresent || false,
-                              })
-                          )
-                        : [
-                              {
-                                  signType: null,
-                                  signDate: null,
-                                  signDesignation: null,
-                                  isSignedPresent: false,
-                              },
-                          ],
-                notarySignatures:
-                    task.data?.notarySignatures?.length > 0
-                        ? task.data.notarySignatures.map(
-                              (sig: notarySignatures): notarySignatures => ({
-                                  commissionExpiredDate:
-                                      sig.commissionExpiredDate || null,
-                                  signDate: sig.signDate || null,
-                                  isSealPresent: sig.isSealPresent || false,
-                                  signedPresent: sig.signedPresent || false,
-                                  signTypeForUI: sig.signTypeForUI || null,
-                              })
-                          )
-                        : [
-                              {
-                                  commissionExpiredDate: null,
-                                  signDate: null,
-                                  isSealPresent: false,
-                                  isSignedPresent: false,
-                                  signTypeForUI: null,
-                              },
-                          ],
+
+                signatures: normalizedSignatures,
+                notarySignatures: normalizedNotarySignatures,
+
                 issueResolved: task?.data?.issueResolved ?? true,
             };
 

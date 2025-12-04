@@ -218,7 +218,7 @@
                                         "entityType": "UNKNOWN",
                                         "trustType": null,
                                         "preferredCommunicationType": null,
-                                        "relationshipToParty": null,
+                                        "relationshipToTheCurrentOwner": null,
                                         "emails": [
                                             {
                                                 "emailAddress": null
@@ -249,7 +249,7 @@
                                     },
                                     "partyRole": {
                                         "partyRole": "ASSIGNEE",
-                                        "relationshipToParty": "OTHER"
+                                        "relationshipToTheCurrentOwner": "OTHER"
                                     }
                                 },
                                 "properties": {
@@ -312,8 +312,8 @@
                                                 ],
                                                 "default": null
                                             },
-                                            "relationshipToParty": {
-                                                "type": "string",
+                                            "relationshipToTheCurrentOwner": {
+                                                "type": ["string", "null"],
                                                 "title": "Relationship to party",
                                                 "enum": [
                                                     "TRUSTEE",
@@ -349,7 +349,8 @@
                                                     "STEPCHILD",
                                                     "STEPPARENT",
                                                     "OTHER"
-                                                ]
+                                                ],
+                                                "default": null
                                             },
                                             "addresses": {
                                                 "type": "array",
@@ -974,7 +975,7 @@
                                     "usCitizen",
                                     "countryOfCitizenship",
                                     "preferredCommunicationType",
-                                    "relationshipToParty",
+                                    "relationshipToTheCurrentOwner",
                                     "addresses",
                                     "phones",
                                     "emails"
@@ -1265,11 +1266,11 @@
                                         "allowNullValue": true
                                     }
                                 },
-                                "relationshipToParty": {
+                                "relationshipToTheCurrentOwner": {
                                     "ui:widget": "SelectWidget",
                                     "ui:options": {
                                         "enumNames": [
-                                            "Select relationship to party",
+                                            "Select relationship to current owner",
                                             "Trustee",
                                             "Trustee of Minor",
                                             "Trustee of Incompetent",
@@ -1305,7 +1306,7 @@
                                             "Other"
                                         ]
                                     },
-                                    "ui:placeholder": "Select relationship to party"
+                                    "ui:placeholder": "Select relationship to current owner"
                                 },
                                 "addresses": {
                                     "ui:options": {
@@ -1584,7 +1585,7 @@
                                         "enum": [true, false],
                                         "default": false
                                     },
-                                    "signedPresent": {
+                                    "isSignedPresent": {
                                         "title": "Signed present",
                                         "type": "boolean",
                                         "enum": [true, false],
@@ -1666,7 +1667,7 @@
                             "signDate": {
                                 "ui:widget": "DateWidgetV2"
                             },
-                            "signedPresent": {
+                            "isSignedPresent": {
                                 "ui:widget": "SelectWidget",
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
@@ -1736,7 +1737,7 @@
                                     "enumNames": ["Yes", "No"]
                                 }
                             },
-                            "signedPresent": {
+                            "isSignedPresent": {
                                 "ui:widget": "SelectWidget",
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
@@ -1752,7 +1753,7 @@
                         "default": [
                             {
                                 "isSealPresent": false,
-                                "signedPresent": false,
+                                "isSignedPresent": false,
                                 "commissionExpiredDate": null,
                                 "signDate": null,
                                 "signTypeForUI": "Notary"
@@ -1813,8 +1814,8 @@
                                             "label": "Allocation"
                                         },
                                         {
-                                            "key": "relationshipToParty",
-                                            "label": "Relationship to party"
+                                            "key": "relationshipToTheCurrentOwner",
+                                            "label": "Relationship to current owner"
                                         }
                                     ]
                                 },

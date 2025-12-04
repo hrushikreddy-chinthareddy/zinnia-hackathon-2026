@@ -4,6 +4,7 @@ import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
+import { assigneeChangePayloadUtils } from '@deps/containers/task-container/task-handlers/payload-utils/assignee-change-payload-utils';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
@@ -11,6 +12,7 @@ import { TransactionResponse } from '@deps/queries/api/bpm';
 import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
+    validateAssigneeChangeTransaction,
 } from '@deps/queries/api/web-non-financial';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
@@ -90,6 +92,10 @@ export async function fetchValidationSummary(
         );
     } else if (customData.taskType === TaskType.Agent_Change_Detail) {
         return await validateAgentTransaction(requestBody);
+    } else if (
+        customData.taskType === TaskType.Initiate_AssigneeChange_Transaction
+    ) {
+        return await validateAssigneeChangeTransaction(requestBody);
     } else {
         browserLogInfo(
             '[fetchValidationSummary] Unknown taskType, no validation method called:',
@@ -142,6 +148,9 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             ],
         };
     },
+    INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
+        return assigneeChangePayloadUtils(customData);
+    },
 };
 
 export function buildValidationRequestBody(customData: any): any {
@@ -159,6 +168,11 @@ export function buildValidationRequestBody(customData: any): any {
     }
     if (customData.taskType === TaskType.Agent_Change_Detail) {
         return requestBodyBuilders.AGENT_CHANGE_DETAIL(customData);
+    }
+    if (customData.taskType === TaskType.Initiate_AssigneeChange_Transaction) {
+        return requestBodyBuilders.INITIATE_ASSIGNEECHANGE_TRANSACTION(
+            customData
+        );
     }
     return { ...customData };
 }
