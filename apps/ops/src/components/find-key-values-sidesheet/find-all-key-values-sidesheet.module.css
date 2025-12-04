@@ -9,10 +9,6 @@
     gap: var(--measure-dimension-gap-2xl);
 }
 
-.datePicker {
-    width: 295px;
-}
-
 .treeControl {
     margin-bottom: var(--measure-dimension-margin-xs);
 
@@ -42,7 +38,7 @@
 .subSectionContainer {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--measure-dimension-gap-md);
 }
 
 .itemsList > .subSectionContainer {
