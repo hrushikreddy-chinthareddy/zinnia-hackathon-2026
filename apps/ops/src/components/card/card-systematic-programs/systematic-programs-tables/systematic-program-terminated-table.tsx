@@ -16,12 +16,7 @@ import {
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
 
-import {
-    arrangmentTypesDictionary,
-    frequencyDictionary,
-    programStatusDictionary,
-    SystematicProgramsTerminatedTableProps,
-} from '../card-systematic-programs.types';
+import { SystematicProgramsTerminatedTableProps } from '../card-systematic-programs.types';
 import styles from '../systematic-programs-table.module.css';
 
 const SystematicProgramsTerminatedTable = ({
@@ -71,9 +66,7 @@ const SystematicProgramsTerminatedTable = ({
                                 >
                                     <TableCell className={styles.typeCell}>
                                         {program.arrangementType
-                                            ? arrangmentTypesDictionary[
-                                                  program.arrangementType
-                                              ]
+                                            ? t(program.arrangementType)
                                             : DEFAULT_ERROR_STRING}
                                     </TableCell>
 
@@ -84,9 +77,7 @@ const SystematicProgramsTerminatedTable = ({
                                     </TableCell>
                                     <TableCell className={styles.frecuencyCell}>
                                         {tosProgram.frequency
-                                            ? frequencyDictionary[
-                                                  tosProgram.frequency
-                                              ]
+                                            ? t(tosProgram.frequency)
                                             : DEFAULT_ERROR_STRING}
                                     </TableCell>
                                     <TableCell className={styles.statusCell}>
@@ -97,9 +88,7 @@ const SystematicProgramsTerminatedTable = ({
                                             height={16}
                                         />
                                         {tosProgram.status
-                                            ? programStatusDictionary[
-                                                  tosProgram.status
-                                              ]
+                                            ? t(tosProgram.status)
                                             : DEFAULT_ERROR_STRING}
                                     </TableCell>
                                     <TableCell>{lastPaymentDate}</TableCell>

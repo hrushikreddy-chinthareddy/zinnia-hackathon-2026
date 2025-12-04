@@ -14,15 +14,10 @@ import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
+import { ArrangementType } from '@zinnia/api-types/types/bpm';
 
 import FooterAction from '../../card-footer-action/card-footer-action';
-import {
-    arrangmentTypesDictionary,
-    arrangmentTypesMsgDictionary,
-    frequencyDictionary,
-    paymentFormDictionary,
-    SystematicProgramsActiveTableProps,
-} from '../card-systematic-programs.types';
+import { SystematicProgramsActiveTableProps } from '../card-systematic-programs.types';
 import styles from '../systematic-programs-table.module.css';
 
 const SystematicProgramsActiveTable = ({
@@ -34,11 +29,16 @@ const SystematicProgramsActiveTable = ({
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
         if (programs.length === 1 || isLife)
-            return arrangmentTypesMsgDictionary[programs[0].arrangementType];
+            return t(programs[0].arrangementType).toLowerCase();
         if (programs.length === 2)
-            return `${
-                arrangmentTypesMsgDictionary[programs[0].arrangementType]
-            } or ${arrangmentTypesMsgDictionary[programs[1].arrangementType]}`;
+            return `${t(programs[0].arrangementType).toLowerCase()} ${t(
+                'or'
+            )} ${
+                programs[1].arrangementType ===
+                ArrangementType.REQUIREDMINIMUMDISTRIBUTION
+                    ? 'RMD'
+                    : t(programs[1].arrangementType).toLowerCase()
+            }`;
         return '';
     };
     return (
@@ -92,10 +92,7 @@ const SystematicProgramsActiveTable = ({
                                                 className={styles.typeCell}
                                             >
                                                 {program.arrangementType
-                                                    ? arrangmentTypesDictionary[
-                                                          program
-                                                              .arrangementType
-                                                      ]
+                                                    ? t(program.arrangementType)
                                                     : DEFAULT_ERROR_STRING}
                                             </TableCell>
 
@@ -110,10 +107,7 @@ const SystematicProgramsActiveTable = ({
                                                 className={styles.frecuencyCell}
                                             >
                                                 {activeProgram.frequency
-                                                    ? frequencyDictionary[
-                                                          activeProgram
-                                                              .frequency
-                                                      ]
+                                                    ? t(activeProgram.frequency)
                                                     : DEFAULT_ERROR_STRING}
                                             </TableCell>
                                             <TableCell
@@ -125,9 +119,7 @@ const SystematicProgramsActiveTable = ({
                                             </TableCell>
                                             <TableCell>
                                                 {paymentType
-                                                    ? paymentFormDictionary[
-                                                          paymentType
-                                                      ]
+                                                    ? t(paymentType)
                                                     : DEFAULT_ERROR_STRING}
                                             </TableCell>
                                             <TableCell
@@ -163,7 +155,9 @@ const SystematicProgramsActiveTable = ({
                         <TableRow>
                             <TableCell colSpan={6}>
                                 <div className={styles.emptyTableCell}>
-                                    {`There are currently no ${getEmptyLabel()} systematic programs.`}
+                                    {t('emptySystematicProgramsTable', {
+                                        type: getEmptyLabel(),
+                                    })}
                                 </div>
                             </TableCell>
                         </TableRow>

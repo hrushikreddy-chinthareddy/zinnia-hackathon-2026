@@ -10,47 +10,49 @@ export interface FooterActionPros {
 const FooterAction = ({ footerContent }: FooterActionPros) => {
     const { text, tempInactive, tooltip, href, isDisabled, onClick } =
         footerContent;
-    return (
-        <span key={`${text}-wrapper`}>
-            {tempInactive ? (
+    const getFooterActionContent = () => {
+        if (tempInactive) {
+            return (
                 <TempNavInactive key={`${text}-tooltip`} tooltipBody={tooltip}>
                     {text}
                 </TempNavInactive>
-            ) : isDisabled ? (
-                tooltip ? (
-                    <Tooltip
-                        placement={PopoverPlacement.TopRight}
-                        body={tooltip}
-                        key={`${text}-tooltip`}
-                    >
-                        <span
-                            className={styles.footerActionText}
-                            key={`${text}-link`}
-                        >
-                            {text}
-                        </span>
-                    </Tooltip>
-                ) : (
-                    <span
-                        className={styles.footerActionText}
-                        key={`${text}-link`}
-                    >
-                        {text}
-                    </span>
-                )
-            ) : (
-                <a
-                    href={href}
-                    key={`${text}-link`}
-                    className={styles.footerActionLink}
-                    data-testid={text}
-                    onClick={onClick}
-                >
+            );
+        }
+
+        if (isDisabled) {
+            const textSpan = (
+                <span className={styles.footerActionText} key={`${text}-link`}>
                     {text}
-                </a>
-            )}
-        </span>
-    );
+                </span>
+            );
+
+            return tooltip ? (
+                <Tooltip
+                    placement={PopoverPlacement.TopRight}
+                    body={tooltip}
+                    key={`${text}-tooltip`}
+                >
+                    {textSpan}
+                </Tooltip>
+            ) : (
+                textSpan
+            );
+        }
+
+        return (
+            <a
+                href={href}
+                key={`${text}-link`}
+                className={styles.footerActionLink}
+                data-testid={text}
+                onClick={onClick}
+            >
+                {text}
+            </a>
+        );
+    };
+
+    return <span key={`${text}-wrapper`}>{getFooterActionContent()}</span>;
 };
 
 export default FooterAction;

@@ -1,7 +1,7 @@
 .systematicPrograms {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--measure-dimension-gap-lg);
     width: 100%;
     th,
     td {
@@ -10,7 +10,7 @@
         font: var(--typography-content-body-sm);
     }
     th {
-        font-weight: 700;
+        font-weight: var(--font-weight-content-value-font-weight);
     }
 }
 
@@ -25,20 +25,22 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 8px;
+    gap: var(--measure-dimension-gap-md);
     a {
-        font: var(--typography-content-body-sm);
-        font-weight: 700;
+        font-size: var(--measure-font-sizing-content-body-sm-font-size);
+        font-weight: var(--font-weight-content-value-font-weight);
     }
 }
 
 .toggle,
 .toggleInactive {
     button {
-        border: 2px solid;
+        border: var(--measure-dimension-stroke-sm) solid;
     }
     p {
-        font: var(--typography-content-body-sm) !important;
+        font-size: var(
+            --measure-font-sizing-content-body-sm-font-size
+        ) !important;
     }
 }
 
@@ -97,14 +99,14 @@
     width: 132px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--measure-dimension-gap-md);
     color: var(--status-text-status-error-text, #db004f);
 }
 
 .emptyTableCell {
     display: flex;
     justify-content: center;
-    padding: 4px;
+    padding: var(--measure-dimension-padding-sm);
     width: 100%;
 }
 
@@ -114,13 +116,16 @@
 
 td.actionCell {
     display: flex;
-    gap: 8px;
+    gap: var(--measure-dimension-gap-md);
     a {
-        font-size: 500;
         text-decoration: underline;
         &:hover {
-            text-underline-offset: 1px;
-            text-decoration-thickness: 1px;
+            text-underline-offset: var(
+                --measure-dimension-letter-spacing-font-letter-spacing-1
+            );
+            text-decoration-thickness: var(
+                --measure-dimension-letter-spacing-font-letter-spacing-1
+            );
         }
     }
 }

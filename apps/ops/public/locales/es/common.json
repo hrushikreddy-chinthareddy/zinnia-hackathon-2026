@@ -459,6 +459,7 @@
         "taxes": "Impuestos",
         "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
         "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "or": "or",
         "showHistory": "Mostrar historial",
         "setUp": "Configurar",
         "systemProgramStatus": "Estado",
@@ -468,6 +469,7 @@
         "manage": "Administrar",
         "cancel": "Cancelar",
         "lastPaymentDate": "Fecha del último pago",
+        "emptySystematicProgramsTable": "Actualmente no existen programas sistemáticos {{type}}.",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
         "illustrationCalcUnreachableSolveFailed": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "La cláusula adicional solicitada no se incluyó porque no cumple con los requisitos de monto nominal."

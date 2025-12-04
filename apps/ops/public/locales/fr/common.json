@@ -459,6 +459,7 @@
         "taxes": "Impôts",
         "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
         "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "or": "ou",
         "showHistory": "Afficher l'historique",
         "setUp": "Configurer",
         "systemProgramStatus": "Statut",
@@ -468,6 +469,7 @@
         "manage": "Gérer",
         "cancel": "Annuler",
         "lastPaymentDate": "Date du dernier paiement",
+        "emptySystematicProgramsTable": "Il n’existe actuellement aucun programme systématique {{type}}.",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
         "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."

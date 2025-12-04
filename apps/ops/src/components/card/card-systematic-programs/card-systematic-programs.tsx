@@ -29,7 +29,9 @@ const SystematicProgramsCard = ({
         useState(false);
 
     const handleToggle = () => {
-        setShowTerminatedOrSuspended(!showTerminatedOrSuspended);
+        setShowTerminatedOrSuspended(
+            (prevTerminatedOrSuspended) => !prevTerminatedOrSuspended
+        );
     };
 
     const hasActivePrograms = programs.some(
