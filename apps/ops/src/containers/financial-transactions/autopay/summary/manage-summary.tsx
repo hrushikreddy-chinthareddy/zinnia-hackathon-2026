@@ -116,7 +116,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                         : 'newAutopayDetails'
                 }`
             ),
-            current: t('current'),
+            current: t(`${translationKeyPrefix}.summary.curren`),
         },
         ...(isWithdrawalAutopay
             ? [
@@ -221,7 +221,9 @@ const ManageSummary = ({ policy }: SummaryProps) => {
 
     return (
         <div className="responsive-padding rounded">
-            <Typography variant={TypographyVariant.H1}>{t('label')}</Typography>
+            <Typography variant={TypographyVariant.H1}>
+                {t(`${translationKeyPrefix}.summary.label`)}
+            </Typography>
             <Typography className="mb-6 mt-2" variant={TypographyVariant.Body}>
                 {validationSucceeded
                     ? t(`${translationKeyPrefix}.summary.typstatus200subtitlee`)
