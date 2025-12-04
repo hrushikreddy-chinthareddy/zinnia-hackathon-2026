@@ -16,7 +16,6 @@ import TransactionNavigationButtons, {
     ParentPage,
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
-import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
@@ -69,9 +68,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
         translationKeyPrefix,
     } = autopay;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: `${translationKeyPrefix}.amount`,
-    });
+    const { t } = useTranslation();
 
     const { featureFlags } = useOptimizely();
     const systematicProgramTablesEnabled =
@@ -103,7 +100,10 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     );
     const { goToNext } = useWorkflow();
     const dateLabel = useMemo(
-        () => (isSetUp ? t('paymentStartDate') : t('nextPaymentDate')),
+        () =>
+            isSetUp
+                ? t(`${translationKeyPrefix}.amount.paymentStartDate`)
+                : t(`${translationKeyPrefix}.amount.nextPaymentDate`),
         [isSetUp, t]
     );
 
@@ -188,38 +188,55 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
             errors = {
                 ...errors,
                 effectiveDate: isSetUp
-                    ? `${t('missingStartDateError')}`
-                    : `${t('missingNextPaymentDateError')}`,
+                    ? `${t(
+                          `${translationKeyPrefix}.amount.missingStartDateError`
+                      )}`
+                    : `${t(
+                          `${translationKeyPrefix}.amount.missingNextPaymentDateError`
+                      )}`,
             };
         } else if (!dayjs(effectiveDate, NUMERIC_DATE_FORMAT).isValid()) {
             errors = {
                 ...errors,
                 effectiveDate: isSetUp
-                    ? `${t('invalidStartDateError')}`
-                    : `${t('invalidNextPaymentDateError')}`,
+                    ? `${t(
+                          `${translationKeyPrefix}.amount.invalidStartDateError`
+                      )}`
+                    : `${t(
+                          `${translationKeyPrefix}.amount.invalidNextPaymentDateError`
+                      )}`,
             };
         }
 
         if (!frequency) {
-            errors = { ...errors, frequency: `${t('missingFrequencyError')}` };
+            errors = {
+                ...errors,
+                frequency: `${t(
+                    `${translationKeyPrefix}.amount.missingFrequencyError`
+                )}`,
+            };
         }
 
         if (isNullEmptyOrUndefined(paymentAmount)) {
             errors = {
                 ...errors,
                 paymentAmount: `${t(
-                    systematicProgramTablesEnabled
-                        ? 'missingAmountErrorSP'
-                        : 'missingAmountError'
+                    `${translationKeyPrefix}.amount.${
+                        systematicProgramTablesEnabled
+                            ? 'missingAmountErrorSP'
+                            : 'missingAmountError'
+                    }`
                 )}`,
             };
         } else if (Number(paymentAmount) < 1) {
             errors = {
                 ...errors,
                 paymentAmount: `${t(
-                    systematicProgramTablesEnabled
-                        ? 'invalidAmountErrorSP'
-                        : 'invalidAmountError'
+                    `${translationKeyPrefix}.amount.${
+                        systematicProgramTablesEnabled
+                            ? 'invalidAmountErrorSP'
+                            : 'invalidAmountError'
+                    }`
                 )}`,
             };
         }
@@ -252,15 +269,27 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     };
 
     const items: RadioItem[] = [
-        { label: t('monthly'), value: Frequency.MONTHLY },
-        { label: t('quarterly'), value: Frequency.QUARTERLY },
-        { label: t('semiAnnually'), value: Frequency.SEMIANNUAL },
-        { label: t('annually'), value: Frequency.ANNUAL },
+        {
+            label: t(`${translationKeyPrefix}.amount.monthly`),
+            value: Frequency.MONTHLY,
+        },
+        {
+            label: t(`${translationKeyPrefix}.amount.quarterly`),
+            value: Frequency.QUARTERLY,
+        },
+        {
+            label: t(`${translationKeyPrefix}.amount.semiAnnually`),
+            value: Frequency.SEMIANNUAL,
+        },
+        {
+            label: t(`${translationKeyPrefix}.amount.annually`),
+            value: Frequency.ANNUAL,
+        },
     ];
 
     return (
         <WorkflowCard
-            title={t('label')}
+            title={t(`${translationKeyPrefix}.amount.label`)}
             footerContent={
                 <TransactionNavigationButtons
                     handleContinue={handleContinue}
@@ -278,18 +307,22 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                 <Field
                     data-testid={
                         t(
-                            systematicProgramTablesEnabled
-                                ? 'paymentAmountSP'
-                                : 'paymentAmount'
+                            `${translationKeyPrefix}.amount.${
+                                systematicProgramTablesEnabled
+                                    ? 'paymentAmountSP'
+                                    : 'paymentAmount'
+                            }`
                         ) ?? ''
                     }
                     size={FieldSize.Small}
                     className="max-w-[160px]"
                     label={
                         t(
-                            systematicProgramTablesEnabled
-                                ? 'paymentAmountSP'
-                                : 'paymentAmount'
+                            `${translationKeyPrefix}.amount.${
+                                systematicProgramTablesEnabled
+                                    ? 'paymentAmountSP'
+                                    : 'paymentAmount'
+                            }`
                         ) ?? ''
                     }
                     leading="$"
@@ -310,7 +343,9 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                 />
 
                 <Radio
-                    label={`${t('paymentFrequency')}`}
+                    label={`${t(
+                        `${translationKeyPrefix}.amount.paymentFrequency`
+                    )}`}
                     items={items}
                     value={String(autopay.frequency)}
                     onChange={handleFrequencyChange}
