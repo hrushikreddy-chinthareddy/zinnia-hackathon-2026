@@ -23,7 +23,7 @@ import { useCompletedTaskTimes } from '@deps/components/dashboard/sections/compl
 import { CompletedTaskTimesFilters } from '@deps/components/dashboard/sections/completed-task-times/tab-content/shared/completed-task-times-filters';
 import { CompletedTaskTimesHeader } from '@deps/components/dashboard/sections/completed-task-times/tab-content/shared/completed-task-times-header';
 import {
-    CSV_COLUMNS,
+    generateCsvColumns,
     generateTasksCSVFilename,
     getCarrierName,
     flattenCompletedTaskTimeData,
@@ -65,8 +65,8 @@ export const CompletedTaskTimesTable = () => {
     const { t } = useTranslation();
 
     const carrierName = useMemo(
-        () => getCarrierName(selectedCarriers),
-        [selectedCarriers]
+        () => getCarrierName(selectedCarriers, t),
+        [selectedCarriers, t]
     );
 
     const flattenedData = useMemo(
@@ -79,8 +79,8 @@ export const CompletedTaskTimesTable = () => {
     );
 
     const csvFileName = useMemo(
-        () => generateTasksCSVFilename(carrierName, timerange),
-        [carrierName, timerange]
+        () => generateTasksCSVFilename(carrierName, timerange, t),
+        [carrierName, timerange, t]
     );
 
     const { handleSort, sortedData } = useTableOptions({
@@ -128,8 +128,8 @@ export const CompletedTaskTimesTable = () => {
     };
 
     const handleExportCSV = useCallback(() => {
-        downloadCSV(flattenedData, csvFileName, CSV_COLUMNS);
-    }, [flattenedData, csvFileName]);
+        downloadCSV(flattenedData, csvFileName, generateCsvColumns(t));
+    }, [flattenedData, csvFileName, t]);
 
     return (
         <CardContainer>

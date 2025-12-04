@@ -473,6 +473,8 @@
         "minute": "minute",
         "hour": "hour",
         "day": "day",
+        "allCarriers": "All Carriers",
+        "medianTaskProcessingTimesFilename": "{{carrierName}} Median Task Processing Times {{fromDate}} to {{toDate}}",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
         "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."

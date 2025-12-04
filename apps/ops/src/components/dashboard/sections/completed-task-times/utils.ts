@@ -23,29 +23,32 @@ export interface CompletedTaskTimeData {
     totalTasks: number;
 }
 
-// CSV column definitions for processing times export
-export const CSV_COLUMNS: {
-    label: string;
-    key: keyof FlattenedCompletedTaskTimeData;
-}[] = [
-    { label: 'Case type', key: 'caseType' },
-    { label: 'Median processing time', key: 'secondMedian' },
-    { label: 'Task', key: 'taskName' },
-    { label: 'Total tasks', key: 'count' },
-];
+// CSV column generation for processing times export
+export const generateCsvColumns = (
+    t: TFunction
+): { label: string; key: keyof FlattenedCompletedTaskTimeData }[] => {
+    return [
+        { label: t('allFields.caseType'), key: 'caseType' },
+        { label: t('allFields.medianProcessingTime'), key: 'taskName' },
+        { label: t('allFields.task'), key: 'taskName' },
+        { label: t('allFields.totalTasks'), key: 'count' },
+    ];
+};
 
 /**
  * Get carrier name for display/export
  * @param selectedCarriers - Object of selected carriers from store
  * @returns Carrier name or "All Carriers"
  */
-export const getCarrierName = (selectedCarriers: {
-    [key: string]: string;
-}): string => {
+export const getCarrierName = (
+    selectedCarriers: {
+        [key: string]: string;
+    },
+    t: TFunction
+): string => {
     const carrierKeys = Object.keys(selectedCarriers);
-    if (carrierKeys.length === 0) return 'All Carriers';
     if (carrierKeys.length === 1) return selectedCarriers[carrierKeys[0]];
-    return 'All Carriers';
+    return t('allFields.allCarriers');
 };
 
 /**
@@ -108,9 +111,15 @@ export const flattenCompletedTaskTimeData = (
  */
 export const generateTasksCSVFilename = (
     carrierName: string,
-    timerange: { from: string; to: string }
+    timerange: { from: string; to: string },
+    t: TFunction
 ): string => {
     const fromDate = dayjs(timerange.from).format(defaultDateFormat);
     const toDate = dayjs(timerange.to).format(defaultDateFormat);
-    return `${carrierName} Median Task Processing Times ${fromDate} to ${toDate}.csv`;
+
+    return `${t('allFields.medianTaskProcessingTimesFilename', {
+        carrierName,
+        fromDate,
+        toDate,
+    })}.csv`;
 };
