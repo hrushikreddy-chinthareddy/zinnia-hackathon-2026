@@ -1,7 +1,7 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
-import { CompletedTaskTimeContext } from '@deps/components/dashboard/sections/completed-task-times/context/completed-task-times-context';
+import { useCompletedTaskTimes } from '@deps/components/dashboard/sections/completed-task-times/context/completed-task-times-context';
 import { TimeframeFilterOptions } from '@deps/components/dashboard/utils';
 
 import filterStyles from './completed-task-times-filters.module.css';
@@ -12,7 +12,7 @@ export const CompletedTaskTimesFilters: FC = () => {
         handleTimeframeRadioChange,
         timerange,
         handleRangeChange,
-    } = useContext(CompletedTaskTimeContext);
+    } = useCompletedTaskTimes();
 
     return (
         <div className={filterStyles.filterContainer}>

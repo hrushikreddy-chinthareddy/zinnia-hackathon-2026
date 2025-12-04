@@ -1,10 +1,10 @@
+import { AxiosResponse } from 'axios';
+
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     CompletedTaskTimeInput,
     CompletedTaskTimeOutput,
 } from '@zinnia/api-types/types/analytics';
-import { AxiosResponse } from 'axios';
-
-import { browserLogError } from '@deps/utils/browser-logging';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';

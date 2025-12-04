@@ -1,3 +1,14 @@
+import { TFunction } from 'i18next';
+
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
+import { Statuses } from '@deps/models/case/case';
+import {
+    getCaseDashboardStats,
+    getCaseTimingData,
+} from '@deps/queries/api/cases';
+import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
+import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
+import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 import {
     CaseCountGroupByEnum,
     CaseCountInput,
@@ -10,17 +21,6 @@ import {
     CompletedTaskTimeInputFilter,
     CompletedTaskTimeGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
-import { TFunction } from 'i18next';
-
-import { friendlyGroupByName } from '@deps/components/dashboard/utils';
-import { Statuses } from '@deps/models/case/case';
-import {
-    getCaseDashboardStats,
-    getCaseTimingData,
-} from '@deps/queries/api/cases';
-import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
-import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
-import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 
 export const getCaseDashboardStatsQuery = async (
     baseFilter: CaseCountInputFilter,
@@ -30,12 +30,9 @@ export const getCaseDashboardStatsQuery = async (
         filter: baseFilter,
         groupBy,
     });
-    if (
-        !statsResponse ||
-        'detail' in statsResponse ||
-        !('data' in statsResponse)
-    ) {
-        throw statsResponse;
+
+    if (!statsResponse || !('data' in statsResponse)) {
+        throw new Error('statsResponse is undefined or empty');
     }
 
     statsResponse.data = statsResponse.data
@@ -59,12 +56,8 @@ export const getCaseDashboardTimingQuery = async (
         filter: baseFilter,
         groupBy,
     });
-    if (
-        !statsResponse ||
-        'detail' in statsResponse ||
-        !('data' in statsResponse)
-    ) {
-        throw statsResponse;
+    if (!statsResponse || !('data' in statsResponse)) {
+        throw new Error('timingResponse is undefined or empty');
     }
 
     statsResponse.data = statsResponse.data.map((item) => {
@@ -86,12 +79,8 @@ export const getExceptionCountQuery = async (
         filter: baseFilter,
         groupBy,
     });
-    if (
-        !exceptionResponse ||
-        'detail' in exceptionResponse ||
-        !('data' in exceptionResponse)
-    ) {
-        throw exceptionResponse;
+    if (!exceptionResponse || !('data' in exceptionResponse)) {
+        throw new Error('exceptionCountResponse is undefined or empty');
     }
 
     exceptionResponse.data = exceptionResponse.data.map((item) => {
@@ -118,13 +107,10 @@ export const getTaskCountQuery = async (
         groupBy: groupBy,
     });
 
-    if (
-        !taskCountResponse ||
-        'detail' in taskCountResponse ||
-        !('data' in taskCountResponse)
-    ) {
-        throw taskCountResponse;
+    if (!taskCountResponse || !('data' in taskCountResponse)) {
+        throw new Error('taskCountResponse is undefined or empty');
     }
+
     taskCountResponse.data = taskCountResponse.data
         .filter((item) => item.name !== null && item.name !== 'null')
         .map((item) => {
@@ -235,12 +221,8 @@ export const getStatsFromSelectionQuery = async (
     };
 
     const statsResponse = await getCaseDashboardStats(query);
-    if (
-        !statsResponse ||
-        'detail' in statsResponse ||
-        !('data' in statsResponse)
-    ) {
-        throw statsResponse;
+    if (!statsResponse || !('data' in statsResponse)) {
+        throw new Error('statsFromSelectionResponse is undefined or empty');
     }
     return statsResponse;
 };
