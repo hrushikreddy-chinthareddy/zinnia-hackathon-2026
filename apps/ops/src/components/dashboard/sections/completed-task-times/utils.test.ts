@@ -1,3 +1,5 @@
+import { TFunction } from 'i18next';
+
 import {
     getCarrierName,
     flattenCompletedTaskTimeData,
@@ -12,13 +14,23 @@ jest.mock('@deps/components/dashboard/utils', () => ({
 }));
 
 describe('Completed Task Time Utils', () => {
+    const TRANSLATIONS: Record<string, string> = {
+        allCarriers: 'All Carriers',
+    };
+
+    const t = jest
+        .fn()
+        .mockImplementation(
+            (key: string) => TRANSLATIONS[key.replace(/allFields\./, '')]
+        );
+
     describe('getCarrierName', () => {
         it('should return "All Carriers" when no carriers selected', () => {
-            expect(getCarrierName({})).toBe('All Carriers');
+            expect(getCarrierName({}, t)).toBe('All Carriers');
         });
 
         it('should return carrier name when one carrier selected', () => {
-            expect(getCarrierName({ carrier1: 'Pacific Life' })).toBe(
+            expect(getCarrierName({ carrier1: 'Pacific Life' }, t)).toBe(
                 'Pacific Life'
             );
         });
@@ -28,18 +40,18 @@ describe('Completed Task Time Utils', () => {
                 carrier1: 'Pacific Life',
                 carrier2: 'MetLife',
             };
-            expect(getCarrierName(carriers)).toBe('All Carriers');
+            expect(getCarrierName(carriers, t)).toBe('All Carriers');
         });
     });
 
     describe('formatTaskTimeFromArray', () => {
-        it('formats a flattened completed task array', () => {
-            const t = jest
-                .fn()
-                .mockImplementation((key: string) =>
-                    key.replace(/allFields\./, '')
-                );
+        const t = jest
+            .fn()
+            .mockImplementation((key: string) =>
+                key.replace(/allFields\./, '')
+            );
 
+        it('formats a flattened completed task array', () => {
             const array = [
                 {
                     caseType: 'New Business',
@@ -170,11 +182,26 @@ describe('Completed Task Time Utils', () => {
     });
 
     describe('generateTasksCSVFilename', () => {
+        const TRANSLATIONS: Record<string, string> = {
+            'allFields.medianTaskProcessingTimesFilename':
+                'Median Task Processing Times',
+        };
+
+        const tMock = jest.fn((key: string, opts?: Record<string, string>) =>
+            opts
+                ? `${opts?.carrierName} ${TRANSLATIONS[key]} ${opts.fromDate} to ${opts.toDate}`
+                : ''
+        ) as unknown as TFunction;
+
         it('should generate correct filename format', () => {
-            const result = generateTasksCSVFilename('Pacific Life', {
-                from: '2024-06-01',
-                to: '2024-06-30',
-            });
+            const result = generateTasksCSVFilename(
+                'Pacific Life',
+                {
+                    from: '2024-06-01',
+                    to: '2024-06-30',
+                },
+                tMock
+            );
 
             expect(result).toBe(
                 'Pacific Life Median Task Processing Times Jun 1, 2024 to Jun 30, 2024.csv'
@@ -183,17 +210,25 @@ describe('Completed Task Time Utils', () => {
 
         it('should handle different status values', () => {
             expect(
-                generateTasksCSVFilename('All Carriers', {
-                    from: '2024-01-01',
-                    to: '2024-12-31',
-                })
+                generateTasksCSVFilename(
+                    'All Carriers',
+                    {
+                        from: '2024-01-01',
+                        to: '2024-12-31',
+                    },
+                    tMock
+                )
             ).toContain('All Carriers Median Task Processing Times');
 
             expect(
-                generateTasksCSVFilename('MetLife', {
-                    from: '2024-01-01',
-                    to: '2024-03-31',
-                })
+                generateTasksCSVFilename(
+                    'MetLife',
+                    {
+                        from: '2024-01-01',
+                        to: '2024-03-31',
+                    },
+                    tMock
+                )
             ).toContain('MetLife Median Task Processing Times');
         });
     });
