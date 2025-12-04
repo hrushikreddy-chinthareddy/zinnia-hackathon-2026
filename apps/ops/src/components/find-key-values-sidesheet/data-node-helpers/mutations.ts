@@ -20,6 +20,8 @@ import {
  * - DataSection - a named (and optionally tagged) collection of nested nodes
  * - DataGroup - an unnamed collection of subgroups of nodes
  *
+ * Full docs here: https://zinnia.atlassian.net/wiki/spaces/AU/pages/5738889232/Rendering+Data+Trees
+ *
  * @param obj - the source data object
  * @param t - the translation function
  * @returns the data node
@@ -51,7 +53,7 @@ export function convertTuple(
     // Skip nullish values
     if (value === null || value === '') return;
 
-    // Primitive → Field
+    // Primitive → DataField
     if (isPrimitive(value)) {
         return {
             type: FieldType.field,
@@ -60,7 +62,7 @@ export function convertTuple(
         };
     }
 
-    // Array → Section -> subsection-field-to-title.ts
+    // Array → DataSection -> subsection-field-to-title.ts
     if (isUnknownArray(value)) {
         const sectionLabelFieldName = sectionTypeToSubSectionTitleFields[key];
         if (sectionLabelFieldName) {
@@ -69,9 +71,8 @@ export function convertTuple(
                     //object within each array item
                     if (!isNonNullishObject(item)) return;
                     const sectionLabel = item[sectionLabelFieldName];
-                    if (!isNonEmptyString(sectionLabel)) return; // TODO: maybe skip, maybe provide default label?
+                    if (!isNonEmptyString(sectionLabel)) return;
 
-                    // TODO: filter out fields that are not visible, including the title field
                     const fields: DataNode[] = buildRenderTreeFromSourceData(
                         item,
                         t
@@ -94,7 +95,7 @@ export function convertTuple(
                 children: sections,
             };
         } else {
-            // value is list of groups
+            // Array → DataGroup
             const groups: DataNode[][] = value.map((item) =>
                 buildRenderTreeFromSourceData(item, t)
             );
@@ -114,7 +115,7 @@ export function convertTuple(
         }
     }
 
-    // Object → Section
+    // Object → DataSection
     if (typeof value === 'object' && !Array.isArray(value)) {
         const children = buildRenderTreeFromSourceData(value, t);
 
@@ -133,7 +134,7 @@ export function convertTuple(
  * Recursively transforms an array of nodes
  *
  * @param nodes - the nodes to transform
- * @param transform - the transform function
+ * @param transform - the transform function to apply to each node
  * @returns the transformed nodes
  */
 export const transformNodes = ({
@@ -163,7 +164,7 @@ export const transformNodes = ({
  * Recursively transforms a single node
  *
  * @param node - the node to transform
- * @param transform - the transform function
+ * @param transform - the transform function to apply to the node
  * @returns the transformed node
  */
 export const transformNode = (

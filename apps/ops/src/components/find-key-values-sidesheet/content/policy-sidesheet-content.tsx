@@ -103,9 +103,11 @@ export const PolicySidesheetContent = ({
             applyTransformationsToNodes(
                 // buildRenderTreeFromSourceData will take an arbitrary data structure, and
                 // convert it into a structure that can be rendered
+                // Full docs here: https://zinnia.atlassian.net/wiki/spaces/AU/pages/5738889232/Rendering+Data+Trees
                 (nodes) => buildRenderTreeFromSourceData(nodes, t),
-                (nodes) => groupBasicsForPolicy(nodes),
+                (nodes) => groupBasicsForPolicy(nodes), // Groups all top-level DataField nodes into a section
                 (nodes) =>
+                    // Groups various data into sections, as defined by Policy FKV business rules
                     groupSectionsForPolicy({
                         nodes,
                         t,
@@ -118,6 +120,7 @@ export const PolicySidesheetContent = ({
                         nodes,
                         transforms: [
                             (node) =>
+                                // Excludes sections and fields that are required to be hidden specifically by carrier/product
                                 excludeNodeByCarrierRules({
                                     node,
                                     lineOfBusiness,
@@ -125,16 +128,19 @@ export const PolicySidesheetContent = ({
                                     planCode,
                                 }),
                             (node) =>
+                                // Excludes sections and fields that are required to be hidden across all data
                                 excludeNodesByLabel({
                                     node,
                                 }),
                             (node) =>
+                                // Adds a tooltip to the node if it exists in the tooltip mapping
                                 addToolTip({
                                     node,
                                     t,
                                     policyNomenclature,
                                 }),
                             (node) =>
+                                // Applies translations and formats dates, currencies, etc.
                                 formatNode({
                                     node,
                                     t,

@@ -87,19 +87,22 @@ export const TransactionSidesheetContent = ({
         return applyTransformationsToNodes(
             // buildRenderTreeFromSourceData will take an arbitrary data structure, and
             // convert it into a structure that can be rendered
+            // Full docs here: https://zinnia.atlassian.net/wiki/spaces/AU/pages/5738889232/Rendering+Data+Trees
             (nodes) => buildRenderTreeFromSourceData(nodes, t),
-            (nodes) => groupBasicsForTransaction(nodes),
-            (nodes) => groupTaxesSection(nodes),
+            (nodes) => groupBasicsForTransaction(nodes), // Groups all top-level DataField nodes into a section
+            (nodes) => groupTaxesSection(nodes), // Combines various data into a Taxes section
             (nodes) =>
                 // Transforms the entire tree, chaining transformations on *each node*
                 transformNodes({
                     nodes,
                     transforms: [
                         (node) =>
+                            // Excludes sections and fields that are required to be hidden
                             excludeNodesByLabel({
                                 node,
                             }),
                         (node) =>
+                            // Adds a link to any partyId fields
                             addLinkToPartyId({
                                 node,
                                 planCode: String(planCode),
@@ -107,11 +110,13 @@ export const TransactionSidesheetContent = ({
                                 allPartiesById,
                             }),
                         (node) =>
+                            // Adds a tooltip to the node if it exists in the tooltip mapping
                             addToolTip({
                                 node,
                                 t,
                             }),
                         (node) =>
+                            // Applies translations and formats dates, currencies, etc.
                             formatNode({
                                 node,
                                 t,
