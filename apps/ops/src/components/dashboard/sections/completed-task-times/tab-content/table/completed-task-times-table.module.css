@@ -16,3 +16,7 @@
         text-align: left;
     }
 }
+
+.taskName {
+    word-break: break-all;
+}

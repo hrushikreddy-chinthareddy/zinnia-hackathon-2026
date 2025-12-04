@@ -165,6 +165,7 @@ export const getCompletedTaskTimeQuery = async (
         groupBy: groupBy,
     });
 
+    // 'detail' may exist when the API returns an HTTPValidationError
     if (
         !completedTaskTimesResponse ||
         'detail' in completedTaskTimesResponse ||
@@ -185,9 +186,7 @@ export const getCompletedTaskTimeQuery = async (
             // Filter nested values as well
             if (item.values && item.values.length > 0) {
                 item.values = item.values
-                    .filter(
-                        (value) => value.name !== null && value.name !== 'null'
-                    )
+                    .filter((value) => value?.name)
                     .map((value) => {
                         // Handle empty or missing task names
                         if (!value?.name) {

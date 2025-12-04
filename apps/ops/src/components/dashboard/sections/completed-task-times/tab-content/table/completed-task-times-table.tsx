@@ -119,7 +119,9 @@ export const CompletedTaskTimesTable = () => {
                     <span className="sr-only">{caseType}</span>
                 </TableCell>
                 <TableCell>{formatTaskTime(task.secondMedian, t)}</TableCell>
-                <TableCell>{task.taskName}</TableCell>
+                <TableCell className={styles.taskName}>
+                    {task.taskName}
+                </TableCell>
                 <TableCell>{task.count.toLocaleString()}</TableCell>
             </TableRow>
         ));

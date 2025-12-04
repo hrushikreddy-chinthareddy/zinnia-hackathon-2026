@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     CompletedTaskTimeInput,
     CompletedTaskTimeOutput,
@@ -22,13 +23,11 @@ export const getCompletedTaskTimeData = async (
             data: response.data,
         };
     } catch (error: any) {
-        console.error(
-            'getTaskCountData::An error occurred while getting task count data',
+        browserLogError(
+            'getCompletedTaskTimeData::An error occurred while getting completed task time',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
+
         return error;
     }
 };
