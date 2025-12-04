@@ -1,22 +1,21 @@
-import { AxiosResponse } from 'axios';
-
-import { browserLogError } from '@deps/utils/browser-logging';
 import {
     CompletedTaskTimeInput,
     CompletedTaskTimeOutput,
-    HTTPValidationError,
 } from '@zinnia/api-types/types/analytics';
+import { AxiosResponse } from 'axios';
+
+import { browserLogError } from '@deps/utils/browser-logging';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 
 export const getCompletedTaskTimeData = async (
     query: CompletedTaskTimeInput
-): Promise<CompletedTaskTimeOutput | HTTPValidationError> => {
+): Promise<CompletedTaskTimeOutput> => {
     try {
         const { data: response } = await client.post<
             CompletedTaskTimeInput,
-            AxiosResponse<CompletedTaskTimeOutput, HTTPValidationError>
+            AxiosResponse<CompletedTaskTimeOutput>
         >(`${baseAppUrl}/api/dashboard/completed-task-time`, query);
 
         return {
@@ -28,6 +27,6 @@ export const getCompletedTaskTimeData = async (
             error
         );
 
-        return error;
+        throw error;
     }
 };

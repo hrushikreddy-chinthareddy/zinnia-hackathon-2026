@@ -1,14 +1,3 @@
-import { TFunction } from 'i18next';
-
-import { friendlyGroupByName } from '@deps/components/dashboard/utils';
-import { Statuses } from '@deps/models/case/case';
-import {
-    getCaseDashboardStats,
-    getCaseTimingData,
-} from '@deps/queries/api/cases';
-import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
-import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
-import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 import {
     CaseCountGroupByEnum,
     CaseCountInput,
@@ -21,6 +10,17 @@ import {
     CompletedTaskTimeInputFilter,
     CompletedTaskTimeGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
+import { TFunction } from 'i18next';
+
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
+import { Statuses } from '@deps/models/case/case';
+import {
+    getCaseDashboardStats,
+    getCaseTimingData,
+} from '@deps/queries/api/cases';
+import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
+import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
+import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 
 export const getCaseDashboardStatsQuery = async (
     baseFilter: CaseCountInputFilter,
@@ -165,13 +165,13 @@ export const getCompletedTaskTimeQuery = async (
         groupBy: groupBy,
     });
 
-    // 'detail' may exist when the API returns an HTTPValidationError
+    // If the response of throws an error, it will just propagate;
+    // If the response is undefined or empty, throw an error
     if (
         !completedTaskTimesResponse ||
-        'detail' in completedTaskTimesResponse ||
         !('data' in completedTaskTimesResponse)
     ) {
-        throw completedTaskTimesResponse;
+        throw new Error('completedTaskTimesResponse is undefined or empty');
     }
 
     completedTaskTimesResponse.data = completedTaskTimesResponse.data
