@@ -112,14 +112,14 @@ describe('SystematicProgramsCard', () => {
 
     describe('toggle functionality', () => {
         it('renders toggle for show history', () => {
-            const { getByTestId } = renderComponent(defaultProps);
-            const toggle = getByTestId('show-history-toggle');
+            const { getByRole } = renderComponent(defaultProps);
+            const toggle = getByRole('button', { name: /showhistory/i });
             expect(toggle).toBeInTheDocument();
         });
 
         it('toggle starts as unchecked', () => {
-            const { getByTestId } = renderComponent(defaultProps);
-            const toggle = getByTestId('show-history-toggle');
+            const { getByRole } = renderComponent(defaultProps);
+            const toggle = getByRole('button', { name: /showhistory/i });
             expect(toggle).toBeInTheDocument();
         });
 
@@ -134,8 +134,8 @@ describe('SystematicProgramsCard', () => {
                     },
                 ],
             };
-            const { getByTestId } = renderComponent(props);
-            const toggle = getByTestId('show-history-toggle');
+            const { getByRole } = renderComponent(props);
+            const toggle = getByRole('button', { name: /showhistory/i });
 
             fireEvent.click(toggle);
 
@@ -219,8 +219,8 @@ describe('SystematicProgramsCard', () => {
         });
 
         it('shows terminated programs after toggle', () => {
-            const { getByTestId } = renderComponent(props);
-            const toggle = getByTestId('show-history-toggle');
+            const { getByRole } = renderComponent(props);
+            const toggle = getByRole('button', { name: /showhistory/i });
 
             fireEvent.click(toggle);
 
@@ -233,8 +233,8 @@ describe('SystematicProgramsCard', () => {
         });
 
         it('displays terminated program status', () => {
-            const { getByTestId } = renderComponent(props);
-            const toggle = getByTestId('show-history-toggle');
+            const { getByRole, getByTestId } = renderComponent(props);
+            const toggle = getByRole('button', { name: /showhistory/i });
 
             fireEvent.click(toggle);
 
@@ -243,8 +243,8 @@ describe('SystematicProgramsCard', () => {
         });
 
         it('formats termination date correctly', () => {
-            const { getByTestId } = renderComponent(props);
-            const toggle = getByTestId('show-history-toggle');
+            const { getByRole, getByTestId } = renderComponent(props);
+            const toggle = getByRole('button', { name: /showhistory/i });
 
             fireEvent.click(toggle);
 
