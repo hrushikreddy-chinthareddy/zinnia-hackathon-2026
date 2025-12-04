@@ -213,10 +213,28 @@ export const applyTransformationsToNodes =
         ...fns: Array<(data: DataNode[], t?: TFunction) => DataNode[]>
     ) =>
     (initialValue: T) => {
-        const initialTransformedData = initialTransformFn(initialValue);
-        const v = fns.reduce((acc, fn) => {
-            const ret = fn(acc);
-            return ret;
-        }, initialTransformedData);
-        return v;
+        try {
+            const initialTransformedData = initialTransformFn(initialValue);
+            const v = fns.reduce((acc, fn) => {
+                try {
+                    const ret = fn(acc);
+                    return ret;
+                } catch (error) {
+                    throw new Error(
+                        `Error applying transformation in applyTransformationsToNodes: ${
+                            error instanceof Error
+                                ? error.message
+                                : String(error)
+                        }`
+                    );
+                }
+            }, initialTransformedData);
+            return v;
+        } catch (error) {
+            throw new Error(
+                `Error in applyTransformationsToNodes: ${
+                    error instanceof Error ? error.message : String(error)
+                }`
+            );
+        }
     };

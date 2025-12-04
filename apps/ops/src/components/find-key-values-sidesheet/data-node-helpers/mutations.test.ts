@@ -365,4 +365,26 @@ describe('applyTransformationsToNodes', () => {
             { type: FieldType.field, label: 'value', value: '6' },
         ]);
     });
+
+    it('throws a helpful error when a transform function throws', () => {
+        const initialTransform = (data: { value: number }[]): DataNode[] =>
+            data.map((item) => ({
+                type: FieldType.field,
+                label: 'value',
+                value: String(item.value),
+            }));
+
+        const malformedTransform = (_nodes: DataNode[]): DataNode[] => {
+            throw new Error('malformed transform');
+        };
+
+        const pipe = applyTransformationsToNodes(
+            initialTransform,
+            malformedTransform
+        );
+
+        expect(() => pipe([{ value: 1 }])).toThrow(
+            /Error applying transformation in applyTransformationsToNodes: malformed transform/
+        );
+    });
 });
