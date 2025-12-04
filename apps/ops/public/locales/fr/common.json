@@ -511,7 +511,9 @@
         "sendToDifferentAddress": "Envoyer à une adresse différente",
         "formsToUpdate": "Formulaire(s) à mettre à jour",
         "view": "Afficher",
-        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ."
+        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer"
     },
     "enums": {
         "LIFE": "Vie",

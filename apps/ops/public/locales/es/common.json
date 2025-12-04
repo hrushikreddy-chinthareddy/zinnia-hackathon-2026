@@ -511,7 +511,9 @@
         "sendToDifferentAddress": "Enviar a una dirección diferente",
         "formsToUpdate": "Formulario(s) para actualizar",
         "view": "Ver",
-        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo."
+        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
+        "collapseAll": "Contraer todo",
+        "expandAll": "Expandir todo"
     },
     "enums": {
         "LIFE": "Vida",

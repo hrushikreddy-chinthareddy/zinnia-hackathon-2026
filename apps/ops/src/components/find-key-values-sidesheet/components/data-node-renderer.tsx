@@ -32,7 +32,7 @@ export function renderNode(node: DataNode, index: number): React.ReactNode {
     }
 }
 
-export const DataNodeRenderer = ({ nodes }: { nodes: DataNode[] }) => {
+export const DataNodesRenderer = ({ nodes }: { nodes: DataNode[] }) => {
     return nodes.map((node, i) => (
         <div className={styles.keyValuesContainer} key={i}>
             {renderNode(node, i)}

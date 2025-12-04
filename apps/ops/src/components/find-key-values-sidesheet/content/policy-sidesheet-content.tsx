@@ -27,7 +27,7 @@ import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import { DataNodeRenderer } from '../components/data-node-renderer';
+import { DataNodesRenderer } from '../components/data-node-renderer';
 import {
     applyTransformationsToNodes,
     buildRenderTreeFromSourceData,
@@ -238,11 +238,11 @@ export const PolicySidesheetContent = ({
                                 className={styles.treeControlIcon}
                             />
                             {treeState === Expand
-                                ? 'Collapse all'
-                                : 'Expand all'}
+                                ? t('allFields.collapseAll')
+                                : t('allFields.expandAll')}
                         </Button>
                     </div>
-                    <DataNodeRenderer nodes={matches} />
+                    <DataNodesRenderer nodes={matches} />
                     {!matches.length && (
                         <div className={styles.emptySearch}>
                             <Label>

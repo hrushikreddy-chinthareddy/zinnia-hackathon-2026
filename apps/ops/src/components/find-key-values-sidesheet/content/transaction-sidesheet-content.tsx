@@ -15,11 +15,11 @@ import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
-import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import useQueryStore from '@deps/utils/queryStore';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
-import { DataNodeRenderer } from '../components/data-node-renderer';
+import { DataNodesRenderer } from '../components/data-node-renderer';
 import {
     applyTransformationsToNodes,
     buildRenderTreeFromSourceData,
@@ -55,7 +55,7 @@ export const TransactionSidesheetContent = ({
     const { data: policy } = usePolicyQuery(
         String(planCode),
         String(id),
-        dayjs(new Date()).format(NUMERIC_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
+        dayjs(new Date()).format(ZAHARA_API_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
         queryClient,
         true
     );
@@ -167,7 +167,7 @@ export const TransactionSidesheetContent = ({
                         {treeState === Expand ? 'Collapse all' : 'Expand all'}
                     </Button>
                 </div>
-                <DataNodeRenderer nodes={matches} />
+                <DataNodesRenderer nodes={matches} />
                 {!matches.length && (
                     <div className={styles.emptySearch}>
                         <Label>

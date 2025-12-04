@@ -1046,7 +1046,9 @@
         "MARRIED": "Married",
         "HEADOFHOUSEHOLD": "Head of household",
         "WIDOWED": "Widowed",
-        "DIVORCED": "Divorced"
+        "DIVORCED": "Divorced",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all"
     },
     "site": {
         "name": "Zinnia Live",
