@@ -92,7 +92,9 @@ const SystematicProgramsActiveTable = ({
                                                 className={styles.typeCell}
                                             >
                                                 {program.arrangementType
-                                                    ? t(program.arrangementType)
+                                                    ? t(
+                                                          `enums.${program.arrangementType}`
+                                                      )
                                                     : DEFAULT_ERROR_STRING}
                                             </TableCell>
 
@@ -107,7 +109,9 @@ const SystematicProgramsActiveTable = ({
                                                 className={styles.frecuencyCell}
                                             >
                                                 {activeProgram.frequency
-                                                    ? t(activeProgram.frequency)
+                                                    ? t(
+                                                          `enums.${activeProgram.frequency}`
+                                                      )
                                                     : DEFAULT_ERROR_STRING}
                                             </TableCell>
                                             <TableCell
@@ -119,7 +123,7 @@ const SystematicProgramsActiveTable = ({
                                             </TableCell>
                                             <TableCell>
                                                 {paymentType
-                                                    ? t(paymentType)
+                                                    ? t(`enums.${paymentType}`)
                                                     : DEFAULT_ERROR_STRING}
                                             </TableCell>
                                             <TableCell
@@ -155,9 +159,12 @@ const SystematicProgramsActiveTable = ({
                         <TableRow>
                             <TableCell colSpan={6}>
                                 <div className={styles.emptyTableCell}>
-                                    {t('emptySystematicProgramsTable', {
-                                        type: getEmptyLabel(),
-                                    })}
+                                    {t(
+                                        'allFields.emptySystematicProgramsTable',
+                                        {
+                                            type: getEmptyLabel(),
+                                        }
+                                    )}
                                 </div>
                             </TableCell>
                         </TableRow>

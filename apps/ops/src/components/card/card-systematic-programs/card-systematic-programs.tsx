@@ -1,10 +1,7 @@
+import { Toggle } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import Toggle, {
-    ToggleSize,
-    ToggleVariant,
-} from '@deps/components/toggle/toggle';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -64,22 +61,12 @@ const SystematicProgramsCard = ({
                         )}
                     </div>
                     <Toggle
-                        ariaLabel={label}
-                        handleToggle={handleToggle}
-                        size={ToggleSize.Default}
+                        labelId="show-history-toggle"
                         text={label}
-                        value={showTerminatedOrSuspended}
-                        variant={
-                            hasTerminatedOrSuspendedPrograms
-                                ? ToggleVariant.Default
-                                : ToggleVariant.Inactive
-                        }
+                        onClick={handleToggle}
+                        pressed={showTerminatedOrSuspended}
                         data-testid="show-history-toggle"
-                        classes={
-                            showTerminatedOrSuspended
-                                ? styles.toggle
-                                : styles.toggleInactive
-                        }
+                        isDisabled={!hasTerminatedOrSuspendedPrograms}
                     />
                 </div>
             }

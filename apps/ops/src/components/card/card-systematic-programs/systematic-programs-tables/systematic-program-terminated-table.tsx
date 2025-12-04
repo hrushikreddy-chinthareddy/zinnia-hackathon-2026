@@ -66,7 +66,9 @@ const SystematicProgramsTerminatedTable = ({
                                 >
                                     <TableCell className={styles.typeCell}>
                                         {program.arrangementType
-                                            ? t(program.arrangementType)
+                                            ? t(
+                                                  `enums.${program.arrangementType}`
+                                              )
                                             : DEFAULT_ERROR_STRING}
                                     </TableCell>
 
@@ -77,7 +79,7 @@ const SystematicProgramsTerminatedTable = ({
                                     </TableCell>
                                     <TableCell className={styles.frecuencyCell}>
                                         {tosProgram.frequency
-                                            ? t(tosProgram.frequency)
+                                            ? t(`enums.${tosProgram.frequency}`)
                                             : DEFAULT_ERROR_STRING}
                                     </TableCell>
                                     <TableCell className={styles.statusCell}>
@@ -88,7 +90,7 @@ const SystematicProgramsTerminatedTable = ({
                                             height={16}
                                         />
                                         {tosProgram.status
-                                            ? t(tosProgram.status)
+                                            ? t(`enums.${tosProgram.status}`)
                                             : DEFAULT_ERROR_STRING}
                                     </TableCell>
                                     <TableCell>{lastPaymentDate}</TableCell>
