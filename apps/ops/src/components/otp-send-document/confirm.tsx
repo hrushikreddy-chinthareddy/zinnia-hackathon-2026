@@ -45,13 +45,12 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                 }
                 subtitle={
                     <>
-                        {t('allFields.theDocumentsHaveBeen')}
                         <span className="font-bold">
-                            {' '}
                             {formNames
                                 ?.map((formName) => (formName ? formName : ''))
                                 .join(', ')}{' '}
                         </span>
+                        {`${t('allFields.hasBeen')} `}
                         {[
                             CommunicationTypes.Email,
                             CommunicationTypes.Fax,
@@ -59,12 +58,11 @@ const Confirm = ({ shouldShowCaseButton, formNames }: ConfirmProps) => {
                             recipients?.length > 0 && (
                                 <PiiWrapper>
                                     <span>
-                                        {t(
+                                        {`${t(
                                             `allFields.sendChannel_${communicationType.toLowerCase()}`
-                                        )}
+                                        )} `}
                                     </span>
                                     <span className="font-bold">
-                                        {' '}
                                         {recipients
                                             ?.map((recipient) =>
                                                 recipient ? recipient : ''

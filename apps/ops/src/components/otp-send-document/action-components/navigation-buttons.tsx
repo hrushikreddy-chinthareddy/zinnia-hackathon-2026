@@ -64,7 +64,7 @@ const SendDocumentNavigationButtons = ({
     return (
         <div className={clsx('flex flex-row justify-start gap-6')}>
             <Button
-                aria-label={t('allFields.continue') as string}
+                aria-label={t('allFields.continue') ?? ''}
                 onClick={onContinueClick}
                 size={ButtonSize.Small}
                 type={'submit'}
@@ -73,7 +73,7 @@ const SendDocumentNavigationButtons = ({
             </Button>
             <NavElement
                 onClick={onCancelClick}
-                aria-label={t('allFields.cancel') as string}
+                aria-label={t('allFields.cancel') ?? ''}
                 size={NavElementSize.Small}
                 type={NavElementType.Button}
                 variant={NavElementVariant.Default}

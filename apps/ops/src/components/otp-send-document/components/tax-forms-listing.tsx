@@ -95,7 +95,7 @@ const TaxFormsListing = ({
                         details={
                             t(
                                 'contactCenter.sendTaxForms.taxFormDetails.title'
-                            ) as string
+                            ) ?? ''
                         }
                         variant={ContentVariant.BodyBold}
                     />
@@ -110,7 +110,7 @@ const TaxFormsListing = ({
                                         details={
                                             t(
                                                 'contactCenter.sendTaxForms.taxFormDetails.documentType'
-                                            ) as string
+                                            ) ?? ''
                                         }
                                         variant={ContentVariant.BodySmBold}
                                     />
@@ -121,7 +121,7 @@ const TaxFormsListing = ({
                                         details={
                                             t(
                                                 'contactCenter.sendTaxForms.taxFormDetails.periodYear'
-                                            ) as string
+                                            ) ?? ''
                                         }
                                         variant={ContentVariant.BodySmBold}
                                     />
@@ -131,7 +131,7 @@ const TaxFormsListing = ({
                                         details={
                                             t(
                                                 'contactCenter.sendTaxForms.taxFormDetails.actions'
-                                            ) as string
+                                            ) ?? ''
                                         }
                                         variant={ContentVariant.BodySmBold}
                                     />
@@ -236,7 +236,7 @@ const TaxFormsListing = ({
                     details={
                         t(
                             'contactCenter.sendTaxForms.taxFormDetails.noTaxForms'
-                        ) as string
+                        ) ?? ''
                     }
                     variant={ContentVariant.BodySm}
                 />

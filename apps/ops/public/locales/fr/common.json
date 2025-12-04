@@ -491,7 +491,7 @@
         "subtype": "Sous-type",
         "noFormsFound": "Aucun formulaire trouvé.",
         "goToCase": "Accéder au cas",
-        "theDocumentsHaveBeen": "Les documents ont été",
+        "hasBeen": "ont été",
         "submitted": "Soumise!",
         "sendChannel_paper_mail": "envoyé par courrier à",
         "sendChannel_fax": "faxé à",

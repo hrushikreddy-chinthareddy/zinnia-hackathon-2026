@@ -130,7 +130,7 @@ const CorrespondenceCard = ({
         <div className="flex flex-col gap-4">
             <Radio
                 items={communicationOptions ?? communicationTypes}
-                label={t('allFields.whereShouldDocsBeSent') as string}
+                label={t('allFields.whereShouldDocsBeSent') ?? ''}
                 onChange={(event) => {
                     setCommunicationType(
                         event.target.value as CommunicationTypes

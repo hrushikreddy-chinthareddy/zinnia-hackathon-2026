@@ -16,7 +16,7 @@ const FaxNumber = ({ fax, setFax, isDisabled }: FaxNumberProps) => {
     const { t } = useTranslation();
     return (
         <Field
-            label={t('allFields.fax') as string}
+            label={t('allFields.fax') ?? ''}
             onChange={(e) => {
                 setFax(xss(e?.target?.value));
             }}
