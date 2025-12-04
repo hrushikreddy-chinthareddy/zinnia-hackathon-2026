@@ -511,7 +511,9 @@
         "sendToDifferentAddress": "Send to a different address",
         "formsToUpdate": "Form(s) to update",
         "view": "View",
-        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field."
+        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all"
     },
     "enums": {
         "LIFE": "Life",
@@ -1046,9 +1048,7 @@
         "MARRIED": "Married",
         "HEADOFHOUSEHOLD": "Head of household",
         "WIDOWED": "Widowed",
-        "DIVORCED": "Divorced",
-        "collapseAll": "Collapse all",
-        "expandAll": "Expand all"
+        "DIVORCED": "Divorced"
     },
     "site": {
         "name": "Zinnia Live",

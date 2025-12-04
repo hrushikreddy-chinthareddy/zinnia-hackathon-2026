@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import useQueryStore from '@deps/utils/queryStore';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
@@ -55,7 +55,7 @@ export const TransactionSidesheetContent = ({
     const { data: policy } = usePolicyQuery(
         String(planCode),
         String(id),
-        dayjs(new Date()).format(ZAHARA_API_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
+        dayjs(new Date()).format(NUMERIC_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
         queryClient,
         true
     );
@@ -164,7 +164,9 @@ export const TransactionSidesheetContent = ({
                             height={18}
                             className={styles.treeControlIcon}
                         />
-                        {treeState === Expand ? 'Collapse all' : 'Expand all'}
+                        {treeState === Expand
+                            ? t('allFields.collapseAll')
+                            : t('allFields.expandAll')}
                     </Button>
                 </div>
                 <DataNodesRenderer nodes={matches} />
