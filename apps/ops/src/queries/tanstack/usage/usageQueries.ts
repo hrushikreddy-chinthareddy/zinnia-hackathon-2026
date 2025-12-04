@@ -26,12 +26,8 @@ export const getUserActivityCountsQuery = async (
         groupBy,
     });
 
-    if (
-        !userActivityResponse ||
-        'detail' in userActivityResponse ||
-        !('data' in userActivityResponse)
-    ) {
-        throw userActivityResponse;
+    if (!userActivityResponse || !('data' in userActivityResponse)) {
+        throw new Error('userActivityResponse is undefined or empty');
     }
     userActivityResponse.data = userActivityResponse.data.map((item) => {
         if (item.name === '') {
@@ -51,12 +47,8 @@ export const getUserViewsCountsQuery = async (
         filter,
         groupBy,
     });
-    if (
-        !userViewsResponse ||
-        'detail' in userViewsResponse ||
-        !('data' in userViewsResponse)
-    ) {
-        throw userViewsResponse;
+    if (!userViewsResponse || !('data' in userViewsResponse)) {
+        throw new Error('userViewsResponse is undefined or empty');
     }
     userViewsResponse.data = userViewsResponse.data.map((item) => {
         if (item.name === '') {
@@ -76,12 +68,8 @@ export const getUserTransactionCountsQuery = async (
         filter,
         groupBy,
     });
-    if (
-        !userTransactionResponse ||
-        'detail' in userTransactionResponse ||
-        !('data' in userTransactionResponse)
-    ) {
-        throw userTransactionResponse;
+    if (!userTransactionResponse || !('data' in userTransactionResponse)) {
+        throw new Error('userTransactionResponse is undefined or empty');
     }
 
     userTransactionResponse.data = userTransactionResponse.data.map((item) => {
@@ -102,12 +90,8 @@ export const getUserIllustrationActivityCountQuery = async (
         filter,
         groupBy,
     });
-    if (
-        !userTransactionResponse ||
-        'detail' in userTransactionResponse ||
-        !('data' in userTransactionResponse)
-    ) {
-        throw userTransactionResponse;
+    if (!userTransactionResponse || !('data' in userTransactionResponse)) {
+        throw new Error('userTransactionResponse is undefined or empty');
     }
 
     userTransactionResponse.data = userTransactionResponse.data.map((item) => {
