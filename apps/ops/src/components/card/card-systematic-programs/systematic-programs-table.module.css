@@ -80,27 +80,23 @@
 }
 
 .typeCell {
-    width: 152px;
-    min-width: 90px;
+    width: 15%;
 }
 
 .paymentAmountCell {
-    width: 155px;
-    min-width: 112px;
+    width: 15%;
 }
 
 .frecuencyCell {
-    width: 115px;
+    width: 11%;
 }
 
 .nextPaymentCell {
-    width: 132px;
-    min-width: 132px;
+    width: 13%;
 }
 
 .statusCell {
-    width: 132px;
-    min-width: 132px;
+    width: 13%;
     display: flex;
     align-items: center;
     gap: var(--measure-dimension-gap-md);
@@ -115,7 +111,7 @@
 }
 
 .actionCell {
-    width: 172px;
+    width: 17%;
 }
 
 td.actionCell {
