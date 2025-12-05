@@ -30,11 +30,14 @@ export const getUserActivityCountsQuery = async (
         throw new Error('userActivityResponse is undefined or empty');
     }
     const formattedData = userActivityResponse.data.map((item) => {
-        if (item.name === '') {
-            const friendlyName = friendlyGroupByName[groupBy[0]];
-            item.name = `No ${friendlyName.toLowerCase()} name`;
-        }
-        return item;
+        const friendlyName = friendlyGroupByName[groupBy[0]];
+
+        return {
+            ...item,
+            name: item?.name
+                ? item.name
+                : `No ${friendlyName.toLowerCase()} name`,
+        };
     });
 
     return {
@@ -55,11 +58,14 @@ export const getUserViewsCountsQuery = async (
         throw new Error('userViewsResponse is undefined or empty');
     }
     const formattedData = userViewsResponse.data.map((item) => {
-        if (item.name === '') {
-            const friendlyName = friendlyGroupByNameForUserViews[groupBy[0]];
-            item.name = `No ${friendlyName.toLowerCase()} name`;
-        }
-        return item;
+        const friendlyName = friendlyGroupByNameForUserViews[groupBy[0]];
+
+        return {
+            ...item,
+            name: item?.name
+                ? item.name
+                : `No ${friendlyName.toLowerCase()} name`,
+        };
     });
 
     return {
@@ -81,10 +87,10 @@ export const getUserTransactionCountsQuery = async (
     }
 
     const formattedData = userTransactionResponse.data.map((item) => {
-        if (item.name === '') {
-            item.name = 'Unknown';
-        }
-        return item;
+        return {
+            ...item,
+            name: item?.name ?? 'Unknown',
+        };
     });
 
     return {
@@ -106,10 +112,10 @@ export const getUserIllustrationActivityCountQuery = async (
     }
 
     const formattedData = userTransactionResponse.data.map((item) => {
-        if (!item?.name) {
-            item.name = 'Unknown';
-        }
-        return item;
+        return {
+            ...item,
+            name: item?.name ?? 'Unknown',
+        };
     });
 
     return {
