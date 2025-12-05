@@ -1,18 +1,18 @@
 .wrapper {
     display: flex;
-    gap: 1rem;
-    margin: 1rem;
+    gap: var(--measure-dimension-gap-lg);
+    margin: var(--measure-dimension-margin-xs);
 }
 
 .card {
     display: flex;
     width: 100%;
     flex-direction: column;
-    gap: 1rem;
-    padding: 2rem 2rem;
-    border-radius: 0.25rem;
+    gap: var(--measure-dimension-gap-lg);
+    padding: var(--measure-dimension-padding-4xl);
+    border-radius: var(--measure-dimension-radius-sm);
     background-color: white;
-    border: 1px solid #cccccc;
-    min-height: 0;
+    border: var(--measure-dimension-stroke-xs) solid
+        var(--color-grayscale-color-200-gray);
     justify-content: space-between;
 }

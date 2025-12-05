@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import groupBy from 'lodash/groupBy';
+import { TFunction } from 'next-i18next';
 
 import { GroupedColumnSeries } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
 import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
@@ -164,7 +165,8 @@ export const productTypes = PRODUCT_TYPE_OPTIONS;
 export const generateSeries = (
     activityData: UserIllustrationActivityOutputLevel1[] | undefined,
     timerange: { from: string; to: string },
-    color: string[]
+    color: string[],
+    t: TFunction
 ) => {
     if (!activityData?.length) return [];
 
@@ -183,9 +185,11 @@ export const generateSeries = (
                 item.count,
             ]) ?? [];
 
+        const name = t(`allFields.${item.name?.toLowerCase()}`) ?? item.name;
+
         return {
             type: 'line',
-            name: item.name,
+            name,
             color: color[index],
             data: [[fromDate.unix() * 1000, 0], ...timeData],
         };
@@ -294,9 +298,15 @@ export const formatIllustrationActivity = (
 
 export const prepareIllustrationsActivityCSV = (
     data: UserIllustrationActivityOutputLevel1[],
-    filename = 'Illustration-Activity.csv'
+    filename = 'Illustration-Activity.csv',
+    t?: TFunction
 ) => {
-    const rows: string[] = ['Date, Product Type, Created, Selected'];
+    const rows: string[] = [
+        `${t ? t('allFields.date') : 'Date'},
+        ${t ? t('allFields.productType') : 'Product Type'},
+        ${t ? t('allFields.created') : 'Created'},
+        ${t ? t('allFields.selected') : 'Selected'}`,
+    ];
     const entries = formatIllustrationActivity(data);
 
     const typeIdx = filename.indexOf(' ');

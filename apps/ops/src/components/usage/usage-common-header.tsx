@@ -1,4 +1,5 @@
 import { Icon, IconType, Tooltip, Button } from '@zinnia/bloom/components';
+import { TFunction } from 'i18next';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,7 +22,8 @@ type UsageCommonLayoutProps = {
             | UserActivityOutputLevel1[]
             | UserViewsOutputLevel1[]
             | UserIllustrationActivityOutputLevel1[],
-        csvFileName: string
+        csvFileName: string,
+        t?: TFunction
     ) => void;
     description?: string;
     titleToolTip?: ReactNode;
@@ -70,7 +72,7 @@ const UsageHeaderLayout = ({
                 mode="link"
                 size="small"
                 onClick={() => {
-                    data.length && csvFunction(data, csvFileName);
+                    data.length && csvFunction(data, csvFileName, t);
                 }}
             >
                 <Icon type={IconType.DOWNLOAD} color="black" />

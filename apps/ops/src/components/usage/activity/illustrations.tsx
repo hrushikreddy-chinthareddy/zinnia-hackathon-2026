@@ -117,7 +117,8 @@ export const IllustrationsActivity = () => {
     const series = generateSeries(
         normalizedIllustrationsActivityData,
         timerange,
-        colors
+        colors,
+        t
     );
 
     const tickInterval = calculateTickInterval(timerange);
@@ -134,9 +135,9 @@ export const IllustrationsActivity = () => {
                     titleToolTip={<IllustrationsActivityTooltip />}
                     data={normalizedIllustrationsActivityData}
                     csvFileName={generateIllustrationsCSVFileName(
-                        t('allFields.illustrationsActivityTitle'),
                         productName,
-                        timerange
+                        timerange,
+                        t
                     )}
                     csvFunction={prepareIllustrationsActivityCSV}
                 />
@@ -188,8 +189,8 @@ export const IllustrationsActivity = () => {
                         ) : (
                             <DateTimeLineChart
                                 series={series}
-                                yAxisTitle={'Total'}
-                                xAxisTitle={'Date'}
+                                yAxisTitle={t('allFields.total') ?? 'Total'}
+                                xAxisTitle={t('allFields.date') ?? 'Date'}
                                 xAxisLabelFormatter={xAxisLabelFormatter}
                                 tickInterval={tickInterval}
                                 tooltipFormatter={tooltipFormatter}

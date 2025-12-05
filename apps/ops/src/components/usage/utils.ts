@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { TFunction } from 'i18next';
 
 import { Timerange } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
@@ -199,12 +200,14 @@ export const ActivityType = {
 } as const;
 
 export const generateIllustrationsCSVFileName = (
-    title: string,
     productType: string,
-    timerange: Timerange
+    timerange: Timerange,
+    t: TFunction
 ) => {
     const fromDate = dayjs(timerange.from).format(defaultDateFormat);
     const toDate = dayjs(timerange.to).format(defaultDateFormat);
 
-    return `${productType} ${title || ''} ${fromDate} to ${toDate}`;
+    return `${productType} ${t(
+        'allFields.illustrationsActivityTitle'
+    )} ${fromDate} ${t('allFields.to')} ${toDate}`;
 };

@@ -466,6 +466,11 @@
         "illustrationsActivityDescription": "Compares illustrations created with those selected for application over time.",
         "illustrationsActivityTooltip": "This chart compares illustrations created with those selected for application. 'Selected' may be higher than 'Created' because an illustration was created earlier but selected in the displayed timeframe.",
         "exportToCsv": "Export to CSV",
+        "total": "Total",
+        "to": "to",
+        "date": "Date",
+        "created": "Created",
+        "selected": "selected",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
         "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
