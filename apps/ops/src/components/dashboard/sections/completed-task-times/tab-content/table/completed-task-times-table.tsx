@@ -236,7 +236,9 @@ export const CompletedTaskTimesTable = () => {
                                                 item.tasks
                                             )}
                                         >
-                                            <TableCell>
+                                            <TableCell
+                                                className={styles.chevronIcon}
+                                            >
                                                 {toSentenceCase(item.caseType)}
                                             </TableCell>
                                             <TableCell>

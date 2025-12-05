@@ -20,3 +20,8 @@
 .taskName {
     word-break: break-all;
 }
+
+/* Temporary fix to avoid chevron icon to shrink */
+.chevronIcon svg {
+    flex-shrink: 0;
+}
