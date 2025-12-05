@@ -5,12 +5,12 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+// Import translations from actual files
+import enTranslations from 'public/locales/en/common.json';
+import esTranslations from 'public/locales/es/common.json';
+import frTranslations from 'public/locales/fr/common.json';
 
 import PendingUpcomingBanner from './pending-upcoming-banner';
-// Import translations from actual files
-import enTranslations from '../../../../../public/locales/en/common.json';
-import esTranslations from '../../../../../public/locales/es/common.json';
-import frTranslations from '../../../../../public/locales/fr/common.json';
 
 // Mock dependencies
 jest.mock('@deps/queries/api/cases');
@@ -102,15 +102,9 @@ describe('PendingUpcomingBanner - Translation Tests', () => {
                 });
 
                 const expectedText =
-                    config.translations.allFields
-                        .systematicProgramPendingBannerText;
+                    config.translations.allFields.systematicProgramPendingBannerText.trim();
 
-                const escapedText = expectedText
-                    .trim()
-                    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regex = new RegExp(escapedText, 'i');
-
-                expect(getByText(regex)).toBeInTheDocument();
+                expect(getByText(expectedText)).toBeInTheDocument();
             });
         });
 
@@ -152,13 +146,9 @@ describe('PendingUpcomingBanner - Translation Tests', () => {
                 });
 
                 const expectedText =
-                    config.translations.autopay.pendingBanner.text;
-                const escapedText = expectedText
-                    .trim()
-                    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                const regex = new RegExp(escapedText, 'i');
+                    config.translations.autopay.pendingBanner.text.trim();
 
-                expect(getByText(regex)).toBeInTheDocument();
+                expect(getByText(expectedText)).toBeInTheDocument();
             });
         });
     });
