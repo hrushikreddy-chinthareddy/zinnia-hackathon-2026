@@ -9,7 +9,6 @@ import {
     ActivityType,
     colors,
     downloadCSV,
-    PRODUCT_TYPE_OPTIONS,
     TRANSACTION_CATEGORY_DISPLAY_MAP,
     TRANSACTION_TYPE_DISPLAY_MAP,
 } from '@deps/components/usage/utils';
@@ -159,8 +158,6 @@ export const PrepareTransactionActivityCSV = (
     const csv = rows.join('\n');
     downloadCSV(csv, filename);
 };
-
-export const productTypes = PRODUCT_TYPE_OPTIONS;
 
 export const generateSeries = (
     activityData: UserIllustrationActivityOutputLevel1[] | undefined,

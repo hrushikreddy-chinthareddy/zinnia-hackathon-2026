@@ -29,14 +29,18 @@ export const getUserActivityCountsQuery = async (
     if (!userActivityResponse || !('data' in userActivityResponse)) {
         throw new Error('userActivityResponse is undefined or empty');
     }
-    userActivityResponse.data = userActivityResponse.data.map((item) => {
+    const formattedData = userActivityResponse.data.map((item) => {
         if (item.name === '') {
             const friendlyName = friendlyGroupByName[groupBy[0]];
             item.name = `No ${friendlyName.toLowerCase()} name`;
         }
         return item;
     });
-    return userActivityResponse;
+
+    return {
+        ...userActivityResponse,
+        data: formattedData,
+    };
 };
 
 export const getUserViewsCountsQuery = async (
@@ -50,14 +54,18 @@ export const getUserViewsCountsQuery = async (
     if (!userViewsResponse || !('data' in userViewsResponse)) {
         throw new Error('userViewsResponse is undefined or empty');
     }
-    userViewsResponse.data = userViewsResponse.data.map((item) => {
+    const formattedData = userViewsResponse.data.map((item) => {
         if (item.name === '') {
             const friendlyName = friendlyGroupByNameForUserViews[groupBy[0]];
             item.name = `No ${friendlyName.toLowerCase()} name`;
         }
         return item;
     });
-    return userViewsResponse;
+
+    return {
+        ...userViewsResponse,
+        data: formattedData,
+    };
 };
 
 export const getUserTransactionCountsQuery = async (
@@ -72,14 +80,17 @@ export const getUserTransactionCountsQuery = async (
         throw new Error('userTransactionResponse is undefined or empty');
     }
 
-    userTransactionResponse.data = userTransactionResponse.data.map((item) => {
+    const formattedData = userTransactionResponse.data.map((item) => {
         if (item.name === '') {
             item.name = 'Unknown';
         }
         return item;
     });
 
-    return userTransactionResponse;
+    return {
+        ...userTransactionResponse,
+        data: formattedData,
+    };
 };
 
 export const getUserIllustrationActivityCountQuery = async (
@@ -94,12 +105,15 @@ export const getUserIllustrationActivityCountQuery = async (
         throw new Error('userTransactionResponse is undefined or empty');
     }
 
-    userTransactionResponse.data = userTransactionResponse.data.map((item) => {
+    const formattedData = userTransactionResponse.data.map((item) => {
         if (!item?.name) {
             item.name = 'Unknown';
         }
         return item;
     });
 
-    return userTransactionResponse;
+    return {
+        ...userTransactionResponse,
+        data: formattedData,
+    };
 };

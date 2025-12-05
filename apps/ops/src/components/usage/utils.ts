@@ -190,7 +190,6 @@ export const ProductType = {
 export const PRODUCT_TYPE_OPTIONS = [
     { value: ProductType.IUL, label: 'IUL' },
     { value: ProductType.Term, label: 'Term' },
-    { value: ProductType.ROP, label: 'ROP' },
 ];
 
 export const ActivityType = {
