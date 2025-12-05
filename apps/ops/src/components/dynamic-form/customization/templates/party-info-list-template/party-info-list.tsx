@@ -19,7 +19,6 @@ export default function PartyInfoListTemplate(
         title: overrideTitle,
         showRemoveItemBtn = true,
         showDeleteBtn = true,
-        prefferedCTA = 'Preferred',
     } = uiOptions;
 
     const [disabledSet, setDisabledSet] = useState(new Set<number>());
@@ -157,12 +156,6 @@ export default function PartyInfoListTemplate(
                                         )}
                                 </div>
                             </div>
-                            <CheckboxText
-                                id={`preferred-${index}`}
-                                label={prefferedCTA as string}
-                                checked={preferredIndex === index}
-                                onChange={() => setPreferredIndex(index)}
-                            />
                         </div>
                     </>
                 );

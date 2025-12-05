@@ -5,9 +5,28 @@ import { BeneficiaryRole, TabTitle } from './types';
 export const getTitle = (
     item: any,
     index: number,
-    tabTitle: string | number | boolean | object | any[] | null | undefined
+    tabTitle: string | number | boolean | object | any[] | null | undefined,
+    titlePaths?: any[] | null,
+    titleSeparator?: any,
+    formData?: any,
+    defaultTitle?: string
 ) => {
-    let header = `Item ${index + 1}`;
+    let header = defaultTitle || `Item ${index + 1}`;
+
+    if (Array.isArray(titlePaths) && titlePaths.length > 0) {
+        const values = titlePaths
+            .map((path: string) =>
+                path
+                    .split('.')
+                    .reduce((acc: any, key: string) => acc?.[key], formData)
+            )
+            .filter(Boolean);
+
+        if (values.length > 0) {
+            return values.join(titleSeparator);
+        }
+    }
+
     if (tabTitle === TabTitle.OwnerDetails) {
         header =
             item?.partyRole === PartyRole.OWNER

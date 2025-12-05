@@ -1,4 +1,4 @@
-import { EntityTypeValue } from '@deps/constants/policy';
+import { Action, EntityTypeValue } from '@deps/constants/policy';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
@@ -113,10 +113,11 @@ const formatPartyData = (policyResponse: any) => {
         )
         .map((role: any) => role.partyId);
 
-    const partyData = policyResponse.parties
+    const actionData = policyResponse.parties
         .filter((party: any) => partyIds.includes(party.partyId))
         .map((party: any) => {
             return {
+                action: party?.action ?? Action.NONE,
                 supportingDocumentAttached:
                     party.supportingDocumentAttached ?? null,
                 party: {
@@ -148,7 +149,7 @@ const formatPartyData = (policyResponse: any) => {
                     trustType: party.trustType ?? null,
                     trustDate: party.trustDate ?? null,
                     preferredCommunicationType:
-                        party.preferredCommunicationType ?? null,
+                        party.preferredCommunicationType ?? 'Not specified',
                     addresses: getAddresses(party.addresses),
                     phones: getPhones(party.phones),
                     emails: getEmails(party.emails),
@@ -157,7 +158,7 @@ const formatPartyData = (policyResponse: any) => {
             };
         });
 
-    return partyData;
+    return actionData;
 };
 
 const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
@@ -266,7 +267,10 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
             Object.assign(task, {
                 data: {
                     ...task.data,
-                    partyData: formatPartyData(policyResponse),
+                    actionData: formatPartyData(policyResponse),
+                    defaultPartyIdRoleChange:
+                        formatPartyData(policyResponse)?.[0]?.party?.partyId ||
+                        '',
                 },
             });
         }

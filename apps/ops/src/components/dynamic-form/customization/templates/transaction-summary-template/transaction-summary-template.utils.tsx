@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { Action, PolicyRole } from '@deps/constants/policy';
 import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
@@ -8,6 +9,7 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
 import { TransactionResponse } from '@deps/queries/api/bpm';
+import { validateRoleChange } from '@deps/queries/api/role-change';
 import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
@@ -87,6 +89,14 @@ export async function fetchValidationSummary(
         );
     } else if (customData.taskType === TaskType.Agent_Change_Detail) {
         return await validateAgentTransaction(requestBody);
+    } else if (customData.taskType === TaskType.Third_Party_Detail) {
+        return await validateRoleChange(
+            requestBody?.planCode,
+            requestBody?.policyNumber,
+            requestBody?.partyId,
+            requestBody?.role,
+            requestBody?.query
+        );
     } else {
         browserLogInfo(
             '[fetchValidationSummary] Unknown taskType, no validation method called:',
@@ -100,6 +110,81 @@ export async function fetchValidationSummary(
 }
 
 type RequestBodyBuilder = (customData: any) => any;
+
+const getRoleChangePartyId = (customData: any): string | null => {
+    const { defaultPartyIdRoleChange } = customData;
+    if (!customData || !Array.isArray(customData.actionData)) {
+        return defaultPartyIdRoleChange;
+    }
+
+    const actionData = customData.actionData;
+
+    const addedItem = actionData.find((item: any) => item.action === 'ADD');
+
+    const deletedItem = actionData.find(
+        (item: any) => item.action === Action.DELETE
+    );
+
+    let requestType = Action.NONE;
+    if (addedItem && deletedItem) {
+        requestType = Action.UPDATE;
+    } else if (addedItem) {
+        requestType = Action.ADD;
+    } else if (deletedItem) {
+        requestType = Action.DELETE;
+    }
+
+    switch (requestType) {
+        case Action.ADD:
+            return defaultPartyIdRoleChange;
+
+        case Action.UPDATE:
+            return deletedItem?.party?.partyId ?? null;
+
+        case Action.DELETE:
+            return deletedItem?.party?.partyId ?? null;
+
+        default:
+            return defaultPartyIdRoleChange;
+    }
+};
+
+const getRoleChangeParty = (customData: any): object | null => {
+    if (!customData || !Array.isArray(customData.actionData)) {
+        return null;
+    }
+
+    const actionData = customData.actionData;
+
+    const addedItem = actionData.find((item: any) => item.action === 'ADD');
+
+    const deletedItem = actionData.find(
+        (item: any) => item.action === Action.DELETE
+    );
+
+    let requestType = Action.NONE;
+    if (addedItem && deletedItem) {
+        requestType = Action.UPDATE;
+    } else if (addedItem) {
+        requestType = Action.ADD;
+    } else if (deletedItem) {
+        requestType = Action.DELETE;
+    }
+
+    switch (requestType) {
+        case Action.ADD:
+            return addedItem.party;
+
+        case Action.UPDATE:
+            return addedItem.party;
+
+        case Action.DELETE:
+            return null;
+
+        default:
+            return null;
+    }
+};
 
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
@@ -139,6 +224,27 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             ],
         };
     },
+    THIRD_PARTY_DETAIL: (customData) => {
+        return {
+            planCode: customData?.planCode,
+            policyNumber: customData?.policyNumber,
+            partyId: getRoleChangePartyId(customData),
+            role: PolicyRole.THIRDPARTYDESIGNEE,
+            query: {
+                effectiveDate: customData?.effectiveDate,
+                caseId: customData?.caseId,
+                correlationId: customData?.correlationId,
+                changeReason: customData?.changeReason,
+                signatures: customData?.signatureData?.signatures,
+                beneDetailsReqInd: customData?.beneDetailsReqInd || false,
+                documents: customData?.documents,
+                supportingDocumentAttached:
+                    customData?.supportingDocumentAttached || null,
+                relationshipToParty: customData?.relationshipToParty,
+                party: getRoleChangeParty(customData),
+            },
+        };
+    },
 };
 
 export function buildValidationRequestBody(customData: any): any {
@@ -156,6 +262,9 @@ export function buildValidationRequestBody(customData: any): any {
     }
     if (customData.taskType === TaskType.Agent_Change_Detail) {
         return requestBodyBuilders.AGENT_CHANGE_DETAIL(customData);
+    }
+    if (customData.taskType === TaskType.Third_Party_Detail) {
+        return requestBodyBuilders.THIRD_PARTY_DETAIL(customData);
     }
     return { ...customData };
 }

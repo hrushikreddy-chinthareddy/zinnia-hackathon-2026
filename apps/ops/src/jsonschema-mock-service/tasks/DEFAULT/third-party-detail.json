@@ -12,38 +12,44 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "Form Review",
+                "title": "Review Form Data",
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "documents": {
-                            "type": "array",
-                            "title": "Supporting Information",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "documentId": {
-                                        "type": "string",
-                                        "ui:field": "subTitle",
-                                        "ui:placeholder": "Documemt ID: "
-                                    },
-                                    "documentType": {
-                                        "type": "string",
-                                        "ui:field": "title",
-                                        "ui:separator": " - "
-                                    },
-                                    "documentName": {
-                                        "type": "string",
-                                        "ui:field": "title",
-                                        "ui:separator": " - "
-                                    },
-                                    "documentSource": {
-                                        "type": "string"
-                                    },
-                                    "documentExt": { "type": "string" },
-                                    "carrier": {
-                                        "type": "string",
-                                        "default": "{{carrier}}"
+                        "details": {
+                            "type": "object",
+                            "title": "Document Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -125,34 +131,40 @@
                         "ui:dataPath": ["issueResolved"],
                         "ui:hideError": true
                     },
-                    "documents": {
-                        "props": {
-                            "readonly": true
-                        },
-                        "items": {
-                            "ui:options": {
-                                "ObjectFieldTemplate": "CardTemplate",
-                                "cardType": "Document",
-                                "icon": "DOCUMENT_TEXT",
-                                "nobackground": true
-                            },
-                            "documentId": {
-                                "ui:widget": "text"
-                            },
-                            "documentName": {
-                                "ui:widget": "text"
-                            },
-                            "documentSource": {
-                                "ui:widget": "text"
-                            },
-                            "documentType": {
-                                "ui:widget": "text"
-                            }
-                        },
+                    "details": {
                         "ui:options": {
-                            "addable": false
+                            "label": false
                         },
-                        "ui:dataPath": ["documents"]
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
                     }
                 }
             },
@@ -161,26 +173,78 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "partyData": {
+                        "actionData": {
                             "type": "array",
+                            "title": "Third Party Designees",
                             "items": {
                                 "type": "object",
+                                "default": {
+                                    "action": "ADD",
+                                    "supportingDocumentAttached": null,
+                                    "party": {
+                                        "partyType": "INDIVIDUAL",
+                                        "firstName": "",
+                                        "lastName": "",
+                                        "middleName": null,
+                                        "endDate": null,
+                                        "entityType": "Other",
+                                        "prefix": null,
+                                        "suffix": null,
+                                        "emails": [
+                                            {
+                                                "emailAddress": null,
+                                                "emailType": "PERSONAL",
+                                                "isPreferred": true
+                                            }
+                                        ],
+                                        "phones": [
+                                            {
+                                                "dialNumber": null,
+                                                "phoneType": "HOME",
+                                                "isPreferred": true
+                                            }
+                                        ],
+                                        "addresses": [
+                                            {
+                                                "addressType": "RESIDENCE",
+                                                "addressLine1": "",
+                                                "addressLine2": null,
+                                                "city": "",
+                                                "state": "",
+                                                "zipCode": "",
+                                                "isPreferred": true
+                                            }
+                                        ],
+                                        "identifications": [
+                                            {
+                                                "identificationValue": null,
+                                                "identificationType": "SSN"
+                                            }
+                                        ]
+                                    }
+                                },
                                 "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": [
+                                            "ADD",
+                                            "UPDATE",
+                                            "DELETE",
+                                            "NONE"
+                                        ]
+                                    },
                                     "party": {
                                         "type": "object",
                                         "properties": {
-                                            "identificationHeader": {
-                                                "type": "object",
-                                                "title": "Identification"
-                                            },
                                             "partyType": {
                                                 "type": "string",
+                                                "title": "Designee type",
                                                 "enum": [
                                                     "INDIVIDUAL",
                                                     "TRUST",
                                                     "ORGANIZATION"
-                                                ],
-                                                "title": "Designee type"
+                                                ]
                                             },
                                             "identifications": {
                                                 "type": "array",
@@ -206,7 +270,7 @@
                                                 "type": ["string", "null"],
                                                 "enum": [
                                                     "EMAIL",
-                                                    "REGULARMAIL",
+                                                    "PHONE",
                                                     null
                                                 ],
                                                 "title": "Preferred contact method"
@@ -320,7 +384,7 @@
                                                         },
                                                         "isPreferred": {
                                                             "type": "boolean",
-                                                            "title": "Preferred"
+                                                            "title": "Preferred address"
                                                         }
                                                     },
                                                     "required": ["addressType"]
@@ -351,7 +415,7 @@
                                                         },
                                                         "isPreferred": {
                                                             "type": "boolean",
-                                                            "title": "Preferred"
+                                                            "title": "Preferred phone"
                                                         }
                                                     }
                                                 }
@@ -380,7 +444,7 @@
                                                         },
                                                         "isPreferred": {
                                                             "type": "boolean",
-                                                            "title": "Preferred"
+                                                            "title": "Preferred email"
                                                         }
                                                     }
                                                 }
@@ -416,11 +480,16 @@
                                                                 "Mr.",
                                                                 "Mrs.",
                                                                 "Ms."
-                                                            ]
+                                                            ],
+                                                            "default": null
                                                         },
                                                         "firstName": {
-                                                            "type": "string",
-                                                            "title": "First name"
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "First name",
+                                                            "minLength": 1
                                                         },
                                                         "middleName": {
                                                             "type": [
@@ -430,10 +499,34 @@
                                                             "title": "Middle name"
                                                         },
                                                         "lastName": {
-                                                            "type": "string",
-                                                            "title": "Last name"
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Last name",
+                                                            "minLength": 1
+                                                        },
+                                                        "suffix": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Suffix",
+                                                            "enum": [
+                                                                null,
+                                                                "JR",
+                                                                "SN",
+                                                                "I",
+                                                                "II",
+                                                                "III"
+                                                            ],
+                                                            "default": null
                                                         }
-                                                    }
+                                                    },
+                                                    "required": [
+                                                        "firstName",
+                                                        "lastName"
+                                                    ]
                                                 }
                                             },
                                             {
@@ -447,8 +540,12 @@
                                                 "then": {
                                                     "properties": {
                                                         "lastName": {
-                                                            "type": "string",
-                                                            "title": "Trust name"
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Trust name",
+                                                            "minLength": 1
                                                         },
                                                         "trustType": {
                                                             "type": [
@@ -466,15 +563,48 @@
                                                             ],
                                                             "default": null
                                                         },
+                                                        "documents": {
+                                                            "type": "array",
+                                                            "title": "Link or upload the supporting document(s)",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "documentName": {
+                                                                        "title": "Name",
+                                                                        "type": "string"
+                                                                    },
+                                                                    "documentId": {
+                                                                        "title": "Document Id",
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
                                                         "trustDate": {
-                                                            "title": "Trust date",
                                                             "type": [
                                                                 "string",
                                                                 "null"
                                                             ],
+                                                            "title": "Trust date"
+                                                        },
+                                                        "supportingDocumentAttached": {
+                                                            "title": "Is the uploaded supporting document(s) valid and relevant?",
+                                                            "type": [
+                                                                "null",
+                                                                "boolean"
+                                                            ],
+                                                            "enum": [
+                                                                true,
+                                                                false,
+                                                                null
+                                                            ],
                                                             "default": null
                                                         }
-                                                    }
+                                                    },
+                                                    "required": [
+                                                        "lastName",
+                                                        "trustDate"
+                                                    ]
                                                 }
                                             },
                                             {
@@ -494,7 +624,8 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Company name"
+                                                            "title": "Company name",
+                                                            "minLength": 1
                                                         },
                                                         "entityType": {
                                                             "type": "string",
@@ -512,53 +643,9 @@
                                                                 "UNKNOWN"
                                                             ]
                                                         }
-                                                    }
+                                                    },
+                                                    "required": ["lastName"]
                                                 }
-                                            }
-                                        ]
-                                    },
-                                    "supportingDocumentAttached": {
-                                        "title": "Is supporting document(s) available?",
-                                        "type": ["null", "boolean"],
-                                        "enum": [true, false, null],
-                                        "default": null
-                                    }
-                                },
-                                "default": {
-                                    "supportingDocumentAttached": null,
-                                    "party": {
-                                        "partyType": "INDIVIDUAL",
-                                        "prefix": null,
-                                        "firstName": "",
-                                        "lastName": "",
-                                        "middleName": null,
-                                        "preferredCommunicationType": null,
-                                        "identifications": [
-                                            {
-                                                "identificationValue": null,
-                                                "identificationType": "SSN"
-                                            }
-                                        ],
-                                        "phones": [
-                                            {
-                                                "dialNumber": null,
-                                                "phoneType": "MOBILE"
-                                            }
-                                        ],
-                                        "emails": [
-                                            {
-                                                "emailAddress": null,
-                                                "emailType": "PERSONAL"
-                                            }
-                                        ],
-                                        "addresses": [
-                                            {
-                                                "addressType": "RESIDENCE",
-                                                "addressLine1": "",
-                                                "city": "",
-                                                "state": null,
-                                                "zipCode": "",
-                                                "isPreferred": false
                                             }
                                         ]
                                     }
@@ -577,34 +664,74 @@
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "partyData": {
+                    "actionData": {
+                        "ui:dataPath": ["actionData"],
                         "ui:options": {
-                            "addable": true,
-                            "orderable": false,
-                            "label": false,
                             "ArrayFieldTemplate": "TransactionAccordionTemplate",
+                            "templateId": "actionData",
+                            "label": false,
+                            "addable": true,
+                            "defaultTitle": "New Third Party Designee",
                             "showDeleteBtn": true,
                             "showAddBtn": true,
-                            "showRemoveItemBtn": true
+                            "tabTitle": "Third Party Designee Details",
+                            "addButtonCTA": "Add Third Party Designee",
+                            "showRemoveItemBtn": true,
+                            "titlePaths": ["party.firstName", "party.lastName"],
+                            "titleSeparator": " ",
+                            "isSinglePartyTransaction": true,
+                            "allowContentDisabled": true
                         },
                         "items": {
+                            "ui:order": [
+                                "action",
+                                "party",
+                                "preferredCommunicationType"
+                            ],
                             "ui:options": {
+                                "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                 "label": false,
+                                "defaultItemLabel": "New Third Party Designee",
                                 "nobackground": true,
-                                "expandable": false,
-                                "removable": false,
-                                "ObjectFieldTemplate": "PartyCardFieldTemplate"
+                                "expandable": false
+                            },
+                            "action": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": [
+                                        "Add",
+                                        "Update",
+                                        "Delete",
+                                        "None"
+                                    ]
+                                }
+                            },
+                            "preferredCommunicationType": {
+                                "ui:widget": "RadioWidget",
+                                "ui:emptyValue": null,
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": [
+                                        "Email",
+                                        "Phone",
+                                        "Not specified"
+                                    ],
+                                    "allowNullValue": true
+                                }
                             },
                             "party": {
                                 "ui:order": [
-                                    "identificationHeader",
                                     "partyType",
                                     "prefix",
                                     "firstName",
                                     "middleName",
                                     "lastName",
+                                    "suffix",
                                     "trustType",
+                                    "documents",
                                     "trustDate",
+                                    "supportingDocumentAttached",
                                     "entityType",
                                     "identifications",
                                     "contactDetailsHeader",
@@ -615,12 +742,6 @@
                                 ],
                                 "ui:options": {
                                     "label": false
-                                },
-                                "identificationHeader": {
-                                    "ui:options": {
-                                        "ObjectFieldTemplate": "TitleFieldTemplate",
-                                        "fontType": "title"
-                                    }
                                 },
                                 "partyType": {
                                     "ui:widget": "radio",
@@ -633,25 +754,9 @@
                                         ]
                                     }
                                 },
-                                "prefix": {
-                                    "ui:widget": "SelectWidget",
-                                    "ui:options": {
-                                        "enumNames": [
-                                            "Select prefix",
-                                            "Dr.",
-                                            "Mr.",
-                                            "Mrs.",
-                                            "Ms."
-                                        ]
-                                    },
-                                    "ui:placeholder": "Select prefix"
-                                },
-                                "firstName": {},
-                                "middleName": {},
-                                "lastName": {},
                                 "trustType": {
-                                    "ui:widget": "SelectWidget",
                                     "ui:options": {
+                                        "ui:widget": "SelectWidget",
                                         "enumNames": [
                                             "Select trust type",
                                             "Individual Trust",
@@ -663,8 +768,51 @@
                                     },
                                     "ui:placeholder": "Select trust type"
                                 },
-                                "trustDate": {
-                                    "ui:widget": "DateWidgetV2"
+                                "uploadDocuments": {
+                                    "inline": true,
+                                    "ui:options": {
+                                        "label": true,
+                                        "omitValue": true
+                                    },
+                                    "upload": {
+                                        "ui:widget": "AutoCompleteWidget",
+                                        "ui:placeholder": "Find existing documents...",
+                                        "ui:options": {
+                                            "label": false,
+                                            "icon": "Search"
+                                        }
+                                    },
+                                    "or": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "inline": true
+                                        }
+                                    },
+                                    "attachment": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "showFiles": false
+                                        },
+                                        "ui:props": {
+                                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                            "apiMethod": "get"
+                                        }
+                                    }
+                                },
+                                "documents": {
+                                    "inline": true,
+                                    "ui:widget": "AttachmentWidget",
+                                    "ui:options": {
+                                        "label": true
+                                    }
+                                },
+                                "supportingDocumentAttached": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"],
+                                        "inline": true,
+                                        "allowNullValue": true
+                                    }
                                 },
                                 "entityType": {
                                     "ui:options": {
@@ -697,44 +845,44 @@
                                         },
                                         "identificationValue": {
                                             "ui:widget": "NumbersWidget",
-                                            "format": "#########",
-                                            "pattern": "^(\\d{9})$",
-                                            "errorMessage": "Please enter a valid SSN"
+                                            "format": "###-##-####",
+                                            "pattern": "^(\\d{3}-\\d{2}-\\d{4}|\\d{9})$",
+                                            "errorMessage": "Please enter a valid SSN (XXX-XX-XXXX or 9 digits)"
                                         }
                                     }
                                 },
-                                "contactDetailsHeader": {
-                                    "ui:options": {
-                                        "ObjectFieldTemplate": "TitleFieldTemplate",
-                                        "fontType": "title"
-                                    }
-                                },
+
                                 "preferredCommunicationType": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
                                         "inline": true,
                                         "enumNames": [
                                             "Email",
-                                            "Mail",
+                                            "Phone",
                                             "Not specified"
                                         ]
                                     }
                                 },
                                 "addresses": {
                                     "ui:options": {
+                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
                                         "addable": true,
                                         "orderable": false,
-                                        "removable": false,
+                                        "removable": true,
+                                        "addButtonCTA": "Add Address",
                                         "label": true,
                                         "title": "Address",
-                                        "ArrayFieldTemplate": "PartyInfoListTemplate"
+                                        "showDeleteBtn": true,
+                                        "showAddBtn": true,
+                                        "showRemoveItemBtn": true,
+                                        "prefferedCTA": "Preferred Address"
                                     },
                                     "items": {
                                         "ui:options": {
+                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                             "label": false,
                                             "noMargin": true,
-                                            "nobackground": true,
-                                            "ObjectFieldTemplate": "PartyCardFieldTemplate"
+                                            "nobackground": true
                                         },
                                         "addressType": {
                                             "ui:widget": "radio",
@@ -819,30 +967,35 @@
                                         },
                                         "zipCode": {
                                             "ui:widget": "NumbersWidget",
-                                            "format": "#####-####",
-                                            "pattern": "^(\\d{9})$",
-                                            "errorMessage": "Please enter a valid zip code"
+                                            "pattern": "^[0-9]{5}$",
+                                            "format": "#####",
+                                            "errorMessage": "Please enter valid zip code (5 digits)"
                                         }
                                     }
                                 },
                                 "phones": {
                                     "ui:options": {
-                                        "addable": false,
+                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
+                                        "addable": true,
                                         "orderable": false,
-                                        "removable": false,
+                                        "removable": true,
+                                        "addButtonCTA": "Add Phone",
                                         "label": true,
-                                        "title": "Phone"
+                                        "title": "Phone",
+                                        "showDeleteBtn": true,
+                                        "showAddBtn": true,
+                                        "showRemoveItemBtn": true,
+                                        "prefferedCTA": "Preferred Phone"
                                     },
                                     "items": {
                                         "ui:options": {
+                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
                                         },
                                         "phoneType": {
-                                            "ui:widget": "radio",
                                             "ui:options": {
-                                                "inline": true,
                                                 "enumNames": [
                                                     "Mobile",
                                                     "Home",
@@ -853,22 +1006,28 @@
                                         },
                                         "dialNumber": {
                                             "ui:widget": "NumbersWidget",
-                                            "format": "+1 (###) ###-####",
-                                            "pattern": "^(\\d{10})$",
-                                            "errorMessage": "Please enter a valid phone number"
+                                            "format": "+### (###) ###-####",
+                                            "errorMessage": "Please enter valid phone number"
                                         }
                                     }
                                 },
                                 "emails": {
                                     "ui:options": {
-                                        "addable": false,
+                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
+                                        "addable": true,
                                         "orderable": false,
-                                        "removable": false,
+                                        "removable": true,
+                                        "addButtonCTA": "Add Email",
                                         "label": true,
-                                        "title": "Email"
+                                        "title": "Email",
+                                        "showDeleteBtn": true,
+                                        "showAddBtn": true,
+                                        "showRemoveItemBtn": true,
+                                        "prefferedCTA": "Preferred Email"
                                     },
                                     "items": {
                                         "ui:options": {
+                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                             "label": false,
                                             "noMargin": true,
                                             "nobackground": true
@@ -885,14 +1044,36 @@
                                             }
                                         }
                                     }
-                                }
-                            },
-                            "supportingDocumentAttached": {
-                                "ui:widget": "RadioWidget",
-                                "ui:options": {
-                                    "inline": true,
-                                    "enumNames": ["Yes", "No"],
-                                    "allowNullValue": true
+                                },
+                                "prefix": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select prefix",
+                                            "Dr.",
+                                            "Mr.",
+                                            "Mrs.",
+                                            "Ms."
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select prefix"
+                                },
+                                "suffix": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select suffix",
+                                            "JR",
+                                            "SN",
+                                            "I",
+                                            "II",
+                                            "III"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select suffix"
+                                },
+                                "trustDate": {
+                                    "ui:widget": "DateWidgetV2"
                                 }
                             }
                         }
@@ -904,100 +1085,145 @@
                 "formSchema": {
                     "type": "object",
                     "properties": {
-                        "signatures": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "signType": {
-                                        "type": "string",
-                                        "title": "Type"
+                        "signatureData": {
+                            "type": "object",
+                            "properties": {
+                                "signatures": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "signType": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
+                                            "signTypeForUI": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
+                                            "isSignedPresent": {
+                                                "title": "Signature present",
+                                                "type": "boolean",
+                                                "enum": [true, false],
+                                                "default": false
+                                            },
+                                            "signDesignation": {
+                                                "type": ["string", "null"],
+                                                "title": "Designation",
+                                                "enum": [
+                                                    null,
+                                                    "Trustee",
+                                                    "Executor",
+                                                    "Custodian",
+                                                    "Guardian",
+                                                    "Attorney-in-fact",
+                                                    "Assignee",
+                                                    "AUTHORIZEDSIGNATORY",
+                                                    "NA"
+                                                ]
+                                            },
+                                            "signDate": {
+                                                "type": ["string", "null"],
+                                                "title": "Signature date",
+                                                "default": null
+                                            }
+                                        }
                                     },
-                                    "signTypeForUI": {
-                                        "type": "string",
-                                        "title": "Type"
-                                    },
-                                    "isSignedPresent": {
-                                        "type": "boolean",
-                                        "title": "Signature present?",
-                                        "enum": [true, false]
-                                    },
-                                    "signDesignation": {
-                                        "type": "string",
-                                        "title": "Designation",
-                                        "enum": [
-                                            "Trustee",
-                                            "Executor",
-                                            "Custodian",
-                                            "Guardian",
-                                            "Attorney-in-fact",
-                                            "Assignee",
-                                            "NA"
-                                        ]
-                                    },
-                                    "signDate": {
-                                        "type": ["string", "null"],
-                                        "title": "Signature date",
-                                        "default": null
-                                    }
+                                    "default": [
+                                        {
+                                            "isSignedPresent": false,
+                                            "signDate": null,
+                                            "signDesignation": null,
+                                            "signType": "OWNER",
+                                            "signTypeForUI": "Owner"
+                                        },
+                                        {
+                                            "isSignedPresent": false,
+                                            "signDate": null,
+                                            "signDesignation": null,
+                                            "signType": "JOINT_OWNER",
+                                            "signTypeForUI": "Joint Owner"
+                                        }
+                                    ]
                                 }
                             }
                         }
                     }
                 },
                 "uiSchema": {
-                    "$schema": "http://json-schema.org/draft-07/schema#",
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
                         "orderable": false,
                         "copyable": false
                     },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
-                    "signatures": {
-                        "ui:options": {
-                            "addable": false,
-                            "label": false
-                        },
-                        "items": {
+                    "signatureData": {
+                        "ui:dataPath": ["signatureData"],
+                        "ui:options": { "label": false },
+                        "signatures": {
+                            "ui:dataPath": ["signatureData", "signatures"],
                             "ui:options": {
+                                "ArrayFieldTemplate": "TransactionAccordionTemplate",
+                                "templateId": "signatures",
+                                "addable": false,
+                                "orderable": false,
+                                "removable": false,
                                 "label": false,
-                                "nobackground": true
+                                "showAddBtn": false,
+                                "showDeleteBtn": false,
+                                "showRemoveItemBtn": false,
+                                "tabTitle": "Signature",
+                                "allowContentDisabled": false
                             },
-                            "signType": {
-                                "ui:widget": "hidden"
-                            },
-                            "signTypeForUI": {
+                            "items": {
                                 "ui:options": {
+                                    "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                    "title": "Signature",
                                     "label": false,
-                                    "readonly": true,
-                                    "omitValue": true
+                                    "expandable": false,
+                                    "nobackground": true
+                                },
+                                "signType": {
+                                    "ui:options": {
+                                        "disabled": true
+                                    },
+                                    "ui:widget": "hidden"
+                                },
+                                "signTypeForUI": {
+                                    "ui:options": {
+                                        "omitValue": true,
+                                        "disabled": true
+                                    }
+                                },
+                                "isSignedPresent": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"]
+                                    }
+                                },
+                                "signDesignation": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select designation",
+                                            "Trustee",
+                                            "Executor",
+                                            "Custodian",
+                                            "Guardian",
+                                            "Attorney-in-fact",
+                                            "Assignee",
+                                            "Authorized signatory",
+                                            "NA"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select designation"
+                                },
+                                "signDate": {
+                                    "ui:widget": "DateWidgetV2"
                                 }
-                            },
-                            "isSignedPresent": {
-                                "ui:widget": "radio",
-                                "ui:options": {
-                                    "enumNames": ["Yes", "No"],
-                                    "inline": true
-                                }
-                            },
-                            "signDesignation": {
-                                "ui:widget": "select",
-                                "ui:options": {
-                                    "enumNames": [
-                                        "Trustee",
-                                        "Executor",
-                                        "Custodian",
-                                        "Guardian",
-                                        "Attorney-in-fact",
-                                        "Assignee",
-                                        "NA"
-                                    ]
-                                }
-                            },
-                            "signDate": {
-                                "ui:widget": "DateWidgetV2"
                             }
                         }
                     }
@@ -1032,52 +1258,31 @@
                     "summary": {
                         "ui:options": {
                             "label": false,
-                            "dataKey": "party",
+                            "dataKey": "actionData",
                             "templateType": "summaryCard",
-                            "ObjectFieldTemplate": "TransactionSummaryTemplate"
-                        },
-                        "sections": [
-                            {
-                                "label": "Identification",
-                                "fields": [
-                                    { "key": "prefix", "label": "Prefix" },
-                                    {
-                                        "key": "firstName",
-                                        "label": "First name"
-                                    },
-                                    {
-                                        "key": "middleName",
-                                        "label": "Middle name"
-                                    },
-                                    { "key": "lastName", "label": "Last name" },
-                                    {
-                                        "key": "trustType",
-                                        "label": "Trust type"
-                                    },
-                                    {
-                                        "key": "trustDate",
-                                        "label": "Trust Date"
-                                    },
-                                    {
-                                        "key": "entityType",
-                                        "label": "Entity Type"
-                                    },
-                                    { "key": "ssn", "label": "SSN" }
-                                ]
-                            },
-                            {
-                                "label": "Contact details",
-                                "fields": [
-                                    {
-                                        "key": "preferredCommunicationType",
-                                        "label": "Preferred contact method"
-                                    },
-                                    { "key": "address", "label": "Address" },
-                                    { "key": "phone", "label": "Phone" },
-                                    { "key": "email", "label": "Email" }
-                                ]
-                            }
-                        ]
+                            "ObjectFieldTemplate": "TransactionSummaryTemplate",
+                            "sections": [
+                                {
+                                    "label": "Identification",
+                                    "fields": [{ "key": "ssn", "label": "SSN" }]
+                                },
+                                {
+                                    "label": "Contact Info",
+                                    "fields": [
+                                        {
+                                            "key": "preferredCommunicationType",
+                                            "label": "Preferred contact method"
+                                        },
+                                        {
+                                            "key": "address",
+                                            "label": "Address"
+                                        },
+                                        { "key": "phone", "label": "Phone" },
+                                        { "key": "email", "label": "Email" }
+                                    ]
+                                }
+                            ]
+                        }
                     },
                     "validationUrl": {
                         "ui:widget": "hidden"
