@@ -302,10 +302,11 @@ export const prepareIllustrationsActivityCSV = (
     t?: TFunction
 ) => {
     const rows: string[] = [
-        `${t ? t('allFields.date') : 'Date'},
-        ${t ? t('allFields.productType') : 'Product Type'},
-        ${t ? t('allFields.created') : 'Created'},
-        ${t ? t('allFields.selected') : 'Selected'}`,
+        `${t ? t('allFields.date') : 'Date'}, ${
+            t ? t('allFields.productType') : 'Product Type'
+        },${t ? t('allFields.created') : 'Created'},${
+            t ? t('allFields.selected') : 'Selected'
+        }`,
     ];
     const entries = formatIllustrationActivity(data);
 
