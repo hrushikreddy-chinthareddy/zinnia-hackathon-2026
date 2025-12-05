@@ -24,15 +24,14 @@ import { getUserActivityCountsQuery } from '@deps/queries/tanstack/usage/usageQu
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserActivityGroupByEnum } from '@zinnia/api-types/types/analytics';
 
-import {
-    downloadUserActivityCSV,
-    generateSeries,
-    startDates,
-    TimeframeFilterOptions,
-} from './utils';
+import { downloadUserActivityCSV, generateSeries } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { generateCSVFileName } from '../utils';
+import {
+    generateCSVFileName,
+    startDates,
+    TimeframeFilterOptions,
+} from '../utils';
 
 export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
     const { t } = useTranslation();

@@ -123,6 +123,11 @@
         "generalLedgerFundCode": "General ledger fund code",
         "totalFundValue": "Total fund value",
         "guaranteedMinimumInterestRate": "Guaranteed minimum interest rate",
+        "sex": "Sex",
+        "genderIdentity": "Gender identity",
+        "male": "Male",
+        "female": "Female",
+        "unisex": "Unisex",
         "lineOfBusiness": "Line of business",
         "planName": "Plan name",
         "productType": "Product type",
@@ -462,6 +467,47 @@
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
         "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements.",
+        "formSelection": "Form Selection",
+        "correspondence": "Correspondence",
+        "confirm": "Confirm",
+        "email": "Email",
+        "fax": "Fax",
+        "mail": "Mail",
+        "max5Emails": "Maximum 5 emails allowed.",
+        "invalidEmail": "Please enter valid email address.",
+        "invalidDomain": "Only Zinnia emails are allowed.",
+        "emailRequired": "Email is required.",
+        "selectAddressToContinue": "Select an address to continue.",
+        "recipientRequiredToContinue": "Recipient is required to continue.",
+        "duplicateRecipientEmail": "Email already exists in the list.",
+        "emailAddress": "Email Address",
+        "selectEmailsOnFile": "Select emails on file",
+        "noRecordsFound": "No records found.",
+        "enterEmailInstructions": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
+        "addUpTo5Recipients": "You may add up to 5 additional recipients.",
+        "selectFormToContinue": "Select a form to continue.",
+        "sendAnotherDocument": "Send another document",
+        "transaction": "Transaction",
+        "subtype": "Subtype",
+        "noFormsFound": "No forms found.",
+        "goToCase": "Go to case",
+        "hasBeen": "has been",
+        "submitted": "Submitted!",
+        "sendChannel_paper_mail": "mailed to",
+        "sendChannel_fax": "faxed to",
+        "sendChannel_email": "emailed to",
+        "whereShouldDocsBeSent": "Where should the document(s) be sent",
+        "firstNameRequired": "First name is required.",
+        "lastNameRequired": "Last name is required.",
+        "verifyAndSelectAddressToContinue": "Verify & select the address to continue.",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "sendToDifferentAddress": "Send to a different address",
+        "formsToUpdate": "Form(s) to update",
+        "view": "View",
+        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
         "policyNumberSearchError": "Enter a policy/contract number to return search results",
         "ssnSearchError": "Enter a Social Security number to return search results",
         "firstNameSearchError": "Enter a first name to return search results",
@@ -4032,77 +4078,6 @@
             "receivedDate": "Received Date",
             "createdDate": "Created date",
             "actions": "Actions"
-        }
-    },
-    "sendDocument": {
-        "tabs": {
-            "formSelection": "Form Selection",
-            "correspondence": "Correspondence",
-            "confirm": "Confirm"
-        },
-        "formSelection": {
-            "label": "Select the appropriate form that needs to be updated.",
-            "transactionType": "Transaction",
-            "transactionSubType": "Subtype",
-            "documentsTitle": "Form(s) to update",
-            "view": "View",
-            "noFormsFound": "No forms found",
-            "addNewDocument": "Send another document"
-        },
-        "correspondence": {
-            "label": "Where should the document(s)  be sent",
-            "addAdditionalRecipient": "+ Add additional recipient",
-            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
-            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
-            "emailMessage": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
-            "emailWarning": "You may add upto 5 additional recipients",
-            "emailLabel": "Select emails on file",
-            "noEmails": "No records found",
-            "email": "Email",
-            "ccEmail": "CC Emails",
-            "fax": "Fax",
-            "mail": "Mail",
-            "emailAddress": "Email Address",
-            "faxNumber": "Fax Number",
-            "edit": "Edit",
-            "mailDetails": {
-                "sendToDifferentAddress": "Send to a different address",
-                "firstName": "First Name",
-                "lastName": "Last Name",
-                "addressType": "Address type"
-            }
-        },
-        "confirm": {
-            "cta": "Go to case",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "The documents have been",
-                "1": "and cc'd"
-            },
-            "channel": {
-                "paper_mail": "mailed to",
-                "fax": "faxed to",
-                "email": "emailed to"
-            },
-            "title": "Submitted!"
-        },
-        "formActions": {
-            "continue": "Continue",
-            "cancel": "Cancel"
-        },
-        "errors": {
-            "formId": "Select a form to continue.",
-            "recipient": "Recipient is required to continue",
-            "inValidDomain": "Only Zinnia emails are allowed",
-            "mailDetails": "Select a address to continue.",
-            "inValidEmail": "Please enter valid email address",
-            "firstName": "First name is required",
-            "lastName": "Last name is required",
-            "address": "Verify & select the address to continue.",
-            "maxEmails": "Maximum 5 emails allowed",
-            "duplicateRecipientEmail": "Email already exist in the list",
-            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields.",
-            "emailRequired": "Email is required"
         }
     },
     "contactCenter": {
@@ -7994,7 +7969,8 @@
                 "call": "Call",
                 "formReview": "Form Review"
             },
-            "nextTask": "Continue to Next Task"
+            "nextTask": "Continue to Next Task",
+            "summaryNigoError": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
         },
         "formErrors": {
             "caseNotFound": "Case not found",
@@ -8473,6 +8449,9 @@
         "agentDetails": {
             "allocationErr": "Allocations must equal 100%"
         }
+    },
+    "transactionAccordion": {
+        "remove": "Remove"
     },
     "fundAllocation": {
         "submitted": "Submitted!",
@@ -9331,5 +9310,22 @@
         "successTitle": "Success",
         "errorTitle": "Error",
         "closeButton": "Close"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Added",
+            "none": "None",
+            "removed": "Removed",
+            "updated": "Updated"
+        },
+        "noSummary": "No transaction summary available.",
+        "primaryBene": "Primary beneficiary",
+        "contingentBene": "Contingent beneficiary",
+        "loading": "Validation API is Running....",
+        "successMessage": "Looking good! Be sure to review your entries before submitting",
+        "errorMessage": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+        "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "internalServerError": "Internal Server Error",
+        "failedToFetch": "Failed to fetch validation summary"
     }
 }

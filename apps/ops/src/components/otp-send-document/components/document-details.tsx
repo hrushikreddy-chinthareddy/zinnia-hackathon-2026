@@ -66,10 +66,10 @@ const DocumentDetail = ({ document, isSelected }: DocumentDetailsProps) => {
                 isNewPage={false}
                 size={NavElementSize.Small}
                 target="_blank"
-                title={`${t('sendDocument.formSelection.view')} `}
+                title={`${t('allFields.view')} `}
                 type={NavElementType.Link}
             >
-                {t('sendDocument.formSelection.view')}
+                {t('allFields.view')}
             </NavElement>
         </label>
     );

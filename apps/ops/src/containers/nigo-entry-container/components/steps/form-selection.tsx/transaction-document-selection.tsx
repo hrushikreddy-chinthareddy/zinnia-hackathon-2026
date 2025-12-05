@@ -35,7 +35,7 @@ function TransactionDocumentSelection({
     setFormDetails,
     correlationId,
 }: FormSelectionProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
     const transactionTypes = availableFormsTransactions?.map((transaction) => {
         return { label: transaction.name, value: transaction.id };
     });
@@ -142,28 +142,26 @@ function TransactionDocumentSelection({
         <>
             <Select
                 className="max-w-xs"
-                label={t(`formSelection.transactionType`) as string}
+                label={t(`allFields.transaction`) ?? ''}
                 options={transactionTypes}
                 onChange={(val: string) => onTransactionTypeChange(val)}
                 size={FieldSize.Small}
                 value={formDetails.transactionType?.selected || ''}
                 name="transactionType"
-                labelTooltip={t(`formSelection.transactionType`) as string}
-                labelTooltipBody={t(`formSelection.transactionType`) as string}
+                labelTooltip={t(`allFields.transaction`) ?? ''}
+                labelTooltipBody={t(`allFields.transaction`) ?? ''}
                 disabled={!transactionTypes.length}
             />
             <Select
                 className="my-4 max-w-xs"
-                label={t(`formSelection.transactionSubType`) as string}
+                label={t(`allFields.subtype`) ?? ''}
                 options={transactionSubTypeOptions}
                 onChange={(val: string) => onTransactionSubTypeChange(val)}
                 size={FieldSize.Small}
                 value={formDetails.transactionSubType?.selected || ''}
                 name="transactionSubType"
-                labelTooltip={t(`formSelection.transactionSubType`) as string}
-                labelTooltipBody={
-                    t(`formSelection.transactionSubType`) as string
-                }
+                labelTooltip={t(`allFields.subtype`) ?? ''}
+                labelTooltipBody={t(`allFields.subtype`) ?? ''}
                 disabled={!transactionSubTypeOptions.length}
             />
             {loader ? (
@@ -175,7 +173,7 @@ function TransactionDocumentSelection({
                             variant={TypographyVariant.FieldLabel}
                             className="mt-4"
                         >
-                            {t('formSelection.noFormsFound')}
+                            {t('allFields.noFormsFound')}
                         </Typography>
                     ) : (
                         <SendDocument
