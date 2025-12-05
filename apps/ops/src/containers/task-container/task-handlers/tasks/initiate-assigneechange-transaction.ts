@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { Action, EntityTypeValue } from '@deps/constants/policy';
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -10,6 +12,7 @@ import {
 } from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 import { toTitleCase } from '@deps/utils/strings';
 
@@ -403,6 +406,9 @@ const assigneeChangeHandler: TaskHandler<AssigneeTaskPayload, any> = {
 
             const taskData = {
                 ...task.data,
+                effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
+                requestType: null,
+                collateralAmount: null,
                 partyUpdates:
                     task.status === TaskStatus.Completed
                         ? task.data.partyUpdates

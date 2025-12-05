@@ -37,6 +37,8 @@ export enum PolicyRole {
     PAYOR = 'Payor',
     THIRDPARTYDESIGNEE = 'ThirdPartyDesignee',
     BENEFICIARY = 'Beneficiary',
+    ASSIGNEE = 'Assignee',
+    AGENT = 'multi-agent',
 }
 
 export enum BooleanValue {

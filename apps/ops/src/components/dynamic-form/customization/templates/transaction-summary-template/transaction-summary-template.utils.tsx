@@ -1,22 +1,21 @@
 import { v4 as uuidv4 } from 'uuid';
 
+import { Action, PolicyRole } from '@deps/constants/policy';
 import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
-import { assigneeChangePayloadUtils } from '@deps/containers/task-container/task-handlers/payload-utils/assignee-change-payload-utils';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
 import { TransactionResponse } from '@deps/queries/api/bpm';
+import { validateRoleChange } from '@deps/queries/api/role-change';
 import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
-    validateAssigneeChangeTransaction,
 } from '@deps/queries/api/web-non-financial';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-
 export function getPartyMeta(item: SummaryItem) {
     const party = item.party || {};
     const address = party.addresses?.[0];
@@ -31,18 +30,15 @@ export function getPartyMeta(item: SummaryItem) {
                 .filter(Boolean)
                 .join(' '),
         addressStr: formattedAddress(address),
-        phoneStr: phone
-            ? formatPhoneNumberWithCountryCode(phone as EnterprisePhone)
-            : DEFAULT_ERROR_STRING,
+        phoneStr: formatPhoneNumberWithCountryCode(phone as EnterprisePhone),
         emailStr: formattedEmail(email),
         ssn: formatIdentification(identifications ?? []),
-        gender: party.gender || DEFAULT_ERROR_STRING,
-        dob: party.dateOfBirth || DEFAULT_ERROR_STRING,
-        relationshipToParty:
-            item.partyRole?.relationshipToParty || DEFAULT_ERROR_STRING,
+        gender: party.gender || '-',
+        dob: party.dateOfBirth || '-',
+        relationshipToParty: item.partyRole?.relationshipToParty || '-',
+        partyId: item.partyId || null,
     };
 }
-
 export function getTransactionPartyDisplayValue({
     taskType,
     fullName,
@@ -52,33 +48,33 @@ export function getTransactionPartyDisplayValue({
     fullName?: string;
     item: any;
 }): string {
-    if (taskType === TaskType.Initiate_BeneChange_Transaction) {
+    if (
+        taskType === TaskType.Initiate_BeneChange_Transaction ||
+        taskType === TaskType.Initiate_AssigneeChange_Transaction
+    ) {
         return fullName || DEFAULT_ERROR_STRING;
     } else if (taskType === TaskType.Agent_Change_Detail) {
         return FormatAgentName(item) || DEFAULT_ERROR_STRING;
     }
+
     return fullName || DEFAULT_ERROR_STRING;
 }
-
 export const FormatAgentName = (item: any): string => {
     const firstName = item?.party?.firstName?.trim?.() || '';
     const lastName = item?.party?.lastName?.trim?.() || '';
     const fullName = `${firstName} ${lastName}`.trim();
     return toTitleCase(fullName) || `Ext. ID: ${item.party.agentExternalId}`;
 };
-
 const ROLE_MAP: { [key: string]: string } = {
     PRIMARYWRITINGAGENT: 'Writing agent',
     PRIMARYSERVICINGAGENT: 'Servicing agent',
 };
-
 export const formatAgentType = (item: any): string => {
     return (
         ROLE_MAP[item.partyRole] ||
         toTitleCase(item.partyRole?.replace(/_/g, ' ') || 'N/A')
     );
 };
-
 export async function fetchValidationSummary(
     validationUrl: string,
     customData: any,
@@ -93,9 +89,17 @@ export async function fetchValidationSummary(
     } else if (customData.taskType === TaskType.Agent_Change_Detail) {
         return await validateAgentTransaction(requestBody);
     } else if (
-        customData.taskType === TaskType.Initiate_AssigneeChange_Transaction
+        customData.taskType === TaskType.Third_Party_Detail ||
+        customData.taskType === TaskType.Initiate_AssigneeChange_Transaction ||
+        customData.taskType === TaskType.Agent_Change_Detail
     ) {
-        return await validateAssigneeChangeTransaction(requestBody);
+        return await validateRoleChange(
+            requestBody?.planCode,
+            requestBody?.policyNumber,
+            requestBody?.partyId,
+            requestBody?.role,
+            requestBody?.query
+        );
     } else {
         browserLogInfo(
             '[fetchValidationSummary] Unknown taskType, no validation method called:',
@@ -107,8 +111,114 @@ export async function fetchValidationSummary(
         throw new Error(`Unsupported taskType: ${customData.taskType}`);
     }
 }
-
 type RequestBodyBuilder = (customData: any) => any;
+const getRoleChangePartyId = (customData: any): string | null => {
+    const { defaultPartyIdRoleChange } = customData;
+    if (!customData || !Array.isArray(customData.partyUpdates)) {
+        return defaultPartyIdRoleChange;
+    }
+    const partyUpdates = customData.partyUpdates;
+
+    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
+    const deletedItem = partyUpdates.find(
+        (item: any) => item.action === Action.DELETE
+    );
+    let requestType = Action.NONE;
+    if (addedItem && deletedItem) {
+        requestType = Action.UPDATE;
+    } else if (addedItem) {
+        requestType = Action.ADD;
+    } else if (deletedItem) {
+        requestType = Action.DELETE;
+    }
+    switch (requestType) {
+        case Action.ADD:
+            return defaultPartyIdRoleChange;
+        case Action.UPDATE:
+            return deletedItem?.party?.partyId ?? null;
+        case Action.DELETE:
+            return deletedItem?.party?.partyId ?? null;
+        default:
+            return defaultPartyIdRoleChange;
+    }
+};
+
+const getRequestType = (customData: any): string | null => {
+    const { defaultPartyIdRoleChange } = customData;
+    if (!customData || !Array.isArray(customData.partyUpdates)) {
+        return defaultPartyIdRoleChange;
+    }
+    const partyUpdates = customData.partyUpdates;
+
+    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
+    const deletedItem = partyUpdates.find(
+        (item: any) => item.action === Action.DELETE
+    );
+    let requestType = Action.NONE;
+    if (addedItem && deletedItem) {
+        requestType = Action.UPDATE;
+    } else if (addedItem) {
+        requestType = Action.ADD;
+    } else if (deletedItem) {
+        requestType = Action.DELETE;
+    }
+    return requestType;
+};
+
+const getCollateralAmount = (customData: any): string | null => {
+    const { defaultPartyIdRoleChange } = customData;
+    if (!customData || !Array.isArray(customData.partyUpdates)) {
+        return defaultPartyIdRoleChange;
+    }
+    const partyUpdates = customData.partyUpdates;
+
+    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
+    const deletedItem = partyUpdates.find(
+        (item: any) => item.action === Action.DELETE
+    );
+    let collateralAmount = null;
+    if (addedItem && deletedItem) {
+        collateralAmount = addedItem?.collateralAmount ?? null;
+    } else if (addedItem) {
+        collateralAmount = addedItem?.collateralAmount ?? null;
+    } else if (deletedItem) {
+        collateralAmount = deletedItem?.collateralAmount ?? null;
+    }
+    return collateralAmount;
+};
+
+const getRoleChangeParty = (customData: any): object | null => {
+    if (!customData || !Array.isArray(customData.partyUpdates)) {
+        return null;
+    }
+    const partyUpdates = customData.partyUpdates;
+    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
+    const deletedItem = partyUpdates.find(
+        (item: any) => item.action === Action.DELETE
+    );
+    let requestType = Action.NONE;
+    if (addedItem && deletedItem) {
+        requestType = Action.UPDATE;
+        customData.requestType = Action.UPDATE;
+    } else if (addedItem) {
+        requestType = Action.ADD;
+        customData.requestType = Action.ADD;
+    } else if (deletedItem) {
+        requestType = Action.DELETE;
+        customData.requestType = Action.DELETE;
+    }
+    switch (requestType) {
+        case Action.ADD:
+            addedItem.party.partyId = null;
+            return addedItem.party;
+        case Action.UPDATE:
+            return addedItem.party;
+        case Action.DELETE:
+            return deletedItem?.party;
+        default:
+            return null;
+    }
+};
 
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
@@ -119,11 +229,10 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             planCode: task.data?.planCode,
             policyNumber: task.data?.policyNumber,
             contractInfo: customData?.contractInfo,
-            actionData: customData?.actionData,
+            partyUpdates: customData?.partyUpdates,
             signatureData: customData?.signatureData,
             policyStatus: customData?.policyStatus,
             caseId: '',
-
             sorSystem: SorSystem.Zahara,
             sourceSystem: 'ONBASE',
             channel: 'Phone',
@@ -148,11 +257,53 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             ],
         };
     },
+    THIRD_PARTY_DETAIL: (customData) => {
+        return {
+            planCode: customData?.planCode,
+            policyNumber: customData?.policyNumber,
+            partyId: getRoleChangePartyId(customData),
+            role: PolicyRole.THIRDPARTYDESIGNEE,
+            query: {
+                effectiveDate: customData?.effectiveDate,
+                caseId: customData?.caseId,
+                correlationId: customData?.correlationId,
+                changeReason: customData?.changeReason,
+                signatures: customData?.signatureData?.signatures,
+                beneDetailsReqInd: customData?.beneDetailsReqInd || false,
+                documents: customData?.documents,
+                supportingDocumentAttached:
+                    customData?.supportingDocumentAttached || null,
+                relationshipToParty: customData?.relationshipToParty,
+                party: getRoleChangeParty(customData),
+                requestType: customData?.requestType,
+            },
+        };
+    },
     INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
-        return assigneeChangePayloadUtils(customData);
+        return {
+            planCode: customData?.planCode,
+            policyNumber: customData?.policyNumber,
+            partyId: getRoleChangePartyId(customData),
+            role: PolicyRole.ASSIGNEE,
+            query: {
+                effectiveDate: customData?.effectiveDate,
+                caseId: customData?.caseId,
+                correlationId: customData?.correlationId,
+                changeReason: customData?.changeReason,
+                signatures: customData?.signatures,
+                beneDetailsReqInd: customData?.beneDetailsReqInd || false,
+                documents: customData?.documents,
+                supportingDocumentAttached:
+                    customData?.supportingDocumentAttached || null,
+                relationshipToParty: customData?.relationshipToParty,
+                party: getRoleChangeParty(customData),
+                requestType: getRequestType(customData),
+                collateralAmount: getCollateralAmount(customData),
+                notarySignatures: customData?.notarySignatures,
+            },
+        };
     },
 };
-
 export function buildValidationRequestBody(customData: any): any {
     if (!customData || typeof customData.taskType !== 'string') {
         browserLogInfo(
@@ -169,6 +320,9 @@ export function buildValidationRequestBody(customData: any): any {
     if (customData.taskType === TaskType.Agent_Change_Detail) {
         return requestBodyBuilders.AGENT_CHANGE_DETAIL(customData);
     }
+    if (customData.taskType === TaskType.Third_Party_Detail) {
+        return requestBodyBuilders.THIRD_PARTY_DETAIL(customData);
+    }
     if (customData.taskType === TaskType.Initiate_AssigneeChange_Transaction) {
         return requestBodyBuilders.INITIATE_ASSIGNEECHANGE_TRANSACTION(
             customData
@@ -176,17 +330,14 @@ export function buildValidationRequestBody(customData: any): any {
     }
     return { ...customData };
 }
-
 export interface PartyRole {
     partyRole?: string;
     relationshipToParty?: string;
 }
-
 export interface Identification {
     identificationType: string;
     identificationValue: string;
 }
-
 export interface Address {
     addressType?: string;
     addressLine1?: string;
@@ -197,7 +348,6 @@ export interface Address {
     zipCodeExtension?: string;
     country?: string;
 }
-
 export interface Phone {
     phoneType?: string;
     dialNumber?: string;
@@ -205,12 +355,10 @@ export interface Phone {
     areaCode?: string;
     extension?: string;
 }
-
 export interface Email {
     emailAddress?: string;
     emailType?: string;
 }
-
 export interface Party {
     partyType?: string;
     beneficiaryPercentage?: number;
@@ -232,7 +380,6 @@ export interface Party {
     fullName?: string;
     [key: string]: any;
 }
-
 export interface SummaryItem {
     action?: string;
     isPerStirpes?: boolean;
@@ -243,7 +390,6 @@ export interface SummaryItem {
     actionType?: string;
     [key: string]: any;
 }
-
 export const formatIdentification = (
     identifications: Identification[]
 ): string => {
@@ -256,7 +402,6 @@ export const formatIdentification = (
         ? ssn.identificationValue
         : identifications[0].identificationValue;
 };
-
 export const formattedAddress = (address?: Address): string => {
     if (!address) return '-';
     return [
@@ -270,11 +415,9 @@ export const formattedAddress = (address?: Address): string => {
         .filter(Boolean)
         .join('\n');
 };
-
 export const formattedEmail = (email?: Email): string => {
     return email?.emailAddress || '-';
 };
-
 export const getRoleLabel = (
     partyRole: PartyRole,
     t: (key: string) => string,
@@ -289,12 +432,10 @@ export const getRoleLabel = (
             CONTINGENTBENEFICIARY: (t) => t('contingentBene'),
         },
     };
-
     const taskRoleMap =
         (taskType && roleLabelMap[taskType]) ||
         roleLabelMap[TaskType.Initiate_BeneChange_Transaction];
     const label = partyRole?.partyRole && taskRoleMap[partyRole.partyRole];
-
     if (typeof label === 'function') {
         return label(t);
     } else if (typeof label === 'string') {

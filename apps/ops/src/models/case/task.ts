@@ -73,6 +73,7 @@ export enum TaskType {
     Initiate_BeneChange_Transaction = 'INITIATE_BENECHANGE_TRANSACTION',
     Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
     Initiate_AssigneeChange_Transaction = 'INITIATE_ASSIGNEECHANGE_TRANSACTION',
+    Third_Party_Detail = 'Third_Party_Detail',
 }
 
 export enum EarlyTaskType {
