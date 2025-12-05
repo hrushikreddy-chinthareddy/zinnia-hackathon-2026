@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Toast, ToastVariant } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -14,15 +14,11 @@ import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN } from '@deps/helpers/case-stat-helpers';
 import { INTERVAL } from '@deps/models/case/task';
-import { createQualityAuditForCaseId } from '@deps/queries/api/cases';
-import { getCaseDetailsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { UserTuple } from '@deps/types/fga';
 import { CreateQualityAuditRequest } from '@deps/types/search';
 
-import {
-    buildCreateQualityAuditPayload,
-    validateCaseQualityAudit,
-} from './case-helpers';
+import { buildCreateQualityAuditPayload } from './case-helpers';
 
 type CaseQuickActionsProps = {
     isCaseEligibleForQualityAudit: boolean;
@@ -44,7 +40,6 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     const [toastMessage, setToastMessage] = useState<any>(undefined);
     const [toastVariant, setToastVariant] = useState<any>(undefined);
     const [isQualityAuditCreated, setIsQualityAuditCreated] = useState(false);
-    const [refCaseId, setRefCaseId] = useState<string>('');
 
     useEffect(() => {
         if (toastMessage && toastVariant) {
@@ -61,48 +56,32 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             tuple?.key?.object.includes(FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN)
     );
 
-    const { data: parentCaseData } = useQuery({
-        queryKey: ['existingQualityAuditCheck', caseDetails?.id, featureFlags],
-        queryFn: () => getCaseDetailsQuery(caseDetails?.id, featureFlags),
-        enabled: !!caseDetails?.id,
-    });
-
-    useEffect(() => {
-        if (parentCaseData) {
-            const hasExistingQualityAudit = validateCaseQualityAudit(
-                caseDetails,
-                parentCaseData
-            );
-            setIsQualityAuditCreated(hasExistingQualityAudit);
-            hasExistingQualityAudit &&
-                setRefCaseId(parentCaseData?.additionalData?.caseId || '');
-        } else {
-            if (caseDetails?.process === 'Quality Audit') {
-                setIsQualityAuditCreated(true);
-            }
-        }
-    }, [parentCaseData]);
+    console.log('userTuplesData', userTuplesData);
 
     const qualityAuditPayload = buildCreateQualityAuditPayload(caseDetails);
 
-    const { mutate, isPending } = useMutation({
+    const { mutate } = useMutation({
         mutationFn: async (qualityAuditPayload: CreateQualityAuditRequest) => {
-            return await createQualityAuditForCaseId(qualityAuditPayload);
+            return await createQualityAuditForCaseIdQuery(qualityAuditPayload);
         },
         onSuccess: (response) => {
-            setToastVariant(ToastVariant.Success);
-            setToastMessage(
-                t('caseOverview.qualityAuditToastMessages.qualityAuditSuccess')
-            );
-            queryClient.invalidateQueries({
-                queryKey: [
-                    'existingQualityAuditCheck',
-                    response?.data?.refCaseId || '',
-                    featureFlags,
-                ],
-            });
+            console.log('API success Response', response);
+
+            if (
+                response?.data?.code === 'QA_CASE_ALREADY_EXISTS' ||
+                response?.data?.code === 'QA_CASE_CREATED'
+            ) {
+                setIsQualityAuditCreated(true);
+                setToastVariant(ToastVariant.Success);
+                setToastMessage(
+                    t(
+                        'caseOverview.qualityAuditToastMessages.qualityAuditSuccess'
+                    )
+                );
+            }
         },
-        onError: () => {
+        onError: (response) => {
+            console.log('Test Error Response => ', response);
             setToastVariant(ToastVariant.Error);
             setToastMessage(
                 t('caseOverview.qualityAuditToastMessages.qualityAuditError')
@@ -111,19 +90,19 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     });
 
     const isQualityAuditEligible =
-        hasQualityAuditAdminPermission &&
-        isCaseEligibleForQualityAudit &&
-        !isPending &&
-        !isQualityAuditCreated;
+        hasQualityAuditAdminPermission && isCaseEligibleForQualityAudit;
 
     const qualityAuditOptions = [
         {
             name: t('caseOverview.quickActions.createQualityAudit'),
             hideLabel: false,
             isEligible: isQualityAuditEligible,
-            shouldShow:
-                hasQualityAuditAdminPermission && !isQualityAuditCreated,
-            tooltip: isQualityAuditEligible
+            shouldShow: hasQualityAuditAdminPermission,
+            tooltip: !isCaseEligibleForQualityAudit
+                ? t('caseOverview.quickActions.caseIsNotEligible')
+                : isQualityAuditCreated
+                ? t('caseOverview.quickActions.qualityAuditExisted')
+                : isQualityAuditEligible
                 ? t('caseOverview.quickActions.createQualityAuditTooltip')
                 : t(
                       'caseOverview.quickActions.createQualityAuditTooltipDisabled'
@@ -134,11 +113,11 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             name: t('caseOverview.quickActions.viewQualityAudit'),
             hideLabel: false,
             isEligible: isQualityAuditCreated,
-            shouldShow: isQualityAuditCreated,
+            shouldShow: false,
             tooltip: t('caseOverview.quickActions.viewQualityAuditTooltip', {
                 caseId: caseDetails?.id,
             }),
-            href: `/cases/${refCaseId}/progress`,
+            href: `/cases/${caseDetails?.id}/progress`,
         },
         {
             name: t('caseOverview.prioritizeCase.title'),

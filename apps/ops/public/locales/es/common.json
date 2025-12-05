@@ -3159,7 +3159,9 @@
             "viewQualityAudit": "Ver Auditoría de Calidad",
             "createQualityAuditTooltip": "Iniciar una Auditoría de Calidad para este caso.",
             "createQualityAuditTooltipDisabled": "No disponible: caso no elegible o permiso denegado.",
-            "viewQualityAuditTooltip": "La Auditoría de Calidad ya existe ({{caseId}})."
+            "viewQualityAuditTooltip": "La Auditoría de Calidad ya existe ({{caseId}}).",
+            "caseIsNotEligible": "La transacción no es elegible para auditoría.",
+            "qualityAuditExisted": "El caso de Auditoría de Calidad ya existe."
         },
         "qualityAuditToastMessages": {
             "qualityAuditSuccess": "Auditoría de Calidad creada.",

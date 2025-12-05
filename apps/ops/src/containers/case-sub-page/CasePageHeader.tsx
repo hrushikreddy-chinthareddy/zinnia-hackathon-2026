@@ -130,11 +130,12 @@ const CasePageHeader = ({
                 clientCode
             );
 
-            if (response?.status === 200)
+            if (response?.status === 200) {
                 setIsCaseEligibleForQualityAudit(true);
+            }
         };
         fetchQualityAuditEligibility();
-    }, [caseId, isCaseEligibleForQualityAudit]);
+    }, [caseId]);
 
     const openSideSheet = useCallback(
         (action: CaseAction) => {

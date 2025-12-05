@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios';
 
 import { Statuses } from '@deps/models/case/case';
 import {
+    createQualityAuditForCaseId,
     getCaseDetails,
     getCases,
     getCaseTimePredict,
@@ -13,6 +14,7 @@ import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
 import {
     CaseSearchErrorResponse,
     CaseSearchResponse,
+    CreateQualityAuditRequest,
 } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -148,5 +150,17 @@ export const postCaseStatsQuery = async (caseStatsQuery?: CaseStatsQuery) => {
         throw 'No data in response';
     } else {
         return result.data;
+    }
+};
+
+export const createQualityAuditForCaseIdQuery = async (
+    query: CreateQualityAuditRequest
+) => {
+    const response = await createQualityAuditForCaseId(query);
+
+    if (response?.status !== 200) {
+        throw 'Quality audit creation error';
+    } else {
+        return response.data;
     }
 };
