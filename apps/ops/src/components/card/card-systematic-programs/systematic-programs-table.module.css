@@ -81,10 +81,12 @@
 
 .typeCell {
     width: 152px;
+    min-width: 90px;
 }
 
 .paymentAmountCell {
     width: 155px;
+    min-width: 112px;
 }
 
 .frecuencyCell {
@@ -93,10 +95,12 @@
 
 .nextPaymentCell {
     width: 132px;
+    min-width: 132px;
 }
 
 .statusCell {
     width: 132px;
+    min-width: 132px;
     display: flex;
     align-items: center;
     gap: var(--measure-dimension-gap-md);
