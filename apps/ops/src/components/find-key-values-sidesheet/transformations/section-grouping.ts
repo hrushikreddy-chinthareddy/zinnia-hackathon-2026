@@ -94,14 +94,15 @@ export const groupSectionsForPolicy = ({
         label: 'people',
         children: allParties.map((party) => {
             const includeFields = ['partyName', 'dob', 'ssn'];
+            const partyName = findValueInNode({
+                node: party,
+                key: 'partyName',
+            });
             return {
                 type: FieldType.section,
                 // Remap label to partyName for rendering
-                label:
-                    findValueInNode({
-                        node: party,
-                        key: 'partyName',
-                    }) ?? party.label,
+                label: partyName ?? party.label,
+                isPIILabel: partyName ? true : false,
                 children: party.children
                     .filter(isDataField)
                     .filter((child) => includeFields.includes(child.label)),
@@ -236,18 +237,21 @@ function groupRiders({
                 const partyNameField = findFieldInNode({
                     node: partyReference,
                     key: 'partyName',
-                });
+                }) ?? {
+                    type: FieldType.field,
+                    value: partyId,
+                    isPII: false,
+                };
 
                 const retainedFields = ['partyAgeAtIssue'];
                 const hydratedParty: DataSection = {
                     ...party,
                     label: partyNameField?.value ?? partyId,
+                    isPIILabel: partyNameField?.isPII,
                     children: [
                         {
-                            type: FieldType.field,
+                            ...partyNameField,
                             label: 'coveredParty',
-                            value: partyNameField?.value ?? partyId,
-                            link: partyNameField?.link,
                         },
                         ...party.children
                             .filter(isDataField)
@@ -315,18 +319,21 @@ function groupSystematicPrograms({
                     const partyNameField = findFieldInNode({
                         node: partyReference,
                         key: 'partyName',
-                    });
+                    }) ?? {
+                        type: FieldType.field,
+                        value: partyId,
+                        isPII: false,
+                    };
 
                     const retainedFields = ['paymentForm'];
                     const hydratedParty: DataSection = {
                         ...party,
                         label: partyNameField?.value ?? partyId,
+                        isPIILabel: partyNameField?.isPII,
                         children: [
                             {
-                                type: FieldType.field,
+                                ...partyNameField,
                                 label: 'partyName',
-                                value: partyNameField?.value ?? partyId,
-                                link: partyNameField?.link,
                             },
                             ...party.children
                                 .filter(isDataField)
@@ -634,6 +641,7 @@ export const getAllParties = ({
                 const personSection: DataSection = {
                     label: partyId,
                     type: FieldType.section,
+                    isPIILabel: true,
 
                     // Selectively populated below
                     children: [
@@ -642,6 +650,7 @@ export const getAllParties = ({
                             label: 'partyName',
                             value: partyName,
                             link: partyLink,
+                            isPII: true,
                         },
                     ],
 
@@ -654,6 +663,7 @@ export const getAllParties = ({
                         type: FieldType.field,
                         label: 'ssn',
                         value: ssn,
+                        isPII: true,
                     });
                 }
 
@@ -662,6 +672,7 @@ export const getAllParties = ({
                         type: FieldType.field,
                         label: 'dob',
                         value: dob,
+                        isPII: true,
                     });
                 }
                 if (bankInfo) {
@@ -669,6 +680,7 @@ export const getAllParties = ({
                         type: FieldType.field,
                         label: 'bankInfo',
                         value: bankInfo,
+                        isPII: true,
                     });
                 }
                 if (addressInfo) {
@@ -676,6 +688,7 @@ export const getAllParties = ({
                         type: FieldType.field,
                         label: 'addressInfo',
                         value: addressInfo,
+                        isPII: true,
                     });
                 }
 

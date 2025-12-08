@@ -13,12 +13,17 @@ export function renderNode(node: DataNode, index: number): React.ReactNode {
                     dataField={[node.label, node.value]}
                     link={node.link}
                     toolTip={node.toolTip}
+                    isPII={node.isPII}
                 />
             );
         }
         case FieldType.section: {
             return (
-                <Section label={node.label} tags={node.tags}>
+                <Section
+                    label={node.label}
+                    tags={node.tags}
+                    isPIILabel={node.isPIILabel}
+                >
                     {node.children}
                 </Section>
             );

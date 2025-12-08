@@ -1,6 +1,7 @@
 import { Accordion, AccordionType } from '@zinnia/bloom/components';
 
 import Highlighter from '@deps/components/highlighter/highlighter';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useTreeState } from '@deps/hooks/useTreeState';
 
 import { DataSection } from '../types';
@@ -11,14 +12,17 @@ export const Section = ({
     label,
     tags,
     children,
+    isPIILabel,
 }: Omit<DataSection, 'type'>) => {
     const { treeState, searchValue } = useTreeState();
+    const labelEl = <Highlighter text={label} highlights={[searchValue]} />;
+
     return (
         <div className={styles.subSection}>
             <Accordion
                 key={`section_${label}`}
                 sectionLabel={
-                    <Highlighter text={label} highlights={[searchValue]} />
+                    isPIILabel ? <PiiWrapper>{labelEl}</PiiWrapper> : labelEl
                 }
                 type={AccordionType.NESTED}
                 treeState={treeState}

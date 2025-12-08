@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import DotContainer from '@deps/components/dot-container/dot-container';
 import Highlighter from '@deps/components/highlighter/highlighter';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useTreeState } from '@deps/hooks/useTreeState';
 
 import styles from '../find-all-key-values-sidesheet.module.css';
@@ -20,16 +21,22 @@ export const DataField = ({
     dataField,
     link,
     toolTip,
+    isPII,
 }: {
     dataField: [string, string];
     link?: string;
     toolTip?: string;
+    isPII?: boolean;
 }) => {
     const [fieldLabel, fieldData] = dataField;
     const { searchValue } = useTreeState();
     const [popoverContainer, setPopoverContainer] =
         useState<HTMLDivElement | null>(null);
-
+    const linkOrValue = link ? (
+        <Link href={link} text={fieldData} />
+    ) : (
+        <Highlighter text={fieldData} highlights={[searchValue]} />
+    );
     return (
         <DotContainer
             dotLeftSide={
@@ -57,11 +64,7 @@ export const DataField = ({
             }
             dotLeftSideClassName="typography-content-body-sm"
             dotRightSide={
-                link ? (
-                    <Link href={link} text={fieldData} />
-                ) : (
-                    <Highlighter text={fieldData} highlights={[searchValue]} />
-                )
+                isPII ? <PiiWrapper>{linkOrValue}</PiiWrapper> : linkOrValue
             }
             dotRightSideClassName="typography-content-body-sm"
         />

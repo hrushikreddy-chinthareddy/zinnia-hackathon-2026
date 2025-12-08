@@ -40,6 +40,7 @@ export type DataField = {
     value: string;
     link?: string;
     toolTip?: string;
+    isPII?: boolean;
 };
 
 export type DataSection = {
@@ -47,6 +48,7 @@ export type DataSection = {
     label: string;
     children: DataNode[];
     tags?: string[];
+    isPIILabel?: boolean;
 };
 
 export type DataGroup = {

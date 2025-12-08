@@ -297,30 +297,28 @@ export const addLinkToPartyId = ({
     if (!(node.type === FieldType.field && node.label === 'partyId')) {
         return node;
     }
-    const partyReference = allPartiesById[node.value];
-
-    if (!partyReference) {
-        return {
-            ...node,
-            link: formatPartyLink({
-                planCode,
-                policyNumber,
-                partyId: node.value,
-            }),
-        };
-    }
+    const partyId = node.value;
+    const partyReference = allPartiesById[partyId];
 
     const partyNameField = findFieldInNode({
         node: partyReference,
         key: 'partyName',
-    });
+    }) ?? {
+        type: FieldType.field,
+        value: partyId,
+        link: formatPartyLink({
+            planCode,
+            policyNumber,
+            partyId,
+        }),
+        isPII: false,
+    };
 
     const partialPartyField: DataField = {
-        ...node,
+        ...partyNameField,
         label: 'impactedParty',
-        value: partyNameField?.value ?? node.value,
-        link: partyNameField?.link,
     };
+
     return partialPartyField;
 };
 
