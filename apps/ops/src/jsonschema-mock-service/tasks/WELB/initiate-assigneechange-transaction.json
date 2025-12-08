@@ -1,1809 +1,1964 @@
 {
-  "formId": "21416aaf-9893-407c-bd20-cedfdded2f47",
-  "process": "Policy Update",
-  "taskType": "INITIATE_ASSIGNEECHANGE_TRANSACTION",
-  "carrier": "WELB",
-  "processSubType": "Assignee Change",
-  "formSchema": {
-    "type": "object"
-  },
-  "uiSchema": {
-    "type": "object"
-  },
-  "schemaContent": {
-    "tabSchemas": [
-      {
-        "title": "Review Form Data",
-        "formSchema": {
-          "type": "object",
-          "properties": {
-            "details": {
-              "type": "object",
-              "title": "Document Details",
-              "properties": {
-                "documents": {
-                  "type": "array",
-                  "title": "Supporting Information",
-                  "items": {
+    "formId": "21416aaf-9893-407c-bd20-cedfdded2f47",
+    "process": "Policy Update",
+    "taskType": "INITIATE_ASSIGNEECHANGE_TRANSACTION",
+    "carrier": "WELB",
+    "processSubType": "Assignee Change",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Review Form Data",
+                "formSchema": {
                     "type": "object",
                     "properties": {
-                      "documentId": {
-                        "type": "string",
-                        "ui:field": "subTitle",
-                        "ui:placeholder": "Documemt ID: "
-                      },
-                      "documentType": {
-                        "type": "string",
-                        "ui:field": "title",
-                        "ui:separator": " - "
-                      },
-                      "documentName": {
-                        "type": "string",
-                        "ui:field": "title",
-                        "ui:separator": " - "
-                      },
-                      "documentSource": {
-                        "type": "string"
-                      },
-                      "documentExt": { "type": "string" },
-                      "carrier": {
-                        "type": "string",
-                        "default": "{{carrier}}"
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "issueResolved": {
-              "type": "boolean",
-              "enum": [true, false],
-              "enumNames": [
-                "The paper application is complete.",
-                "The paper application is incomplete."
-              ],
-              "title": "Is the paper application form complete?",
-              "default": true
-            }
-          },
-          "dependencies": {
-            "issueResolved": {
-              "oneOf": [
-                {
-                  "properties": {
-                    "issueResolved": {
-                      "const": true
-                    }
-                  }
-                },
-                {
-                  "properties": {
-                    "issueResolved": {
-                      "const": false
+                        "details": {
+                            "type": "object",
+                            "title": "Document Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "The paper application is complete.",
+                                "The paper application is incomplete."
+                            ],
+                            "title": "Is the paper application form complete?",
+                            "default": true
+                        }
                     },
-                    "declineReason": {
-                      "type": "array",
-                      "title": "What is the issue with the form?",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "value": {
-                            "type": "string"
-                          },
-                          "exceptionSubRefs": {
-                            "type": "array",
-                            "minItems": 1,
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "type": "array",
+                                            "title": "What is the issue with the form?",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
                             "items": {
-                              "type": "object",
-                              "additionalProperties": {
-                                "type": "string"
-                              }
-                            }
-                          }
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false
+                            },
+                            "ui:dataPath": ["documents"]
                         },
-                        "required": ["value", "exceptionSubRefs"]
-                      },
-                      "minItems": 1
+                        "ui:dataPath": ["details"]
                     }
-                  }
                 }
-              ]
-            }
-          }
-        },
-        "uiSchema": {
-          "ui:globalOptions": {
-            "duplicateKeySuffixSeparator": "_",
-            "orderable": false,
-            "copyable": false
-          },
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "ui:submitButtonOptions": {
-            "norender": true
-          },
-          "issueResolved": {
-            "ui:widget": "radio",
-            "ui:options": {
-              "label": true
             },
-            "ui:dataPath": ["issueResolved"],
-            "ui:hideError": true
-          },
-          "details": {
-            "ui:options": {
-              "label": false
-            },
-            "documents": {
-              "props": {
-                "readonly": true
-              },
-              "items": {
-                "ui:options": {
-                  "ObjectFieldTemplate": "CardTemplate",
-                  "cardType": "Document",
-                  "icon": "DOCUMENT_TEXT",
-                  "nobackground": true
-                },
-                "documentId": {
-                  "ui:widget": "text"
-                },
-                "documentName": {
-                  "ui:widget": "text"
-                },
-                "documentSource": {
-                  "ui:widget": "text"
-                },
-                "documentType": {
-                  "ui:widget": "text"
-                }
-              },
-              "ui:options": {
-                "addable": false
-              },
-              "ui:dataPath": ["documents"]
-            },
-            "ui:dataPath": ["details"]
-          }
-        }
-      },
 
-      {
-        "title": "Assignee Details",
-        "formSchema": {
-          "type": "object",
-          "properties": {
-            "documents": {
-              "type": "array",
-              "title": "Link or upload the supporting document(s)",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "documentName": {
-                    "title": "Name",
-                    "type": "string"
-                  },
-                  "documentId": {
-                    "title": "Document Id",
-                    "type": "string"
-                  }
-                }
-              }
-            },
-            "supportingDocumentAttached": {
-              "title": "Is the uploaded supporting document(s) valid and relevant?",
-              "type": ["null", "boolean"],
-              "enum": [true, false, null],
-              "default": null
-            },
-            "actionData": {
-              "type": "array",
-              "title": "Assignee",
-              "items": {
-                "type": "object",
-                "default": {
-                  "action": "ADD",
-                  "supportingDocumentAttached": null,
-                  "party": {
-                    "partyType": "INDIVIDUAL",
-                    "firstName": "",
-                    "lastName": "",
-                    "middleName": null,
-                    "endDate": null,
-                    "relationshipToTheCurrentOwner": null,
-
-                    "entityType": "Other",
-                    "prefix": null,
-                    "suffix": null,
-                    "emails": [
-                      {
-                        "emailAddress": null,
-                        "emailType": "PERSONAL",
-                        "isPreferred": true
-                      }
-                    ],
-                    "phones": [
-                      {
-                        "dialNumber": null,
-                        "phoneType": "HOME",
-                        "isPreferred": true
-                      }
-                    ],
-                    "addresses": [
-                      {
-                        "addressType": "RESIDENCE",
-                        "addressLine1": "",
-                        "addressLine2": null,
-                        "city": "",
-                        "state": "",
-                        "zipCode": "",
-                        "isPreferred": true
-                      }
-                    ],
-                    "identifications": [
-                      {
-                        "identificationValue": null,
-                        "identificationType": "SSN"
-                      }
-                    ]
-                  }
-                },
-                "properties": {
-                  "action": {
-                    "type": "string",
-                    "title": "Action",
-                    "enum": ["ADD", "UPDATE", "DELETE", "NONE"]
-                  },
-                  "party": {
+            {
+                "title": "Assignee Details",
+                "formSchema": {
                     "type": "object",
                     "properties": {
-                      "partyType": {
-                        "type": "string",
-                        "title": "Party type",
-                        "enum": ["INDIVIDUAL", "TRUST", "ORGANIZATION"]
-                      },
-                      "collateralAmount": {
-                        "type": ["number", "null"],
-                        "title": "Collateral Amount",
-                        "default": null
-                      },
-                      "usCitizen": {
-                        "type": ["null", "string"],
-                        "title": "US Citizen",
-                        "enum": ["Yes", "No", null],
-                        "default": null
-                      },
-                      "identifications": {
-                        "type": "array",
-                        "title": "",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "identificationValue": {
-                              "type": ["string", "null"],
-                              "title": "SSN"
-                            }
-                          }
-                        }
-                      },
-                      "relationshipToTheCurrentOwner": {
-                        "type": ["string", "null"],
-                        "title": "Relationship to current owner",
-                        "enum": [
-                          "TRUSTEE",
-                          "TRUSTEEOFMINOR",
-                          "TRUSTEEOFINCOMPETENT",
-                          "POWEROFATTORNEY",
-                          "CONTROLLINGPERSONOFENTITY",
-                          "BROTHER",
-                          "CHILD",
-                          "DAUGHTER",
-                          "DOMESTICPARTNER",
-                          "EXECUTOR",
-                          "FATHER",
-                          "FIANCE",
-                          "GRANDCHILD",
-                          "LIFEPARTNER",
-                          "MOTHER",
-                          "SISTER",
-                          "SON",
-                          "SPOUSE",
-                          "STEPFATHER",
-                          "STEPMOTHER",
-                          "SELF",
-                          "BUSINESS",
-                          "BUSINESSASSOCIATE",
-                          "PARTNER",
-                          "EMPLOYER",
-                          "FORMERSPOUSE",
-                          "GRANDPARENT",
-                          "PARENT",
-                          "OWNER",
-                          "SIBLING",
-                          "STEPCHILD",
-                          "STEPPARENT",
-                          "OTHER"
-                        ],
-                        "default": ""
-                      },
-                      "contactDetailsHeader": {
-                        "type": "object",
-                        "title": "Contact Details"
-                      },
-                      "preferredCommunicationType": {
-                        "type": ["string", "null"],
-                        "enum": ["EMAIL", "PHONE", "Not specified"],
-                        "title": "Preferred contact method"
-                      },
-                      "addresses": {
-                        "type": "array",
-                        "title": "Address",
-                        "items": {
-                          "type": "object",
-                          "default": {
-                            "addressType": "RESIDENCE",
-                            "addressLine1": "",
-                            "addressLine2": null,
-                            "city": "",
-                            "state": "",
-                            "zipCode": "",
-                            "isPreferred": false
-                          },
-                          "properties": {
-                            "addressType": {
-                              "type": "string",
-                              "title": "Address type",
-                              "enum": [
-                                "RESIDENCE",
-                                "BUSINESS",
-                                "SEASONAL",
-                                "POBOX"
-                              ]
-                            },
-                            "addressLine1": {
-                              "type": ["string", "null"],
-                              "title": "Address"
-                            },
-                            "city": {
-                              "type": ["string", "null"],
-                              "title": "City"
-                            },
-                            "state": {
-                              "type": ["string", "null"],
-                              "title": "State",
-                              "enum": [
-                                null,
-                                "AA",
-                                "AE",
-                                "AK",
-                                "AL",
-                                "AP",
-                                "AR",
-                                "AZ",
-                                "CA",
-                                "CD",
-                                "CO",
-                                "CT",
-                                "DC",
-                                "DE",
-                                "FL",
-                                "FN",
-                                "GA",
-                                "GU",
-                                "HI",
-                                "IA",
-                                "ID",
-                                "IL",
-                                "IN",
-                                "KS",
-                                "KY",
-                                "LA",
-                                "MA",
-                                "MD",
-                                "ME",
-                                "MI",
-                                "MN",
-                                "MO",
-                                "MS",
-                                "MT",
-                                "NC",
-                                "ND",
-                                "NE",
-                                "NH",
-                                "NJ",
-                                "NM",
-                                "NV",
-                                "NY",
-                                "OH",
-                                "OK",
-                                "OR",
-                                "PA",
-                                "PR",
-                                "RI",
-                                "SC",
-                                "SD",
-                                "TN",
-                                "TX",
-                                "UT",
-                                "VA",
-                                "VI",
-                                "VT",
-                                "WA",
-                                "WI",
-                                "WV",
-                                "WY"
-                              ],
-                              "default": null
-                            },
-                            "zipCode": {
-                              "type": ["string", "null"],
-                              "title": "Zip"
-                            }
-                          },
-                          "required": ["addressType"]
-                        }
-                      },
-                      "phones": {
-                        "type": "array",
-                        "title": "",
-                        "items": {
-                          "type": "object",
-                          "default": {
-                            "dialNumber": null,
-                            "phoneType": "HOME",
-                            "isPreferred": false
-                          },
-                          "properties": {
-                            "phoneType": {
-                              "type": "string",
-                              "title": "Phone type",
-                              "enum": ["MOBILE", "HOME", "BUSINESS", "FAX"]
-                            },
-                            "dialNumber": {
-                              "type": ["string", "null"],
-                              "title": "Phone"
-                            }
-                          }
-                        }
-                      },
-                      "emails": {
-                        "type": "array",
-                        "title": "",
-                        "items": {
-                          "type": "object",
-                          "default": {
-                            "emailAddress": null,
-                            "emailType": "PERSONAL",
-                            "isPreferred": false
-                          },
-                          "properties": {
-                            "emailType": {
-                              "type": "string",
-                              "title": "Email type",
-                              "enum": ["PERSONAL", "BUSINESS", "OTHER"]
-                            },
-                            "emailAddress": {
-                              "type": ["string", "null"],
-                              "title": "Email"
-                            }
-                          }
-                        }
-                      }
-                    },
-                    "required": ["partyType", "firstName", "lastName"],
-                    "allOf": [
-                      {
-                        "if": {
-                          "properties": {
-                            "usCitizen": {
-                              "const": "No"
-                            }
-                          },
-                          "required": ["usCitizen"]
-                        },
-                        "then": {
-                          "properties": {
-                            "countryOfCitizenship": {
-                              "type": "string",
-                              "title": "Country of Citizenship",
-                              "enum": [
-                                "AF",
-                                "AL",
-                                "DZ",
-                                "AD",
-                                "AO",
-                                "AR",
-                                "AM",
-                                "AU",
-                                "AT",
-                                "AZ",
-                                "BS",
-                                "BH",
-                                "BD",
-                                "BB",
-                                "BY",
-                                "BE",
-                                "BZ",
-                                "BJ",
-                                "BT",
-                                "BO",
-                                "BA",
-                                "BW",
-                                "BR",
-                                "BN",
-                                "BG",
-                                "BF",
-                                "BI",
-                                "KH",
-                                "CM",
-                                "CA",
-                                "CV",
-                                "CF",
-                                "TD",
-                                "CL",
-                                "CN",
-                                "CO",
-                                "KM",
-                                "CR",
-                                "HR",
-                                "CU",
-                                "CY",
-                                "CZ",
-                                "CD",
-                                "DK",
-                                "DJ",
-                                "DM",
-                                "DO",
-                                "EC",
-                                "EG",
-                                "SV",
-                                "GQ",
-                                "ER",
-                                "EE",
-                                "SZ",
-                                "ET",
-                                "FJ",
-                                "FI",
-                                "FR",
-                                "GA",
-                                "GM",
-                                "GE",
-                                "DE",
-                                "GH",
-                                "GR",
-                                "GD",
-                                "GT",
-                                "GN",
-                                "GW",
-                                "GY",
-                                "HT",
-                                "HN",
-                                "HU",
-                                "IS",
-                                "IN",
-                                "ID",
-                                "IR",
-                                "IQ",
-                                "IE",
-                                "IL",
-                                "IT",
-                                "JM",
-                                "JP",
-                                "JO",
-                                "KZ",
-                                "KE",
-                                "KI",
-                                "KW",
-                                "KG",
-                                "LA",
-                                "LV",
-                                "LB",
-                                "LS",
-                                "LR",
-                                "LY",
-                                "LI",
-                                "LT",
-                                "LU",
-                                "MG",
-                                "MW",
-                                "MY",
-                                "MV",
-                                "ML",
-                                "MT",
-                                "MR",
-                                "MU",
-                                "MX",
-                                "MD",
-                                "MC",
-                                "MN",
-                                "ME",
-                                "MA",
-                                "MZ",
-                                "MM",
-                                "NA",
-                                "NP",
-                                "NL",
-                                "NZ",
-                                "NI",
-                                "NE",
-                                "NG",
-                                "KP",
-                                "MK",
-                                "NO",
-                                "OM",
-                                "PK",
-                                "PS",
-                                "PA",
-                                "PG",
-                                "PY",
-                                "PE",
-                                "PH",
-                                "PL",
-                                "PT",
-                                "QA",
-                                "RO",
-                                "RU",
-                                "RW",
-                                "SA",
-                                "SN",
-                                "RS",
-                                "SC",
-                                "SL",
-                                "SG",
-                                "SK",
-                                "SI",
-                                "SO",
-                                "ZA",
-                                "KR",
-                                "SS",
-                                "ES",
-                                "LK",
-                                "SD",
-                                "SR",
-                                "SE",
-                                "CH",
-                                "SY",
-                                "TW",
-                                "TJ",
-                                "TZ",
-                                "TH",
-                                "TG",
-                                "TO",
-                                "TT",
-                                "TN",
-                                "TR",
-                                "TM",
-                                "UG",
-                                "UA",
-                                "AE",
-                                "GB",
-                                "US",
-                                "UY",
-                                "UZ",
-                                "VU",
-                                "VA",
-                                "VE",
-                                "VN",
-                                "YE",
-                                "ZM",
-                                "ZW"
-                              ]
-                            }
-                          },
-                          "required": ["countryOfCitizenship"]
-                        },
-                        "else": {
-                          "properties": {}
-                        }
-                      },
-                      {
-                        "if": {
-                          "properties": {
-                            "partyType": {
-                              "enum": ["INDIVIDUAL"]
-                            }
-                          }
-                        },
-                        "then": {
-                          "properties": {
-                            "prefix": {
-                              "type": ["string", "null"],
-                              "title": "Prefix",
-                              "enum": [null, "Dr.", "Mr.", "Mrs.", "Ms."],
-                              "default": null
-                            },
-                            "firstName": {
-                              "type": ["string", "null"],
-                              "title": "First name",
-                              "minLength": 1
-                            },
-                            "middleName": {
-                              "type": ["string", "null"],
-                              "title": "Middle name"
-                            },
-                            "lastName": {
-                              "type": ["string", "null"],
-                              "title": "Last name",
-                              "minLength": 1
-                            },
-                            "suffix": {
-                              "type": ["string", "null"],
-                              "title": "Suffix",
-                              "enum": [null, "JR", "SN", "I", "II", "III"],
-                              "default": null
-                            }
-                          },
-                          "required": ["firstName", "lastName"]
-                        }
-                      },
-                      {
-                        "if": {
-                          "properties": {
-                            "partyType": {
-                              "enum": ["TRUST"]
-                            }
-                          }
-                        },
-                        "then": {
-                          "properties": {
-                            "lastName": {
-                              "type": ["string", "null"],
-                              "title": "Trust name",
-                              "minLength": 1
-                            },
-                            "trustType": {
-                              "type": ["string", "null"],
-                              "title": "Trust type",
-                              "enum": [
-                                null,
-                                "INDIVIDUALTRUST",
-                                "CORPORATETRUST",
-                                "TESTAMENTARYTRUST",
-                                "INTERVIVOSTRUST",
-                                "GRANTORTRUST"
-                              ],
-                              "default": null
-                            },
-                            "documents": {
-                              "type": "array",
-                              "title": "Link or upload the supporting document(s)",
-                              "items": {
+                        "documents": {
+                            "type": "array",
+                            "title": "Link or upload the supporting document(s)",
+                            "items": {
                                 "type": "object",
                                 "properties": {
-                                  "documentName": {
-                                    "title": "Name",
-                                    "type": "string"
-                                  },
-                                  "documentId": {
-                                    "title": "Document Id",
-                                    "type": "string"
-                                  }
+                                    "documentName": {
+                                        "title": "Name",
+                                        "type": "string"
+                                    },
+                                    "documentId": {
+                                        "title": "Document Id",
+                                        "type": "string"
+                                    }
                                 }
-                              }
-                            },
-                            "trustDate": {
-                              "type": ["string", "null"],
-                              "title": "Trust date"
-                            },
-                            "supportingDocumentAttached": {
-                              "title": "Is the uploaded supporting document(s) valid and relevant?",
-                              "type": ["null", "boolean"],
-                              "enum": [true, false, null],
-                              "default": null
                             }
-                          },
-                          "required": ["lastName", "trustDate"]
-                        }
-                      },
-                      {
-                        "if": {
-                          "properties": {
-                            "partyType": {
-                              "enum": ["ORGANIZATION"]
-                            }
-                          }
                         },
-                        "then": {
-                          "properties": {
-                            "lastName": {
-                              "type": ["string", "null"],
-                              "title": "Company name",
-                              "minLength": 1
-                            },
-                            "entityType": {
-                              "type": "string",
-                              "title": "Entity type",
-                              "enum": [
-                                "SOLEPROPRIETORSHIP",
-                                "GENERALPARTNERSHIP",
-                                "LIMITEDPARTNERSHIP",
-                                "SCORPORATION",
-                                "CCORPORATION",
-                                "LIMITEDLIABILITYCOMPANY",
-                                "CHARITABLEORGANIZATION",
-                                "ESTATE",
-                                "CORPORATION",
-                                "UNKNOWN"
-                              ]
-                            }
-                          },
-                          "required": ["lastName"]
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "uiSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "ui:globalOptions": {
-            "duplicateKeySuffixSeparator": "_",
-            "orderable": false,
-            "copyable": false
-          },
-          "ui:submitButtonOptions": {
-            "norender": true
-          },
-          "documents": {
-            "inline": true,
-            "ui:widget": "AttachmentWidget",
-            "ui:options": {
-              "label": true
-            }
-          },
-          "supportingDocumentAttached": {
-            "ui:widget": "RadioWidget",
-            "ui:options": {
-              "enumNames": ["Yes", "No"],
-              "inline": true,
-              "allowNullValue": true
-            }
-          },
-          "actionData": {
-            "ui:dataPath": ["actionData"],
-            "ui:options": {
-              "ArrayFieldTemplate": "TransactionAccordionTemplate",
-              "templateId": "actionData",
-              "label": false,
-              "addable": true,
-              "defaultTitle": "New Assignee",
-              "showDeleteBtn": true,
-              "showAddBtn": true,
-              "tabTitle": "Assignee Details",
-              "addButtonCTA": "Add New Assignee",
-              "showRemoveItemBtn": true,
-              "titlePaths": ["party.firstName", "party.lastName"],
-              "titleSeparator": " ",
-              "isSinglePartyTransaction": true,
-              "allowContentDisabled": true
-            },
-            "items": {
-              "ui:order": ["action", "party", "preferredCommunicationType"],
-              "ui:options": {
-                "ObjectFieldTemplate": "PartyCardFieldTemplate",
-                "label": false,
-                "defaultItemLabel": "New Third Party Designee",
-                "nobackground": true,
-                "expandable": false
-              },
-              "action": {
-                "ui:widget": "hidden",
-                "ui:options": {
-                  "inline": true,
-                  "enumNames": ["Add", "Update", "Delete", "None"]
-                }
-              },
-              "preferredCommunicationType": {
-                "ui:widget": "RadioWidget",
-                "ui:emptyValue": "Not specified",
-                "ui:options": {
-                  "inline": true,
-                  "enumNames": ["Email", "Phone", "Not specified"],
-                  "allowNullValue": true
-                }
-              },
-              "party": {
-                "ui:order": [
-                  "collateralAmount",
-                  "relationshipToTheCurrentOwner",
-                  "partyType",
-                  "prefix",
-                  "firstName",
-                  "middleName",
-                  "lastName",
-                  "suffix",
-                  "trustType",
-                  "documents",
-                  "trustDate",
-                  "supportingDocumentAttached",
-                  "entityType",
-                  "identifications",
-                  "usCitizen",
-                  "countryOfCitizenship",
-                  "contactDetailsHeader",
-                  "preferredCommunicationType",
-                  "addresses",
-                  "phones",
-                  "emails"
-                ],
-                "ui:options": {
-                  "label": false
-                },
-                "partyType": {
-                  "ui:widget": "radio",
-                  "ui:options": {
-                    "inline": true,
-                    "enumNames": ["Individual", "Trust", "Estate/Organization"]
-                  }
-                },
-                "trustType": {
-                  "ui:options": {
-                    "ui:widget": "SelectWidget",
-                    "enumNames": [
-                      "Select trust type",
-                      "Individual Trust",
-                      "Corporate Trust",
-                      "Testamentary Trust",
-                      "Inter Vivos Trust",
-                      "Grantor Trust"
-                    ]
-                  },
-                  "ui:placeholder": "Select trust type"
-                },
-                "uploadDocuments": {
-                  "inline": true,
-                  "ui:options": {
-                    "label": true,
-                    "omitValue": true
-                  },
-                  "upload": {
-                    "ui:widget": "AutoCompleteWidget",
-                    "ui:placeholder": "Find existing documents...",
-                    "ui:options": {
-                      "label": false,
-                      "icon": "Search"
-                    }
-                  },
-                  "or": {
-                    "ui:options": {
-                      "label": false,
-                      "inline": true
-                    }
-                  },
-                  "attachment": {
-                    "ui:options": {
-                      "label": false,
-                      "showFiles": false
-                    },
-                    "ui:props": {
-                      "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                      "apiMethod": "get"
-                    }
-                  }
-                },
-                "documents": {
-                  "inline": true,
-                  "ui:widget": "AttachmentWidget",
-                  "ui:options": {
-                    "label": true
-                  }
-                },
-                "supportingDocumentAttached": {
-                  "ui:widget": "RadioWidget",
-                  "ui:options": {
-                    "enumNames": ["Yes", "No"],
-                    "inline": true,
-                    "allowNullValue": true
-                  }
-                },
-                "entityType": {
-                  "ui:options": {
-                    "enumNames": [
-                      "Sole Proprietorship",
-                      "General Partnership",
-                      "Limited Partnership",
-                      "S Corporation",
-                      "C Corporation",
-                      "Limited Liability Company",
-                      "Charitable Organization",
-                      "Estate",
-                      "Corporation",
-                      "Other"
-                    ]
-                  }
-                },
-                "collateralAmount": {
-                  "ui:options": {
-                    "prefix": "$",
-                    "allowDecimal": true,
-                    "decimalPlaces": 2
-                  }
-                },
-                "usCitizen": {
-                  "ui:widget": "RadioWidget",
-                  "ui:options": {
-                    "inline": true,
-                    "enumNames": ["Yes", "No"],
-                    "allowNullValue": true
-                  }
-                },
-                "countryOfCitizenship": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": [
-                      "Select country of citizenship",
-                      "Afghanistan",
-                      "Albania",
-                      "Algeria",
-                      "Andorra",
-                      "Angola",
-                      "Antigua and Barbuda",
-                      "Argentina",
-                      "Armenia",
-                      "Australia",
-                      "Austria",
-                      "Azerbaijan",
-                      "Bahamas",
-                      "Bahrain",
-                      "Bangladesh",
-                      "Barbados",
-                      "Belarus",
-                      "Belgium",
-                      "Belize",
-                      "Benin",
-                      "Bhutan",
-                      "Bolivia",
-                      "Bosnia and Herzegovina",
-                      "Botswana",
-                      "Brazil",
-                      "Brunei",
-                      "Bulgaria",
-                      "Burkina Faso",
-                      "Burundi",
-                      "Cambodia",
-                      "Cameroon",
-                      "Canada",
-                      "Central African Republic",
-                      "Chad",
-                      "Chile",
-                      "China",
-                      "Colombia",
-                      "Comoros",
-                      "Congo (Brazzaville)",
-                      "Congo (Kinshasa)",
-                      "Cook Islands",
-                      "Costa Rica",
-                      "Côte d'Ivoire",
-                      "Croatia",
-                      "Cuba",
-                      "Cyprus",
-                      "Czech Republic",
-                      "Denmark",
-                      "Djibouti",
-                      "Dominica",
-                      "Dominican Republic",
-                      "Ecuador",
-                      "Egypt",
-                      "El Salvador",
-                      "Equatorial Guinea",
-                      "Eritrea",
-                      "Estonia",
-                      "Eswatini (formerly Swaziland)",
-                      "Ethiopia",
-                      "Fiji",
-                      "Finland",
-                      "France",
-                      "Gabon",
-                      "Gambia",
-                      "Georgia",
-                      "Germany",
-                      "Ghana",
-                      "Greece",
-                      "Grenada",
-                      "Guatemala",
-                      "Guinea",
-                      "Guinea-Bissau",
-                      "Guyana",
-                      "Haiti",
-                      "Honduras",
-                      "Hungary",
-                      "Iceland",
-                      "India",
-                      "Indonesia",
-                      "Iran",
-                      "Iraq",
-                      "Ireland",
-                      "Israel",
-                      "Italy",
-                      "Jamaica",
-                      "Japan",
-                      "Jordan",
-                      "Kazakhstan",
-                      "Kenya",
-                      "Kiribati",
-                      "Kosovo",
-                      "Kuwait",
-                      "Kyrgyzstan",
-                      "Laos",
-                      "Latvia",
-                      "Lebanon",
-                      "Lesotho",
-                      "Liberia",
-                      "Libya",
-                      "Liechtenstein",
-                      "Lithuania",
-                      "Luxembourg",
-                      "Macedonia (FYROM)",
-                      "Madagascar",
-                      "Malawi",
-                      "Malaysia",
-                      "Maldives",
-                      "Mali",
-                      "Malta",
-                      "Marshall Islands",
-                      "Mauritania",
-                      "Mauritius",
-                      "Mexico",
-                      "Micronesia",
-                      "Moldova",
-                      "Monaco",
-                      "Mongolia",
-                      "Montenegro",
-                      "Morocco",
-                      "Mozambique",
-                      "Myanmar (formerly Burma)",
-                      "Namibia",
-                      "Nauru",
-                      "Nepal",
-                      "Netherlands",
-                      "New Zealand",
-                      "Nicaragua",
-                      "Niger",
-                      "Nigeria",
-                      "North Korea",
-                      "North Macedonia",
-                      "Norway",
-                      "Oman",
-                      "Pakistan",
-                      "Palau",
-                      "Panama",
-                      "Papua New Guinea",
-                      "Paraguay",
-                      "Peru",
-                      "Philippines",
-                      "Poland",
-                      "Portugal",
-                      "Qatar",
-                      "Romania",
-                      "Russia",
-                      "Rwanda",
-                      "Saint Kitts and Nevis",
-                      "Saint Lucia",
-                      "Saint Vincent and the Grenadines",
-                      "Samoa",
-                      "San Marino",
-                      "Sao Tome and Principe",
-                      "Saudi Arabia",
-                      "Senegal",
-                      "Serbia",
-                      "Seychelles",
-                      "Sierra Leone",
-                      "Singapore",
-                      "Sint Maarten (Dutch part)",
-                      "Slovakia",
-                      "Slovenia",
-                      "Solomon Islands",
-                      "Somalia",
-                      "South Africa",
-                      "South Korea",
-                      "South Sudan",
-                      "Spain",
-                      "Sri Lanka",
-                      "Sudan",
-                      "Suriname",
-                      "Sweden",
-                      "Switzerland",
-                      "Syria",
-                      "Tajikistan",
-                      "Tanzania",
-                      "Thailand",
-                      "Timor-Leste (East Timor)",
-                      "Togo",
-                      "Tonga",
-                      "Trinidad and Tobago",
-                      "Tunisia",
-                      "Turkey",
-                      "Turkmenistan",
-                      "Tuvalu",
-                      "Uganda",
-                      "Ukraine",
-                      "United Arab Emirates",
-                      "United Kingdom",
-                      "United States",
-                      "Uruguay",
-                      "Uzbekistan",
-                      "Vanuatu",
-                      "Vatican City",
-                      "Venezuela",
-                      "Vietnam",
-                      "Yemen",
-                      "Zambia",
-                      "Zimbabwe"
-                    ]
-                  },
-                  "ui:placeholder": "Select country of citizenship"
-                },
-                "relationshipToTheCurrentOwner": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": [
-                      "Select relationship to current owner",
-                      "Trustee",
-                      "Trustee of Minor",
-                      "Trustee of Incompetent",
-                      "Power of Attorney",
-                      "Controlling Person of Entity",
-                      "Brother",
-                      "Child",
-                      "Daughter",
-                      "Domestic Partner",
-                      "Executor",
-                      "Father",
-                      "Fiance",
-                      "Grandchild",
-                      "Life Partner",
-                      "Mother",
-                      "Sister",
-                      "Son",
-                      "Spouse",
-                      "Stepfather",
-                      "Stepmother",
-                      "Self",
-                      "Business",
-                      "Business Associate",
-                      "Partner",
-                      "Employer",
-                      "Former Spouse",
-                      "Grandparent",
-                      "Parent",
-                      "Owner",
-                      "Sibling",
-                      "Stepchild",
-                      "Stepparent",
-                      "Other"
-                    ]
-                  },
-                  "ui:placeholder": "Select relationship to current owner"
-                },
-                "identifications": {
-                  "ui:options": {
-                    "addable": false,
-                    "orderable": false,
-                    "removable": false,
-                    "label": false
-                  },
-                  "items": {
-                    "ui:options": {
-                      "label": false,
-                      "noMargin": true,
-                      "nobackground": true
-                    },
-                    "identificationValue": {
-                      "ui:widget": "NumbersWidget",
-                      "format": "###-##-####",
-                      "pattern": "^(\\d{3}-\\d{2}-\\d{4}|\\d{9})$",
-                      "errorMessage": "Please enter a valid SSN (XXX-XX-XXXX or 9 digits)"
-                    }
-                  }
-                },
+                        "supportingDocumentAttached": {
+                            "title": "Is the uploaded supporting document(s) valid and relevant?",
+                            "type": ["null", "boolean"],
+                            "enum": [true, false, null],
+                            "default": null
+                        },
+                        "actionData": {
+                            "type": "array",
+                            "title": "Assignee",
+                            "items": {
+                                "type": "object",
+                                "default": {
+                                    "action": "ADD",
+                                    "supportingDocumentAttached": null,
+                                    "party": {
+                                        "partyType": "INDIVIDUAL",
+                                        "firstName": "",
+                                        "lastName": "",
+                                        "middleName": null,
+                                        "endDate": null,
+                                        "relationshipToTheCurrentOwner": null,
 
-                "preferredCommunicationType": {
-                  "ui:widget": "RadioWidget",
-                  "ui:options": {
-                    "inline": true,
-                    "enumNames": ["Email", "Phone", "Not specified"]
-                  }
+                                        "entityType": "Other",
+                                        "prefix": null,
+                                        "suffix": null,
+                                        "emails": [
+                                            {
+                                                "emailAddress": null,
+                                                "emailType": "PERSONAL",
+                                                "isPreferred": true
+                                            }
+                                        ],
+                                        "phones": [
+                                            {
+                                                "dialNumber": null,
+                                                "phoneType": "HOME",
+                                                "isPreferred": true
+                                            }
+                                        ],
+                                        "addresses": [
+                                            {
+                                                "addressType": "RESIDENCE",
+                                                "addressLine1": "",
+                                                "addressLine2": null,
+                                                "city": "",
+                                                "state": "",
+                                                "zipCode": "",
+                                                "isPreferred": true
+                                            }
+                                        ],
+                                        "identifications": [
+                                            {
+                                                "identificationValue": null,
+                                                "identificationType": "SSN"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": [
+                                            "ADD",
+                                            "UPDATE",
+                                            "DELETE",
+                                            "NONE"
+                                        ]
+                                    },
+                                    "party": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partyType": {
+                                                "type": "string",
+                                                "title": "Party type",
+                                                "enum": [
+                                                    "INDIVIDUAL",
+                                                    "TRUST",
+                                                    "ORGANIZATION"
+                                                ]
+                                            },
+                                            "collateralAmount": {
+                                                "type": ["number", "null"],
+                                                "title": "Collateral Amount",
+                                                "default": null
+                                            },
+                                            "usCitizen": {
+                                                "type": ["null", "string"],
+                                                "title": "US Citizen",
+                                                "enum": ["Yes", "No", null],
+                                                "default": null
+                                            },
+                                            "identifications": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "identificationValue": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "SSN"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "relationshipToTheCurrentOwner": {
+                                                "type": ["string", "null"],
+                                                "title": "Relationship to current owner",
+                                                "enum": [
+                                                    "TRUSTEE",
+                                                    "TRUSTEEOFMINOR",
+                                                    "TRUSTEEOFINCOMPETENT",
+                                                    "POWEROFATTORNEY",
+                                                    "CONTROLLINGPERSONOFENTITY",
+                                                    "BROTHER",
+                                                    "CHILD",
+                                                    "DAUGHTER",
+                                                    "DOMESTICPARTNER",
+                                                    "EXECUTOR",
+                                                    "FATHER",
+                                                    "FIANCE",
+                                                    "GRANDCHILD",
+                                                    "LIFEPARTNER",
+                                                    "MOTHER",
+                                                    "SISTER",
+                                                    "SON",
+                                                    "SPOUSE",
+                                                    "STEPFATHER",
+                                                    "STEPMOTHER",
+                                                    "SELF",
+                                                    "BUSINESS",
+                                                    "BUSINESSASSOCIATE",
+                                                    "PARTNER",
+                                                    "EMPLOYER",
+                                                    "FORMERSPOUSE",
+                                                    "GRANDPARENT",
+                                                    "PARENT",
+                                                    "OWNER",
+                                                    "SIBLING",
+                                                    "STEPCHILD",
+                                                    "STEPPARENT",
+                                                    "OTHER"
+                                                ],
+                                                "default": ""
+                                            },
+                                            "contactDetailsHeader": {
+                                                "type": "object",
+                                                "title": "Contact Details"
+                                            },
+                                            "preferredCommunicationType": {
+                                                "type": ["string", "null"],
+                                                "enum": [
+                                                    "EMAIL",
+                                                    "PHONE",
+                                                    "Not specified"
+                                                ],
+                                                "title": "Preferred contact method"
+                                            },
+                                            "addresses": {
+                                                "type": "array",
+                                                "title": "Address",
+                                                "items": {
+                                                    "type": "object",
+                                                    "default": {
+                                                        "addressType": "RESIDENCE",
+                                                        "addressLine1": "",
+                                                        "addressLine2": null,
+                                                        "city": "",
+                                                        "state": "",
+                                                        "zipCode": "",
+                                                        "isPreferred": false
+                                                    },
+                                                    "properties": {
+                                                        "addressType": {
+                                                            "type": "string",
+                                                            "title": "Address type",
+                                                            "enum": [
+                                                                "RESIDENCE",
+                                                                "BUSINESS",
+                                                                "SEASONAL",
+                                                                "POBOX"
+                                                            ]
+                                                        },
+                                                        "addressLine1": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Address"
+                                                        },
+                                                        "city": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "City"
+                                                        },
+                                                        "state": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "State",
+                                                            "enum": [
+                                                                null,
+                                                                "AA",
+                                                                "AE",
+                                                                "AK",
+                                                                "AL",
+                                                                "AP",
+                                                                "AR",
+                                                                "AZ",
+                                                                "CA",
+                                                                "CD",
+                                                                "CO",
+                                                                "CT",
+                                                                "DC",
+                                                                "DE",
+                                                                "FL",
+                                                                "FN",
+                                                                "GA",
+                                                                "GU",
+                                                                "HI",
+                                                                "IA",
+                                                                "ID",
+                                                                "IL",
+                                                                "IN",
+                                                                "KS",
+                                                                "KY",
+                                                                "LA",
+                                                                "MA",
+                                                                "MD",
+                                                                "ME",
+                                                                "MI",
+                                                                "MN",
+                                                                "MO",
+                                                                "MS",
+                                                                "MT",
+                                                                "NC",
+                                                                "ND",
+                                                                "NE",
+                                                                "NH",
+                                                                "NJ",
+                                                                "NM",
+                                                                "NV",
+                                                                "NY",
+                                                                "OH",
+                                                                "OK",
+                                                                "OR",
+                                                                "PA",
+                                                                "PR",
+                                                                "RI",
+                                                                "SC",
+                                                                "SD",
+                                                                "TN",
+                                                                "TX",
+                                                                "UT",
+                                                                "VA",
+                                                                "VI",
+                                                                "VT",
+                                                                "WA",
+                                                                "WI",
+                                                                "WV",
+                                                                "WY"
+                                                            ],
+                                                            "default": null
+                                                        },
+                                                        "zipCode": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Zip"
+                                                        }
+                                                    },
+                                                    "required": ["addressType"]
+                                                }
+                                            },
+                                            "phones": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "default": {
+                                                        "dialNumber": null,
+                                                        "phoneType": "HOME",
+                                                        "isPreferred": false
+                                                    },
+                                                    "properties": {
+                                                        "phoneType": {
+                                                            "type": "string",
+                                                            "title": "Phone type",
+                                                            "enum": [
+                                                                "MOBILE",
+                                                                "HOME",
+                                                                "BUSINESS",
+                                                                "FAX"
+                                                            ]
+                                                        },
+                                                        "dialNumber": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Phone"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "emails": {
+                                                "type": "array",
+                                                "title": "",
+                                                "items": {
+                                                    "type": "object",
+                                                    "default": {
+                                                        "emailAddress": null,
+                                                        "emailType": "PERSONAL",
+                                                        "isPreferred": false
+                                                    },
+                                                    "properties": {
+                                                        "emailType": {
+                                                            "type": "string",
+                                                            "title": "Email type",
+                                                            "enum": [
+                                                                "PERSONAL",
+                                                                "BUSINESS",
+                                                                "OTHER"
+                                                            ]
+                                                        },
+                                                        "emailAddress": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Email"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "required": [
+                                            "partyType",
+                                            "firstName",
+                                            "lastName"
+                                        ],
+                                        "allOf": [
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "usCitizen": {
+                                                            "const": "No"
+                                                        }
+                                                    },
+                                                    "required": ["usCitizen"]
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "countryOfCitizenship": {
+                                                            "type": "string",
+                                                            "title": "Country of Citizenship",
+                                                            "enum": [
+                                                                "AF",
+                                                                "AL",
+                                                                "DZ",
+                                                                "AD",
+                                                                "AO",
+                                                                "AR",
+                                                                "AM",
+                                                                "AU",
+                                                                "AT",
+                                                                "AZ",
+                                                                "BS",
+                                                                "BH",
+                                                                "BD",
+                                                                "BB",
+                                                                "BY",
+                                                                "BE",
+                                                                "BZ",
+                                                                "BJ",
+                                                                "BT",
+                                                                "BO",
+                                                                "BA",
+                                                                "BW",
+                                                                "BR",
+                                                                "BN",
+                                                                "BG",
+                                                                "BF",
+                                                                "BI",
+                                                                "KH",
+                                                                "CM",
+                                                                "CA",
+                                                                "CV",
+                                                                "CF",
+                                                                "TD",
+                                                                "CL",
+                                                                "CN",
+                                                                "CO",
+                                                                "KM",
+                                                                "CR",
+                                                                "HR",
+                                                                "CU",
+                                                                "CY",
+                                                                "CZ",
+                                                                "CD",
+                                                                "DK",
+                                                                "DJ",
+                                                                "DM",
+                                                                "DO",
+                                                                "EC",
+                                                                "EG",
+                                                                "SV",
+                                                                "GQ",
+                                                                "ER",
+                                                                "EE",
+                                                                "SZ",
+                                                                "ET",
+                                                                "FJ",
+                                                                "FI",
+                                                                "FR",
+                                                                "GA",
+                                                                "GM",
+                                                                "GE",
+                                                                "DE",
+                                                                "GH",
+                                                                "GR",
+                                                                "GD",
+                                                                "GT",
+                                                                "GN",
+                                                                "GW",
+                                                                "GY",
+                                                                "HT",
+                                                                "HN",
+                                                                "HU",
+                                                                "IS",
+                                                                "IN",
+                                                                "ID",
+                                                                "IR",
+                                                                "IQ",
+                                                                "IE",
+                                                                "IL",
+                                                                "IT",
+                                                                "JM",
+                                                                "JP",
+                                                                "JO",
+                                                                "KZ",
+                                                                "KE",
+                                                                "KI",
+                                                                "KW",
+                                                                "KG",
+                                                                "LA",
+                                                                "LV",
+                                                                "LB",
+                                                                "LS",
+                                                                "LR",
+                                                                "LY",
+                                                                "LI",
+                                                                "LT",
+                                                                "LU",
+                                                                "MG",
+                                                                "MW",
+                                                                "MY",
+                                                                "MV",
+                                                                "ML",
+                                                                "MT",
+                                                                "MR",
+                                                                "MU",
+                                                                "MX",
+                                                                "MD",
+                                                                "MC",
+                                                                "MN",
+                                                                "ME",
+                                                                "MA",
+                                                                "MZ",
+                                                                "MM",
+                                                                "NA",
+                                                                "NP",
+                                                                "NL",
+                                                                "NZ",
+                                                                "NI",
+                                                                "NE",
+                                                                "NG",
+                                                                "KP",
+                                                                "MK",
+                                                                "NO",
+                                                                "OM",
+                                                                "PK",
+                                                                "PS",
+                                                                "PA",
+                                                                "PG",
+                                                                "PY",
+                                                                "PE",
+                                                                "PH",
+                                                                "PL",
+                                                                "PT",
+                                                                "QA",
+                                                                "RO",
+                                                                "RU",
+                                                                "RW",
+                                                                "SA",
+                                                                "SN",
+                                                                "RS",
+                                                                "SC",
+                                                                "SL",
+                                                                "SG",
+                                                                "SK",
+                                                                "SI",
+                                                                "SO",
+                                                                "ZA",
+                                                                "KR",
+                                                                "SS",
+                                                                "ES",
+                                                                "LK",
+                                                                "SD",
+                                                                "SR",
+                                                                "SE",
+                                                                "CH",
+                                                                "SY",
+                                                                "TW",
+                                                                "TJ",
+                                                                "TZ",
+                                                                "TH",
+                                                                "TG",
+                                                                "TO",
+                                                                "TT",
+                                                                "TN",
+                                                                "TR",
+                                                                "TM",
+                                                                "UG",
+                                                                "UA",
+                                                                "AE",
+                                                                "GB",
+                                                                "US",
+                                                                "UY",
+                                                                "UZ",
+                                                                "VU",
+                                                                "VA",
+                                                                "VE",
+                                                                "VN",
+                                                                "YE",
+                                                                "ZM",
+                                                                "ZW"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "countryOfCitizenship"
+                                                    ]
+                                                },
+                                                "else": {
+                                                    "properties": {}
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": [
+                                                                "INDIVIDUAL"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "prefix": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Prefix",
+                                                            "enum": [
+                                                                null,
+                                                                "Dr.",
+                                                                "Mr.",
+                                                                "Mrs.",
+                                                                "Ms."
+                                                            ],
+                                                            "default": null
+                                                        },
+                                                        "firstName": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "First name",
+                                                            "minLength": 1
+                                                        },
+                                                        "middleName": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Middle name"
+                                                        },
+                                                        "lastName": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Last name",
+                                                            "minLength": 1
+                                                        },
+                                                        "suffix": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Suffix",
+                                                            "enum": [
+                                                                null,
+                                                                "JR",
+                                                                "SN",
+                                                                "I",
+                                                                "II",
+                                                                "III"
+                                                            ],
+                                                            "default": null
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "firstName",
+                                                        "lastName"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": ["TRUST"]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "lastName": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Trust name",
+                                                            "minLength": 1
+                                                        },
+                                                        "trustType": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Trust type",
+                                                            "enum": [
+                                                                null,
+                                                                "INDIVIDUALTRUST",
+                                                                "CORPORATETRUST",
+                                                                "TESTAMENTARYTRUST",
+                                                                "INTERVIVOSTRUST",
+                                                                "GRANTORTRUST"
+                                                            ],
+                                                            "default": null
+                                                        },
+                                                        "documents": {
+                                                            "type": "array",
+                                                            "title": "Link or upload the supporting document(s)",
+                                                            "items": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "documentName": {
+                                                                        "title": "Name",
+                                                                        "type": "string"
+                                                                    },
+                                                                    "documentId": {
+                                                                        "title": "Document Id",
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        "trustDate": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Trust date"
+                                                        },
+                                                        "supportingDocumentAttached": {
+                                                            "title": "Is the uploaded supporting document(s) valid and relevant?",
+                                                            "type": [
+                                                                "null",
+                                                                "boolean"
+                                                            ],
+                                                            "enum": [
+                                                                true,
+                                                                false,
+                                                                null
+                                                            ],
+                                                            "default": null
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "lastName",
+                                                        "trustDate"
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "partyType": {
+                                                            "enum": [
+                                                                "ORGANIZATION"
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "properties": {
+                                                        "lastName": {
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "title": "Company name",
+                                                            "minLength": 1
+                                                        },
+                                                        "entityType": {
+                                                            "type": "string",
+                                                            "title": "Entity type",
+                                                            "enum": [
+                                                                "SOLEPROPRIETORSHIP",
+                                                                "GENERALPARTNERSHIP",
+                                                                "LIMITEDPARTNERSHIP",
+                                                                "SCORPORATION",
+                                                                "CCORPORATION",
+                                                                "LIMITEDLIABILITYCOMPANY",
+                                                                "CHARITABLEORGANIZATION",
+                                                                "ESTATE",
+                                                                "CORPORATION",
+                                                                "UNKNOWN"
+                                                            ]
+                                                        }
+                                                    },
+                                                    "required": ["lastName"]
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
                 },
-                "addresses": {
-                  "ui:options": {
-                    "ArrayFieldTemplate": "PartyInfoListTemplate",
-                    "addable": true,
-                    "orderable": false,
-                    "removable": true,
-                    "addButtonCTA": "Add Address",
-                    "label": true,
-                    "title": "Address",
-                    "showDeleteBtn": true,
-                    "showAddBtn": true,
-                    "showRemoveItemBtn": true,
-                    "prefferedCTA": "Preferred Address"
-                  },
-                  "items": {
-                    "ui:options": {
-                      "ObjectFieldTemplate": "PartyCardFieldTemplate",
-                      "label": false,
-                      "noMargin": true,
-                      "nobackground": true
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
                     },
-                    "addressType": {
-                      "ui:widget": "radio",
-                      "ui:options": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "documents": {
                         "inline": true,
-                        "enumNames": [
-                          "Residential",
-                          "Business",
-                          "Seasonal",
-                          "PO Box"
-                        ]
-                      }
+                        "ui:widget": "AttachmentWidget",
+                        "ui:options": {
+                            "label": true
+                        }
                     },
-                    "city": {
-                      "ui:options": {}
+                    "supportingDocumentAttached": {
+                        "ui:widget": "RadioWidget",
+                        "ui:options": {
+                            "enumNames": ["Yes", "No"],
+                            "inline": true,
+                            "allowNullValue": true
+                        }
                     },
-                    "state": {
-                      "ui:options": {
-                        "enumNames": [
-                          "Select state",
-                          "AA",
-                          "AE",
-                          "AK",
-                          "AL",
-                          "AP",
-                          "AR",
-                          "AZ",
-                          "CA",
-                          "CD",
-                          "CO",
-                          "CT",
-                          "DC",
-                          "DE",
-                          "FL",
-                          "FN",
-                          "GA",
-                          "GU",
-                          "HI",
-                          "IA",
-                          "ID",
-                          "IL",
-                          "IN",
-                          "KS",
-                          "KY",
-                          "LA",
-                          "MA",
-                          "MD",
-                          "ME",
-                          "MI",
-                          "MN",
-                          "MO",
-                          "MS",
-                          "MT",
-                          "NC",
-                          "ND",
-                          "NE",
-                          "NH",
-                          "NJ",
-                          "NM",
-                          "NV",
-                          "NY",
-                          "OH",
-                          "OK",
-                          "OR",
-                          "PA",
-                          "PR",
-                          "RI",
-                          "SC",
-                          "SD",
-                          "TN",
-                          "TX",
-                          "UT",
-                          "VA",
-                          "VI",
-                          "VT",
-                          "WA",
-                          "WI",
-                          "WV",
-                          "WY"
-                        ]
-                      }
-                    },
-                    "zipCode": {
-                      "ui:widget": "NumbersWidget",
-                      "pattern": "^[0-9]{5}$",
-                      "format": "#####",
-                      "errorMessage": "Please enter valid zip code (5 digits)"
+                    "actionData": {
+                        "ui:dataPath": ["actionData"],
+                        "ui:options": {
+                            "ArrayFieldTemplate": "TransactionAccordionTemplate",
+                            "templateId": "actionData",
+                            "label": false,
+                            "addable": true,
+                            "defaultTitle": "New Assignee",
+                            "showDeleteBtn": true,
+                            "showAddBtn": true,
+                            "tabTitle": "Assignee Details",
+                            "addButtonCTA": "Add New Assignee",
+                            "showRemoveItemBtn": true,
+                            "titlePaths": ["party.firstName", "party.lastName"],
+                            "titleSeparator": " ",
+                            "isSinglePartyTransaction": true,
+                            "allowContentDisabled": true
+                        },
+                        "items": {
+                            "ui:order": [
+                                "action",
+                                "party",
+                                "preferredCommunicationType"
+                            ],
+                            "ui:options": {
+                                "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                "label": false,
+                                "defaultItemLabel": "New Third Party Designee",
+                                "nobackground": true,
+                                "expandable": false
+                            },
+                            "action": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": [
+                                        "Add",
+                                        "Update",
+                                        "Delete",
+                                        "None"
+                                    ]
+                                }
+                            },
+                            "preferredCommunicationType": {
+                                "ui:widget": "RadioWidget",
+                                "ui:emptyValue": "Not specified",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": [
+                                        "Email",
+                                        "Phone",
+                                        "Not specified"
+                                    ],
+                                    "allowNullValue": true
+                                }
+                            },
+                            "party": {
+                                "ui:order": [
+                                    "collateralAmount",
+                                    "relationshipToTheCurrentOwner",
+                                    "partyType",
+                                    "prefix",
+                                    "firstName",
+                                    "middleName",
+                                    "lastName",
+                                    "suffix",
+                                    "trustType",
+                                    "documents",
+                                    "trustDate",
+                                    "supportingDocumentAttached",
+                                    "entityType",
+                                    "identifications",
+                                    "usCitizen",
+                                    "countryOfCitizenship",
+                                    "contactDetailsHeader",
+                                    "preferredCommunicationType",
+                                    "addresses",
+                                    "phones",
+                                    "emails"
+                                ],
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "partyType": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "inline": true,
+                                        "enumNames": [
+                                            "Individual",
+                                            "Trust",
+                                            "Estate/Organization"
+                                        ]
+                                    }
+                                },
+                                "trustType": {
+                                    "ui:options": {
+                                        "ui:widget": "SelectWidget",
+                                        "enumNames": [
+                                            "Select trust type",
+                                            "Individual Trust",
+                                            "Corporate Trust",
+                                            "Testamentary Trust",
+                                            "Inter Vivos Trust",
+                                            "Grantor Trust"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select trust type"
+                                },
+                                "uploadDocuments": {
+                                    "inline": true,
+                                    "ui:options": {
+                                        "label": true,
+                                        "omitValue": true
+                                    },
+                                    "upload": {
+                                        "ui:widget": "AutoCompleteWidget",
+                                        "ui:placeholder": "Find existing documents...",
+                                        "ui:options": {
+                                            "label": false,
+                                            "icon": "Search"
+                                        }
+                                    },
+                                    "or": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "inline": true
+                                        }
+                                    },
+                                    "attachment": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "showFiles": false
+                                        },
+                                        "ui:props": {
+                                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
+                                            "apiMethod": "get"
+                                        }
+                                    }
+                                },
+                                "documents": {
+                                    "inline": true,
+                                    "ui:widget": "AttachmentWidget",
+                                    "ui:options": {
+                                        "label": true
+                                    }
+                                },
+                                "supportingDocumentAttached": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"],
+                                        "inline": true,
+                                        "allowNullValue": true
+                                    }
+                                },
+                                "entityType": {
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Sole Proprietorship",
+                                            "General Partnership",
+                                            "Limited Partnership",
+                                            "S Corporation",
+                                            "C Corporation",
+                                            "Limited Liability Company",
+                                            "Charitable Organization",
+                                            "Estate",
+                                            "Corporation",
+                                            "Other"
+                                        ]
+                                    }
+                                },
+                                "collateralAmount": {
+                                    "ui:options": {
+                                        "prefix": "$",
+                                        "allowDecimal": true,
+                                        "decimalPlaces": 2
+                                    }
+                                },
+                                "usCitizen": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:options": {
+                                        "inline": true,
+                                        "enumNames": ["Yes", "No"],
+                                        "allowNullValue": true
+                                    }
+                                },
+                                "countryOfCitizenship": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select country of citizenship",
+                                            "Afghanistan",
+                                            "Albania",
+                                            "Algeria",
+                                            "Andorra",
+                                            "Angola",
+                                            "Antigua and Barbuda",
+                                            "Argentina",
+                                            "Armenia",
+                                            "Australia",
+                                            "Austria",
+                                            "Azerbaijan",
+                                            "Bahamas",
+                                            "Bahrain",
+                                            "Bangladesh",
+                                            "Barbados",
+                                            "Belarus",
+                                            "Belgium",
+                                            "Belize",
+                                            "Benin",
+                                            "Bhutan",
+                                            "Bolivia",
+                                            "Bosnia and Herzegovina",
+                                            "Botswana",
+                                            "Brazil",
+                                            "Brunei",
+                                            "Bulgaria",
+                                            "Burkina Faso",
+                                            "Burundi",
+                                            "Cambodia",
+                                            "Cameroon",
+                                            "Canada",
+                                            "Central African Republic",
+                                            "Chad",
+                                            "Chile",
+                                            "China",
+                                            "Colombia",
+                                            "Comoros",
+                                            "Congo (Brazzaville)",
+                                            "Congo (Kinshasa)",
+                                            "Cook Islands",
+                                            "Costa Rica",
+                                            "Côte d'Ivoire",
+                                            "Croatia",
+                                            "Cuba",
+                                            "Cyprus",
+                                            "Czech Republic",
+                                            "Denmark",
+                                            "Djibouti",
+                                            "Dominica",
+                                            "Dominican Republic",
+                                            "Ecuador",
+                                            "Egypt",
+                                            "El Salvador",
+                                            "Equatorial Guinea",
+                                            "Eritrea",
+                                            "Estonia",
+                                            "Eswatini (formerly Swaziland)",
+                                            "Ethiopia",
+                                            "Fiji",
+                                            "Finland",
+                                            "France",
+                                            "Gabon",
+                                            "Gambia",
+                                            "Georgia",
+                                            "Germany",
+                                            "Ghana",
+                                            "Greece",
+                                            "Grenada",
+                                            "Guatemala",
+                                            "Guinea",
+                                            "Guinea-Bissau",
+                                            "Guyana",
+                                            "Haiti",
+                                            "Honduras",
+                                            "Hungary",
+                                            "Iceland",
+                                            "India",
+                                            "Indonesia",
+                                            "Iran",
+                                            "Iraq",
+                                            "Ireland",
+                                            "Israel",
+                                            "Italy",
+                                            "Jamaica",
+                                            "Japan",
+                                            "Jordan",
+                                            "Kazakhstan",
+                                            "Kenya",
+                                            "Kiribati",
+                                            "Kosovo",
+                                            "Kuwait",
+                                            "Kyrgyzstan",
+                                            "Laos",
+                                            "Latvia",
+                                            "Lebanon",
+                                            "Lesotho",
+                                            "Liberia",
+                                            "Libya",
+                                            "Liechtenstein",
+                                            "Lithuania",
+                                            "Luxembourg",
+                                            "Macedonia (FYROM)",
+                                            "Madagascar",
+                                            "Malawi",
+                                            "Malaysia",
+                                            "Maldives",
+                                            "Mali",
+                                            "Malta",
+                                            "Marshall Islands",
+                                            "Mauritania",
+                                            "Mauritius",
+                                            "Mexico",
+                                            "Micronesia",
+                                            "Moldova",
+                                            "Monaco",
+                                            "Mongolia",
+                                            "Montenegro",
+                                            "Morocco",
+                                            "Mozambique",
+                                            "Myanmar (formerly Burma)",
+                                            "Namibia",
+                                            "Nauru",
+                                            "Nepal",
+                                            "Netherlands",
+                                            "New Zealand",
+                                            "Nicaragua",
+                                            "Niger",
+                                            "Nigeria",
+                                            "North Korea",
+                                            "North Macedonia",
+                                            "Norway",
+                                            "Oman",
+                                            "Pakistan",
+                                            "Palau",
+                                            "Panama",
+                                            "Papua New Guinea",
+                                            "Paraguay",
+                                            "Peru",
+                                            "Philippines",
+                                            "Poland",
+                                            "Portugal",
+                                            "Qatar",
+                                            "Romania",
+                                            "Russia",
+                                            "Rwanda",
+                                            "Saint Kitts and Nevis",
+                                            "Saint Lucia",
+                                            "Saint Vincent and the Grenadines",
+                                            "Samoa",
+                                            "San Marino",
+                                            "Sao Tome and Principe",
+                                            "Saudi Arabia",
+                                            "Senegal",
+                                            "Serbia",
+                                            "Seychelles",
+                                            "Sierra Leone",
+                                            "Singapore",
+                                            "Sint Maarten (Dutch part)",
+                                            "Slovakia",
+                                            "Slovenia",
+                                            "Solomon Islands",
+                                            "Somalia",
+                                            "South Africa",
+                                            "South Korea",
+                                            "South Sudan",
+                                            "Spain",
+                                            "Sri Lanka",
+                                            "Sudan",
+                                            "Suriname",
+                                            "Sweden",
+                                            "Switzerland",
+                                            "Syria",
+                                            "Tajikistan",
+                                            "Tanzania",
+                                            "Thailand",
+                                            "Timor-Leste (East Timor)",
+                                            "Togo",
+                                            "Tonga",
+                                            "Trinidad and Tobago",
+                                            "Tunisia",
+                                            "Turkey",
+                                            "Turkmenistan",
+                                            "Tuvalu",
+                                            "Uganda",
+                                            "Ukraine",
+                                            "United Arab Emirates",
+                                            "United Kingdom",
+                                            "United States",
+                                            "Uruguay",
+                                            "Uzbekistan",
+                                            "Vanuatu",
+                                            "Vatican City",
+                                            "Venezuela",
+                                            "Vietnam",
+                                            "Yemen",
+                                            "Zambia",
+                                            "Zimbabwe"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select country of citizenship"
+                                },
+                                "relationshipToTheCurrentOwner": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select relationship to current owner",
+                                            "Trustee",
+                                            "Trustee of Minor",
+                                            "Trustee of Incompetent",
+                                            "Power of Attorney",
+                                            "Controlling Person of Entity",
+                                            "Brother",
+                                            "Child",
+                                            "Daughter",
+                                            "Domestic Partner",
+                                            "Executor",
+                                            "Father",
+                                            "Fiance",
+                                            "Grandchild",
+                                            "Life Partner",
+                                            "Mother",
+                                            "Sister",
+                                            "Son",
+                                            "Spouse",
+                                            "Stepfather",
+                                            "Stepmother",
+                                            "Self",
+                                            "Business",
+                                            "Business Associate",
+                                            "Partner",
+                                            "Employer",
+                                            "Former Spouse",
+                                            "Grandparent",
+                                            "Parent",
+                                            "Owner",
+                                            "Sibling",
+                                            "Stepchild",
+                                            "Stepparent",
+                                            "Other"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select relationship to current owner"
+                                },
+                                "identifications": {
+                                    "ui:options": {
+                                        "addable": false,
+                                        "orderable": false,
+                                        "removable": false,
+                                        "label": false
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
+                                        },
+                                        "identificationValue": {
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "###-##-####",
+                                            "pattern": "^(\\d{3}-\\d{2}-\\d{4}|\\d{9})$",
+                                            "errorMessage": "Please enter a valid SSN (XXX-XX-XXXX or 9 digits)"
+                                        }
+                                    }
+                                },
+
+                                "preferredCommunicationType": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:options": {
+                                        "inline": true,
+                                        "enumNames": [
+                                            "Email",
+                                            "Phone",
+                                            "Not specified"
+                                        ]
+                                    }
+                                },
+                                "addresses": {
+                                    "ui:options": {
+                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
+                                        "addable": true,
+                                        "orderable": false,
+                                        "removable": true,
+                                        "addButtonCTA": "Add Address",
+                                        "label": true,
+                                        "title": "Address",
+                                        "showDeleteBtn": true,
+                                        "showAddBtn": true,
+                                        "showRemoveItemBtn": true,
+                                        "prefferedCTA": "Preferred Address"
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
+                                        },
+                                        "addressType": {
+                                            "ui:widget": "radio",
+                                            "ui:options": {
+                                                "inline": true,
+                                                "enumNames": [
+                                                    "Residential",
+                                                    "Business",
+                                                    "Seasonal",
+                                                    "PO Box"
+                                                ]
+                                            }
+                                        },
+                                        "city": {
+                                            "ui:options": {}
+                                        },
+                                        "state": {
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "Select state",
+                                                    "AA",
+                                                    "AE",
+                                                    "AK",
+                                                    "AL",
+                                                    "AP",
+                                                    "AR",
+                                                    "AZ",
+                                                    "CA",
+                                                    "CD",
+                                                    "CO",
+                                                    "CT",
+                                                    "DC",
+                                                    "DE",
+                                                    "FL",
+                                                    "FN",
+                                                    "GA",
+                                                    "GU",
+                                                    "HI",
+                                                    "IA",
+                                                    "ID",
+                                                    "IL",
+                                                    "IN",
+                                                    "KS",
+                                                    "KY",
+                                                    "LA",
+                                                    "MA",
+                                                    "MD",
+                                                    "ME",
+                                                    "MI",
+                                                    "MN",
+                                                    "MO",
+                                                    "MS",
+                                                    "MT",
+                                                    "NC",
+                                                    "ND",
+                                                    "NE",
+                                                    "NH",
+                                                    "NJ",
+                                                    "NM",
+                                                    "NV",
+                                                    "NY",
+                                                    "OH",
+                                                    "OK",
+                                                    "OR",
+                                                    "PA",
+                                                    "PR",
+                                                    "RI",
+                                                    "SC",
+                                                    "SD",
+                                                    "TN",
+                                                    "TX",
+                                                    "UT",
+                                                    "VA",
+                                                    "VI",
+                                                    "VT",
+                                                    "WA",
+                                                    "WI",
+                                                    "WV",
+                                                    "WY"
+                                                ]
+                                            }
+                                        },
+                                        "zipCode": {
+                                            "ui:widget": "NumbersWidget",
+                                            "pattern": "^[0-9]{5}$",
+                                            "format": "#####",
+                                            "errorMessage": "Please enter valid zip code (5 digits)"
+                                        }
+                                    }
+                                },
+                                "phones": {
+                                    "ui:options": {
+                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
+                                        "addable": true,
+                                        "orderable": false,
+                                        "removable": true,
+                                        "addButtonCTA": "Add Phone",
+                                        "label": true,
+                                        "title": "Phone",
+                                        "showDeleteBtn": true,
+                                        "showAddBtn": true,
+                                        "showRemoveItemBtn": true,
+                                        "prefferedCTA": "Preferred Phone"
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
+                                        },
+                                        "phoneType": {
+                                            "ui:options": {
+                                                "enumNames": [
+                                                    "Mobile",
+                                                    "Home",
+                                                    "Business",
+                                                    "Fax"
+                                                ]
+                                            }
+                                        },
+                                        "dialNumber": {
+                                            "ui:widget": "NumbersWidget",
+                                            "format": "+### (###) ###-####",
+                                            "errorMessage": "Please enter valid phone number"
+                                        }
+                                    }
+                                },
+                                "emails": {
+                                    "ui:options": {
+                                        "ArrayFieldTemplate": "PartyInfoListTemplate",
+                                        "addable": true,
+                                        "orderable": false,
+                                        "removable": true,
+                                        "addButtonCTA": "Add Email",
+                                        "label": true,
+                                        "title": "Email",
+                                        "showDeleteBtn": true,
+                                        "showAddBtn": true,
+                                        "showRemoveItemBtn": true,
+                                        "prefferedCTA": "Preferred Email"
+                                    },
+                                    "items": {
+                                        "ui:options": {
+                                            "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                            "label": false,
+                                            "noMargin": true,
+                                            "nobackground": true
+                                        },
+                                        "emailType": {
+                                            "ui:widget": "radio",
+                                            "ui:options": {
+                                                "inline": true,
+                                                "enumNames": [
+                                                    "Personal",
+                                                    "Business",
+                                                    "Other"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                "prefix": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select prefix",
+                                            "Dr.",
+                                            "Mr.",
+                                            "Mrs.",
+                                            "Ms."
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select prefix"
+                                },
+                                "suffix": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select suffix",
+                                            "JR",
+                                            "SN",
+                                            "I",
+                                            "II",
+                                            "III"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select suffix"
+                                },
+                                "trustDate": {
+                                    "ui:widget": "DateWidgetV2"
+                                }
+                            }
+                        }
                     }
-                  }
-                },
-                "phones": {
-                  "ui:options": {
-                    "ArrayFieldTemplate": "PartyInfoListTemplate",
-                    "addable": true,
-                    "orderable": false,
-                    "removable": true,
-                    "addButtonCTA": "Add Phone",
-                    "label": true,
-                    "title": "Phone",
-                    "showDeleteBtn": true,
-                    "showAddBtn": true,
-                    "showRemoveItemBtn": true,
-                    "prefferedCTA": "Preferred Phone"
-                  },
-                  "items": {
-                    "ui:options": {
-                      "ObjectFieldTemplate": "PartyCardFieldTemplate",
-                      "label": false,
-                      "noMargin": true,
-                      "nobackground": true
-                    },
-                    "phoneType": {
-                      "ui:options": {
-                        "enumNames": ["Mobile", "Home", "Business", "Fax"]
-                      }
-                    },
-                    "dialNumber": {
-                      "ui:widget": "NumbersWidget",
-                      "format": "+### (###) ###-####",
-                      "errorMessage": "Please enter valid phone number"
-                    }
-                  }
-                },
-                "emails": {
-                  "ui:options": {
-                    "ArrayFieldTemplate": "PartyInfoListTemplate",
-                    "addable": true,
-                    "orderable": false,
-                    "removable": true,
-                    "addButtonCTA": "Add Email",
-                    "label": true,
-                    "title": "Email",
-                    "showDeleteBtn": true,
-                    "showAddBtn": true,
-                    "showRemoveItemBtn": true,
-                    "prefferedCTA": "Preferred Email"
-                  },
-                  "items": {
-                    "ui:options": {
-                      "ObjectFieldTemplate": "PartyCardFieldTemplate",
-                      "label": false,
-                      "noMargin": true,
-                      "nobackground": true
-                    },
-                    "emailType": {
-                      "ui:widget": "radio",
-                      "ui:options": {
-                        "inline": true,
-                        "enumNames": ["Personal", "Business", "Other"]
-                      }
-                    }
-                  }
-                },
-                "prefix": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": ["Select prefix", "Dr.", "Mr.", "Mrs.", "Ms."]
-                  },
-                  "ui:placeholder": "Select prefix"
-                },
-                "suffix": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": ["Select suffix", "JR", "SN", "I", "II", "III"]
-                  },
-                  "ui:placeholder": "Select suffix"
-                },
-                "trustDate": {
-                  "ui:widget": "DateWidgetV2"
                 }
-              }
-            }
-          }
-        }
-      },
-      {
-        "title": "Signature",
-        "formSchema": {
-          "type": "object",
-          "properties": {
-            "signatureData": {
-              "type": "object",
-              "properties": {
-                "signatures": {
-                  "type": "array",
-                  "items": {
+            },
+            {
+                "title": "Signature",
+                "formSchema": {
                     "type": "object",
                     "properties": {
-                      "signType": {
-                        "type": "string",
-                        "title": "Type"
-                      },
-                      "signTypeForUI": {
-                        "type": "string",
-                        "title": "Type"
-                      },
-                      "isSignedPresent": {
-                        "title": "Signature present",
-                        "type": "boolean",
-                        "enum": [true, false],
-                        "default": false
-                      },
-                      "signDesignation": {
-                        "type": ["string", "null"],
-                        "title": "Designation",
-                        "enum": [
-                          null,
-                          "Trustee",
-                          "Executor",
-                          "Custodian",
-                          "Guardian",
-                          "Attorney-in-fact",
-                          "Assignee",
-                          "AUTHORIZEDSIGNATORY",
-                          "NA"
-                        ]
-                      },
-                      "signDate": {
-                        "type": ["string", "null"],
-                        "title": "Signature date",
-                        "default": null
-                      }
+                        "signatureData": {
+                            "type": "object",
+                            "properties": {
+                                "signatures": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "signType": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
+                                            "signTypeForUI": {
+                                                "type": "string",
+                                                "title": "Type"
+                                            },
+                                            "isSignedPresent": {
+                                                "title": "Signature present",
+                                                "type": "boolean",
+                                                "enum": [true, false],
+                                                "default": false
+                                            },
+                                            "signDesignation": {
+                                                "type": ["string", "null"],
+                                                "title": "Designation",
+                                                "enum": [
+                                                    null,
+                                                    "Trustee",
+                                                    "Executor",
+                                                    "Custodian",
+                                                    "Guardian",
+                                                    "Attorney-in-fact",
+                                                    "Assignee",
+                                                    "AUTHORIZEDSIGNATORY",
+                                                    "NA"
+                                                ]
+                                            },
+                                            "signDate": {
+                                                "type": ["string", "null"],
+                                                "title": "Signature date",
+                                                "default": null
+                                            }
+                                        }
+                                    },
+                                    "default": [
+                                        {
+                                            "isSignedPresent": false,
+                                            "signDate": null,
+                                            "signDesignation": null,
+                                            "signType": "OWNER",
+                                            "signTypeForUI": "Owner"
+                                        },
+                                        {
+                                            "isSignedPresent": false,
+                                            "signDate": null,
+                                            "signDesignation": null,
+                                            "signType": "JOINT_OWNER",
+                                            "signTypeForUI": "Joint Owner"
+                                        },
+                                        {
+                                            "isSignedPresent": false,
+                                            "signDate": null,
+                                            "signDesignation": null,
+                                            "signType": "IRREVOCABLE_BENEFICIARY",
+                                            "signTypeForUI": "Irrevocable Beneficiary"
+                                        }
+                                    ]
+                                },
+                                "notarySignatures": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "commissionExpiredDate": {
+                                                "type": "string",
+                                                "title": "Commission expired date"
+                                            },
+                                            "signDate": {
+                                                "type": "string",
+                                                "title": "Sign date"
+                                            },
+                                            "isSealPresent": {
+                                                "title": "Seal present",
+                                                "type": "boolean",
+                                                "enum": [true, false],
+                                                "default": false
+                                            },
+                                            "isSignedPresent": {
+                                                "title": "Signed present",
+                                                "type": "boolean",
+                                                "enum": [true, false],
+                                                "default": false
+                                            }
+                                        }
+                                    },
+                                    "default": [
+                                        {
+                                            "commissionExpiredDate": null,
+                                            "signDate": null,
+                                            "isSealPresent": false,
+                                            "isSignedPresent": false,
+                                            "signType": "NOTARY",
+                                            "signTypeForUI": "Notary"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
                     }
-                  },
-                  "default": [
-                    {
-                      "isSignedPresent": false,
-                      "signDate": null,
-                      "signDesignation": null,
-                      "signType": "OWNER",
-                      "signTypeForUI": "Owner"
-                    },
-                    {
-                      "isSignedPresent": false,
-                      "signDate": null,
-                      "signDesignation": null,
-                      "signType": "JOINT_OWNER",
-                      "signTypeForUI": "Joint Owner"
-                    },
-                    {
-                      "isSignedPresent": false,
-                      "signDate": null,
-                      "signDesignation": null,
-                      "signType": "IRREVOCABLE_BENEFICIARY",
-                      "signTypeForUI": "Irrevocable Beneficiary"
-                    }
-                  ]
                 },
-                "notarySignatures": {
-                  "type": "array",
-                  "items": {
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "signatureData": {
+                        "ui:dataPath": ["signatureData"],
+                        "ui:options": { "label": false },
+                        "signatures": {
+                            "ui:dataPath": ["signatureData", "signatures"],
+                            "ui:options": {
+                                "ArrayFieldTemplate": "TransactionAccordionTemplate",
+                                "templateId": "signatures",
+                                "addable": false,
+                                "orderable": false,
+                                "removable": false,
+                                "label": false,
+                                "showAddBtn": false,
+                                "showDeleteBtn": false,
+                                "showRemoveItemBtn": false,
+                                "tabTitle": "Signature",
+                                "allowContentDisabled": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                    "title": "Signature",
+                                    "label": false,
+                                    "expandable": false,
+                                    "nobackground": true
+                                },
+                                "signType": {
+                                    "ui:options": {
+                                        "disabled": true
+                                    },
+                                    "ui:widget": "hidden"
+                                },
+                                "signTypeForUI": {
+                                    "ui:options": {
+                                        "omitValue": true,
+                                        "disabled": true
+                                    }
+                                },
+                                "isSignedPresent": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"]
+                                    }
+                                },
+                                "signDesignation": {
+                                    "ui:widget": "select",
+                                    "ui:options": {
+                                        "enumNames": [
+                                            "Select designation",
+                                            "Trustee",
+                                            "Executor",
+                                            "Custodian",
+                                            "Guardian",
+                                            "Attorney-in-fact",
+                                            "Assignee",
+                                            "Authorized signatory",
+                                            "NA"
+                                        ]
+                                    },
+                                    "ui:placeholder": "Select designation"
+                                },
+                                "signDate": {
+                                    "ui:widget": "DateWidgetV2"
+                                }
+                            }
+                        },
+                        "notarySignatures": {
+                            "ui:dataPath": [
+                                "signatureData",
+                                "notarySignatures"
+                            ],
+                            "ui:options": {
+                                "ArrayFieldTemplate": "TransactionAccordionTemplate",
+                                "templateId": "signatures",
+                                "addable": false,
+                                "orderable": false,
+                                "removable": false,
+                                "label": false,
+                                "showAddBtn": false,
+                                "showDeleteBtn": false,
+                                "showRemoveItemBtn": false,
+                                "tabTitle": "Signature",
+                                "allowContentDisabled": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "PartyCardFieldTemplate",
+                                    "title": "Signature",
+                                    "label": false,
+                                    "expandable": false,
+                                    "nobackground": true
+                                },
+                                "commissionExpiredDate": {
+                                    "ui:widget": "DateWidgetV2"
+                                },
+                                "signDate": {
+                                    "ui:widget": "DateWidgetV2"
+                                },
+                                "isSealPresent": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"]
+                                    }
+                                },
+                                "isSignedPresent": {
+                                    "ui:widget": "SelectWidget",
+                                    "ui:options": {
+                                        "enumNames": ["Yes", "No"]
+                                    }
+                                },
+                                "signTypeForUI": {
+                                    "ui:options": {
+                                        "omitValue": true,
+                                        "disabled": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Summary",
+                "formSchema": {
                     "type": "object",
                     "properties": {
-                      "commissionExpiredDate": {
-                        "type": "string",
-                        "title": "Commission expired date"
-                      },
-                      "signDate": {
-                        "type": "string",
-                        "title": "Sign date"
-                      },
-                      "isSealPresent": {
-                        "title": "Seal present",
-                        "type": "boolean",
-                        "enum": [true, false],
-                        "default": false
-                      },
-                      "isSignedPresent": {
-                        "title": "Signed present",
-                        "type": "boolean",
-                        "enum": [true, false],
-                        "default": false
-                      }
+                        "summary": {
+                            "type": "string"
+                        },
+                        "validationUrl": {
+                            "type": "string",
+                            "default": "api/bpm/v1/policies/{{customData.planCode}}/{{customData.policyNumber}}/parties/{{customData.partyId}}/Assignees/validation"
+                        }
                     }
-                  },
-                  "default": [
-                    {
-                      "commissionExpiredDate": null,
-                      "signDate": null,
-                      "isSealPresent": false,
-                      "isSignedPresent": false,
-                      "signType": "NOTARY",
-                      "signTypeForUI": "Notary"
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:hideFooter": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "summary": {
+                        "ui:options": {
+                            "label": false,
+                            "dataKey": "actionData",
+                            "templateType": "summaryCard",
+                            "ObjectFieldTemplate": "TransactionSummaryTemplate",
+                            "sections": [
+                                {
+                                    "label": "Identification",
+                                    "fields": [{ "key": "ssn", "label": "SSN" }]
+                                },
+                                {
+                                    "label": "Contact Info",
+                                    "fields": [
+                                        {
+                                            "key": "preferredCommunicationType",
+                                            "label": "Preferred contact method"
+                                        },
+                                        {
+                                            "key": "address",
+                                            "label": "Address"
+                                        },
+                                        { "key": "phone", "label": "Phone" },
+                                        { "key": "email", "label": "Email" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "validationUrl": {
+                        "ui:widget": "hidden"
                     }
-                  ]
                 }
-              }
             }
-          }
-        },
-        "uiSchema": {
-          "ui:globalOptions": {
-            "duplicateKeySuffixSeparator": "_",
-            "orderable": false,
-            "copyable": false
-          },
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "ui:submitButtonOptions": {
-            "norender": true
-          },
-          "signatureData": {
-            "ui:dataPath": ["signatureData"],
-            "ui:options": { "label": false },
-            "signatures": {
-              "ui:dataPath": ["signatureData", "signatures"],
-              "ui:options": {
-                "ArrayFieldTemplate": "TransactionAccordionTemplate",
-                "templateId": "signatures",
-                "addable": false,
-                "orderable": false,
-                "removable": false,
-                "label": false,
-                "showAddBtn": false,
-                "showDeleteBtn": false,
-                "showRemoveItemBtn": false,
-                "tabTitle": "Signature",
-                "allowContentDisabled": false
-              },
-              "items": {
-                "ui:options": {
-                  "ObjectFieldTemplate": "PartyCardFieldTemplate",
-                  "title": "Signature",
-                  "label": false,
-                  "expandable": false,
-                  "nobackground": true
-                },
-                "signType": {
-                  "ui:options": {
-                    "disabled": true
-                  },
-                  "ui:widget": "hidden"
-                },
-                "signTypeForUI": {
-                  "ui:options": {
-                    "omitValue": true,
-                    "disabled": true
-                  }
-                },
-                "isSignedPresent": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": ["Yes", "No"]
-                  }
-                },
-                "signDesignation": {
-                  "ui:widget": "select",
-                  "ui:options": {
-                    "enumNames": [
-                      "Select designation",
-                      "Trustee",
-                      "Executor",
-                      "Custodian",
-                      "Guardian",
-                      "Attorney-in-fact",
-                      "Assignee",
-                      "Authorized signatory",
-                      "NA"
-                    ]
-                  },
-                  "ui:placeholder": "Select designation"
-                },
-                "signDate": {
-                  "ui:widget": "DateWidgetV2"
-                }
-              }
-            },
-            "notarySignatures": {
-              "ui:dataPath": ["signatureData", "notarySignatures"],
-              "ui:options": {
-                "ArrayFieldTemplate": "TransactionAccordionTemplate",
-                "templateId": "signatures",
-                "addable": false,
-                "orderable": false,
-                "removable": false,
-                "label": false,
-                "showAddBtn": false,
-                "showDeleteBtn": false,
-                "showRemoveItemBtn": false,
-                "tabTitle": "Signature",
-                "allowContentDisabled": false
-              },
-              "items": {
-                "ui:options": {
-                  "ObjectFieldTemplate": "PartyCardFieldTemplate",
-                  "title": "Signature",
-                  "label": false,
-                  "expandable": false,
-                  "nobackground": true
-                },
-                "commissionExpiredDate": {
-                  "ui:widget": "DateWidgetV2"
-                },
-                "signDate": {
-                  "ui:widget": "DateWidgetV2"
-                },
-                "isSealPresent": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": ["Yes", "No"]
-                  }
-                },
-                "isSignedPresent": {
-                  "ui:widget": "SelectWidget",
-                  "ui:options": {
-                    "enumNames": ["Yes", "No"]
-                  }
-                },
-                "signTypeForUI": {
-                  "ui:options": {
-                    "omitValue": true,
-                    "disabled": true
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        "title": "Summary",
-        "formSchema": {
-          "type": "object",
-          "properties": {
-            "summary": {
-              "type": "string"
-            },
-            "validationUrl": {
-              "type": "string",
-              "default": "api/bpm/v1/policies/{{customData.planCode}}/{{customData.policyNumber}}/parties/{{customData.partyId}}/Assignees/validation"
-            }
-          }
-        },
-        "uiSchema": {
-          "$schema": "http://json-schema.org/draft-07/schema#",
-          "ui:hideError": true,
-          "ui:hideFooter": true,
-          "ui:globalOptions": {
-            "duplicateKeySuffixSeparator": "_",
-            "orderable": false,
-            "copyable": false
-          },
-          "ui:submitButtonOptions": {
-            "norender": true
-          },
-          "summary": {
-            "ui:options": {
-              "label": false,
-              "dataKey": "actionData",
-              "templateType": "summaryCard",
-              "ObjectFieldTemplate": "TransactionSummaryTemplate",
-              "sections": [
-                {
-                  "label": "Identification",
-                  "fields": [{ "key": "ssn", "label": "SSN" }]
-                },
-                {
-                  "label": "Contact Info",
-                  "fields": [
-                    {
-                      "key": "preferredCommunicationType",
-                      "label": "Preferred contact method"
-                    },
-                    {
-                      "key": "address",
-                      "label": "Address"
-                    },
-                    { "key": "phone", "label": "Phone" },
-                    { "key": "email", "label": "Email" }
-                  ]
-                }
-              ]
-            }
-          },
-          "validationUrl": {
-            "ui:widget": "hidden"
-          }
-        }
-      }
-    ]
-  }
+        ]
+    }
 }
