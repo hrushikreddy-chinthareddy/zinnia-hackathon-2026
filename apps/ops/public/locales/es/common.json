@@ -507,7 +507,34 @@
         "sendToDifferentAddress": "Enviar a una dirección diferente",
         "formsToUpdate": "Formulario(s) para actualizar",
         "view": "Ver",
-        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo."
+        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
+        "accountValue": "Valor de la cuenta",
+        "accountValueTooltip": "Este es el valor en efectivo contenido dentro de la póliza de seguro de vida del propietario. El valor de la cuenta se acumula con el tiempo a medida que se pagan las primas y se ganan intereses.",
+        "surrenderValueTooltip": "Esto es lo que el propietario o sus beneficiarios pueden esperar si se rescinde la póliza. Es el valor actual de la cuenta menos los cargos por rescate, préstamos pendientes y otras tarifas.",
+        "upcomingPremium": "Próxima prima de {{frequency}}",
+        "upcomingPremiumNoPayment": "No hay pago programado",
+        "makePayment": "Realizar pago",
+        "baseDeathBenefit": "Beneficio por fallecimiento básico",
+        "baseDeathBenefitTooltip": "Este es el monto del beneficio por fallecimiento relacionado con la cobertura básica del propietario. Refleja la cifra actual, por lo que tiene en cuenta cualquier cambio en el beneficio por fallecimiento que haya ocurrido debido a retiros o préstamos. (Nota: Esta cifra puede diferir del beneficio por fallecimiento bruto total si hay líneas de cobertura adicionales o cláusulas adicionales que aumentan el beneficio por fallecimiento.)",
+        "account": "Cuenta",
+        "endingIn": "{{accountType}} terminando en {{accountNumber}}",
+        "freeLookCancelDate": "Fecha de finalización del período de revisión",
+        "gracePeriod": "Período de gracia antes de la caducidad",
+        "gracePeriodTooltip": "Estas fechas indican cuánto tiempo tiene el propietario para realizar el pago de gracia requerido para mantener la póliza activa. La primera fecha es cuando la póliza entró en estado de caducidad pendiente, y la segunda es la fecha límite para realizar el pago de gracia requerido.",
+        "gracePeriodMinPayment": "Pago mínimo del período de gracia",
+        "gracePeriodMinPaymentTooltip": "Este es el monto mínimo que el propietario debe pagar en primas antes de que finalice el período de gracia para mantener su póliza activa (y su cobertura y valor de cuenta intactos).",
+        "guaranteePeriod": "Período de garantía",
+        "lapseEffectiveDate": "Fecha efectiva de caducidad",
+        "lapseEffectiveDateTooltip": "Esta es la fecha en que la póliza caducó. El propietario no realizó un pago de gracia, por lo que ahora la póliza está oficialmente inactiva.",
+        "reinstatementPeriod": "Período de reinstalación",
+        "reinstatementPeriodTooltip": "Esto indica cuánto tiempo después de la fecha de caducidad tiene el propietario para comenzar el proceso de reinstalación de la póliza. Algunas pólizas no tienen un período de reinstalación. En ese caso, una póliza caducada ha terminado definitivamente.",
+        "underwritingDecisionTooltip": "Las pólizas caducadas deben ser aprobadas a través de suscripción para ser reinstaladas. Durante la suscripción, la aseguradora evalúa el riesgo de asegurar al propietario en función de su salud y estilo de vida y determina el costo de su seguro. Una vez aprobado, el propietario puede realizar el pago requerido para que su póliza vuelva a estar activa.",
+        "reinstatementPaymentPeriod": "Período de pago de reinstalación",
+        "reinstatementPaymentPeriodTooltip": "Estas fechas indican cuánto tiempo tiene el propietario para realizar el pago de reinstalación requerido una vez aprobado a través de suscripción. La primera fecha es cuando el propietario fue aprobado para la reinstalación, y la segunda es la fecha límite para realizar el pago de reinstalación requerido.",
+        "reinstatementMinPayment": "Pago mínimo de reinstalación",
+        "reinstatementMinPaymentTooltip": "Este es el monto mínimo que el propietario debe pagar en primas dentro del período de aprobación de la reinstalación para que su póliza vuelva a estar activa.",
+        "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}.",
+        "year(s)": "año(s)"
     },
     "enums": {
         "LIFE": "Vida",
@@ -2469,7 +2496,6 @@
             "organizingYourResults": "Organizando tus resultados…",
             "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
         },
-
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -8594,7 +8620,9 @@
             "no": "No",
             "yes": "Sí"
         },
-        "errors": { "beneDeceased": "Por favor seleccione una opción" }
+        "errors": {
+            "beneDeceased": "Por favor seleccione una opción"
+        }
     },
     "claimsMatchBeneDocument": {
         "confirmStep": {
