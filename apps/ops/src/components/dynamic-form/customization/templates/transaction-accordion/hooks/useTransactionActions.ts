@@ -26,6 +26,10 @@ export function useTransactionActions({
     const actionDataRef = useRef<any[]>(actionData);
 
     useEffect(() => {
+        actionDataRef.current = actionData;
+    }, [actionData]);
+
+    useEffect(() => {
         if (templateId !== 'actionData') return;
 
         if (actionData.length === itemsLen) return;
@@ -50,11 +54,7 @@ export function useTransactionActions({
         Array.isArray(actionData) &&
         actionData.some((x: any) => x.action === Action.ADD);
 
-    const onToggleDelete = (
-        index: number,
-        checked: boolean,
-        isSingleParty: boolean
-    ) => {
+    const onToggleDelete = (index: number, checked: boolean) => {
         let updatedList = [...actionDataRef.current];
 
         if (isSingleParty) {

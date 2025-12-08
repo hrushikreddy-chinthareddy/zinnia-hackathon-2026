@@ -142,11 +142,7 @@ export const TransactionAccordionTemplate = (
                                         label="Remove"
                                         checked={isDeleted}
                                         onChange={(val) =>
-                                            onToggleDelete(
-                                                index,
-                                                val,
-                                                actionData
-                                            )
+                                            onToggleDelete(index, val)
                                         }
                                     />
                                 )}
