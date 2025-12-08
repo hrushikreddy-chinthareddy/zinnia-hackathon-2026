@@ -26,7 +26,7 @@ interface ContentProps extends PropsWithChildren<PiiProps> {
     className?: string;
     contentClassName?: string;
     triggerClassName?: string;
-    details: string;
+    details?: string;
     highlights?: string[];
     truncate?: boolean;
     variant?: ContentVariant;
