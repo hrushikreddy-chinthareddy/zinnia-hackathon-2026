@@ -2,6 +2,7 @@ import {
     Button,
     Icon,
     IconType,
+    Label,
     SelectFilter,
     SelectFilterOption,
 } from '@zinnia/bloom/components';
@@ -11,7 +12,6 @@ import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
-import { BrokerDealerFilter } from '@deps/components/dashboard/header-components/broker-dealer-filter/broker-dealer-filter';
 import styles from '@deps/components/dashboard/header-components/filters-header/filters-header.module.css';
 import Typography, {
     TypographyVariant,
@@ -242,12 +242,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             <div
                 ref={ref}
                 id="carrier-header"
-                className={clsx('flex-wrap', styles.filtersHeader, {
-                    [styles.pinned as string]:
-                        carrierHeaderIsIntersecting ||
-                        Number(carrierHeaderEntry?.boundingClientRect.bottom) <
-                            64,
-                })}
+                className={clsx('flex-wrap', styles.filtersHeader)}
             >
                 <Typography
                     className="flex items-center"
@@ -256,60 +251,51 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                 >
                     {t('caseStatsDashboardTitle')}
                 </Typography>
-                <div className="flex justify-between items-center">
-                    <div className="flex nowrap gap-2 items-center align-middle">
-                        <div className="w-52">
-                            <SelectFilter
-                                options={options}
-                                placeHolder={t('allCarriers') || ''}
-                                values={placeholderSelectedCarriers}
-                                updateValues={updateCarrierFilters}
-                            />
-                            {/* <Select
-                                isMultiselect
-                                options={options}
-                                value={placeholderSelectedCarriers}
-                                onChange={updateCarrierFilters}
-                                size={FieldSize.Small}
-                                placeholder={t('allCarriers') || ''}
-                                name="carrier-dropdown-btn"
-                                onOpenChange={handleOnOpenChangeCarrier}
-                            /> */}
-                        </div>
-                        <div className="w-52">
-                            <BrokerDealerFilter
-                                brokerDealers={brokerDealers}
-                                selectedBrokerDealers={
-                                    placeholderSelectedBrokerDealers
-                                }
-                                selectedCarriers={Object.keys(
-                                    placeholderSelectedCarriers
-                                )}
-                                setSelectedBrokerDealers={setBrokerDealers}
-                                updateBrokerDealerFilters={
-                                    updateBrokerDealerFilters
-                                }
-                                handleOnOpenChangeBroker={
-                                    handleOnOpenChangeBroker
-                                }
-                            />
-                        </div>
-                        <div>
-                            <Button
-                                className="flex items-center align-middle flex-row"
-                                mode="link"
-                                disabled={clearFiltersDisabled}
-                                size={ButtonSize.Small}
-                                onClick={clearFilters}
-                            >
-                                <Icon
-                                    width={16}
-                                    height={16}
-                                    type={IconType.CLOSE}
-                                />{' '}
-                                clear
-                            </Button>
-                        </div>
+                <div className={styles.filters}>
+                    <div>
+                        <SelectFilter
+                            options={options}
+                            label={<Label>{t('allCarriers')}</Label>}
+                            values={placeholderSelectedCarriers}
+                            onValueChange={updateCarrierFilters}
+                            container={ref?.current}
+                        />
+                    </div>
+                    <div>
+                        <SelectFilter
+                            options={brokerDealers}
+                            label={<Label>{t('allDistributors')}</Label>}
+                        />
+                        {/* <BrokerDealerFilter
+                            brokerDealers={brokerDealers}
+                            selectedBrokerDealers={
+                                placeholderSelectedBrokerDealers
+                            }
+                            selectedCarriers={Object.keys(
+                                placeholderSelectedCarriers
+                            )}
+                            setSelectedBrokerDealers={setBrokerDealers}
+                            updateBrokerDealerFilters={
+                                updateBrokerDealerFilters
+                            }
+                            handleOnOpenChangeBroker={handleOnOpenChangeBroker}
+                        /> */}
+                    </div>
+                    <div>
+                        <Button
+                            className="flex items-center align-middle flex-row"
+                            mode="link"
+                            disabled={clearFiltersDisabled}
+                            size={ButtonSize.Small}
+                            onClick={clearFilters}
+                        >
+                            <Icon
+                                width={16}
+                                height={16}
+                                type={IconType.CLOSE}
+                            />{' '}
+                            clear
+                        </Button>
                     </div>
                 </div>
             </div>
