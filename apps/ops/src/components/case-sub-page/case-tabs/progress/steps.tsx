@@ -187,13 +187,19 @@ const Step = ({
     const sideSheet = useSideSheetContext();
     const hasSidesheet = doesStepHaveSidesheet(step);
 
-    const stepAdditional = step.stepAdditionalData?.[0];
+    const aiEnabledAdditional = step.stepAdditionalData?.find(
+        (additional) => additional.label === 'AIEnabledFlag'
+    );
+
+    const entityIdAdditional = step.stepAdditionalData?.find(
+        (additional) => additional.label === 'PaymentRecordId'
+    );
 
     const isAiEnabled =
-        stepAdditional?.label === 'AIEnabledFlag' &&
-        String(stepAdditional.value).toLowerCase() === 'true';
+        aiEnabledAdditional &&
+        String(aiEnabledAdditional.value).toLowerCase() === 'true';
 
-    const entityId = stepAdditional ? stepAdditional.value : undefined;
+    const entityId = entityIdAdditional?.value;
 
     const { data: transactionEntity } = useQuery({
         queryKey: ['requestInitiateWithBillingPartner', entityId],
