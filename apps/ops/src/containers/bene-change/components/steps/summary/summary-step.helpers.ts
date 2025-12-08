@@ -43,6 +43,17 @@ export const DEFAULT_BENE_ADDRESS = {
     country: 'US',
 };
 
+export const getDisplayName = (partyInfo: Party) => {
+    const { firstName, middleName, lastName, partyType } = partyInfo || {};
+
+    return partyType === PartyType.INDIVIDUAL
+        ? [firstName, middleName, lastName]
+              .filter(Boolean)
+              .map((name) => toTitleCase(name))
+              .join(' ')
+        : toTitleCase(lastName || '');
+};
+
 export const isEqualObjects = (obj1: any, obj2: any) => {
     const diffInFields = Object.entries(obj2).filter(
         ([field, obj2Value]) => obj1[field] !== obj2Value

@@ -276,7 +276,7 @@ const RoleDetailsComponent = ({
     return (
         <div
             className={
-                (isTpdRole && removedTpdIndex === index) ||
+                (isTpdRole && removedTpdIndex !== null) ||
                 (removeRole && !role?.toLowerCase().includes(NEW))
                     ? 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'
                     : 'my-4 w-full rounded-sm border-2 p-8'
@@ -298,7 +298,7 @@ const RoleDetailsComponent = ({
                         <div className="font-primary text-xl">
                             <span
                                 className={
-                                    (isTpdRole && removedTpdIndex === index) ||
+                                    (isTpdRole && removedTpdIndex !== null) ||
                                     removeRole
                                         ? 'text-gray-200'
                                         : ''
@@ -321,7 +321,11 @@ const RoleDetailsComponent = ({
                                     className="default-focus-icons flex justify-start rounded-xl"
                                     onClick={() => {
                                         setAddRole(true);
-                                        setRoleData(defaultRoleValue.roleData);
+                                        setRoleData((prevRoleData) => ({
+                                            ...prevRoleData,
+                                            signatures: prevRoleData.signatures,
+                                            ...defaultRoleValue.roleData,
+                                        }));
                                         setRemoveRole(false);
                                     }}
                                 >

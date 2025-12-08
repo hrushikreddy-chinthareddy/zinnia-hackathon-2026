@@ -675,7 +675,7 @@ export const validate = (
     ) {
         return currentErrors;
     }
-    if (addRole === true) {
+    if (addRole) {
         currentErrors['owner'] = t('formValidations.addRole', { roleLabel });
         return currentErrors;
     }
