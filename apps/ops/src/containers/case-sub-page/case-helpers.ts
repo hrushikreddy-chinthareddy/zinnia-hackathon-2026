@@ -371,19 +371,3 @@ export const buildQualityAuditEligibilityPayload = (
         clientCode: caseDetails?.carrier,
     };
 };
-
-export const validateCaseQualityAudit = (
-    caseDetails: Case,
-    qualityAuditCaseDetails: Case
-) => {
-    const { processSubType, process, correlationId } = caseDetails;
-    const {
-        processSubType: qualityAuditProcessSubType,
-        correlationId: qualityAuditCorrelationId,
-    } = qualityAuditCaseDetails;
-    return (
-        processSubType === qualityAuditProcessSubType &&
-        process === 'Quality Audit' &&
-        correlationId === qualityAuditCorrelationId
-    );
-};

@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { Toast, ToastVariant } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,8 +11,8 @@ import { PopoverPlacement } from '@deps/components/popover/popover';
 import { TextButton } from '@deps/components/quick-actions-menu/quick-action-text-button';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN } from '@deps/helpers/case-stat-helpers';
+import { QualityAuditStatus } from '@deps/models/case/case';
 import { INTERVAL } from '@deps/models/case/task';
 import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { UserTuple } from '@deps/types/fga';
@@ -34,9 +34,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     canShowPriorityActions,
 }) => {
     const { t } = useTranslation();
-    const { featureFlags } = useOptimizely();
     const { caseDetails, userTuplesData } = useCaseActivityContext();
-    const queryClient = useQueryClient();
     const [toastMessage, setToastMessage] = useState<any>(undefined);
     const [toastVariant, setToastVariant] = useState<any>(undefined);
     const [isQualityAuditCreated, setIsQualityAuditCreated] = useState(false);
@@ -56,8 +54,6 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             tuple?.key?.object.includes(FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN)
     );
 
-    console.log('userTuplesData', userTuplesData);
-
     const qualityAuditPayload = buildCreateQualityAuditPayload(caseDetails);
 
     const { mutate } = useMutation({
@@ -65,11 +61,11 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             return await createQualityAuditForCaseIdQuery(qualityAuditPayload);
         },
         onSuccess: (response) => {
-            console.log('API success Response', response);
-
             if (
-                response?.data?.code === 'QA_CASE_ALREADY_EXISTS' ||
-                response?.data?.code === 'QA_CASE_CREATED'
+                [
+                    QualityAuditStatus.QA_CASE_ALREADY_EXISTS,
+                    QualityAuditStatus.QA_CASE_CREATED,
+                ].includes(response?.data?.code || '')
             ) {
                 setIsQualityAuditCreated(true);
                 setToastVariant(ToastVariant.Success);
@@ -80,8 +76,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                 );
             }
         },
-        onError: (response) => {
-            console.log('Test Error Response => ', response);
+        onError: () => {
             setToastVariant(ToastVariant.Error);
             setToastMessage(
                 t('caseOverview.qualityAuditToastMessages.qualityAuditError')

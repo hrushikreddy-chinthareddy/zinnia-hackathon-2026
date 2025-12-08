@@ -135,7 +135,7 @@ const CasePageHeader = ({
             }
         };
         fetchQualityAuditEligibility();
-    }, [caseId]);
+    }, [caseId, caseDetails]);
 
     const openSideSheet = useCallback(
         (action: CaseAction) => {

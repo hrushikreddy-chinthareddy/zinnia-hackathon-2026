@@ -346,3 +346,8 @@ export const shouldShowEscalationBadge = (
     escalated: boolean,
     status: Statuses
 ): boolean => escalated && !BADGE_EXCLUDED_STATUSES.has(status);
+
+export enum QualityAuditStatus {
+    QA_CASE_ALREADY_EXISTS = 'QA_CASE_ALREADY_EXISTS',
+    QA_CASE_CREATED = 'QA_CASE_CREATED',
+}
