@@ -4,8 +4,8 @@ import { v4 as uuidV4 } from 'uuid';
 
 import { OneTimePremiumRequestQuery } from '@deps/queries/api/bpm';
 import {
-    ZAHARA_API_DATE_FORMAT,
     NUMERIC_DATE_FORMAT,
+    EDS_DATE_DISPLAY_FORMAT,
 } from '@deps/types/constants';
 import { PaymentForm } from '@zinnia/api-types/types/bpm';
 
@@ -28,7 +28,7 @@ export const buildNewPremiumRequestBody = (
         correlationId: uuidV4(),
         effectiveDate: dayjs(effectiveDate)
             .utc()
-            .format(ZAHARA_API_DATE_FORMAT),
+            .format(EDS_DATE_DISPLAY_FORMAT),
         reverseInitiator: premium.reverseInitiator,
         transactionAmounts: {
             requestedAmount: Number(premium.paymentAmount),
