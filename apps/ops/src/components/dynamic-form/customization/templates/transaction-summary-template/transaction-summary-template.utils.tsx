@@ -114,13 +114,13 @@ export async function fetchValidationSummary(
 type RequestBodyBuilder = (customData: any) => any;
 const getRoleChangePartyId = (customData: any): string | null => {
     const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.partyUpdates)) {
+    if (!customData || !Array.isArray(customData.actionData)) {
         return defaultPartyIdRoleChange;
     }
-    const partyUpdates = customData.partyUpdates;
+    const actionData = customData.actionData;
 
-    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
-    const deletedItem = partyUpdates.find(
+    const addedItem = actionData.find((item: any) => item.action === 'ADD');
+    const deletedItem = actionData.find(
         (item: any) => item.action === Action.DELETE
     );
     let requestType = Action.NONE;
@@ -145,13 +145,13 @@ const getRoleChangePartyId = (customData: any): string | null => {
 
 const getRequestType = (customData: any): string | null => {
     const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.partyUpdates)) {
+    if (!customData || !Array.isArray(customData.actionData)) {
         return defaultPartyIdRoleChange;
     }
-    const partyUpdates = customData.partyUpdates;
+    const actionData = customData.actionData;
 
-    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
-    const deletedItem = partyUpdates.find(
+    const addedItem = actionData.find((item: any) => item.action === 'ADD');
+    const deletedItem = actionData.find(
         (item: any) => item.action === Action.DELETE
     );
     let requestType = Action.NONE;
@@ -167,15 +167,17 @@ const getRequestType = (customData: any): string | null => {
 
 const getCollateralAmount = (customData: any): string | null => {
     const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.partyUpdates)) {
+    if (!customData || !Array.isArray(customData.actionData)) {
         return defaultPartyIdRoleChange;
     }
-    const partyUpdates = customData.partyUpdates;
+    const actionData = customData.actionData;
 
-    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
-    const deletedItem = partyUpdates.find(
+    const addedItem = actionData.find((item: any) => item.action === 'ADD');
+    const deletedItem = actionData.find(
         (item: any) => item.action === Action.DELETE
     );
+    console.log('addedItem', addedItem);
+
     let collateralAmount = null;
     if (addedItem && deletedItem) {
         collateralAmount = addedItem?.collateralAmount ?? null;
@@ -188,12 +190,13 @@ const getCollateralAmount = (customData: any): string | null => {
 };
 
 const getRoleChangeParty = (customData: any): object | null => {
-    if (!customData || !Array.isArray(customData.partyUpdates)) {
+    if (!customData || !Array.isArray(customData.actionData)) {
         return null;
     }
-    const partyUpdates = customData.partyUpdates;
-    const addedItem = partyUpdates.find((item: any) => item.action === 'ADD');
-    const deletedItem = partyUpdates.find(
+    const actionData = customData.actionData;
+    console.log('actionData', actionData);
+    const addedItem = actionData.find((item: any) => item.action === 'ADD');
+    const deletedItem = actionData.find(
         (item: any) => item.action === Action.DELETE
     );
     let requestType = Action.NONE;
@@ -229,7 +232,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             planCode: task.data?.planCode,
             policyNumber: task.data?.policyNumber,
             contractInfo: customData?.contractInfo,
-            partyUpdates: customData?.partyUpdates,
+            actionData: customData?.actionData,
             signatureData: customData?.signatureData,
             policyStatus: customData?.policyStatus,
             caseId: '',
@@ -291,7 +294,6 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 correlationId: customData?.correlationId,
                 changeReason: customData?.changeReason,
                 signatures: customData?.signatures,
-                beneDetailsReqInd: customData?.beneDetailsReqInd || false,
                 documents: customData?.documents,
                 supportingDocumentAttached:
                     customData?.supportingDocumentAttached || null,
