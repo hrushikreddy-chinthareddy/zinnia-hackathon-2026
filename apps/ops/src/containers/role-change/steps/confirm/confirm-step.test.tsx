@@ -4,13 +4,12 @@ import * as nextRouter from 'next/router';
 import { PolicyRole, RoleLabel } from '@deps/constants/policy';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { submitRoleChange, deleteTPDRole } from '@deps/queries/api/role-change';
+import { submitRoleChange } from '@deps/queries/api/role-change';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 import ConfirmStep from './confirm-step';
 
 const mockSubmitRoleChange = submitRoleChange as jest.Mock;
-const mockDeleteTPDRole = deleteTPDRole as jest.Mock;
 
 // Mocks
 const pushMock = jest.fn();
