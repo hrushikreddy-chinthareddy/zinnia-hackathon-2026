@@ -240,7 +240,7 @@ describe('addLinkToPartyId', () => {
         }) as DataField;
 
         expect(result.link).toBe('/policies/PLAN/POLICY/people/P1');
-        expect(result.label).toBe('partyId');
+        expect(result.label).toBe('impactedParty');
         expect(result.value).toBe('P1');
     });
 
