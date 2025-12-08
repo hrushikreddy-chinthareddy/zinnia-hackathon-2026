@@ -1,22 +1,17 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 import { Content, ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
-import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { FeatureType } from '@zinnia/api-types/types/sor';
 
-import BaseDeathBenefit from './display-fields/base-death-benefit';
 import { QuickViewRoot } from './quick-view-root/quick-view-root';
 
 export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation([
-        TranslationFiles.COMMON,
-        TranslationFiles.COLDEFS,
-    ]);
+    const { t } = useTranslation();
 
     const reinstatement = policy.features.getFirstFeatureByType(
         FeatureType.REINSTATEMENT
@@ -25,22 +20,6 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
         FeatureType.LAPSEASSESSMENT
     );
 
-    let reinstatementPeriodText;
-
-    switch (Number(reinstatement?.period)) {
-        case 0:
-            reinstatementPeriodText = 'None';
-            break;
-        case 1:
-            reinstatementPeriodText = t('common:temporal.oneYear');
-            break;
-        default:
-            reinstatementPeriodText = t('common:temporal.nYears', {
-                n: reinstatement?.period,
-            });
-            break;
-    }
-
     return (
         <QuickViewRoot
             title={t('dashboard.search.results.policySummaryCard.header2')}
@@ -48,19 +27,17 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
             <div>
                 <Label
                     variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:policySummary.lapseEffectiveDate')}
-                    tooltipTitle={t('colDefs:policySummary.lapseEffectiveDate')}
-                    tooltipBody={t(
-                        'colDefs:policySummary.lapseEffectiveDateTooltip'
-                    )}
+                    label={t('allFields.lapseEffectiveDate')}
+                    tooltipTitle={t('allFields.lapseEffectiveDate')}
+                    tooltipBody={t('allFields.lapseEffectiveDateTooltip')}
                 />
                 <Content
                     details={
                         pendingLapse?.effectiveDate
-                            ? dayjs(pendingLapse?.effectiveDate).format(
-                                  DEFAULT_EXTENDED_DATE_FORMAT
+                            ? convertKebabedDateString(
+                                  pendingLapse?.effectiveDate
                               )
-                            : '--'
+                            : DEFAULT_ERROR_STRING
                     }
                     variant={ContentVariant.BodySm}
                 />
@@ -68,99 +45,92 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
             <div>
                 <Label
                     variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:policySummary.reinstatementPeriod')}
-                    tooltipTitle={t(
-                        'colDefs:policySummary.reinstatementPeriod'
-                    )}
-                    tooltipBody={t(
-                        'colDefs:policySummary.reinstatementPeriodTooltip'
-                    )}
+                    label={t('allFields.reinstatementPeriod')}
+                    tooltipTitle={t('allFields.reinstatementPeriod')}
+                    tooltipBody={t('allFields.reinstatementPeriodTooltip')}
                 />
                 <Content
-                    details={reinstatementPeriodText}
+                    details={
+                        reinstatement?.period
+                            ? `${reinstatement?.period} ${t(
+                                  'allFields.year(s)'
+                              )}`
+                            : DEFAULT_ERROR_STRING
+                    }
                     variant={ContentVariant.BodySm}
                 />
             </div>
-            {reinstatement && (
-                <>
-                    {!!reinstatement.approvalDate && (
-                        <div>
-                            <Label
-                                variant={LabelVariant.FieldLabel}
-                                label={t(
-                                    'colDefs:policySummary.underwritingDecision'
-                                )}
-                                tooltipTitle={t(
-                                    'colDefs:policySummary.underwritingDecision'
-                                )}
-                                tooltipBody={t(
-                                    'colDefs:policySummary.underwritingDecisionTooltip'
-                                )}
-                            />
-                            <Content
-                                details={
-                                    reinstatement?.approvalDate
-                                        ? String(t('common:general.approved'))
-                                        : String(t('common:general.unapproved'))
-                                }
-                                variant={ContentVariant.BodySm}
-                            />
-                        </div>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('allFields.underwritingDecision')}
+                    tooltipTitle={t('allFields.underwritingDecision')}
+                    tooltipBody={t('allFields.underwritingDecisionTooltip')}
+                />
+                <Content
+                    details={
+                        reinstatement?.underwritingDecision === true
+                            ? t('enums.APPROVED')
+                            : reinstatement?.underwritingDecision === false
+                            ? t('enums.DECLINED')
+                            : DEFAULT_ERROR_STRING
+                    }
+                    variant={ContentVariant.BodySm}
+                />
+            </div>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('allFields.reinstatementPaymentPeriod')}
+                    tooltipTitle={t('allFields.reinstatementPaymentPeriod')}
+                    tooltipBody={t(
+                        'allFields.reinstatementPaymentPeriodTooltip'
                     )}
+                />
+                <Content
+                    details={
+                        reinstatement?.approvalDate && reinstatement?.endDate
+                            ? `${convertKebabedDateString(
+                                  reinstatement?.approvalDate
+                              )} - ${convertKebabedDateString(
+                                  reinstatement?.endDate
+                              )}`
+                            : DEFAULT_ERROR_STRING
+                    }
+                    variant={ContentVariant.BodySm}
+                />
+            </div>
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('allFields.reinstatementMinPayment')}
+                    tooltipTitle={t('allFields.reinstatementMinPayment')}
+                    tooltipBody={t('allFields.reinstatementMinPaymentTooltip')}
+                />
+                <Content
+                    details={
+                        reinstatement?.totalRequiredAmount
+                            ? numberFormatify(
+                                  reinstatement?.totalRequiredAmount
+                              )
+                            : DEFAULT_ERROR_STRING
+                    }
+                    variant={ContentVariant.BodySm}
+                />
+            </div>
 
-                    {reinstatement.approvalDate && reinstatement.endDate && (
-                        <div>
-                            <Label
-                                variant={LabelVariant.FieldLabel}
-                                label={t(
-                                    'colDefs:policySummary.reinstatementPaymentPeriod'
-                                )}
-                                tooltipTitle={t(
-                                    'colDefs:policySummary.reinstatementPaymentPeriod'
-                                )}
-                                tooltipBody={t(
-                                    'colDefs:policySummary.reinstatementPaymentPeriodTooltip'
-                                )}
-                            />
-                            <Content
-                                details={`${dayjs(
-                                    reinstatement?.approvalDate
-                                ).format(
-                                    DEFAULT_EXTENDED_DATE_FORMAT
-                                )} - ${dayjs(reinstatement?.endDate).format(
-                                    DEFAULT_EXTENDED_DATE_FORMAT
-                                )}`}
-                                variant={ContentVariant.BodySm}
-                            />
-                        </div>
-                    )}
-
-                    {!!reinstatement.paymentAmount && (
-                        <div>
-                            <Label
-                                variant={LabelVariant.FieldLabel}
-                                label={t(
-                                    'colDefs:policySummary.reinstatementMinPayment'
-                                )}
-                                tooltipTitle={t(
-                                    'colDefs:policySummary.reinstatementMinPayment'
-                                )}
-                                tooltipBody={t(
-                                    'colDefs:policySummary.reinstatementMinPaymentTooltip'
-                                )}
-                            />
-                            <Content
-                                details={numberFormatify(
-                                    reinstatement?.paymentAmount
-                                )}
-                                variant={ContentVariant.BodySm}
-                            />
-                        </div>
-                    )}
-                </>
-            )}
-
-            <BaseDeathBenefit baseDeathBenefit={policy.baseDeathBenefit} />
+            <div>
+                <Label
+                    variant={LabelVariant.FieldLabel}
+                    label={t('allFields.baseDeathBenefit')}
+                    tooltipTitle={t('allFields.baseDeathBenefit')}
+                    tooltipBody={t('allFields.baseDeathBenefitTooltip')}
+                />
+                <Content
+                    details={numberFormatify(policy.baseDeathBenefit)}
+                    variant={ContentVariant.BodySm}
+                />
+            </div>
         </QuickViewRoot>
     );
 };
