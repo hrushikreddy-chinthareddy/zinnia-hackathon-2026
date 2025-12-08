@@ -42,7 +42,7 @@
         },
         "actionData": [
             {
-                "action": "UPDATE",
+                "action": "ADD",
                 "actionType": "THIRD_PARTY_DESIGNEE_CHANGE",
                 "isIrrevocable": true,
                 "isPerStirpes": false,

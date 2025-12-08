@@ -280,6 +280,15 @@
                                                 "title": "Address",
                                                 "items": {
                                                     "type": "object",
+                                                    "default": {
+                                                        "addressType": "RESIDENCE",
+                                                        "addressLine1": "",
+                                                        "addressLine2": null,
+                                                        "city": "",
+                                                        "state": "",
+                                                        "zipCode": "",
+                                                        "isPreferred": false
+                                                    },
                                                     "properties": {
                                                         "addressType": {
                                                             "type": "string",
@@ -381,10 +390,6 @@
                                                                 "null"
                                                             ],
                                                             "title": "Zip"
-                                                        },
-                                                        "isPreferred": {
-                                                            "type": "boolean",
-                                                            "title": "Preferred address"
                                                         }
                                                     },
                                                     "required": ["addressType"]
@@ -395,6 +400,11 @@
                                                 "title": "",
                                                 "items": {
                                                     "type": "object",
+                                                    "default": {
+                                                        "dialNumber": null,
+                                                        "phoneType": "HOME",
+                                                        "isPreferred": false
+                                                    },
                                                     "properties": {
                                                         "phoneType": {
                                                             "type": "string",
@@ -412,10 +422,6 @@
                                                                 "null"
                                                             ],
                                                             "title": "Phone"
-                                                        },
-                                                        "isPreferred": {
-                                                            "type": "boolean",
-                                                            "title": "Preferred phone"
                                                         }
                                                     }
                                                 }
@@ -425,6 +431,11 @@
                                                 "title": "",
                                                 "items": {
                                                     "type": "object",
+                                                    "default": {
+                                                        "emailAddress": null,
+                                                        "emailType": "PERSONAL",
+                                                        "isPreferred": false
+                                                    },
                                                     "properties": {
                                                         "emailType": {
                                                             "type": "string",
@@ -441,10 +452,6 @@
                                                                 "null"
                                                             ],
                                                             "title": "Email"
-                                                        },
-                                                        "isPreferred": {
-                                                            "type": "boolean",
-                                                            "title": "Preferred email"
                                                         }
                                                     }
                                                 }

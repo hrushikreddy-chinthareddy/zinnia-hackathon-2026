@@ -1,14 +1,15 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
+
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action } from '@deps/constants/policy';
-
-import { useTransactionActions } from './hooks/useTransactionActions';
-import { useAccordionState } from './hooks/useAccordionState';
-import { getTitle } from './utils';
-import styles from './transaction-accordion.module.css';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
+
+import { useAccordionState } from './hooks/useAccordionState';
+import { useTransactionActions } from './hooks/useTransactionActions';
+import styles from './transaction-accordion.module.css';
+import { getTitle } from './utils';
 
 export const TransactionAccordionTemplate = (
     props: ArrayFieldTemplateProps
@@ -33,7 +34,6 @@ export const TransactionAccordionTemplate = (
         isSinglePartyTransaction = false,
         isMultiPartyTransaction = false,
     } = ui;
-
     const isSimpleAccordion =
         !isSinglePartyTransaction && !isMultiPartyTransaction;
 

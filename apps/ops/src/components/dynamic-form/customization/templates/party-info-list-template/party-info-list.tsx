@@ -1,43 +1,110 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useState, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import { TranslationFiles } from '@deps/config/translations';
 
 import styles from './party-info-list.module.css';
 
 export default function PartyInfoListTemplate(
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
 ) {
-    const { canAdd, items, onAddClick, readonly, title, uiSchema } = props;
-
+    const {
+        canAdd,
+        items,
+        onAddClick,
+        readonly,
+        title,
+        uiSchema,
+        formContext,
+        formData,
+        idSchema,
+    } = props;
+    const { customData, setCustomData } = formContext;
+    const { actionData } = customData;
+    // the commented code in this file is for future use and is intentionally left there
     const uiOptions = getUiOptions(uiSchema);
     const {
         addButtonCTA = 'Add',
         title: overrideTitle,
-        showRemoveItemBtn = true,
+        // showRemoveItemBtn = true,
         showDeleteBtn = true,
+        prefferedCTA = 'Preferred',
     } = uiOptions;
 
     const [disabledSet, setDisabledSet] = useState(new Set<number>());
     const prevLengthRef = useRef(items.length);
     const [newlyAddedSet, setNewlyAddedSet] = useState(new Set<number>());
+
     const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'transactionAccordion',
-    });
+    // const { t } = useTranslation(TranslationFiles.COMMON, {
+    //     keyPrefix: 'transactionAccordion',
+    // });
 
-    const toggleDisable = (index: number) => {
-        setDisabledSet((prev) => {
-            const copy = new Set(prev);
-            copy.has(index) ? copy.delete(index) : copy.add(index);
-            return copy;
+    // const toggleDisable = (index: number) => {
+    //     setDisabledSet((prev) => {
+    //         const copy = new Set(prev);
+    //         copy.has(index) ? copy.delete(index) : copy.add(index);
+    //         return copy;
+    //     });
+    // };
+
+    const toggleIsPreferred = (index: number, checked: boolean) => {
+        let newPreferredIndex = preferredIndex;
+
+        if (checked) {
+            newPreferredIndex = index;
+        } else if (preferredIndex === index) {
+            newPreferredIndex = -1;
+        }
+
+        setPreferredIndex(newPreferredIndex);
+    };
+
+    const handleAddClick = () => {
+        const id = idSchema?.$id ?? '';
+
+        const match = id.match(/actionData_(\d+)/);
+        const partyIndex = match ? Number(match[1]) : 0;
+
+        const contacts = Array.isArray(formData) ? formData : [];
+
+        const sample = contacts[0] ?? {};
+
+        const updatedActionData = [...(actionData ?? [])];
+        const existingEntry = updatedActionData[partyIndex] ?? {};
+        const existingParty = existingEntry.party ?? {};
+
+        let emails = existingParty.emails ?? [];
+        let phones = existingParty.phones ?? [];
+        let addresses = existingParty.addresses ?? [];
+
+        if ('emailType' in sample || id.endsWith('_emails')) {
+            emails = contacts;
+        } else if ('phoneType' in sample || id.endsWith('_phones')) {
+            phones = contacts;
+        } else if ('addressType' in sample || id.endsWith('_addresses')) {
+            addresses = contacts;
+        }
+
+        updatedActionData[partyIndex] = {
+            ...existingEntry,
+            party: {
+                ...existingParty,
+                emails,
+                phones,
+                addresses,
+            },
+        };
+
+        setCustomData({
+            actionData: updatedActionData,
         });
+
+        onAddClick();
     };
 
     useEffect(() => {
@@ -82,7 +149,7 @@ export default function PartyInfoListTemplate(
                     {!readonly && canAdd && (
                         <button
                             type="button"
-                            onClick={onAddClick}
+                            onClick={handleAddClick}
                             className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
                         >
                             <Icon type={IconType.ADD} small />
@@ -93,6 +160,8 @@ export default function PartyInfoListTemplate(
             </div>
 
             {items.map((element, index) => {
+                const isPreferred = preferredIndex === index;
+
                 const isDisabled = disabledSet.has(index);
 
                 return (
@@ -118,7 +187,7 @@ export default function PartyInfoListTemplate(
                                     {element.children}
                                 </div>
                                 <div className="flex flex-col gap-3 items-end">
-                                    {showRemoveItemBtn &&
+                                    {/* {showRemoveItemBtn &&
                                         !readonly &&
                                         !newlyAddedSet.has(index) && (
                                             <CheckboxText
@@ -129,7 +198,7 @@ export default function PartyInfoListTemplate(
                                                     toggleDisable(index)
                                                 }
                                             />
-                                        )}
+                                        )} */}
                                     {showDeleteBtn &&
                                         !readonly &&
                                         newlyAddedSet.has(index) && (
@@ -139,23 +208,19 @@ export default function PartyInfoListTemplate(
                                                     element.index
                                                 )}
                                             >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={4}
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                    />
-                                                </svg>
+                                                <Icon type={IconType.CLOSE} />
                                             </button>
                                         )}
                                 </div>
                             </div>
+                            <CheckboxText
+                                id={`preferred-${index}`}
+                                label={prefferedCTA as string}
+                                checked={isPreferred}
+                                onChange={(val) =>
+                                    toggleIsPreferred(index, val)
+                                }
+                            />
                         </div>
                     </>
                 );
