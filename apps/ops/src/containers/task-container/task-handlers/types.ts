@@ -113,6 +113,7 @@ export enum PartyRoleType {
     CONTINGENTBENEFICIARY = 'CONTINGENTBENEFICIARY',
     PRIMARYWRITINGAGENT = 'PRIMARYWRITINGAGENT',
     PRIMARYSERVICINGAGENT = 'PRIMARYSERVICINGAGENT',
+    THIRDPARTYDESIGNEE = 'THIRDPARTYDESIGNEE',
 }
 
 export enum PartyRoleLabel {
@@ -122,6 +123,7 @@ export enum PartyRoleLabel {
     CONTINGENTBENEFICIARY = 'Contingent Beneficiary',
     PRIMARYWRITINGAGENT = 'Primary Writing Agent',
     PRIMARYSERVICINGAGENT = 'Primary Servicing Agent',
+    THIRDPARTYDESIGNEE = 'Third Party Designee',
 }
 
 export enum AddressType {

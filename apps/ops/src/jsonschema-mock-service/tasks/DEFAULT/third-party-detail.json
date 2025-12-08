@@ -1150,6 +1150,13 @@
                                             "signDesignation": null,
                                             "signType": "JOINT_OWNER",
                                             "signTypeForUI": "Joint Owner"
+                                        },
+                                        {
+                                            "isSignedPresent": false,
+                                            "signDate": null,
+                                            "signDesignation": null,
+                                            "signType": "THIRD_PARTY_DESIGNEE",
+                                            "signTypeForUI": "Third Party Designee "
                                         }
                                     ]
                                 }

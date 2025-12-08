@@ -199,7 +199,6 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             signatureData: customData?.signatureData,
             policyStatus: customData?.policyStatus,
             caseId: '',
-
             sorSystem: SorSystem.Zahara,
             sourceSystem: 'ONBASE',
             channel: 'Phone',

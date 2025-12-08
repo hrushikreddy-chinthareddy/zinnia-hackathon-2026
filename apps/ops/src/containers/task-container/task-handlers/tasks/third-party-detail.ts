@@ -1,8 +1,9 @@
+import dayjs from 'dayjs';
+
 import { Action, EntityTypeValue } from '@deps/constants/policy';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
-    AddressType,
     EmailType,
     IdentificationType,
     PartyType,
@@ -10,9 +11,18 @@ import {
 } from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 
-import { TaskHandler, ReviewPayload, Reason } from '../types';
+import {
+    TaskHandler,
+    ReviewPayload,
+    Reason,
+    AddressType,
+    PartyRoleType,
+    PartyRole,
+    Party,
+} from '../types';
 
 const getPrefix = (prefix: string | null) => {
     switch (prefix) {
@@ -104,6 +114,69 @@ const getIdentifications = (identifications: any = []) => {
           ];
 };
 
+const formatParty = (party: Party, role: string) => ({
+    partyRoleId: party?.partyRoleId ?? null,
+    partyRole: role,
+    partyType: party?.partyType,
+    prefix: party?.prefix ?? null,
+    firstName:
+        party?.partyType === PartyType.INDIVIDUAL
+            ? party?.firstName || null
+            : null,
+    lastName:
+        party?.partyType === PartyType.INDIVIDUAL
+            ? party?.lastName || null
+            : party?.fullName || null,
+    middleName:
+        party?.partyType === PartyType.INDIVIDUAL
+            ? party?.middleName || null
+            : null,
+    fullName: party?.fullName || null,
+    dateOfBirth: party?.dateOfBirth ?? null,
+    suffix: party?.suffix ?? null,
+    trustType: party?.trustType ?? null,
+    addresses: getAddresses(party?.addresses ?? []),
+    identifications: getIdentifications(party.identifications),
+    emails: getEmails(party.emails),
+    phones: getPhones(party.phones),
+});
+
+const getContractInfo = (policyResponse: any) => {
+    const rolesToFormat = [
+        {
+            roleKey: PartyRoleType.OWNER,
+            roleLabel: PartyRoleType.OWNER,
+        },
+        {
+            roleKey: PartyRoleType.JOINTOWNER,
+            roleLabel: PartyRoleType.JOINTOWNER,
+        },
+        {
+            roleKey: PartyRoleType.THIRDPARTYDESIGNEE,
+            roleLabel: PartyRoleType.THIRDPARTYDESIGNEE,
+        },
+    ];
+
+    const partyRoleMap = policyResponse.partyRoles.reduce(
+        (acc: Record<string, string>, role: PartyRole) => {
+            acc[role.partyRole] = role.partyId;
+            return acc;
+        },
+        {}
+    );
+
+    const parties = rolesToFormat
+        .map(({ roleKey, roleLabel }) => {
+            const partyId = partyRoleMap[roleKey];
+            const party = policyResponse.parties.find(
+                (p: Party) => p.partyId === partyId
+            );
+            return party ? formatParty(party, roleLabel) : null;
+        })
+        .filter(Boolean);
+
+    return parties;
+};
 const formatPartyData = (policyResponse: any) => {
     const partyIds = policyResponse.partyRoles
         .filter(
@@ -267,6 +340,11 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
             Object.assign(task, {
                 data: {
                     ...task.data,
+
+                    contractInfo: {
+                        parties: getContractInfo(policyResponse),
+                    },
+                    effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
                     actionData: formatPartyData(policyResponse),
                     defaultPartyIdRoleChange:
                         formatPartyData(policyResponse)?.[0]?.party?.partyId ||
