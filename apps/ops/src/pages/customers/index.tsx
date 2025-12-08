@@ -3,6 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { TranslationFiles } from '@deps/config/translations';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useCustomersFiltering } from '@deps/hooks/customers/useCustomersFiltering';
 import { useCustomersQuery } from '@deps/queries/tanstack/customers/customers-queries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
@@ -11,8 +12,6 @@ import {
 } from '@deps/utils/optimizely/optimizely';
 import { logInfo, withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
-
-import { useCustomersFiltering } from './hooks/useCustomersFiltering';
 
 export default function CustomersPage() {
     const { limit, offset, sortBy, sortOrder, filters } =
