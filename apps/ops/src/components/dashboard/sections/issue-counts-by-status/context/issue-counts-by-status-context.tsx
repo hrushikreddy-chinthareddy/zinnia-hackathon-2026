@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import dayjs from 'dayjs';
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
@@ -112,7 +113,9 @@ export const IssueCountsByStatusProvider: FC<PropsWithChildren> = ({
         exceptionCategory: category,
         process: formatProcessFilter(selectedProcess),
         exceptionCreatedDateStart: timerange.from,
-        exceptionCreatedDateEnd: timerange.to || undefined,
+        exceptionCreatedDateEnd: timerange.to
+            ? dayjs(timerange.to).add(1, 'day').toISOString()
+            : undefined,
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         exceptionStatus,
