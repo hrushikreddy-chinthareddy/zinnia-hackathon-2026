@@ -11,14 +11,12 @@ type SendDocumentProps = {
 };
 
 const SendDocument = ({ documents, selectedFormId }: SendDocumentProps) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'sendDocument.formSelection',
-    });
+    const { t } = useTranslation();
 
     return (
         <div className="documents-grid">
             <Label
-                label={t('documentsTitle')}
+                label={t('allFields.formsToUpdate')}
                 variant={LabelVariant.FieldLabel}
             />
             {documents.map((document) => {
