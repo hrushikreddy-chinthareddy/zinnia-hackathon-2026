@@ -184,11 +184,17 @@ export const generateSeries = (
 
         const name = t(`allFields.${item.name?.toLowerCase()}`) ?? item.name;
 
+        const defaultStartTime = fromDate.unix() * 1000;
+        const seriesStartPoint =
+            timeData[0][0] > defaultStartTime
+                ? defaultStartTime
+                : timeData[0][0];
+
         return {
             type: 'line',
             name,
             color: color[index],
-            data: [[fromDate.unix() * 1000, 0], ...timeData],
+            data: [[seriesStartPoint, 0], ...timeData],
         };
     });
 };
