@@ -92,7 +92,8 @@ export default function StatusFilter({
         if (prevSelected.size !== 0 || newSelectedSet.size !== 0) {
             setSelected(newSelected);
         }
-    }, [values, selected, statusOptions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values]);
 
     const handleSelection = (selectedValue: string, displayText: string) => {
         setSelected((prev) => {
@@ -134,7 +135,8 @@ export default function StatusFilter({
         onChange(
             Object.keys(selected).filter((key) => selected[key]) as Statuses[]
         );
-    }, [selected, onChange]);
+        //eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected]);
 
     return (
         <div className="w-[214px] sm:w-[234px]">
