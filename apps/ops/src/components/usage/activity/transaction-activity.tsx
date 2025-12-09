@@ -111,14 +111,14 @@ export const TransactionActivity = () => {
         <div className={styles.wrapper}>
             <div className={styles.card}>
                 <UsageHeaderLayout
-                    title={String(
+                    title={
                         t('allFields.zinniaLiveTransactionActivityTitle') ?? ''
-                    )}
-                    description={String(
+                    }
+                    description={
                         t(
                             'allFields.zinniaLiveTransactionActivityDescription'
                         ) ?? ''
-                    )}
+                    }
                     titleToolTip={<TransactionActivityTooltip />}
                     data={transactionData?.data || []}
                     csvFileName={generateCSVFileName({
