@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partie concernée",
         "emptySearch": "Aucun résultat trouvé",
         "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
@@ -65,6 +66,7 @@
         "currency": "Devise",
         "fixedCostPeriod": "Période de coût fixe",
         "totalCoverageAmount": "Montant total de la couverture",
+        "deathBenefit": "Prestation décès",
         "cumulativeGrossDeathBenefitAmount": "Montant brut cumulé de la prestation décès",
         "netDeathBenefit": "Prestation décès nette estimée",
         "minimumCoverageAmount": "Montant minimal de couverture",
@@ -273,6 +275,8 @@
         "marketValueAdjustmentIndicator": "Indicateur MVA",
         "marketValueAdjustmentAmount": "Montant MVA",
         "marketValueAdjustmentPeriod": "Période MVA",
+        "marketValueAdjustmentBaseRate": "Taux de base MVA",
+        "marketValueAdjustmentTransactionRate": "Taux de transaction MVA",
         "requiredMinimumDistribution": "Distribution minimale requise",
         "priorYearRequiredMinimumDistributionAmount": "Montant RMD de l'année précédente",
         "totalRequiredMinimumDistributionAnnualAmount": "Montant annuel total RMD",
@@ -507,7 +511,9 @@
         "sendToDifferentAddress": "Envoyer à une adresse différente",
         "formsToUpdate": "Formulaire(s) à mettre à jour",
         "view": "Afficher",
-        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ."
+        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer"
     },
     "enums": {
         "LIFE": "Vie",
