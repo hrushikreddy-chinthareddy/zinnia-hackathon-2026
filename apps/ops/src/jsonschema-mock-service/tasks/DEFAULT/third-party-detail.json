@@ -1,8 +1,7 @@
 {
-    "formId": "9569c24d-250e-45bd-ab0f-c85f04a192a9",
+    "formId": "6574d332-30e5-4995-82fd-9f5e712be565",
     "process": "Policy Update",
     "taskType": "THIRD_PARTY_DETAIL",
-    "processSubType": "Third Party Designee Change",
     "formSchema": {
         "type": "object"
     },
