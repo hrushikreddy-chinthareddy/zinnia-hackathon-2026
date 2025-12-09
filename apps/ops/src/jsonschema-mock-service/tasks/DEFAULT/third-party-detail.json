@@ -608,10 +608,7 @@
                                                             "default": null
                                                         }
                                                     },
-                                                    "required": [
-                                                        "lastName",
-                                                        "trustDate"
-                                                    ]
+                                                    "required": ["lastName"]
                                                 }
                                             },
                                             {
