@@ -1,3 +1,5 @@
+import { assertUnreachable } from '@deps/utils/assertions';
+
 import { DataNode, FieldType } from '../types';
 import { DataField } from './data-field';
 import { Group } from './data-group';
@@ -32,8 +34,8 @@ export function renderNode(node: DataNode, index: number): React.ReactNode {
             return <Group key={`group-${index}`}>{node.children}</Group>;
         }
         default:
-            // Fully exhaustive since type is a Symbol
-            return null;
+            // Unit tests ensure this will never be called
+            assertUnreachable(node);
     }
 }
 
