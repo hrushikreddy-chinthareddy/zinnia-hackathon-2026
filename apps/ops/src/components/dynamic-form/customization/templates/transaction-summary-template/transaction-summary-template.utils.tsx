@@ -180,13 +180,20 @@ const getCollateralAmount = (customData: any): string | null => {
 
     let collateralAmount = null;
     if (addedItem && deletedItem) {
-        collateralAmount = addedItem?.collateralAmount ?? null;
+        collateralAmount = addedItem?.party?.collateralAmount ?? null;
     } else if (addedItem) {
-        collateralAmount = addedItem?.collateralAmount ?? null;
+        collateralAmount = addedItem?.party?.collateralAmount ?? null;
     } else if (deletedItem) {
-        collateralAmount = deletedItem?.collateralAmount ?? null;
+        collateralAmount = deletedItem?.party?.collateralAmount ?? null;
     }
-    return collateralAmount;
+    if (collateralAmount !== null && collateralAmount !== undefined) {
+        const num = Number(collateralAmount);
+        if (!isNaN(num)) {
+            return num.toFixed(2);
+        }
+    }
+
+    return null;
 };
 
 const getRoleChangeParty = (customData: any): object | null => {
@@ -194,7 +201,6 @@ const getRoleChangeParty = (customData: any): object | null => {
         return null;
     }
     const actionData = customData.actionData;
-    console.log('actionData', actionData);
     const addedItem = actionData.find((item: any) => item.action === 'ADD');
     const deletedItem = actionData.find(
         (item: any) => item.action === Action.DELETE
@@ -213,10 +219,13 @@ const getRoleChangeParty = (customData: any): object | null => {
     switch (requestType) {
         case Action.ADD:
             addedItem.party.partyId = null;
+            addedItem.party.startDate = customData.effectiveDate;
             return addedItem.party;
         case Action.UPDATE:
+            addedItem.party.startDate = customData.effectiveDate;
             return addedItem.party;
         case Action.DELETE:
+            deletedItem.party.endDate = customData.effectiveDate;
             return deletedItem?.party;
         default:
             return null;
@@ -293,7 +302,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 caseId: customData?.caseId,
                 correlationId: customData?.correlationId,
                 changeReason: customData?.changeReason,
-                signatures: customData?.signatures,
+                signatures: customData?.signatureData?.signatures || [],
                 documents: customData?.documents,
                 supportingDocumentAttached:
                     customData?.supportingDocumentAttached || null,
@@ -301,7 +310,8 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 party: getRoleChangeParty(customData),
                 requestType: getRequestType(customData),
                 collateralAmount: getCollateralAmount(customData),
-                notarySignatures: customData?.notarySignatures,
+                notarySignatures:
+                    customData?.signatureData?.notarySignatures || [],
             },
         };
     },
@@ -316,6 +326,7 @@ export function buildValidationRequestBody(customData: any): any {
         );
         return { ...customData };
     }
+    console.log('customData', customData);
     if (customData.taskType === TaskType.Initiate_BeneChange_Transaction) {
         return requestBodyBuilders.INITIATE_BENECHANGE_TRANSACTION(customData);
     }
@@ -363,6 +374,7 @@ export interface Email {
 }
 export interface Party {
     partyType?: string;
+    startDate?: string | null;
     beneficiaryPercentage?: number;
     agentPercentage?: number;
     identifications?: Identification[];

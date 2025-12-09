@@ -144,7 +144,7 @@ const formatPartyData = (policyResponse: any) => {
     const partyIds = policyResponse.partyRoles
         .filter(
             (role: any) =>
-                role.partyRole === 'PRIMARYBENEFICIARY' &&
+                role.partyRole === 'ASSIGNEE' &&
                 (!role?.endDate || !isEndDated(role?.endDate))
         )
         .map((role: any) => role.partyId);
