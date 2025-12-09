@@ -49,6 +49,11 @@ enum ParentStageIds {
     AgentValidation = 'agentValidation',
 }
 
+enum StepAdditionalLabels {
+    AIEnabledFlag = 'AIEnabledFlag',
+    PaymentRecordId = 'PaymentRecordId',
+}
+
 const StepResultTag = ({ step }: { step: TransformedStep }) => {
     const { t } = useTranslation();
     let text;
@@ -188,11 +193,12 @@ const Step = ({
     const hasSidesheet = doesStepHaveSidesheet(step);
 
     const aiEnabledAdditional = step.stepAdditionalData?.find(
-        (additional) => additional.label === 'AIEnabledFlag'
+        (additional) => additional.label === StepAdditionalLabels.AIEnabledFlag
     );
 
     const entityIdAdditional = step.stepAdditionalData?.find(
-        (additional) => additional.label === 'PaymentRecordId'
+        (additional) =>
+            additional.label === StepAdditionalLabels.PaymentRecordId
     );
 
     const isAiEnabled =
