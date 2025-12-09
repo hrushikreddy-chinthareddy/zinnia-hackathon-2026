@@ -22,11 +22,11 @@
     padding-bottom: var(--measure-dimension-gap-lg);
     justify-content: space-between;
 
-    /* &.pinned {
+    &.pinned {
         border-bottom-color: var(--color-base-border-border-bold);
         padding: var(--measure-dimension-padding-2xl);
         box-shadow: var(--shadow-elevation-elevation-light-sm);
-    } */
+    }
 
     &.pinned {
         z-index: 4;
@@ -36,13 +36,14 @@
 .filters {
     display: flex;
     flex-grow: 1;
-    min-width: 0;
     gap: var(--measure-dimension-gap-lg);
     align-items: anchor-center;
-    max-width: 65%;
+    justify-content: flex-end;
 
     > * {
         flex: 1;
+        width: 45%;
+        max-width: 425px;
     }
 
     > :last-child {

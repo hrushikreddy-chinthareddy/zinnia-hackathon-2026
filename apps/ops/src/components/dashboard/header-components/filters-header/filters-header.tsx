@@ -242,7 +242,12 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             <div
                 ref={ref}
                 id="carrier-header"
-                className={clsx('flex-wrap', styles.filtersHeader)}
+                className={clsx('flex-wrap', styles.filtersHeader, {
+                    [styles.pinned as string]:
+                        carrierHeaderIsIntersecting ||
+                        Number(carrierHeaderEntry?.boundingClientRect.bottom) <
+                            64,
+                })}
             >
                 <Typography
                     className="flex items-center"
