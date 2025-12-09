@@ -1,6 +1,6 @@
 .formContainer {
     margin-top: var(--measure-dimension-gap-lg);
-    margin-bottom: var(--measure-dimension-gap-2xl);
+    margin-bottom: var(--measure-dimension-gap-xl);
     @media (max-width: 1024px) {
         margin-bottom: 5px;
     }

@@ -26,6 +26,7 @@ interface SearchBarProps
     handleError?: (bool: boolean) => void;
     disabled?: boolean;
     onChangeCallback?: (value: string, key: PolicySearchKeys) => void;
+    hasLegend?: boolean;
 }
 
 const SearchBar = ({
@@ -39,6 +40,7 @@ const SearchBar = ({
     handleError,
     disabled = false,
     onChangeCallback,
+    hasLegend = true,
 }: SearchBarProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const getToggleLabel = useCallback(
@@ -115,14 +117,16 @@ const SearchBar = ({
             id="search-form"
         >
             <fieldset>
-                <legend>
-                    <label
-                        htmlFor="search-by-dropdown"
-                        className="typography-labels-field-label mb-1"
-                    >
-                        {t('caseManagementDashboard.search.searchKeyType')}
-                    </label>
-                </legend>
+                {hasLegend && (
+                    <legend>
+                        <label
+                            htmlFor="search-by-dropdown"
+                            className="typography-labels-field-label mb-1"
+                        >
+                            {t('caseManagementDashboard.search.searchKeyType')}
+                        </label>
+                    </legend>
+                )}
                 <div className={styles.searchRow}>
                     <div className={styles.searchContainer}>
                         <DropdownMenu.Root>

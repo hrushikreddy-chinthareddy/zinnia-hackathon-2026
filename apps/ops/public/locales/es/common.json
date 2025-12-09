@@ -4335,6 +4335,10 @@
         "pndAwaitingFunds": "Esperando fondos",
         "canceledNoPremium": "Sin prima"
     },
+    "button": {
+        "showLess": "Mostrar menos",
+        "showAll": "mostrar todo"
+    },
     "placeHolder": {
         "globalSelectSearch": "Empiece a escribir para encontrar valores..."
     },

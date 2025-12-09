@@ -4332,6 +4332,10 @@
         "pndAwaitingFunds": "Awaiting Funds",
         "canceledNoPremium": "No Premium"
     },
+    "button": {
+        "showLess": "Show less",
+        "showAll": "Show all"
+    },
     "placeHolder": {
         "globalSelectSearch": "Start typing to find values..."
     },

@@ -4280,6 +4280,10 @@
         "pndAwaitingFunds": "En attente de fonds",
         "canceledNoPremium": "Pas de prime"
     },
+    "button": {
+        "showLess": "Afficher moins",
+        "showAll": "tout afficher"
+    },
     "placeHolder": {
         "globalSelectSearch": "Commencez à taper pour trouver des valeurs..."
     },

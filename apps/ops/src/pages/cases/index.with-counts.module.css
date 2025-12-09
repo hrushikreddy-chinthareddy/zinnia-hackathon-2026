@@ -26,24 +26,31 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding-top: 14px;
+    padding-bottom: 10px;
 
     @media (min-width: 768px) {
         width: auto;
     }
 }
-
 .statusRow {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
 
-    @media (min-width: 640px) {
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-        flex-direction: row;
-        align-items: center;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    max-width: 88vw;
+
+    @media (max-width: 1024px) {
+        max-width: 94vw;
+    }
+    @media (max-width: 1365px) and (min-width: 1025px) {
+        max-width: 70vw;
+    }
+
+    @media (max-width: 767px) {
+        flex-direction: column;
+        overflow-x: visible;
+        max-width: 100%;
     }
 }
