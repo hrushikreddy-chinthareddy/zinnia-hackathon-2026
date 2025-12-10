@@ -40,7 +40,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
         brokerDealerName: Object.keys(selectedBrokerDealers),
     };
 
-    const { data: processListOptions, isSuccess } = useQuery({
+    const { data: processListOptions } = useQuery({
         queryKey: ['processListOptions', processFilter],
         placeholderData: (previousData) => previousData,
         queryFn: () =>
