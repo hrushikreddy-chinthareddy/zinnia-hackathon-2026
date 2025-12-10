@@ -23,12 +23,17 @@ jest.mock('react-i18next', () => ({
                 postTamraBasis: 'Post tamra basis',
             };
             const POLICY_PREFIX = 'policy.detailCards.policyDetails.';
+            const ENUMS_PREFIX = 'enums.';
 
-            const normalizedKey = key.startsWith(POLICY_PREFIX)
-                ? key.substring(POLICY_PREFIX.length)
-                : key;
+            let normalizedKey = key;
 
-            return translations[normalizedKey] ?? key;
+            if (normalizedKey.startsWith(POLICY_PREFIX)) {
+                normalizedKey = normalizedKey.substring(POLICY_PREFIX.length);
+            } else if (normalizedKey.startsWith(ENUMS_PREFIX)) {
+                normalizedKey = normalizedKey.substring(ENUMS_PREFIX.length);
+            }
+
+            return translations[normalizedKey] ?? normalizedKey;
         },
     }),
 }));

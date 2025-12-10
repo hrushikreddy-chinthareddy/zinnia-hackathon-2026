@@ -32,9 +32,7 @@ export const CostBasisQualificationCard = ({
         style: 'currency',
     };
     const { costBasis, issueState, qualificationType } = policy;
-    const qualificationTypeValue = t(
-        `${qualificationType?.toLocaleLowerCase() || ''}`
-    );
+    const qualificationTypeValue = t(`enums.${qualificationType || ''}`);
     const {
         preTaxEquityAndFiscalResponsibilityActBasis,
         preTechnicalAndMiscellaneousRevenueActAmount,
