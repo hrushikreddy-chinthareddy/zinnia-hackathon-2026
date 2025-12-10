@@ -68,9 +68,7 @@ export const CostBasisQualificationCard = ({
         </div>
     );
 
-    const label =
-        t('policy.detailCards.policyDetails.showdetailedCostBasis') ||
-        t('Show detailed cost basis info');
+    const label = t('policy.detailCards.policyDetails.showdetailedCostBasis');
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
