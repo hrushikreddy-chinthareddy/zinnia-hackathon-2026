@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { t } from 'i18next';
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
@@ -40,7 +40,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
         brokerDealerName: Object.keys(selectedBrokerDealers),
     };
 
-    const { data: processListOptions } = useQuery({
+    const { data: processListOptions, isSuccess } = useQuery({
         queryKey: ['processListOptions', processFilter],
         placeholderData: (previousData) => previousData,
         queryFn: () =>
@@ -56,10 +56,24 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
         enabled: Object.keys(processFilter).length > 0,
     });
 
-    const handleChange = (value: string) => {
-        setSelectedProcess(value as Processes | ExtendedProcesses);
-        onValueChange(value as Processes | ExtendedProcesses);
-    };
+    const handleChange = useCallback(
+        (value: string) => {
+            setSelectedProcess(value as Processes | ExtendedProcesses);
+            onValueChange(value as Processes | ExtendedProcesses);
+        },
+        [setSelectedProcess, onValueChange]
+    );
+
+    useEffect(() => {
+        if (!processListOptions) return;
+        const isPrevOptionValid = processListOptions?.some(
+            (o) => o.value === value
+        );
+
+        if (!isPrevOptionValid && value !== ExtendedProcesses.ALL) {
+            handleChange(ExtendedProcesses.ALL);
+        }
+    }, [handleChange, value, processListOptions]);
 
     return (
         <Select
