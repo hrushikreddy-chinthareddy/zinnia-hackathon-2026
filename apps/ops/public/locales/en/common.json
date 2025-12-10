@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Impacted party",
         "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",
         "policyBasics": "{{policyNomenclature, capitalize}} basics",
@@ -65,6 +66,7 @@
         "currency": "Currency",
         "fixedCostPeriod": "Fixed cost period",
         "totalCoverageAmount": "Total coverage amount",
+        "deathBenefit": "Death benefit",
         "cumulativeGrossDeathBenefitAmount": "Cumulative gross death benefit amount",
         "netDeathBenefit": "Estimated net death benefit",
         "minimumCoverageAmount": "Minimum coverage amount",
@@ -123,6 +125,11 @@
         "generalLedgerFundCode": "General ledger fund code",
         "totalFundValue": "Total fund value",
         "guaranteedMinimumInterestRate": "Guaranteed minimum interest rate",
+        "sex": "Sex",
+        "genderIdentity": "Gender identity",
+        "male": "Male",
+        "female": "Female",
+        "unisex": "Unisex",
         "lineOfBusiness": "Line of business",
         "planName": "Plan name",
         "productType": "Product type",
@@ -268,6 +275,8 @@
         "marketValueAdjustmentIndicator": "MVA indicator",
         "marketValueAdjustmentAmount": "MVA amount",
         "marketValueAdjustmentPeriod": "MVA period",
+        "marketValueAdjustmentBaseRate": "MVA base rate",
+        "marketValueAdjustmentTransactionRate": "MVA transaction rate",
         "requiredMinimumDistribution": "Required minimum distribution",
         "priorYearRequiredMinimumDistributionAmount": "Prior year RMD amount",
         "totalRequiredMinimumDistributionAnnualAmount": "Total RMD annual amount ",
@@ -310,7 +319,7 @@
         "totalPremiumBonus": "Total premium bonus",
         "unvestedPremiumBonus": "Unvested premium bonus",
         "coveredParties": "Covered parties",
-        "Riders": "Riders",
+        "riders": "Riders",
         "timestamp": "Timestamp",
         "riderName": "Rider name",
         "underwritingStatus": "Underwriting status",
@@ -467,7 +476,50 @@
         "systematicProgramPendingBannerText": "An update to this policy's systematic program details is pending. For more information, ",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
         "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
-        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements."
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements.",
+        "formSelection": "Form Selection",
+        "correspondence": "Correspondence",
+        "confirm": "Confirm",
+        "email": "Email",
+        "fax": "Fax",
+        "mail": "Mail",
+        "max5Emails": "Maximum 5 emails allowed.",
+        "invalidEmail": "Please enter valid email address.",
+        "invalidDomain": "Only Zinnia emails are allowed.",
+        "emailRequired": "Email is required.",
+        "selectAddressToContinue": "Select an address to continue.",
+        "recipientRequiredToContinue": "Recipient is required to continue.",
+        "duplicateRecipientEmail": "Email already exists in the list.",
+        "emailAddress": "Email Address",
+        "selectEmailsOnFile": "Select emails on file",
+        "noRecordsFound": "No records found.",
+        "enterEmailInstructions": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
+        "addUpTo5Recipients": "You may add up to 5 additional recipients.",
+        "selectFormToContinue": "Select a form to continue.",
+        "sendAnotherDocument": "Send another document",
+        "transaction": "Transaction",
+        "subtype": "Subtype",
+        "noFormsFound": "No forms found.",
+        "goToCase": "Go to case",
+        "hasBeen": "has been",
+        "submitted": "Submitted!",
+        "sendChannel_paper_mail": "mailed to",
+        "sendChannel_fax": "faxed to",
+        "sendChannel_email": "emailed to",
+        "whereShouldDocsBeSent": "Where should the document(s) be sent",
+        "firstNameRequired": "First name is required.",
+        "lastNameRequired": "Last name is required.",
+        "verifyAndSelectAddressToContinue": "Verify & select the address to continue.",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "sendToDifferentAddress": "Send to a different address",
+        "formsToUpdate": "Form(s) to update",
+        "view": "View",
+        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all"
     },
     "enums": {
         "LIFE": "Life",
@@ -1632,7 +1684,16 @@
             "isIrrevocableBene": "Is there an irrevocable beneficiary ?",
             "leaveTransaction": "Leave this transaction",
             "signatureShouldBePresent": "Signature present option must be selected",
-            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box."
+            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
+            "selectOption": "Select",
+            "trustee": "Trustee",
+            "executor": "Executor",
+            "custodian": "Custodian",
+            "guardian": "Guardian",
+            "attorneyInFact": "Attorney-in-fact",
+            "assignee": "Assignee",
+            "authorizedSignatory": "Authorized signatory",
+            "na": "NA"
         },
         "summary": {
             "allocation": {
@@ -3053,7 +3114,8 @@
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "standardDocumentMatching": "Match Document",
             "toaNigo": "Review Transfer Issues",
-            "applicationReview": "Validate Application Details"
+            "applicationReview": "Validate Application Details",
+            "aiIndicatorTooltip": "Form data automatically extracted via AI."
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -4037,77 +4099,6 @@
             "actions": "Actions"
         }
     },
-    "sendDocument": {
-        "tabs": {
-            "formSelection": "Form Selection",
-            "correspondence": "Correspondence",
-            "confirm": "Confirm"
-        },
-        "formSelection": {
-            "label": "Select the appropriate form that needs to be updated.",
-            "transactionType": "Transaction",
-            "transactionSubType": "Subtype",
-            "documentsTitle": "Form(s) to update",
-            "view": "View",
-            "noFormsFound": "No forms found",
-            "addNewDocument": "Send another document"
-        },
-        "correspondence": {
-            "label": "Where should the document(s)  be sent",
-            "addAdditionalRecipient": "+ Add additional recipient",
-            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
-            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
-            "emailMessage": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
-            "emailWarning": "You may add upto 5 additional recipients",
-            "emailLabel": "Select emails on file",
-            "noEmails": "No records found",
-            "email": "Email",
-            "ccEmail": "CC Emails",
-            "fax": "Fax",
-            "mail": "Mail",
-            "emailAddress": "Email Address",
-            "faxNumber": "Fax Number",
-            "edit": "Edit",
-            "mailDetails": {
-                "sendToDifferentAddress": "Send to a different address",
-                "firstName": "First Name",
-                "lastName": "Last Name",
-                "addressType": "Address type"
-            }
-        },
-        "confirm": {
-            "cta": "Go to case",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "The documents have been",
-                "1": "and cc'd"
-            },
-            "channel": {
-                "paper_mail": "mailed to",
-                "fax": "faxed to",
-                "email": "emailed to"
-            },
-            "title": "Submitted!"
-        },
-        "formActions": {
-            "continue": "Continue",
-            "cancel": "Cancel"
-        },
-        "errors": {
-            "formId": "Select a form to continue.",
-            "recipient": "Recipient is required to continue",
-            "inValidDomain": "Only Zinnia emails are allowed",
-            "mailDetails": "Select a address to continue.",
-            "inValidEmail": "Please enter valid email address",
-            "firstName": "First name is required",
-            "lastName": "Last name is required",
-            "address": "Verify & select the address to continue.",
-            "maxEmails": "Maximum 5 emails allowed",
-            "duplicateRecipientEmail": "Email already exist in the list",
-            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields.",
-            "emailRequired": "Email is required"
-        }
-    },
     "contactCenter": {
         "sendStatement": {
             "startDate": "Period start date",
@@ -4363,6 +4354,10 @@
         "pndAwaitingFunds": "Awaiting Funds",
         "canceledNoPremium": "No Premium"
     },
+    "button": {
+        "showLess": "Show less",
+        "showAll": "Show all"
+    },
     "placeHolder": {
         "globalSelectSearch": "Start typing to find values..."
     },
@@ -4407,7 +4402,7 @@
             "cumulativeGrossDeathBenefitAmount": "This is what the {{policyNomenclature}} pays out when the insured dies. It's usually the same as the base death benefit (also known as the face amount) but it can include additions (like returned premiums) in some cases.",
             "netDeathBenefit": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount. ",
             "minimumCoverageAmount": "This is the lowest amount that an owner can reduce their death benefit to. Less coverage may lead to lower premiums—and negative tax consequences. If the decrease creates a large enough gap between the death benefit and the premiums paid in, the policy may fail guidelines tests and cease to offer tax advantages.  All changes reset the seven year period for the 7-pay test.",
-            "maximumCoverageAmount": "This is the highest amount that an owner can increase their death benefit to. Increase requests must go through the underwriting process for approval. All changes reset the seven year period for the 7-pay test.",
+            "maximumCoverageAmount": "This is the highest amount that an owner can increase their death benefit to. Increase requests must go through the underwriting process for approval. All changes reset the seven year period for the 7-pay test.",
             "minimumCoverageDecreaseAmount": "This refers to the smallest reduction in coverage that an owner is allowed to make per {{policyNomenclature}} year.",
             "maximumCoverageDecreaseAmount": "This refers to the largest reuction in coverage an owner can make per {{policyNomenclature}} year.",
             "minimumCoverageIncreaseAmount": "This refers to the smallest increment by which an owner can increase their coverage in a single {{policyNomenclature}} year.",

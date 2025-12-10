@@ -273,7 +273,7 @@ export default function RMDMethod({
                 isLC={isLC}
             />
             {rmdMethod === RMDType.CalculateRMD && (
-                <RMDCalculator isFormStateReadOnly />
+                <RMDCalculator isFormStateReadOnly={isFormStateReadOnly} />
             )}
             {!isQCD && (
                 <div className="p-2">

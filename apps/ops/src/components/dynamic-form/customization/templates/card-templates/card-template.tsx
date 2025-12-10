@@ -27,6 +27,7 @@ import {
     formatPercentage,
     formatPhone,
     isNullEmptyOrUndefined,
+    toTitleCase,
 } from '@deps/helpers/string.helpers';
 import {
     formatDirtyAddress,
@@ -38,7 +39,7 @@ import {
     DataFormattingTypes,
     TaskFieldTypes,
 } from '@deps/models/case/task';
-import { toTitleCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import style from './card-template.module.css';
@@ -238,7 +239,13 @@ export const formatValueByDataType = (dataType: string, value: any) => {
         case DataFormattingTypes.Amount:
             return numberFormatify(Math.abs(value));
         case DataFormattingTypes.DirtyAddress: {
-            if (!value) return null;
+            if (
+                value === undefined ||
+                value === null ||
+                value === '' ||
+                value === DEFAULT_ERROR_STRING
+            )
+                return DEFAULT_ERROR_STRING;
             try {
                 const addressValue =
                     typeof value === 'string' && value.startsWith('{')
@@ -253,7 +260,7 @@ export const formatValueByDataType = (dataType: string, value: any) => {
                 );
             } catch (error) {
                 console.error('Error parsing address value:', error);
-                return null;
+                return DEFAULT_ERROR_STRING;
             }
         }
         case DataFormattingTypes.Button: {
@@ -366,7 +373,7 @@ export const SingleCard = ({
                             {subtitle?.field?.[0] &&
                                 formatValueByDataType(
                                     subtitle?.field?.[0]?.dataType,
-                                    subtitle?.value || '--'
+                                    subtitle?.value || DEFAULT_ERROR_STRING
                                 )}
                         </PiiWrapper>
                     </div>
@@ -412,8 +419,8 @@ export const DetailsCard = ({ details, sectionTitle, properties }: any) => {
                                 details[schema.key] &&
                                     details[schema.key] !== schema.default
                                     ? details[schema.key]
-                                    : replacePlaceholders(schema, details)
-                                          ?.default ?? '--'
+                                    : replacePlaceholders(schema, details, true)
+                                          ?.default || DEFAULT_ERROR_STRING
                             )}
                         </Typography>
                     );

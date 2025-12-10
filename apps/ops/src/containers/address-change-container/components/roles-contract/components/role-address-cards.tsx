@@ -31,7 +31,7 @@ export const RoleAddressCard = ({
     isAddressChange = true,
     isAddressCard = true,
 }: IRoleAddressCardProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     return (
         <>
@@ -88,9 +88,7 @@ export const RoleAddressCard = ({
                                             <div>
                                                 <Label
                                                     className="h-6 leading-4.5"
-                                                    label={t(
-                                                        'correspondence.email'
-                                                    )}
+                                                    label={t('allFields.email')}
                                                     variant={
                                                         LabelVariant.FieldLabel
                                                     }

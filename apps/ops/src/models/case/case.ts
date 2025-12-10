@@ -164,6 +164,7 @@ export enum Statuses {
     Pending = 'IMPEDED',
     Resolved = 'RESOLVED',
     Unresolved = 'UNRESOLVED',
+    All = 'All',
     Issued = 'Issued', // NOTE: API response current returns Titlecase instead of ALLCAPS - MR
 }
 

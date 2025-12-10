@@ -43,7 +43,11 @@ export const replacePlaceholders = (
         const result: Record<string, any> = {};
         for (const key in template) {
             if (Object.prototype.hasOwnProperty.call(template, key)) {
-                result[key] = replacePlaceholders(template[key], data);
+                result[key] = replacePlaceholders(
+                    template[key],
+                    data,
+                    returnEmptyOnNoMatch
+                );
             }
         }
         return result;

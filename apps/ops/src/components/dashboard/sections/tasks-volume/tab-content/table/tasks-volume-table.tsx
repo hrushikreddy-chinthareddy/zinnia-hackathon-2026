@@ -141,6 +141,11 @@ export const TasksVolumeTable = () => {
                         <NoDataMessage />
                     ) : (
                         <Table>
+                            <colgroup>
+                                <col style={{ width: '45%' }} />
+                                <col style={{ width: '35%' }} />
+                                <col style={{ width: '20%' }} />
+                            </colgroup>
                             <TableHeader>
                                 <TableRow>
                                     <TableHeaderCell
