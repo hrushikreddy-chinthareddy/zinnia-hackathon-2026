@@ -6895,7 +6895,7 @@
     "premiumAutopay": {
         "start": {
             "label": "Démarrer",
-            "subtitleManage": "Make changes to the schedule, amount, or payment method for this policy's systematic premium.",
+            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police.",
             "titleStart": "Configurer le prélèvement automatique de la prime",
             "titleStartSP": "Configurer le programme systématique Premium",
             "titleManage": "Gérer le prélèvement automatique de la prime",
