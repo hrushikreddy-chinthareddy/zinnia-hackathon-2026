@@ -108,6 +108,7 @@ export interface Party {
     agentFullName?: string;
     agentPercentage?: number;
     agentType?: string;
+    isIrrevocable?: boolean;
 }
 
 export interface PolicyResponse {

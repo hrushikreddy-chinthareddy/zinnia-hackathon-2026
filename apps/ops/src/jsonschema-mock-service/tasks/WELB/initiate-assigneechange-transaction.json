@@ -208,8 +208,8 @@
                                     "supportingDocumentAttached": null,
                                     "party": {
                                         "partyType": "INDIVIDUAL",
-                                        "firstName": "",
-                                        "lastName": "",
+                                        "firstName": null,
+                                        "lastName": null,
                                         "middleName": null,
                                         "endDate": null,
                                         "relationshipToTheCurrentOwner": null,
@@ -236,9 +236,9 @@
                                                 "addressType": "RESIDENCE",
                                                 "addressLine1": "",
                                                 "addressLine2": null,
-                                                "city": "",
-                                                "state": "",
-                                                "zipCode": "",
+                                                "city": null,
+                                                "state": null,
+                                                "zipCode": null,
                                                 "isPreferred": true
                                             }
                                         ],
@@ -336,9 +336,10 @@
                                                     "SIBLING",
                                                     "STEPCHILD",
                                                     "STEPPARENT",
-                                                    "OTHER"
+                                                    "OTHER",
+                                                    null
                                                 ],
-                                                "default": ""
+                                                "default": null
                                             },
                                             "contactDetailsHeader": {
                                                 "type": "object",
@@ -535,11 +536,7 @@
                                                 }
                                             }
                                         },
-                                        "required": [
-                                            "partyType",
-                                            "firstName",
-                                            "lastName"
-                                        ],
+                                        "required": ["partyType"],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -1363,6 +1360,7 @@
                                 },
                                 "relationshipToTheCurrentOwner": {
                                     "ui:widget": "SelectWidget",
+                                    "ui:emptyValue": null,
                                     "ui:options": {
                                         "enumNames": [
                                             "Select relationship to current owner",
@@ -1732,12 +1730,14 @@
                                         "type": "object",
                                         "properties": {
                                             "commissionExpiredDate": {
-                                                "type": "string",
-                                                "title": "Commission expired date"
+                                                "type": ["string", "null"],
+                                                "title": "Commission expired date",
+                                                "default": null
                                             },
                                             "signDate": {
-                                                "type": "string",
-                                                "title": "Sign date"
+                                                "type": ["string", "null"],
+                                                "title": "Sign date",
+                                                "default": null
                                             },
                                             "isSealPresent": {
                                                 "title": "Seal present",

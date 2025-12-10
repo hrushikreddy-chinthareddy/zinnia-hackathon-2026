@@ -309,7 +309,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 relationshipToParty: customData?.relationshipToParty,
                 party: getRoleChangeParty(customData),
                 requestType: getRequestType(customData),
-                collateralAmount: getCollateralAmount(customData),
+                collateralAmount: Number(getCollateralAmount(customData)),
                 notarySignatures:
                     customData?.signatureData?.notarySignatures || [],
             },

@@ -138,6 +138,7 @@ const formatParty = (party: Party, role: string) => ({
     identifications: getIdentifications(party.identifications),
     emails: getEmails(party.emails),
     phones: getPhones(party.phones),
+    isIrrevocable: party?.isIrrevocable ?? false,
 });
 
 const formatPartyData = (policyResponse: any) => {
@@ -152,7 +153,6 @@ const formatPartyData = (policyResponse: any) => {
     const actionData = policyResponse.parties
         .filter((party: any) => partyIds.includes(party.partyId))
         .map((party: any) => {
-            console.log('party', party);
             return {
                 action: party?.action ?? Action.NONE,
                 supportingDocumentAttached:
@@ -195,11 +195,10 @@ const formatPartyData = (policyResponse: any) => {
                     phones: getPhones(party.phones),
                     emails: getEmails(party.emails),
                     identifications: getIdentifications(party.identifications),
+                    isIrrevocable: party.isIrrevocable ?? false,
                 },
             };
         });
-
-    console.log(actionData, 'actionData');
 
     return actionData;
 };
@@ -345,6 +344,7 @@ const initiateAssigneeChangeTransaction: TaskHandler<ReviewPayload, any> = {
             },
             'ui:dataPath': ['declineReason'],
         };
+        console.log(task, 'task');
 
         if (task) {
             Object.assign(task, {

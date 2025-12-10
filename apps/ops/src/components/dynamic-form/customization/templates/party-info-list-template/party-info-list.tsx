@@ -32,7 +32,7 @@ export default function PartyInfoListTemplate(
         prefferedCTA = 'Preferred',
     } = uiOptions;
 
-    const [disabledSet, setDisabledSet] = useState(new Set<number>());
+    // const [disabledSet, setDisabledSet] = useState(new Set<number>());
     const prevLengthRef = useRef(items.length);
     const [newlyAddedSet, setNewlyAddedSet] = useState(new Set<number>());
 
@@ -162,7 +162,7 @@ export default function PartyInfoListTemplate(
             {items.map((element, index) => {
                 const isPreferred = preferredIndex === index;
 
-                const isDisabled = disabledSet.has(index);
+                // const isDisabled = disabledSet.has(index);
 
                 return (
                     <>
@@ -176,14 +176,10 @@ export default function PartyInfoListTemplate(
                                     ? styles.animateSlideUp
                                     : ''
                             }`}
-                            style={{ opacity: isDisabled ? 0.5 : 1 }}
+                            style={{ opacity: 1 }}
                         >
                             <div className="flex justify-between items-start gap-4 flex-wrap">
-                                <div
-                                    className={`flex-1 min-w-[70%] ${
-                                        isDisabled ? 'pointer-events-none' : ''
-                                    }`}
-                                >
+                                <div className={`flex-1 min-w-[70%]`}>
                                     {element.children}
                                 </div>
                                 <div className="flex flex-col gap-3 items-end">

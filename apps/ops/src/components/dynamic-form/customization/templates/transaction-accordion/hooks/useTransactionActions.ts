@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 import { Action } from '@deps/constants/policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -21,9 +21,16 @@ export function useTransactionActions({
     setCustomData,
     isSingleParty,
 }: Params) {
-    const actionData = customData?.actionData || [];
+    const actionData = useMemo(
+        () => customData?.actionData || [],
+        [customData?.actionData]
+    );
 
     const actionDataRef = useRef<any[]>(actionData);
+
+    useEffect(() => {
+        actionDataRef.current = actionData;
+    }, [actionData]);
 
     useEffect(() => {
         if (templateId !== 'actionData') return;
@@ -43,18 +50,14 @@ export function useTransactionActions({
         setCustomData({
             actionData: actionData.slice(0, itemsLen),
         });
-    }, [actionData, itemsLen, templateId]);
+    }, [actionData, itemsLen, templateId, itemDefault, setCustomData]);
 
     const disableAddButton =
         isSingleParty &&
         Array.isArray(actionData) &&
         actionData.some((x: any) => x.action === Action.ADD);
 
-    const onToggleDelete = (
-        index: number,
-        checked: boolean,
-        isSingleParty: boolean
-    ) => {
+    const onToggleDelete = (index: number, checked: boolean) => {
         let updatedList = [...actionDataRef.current];
 
         if (isSingleParty) {

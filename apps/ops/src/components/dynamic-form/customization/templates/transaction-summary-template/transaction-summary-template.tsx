@@ -180,9 +180,13 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const taskType = formContext.customData?.taskType;
     return (
         <div id={'id'} className="space-y-8">
-            <p className="mb-3 font-primary text-sm">
-                {validationSucceeded ? t('successMessage') : t('errorMessage')}
-            </p>
+            {!readonly && (
+                <p className="mb-3 font-primary text-sm">
+                    {validationSucceeded
+                        ? t('successMessage')
+                        : t('errorMessage')}
+                </p>
+            )}
             {(dataSource as SummaryItem[]).map(
                 (item: SummaryItem, idx: number) => {
                     const {
@@ -353,7 +357,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                 />
             )}
 
-            {!validationSucceeded && renderValidationErrors()}
+            {!readonly && !validationSucceeded && renderValidationErrors()}
             {showSelectionError && !isChecked && (
                 <AssistiveText
                     className="mt-2"

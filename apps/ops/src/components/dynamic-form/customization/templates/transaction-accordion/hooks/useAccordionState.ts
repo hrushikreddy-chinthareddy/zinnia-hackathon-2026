@@ -1,24 +1,27 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export function useAccordionState(templateId: string, itemsLen: number) {
-    const [activeIndex, setActiveIndex] = useState<number | null>(0);
-    const prevLen = useRef(itemsLen);
-
-    useEffect(() => setActiveIndex(0), [templateId]);
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const prevItemsLenRef = useRef(itemsLen);
+    const prevTemplateIdRef = useRef(templateId);
 
     useEffect(() => {
-        const oldLen = prevLen.current;
+        const prevLen = prevItemsLenRef.current;
+        const prevTemplate = prevTemplateIdRef.current;
 
-        if (itemsLen > oldLen) setActiveIndex(itemsLen - 1);
-
-        if (itemsLen < oldLen) {
+        if (templateId !== prevTemplate) {
+            setActiveIndex(null);
+        } else if (itemsLen > prevLen) {
+            setActiveIndex(itemsLen - 1);
+        } else if (itemsLen < prevLen) {
             setActiveIndex((prev) =>
                 prev !== null && prev < itemsLen ? prev : null
             );
         }
 
-        prevLen.current = itemsLen;
-    }, [itemsLen]);
+        prevItemsLenRef.current = itemsLen;
+        prevTemplateIdRef.current = templateId;
+    }, [templateId, itemsLen]);
 
     return { activeIndex, setActiveIndex };
 }

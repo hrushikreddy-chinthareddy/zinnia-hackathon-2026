@@ -18,7 +18,6 @@ export const TransactionAccordionTemplate = (
         props;
     const ui = getUiOptions(uiSchema);
     const { customData, setCustomData } = formContext;
-    console.log(customData, 'customData123');
 
     const {
         templateId = 'default',
@@ -78,15 +77,15 @@ export const TransactionAccordionTemplate = (
               );
     }
 
-    const isIrrevocableBene =
-        formContext?.customData?.contractInfo?.parties?.some(
-            (party: any) => party.partyRole === Roles.ASSIGNEE
-        );
+    const isIrrevocable = formContext?.customData?.contractInfo?.parties?.some(
+        (party: any) => party.isIrrevocable === true
+    );
     if (formContext?.customData?.signatureData) {
-        formContext.customData.signatureData.signatures = isIrrevocableBene
+        formContext.customData.signatureData.signatures = isIrrevocable
             ? formContext.customData.signatureData.signatures
             : formContext.customData.signatureData.signatures?.filter(
-                  (signature: any) => signature.signType !== Roles.ASSIGNEE
+                  (signature: any) =>
+                      signature.signType !== Roles.IRREVOCABLE_BENEFICIARY
               );
     }
 
@@ -155,11 +154,7 @@ export const TransactionAccordionTemplate = (
                                         label="Remove"
                                         checked={isDeleted}
                                         onChange={(val) =>
-                                            onToggleDelete(
-                                                index,
-                                                val,
-                                                actionData
-                                            )
+                                            onToggleDelete(index, val)
                                         }
                                     />
                                 )}
