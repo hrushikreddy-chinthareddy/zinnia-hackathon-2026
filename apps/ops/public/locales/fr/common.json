@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partie concernée",
         "emptySearch": "Aucun résultat trouvé",
         "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
@@ -65,6 +66,7 @@
         "currency": "Devise",
         "fixedCostPeriod": "Période de coût fixe",
         "totalCoverageAmount": "Montant total de la couverture",
+        "deathBenefit": "Prestation décès",
         "cumulativeGrossDeathBenefitAmount": "Montant brut cumulé de la prestation décès",
         "netDeathBenefit": "Prestation décès nette estimée",
         "minimumCoverageAmount": "Montant minimal de couverture",
@@ -123,6 +125,11 @@
         "generalLedgerFundCode": "Code du fonds du grand livre",
         "totalFundValue": "Valeur totale du fonds",
         "guaranteedMinimumInterestRate": "Taux d'intérêt minimum garanti",
+        "sex": "Sexe",
+        "genderIdentity": "Identité de genre",
+        "male": "Homme",
+        "female": "Femme",
+        "unisex": "Unisexe",
         "lineOfBusiness": "Ligne d'activité",
         "planName": "Nom du plan",
         "productType": "Type de produit",
@@ -268,6 +275,8 @@
         "marketValueAdjustmentIndicator": "Indicateur MVA",
         "marketValueAdjustmentAmount": "Montant MVA",
         "marketValueAdjustmentPeriod": "Période MVA",
+        "marketValueAdjustmentBaseRate": "Taux de base MVA",
+        "marketValueAdjustmentTransactionRate": "Taux de transaction MVA",
         "requiredMinimumDistribution": "Distribution minimale requise",
         "priorYearRequiredMinimumDistributionAmount": "Montant RMD de l'année précédente",
         "totalRequiredMinimumDistributionAnnualAmount": "Montant annuel total RMD",
@@ -472,7 +481,50 @@
         "emptySystematicProgramsTable": "Il n’existe actuellement aucun programme systématique {{type}}.",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
         "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
-        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré."
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "L’avenant demandé n’a pas été inclus car il ne répond pas aux exigences en matière de capital assuré.",
+        "formSelection": "Sélection de formulaire",
+        "correspondence": "Correspondance",
+        "confirm": "Confirmer",
+        "email": "E-mail",
+        "fax": "Fax",
+        "mail": "Mail préféré",
+        "max5Emails": "Maximum 5 e-mails autorisés.",
+        "invalidEmail": "Veuillez saisir une adresse e-mail valide.",
+        "invalidDomain": "Seuls les e-mails de Zinnia sont autorisés.",
+        "emailRequired": "L'e-mail est requis.",
+        "selectAddressToContinue": "Sélectionnez une adresse pour continuer.",
+        "recipientRequiredToContinue": "Le destinataire est tenu de continuer.",
+        "duplicateRecipientEmail": "L'e-mail existe deja dans la liste.",
+        "emailAddress": "Adresse e-mail",
+        "selectEmailsOnFile": "Sélectionnez les e-mails enregistrés",
+        "noRecordsFound": "Aucun enregistrement trouvé.",
+        "enterEmailInstructions": "Saisissez les adresses e-mail séparées par des virgules ou des points-virgules avec un maximum de 5.",
+        "addUpTo5Recipients": "Vous pouvez ajouter jusqu'à 5 destinataires supplémentaires.",
+        "selectFormToContinue": "Sélectionnez un formulaire pour continuer.",
+        "sendAnotherDocument": "Envoyer un autre document",
+        "transaction": "Transaction",
+        "subtype": "Sous-type",
+        "noFormsFound": "Aucun formulaire trouvé.",
+        "goToCase": "Accéder au cas",
+        "hasBeen": "ont été",
+        "submitted": "Soumise!",
+        "sendChannel_paper_mail": "envoyé par courrier à",
+        "sendChannel_fax": "faxé à",
+        "sendChannel_email": "envoyé par courrier électronique à",
+        "whereShouldDocsBeSent": "Où le(s) document(s) doivent-ils être envoyés?",
+        "firstNameRequired": "Le prénom est obligatoire.",
+        "lastNameRequired": "Le nom de famille est obligatoire.",
+        "verifyAndSelectAddressToContinue": "Vérifiez et sélectionnez l'adresse pour continuer.",
+        "firstName": "Prénom",
+        "lastName": "Nom de famille",
+        "continue": "Continuer",
+        "cancel": "Annuler",
+        "sendToDifferentAddress": "Envoyer à une adresse différente",
+        "formsToUpdate": "Formulaire(s) à mettre à jour",
+        "view": "Afficher",
+        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer"
     },
     "enums": {
         "LIFE": "Vie",
@@ -1707,7 +1759,16 @@
             "spouseConsentText": "Si vous n'avez pas de conjoint, ou si votre conjoint est décédé, cochez cette case.",
             "signatureShouldBePresent": "L'option 'Signature présente' doit être sélectionnée",
             "continue": "Continuer",
-            "leaveTransaction": "Quitter cette transaction"
+            "leaveTransaction": "Quitter cette transaction",
+            "selectOption": "Sélectionner",
+            "trustee": "Curateur",
+            "executor": "Exécuteur",
+            "custodian": "Gardien",
+            "guardian": "Tuteur",
+            "attorneyInFact": "mandataire",
+            "assignee": "Cessionnaire",
+            "authorizedSignatory": "Signataire autorisé",
+            "na": "NA"
         },
         "summary": {
             "allocation": {
@@ -3020,6 +3081,7 @@
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
             "applicationReview": "Valider les détails de la candidature",
+            "aiIndicatorTooltip": "Données du formulaire extraites automatiquement par l’IA.",
             "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
             "agentOnboardingReview": "Valider les problèmes d'onboarding",
             "toaReview": "Examiner les problèmes de transfert",
@@ -3994,71 +4056,6 @@
             "actions": "Actions"
         }
     },
-    "sendDocument": {
-        "tabs": {
-            "formSelection": "Sélection de formulaire",
-            "correspondence": "Correspondance",
-            "confirm": "Confirmer"
-        },
-        "formSelection": {
-            "label": "Sélectionnez le formulaire approprié qui doit être mis à jour.",
-            "transactionType": "Transaction",
-            "transactionSubType": "Sous-type",
-            "documentsTitle": "Formulaire(s) à mettre à jour",
-            "view": "Afficher",
-            "noFormsFound": "Aucun formulaire trouvé",
-            "addNewDocument": "Envoyer un autre document"
-        },
-        "correspondence": {
-            "label": "Où le(s) document(s) doivent-ils être envoyés ? ",
-            "addAdditionalRecipient": "+ Ajouter un destinataire",
-            "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
-            "additionalRecipientTooltip": "Vous pouvez ajouter jusqu'a 5 adresses e-mail dans le champ CC. Utilisez une virgule (,), point-virgule (;) ou Enter pour les séparer",
-            "emailMessage": "Saisissez les adresses e-mail séparées par des virgules ou des points-virgules avec un maximum de 5.",
-            "emailWarning": "Vous pouvez ajouter jusqu'à 5 destinataires supplémentaires",
-            "emailLabel": "Sélectionnez les e-mails enregistrés",
-            "noEmails": "Aucun enregistrement trouvé",
-            "email": "E-mail",
-            "ccEmail": "Destinataires en copie carbone",
-            "fax": "Fax",
-            "mail": "Mail préféré",
-            "emailAddress": "Adresse e-mail",
-            "faxNumber": "Numéro de fax",
-            "mailDetails": {
-                "sendToDifferentAddress": "Envoyer à une adresse différente",
-                "firstName": "Prénom",
-                "lastName": "Nom de famille",
-                "addressType": "Type d'adresse"
-            }
-        },
-        "confirm": {
-            "cta": "Accéder au cas",
-            "secondaryCta": "Fermer",
-            "subtitle": {
-                "0": "Les documents ont été ",
-                "1": "et en copie"
-            },
-            "title": "Soumise!"
-        },
-        "formActions": {
-            "continue": "Continuer",
-            "cancel": "Annuler"
-        },
-        "errors": {
-            "formId": "Sélectionnez un formulaire pour continuer.",
-            "recipient": "Le destinataire est tenu de continuer",
-            "inValidDomain": "Seuls les e-mails de Zinnia sont autorisés",
-            "mailDetails": "Sélectionnez une adresse pour continuer.",
-            "inValidEmail": "Veuillez saisir une adresse e-mail valide",
-            "firstName": "Le prénom est obligatoire",
-            "lastName": "Le nom de famille est obligatoire",
-            "address": "Vérifiez et sélectionnez l'adresse pour continuer.",
-            "maxEmails": "Maximum 5 e-mails autorisés",
-            "duplicateRecipientEmail": "L'e-mail existe deja dans la liste",
-            "duplicateEmail": "Assurez-vous que l'adresse e-mail est unique entre les champs Destinataire et CC",
-            "emailRequired": "L'e-mail est requis"
-        }
-    },
     "contactCenter": {
         "sendStatement": {
             "startDate": "Date de début de la période",
@@ -4309,6 +4306,10 @@
         "canceledFreeLook": "Aperçu gratuit annulé",
         "pndAwaitingFunds": "En attente de fonds",
         "canceledNoPremium": "Pas de prime"
+    },
+    "button": {
+        "showLess": "Afficher moins",
+        "showAll": "tout afficher"
     },
     "placeHolder": {
         "globalSelectSearch": "Commencez à taper pour trouver des valeurs..."

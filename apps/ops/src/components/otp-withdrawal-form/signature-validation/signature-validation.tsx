@@ -120,6 +120,7 @@ export default function SignatureValidation({
         isFormStateReadOnly?: boolean
     ) => {
         return createElement(field.component, {
+            ...field,
             key: field.key,
             isFormStateReadOnly,
             label: field.label,

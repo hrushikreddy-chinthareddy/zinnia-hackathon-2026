@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partido impactado",
         "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
         "policyBasics": "Básicos de {{policyNomenclature}}",
@@ -65,6 +66,7 @@
         "currency": "Moneda",
         "fixedCostPeriod": "Período de costo fijo",
         "totalCoverageAmount": "Monto total de cobertura",
+        "deathBenefit": "Beneficio por fallecimiento",
         "cumulativeGrossDeathBenefitAmount": "Monto acumulado bruto del beneficio por fallecimiento",
         "netDeathBenefit": "Beneficio neto estimado por fallecimiento",
         "minimumCoverageAmount": "Monto mínimo de cobertura",
@@ -123,6 +125,11 @@
         "generalLedgerFundCode": "Código contable del fondo",
         "totalFundValue": "Valor total del fondo",
         "guaranteedMinimumInterestRate": "Tasa mínima de interés garantizada",
+        "sex": "Sexo",
+        "genderIdentity": "Identidad de género",
+        "male": "Masculino",
+        "female": "Femenino",
+        "unisex": "Unisex",
         "lineOfBusiness": "Línea de negocio",
         "planName": "Nombre del plan",
         "productType": "Tipo de producto",
@@ -268,6 +275,8 @@
         "marketValueAdjustmentIndicator": "Indicador de ajuste de valor de mercado",
         "marketValueAdjustmentAmount": "Monto del ajuste de valor de mercado",
         "marketValueAdjustmentPeriod": "Período del ajuste de valor de mercado",
+        "marketValueAdjustmentBaseRate": "Tasa base del ajuste de valor de mercado",
+        "marketValueAdjustmentTransactionRate": "Tasa de transacción del ajuste de valor de mercado",
         "requiredMinimumDistribution": "Distribución mínima requerida",
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "totalRequiredMinimumDistributionAnnualAmount": "Monto anual total de RMD",
@@ -472,7 +481,50 @@
         "emptySystematicProgramsTable": "Actualmente no existen programas sistemáticos {{type}}.",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
         "illustrationCalcUnreachableSolveFailed": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló.",
-        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "La cláusula adicional solicitada no se incluyó porque no cumple con los requisitos de monto nominal."
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "La cláusula adicional solicitada no se incluyó porque no cumple con los requisitos de monto nominal.",
+        "formSelection": "Selección de Formulario",
+        "correspondence": "Correspondencia",
+        "confirm": "Confirmar",
+        "email": "Correo electrónico",
+        "fax": "Fax",
+        "mail": "Correo",
+        "max5Emails": "Se permiten un máximo de 5 correos electrónicos.",
+        "invalidEmail": "Por favor, ingrese una dirección de correo electrónico válida.",
+        "invalidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+        "emailRequired": "Se requiere correo electrónico.",
+        "selectAddressToContinue": "Seleccione una dirección para continuar.",
+        "recipientRequiredToContinue": "Se requiere un destinatario para continuar.",
+        "duplicateRecipientEmail": "El correo electrónico ya existe en la lista.",
+        "emailAddress": "Dirección de correo electrónico",
+        "selectEmailsOnFile": "Seleccionar correos electrónicos archivados",
+        "noRecordsFound": "No se encontraron registros.",
+        "enterEmailInstructions": "Ingrese direcciones de correo electrónico separadas por comas o punto y coma con un máximo de 5.",
+        "addUpTo5Recipients": "Puede agregar hasta 5 destinatarios adicionales.",
+        "selectFormToContinue": "Seleccione un formulario para continuar.",
+        "sendAnotherDocument": "Enviar otro documento",
+        "transaction": "Transacción",
+        "subtype": "Subtipo",
+        "noFormsFound": "No se encontraron formularios.",
+        "goToCase": "Ir al caso",
+        "hasBeen": "han sido",
+        "submitted": "¡Enviado!",
+        "sendChannel_paper_mail": "enviados por correo a",
+        "sendChannel_fax": "enviados por fax a",
+        "sendChannel_email": "enviados por correo electrónico a",
+        "whereShouldDocsBeSent": "¿Adónde deben enviarse los documentos?",
+        "firstNameRequired": "Se requiere el nombre.",
+        "lastNameRequired": "Se requiere el apellido.",
+        "verifyAndSelectAddressToContinue": "Verifique y seleccione la dirección para continuar.",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "sendToDifferentAddress": "Enviar a una dirección diferente",
+        "formsToUpdate": "Formulario(s) para actualizar",
+        "view": "Ver",
+        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
+        "collapseAll": "Contraer todo",
+        "expandAll": "Expandir todo"
     },
     "enums": {
         "LIFE": "Vida",
@@ -1671,7 +1723,16 @@
             "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
             "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
             "continue": "Continuar",
-            "leaveTransaction": "Dejar esta transacción"
+            "leaveTransaction": "Dejar esta transacción",
+            "selectOption": "Seleccionar",
+            "trustee": "Fideicomisario",
+            "executor": "Ejecutor",
+            "custodian": "Custodio",
+            "guardian": "Guardián",
+            "attorneyInFact": "Apoderado",
+            "assignee": "Cesionario",
+            "authorizedSignatory": "Firmante autorizado",
+            "na": "NA"
         },
         "summary": {
             "header": "Resumen",
@@ -2434,7 +2495,6 @@
             "organizingYourResults": "Organizando tus resultados…",
             "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
         },
-
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -3060,7 +3120,8 @@
             "commonTaskIssues": "Problema: Se encontraron uno o más problemas de {{taskType}}.",
             "standardDocumentMatching": "Coincidencia de Documentos",
             "toaNigo": "Revisar Problemas de Transferencia",
-            "applicationReview": "Validar Detalles de la Solicitud"
+            "applicationReview": "Validar Detalles de la Solicitud",
+            "aiIndicatorTooltip": "Datos del formulario extraídos automáticamente mediante IA."
         },
         "processDate": {
             "canceled": "Cancelado el",
@@ -4045,76 +4106,6 @@
             "actions": "Acciones"
         }
     },
-    "sendDocument": {
-        "tabs": {
-            "formSelection": "Selección de Formulario",
-            "correspondence": "Correspondencia",
-            "confirm": "Confirmar"
-        },
-        "formSelection": {
-            "label": "Seleccione el formulario adecuado que necesita ser actualizado.",
-            "transactionType": "Transacción",
-            "transactionSubType": "Subtipo",
-            "documentsTitle": "Formulario(s) para actualizar",
-            "view": "Ver",
-            "noFormsFound": "No se encontraron formularios",
-            "addNewDocument": "Enviar otro documento"
-        },
-        "correspondence": {
-            "label": "¿Adónde deben enviarse los documentos?",
-            "addAdditionalRecipient": "+ Agregar destinatario adicional",
-            "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
-            "additionalRecipientTooltip": "Puede agregar hasta 5 direcciones de correo electrónico en el campo CC. Use una coma (,), punto y coma (;) o Enter para separarlas.",
-            "emailMessage": "Ingrese direcciones de correo electrónico separadas por comas o punto y coma con un máximo de 5.",
-            "emailWarning": "Puede agregar hasta 5 destinatarios adicionales",
-            "emailLabel": "Seleccionar correos electrónicos archivados",
-            "noEmails": "No se encontraron registros",
-            "email": "Correo electrónico",
-            "ccEmail": "Correos CC",
-            "fax": "Fax",
-            "mail": "Correo",
-            "emailAddress": "Dirección de correo electrónico",
-            "faxNumber": "Número de fax",
-            "mailDetails": {
-                "sendToDifferentAddress": "Enviar a una dirección diferente",
-                "firstName": "Nombre",
-                "lastName": "Apellido",
-                "addressType": "Tipo de dirección"
-            }
-        },
-        "confirm": {
-            "cta": "Ir al caso",
-            "secondaryCta": "Cerrar",
-            "subtitle": {
-                "0": "Los documentos han sido",
-                "1": "y CC'd"
-            },
-            "channel": {
-                "paper_mail": "enviados por correo a",
-                "fax": "enviados por fax a",
-                "email": "enviados por correo electrónico a"
-            },
-            "title": "¡Enviado!"
-        },
-        "formActions": {
-            "continue": "Continuar",
-            "cancel": "Cancelar"
-        },
-        "errors": {
-            "formId": "Seleccione un formulario para continuar.",
-            "recipient": "Se requiere un destinatario para continuar",
-            "inValidDomain": "Solo se permiten correos electrónicos de Zinnia",
-            "mailDetails": "Seleccione una dirección para continuar.",
-            "inValidEmail": "Por favor, ingrese una dirección de correo electrónico válida",
-            "firstName": "Se requiere el nombre",
-            "lastName": "Se requiere el apellido",
-            "address": "Verifique y seleccione la dirección para continuar.",
-            "maxEmails": "Se permiten un máximo de 5 correos electrónicos",
-            "duplicateRecipientEmail": "El correo electrónico ya existe en la lista",
-            "duplicateEmail": "Por favor, asegúrese de que la dirección de correo electrónico sea única entre los campos de Destinatario y CC.",
-            "emailRequired": "Se requiere correo electrónico"
-        }
-    },
     "contactCenter": {
         "sendStatement": {
             "startDate": "Fecha de inicio del período",
@@ -4369,6 +4360,10 @@
         "canceledFreeLook": "Vista gratuita cancelada",
         "pndAwaitingFunds": "Esperando fondos",
         "canceledNoPremium": "Sin prima"
+    },
+    "button": {
+        "showLess": "Mostrar menos",
+        "showAll": "mostrar todo"
     },
     "placeHolder": {
         "globalSelectSearch": "Empiece a escribir para encontrar valores..."
@@ -8629,7 +8624,9 @@
             "no": "No",
             "yes": "Sí"
         },
-        "errors": { "beneDeceased": "Por favor seleccione una opción" }
+        "errors": {
+            "beneDeceased": "Por favor seleccione una opción"
+        }
     },
     "claimsMatchBeneDocument": {
         "confirmStep": {

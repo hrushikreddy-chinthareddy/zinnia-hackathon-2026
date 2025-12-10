@@ -21,7 +21,6 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
-import StatusFilter from '@deps/containers/active-filters/status-filter';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -74,6 +73,7 @@ import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
 import styles from './index.module.css';
+import stylesWithCounts from './index.with-counts.module.css';
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(
     () =>
@@ -101,6 +101,15 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     isAdvisorsExcel: boolean;
 }
+const StatusFilterWithCounts = dynamic(
+    () => import('@deps/containers/active-filters/status-filter'),
+    { ssr: false }
+);
+
+const StatusFilterWithoutCounts = dynamic(
+    () => import('@deps/containers/active-filters/status-chip-dropdown'),
+    { ssr: false }
+);
 
 const CaseManagementDashboard = ({
     authorizedCarriers,
@@ -183,7 +192,7 @@ const CaseManagementDashboard = ({
         queryKey: ['caseStats', caseStatsRequestObject],
         queryFn: () => postCaseStatsQuery(caseStatsRequestObject),
         placeholderData: {
-            All: 0,
+            [Statuses.All]: 0,
             [Statuses.InProgress]: 0,
             [Statuses.Exception]: 0,
             [Statuses.NotStarted]: 0,
@@ -402,8 +411,10 @@ const CaseManagementDashboard = ({
         },
         [setCaseManagementFilters, user.sid, user.partyId]
     );
+
     const handleClear = useCallback(
         (searchField: PolicySearchKeys | undefined) => {
+            setCurrentSearchValue(() => {});
             if (searchField) {
                 const prevSearch = caseManagementFilters.searchValue;
                 delete prevSearch?.[searchField];
@@ -533,8 +544,12 @@ const CaseManagementDashboard = ({
             openRefineResultsSidesheet();
         }
     };
+    const isCaseStatsEnabled = featureFlags[FEATURE_FLAGS.CASE_STATS_COUNT];
 
-    // JSX
+    const StatusFilterComponent = isCaseStatsEnabled
+        ? StatusFilterWithCounts
+        : StatusFilterWithoutCounts;
+    const activeStyles = isCaseStatsEnabled ? stylesWithCounts : styles;
     return (
         <CaseManagementFiltersContext.Provider
             value={[
@@ -549,7 +564,7 @@ const CaseManagementDashboard = ({
                 {t('caseManagementDashboard.h1')}
             </Typography>
             <>
-                <div className={styles.searchContainer}>
+                <div className={activeStyles.searchContainer}>
                     <SearchBar
                         searchValue={caseManagementFilters.searchValue}
                         onSearch={handleSearch}
@@ -558,8 +573,9 @@ const CaseManagementDashboard = ({
                         onToggle={handleToggle}
                         onClear={handleClear}
                         onChangeCallback={handleSearchInputChange}
+                        hasLegend={!isCaseStatsEnabled}
                     />
-                    <div className={styles.searchActions}>
+                    <div className={activeStyles.searchActions}>
                         <Button
                             type="button"
                             onClick={openRefineResultsSidesheet}
@@ -580,30 +596,31 @@ const CaseManagementDashboard = ({
                 </div>
 
                 <fieldset form="search-form">
-                    <legend>
-                        <label
-                            htmlFor="status-select"
-                            className="typography-labels-field-label mt-4 mb-1"
-                        >
-                            {t('caseOverview.tasks.status')}
-                        </label>
-                    </legend>
-                    <div className={styles.statusRow}>
-                        <StatusFilter
+                    {!isCaseStatsEnabled && (
+                        <legend>
+                            <label
+                                htmlFor="status-select"
+                                className="typography-labels-field-label mt-4 mb-1"
+                            >
+                                {t('caseOverview.tasks.status')}
+                            </label>
+                        </legend>
+                    )}
+                    <div className={activeStyles.statusRow}>
+                        <StatusFilterComponent
                             caseTotals={caseTotals}
-                            onChange={(vals) =>
+                            onChange={(vals) => {
                                 setCaseManagementFilters((prev) => {
                                     const { notInCaseStatus = [] } =
                                         prev.additionalFilters;
                                     const nonConflictingNicsVals =
                                         notInCaseStatus.filter(
                                             (val) => !vals.includes(val)
-                                        ); // remove any values that are both in caseStatus and notInCaseStatus
+                                        );
                                     return {
                                         ...prev,
                                         offset: 0,
                                         searchValue: {
-                                            // set this to the current search value in the input field
                                             ...currentSearchValue,
                                         },
                                         additionalFilters: {
@@ -613,8 +630,8 @@ const CaseManagementDashboard = ({
                                                 nonConflictingNicsVals,
                                         },
                                     };
-                                })
-                            }
+                                });
+                            }}
                             sessionId={user.sid}
                             userId={user.partyId}
                             values={

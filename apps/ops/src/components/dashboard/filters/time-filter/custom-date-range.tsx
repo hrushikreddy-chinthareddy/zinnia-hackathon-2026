@@ -86,7 +86,6 @@ export const CustomDateRange: FC<CustomDateRangeProps> = ({
                     <div className={fieldStyles.datePickerContainer}>
                         <DatePicker
                             mode="range"
-                            timeZone="UTC"
                             selected={selected}
                             onSelect={handleSelect}
                             endMonth={dayjs().toDate()}

@@ -97,17 +97,17 @@ const SendStatement = ({
     const communicationTypes = useMemo(
         () => [
             {
-                label: t('sendDocument.correspondence.email'),
+                label: t('allFields.email'),
                 value: CommunicationTypes.Email,
                 disabled: !shouldShowEmailOption,
             },
             {
-                label: t('sendDocument.correspondence.fax'),
+                label: t('allFields.fax'),
                 value: CommunicationTypes.Fax,
                 disabled: !shouldShowFaxOption,
             },
             {
-                label: t('sendDocument.correspondence.mail'),
+                label: t('allFields.mail'),
                 value: CommunicationTypes.Mail,
                 disabled: !shouldShowMailOption,
             },

@@ -1,6 +1,8 @@
 .quickActions {
     align-items: center;
     justify-content: center;
+    display: flex;
+    width: fit-content;
     gap: var(--measure-dimension-z-space-1);
     color: var(--color-base-icon-icon-action-text-link);
     &:hover {
