@@ -56,21 +56,28 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
         enabled: Object.keys(processFilter).length > 0,
     });
 
+    const isProcesses = (value: string): value is Processes => {
+        return value in Processes;
+    };
+
     const handleChange = useCallback(
         (value: string) => {
-            setSelectedProcess(value as Processes | ExtendedProcesses);
-            onValueChange(value as Processes | ExtendedProcesses);
+            const process = isProcesses(value) ? value : ExtendedProcesses.ALL;
+            setSelectedProcess(process);
+            onValueChange(process);
         },
         [setSelectedProcess, onValueChange]
     );
 
     useEffect(() => {
-        if (!processListOptions) return;
+        if (!value || value === ExtendedProcesses.ALL || !processListOptions)
+            return;
+
         const isPrevOptionValid = processListOptions?.some(
             (o) => o.value === value
         );
 
-        if (!isPrevOptionValid && value !== ExtendedProcesses.ALL) {
+        if (!isPrevOptionValid) {
             handleChange(ExtendedProcesses.ALL);
         }
     }, [handleChange, value, processListOptions]);
