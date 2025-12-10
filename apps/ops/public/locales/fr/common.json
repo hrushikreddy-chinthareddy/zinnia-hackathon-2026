@@ -1748,7 +1748,16 @@
             "spouseConsentText": "Si vous n'avez pas de conjoint, ou si votre conjoint est décédé, cochez cette case.",
             "signatureShouldBePresent": "L'option 'Signature présente' doit être sélectionnée",
             "continue": "Continuer",
-            "leaveTransaction": "Quitter cette transaction"
+            "leaveTransaction": "Quitter cette transaction",
+            "selectOption": "Sélectionner",
+            "trustee": "Curateur",
+            "executor": "Exécuteur",
+            "custodian": "Gardien",
+            "guardian": "Tuteur",
+            "attorneyInFact": "mandataire",
+            "assignee": "Cessionnaire",
+            "authorizedSignatory": "Signataire autorisé",
+            "na": "NA"
         },
         "summary": {
             "allocation": {

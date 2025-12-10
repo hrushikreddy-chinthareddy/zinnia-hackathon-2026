@@ -1678,7 +1678,16 @@
             "isIrrevocableBene": "Is there an irrevocable beneficiary ?",
             "leaveTransaction": "Leave this transaction",
             "signatureShouldBePresent": "Signature present option must be selected",
-            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box."
+            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
+            "selectOption": "Select",
+            "trustee": "Trustee",
+            "executor": "Executor",
+            "custodian": "Custodian",
+            "guardian": "Guardian",
+            "attorneyInFact": "Attorney-in-fact",
+            "assignee": "Assignee",
+            "authorizedSignatory": "Authorized signatory",
+            "na": "NA"
         },
         "summary": {
             "allocation": {

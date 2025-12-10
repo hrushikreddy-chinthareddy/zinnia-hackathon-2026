@@ -1712,7 +1712,16 @@
             "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
             "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
             "continue": "Continuar",
-            "leaveTransaction": "Dejar esta transacción"
+            "leaveTransaction": "Dejar esta transacción",
+            "selectOption": "Seleccionar",
+            "trustee": "Fideicomisario",
+            "executor": "Ejecutor",
+            "custodian": "Custodio",
+            "guardian": "Guardián",
+            "attorneyInFact": "Apoderado",
+            "assignee": "Cesionario",
+            "authorizedSignatory": "Firmante autorizado",
+            "na": "NA"
         },
         "summary": {
             "header": "Resumen",
