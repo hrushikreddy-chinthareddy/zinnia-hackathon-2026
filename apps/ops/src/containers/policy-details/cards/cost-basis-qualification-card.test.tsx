@@ -22,7 +22,13 @@ jest.mock('react-i18next', () => ({
                 preTamraBasis: 'Pre tamra basis',
                 postTamraBasis: 'Post tamra basis',
             };
-            return translations[key] ?? key;
+            const POLICY_PREFIX = 'policy.detailCards.policyDetails.';
+
+            const normalizedKey = key.startsWith(POLICY_PREFIX)
+                ? key.substring(POLICY_PREFIX.length)
+                : key;
+
+            return translations[normalizedKey] ?? key;
         },
     }),
 }));
