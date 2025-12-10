@@ -9,6 +9,7 @@ import {
     DashboardTabs,
 } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
+import { NewFiltersHeader } from '@deps/components/dashboard/header-components/filters-header/select-filters-header';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
@@ -73,16 +74,26 @@ const DashboardPage = ({
         });
     }, []);
 
+    const ff = false;
+
     return (
         <>
             <PageHead titleKey="dashboard" />
             <DashboardResponsiveLayout>
-                <FiltersHeader
-                    carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
-                    carrierHeaderEntry={carrierHeaderEntry}
+                {ff && (
+                    <FiltersHeader
+                        carrierHeaderIsIntersecting={
+                            carrierHeaderIsIntersecting
+                        }
+                        carrierHeaderEntry={carrierHeaderEntry}
+                        authorizedCarriers={authorizedCarriers}
+                        brokerDealersSSR={brokerDealersSSR}
+                        ref={carrierHeaderRef}
+                    />
+                )}
+                <NewFiltersHeader
                     authorizedCarriers={authorizedCarriers}
                     brokerDealersSSR={brokerDealersSSR}
-                    ref={carrierHeaderRef}
                 />
                 <DashboardTabNav>
                     <div ref={tabContentRef} className={styles.tabContent}>

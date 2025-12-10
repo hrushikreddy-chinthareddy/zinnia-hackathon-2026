@@ -1,18 +1,15 @@
-import {
-    Button,
-    Icon,
-    IconType,
-    Label,
-    SelectFilter,
-    SelectFilterOption,
-} from '@zinnia/bloom/components';
+import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
+import { BrokerDealerFilter } from '@deps/components/dashboard/header-components/broker-dealer-filter/broker-dealer-filter';
 import styles from '@deps/components/dashboard/header-components/filters-header/filters-header.module.css';
+import { CarrierListItem } from '@deps/components/dashboard/types';
+import { FieldSize } from '@deps/components/fields/field';
+import Select from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -36,7 +33,7 @@ interface FiltersHeaderProps {
 
 const getUniqueCarrierFilterItems = (
     carrierFilterItems: MultiselectOption[]
-): SelectFilterOption[] => {
+): MultiselectOption[] => {
     const carrierLabels = new Set();
 
     const uniqueCarrierFilterItems = (
@@ -98,26 +95,23 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         >(brokerDealersSSR || []);
 
         const [placeholderSelectedCarriers, setPlaceholderSelectedCarriers] =
-            useState<SelectFilterOption[]>(
+            useState<CarrierListItem>(
                 carrierFilterItems.length === 1
-                    ? [
-                          {
-                              value: carrierFilterItems[0].value,
-                              label: carrierFilterItems[0].displayText,
-                          },
-                      ]
-                    : []
+                    ? {
+                          [carrierFilterItems[0].value]:
+                              carrierFilterItems[0].displayText,
+                      }
+                    : {}
             );
         const [placeholderSelectedBrokerDealers, setSelectedBrokerDealers] =
-            useState<SelectFilterOption[]>(
+            useState<CarrierListItem>(
                 brokerDealers?.length === 1
-                    ? [
-                          {
-                              value: toTitleCase(brokerDealers[0].name),
-                              label: toTitleCase(brokerDealers[0].name),
-                          },
-                      ]
-                    : []
+                    ? {
+                          [brokerDealers[0].name]: toTitleCase(
+                              brokerDealers[0].name
+                          ),
+                      }
+                    : {}
             );
 
         const options = useMemo(() => {
@@ -143,45 +137,30 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             }
         }, [carrierFilterItems, updateSelectedCarriers]);
 
-        const updateCarrierFilters = ({
-            label,
-            value,
-        }: {
-            label: string;
-            value: string;
-        }) => {
+        const updateCarrierFilters = (value: string, displayText: string) => {
             setPlaceholderSelectedCarriers((prevSelectedCarriers) => {
-                if (
-                    prevSelectedCarriers.some(
-                        (item) => item.value === value || item.label === label
-                    )
-                ) {
-                    return prevSelectedCarriers.filter(
-                        (item) => item.value !== value
-                    );
+                const copy = { ...prevSelectedCarriers };
+                if (copy[value]) {
+                    delete copy[value];
+                    return { ...copy };
+                } else {
+                    return { ...copy, [value]: displayText };
                 }
-                return [...prevSelectedCarriers, { value, label }];
             });
         };
 
-        const updateBrokerDealerFilters = ({
-            value,
-            label,
-        }: {
-            value: string;
-            label: string;
-        }) => {
+        const updateBrokerDealerFilters = (
+            value: string,
+            displayText: string
+        ) => {
             setSelectedBrokerDealers((prevSelectedAgents) => {
-                if (
-                    prevSelectedAgents.some(
-                        (item) => item.value === value || item.label === label
-                    )
-                ) {
-                    return prevSelectedAgents.filter(
-                        (item) => item.value !== value
-                    );
+                const copy = { ...prevSelectedAgents };
+                if (copy[value]) {
+                    delete copy[value];
+                    return { ...copy };
+                } else {
+                    return { ...copy, [value]: displayText };
                 }
-                return [...prevSelectedAgents, { value, label }];
             });
         };
 
@@ -214,8 +193,8 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         };
 
         const clearFilters = () => {
-            setPlaceholderSelectedCarriers([]);
-            setSelectedBrokerDealers([]);
+            setPlaceholderSelectedCarriers({});
+            setSelectedBrokerDealers({});
             updateSelectedBrokerDealers({});
             updateSelectedCarriers({});
         }, [
@@ -256,51 +235,54 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                 >
                     {t('caseStatsDashboardTitle')}
                 </Typography>
-                <div className={styles.filters}>
-                    <div>
-                        <SelectFilter
-                            options={options}
-                            label={<Label>{t('allCarriers')}</Label>}
-                            values={placeholderSelectedCarriers}
-                            onValueChange={updateCarrierFilters}
-                            container={ref?.current}
-                        />
-                    </div>
-                    <div>
-                        <SelectFilter
-                            options={brokerDealers}
-                            label={<Label>{t('allDistributors')}</Label>}
-                        />
-                        {/* <BrokerDealerFilter
-                            brokerDealers={brokerDealers}
-                            selectedBrokerDealers={
-                                placeholderSelectedBrokerDealers
-                            }
-                            selectedCarriers={Object.keys(
-                                placeholderSelectedCarriers
-                            )}
-                            setSelectedBrokerDealers={setBrokerDealers}
-                            updateBrokerDealerFilters={
-                                updateBrokerDealerFilters
-                            }
-                            handleOnOpenChangeBroker={handleOnOpenChangeBroker}
-                        /> */}
-                    </div>
-                    <div>
-                        <Button
-                            className="flex items-center align-middle flex-row"
-                            mode="link"
-                            disabled={clearFiltersDisabled}
-                            size={ButtonSize.Small}
-                            onClick={clearFilters}
-                        >
-                            <Icon
-                                width={16}
-                                height={16}
-                                type={IconType.CLOSE}
-                            />{' '}
-                            clear
-                        </Button>
+                <div className="flex justify-between items-center">
+                    <div className="flex nowrap gap-2 items-center align-middle">
+                        <div className="w-52">
+                            <Select
+                                isMultiselect
+                                options={options}
+                                value={placeholderSelectedCarriers}
+                                onChange={updateCarrierFilters}
+                                size={FieldSize.Small}
+                                placeholder={t('allCarriers') || ''}
+                                name="carrier-dropdown-btn"
+                                onOpenChange={handleOnOpenChangeCarrier}
+                            />
+                        </div>
+                        <div className="w-52">
+                            <BrokerDealerFilter
+                                brokerDealers={brokerDealers}
+                                selectedBrokerDealers={
+                                    placeholderSelectedBrokerDealers
+                                }
+                                selectedCarriers={Object.keys(
+                                    placeholderSelectedCarriers
+                                )}
+                                setSelectedBrokerDealers={setBrokerDealers}
+                                updateBrokerDealerFilters={
+                                    updateBrokerDealerFilters
+                                }
+                                handleOnOpenChangeBroker={
+                                    handleOnOpenChangeBroker
+                                }
+                            />
+                        </div>
+                        <div>
+                            <Button
+                                className="flex items-center align-middle flex-row"
+                                mode="link"
+                                disabled={clearFiltersDisabled}
+                                size={ButtonSize.Small}
+                                onClick={clearFilters}
+                            >
+                                <Icon
+                                    width={16}
+                                    height={16}
+                                    type={IconType.CLOSE}
+                                />
+                                clear
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>

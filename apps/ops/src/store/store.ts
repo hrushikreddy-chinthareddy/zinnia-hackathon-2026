@@ -9,6 +9,13 @@ interface DashboardStoreTypes {
     updateSelectedCarriers: (value: CarrierListItem) => void;
     updateSelectedBrokerDealers: (value: CarrierListItem) => void;
 }
+
+interface DashboardStoreSelectFilterTypes {
+    selectedCarriers: string[];
+    selectedBrokerDealers: string[];
+    updateSelectedCarriers: (value: string[]) => void;
+    updateSelectedBrokerDealers: (value: string[]) => void;
+}
 //Split comma-joined carrierId keys (e.g. {"1,2": "Carrier Name"}) into separate entries ({"1":"Carrier Name","2":"Carrier Name"})
 const transformObject = (
     inputObj: Record<string, string>
@@ -39,6 +46,28 @@ export const useDashboardStore = create(
         },
 
         updateSelectedBrokerDealers: (val: CarrierListItem) =>
+            set(
+                { selectedBrokerDealers: val },
+                undefined,
+                'dashboard/updateSelectedBroker'
+            ),
+    }))
+);
+
+export const useDashboardStoreSelectFilter = create(
+    devtools<DashboardStoreSelectFilterTypes>((set) => ({
+        selectedCarriers: [],
+        selectedBrokerDealers: [],
+
+        updateSelectedCarriers: (val: string[]) => {
+            return set(
+                { selectedCarriers: val },
+                undefined,
+                'dashboard/updateSelectedCarrier'
+            );
+        },
+
+        updateSelectedBrokerDealers: (val: string[]) =>
             set(
                 { selectedBrokerDealers: val },
                 undefined,
