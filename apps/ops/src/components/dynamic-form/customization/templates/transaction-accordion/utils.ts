@@ -8,7 +8,6 @@ export const getTitle = (
     tabTitle: string | number | boolean | object | any[] | null | undefined,
     titlePaths?: any[] | null,
     titleSeparator?: any,
-    formData?: any,
     defaultTitle?: string
 ) => {
     let header = defaultTitle || `Item ${index + 1}`;
@@ -18,7 +17,7 @@ export const getTitle = (
             .map((path: string) =>
                 path
                     .split('.')
-                    .reduce((acc: any, key: string) => acc?.[key], formData)
+                    .reduce((acc: any, key: string) => acc?.[key], item)
             )
             .filter(Boolean);
 

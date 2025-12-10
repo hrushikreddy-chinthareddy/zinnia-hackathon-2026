@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Action, PolicyRole } from '@deps/constants/policy';
@@ -14,7 +15,10 @@ import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
 } from '@deps/queries/api/web-non-financial';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DEFAULT_ERROR_STRING,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 
 export function getPartyMeta(item: SummaryItem) {
@@ -230,7 +234,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             partyId: getRoleChangePartyId(customData),
             role: PolicyRole.THIRDPARTYDESIGNEE,
             query: {
-                effectiveDate: customData?.effectiveDate,
+                effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                 caseId: customData?.caseId,
                 correlationId: customData?.correlationId,
                 changeReason: customData?.changeReason,
@@ -350,15 +354,23 @@ export const formatIdentification = (
 
 export const formattedAddress = (address?: Address): string => {
     if (!address) return '-';
-    return [
-        address.addressLine1,
-        address.addressLine2,
-        `${address.city}${address.city && address.state ? ',' : ''} ${
-            address.state
-        } ${address.zipCode}`,
-        address.country,
-    ]
-        .filter(Boolean)
+
+    const clean = (v: any) =>
+        v === null || v === undefined ? '' : String(v).trim();
+
+    const line1 = clean(address.addressLine1);
+    const line2 = clean(address.addressLine2);
+    const city = clean(address.city);
+    const state = clean(address.state);
+    const zip = clean(address.zipCode);
+    const country = clean(address.country);
+
+    const cityStateZip = [city, state && `${state}`, zip]
+        .filter((v) => v && v.length > 0)
+        .join(', ');
+
+    return [line1, line2, cityStateZip, country]
+        .filter((v) => v && v.length > 0)
         .join('\n');
 };
 

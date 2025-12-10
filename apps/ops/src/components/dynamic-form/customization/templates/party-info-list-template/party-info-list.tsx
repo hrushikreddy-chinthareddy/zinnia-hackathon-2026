@@ -6,6 +6,7 @@ import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text'
 
 import styles from './party-info-list.module.css';
 
+// the commented code in this file is for future use and is intentionally left there
 export default function PartyInfoListTemplate(
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
 ) {
@@ -20,9 +21,8 @@ export default function PartyInfoListTemplate(
         formData,
         idSchema,
     } = props;
-    const { customData, setCustomData } = formContext;
-    const { actionData } = customData;
-    // the commented code in this file is for future use and is intentionally left there
+    const { setCustomData } = formContext;
+
     const uiOptions = getUiOptions(uiSchema);
     const {
         addButtonCTA = 'Add',
@@ -39,7 +39,8 @@ export default function PartyInfoListTemplate(
     const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-
+    const contacts = Array.isArray(formData) ? formData : [];
+    const updatedActionData = [...(formContext.parentActionData || [])];
     // const { t } = useTranslation(TranslationFiles.COMMON, {
     //     keyPrefix: 'transactionAccordion',
     // });
@@ -51,10 +52,52 @@ export default function PartyInfoListTemplate(
     //         return copy;
     //     });
     // };
+    useEffect(() => {
+        const id = idSchema?.$id ?? '';
+        const match = id.match(/actionData_(\d+)/);
+        const partyIndex = match ? Number(match[1]) : 0;
+        const updatedList = contacts.map((item: any, idx: number) => ({
+            ...item,
+            isPreferred: idx === preferredIndex,
+        }));
+
+        const entry = updatedActionData[partyIndex] ?? {};
+        const party = entry.party ?? {};
+
+        let updatedParty = { ...party };
+        let hasChanged = false;
+
+        const safeStringify = (v: any) => JSON.stringify(v ?? []);
+
+        if (id.endsWith('_emails')) {
+            if (safeStringify(party.emails) !== safeStringify(updatedList)) {
+                updatedParty = { ...party, emails: updatedList };
+                hasChanged = true;
+            }
+        } else if (id.endsWith('_phones')) {
+            if (safeStringify(party.phones) !== safeStringify(updatedList)) {
+                updatedParty = { ...party, phones: updatedList };
+                hasChanged = true;
+            }
+        } else if (id.endsWith('_addresses')) {
+            if (safeStringify(party.addresses) !== safeStringify(updatedList)) {
+                updatedParty = { ...party, addresses: updatedList };
+                hasChanged = true;
+            }
+        }
+
+        if (!hasChanged) return;
+
+        updatedActionData[partyIndex] = {
+            ...entry,
+            party: updatedParty,
+        };
+
+        setCustomData({ actionData: updatedActionData });
+    }, [preferredIndex]);
 
     const toggleIsPreferred = (index: number, checked: boolean) => {
         let newPreferredIndex = preferredIndex;
-
         if (checked) {
             newPreferredIndex = index;
         } else if (preferredIndex === index) {
@@ -62,49 +105,6 @@ export default function PartyInfoListTemplate(
         }
 
         setPreferredIndex(newPreferredIndex);
-    };
-
-    const handleAddClick = () => {
-        const id = idSchema?.$id ?? '';
-
-        const match = id.match(/actionData_(\d+)/);
-        const partyIndex = match ? Number(match[1]) : 0;
-
-        const contacts = Array.isArray(formData) ? formData : [];
-
-        const sample = contacts[0] ?? {};
-
-        const updatedActionData = [...(actionData ?? [])];
-        const existingEntry = updatedActionData[partyIndex] ?? {};
-        const existingParty = existingEntry.party ?? {};
-
-        let emails = existingParty.emails ?? [];
-        let phones = existingParty.phones ?? [];
-        let addresses = existingParty.addresses ?? [];
-
-        if ('emailType' in sample || id.endsWith('_emails')) {
-            emails = contacts;
-        } else if ('phoneType' in sample || id.endsWith('_phones')) {
-            phones = contacts;
-        } else if ('addressType' in sample || id.endsWith('_addresses')) {
-            addresses = contacts;
-        }
-
-        updatedActionData[partyIndex] = {
-            ...existingEntry,
-            party: {
-                ...existingParty,
-                emails,
-                phones,
-                addresses,
-            },
-        };
-
-        setCustomData({
-            actionData: updatedActionData,
-        });
-
-        onAddClick();
     };
 
     useEffect(() => {
@@ -149,7 +149,7 @@ export default function PartyInfoListTemplate(
                     {!readonly && canAdd && (
                         <button
                             type="button"
-                            onClick={handleAddClick}
+                            onClick={onAddClick}
                             className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
                         >
                             <Icon type={IconType.ADD} small />
@@ -213,6 +213,7 @@ export default function PartyInfoListTemplate(
                                 id={`preferred-${index}`}
                                 label={prefferedCTA as string}
                                 checked={isPreferred}
+                                isDisabled={readonly || isPreferred}
                                 onChange={(val) =>
                                     toggleIsPreferred(index, val)
                                 }

@@ -45,7 +45,7 @@ const getAddresses = (addresses: any) => {
               addressType: address?.addressType ?? AddressType.RESIDENCE,
               addressLine1: address?.addressLine1 ?? null,
               city: address?.city ?? null,
-              state: address?.state ?? null,
+              state: address?.state?.length > 0 ? address?.state : null,
               zipCode: address?.zipCode ?? null,
               zipCodeExtension: address?.zipCodeExtension ?? null,
               country: address?.country ?? 'USA',
@@ -56,10 +56,10 @@ const getAddresses = (addresses: any) => {
         : [
               {
                   addressType: AddressType.RESIDENCE,
-                  addressLine1: '',
-                  city: '',
-                  state: '',
-                  zipCode: '',
+                  addressLine1: null,
+                  city: null,
+                  state: null,
+                  zipCode: null,
               },
           ];
 };
@@ -78,7 +78,7 @@ const getPhones = (phones: any) => {
         : [
               {
                   phoneType: PhoneType.HOME,
-                  dialNumber: null,
+                  dialNumber: '',
               },
           ];
 };
@@ -94,7 +94,7 @@ const getEmails = (emails: any) => {
           }))
         : [
               {
-                  emailAddress: null,
+                  emailAddress: '',
                   emailType: EmailType.PERSONAL,
               },
           ];
@@ -222,7 +222,7 @@ const formatPartyData = (policyResponse: any) => {
                     trustType: party.trustType ?? null,
                     trustDate: party.trustDate ?? null,
                     preferredCommunicationType:
-                        party.preferredCommunicationType ?? 'Not specified',
+                        party.preferredCommunicationType ?? null,
                     addresses: getAddresses(party.addresses),
                     phones: getPhones(party.phones),
                     emails: getEmails(party.emails),
@@ -230,7 +230,6 @@ const formatPartyData = (policyResponse: any) => {
                 },
             };
         });
-
     return actionData;
 };
 

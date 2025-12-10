@@ -1,4 +1,4 @@
-import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
+import { ArrayFieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
@@ -14,10 +14,17 @@ import { getTitle } from './utils';
 export const TransactionAccordionTemplate = (
     props: ArrayFieldTemplateProps
 ) => {
-    const { canAdd, items, onAddClick, readonly, uiSchema, formContext } =
-        props;
+    const {
+        canAdd,
+        items,
+        onAddClick,
+        readonly,
+        uiSchema,
+        formContext,
+        formData,
+    } = props;
     const ui = getUiOptions(uiSchema);
-    const { customData, setCustomData } = formContext;
+    const { setCustomData } = formContext;
 
     const {
         templateId = 'default',
@@ -37,26 +44,11 @@ export const TransactionAccordionTemplate = (
     const isSimpleAccordion =
         !isSinglePartyTransaction && !isMultiPartyTransaction;
 
-    function getItemDefault(schema?: RJSFSchema) {
-        const items = schema?.items;
-        if (!items || Array.isArray(items) || typeof items !== 'object')
-            return undefined;
-        if (!('default' in items)) return undefined;
-        return (items as { default?: unknown }).default;
-    }
-
-    const itemDefault = getItemDefault(props.schema);
-
-    const { actionData, disableAddButton, onToggleDelete } =
-        useTransactionActions({
-            templateId: templateId as string,
-            itemsLen: items.length,
-            isSingleParty: isSinglePartyTransaction as boolean,
-            itemDefault,
-            customData,
-            setCustomData,
-        });
-
+    const { disableAddButton, onToggleDelete } = useTransactionActions({
+        setCustomData,
+        isSingleParty: isSinglePartyTransaction as boolean,
+        formData,
+    });
     const { activeIndex, setActiveIndex } = useAccordionState(
         templateId as string,
         items.length
@@ -77,23 +69,24 @@ export const TransactionAccordionTemplate = (
               );
     }
 
+    formContext.parentActionData = formData;
+
     return (
         <div>
             {items.map((element, index) => {
-                const formData = element.children?.props?.formData || {};
+                const formDataEle = element.children?.props?.formData || {};
                 const itemTitle = overrideTitle
                     ? overrideTitle
                     : getTitle(
-                          formData,
+                          formDataEle,
                           index,
                           tabTitle,
                           titlePaths as any[],
                           titleSeparator,
-                          formData,
                           defaultTitle as string
                       );
 
-                const itemAction = actionData?.[index]?.action;
+                const itemAction = formData?.[index]?.action;
                 const isNew = itemAction === Action.ADD;
                 const isDeleted = itemAction === Action.DELETE;
 
