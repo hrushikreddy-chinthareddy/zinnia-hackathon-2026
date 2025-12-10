@@ -3108,7 +3108,8 @@
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "standardDocumentMatching": "Match Document",
             "toaNigo": "Review Transfer Issues",
-            "applicationReview": "Validate Application Details"
+            "applicationReview": "Validate Application Details",
+            "aiIndicatorTooltip": "Form data automatically extracted via AI."
         },
         "processDate": {
             "canceled": "Canceled on",

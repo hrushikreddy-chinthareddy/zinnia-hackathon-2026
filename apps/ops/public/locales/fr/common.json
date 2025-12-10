@@ -3070,6 +3070,7 @@
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
             "applicationReview": "Valider les détails de la candidature",
+            "aiIndicatorTooltip": "Données du formulaire extraites automatiquement par l’IA.",
             "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
             "agentOnboardingReview": "Valider les problèmes d'onboarding",
             "toaReview": "Examiner les problèmes de transfert",
