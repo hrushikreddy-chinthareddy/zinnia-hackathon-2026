@@ -49,6 +49,11 @@ enum ParentStageIds {
     AgentValidation = 'agentValidation',
 }
 
+enum StepAdditionalLabels {
+    AIEnabledFlag = 'AIEnabledFlag',
+    PaymentRecordId = 'PaymentRecordId',
+}
+
 const StepResultTag = ({ step }: { step: TransformedStep }) => {
     const { t } = useTranslation();
     let text;
@@ -187,8 +192,20 @@ const Step = ({
     const sideSheet = useSideSheetContext();
     const hasSidesheet = doesStepHaveSidesheet(step);
 
-    const stepAdditional = step.stepAdditionalData?.[0];
-    const entityId = stepAdditional ? stepAdditional.value : undefined;
+    const aiEnabledAdditional = step.stepAdditionalData?.find(
+        (additional) => additional.label === StepAdditionalLabels.AIEnabledFlag
+    );
+
+    const entityIdAdditional = step.stepAdditionalData?.find(
+        (additional) =>
+            additional.label === StepAdditionalLabels.PaymentRecordId
+    );
+
+    const isAiEnabled =
+        aiEnabledAdditional &&
+        String(aiEnabledAdditional.value).toLowerCase() === 'true';
+
+    const entityId = entityIdAdditional?.value;
 
     const { data: transactionEntity } = useQuery({
         queryKey: ['requestInitiateWithBillingPartner', entityId],
@@ -232,6 +249,21 @@ const Step = ({
                             details={step.name}
                             pii={hasPii}
                         />
+                        {isAiEnabled && (
+                            <Tooltip
+                                placement={PopoverPlacement.TopRight}
+                                body={t('caseOverview.tabs.aiIndicatorTooltip')}
+                                isTabbable={false}
+                            >
+                                <Icon
+                                    width={16}
+                                    height={16}
+                                    className="shrink-0 text-orange-400"
+                                    type={IconType.SPARKLES}
+                                    alt="AI"
+                                />
+                            </Tooltip>
+                        )}
                         <StepResultTag step={step} />
                         {step.documents?.length > 0 && (
                             <div className="flex flex-row items-center gap-0.5 text-gray-600">

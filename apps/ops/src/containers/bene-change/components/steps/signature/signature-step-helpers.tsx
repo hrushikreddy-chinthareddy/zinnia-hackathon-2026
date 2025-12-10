@@ -5,7 +5,10 @@ import {
     SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
-import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
+import {
+    SignatureValidationTypeWithdrawal,
+    SignatureDesignation,
+} from '@deps/models/case/renewal/signature-validation';
 import {
     FormValidationErrors,
     SignatureWithdrawal,
@@ -55,6 +58,42 @@ export const useReRegSignatureStepConfig = (
         [t]
     );
 
+    const customOptions = [
+        {
+            label: t('selectOption'),
+            value: SignatureDesignation.Unselected,
+        },
+        {
+            label: t('trustee'),
+            value: SignatureDesignation.Trustee,
+        },
+        {
+            label: t('executor'),
+            value: SignatureDesignation.Executor,
+        },
+        {
+            label: t('custodian'),
+            value: SignatureDesignation.Custodian,
+        },
+        {
+            label: t('guardian'),
+            value: SignatureDesignation.Guardian,
+        },
+        {
+            label: t('attorneyInFact'),
+            value: SignatureDesignation.AttorneyInFact,
+        },
+        {
+            label: t('assignee'),
+            value: SignatureDesignation.Assignee,
+        },
+        {
+            label: t('authorizedSignatory'),
+            value: SignatureDesignation.AuthorizedSignatory,
+        },
+        { label: t('na'), value: SignatureDesignation.NA },
+    ];
+
     const signaturesConfig = useMemo(
         () => [
             {
@@ -71,6 +110,7 @@ export const useReRegSignatureStepConfig = (
                     {
                         component: SignatureFields.SignatureTitle,
                         key: 'owner-title',
+                        customOptions: customOptions,
                     },
                     ...(isOwnerSignGuaranteeStamp && carrierId === 'FLIC'
                         ? [
@@ -103,6 +143,7 @@ export const useReRegSignatureStepConfig = (
                               {
                                   component: SignatureFields.SignatureTitle,
                                   key: 'joint-title',
+                                  customOptions: customOptions,
                               },
                               {
                                   component: SignatureFields.SignatureDate,

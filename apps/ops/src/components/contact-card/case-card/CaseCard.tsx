@@ -13,7 +13,7 @@ import { toSentenceCase } from '@deps/utils/strings';
 
 import styles from './CaseCard.module.css';
 
-const CASE_TO_PIZZA_STATUS: Record<Statuses, PizzaStatus> = {
+const CASE_TO_PIZZA_STATUS: Partial<Record<Statuses, PizzaStatus>> = {
     [Statuses.Canceled]: PizzaStatus.Default,
     [Statuses.Completed]: PizzaStatus.Complete,
     [Statuses.InProgress]: PizzaStatus.Progress,

@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partido impactado",
         "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
         "policyBasics": "Básicos de {{policyNomenclature}}",
@@ -65,6 +66,7 @@
         "currency": "Moneda",
         "fixedCostPeriod": "Período de costo fijo",
         "totalCoverageAmount": "Monto total de cobertura",
+        "deathBenefit": "Beneficio por fallecimiento",
         "cumulativeGrossDeathBenefitAmount": "Monto acumulado bruto del beneficio por fallecimiento",
         "netDeathBenefit": "Beneficio neto estimado por fallecimiento",
         "minimumCoverageAmount": "Monto mínimo de cobertura",
@@ -273,6 +275,8 @@
         "marketValueAdjustmentIndicator": "Indicador de ajuste de valor de mercado",
         "marketValueAdjustmentAmount": "Monto del ajuste de valor de mercado",
         "marketValueAdjustmentPeriod": "Período del ajuste de valor de mercado",
+        "marketValueAdjustmentBaseRate": "Tasa base del ajuste de valor de mercado",
+        "marketValueAdjustmentTransactionRate": "Tasa de transacción del ajuste de valor de mercado",
         "requiredMinimumDistribution": "Distribución mínima requerida",
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "totalRequiredMinimumDistributionAnnualAmount": "Monto anual total de RMD",
@@ -507,6 +511,8 @@
         "sendToDifferentAddress": "Enviar a una dirección diferente",
         "formsToUpdate": "Formulario(s) para actualizar",
         "view": "Ver",
+        "collapseAll": "Contraer todo",
+        "expandAll": "Expandir todo",
         "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
         "accountValue": "Valor de la cuenta",
         "accountValueTooltip": "Este es el valor en efectivo contenido dentro de la póliza de seguro de vida del propietario. El valor de la cuenta se acumula con el tiempo a medida que se pagan las primas y se ganan intereses.",
@@ -1733,7 +1739,16 @@
             "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
             "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
             "continue": "Continuar",
-            "leaveTransaction": "Dejar esta transacción"
+            "leaveTransaction": "Dejar esta transacción",
+            "selectOption": "Seleccionar",
+            "trustee": "Fideicomisario",
+            "executor": "Ejecutor",
+            "custodian": "Custodio",
+            "guardian": "Guardián",
+            "attorneyInFact": "Apoderado",
+            "assignee": "Cesionario",
+            "authorizedSignatory": "Firmante autorizado",
+            "na": "NA"
         },
         "summary": {
             "header": "Resumen",
@@ -3121,7 +3136,8 @@
             "commonTaskIssues": "Problema: Se encontraron uno o más problemas de {{taskType}}.",
             "standardDocumentMatching": "Coincidencia de Documentos",
             "toaNigo": "Revisar Problemas de Transferencia",
-            "applicationReview": "Validar Detalles de la Solicitud"
+            "applicationReview": "Validar Detalles de la Solicitud",
+            "aiIndicatorTooltip": "Datos del formulario extraídos automáticamente mediante IA."
         },
         "processDate": {
             "canceled": "Cancelado el",
@@ -4360,6 +4376,10 @@
         "canceledFreeLook": "Vista gratuita cancelada",
         "pndAwaitingFunds": "Esperando fondos",
         "canceledNoPremium": "Sin prima"
+    },
+    "button": {
+        "showLess": "Mostrar menos",
+        "showAll": "mostrar todo"
     },
     "placeHolder": {
         "globalSelectSearch": "Empiece a escribir para encontrar valores..."

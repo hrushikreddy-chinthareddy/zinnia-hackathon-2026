@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partie concernée",
         "emptySearch": "Aucun résultat trouvé",
         "transactionBasics": "Bases des transactions",
         "policyBasics": "Bases de {{policyNomenclature}}",
@@ -65,6 +66,7 @@
         "currency": "Devise",
         "fixedCostPeriod": "Période de coût fixe",
         "totalCoverageAmount": "Montant total de la couverture",
+        "deathBenefit": "Prestation décès",
         "cumulativeGrossDeathBenefitAmount": "Montant brut cumulé de la prestation décès",
         "netDeathBenefit": "Prestation décès nette estimée",
         "minimumCoverageAmount": "Montant minimal de couverture",
@@ -273,6 +275,8 @@
         "marketValueAdjustmentIndicator": "Indicateur MVA",
         "marketValueAdjustmentAmount": "Montant MVA",
         "marketValueAdjustmentPeriod": "Période MVA",
+        "marketValueAdjustmentBaseRate": "Taux de base MVA",
+        "marketValueAdjustmentTransactionRate": "Taux de transaction MVA",
         "requiredMinimumDistribution": "Distribution minimale requise",
         "priorYearRequiredMinimumDistributionAmount": "Montant RMD de l'année précédente",
         "totalRequiredMinimumDistributionAnnualAmount": "Montant annuel total RMD",
@@ -507,6 +511,8 @@
         "sendToDifferentAddress": "Envoyer à une adresse différente",
         "formsToUpdate": "Formulaire(s) à mettre à jour",
         "view": "Afficher",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer",
         "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
         "accountValue": "Valeur du compte",
         "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
@@ -515,7 +521,6 @@
         "upcomingPremiumNoPayment": "Pas de paiement prévu",
         "makePayment": "Effectuer un paiement",
         "baseDeathBenefit": "Capital décès de base",
-        "deathBenefit": "Prestation de décès",
         "baseDeathBenefitTooltip": "C'est le montant du capital décès lié à la couverture de base du propriétaire. Il reflète la valeur actuelle, donc il tient compte de toutes les modifications apportées au capital décès dues aux retraits ou aux prêts. (Note : Cette valeur peut différer du capital décès brut total s'il y a des lignes de couverture supplémentaires ou des avenants qui ajoutent au capital décès)",
         "account": "Cpt",
         "endingIn": "{{accountType}} se terminant par {{accountNumber}}",
@@ -1770,7 +1775,16 @@
             "spouseConsentText": "Si vous n'avez pas de conjoint, ou si votre conjoint est décédé, cochez cette case.",
             "signatureShouldBePresent": "L'option 'Signature présente' doit être sélectionnée",
             "continue": "Continuer",
-            "leaveTransaction": "Quitter cette transaction"
+            "leaveTransaction": "Quitter cette transaction",
+            "selectOption": "Sélectionner",
+            "trustee": "Curateur",
+            "executor": "Exécuteur",
+            "custodian": "Gardien",
+            "guardian": "Tuteur",
+            "attorneyInFact": "mandataire",
+            "assignee": "Cessionnaire",
+            "authorizedSignatory": "Signataire autorisé",
+            "na": "NA"
         },
         "summary": {
             "allocation": {
@@ -3083,6 +3097,7 @@
             "standardDocumentMatching": "Document de correspondance",
             "toaNigo": "Examiner les problèmes de transfert",
             "applicationReview": "Valider les détails de la candidature",
+            "aiIndicatorTooltip": "Données du formulaire extraites automatiquement par l’IA.",
             "appDataEntry": "Résoudre les problèmes de saisie des données de l'application",
             "agentOnboardingReview": "Valider les problèmes d'onboarding",
             "toaReview": "Examiner les problèmes de transfert",
@@ -4307,6 +4322,10 @@
         "canceledFreeLook": "Aperçu gratuit annulé",
         "pndAwaitingFunds": "En attente de fonds",
         "canceledNoPremium": "Pas de prime"
+    },
+    "button": {
+        "showLess": "Afficher moins",
+        "showAll": "tout afficher"
     },
     "placeHolder": {
         "globalSelectSearch": "Commencez à taper pour trouver des valeurs..."
