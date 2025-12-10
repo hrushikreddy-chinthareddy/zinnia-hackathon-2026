@@ -239,7 +239,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             'fgaRoles',
             partyId,
             featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS],
-            featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS],
         ],
         queryFn: async () => {
             const tuples = [
@@ -264,10 +263,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 },
             ];
 
-            if (
-                isDemo() &&
-                featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
-            ) {
+            if (isDemo()) {
                 tuples.push({
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
@@ -317,10 +313,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.UiAccess
             );
             let hasTestHarnessAccess = false;
-            if (
-                isDemo() &&
-                featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
-            ) {
+            if (isDemo()) {
                 hasTestHarnessAccess = !!checkRelation(
                     data,
                     FgaRoles.TEST_HARNESS_ACCESS,
