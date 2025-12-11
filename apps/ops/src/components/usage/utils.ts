@@ -210,3 +210,9 @@ export const generateIllustrationsCSVFileName = (
         'allFields.illustrationsActivityTitle'
     )} ${fromDate} ${t('allFields.to')} ${toDate}`;
 };
+
+export const isTimeFrameFilterOption = (
+    value: string
+): value is TimeframeFilterOptions => {
+    return Object.values(TimeframeFilterOptions).map(String).includes(value);
+};

@@ -20,7 +20,7 @@ export default withAuthAndLogging(
     ) => {
         const url = `${apiServerBaseUrl}/analytics/v1/dashboard/user_illustration_activity_count`;
         return await requestHandler<UserIllustrationActivityOutput>(
-            url as string,
+            url,
             req,
             res,
             loggingContext

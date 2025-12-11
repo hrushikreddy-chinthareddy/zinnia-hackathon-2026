@@ -21,6 +21,7 @@ import {
     ROLE_OPTIONS,
     startDates,
     TimeframeFilterOptions,
+    isTimeFrameFilterOption,
 } from '@deps/components/usage/utils';
 import { getUserTransactionCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
@@ -39,6 +40,10 @@ import {
     buildDrilldownSeries,
 } from './utils';
 export const TransactionActivity = () => {
+    const GROUPED_PADDING = 0.5;
+    const CHART_HEIGHT = 495;
+    const POINT_WIDTH = 60;
+
     const [role, setRole] = useState('All');
     const { t } = useTranslation();
     const {
@@ -107,6 +112,12 @@ export const TransactionActivity = () => {
     const xCats = categories.map((c) => c.displayName);
     const chartKey = `${timerange.from}__${timerange.to}__${role}`;
 
+    const handleOnRadioChange = (val: string) => {
+        if (isTimeFrameFilterOption(val)) {
+            handleTimeframeRadioChange(val);
+        }
+    };
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
@@ -143,11 +154,7 @@ export const TransactionActivity = () => {
                     </div>
                     <TimeFilter
                         defaultValue={timeframeRadio}
-                        onRadioChange={(val) =>
-                            handleTimeframeRadioChange(
-                                val as TimeframeFilterOptions
-                            )
-                        }
+                        onRadioChange={handleOnRadioChange}
                         controlledTimeValue={timeframeRadio}
                         timerange={timerange}
                         handleTimerangeChange={handleRangeChange}
@@ -169,9 +176,9 @@ export const TransactionActivity = () => {
                                 series={topSeries}
                                 xAxisTitle="All transactions"
                                 yAxisTitle="Total transactions"
-                                height={495}
-                                pointWidth={60}
-                                groupPadding={0.5}
+                                height={CHART_HEIGHT}
+                                pointWidth={POINT_WIDTH}
+                                groupPadding={GROUPED_PADDING}
                                 tooltipFormatter={
                                     transactionActivityTooltipFormatter
                                 }

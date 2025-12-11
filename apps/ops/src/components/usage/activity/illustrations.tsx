@@ -24,6 +24,7 @@ import {
     ActivityType,
     colors,
     generateIllustrationsCSVFileName,
+    isTimeFrameFilterOption,
     PRODUCT_TYPE_OPTIONS,
     ProductType,
     startDates,
@@ -76,9 +77,7 @@ export const IllustrationsActivity = () => {
     };
 
     const isProductTypeOption = (value: string): value is ProductTypeOption => {
-        return (Object.values(ProductType) as readonly string[]).includes(
-            value
-        );
+        return Object.values(ProductType).map(String).includes(value);
     };
 
     const handleProductTypeChange = (productType: string) => {
@@ -126,14 +125,6 @@ export const IllustrationsActivity = () => {
         colors,
         t
     );
-
-    function isTimeFrameFilterOption(
-        value: string
-    ): value is TimeframeFilterOptions {
-        return (Object.values(TimeframeFilterOptions) as string[]).includes(
-            value
-        );
-    }
 
     const handleOnRadioChange = (val: string) => {
         if (isTimeFrameFilterOption(val)) {
