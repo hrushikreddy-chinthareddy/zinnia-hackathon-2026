@@ -46,8 +46,8 @@
         max-width: 425px;
     }
 
-    > :last-child {
+    /* > :last-child {
         flex: 0;
         margin-top: var(--measure-dimension-margin-sm);
-    }
+    } */
 }

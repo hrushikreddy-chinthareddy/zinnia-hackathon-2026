@@ -67,12 +67,10 @@ export type StatusDisplayText = 'Open' | 'Closed' | 'Open-Closed' | 'All';
  * @param selectedCarriers - Object of selected carriers from store
  * @returns Carrier name or "All Carriers"
  */
-export const getCarrierName = (selectedCarriers: {
-    [key: string]: string;
-}): string => {
-    const carrierKeys = Object.keys(selectedCarriers);
+export const getCarrierName = (selectedCarriers: string[]): string => {
+    const carrierKeys = selectedCarriers;
     if (carrierKeys.length === 0) return 'All Carriers';
-    if (carrierKeys.length === 1) return selectedCarriers[carrierKeys[0]];
+    if (carrierKeys.length === 1) return carrierKeys[0];
     return 'All Carriers';
 };
 

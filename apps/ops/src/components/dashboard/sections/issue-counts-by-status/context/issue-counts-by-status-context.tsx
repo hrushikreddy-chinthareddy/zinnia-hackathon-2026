@@ -116,8 +116,8 @@ export const IssueCountsByStatusProvider: FC<PropsWithChildren> = ({
         exceptionCreatedDateEnd: timerange.to
             ? dayjs(timerange.to).add(1, 'day').toISOString()
             : undefined,
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         exceptionStatus,
     };
 

@@ -38,7 +38,6 @@ export const BrokerDealerFilter = ({
     brokerDealers,
     updateBrokerDealerFilters,
     selectedBrokerDealers,
-    selectedCarriers,
     setSelectedBrokerDealers,
     disabled,
     handleOnOpenChangeBroker,
@@ -59,7 +58,7 @@ export const BrokerDealerFilter = ({
         if (!brokerDealers) {
             fetchBrokerDealersClient();
         }
-    }, [selectedCarriers, brokerDealers, setSelectedBrokerDealers]);
+    }, [brokerDealers, setSelectedBrokerDealers]);
 
     return (
         <Select

@@ -36,8 +36,8 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
 
     const processFilter = {
         caseStatus,
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
     };
 
     const { data: processListOptions } = useQuery({

@@ -1,20 +1,22 @@
+import { Label, SelectFilter } from '@zinnia/bloom/components';
 import {
-    Button,
-    Icon,
-    IconType,
-    Label,
-    SelectFilter,
-} from '@zinnia/bloom/components';
-import { SetStateAction, useCallback, useMemo, useState } from 'react';
+    SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { ButtonSize } from '@deps/components/button/button';
 import styles from '@deps/components/dashboard/header-components/filters-header/select-filters-header.module.css';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { DashboardResponseData } from '@deps/queries/api/dashboard';
-import { useDashboardStoreSelectFilter } from '@deps/store/store';
+import {
+    DashboardResponseData,
+    fetchAgents,
+} from '@deps/queries/api/dashboard';
+import { useDashboardStore } from '@deps/store/store';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import { getBrokerDealerOptions } from './filters-header.helpers';
@@ -39,7 +41,7 @@ export const SelectFiltersHeader = ({
         updateSelectedBrokerDealers,
         selectedCarriers,
         selectedBrokerDealers,
-    } = useDashboardStoreSelectFilter((state) => state);
+    } = useDashboardStore((state) => state);
 
     const authorizedCarriersOptions = authorizedCarriers.map((carrier) => ({
         value: carrier,
@@ -51,10 +53,30 @@ export const SelectFiltersHeader = ({
         return getBrokerDealerOptions(brokerDealersSSR);
     }, [brokerDealersSSR]);
 
-    const clearFilters = () => {
-        updateSelectedCarriers([]);
-        updateSelectedBrokerDealers([]);
-    };
+    // const clearFilters = () => {
+    //     updateSelectedCarriers([]);
+    //     updateSelectedBrokerDealers([]);
+    // };
+
+    // const clearFiltersDisabled =
+    //     Object.keys({
+    //         ...selectedCarriers,
+    //         ...selectedBrokerDealers,
+    //     }).length === 0;
+
+    useEffect(() => {
+        const fetchBrokerDealersClient = async () => {
+            const brokerDealerArray = await fetchAgents();
+            console.log({ brokerDealerArray });
+            updateSelectedBrokerDealers([]);
+        };
+
+        if (!selectedBrokerDealers) {
+            fetchBrokerDealersClient();
+        }
+    }, [selectedBrokerDealers, updateSelectedBrokerDealers]);
+
+    console.log({ selectedCarriers, selectedBrokerDealers });
 
     return (
         <div
@@ -70,34 +92,31 @@ export const SelectFiltersHeader = ({
                 {t('caseStatsDashboardTitle')}
             </Typography>
             <div className={styles.filters}>
-                <div>
-                    <SelectFilter
-                        options={authorizedCarriersOptions}
-                        label={<Label>{t('allCarriers')}</Label>}
-                        onValueChange={updateSelectedCarriers}
-                        container={container}
-                    />
-                </div>
-                <div>
-                    <SelectFilter
-                        options={brokerDealerOptions}
-                        label={<Label>{t('allDistributors')}</Label>}
-                        onValueChange={updateSelectedBrokerDealers}
-                        container={container}
-                    />
-                </div>
-                <div>
-                    <Button
-                        className="flex items-center align-middle flex-row"
-                        mode="link"
-                        disabled={false}
-                        size={ButtonSize.Small}
-                        onClick={clearFilters}
-                    >
-                        <Icon width={16} height={16} type={IconType.CLOSE} />
-                        clear
-                    </Button>
-                </div>
+                <SelectFilter
+                    options={authorizedCarriersOptions}
+                    label={<Label>{t('allCarriers')}</Label>}
+                    onValueChange={updateSelectedCarriers}
+                    container={container}
+                    values={selectedCarriers}
+                />
+                <SelectFilter
+                    key={`carrier-${selectedCarriers.join('-')}`}
+                    options={brokerDealerOptions}
+                    label={<Label>{t('allDistributors')}</Label>}
+                    onValueChange={updateSelectedBrokerDealers}
+                    container={container}
+                    values={selectedBrokerDealers}
+                />
+                {/* <Button
+                    className="flex items-center align-middle flex-row"
+                    mode="link"
+                    disabled={clearFiltersDisabled}
+                    size={ButtonSize.Small}
+                    onClick={clearFilters}
+                >
+                    <Icon type={IconType.CLOSE} />
+                    clear
+                </Button> */}
             </div>
         </div>
     );

@@ -15,7 +15,7 @@ import {
     TimeframeFilterOptions,
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
-import { useDashboardStoreSelectFilter } from '@deps/store/store';
+import { useDashboardStore } from '@deps/store/store';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import {
     CaseCountGroupByEnum,
@@ -103,8 +103,9 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
     );
 
     // NOTE: Need to use feature flag to decide which store to pull from
-    const { selectedCarriers, selectedBrokerDealers } =
-        useDashboardStoreSelectFilter((state) => state);
+    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
+        (state) => state
+    );
     const [selectedProcess, setSelectedProcess] = useState<
         Processes | ExtendedProcesses
     >(Processes.NewBusiness);

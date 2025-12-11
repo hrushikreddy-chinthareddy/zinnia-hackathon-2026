@@ -32,12 +32,36 @@ const transformObject = (
     return outputObj;
 };
 
+// export const useDashboardStore = create(
+//     devtools<DashboardStoreTypes>((set) => ({
+//         selectedCarriers: {},
+//         selectedBrokerDealers: {},
+//         updateSelectedCarriers: (val: CarrierListItem) => {
+//             const transformedVal = transformObject(val);
+//             return set(
+//                 { selectedCarriers: transformedVal },
+//                 undefined,
+//                 'dashboard/updateSelectedCarrier'
+//             );
+//         },
+
+//         updateSelectedBrokerDealers: (val: CarrierListItem) =>
+//             set(
+//                 { selectedBrokerDealers: val },
+//                 undefined,
+//                 'dashboard/updateSelectedBroker'
+//             ),
+//     }))
+// );
+
 export const useDashboardStore = create(
-    devtools<DashboardStoreTypes>((set) => ({
-        selectedCarriers: {},
-        selectedBrokerDealers: {},
-        updateSelectedCarriers: (val: CarrierListItem) => {
-            const transformedVal = transformObject(val);
+    devtools<DashboardStoreSelectFilterTypes>((set) => ({
+        selectedCarriers: [],
+        selectedBrokerDealers: [],
+
+        updateSelectedCarriers: (val: string[]) => {
+            // API expects uppercase
+            const transformedVal = val.map((val) => val.toLocaleUpperCase());
             return set(
                 { selectedCarriers: transformedVal },
                 undefined,
@@ -45,33 +69,13 @@ export const useDashboardStore = create(
             );
         },
 
-        updateSelectedBrokerDealers: (val: CarrierListItem) =>
-            set(
-                { selectedBrokerDealers: val },
+        updateSelectedBrokerDealers: (val: string[]) => {
+            const transformedVal = val.map((val) => val.toLocaleUpperCase());
+            return set(
+                { selectedBrokerDealers: transformedVal },
                 undefined,
                 'dashboard/updateSelectedBroker'
-            ),
-    }))
-);
-
-export const useDashboardStoreSelectFilter = create(
-    devtools<DashboardStoreSelectFilterTypes>((set) => ({
-        selectedCarriers: [],
-        selectedBrokerDealers: [],
-
-        updateSelectedCarriers: (val: string[]) => {
-            return set(
-                { selectedCarriers: val },
-                undefined,
-                'dashboard/updateSelectedCarrier'
             );
         },
-
-        updateSelectedBrokerDealers: (val: string[]) =>
-            set(
-                { selectedBrokerDealers: val },
-                undefined,
-                'dashboard/updateSelectedBroker'
-            ),
     }))
 );
