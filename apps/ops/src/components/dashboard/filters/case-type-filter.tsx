@@ -57,7 +57,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
     });
 
     const isProcesses = (value: string): value is Processes => {
-        return value in Processes;
+        return Object.values(Processes).map(String).includes(value);
     };
 
     const handleChange = useCallback(
