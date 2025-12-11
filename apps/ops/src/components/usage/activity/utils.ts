@@ -185,16 +185,19 @@ export const generateSeries = (
         const name = t(`allFields.${item.name?.toLowerCase()}`) ?? item.name;
 
         const defaultStartTime = fromDate.unix() * 1000;
-        const seriesStartPoint =
-            timeData[0][0] > defaultStartTime
-                ? defaultStartTime
-                : timeData[0][0];
+        const hasDateAlready = timeData.some(([t]) => t === defaultStartTime);
+        const firstSeries = timeData[0]?.[0] ?? 0;
+        const seriesStartPoint = !firstSeries
+            ? defaultStartTime
+            : Math.min(firstSeries, defaultStartTime);
 
         return {
             type: 'line',
             name,
             color: color[index],
-            data: [[seriesStartPoint, 0], ...timeData],
+            data: hasDateAlready
+                ? timeData
+                : [[seriesStartPoint, 0], ...timeData],
         };
     });
 };
