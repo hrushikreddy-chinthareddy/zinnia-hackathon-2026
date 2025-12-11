@@ -74,7 +74,7 @@ export const SelectFiltersHeader = ({
             <div className={styles.filters}>
                 <SelectFilter
                     options={authorizedCarriersOptions}
-                    label={<Label>{t('allCarriers')}</Label>}
+                    label={<Label>{t('carriers')}</Label>}
                     onValueChange={updateSelectedCarriers}
                     container={container}
                     values={selectedCarriers}
@@ -82,7 +82,7 @@ export const SelectFiltersHeader = ({
                 <SelectFilter
                     key={`carrier-${selectedCarriers.join('-')}`}
                     options={brokerDealerOptions}
-                    label={<Label>{t('allDistributors')}</Label>}
+                    label={<Label>{t('distributors')}</Label>}
                     onValueChange={updateSelectedBrokerDealers}
                     container={container}
                     values={selectedBrokerDealers}
