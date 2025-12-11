@@ -90,7 +90,6 @@ type RoleChangeContextType = {
 
 export const defaultRoleValue: RoleChangeContextType = {
     roleData: {
-        // signatures: [],
         documents: null,
         party: {
             partyId: '',
