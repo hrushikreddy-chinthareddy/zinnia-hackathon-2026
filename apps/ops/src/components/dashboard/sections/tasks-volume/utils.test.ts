@@ -15,20 +15,15 @@ jest.mock('@deps/components/dashboard/utils', () => ({
 describe('Tasks Volume Utils', () => {
     describe('getCarrierName', () => {
         it('should return "All Carriers" when no carriers selected', () => {
-            expect(getCarrierName({})).toBe('All Carriers');
+            expect(getCarrierName([])).toBe('All Carriers');
         });
 
         it('should return carrier name when one carrier selected', () => {
-            expect(getCarrierName({ carrier1: 'Pacific Life' })).toBe(
-                'Pacific Life'
-            );
+            expect(getCarrierName(['Pacific Life'])).toBe('Pacific Life');
         });
 
         it('should return "All Carriers" when multiple carriers selected', () => {
-            const carriers = {
-                carrier1: 'Pacific Life',
-                carrier2: 'MetLife',
-            };
+            const carriers = ['Pacific Life', 'MetLife'];
             expect(getCarrierName(carriers)).toBe('All Carriers');
         });
     });
