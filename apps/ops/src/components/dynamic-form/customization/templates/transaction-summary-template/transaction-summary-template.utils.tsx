@@ -418,15 +418,23 @@ export const formatIdentification = (
 };
 export const formattedAddress = (address?: Address): string => {
     if (!address) return '-';
-    return [
-        address.addressLine1,
-        address.addressLine2,
-        `${address.city}${address.city && address.state ? ',' : ''} ${
-            address.state
-        } ${address.zipCode}`,
-        address.country,
-    ]
-        .filter(Boolean)
+
+    const clean = (v: any) =>
+        v === null || v === undefined ? '' : String(v).trim();
+
+    const line1 = clean(address.addressLine1);
+    const line2 = clean(address.addressLine2);
+    const city = clean(address.city);
+    const state = clean(address.state);
+    const zip = clean(address.zipCode);
+    const country = clean(address.country);
+
+    const cityStateZip = [city, state && `${state}`, zip]
+        .filter((v) => v && v.length > 0)
+        .join(', ');
+
+    return [line1, line2, cityStateZip, country]
+        .filter((v) => v && v.length > 0)
         .join('\n');
 };
 export const formattedEmail = (email?: Email): string => {

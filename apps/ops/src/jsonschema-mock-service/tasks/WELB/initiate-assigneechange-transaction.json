@@ -219,14 +219,14 @@
                                         "suffix": null,
                                         "emails": [
                                             {
-                                                "emailAddress": null,
+                                                "emailAddress": "",
                                                 "emailType": "PERSONAL",
                                                 "isPreferred": true
                                             }
                                         ],
                                         "phones": [
                                             {
-                                                "dialNumber": null,
+                                                "dialNumber": "",
                                                 "phoneType": "HOME",
                                                 "isPreferred": true
                                             }
@@ -234,7 +234,7 @@
                                         "addresses": [
                                             {
                                                 "addressType": "RESIDENCE",
-                                                "addressLine1": "",
+                                                "addressLine1": null,
                                                 "addressLine2": null,
                                                 "city": null,
                                                 "state": null,
@@ -349,8 +349,8 @@
                                                 "type": ["string", "null"],
                                                 "enum": [
                                                     "EMAIL",
-                                                    "PHONE",
-                                                    "Not specified"
+                                                    "REGULARMAIL",
+                                                    null
                                                 ],
                                                 "title": "Preferred contact method"
                                             },
@@ -361,11 +361,11 @@
                                                     "type": "object",
                                                     "default": {
                                                         "addressType": "RESIDENCE",
-                                                        "addressLine1": "",
+                                                        "addressLine1": null,
                                                         "addressLine2": null,
-                                                        "city": "",
-                                                        "state": "",
-                                                        "zipCode": "",
+                                                        "city": null,
+                                                        "state": null,
+                                                        "zipCode": null,
                                                         "isPreferred": false
                                                     },
                                                     "properties": {
@@ -470,8 +470,7 @@
                                                             ],
                                                             "title": "Zip"
                                                         }
-                                                    },
-                                                    "required": ["addressType"]
+                                                    }
                                                 }
                                             },
                                             "phones": {
@@ -480,7 +479,7 @@
                                                 "items": {
                                                     "type": "object",
                                                     "default": {
-                                                        "dialNumber": null,
+                                                        "dialNumber": "",
                                                         "phoneType": "HOME",
                                                         "isPreferred": false
                                                     },
@@ -511,7 +510,7 @@
                                                 "items": {
                                                     "type": "object",
                                                     "default": {
-                                                        "emailAddress": null,
+                                                        "emailAddress": "",
                                                         "emailType": "PERSONAL",
                                                         "isPreferred": false
                                                     },
@@ -764,10 +763,10 @@
                                                             "title": "Prefix",
                                                             "enum": [
                                                                 null,
-                                                                "Dr.",
-                                                                "Mr.",
-                                                                "Mrs.",
-                                                                "Ms."
+                                                                "DR",
+                                                                "MR",
+                                                                "MRS",
+                                                                "MS"
                                                             ],
                                                             "default": null
                                                         },
@@ -832,8 +831,7 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Trust name",
-                                                            "minLength": 1
+                                                            "title": "Trust name"
                                                         },
                                                         "trustType": {
                                                             "type": [
@@ -851,42 +849,12 @@
                                                             ],
                                                             "default": null
                                                         },
-                                                        "documents": {
-                                                            "type": "array",
-                                                            "title": "Link or upload the supporting document(s)",
-                                                            "items": {
-                                                                "type": "object",
-                                                                "properties": {
-                                                                    "documentName": {
-                                                                        "title": "Name",
-                                                                        "type": "string"
-                                                                    },
-                                                                    "documentId": {
-                                                                        "title": "Document Id",
-                                                                        "type": "string"
-                                                                    }
-                                                                }
-                                                            }
-                                                        },
                                                         "trustDate": {
                                                             "type": [
                                                                 "string",
                                                                 "null"
                                                             ],
                                                             "title": "Trust date"
-                                                        },
-                                                        "supportingDocumentAttached": {
-                                                            "title": "Is the uploaded supporting document(s) valid and relevant?",
-                                                            "type": [
-                                                                "null",
-                                                                "boolean"
-                                                            ],
-                                                            "enum": [
-                                                                true,
-                                                                false,
-                                                                null
-                                                            ],
-                                                            "default": null
                                                         }
                                                     },
                                                     "required": [
@@ -912,8 +880,7 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Company name",
-                                                            "minLength": 1
+                                                            "title": "Company name"
                                                         },
                                                         "entityType": {
                                                             "type": "string",
@@ -935,7 +902,58 @@
                                                     "required": ["lastName"]
                                                 }
                                             }
-                                        ]
+                                        ],
+                                        "dependencies": {
+                                            "preferredCommunicationType": {
+                                                "oneOf": [
+                                                    {
+                                                        "properties": {
+                                                            "preferredCommunicationType": {
+                                                                "enum": [
+                                                                    "EMAIL"
+                                                                ]
+                                                            },
+                                                            "emails": {
+                                                                "minItems": 1,
+                                                                "items": {
+                                                                    "required": [
+                                                                        "emailType",
+                                                                        "emailAddress"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "preferredCommunicationType": {
+                                                                "enum": [
+                                                                    "REGULARMAIL"
+                                                                ]
+                                                            },
+                                                            "addresses": {
+                                                                "items": {
+                                                                    "required": [
+                                                                        "addressType",
+                                                                        "addressLine1",
+                                                                        "city",
+                                                                        "state",
+                                                                        "zipCode"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "preferredCommunicationType": {
+                                                                "const": null
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1017,7 +1035,7 @@
                                     "inline": true,
                                     "enumNames": [
                                         "Email",
-                                        "Phone",
+                                        "Mail",
                                         "Not specified"
                                     ],
                                     "allowNullValue": true
@@ -1034,9 +1052,7 @@
                                     "lastName",
                                     "suffix",
                                     "trustType",
-                                    "documents",
                                     "trustDate",
-                                    "supportingDocumentAttached",
                                     "entityType",
                                     "identifications",
                                     "usCitizen",
@@ -1074,52 +1090,6 @@
                                         ]
                                     },
                                     "ui:placeholder": "Select trust type"
-                                },
-                                "uploadDocuments": {
-                                    "inline": true,
-                                    "ui:options": {
-                                        "label": true,
-                                        "omitValue": true
-                                    },
-                                    "upload": {
-                                        "ui:widget": "AutoCompleteWidget",
-                                        "ui:placeholder": "Find existing documents...",
-                                        "ui:options": {
-                                            "label": false,
-                                            "icon": "Search"
-                                        }
-                                    },
-                                    "or": {
-                                        "ui:options": {
-                                            "label": false,
-                                            "inline": true
-                                        }
-                                    },
-                                    "attachment": {
-                                        "ui:options": {
-                                            "label": false,
-                                            "showFiles": false
-                                        },
-                                        "ui:props": {
-                                            "apiUrl": "case/v1/form/metadata?process=Common&taskType=UI_UPLOAD_DOCUMENT&carrier=null",
-                                            "apiMethod": "get"
-                                        }
-                                    }
-                                },
-                                "documents": {
-                                    "inline": true,
-                                    "ui:widget": "AttachmentWidget",
-                                    "ui:options": {
-                                        "label": true
-                                    }
-                                },
-                                "supportingDocumentAttached": {
-                                    "ui:widget": "RadioWidget",
-                                    "ui:options": {
-                                        "enumNames": ["Yes", "No"],
-                                        "inline": true,
-                                        "allowNullValue": true
-                                    }
                                 },
                                 "entityType": {
                                     "ui:options": {
@@ -1429,7 +1399,7 @@
                                         "inline": true,
                                         "enumNames": [
                                             "Email",
-                                            "Phone",
+                                            "Mail",
                                             "Not specified"
                                         ]
                                     }
@@ -1621,10 +1591,10 @@
                                     "ui:options": {
                                         "enumNames": [
                                             "Select prefix",
-                                            "Dr.",
-                                            "Mr.",
-                                            "Mrs.",
-                                            "Ms."
+                                            "DR",
+                                            "MR",
+                                            "MRS",
+                                            "MS"
                                         ]
                                     },
                                     "ui:placeholder": "Select prefix"

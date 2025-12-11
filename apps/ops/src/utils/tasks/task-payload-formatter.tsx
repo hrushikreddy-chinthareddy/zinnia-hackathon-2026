@@ -260,6 +260,7 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
 };
 
 export const getAssigneeChangePayload = (task: ManagementTask) => {
+    let updateTask = { ...task };
     const updates = Array.isArray(task.data.actionData)
         ? task.data.actionData
         : [];
@@ -276,6 +277,104 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     let collateralAmount: number | null = null;
 
     const effectiveDate = dayjs().format(ZAHARA_API_DATE_FORMAT);
+    const getAddresses = (addressesArr = []) => {
+        if (!Array.isArray(addressesArr)) return null;
+
+        let allHaveType = true;
+        let allRequiredMissing = true;
+
+        const cleaned = addressesArr.filter((item: any) => {
+            const type = item?.addressType;
+
+            const line1 = item?.addressLine1;
+            const city = item?.city;
+            const state = item?.state;
+            const zip = item?.zipCode;
+
+            const hasType = Boolean(type);
+            const anyRequiredPresent = Boolean(line1 || city || state || zip);
+            const requiredMissing = !anyRequiredPresent;
+
+            if (!hasType) allHaveType = false;
+            if (!requiredMissing) allRequiredMissing = false;
+
+            if (hasType && requiredMissing) {
+                return false;
+            }
+
+            if (!hasType && requiredMissing) {
+                return false;
+            }
+
+            return true;
+        });
+
+        if (allHaveType && allRequiredMissing) {
+            return null;
+        }
+
+        return cleaned.length > 0 ? cleaned : null;
+    };
+
+    const getEmails = (emailsArr = []) => {
+        if (!Array.isArray(emailsArr)) return null;
+
+        let allHaveType = true;
+        let allMissingAddress = true;
+
+        const cleaned = emailsArr.filter((item: any) => {
+            const type = item?.emailType;
+            const addr = item?.emailAddress;
+
+            const hasType = Boolean(type);
+            const hasAddress = Boolean(addr);
+
+            if (!hasType) allHaveType = false;
+            if (hasAddress) allMissingAddress = false;
+
+            if (hasType && !hasAddress) return false;
+
+            if (!hasType && !hasAddress) return false;
+
+            return true;
+        });
+
+        if (allHaveType && allMissingAddress) {
+            return null;
+        }
+
+        return cleaned.length > 0 ? cleaned : null;
+    };
+
+    const getPhones = (emailsArr = []) => {
+        if (!Array.isArray(emailsArr)) return null;
+
+        let allHaveType = true;
+        let allMissingPhone = true;
+
+        const cleaned = emailsArr.filter((item: any) => {
+            const type = item?.phoneType;
+            const phn = item?.dialNumber;
+
+            const hasType = Boolean(type);
+            const hasPhone = Boolean(phn);
+
+            if (!hasType) allHaveType = false;
+            if (hasPhone) allMissingPhone = false;
+
+            if (hasType && !hasPhone) return false;
+
+            if (!hasType && !hasPhone) return false;
+
+            return true;
+        });
+
+        if (allHaveType && allMissingPhone) {
+            return null;
+        }
+
+        return cleaned.length > 0 ? cleaned : null;
+    };
 
     const getRelationship = (item: any) =>
         item?.party?.relationshipToTheCurrentOwner || null;
@@ -296,6 +395,9 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             startDate: effectiveDate,
             partyId: deleteItem.party.partyId,
             relationshipToTheCurrentOwner: getRelationship(addItem),
+            emails: getEmails(addItem.party.emails),
+            phones: getPhones(addItem.party.phones),
+            addresses: getAddresses(addItem.party.addresses),
             identifications: mergeIdentifications(
                 addItem.party.identifications
             ),
@@ -312,6 +414,9 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             startDate: effectiveDate,
             relationshipToTheCurrentOwner: getRelationship(addItem),
             partyId: undefined,
+            emails: getEmails(addItem.party.emails),
+            phones: getPhones(addItem.party.phones),
+            addresses: getAddresses(addItem.party.addresses),
             identifications: mergeIdentifications(
                 addItem.party.identifications
             ),
@@ -325,6 +430,9 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             ...deleteItem.party,
             endDate: effectiveDate,
             relationshipToTheCurrentOwner: getRelationship(deleteItem),
+            emails: getEmails(deleteItem.party.emails),
+            phones: getPhones(deleteItem.party.phones),
+            addresses: getAddresses(deleteItem.party.addresses),
             identifications: mergeIdentifications(
                 deleteItem.party.identifications
             ),
@@ -335,8 +443,6 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         actionData,
         signatureData,
         contractInfo,
-        validationUrl,
-        process,
         defaultPartyIdRoleChange,
         ...rest
     } = task.data;
@@ -344,6 +450,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     const formattedData: any = {
         ...rest,
         carrierId: task.carrier,
+        caseId: task.caseId,
         planCode: task.data.planCode,
         policyNumber: task.data.policyNumber,
         requestType,
@@ -352,7 +459,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         partyId,
         party,
         signatures: signatureData.signatures ?? [],
-        notarySignature: signatureData.notarySignature,
+        notarySignature: signatureData.notarySignature ?? [],
     };
 
     if (
@@ -361,19 +468,14 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     ) {
         formattedData.partyId = partyId;
     }
-
-    console.log(
-        formattedData,
-        'formattedData in assignee change payload util new12345'
-    );
-
-    return {
+    updateTask = {
         ...task,
         data: {
-            ...task.data, // preserve EVERYTHING, including taskId
-            ...formattedData, // override data fields
+            ...formattedData,
+            transactionName: 'Assignee Change',
         },
     };
+    return updateTask;
 };
 
 function mergeIdentifications(uiIdentifications: any[]) {
