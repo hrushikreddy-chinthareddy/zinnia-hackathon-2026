@@ -4989,7 +4989,10 @@
                 "Rider_WDR": "The Owner must be aged 18-55 to select Owner Waiver of Deduction Rider.",
                 "Rider_WPR": "Waives policy premiums if the insured becomes totally disabled.",
                 "Rider_WCR": "Waives certain policy charges during periods of the insured's total disability.",
-                "Rider_OWCR": "Waives policy charges if the policy owner becomes disabled or meets specific criteria."
+                "Rider_OWCR": "Waives policy charges if the policy owner becomes disabled or meets specific criteria.",
+                "Rider_BONUS": "Increases the contract’s accumulation value by applying a bonus to new premium.",
+                "Rider_GAB": "Triggers a single true-up at the end of the GAP period to bring the accumulation value up to the guaranteed GAP amount when needed.",
+                "Rider_GWB": "Guarantees lifetime withdrawals from an annuity, subject to the rider’s terms."
             }
         },
         "history": {

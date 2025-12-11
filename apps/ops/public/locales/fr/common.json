@@ -4918,7 +4918,10 @@
                 "Rider_WDR": "Le propriétaire doit être âgé de 18 à 55 ans pour sélectionner l'avenant de renonciation à la déduction du propriétaire.",
                 "Rider_WPR": "Annule les primes d'assurance si l'assuré devient totalement invalide.",
                 "Rider_WCR": "Renoncent à certains frais de police pendant les périodes d'invalidité totale de l'assuré.",
-                "Rider_OWCR": "Annule les frais de police si le titulaire de la police devient invalide ou répond à des critères spécifiques."
+                "Rider_OWCR": "Annule les frais de police si le titulaire de la police devient invalide ou répond à des critères spécifiques.",
+                "Rider_BONUS": "Augmente la valeur d'accumulation du contrat en appliquant une bonification à la nouvelle prime.",
+                "Rider_GAB": "Déclenche un ajustement unique à la fin de la période GAP pour porter la valeur d'accumulation au montant GAP garanti lorsque nécessaire.",
+                "Rider_GWB": "Garantit des retraits à vie d'une rente, sous réserve des conditions de l'avenant."
             }
         },
         "history": {

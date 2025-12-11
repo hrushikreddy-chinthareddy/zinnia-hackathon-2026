@@ -4973,7 +4973,10 @@
                 "Rider_WDR": "El propietario debe tener entre 18 y 55 años para seleccionar la exención de deducción del propietario.",
                 "Rider_WPR": "Exime el pago de las primas de la póliza si el asegurado queda totalmente discapacitado.",
                 "Rider_WCR": "Exime ciertos cargos de la póliza durante los períodos de incapacidad total del asegurado.",
-                "Rider_OWCR": "Exime los cargos de la póliza si el titular de la póliza queda discapacitado o cumple criterios específicos."
+                "Rider_OWCR": "Exime los cargos de la póliza si el titular de la póliza queda discapacitado o cumple criterios específicos.",
+                "Rider_BONUS": "Aumenta el valor de acumulación del contrato aplicando una bonificación a la prima nueva.",
+                "Rider_GAB": "Activa un ajuste único al final del período GAP para elevar el valor de acumulación hasta el monto GAP garantizado cuando sea necesario.",
+                "Rider_GWB": "Garantiza retiros de por vida de una anualidad, sujeto a los términos del anexo."
             }
         },
         "history": {
