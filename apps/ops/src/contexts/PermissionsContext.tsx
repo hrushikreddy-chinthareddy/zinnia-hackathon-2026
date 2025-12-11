@@ -63,6 +63,7 @@ export interface PermissionsContextProps {
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
     hasPermissionToPrioritizeCases: boolean;
+    hasMarketConnectContacts: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -78,6 +79,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { featureFlags } = useOptimizely();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
+
+    const hasMarketConnectContacts =
+        !!featureFlags[FEATURE_FLAGS.MARKET_CONNECT_ENABLED];
 
     const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
         queryKey: ['isAllowHomeExperience', partyId],
@@ -422,6 +426,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                hasMarketConnectContacts,
             }}
         >
             {children}
