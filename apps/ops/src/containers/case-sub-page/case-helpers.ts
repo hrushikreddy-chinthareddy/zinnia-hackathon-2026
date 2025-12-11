@@ -353,21 +353,3 @@ export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
         auditRequestId: auditRequestId,
     };
 };
-
-type QualityAuditEligibilityPayload = {
-    contractNumber: string;
-    process: string;
-    processSubType: string | undefined;
-    clientCode: string;
-};
-
-export const buildQualityAuditEligibilityPayload = (
-    caseDetails: Case
-): QualityAuditEligibilityPayload => {
-    return {
-        contractNumber: caseDetails?.policyNumber,
-        process: caseDetails?.process,
-        processSubType: caseDetails?.processSubType,
-        clientCode: caseDetails?.carrier,
-    };
-};

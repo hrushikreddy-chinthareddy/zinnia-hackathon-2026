@@ -3154,10 +3154,8 @@
         "quickActions": {
             "quickActions": "Quick Actions",
             "createQualityAudit": "Create Quality Audit",
-            "viewQualityAudit": "View Quality Audit",
             "createQualityAuditTooltip": "Initiate a Quality Audit for this case.",
             "createQualityAuditTooltipDisabled": "Not available: case not eligible or permission denied.",
-            "viewQualityAuditTooltip": "Quality Audit already exists ({{caseId}}).",
             "caseIsNotEligible": "Transaction not eligible for auditing.",
             "qualityAuditExisted": "Quality Audit case already exists."
         },

@@ -104,16 +104,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                   ),
             href: '',
         },
-        {
-            name: t('caseOverview.quickActions.viewQualityAudit'),
-            hideLabel: false,
-            isEligible: isQualityAuditCreated,
-            shouldShow: false,
-            tooltip: t('caseOverview.quickActions.viewQualityAuditTooltip', {
-                caseId: caseDetails?.id,
-            }),
-            href: `/cases/${caseDetails?.id}/progress`,
-        },
+
         {
             name: t('caseOverview.prioritizeCase.title'),
             hideLabel: false,

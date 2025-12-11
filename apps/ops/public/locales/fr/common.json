@@ -3120,10 +3120,8 @@
         "quickActions": {
             "quickActions": "Actions Rapides",
             "createQualityAudit": "Créer un Audit de Qualité",
-            "viewQualityAudit": "Voir l'Audit de Qualité",
             "createQualityAuditTooltip": "Initier un Audit de Qualité pour ce cas.",
             "createQualityAuditTooltipDisabled": "Non disponible : cas non éligible ou permission refusée.",
-            "viewQualityAuditTooltip": "L’audit qualité existe déjà ({{caseId}}).",
             "caseIsNotEligible": "La transaction n’est pas éligible à l’audit.",
             "qualityAuditExisted": "Le dossier d’audit qualité existe déjà."
         },

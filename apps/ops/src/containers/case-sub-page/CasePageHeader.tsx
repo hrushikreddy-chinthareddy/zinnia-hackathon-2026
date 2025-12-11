@@ -27,7 +27,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { buildQualityAuditEligibilityPayload } from './case-helpers';
+import { buildCreateQualityAuditPayload } from './case-helpers';
 import CaseActionSideSheet from './caseActionsSideSheet';
 import CaseQuickActions from './CaseQuickActions';
 import styles from './styles.module.css';
@@ -116,18 +116,11 @@ const CasePageHeader = ({
     }, [caseProcessingDetails]);
 
     useEffect(() => {
-        const {
-            contractNumber,
-            process,
-            processSubType = '',
-            clientCode,
-        } = buildQualityAuditEligibilityPayload(caseDetails);
+        const qualityAuditEligibilityPayload =
+            buildCreateQualityAuditPayload(caseDetails);
         const fetchQualityAuditEligibility = async () => {
             const response = await checkCaseQualityAuditEligibility(
-                contractNumber,
-                process,
-                processSubType,
-                clientCode
+                qualityAuditEligibilityPayload
             );
 
             if (response?.status === 200) {

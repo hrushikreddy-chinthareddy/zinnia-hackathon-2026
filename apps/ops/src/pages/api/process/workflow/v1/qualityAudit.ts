@@ -3,8 +3,8 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import {
+    logError,
     logTrace,
-    logWarn,
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
@@ -43,7 +43,7 @@ export default withAuthAndLogging(
             });
             return res.status(response?.status).json(response?.data);
         } catch (error: any) {
-            logWarn('CreateQualityAudit::error', {
+            logError('CreateQualityAudit::error', {
                 ...parseErrorInformation(error),
                 ...loggingContext,
                 duration: performance.now() - now,

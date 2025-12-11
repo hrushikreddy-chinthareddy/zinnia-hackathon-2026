@@ -5,6 +5,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { CreateQualityAuditRequest } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import {
@@ -134,16 +135,9 @@ export enum TransactionResponseStatus {
     Failure = 'failure',
     Success = 'success',
 }
-
-export interface CaseQualityAuditEligibilityRequest {
-    contractNumber: string;
-    process: string;
-    processSubType: string;
-    clientCode: string;
-}
 export interface CaseQualityAuditEligibilityResponse {
     status: string | number;
-    data: any;
+    data?: any;
 }
 
 export const checkEligibilityLoanRepaymentOneTime = async (
@@ -841,50 +835,31 @@ export const checkEligibilityFreelookCancellation = async (
 };
 
 export const checkCaseQualityAuditEligibility = async (
-    contractNumber: string,
-    process: string,
-    processSubType: string,
-    clientCode: string
+    query: CreateQualityAuditRequest
 ): Promise<CaseQualityAuditEligibilityResponse> => {
     const caseQualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit/eligibilitycheck`;
-    const qualityAuditPayload = {
-        contractNumber,
-        process,
-        processSubType,
-        clientCode,
-    };
 
     try {
         browserLogInfo(
             'CaseQualityAuditEligibility::Initiating eligibility check',
             {
-                payload: {
-                    contractNumber,
-                    process,
-                    processSubType,
-                    clientCode,
-                },
+                payload: query,
                 url: caseQualityAuditUrl,
                 function: 'checCaseQualityAuditEligibility',
             }
         );
 
         const response = await client.post<
-            CaseQualityAuditEligibilityRequest,
+            CreateQualityAuditRequest,
             AxiosResponse
-        >(caseQualityAuditUrl, qualityAuditPayload);
+        >(caseQualityAuditUrl, query);
         return { status: response.status, data: response.data };
     } catch (error: any) {
         browserLogError(
             'CaseQualityAuditEligibility::Eligibility check failed',
             {
                 ...parseErrorInformation(error),
-                payload: {
-                    contractNumber,
-                    process,
-                    processSubType,
-                    clientCode,
-                },
+                payload: query,
                 url: caseQualityAuditUrl,
                 function: 'checCaseQualityAuditEligibility',
             }
