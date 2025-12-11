@@ -1,4 +1,5 @@
 import { Label, SelectFilter } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,9 +19,13 @@ import {
 export const SelectFiltersHeader = ({
     authorizedCarriers,
     brokerDealersSSR,
+    carrierHeaderIsIntersecting,
+    carrierHeaderEntry,
 }: {
     brokerDealersSSR: DashboardResponseData[];
     authorizedCarriers: string[];
+    carrierHeaderIsIntersecting: boolean;
+    carrierHeaderEntry?: IntersectionObserverEntry;
 }) => {
     const { t } = useTranslation();
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -52,8 +57,12 @@ export const SelectFiltersHeader = ({
     return (
         <div
             id="carrier-header"
-            className={styles.filtersHeader}
             ref={setContainerRef}
+            className={clsx(styles.filtersHeader, {
+                [styles.pinned as string]:
+                    carrierHeaderIsIntersecting ||
+                    Number(carrierHeaderEntry?.boundingClientRect.bottom) < 64,
+            })}
         >
             <Typography
                 className="flex items-center"

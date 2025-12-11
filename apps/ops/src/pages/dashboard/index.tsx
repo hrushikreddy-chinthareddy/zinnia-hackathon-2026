@@ -2,7 +2,7 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import {
     DashboardTabNav,
@@ -55,7 +55,7 @@ const DashboardPage = ({
 }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
 
-    const carrierHeaderRef = useRef<HTMLDivElement>(null);
+    //const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
         ref: tabContentRef,
@@ -80,6 +80,8 @@ const DashboardPage = ({
                 <SelectFiltersHeader
                     authorizedCarriers={authorizedCarriers}
                     brokerDealersSSR={brokerDealersSSR}
+                    carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
+                    carrierHeaderEntry={carrierHeaderEntry}
                 />
                 <DashboardTabNav>
                     <div ref={tabContentRef} className={styles.tabContent}>

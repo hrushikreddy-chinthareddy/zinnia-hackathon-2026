@@ -1,12 +1,3 @@
-.container {
-    position: relative;
-    background-color: var(--color-base-surface-surface-secondary);
-}
-
-.link {
-    z-index: 2;
-}
-
 .filtersHeader {
     display: flex;
     gap: var(--measure-dimension-gap-lg);
