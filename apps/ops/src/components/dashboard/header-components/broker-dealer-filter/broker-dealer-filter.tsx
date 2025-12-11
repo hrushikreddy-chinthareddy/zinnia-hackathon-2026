@@ -1,14 +1,9 @@
-import { FieldSize, Select } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import {
-    Dispatch,
-    ReactElement,
-    SetStateAction,
-    useEffect,
-    useMemo,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo } from 'react';
 
 import { CarrierListItem } from '@deps/components/dashboard/types';
+import { FieldSize } from '@deps/components/fields/field';
+import Select from '@deps/components/select/select';
 import { MultiselectOption } from '@deps/components/select/select.helpers';
 import { TranslationFiles } from '@deps/config/translations';
 import { toTitleCase } from '@deps/helpers/string.helpers';
@@ -24,7 +19,6 @@ type BrokerDealerFilterProps = {
     selectedBrokerDealers: CarrierListItem;
     disabled?: boolean;
     handleOnOpenChangeBroker?: (open: boolean) => void;
-    label: ReactElement;
 };
 
 const getBrokerDealerOptions = (

@@ -15,23 +15,39 @@
     border: 1px solid transparent;
     border-left-width: 0;
     border-right-width: 0;
+    position: sticky;
+    top: 0;
+    background-color: var(--color-base-surface-surface-primary);
+    z-index: 3;
+    padding-bottom: var(--measure-dimension-gap-lg);
+    justify-content: space-between;
 
     &.pinned {
         border-bottom-color: var(--color-base-border-border-bold);
         padding: var(--measure-dimension-padding-2xl);
         box-shadow: var(--shadow-elevation-elevation-light-sm);
     }
-}
-
-.filtersHeader {
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background-color: var(--color-base-surface-surface-primary);
-    z-index: 3;
-    padding-bottom: var(--measure-dimension-gap-lg);
 
     &.pinned {
         z-index: 4;
+    }
+}
+
+.filters {
+    display: flex;
+    flex-grow: 1;
+    gap: var(--measure-dimension-gap-lg);
+    align-items: anchor-center;
+    justify-content: flex-end;
+
+    > * {
+        flex: 1;
+        width: 45%;
+        max-width: 425px;
+    }
+
+    > :last-child {
+        flex: 0;
+        margin-top: var(--measure-dimension-margin-sm);
     }
 }

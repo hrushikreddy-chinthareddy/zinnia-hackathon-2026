@@ -15,7 +15,7 @@ import {
     TimeframeFilterOptions,
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
-import { useDashboardStore } from '@deps/store/store';
+import { useDashboardStoreSelectFilter } from '@deps/store/store';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import {
     CaseCountGroupByEnum,
@@ -101,9 +101,10 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
     const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
         CaseCountGroupByEnum.PROCESS_SUB_TYPE
     );
-    const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
-        (state) => state
-    );
+
+    // NOTE: Need to use feature flag to decide which store to pull from
+    const { selectedCarriers, selectedBrokerDealers } =
+        useDashboardStoreSelectFilter((state) => state);
     const [selectedProcess, setSelectedProcess] = useState<
         Processes | ExtendedProcesses
     >(Processes.NewBusiness);
@@ -114,8 +115,8 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const filter = {
         caseStatus: Object.keys(caseStatus) as Statuses[],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         createdDateStart,
         process: formatProcessFilter(selectedProcess),
     };

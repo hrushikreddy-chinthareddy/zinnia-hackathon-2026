@@ -9,7 +9,7 @@ import {
     DashboardTabs,
 } from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
-import { NewFiltersHeader } from '@deps/components/dashboard/header-components/filters-header/select-filters-header';
+import { SelectFiltersHeader } from '@deps/components/dashboard/header-components/filters-header/select-filters-header';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
@@ -74,7 +74,7 @@ const DashboardPage = ({
         });
     }, []);
 
-    const ff = false;
+    const ff = true;
 
     return (
         <>
@@ -91,10 +91,18 @@ const DashboardPage = ({
                         ref={carrierHeaderRef}
                     />
                 )}
-                <NewFiltersHeader
-                    authorizedCarriers={authorizedCarriers}
-                    brokerDealersSSR={brokerDealersSSR}
-                />
+                {!ff && (
+                    <div
+                        id="carrier-header"
+                        className={styles.filtersHeader}
+                        ref={carrierHeaderRef}
+                    >
+                        <SelectFiltersHeader
+                            authorizedCarriers={authorizedCarriers}
+                            brokerDealersSSR={brokerDealersSSR}
+                        />
+                    </div>
+                )}
                 <DashboardTabNav>
                     <div ref={tabContentRef} className={styles.tabContent}>
                         <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>

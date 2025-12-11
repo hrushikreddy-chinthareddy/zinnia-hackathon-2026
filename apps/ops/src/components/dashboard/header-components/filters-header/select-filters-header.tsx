@@ -9,7 +9,7 @@ import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ButtonSize } from '@deps/components/button/button';
-import styles from '@deps/components/dashboard/header-components/filters-header/filters-header.module.css';
+import styles from '@deps/components/dashboard/header-components/filters-header/select-filters-header.module.css';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -19,7 +19,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
 import { getBrokerDealerOptions } from './filters-header.helpers';
 
-export const NewFiltersHeader = ({
+export const SelectFiltersHeader = ({
     authorizedCarriers,
     brokerDealersSSR,
 }: {
