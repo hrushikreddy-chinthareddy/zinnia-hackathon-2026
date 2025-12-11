@@ -44,15 +44,15 @@ import {
     prepareIllustrationsActivityCSV,
 } from './utils';
 
-type ProductTypeOption = (typeof ProductType)[keyof typeof ProductType];
+type ProductTypeKeys = keyof typeof ProductType;
+type ProductTypeOption = (typeof ProductType)[ProductTypeKeys];
 
 export const IllustrationsActivity = () => {
     const { t } = useTranslation();
     const [productType, setProductType] = useState<ProductTypeOption>(
         ProductType.Term
     );
-    const [productName, setProductName] =
-        useState<keyof typeof ProductType>('Term');
+    const [productName, setProductName] = useState<ProductTypeKeys>('Term');
 
     const {
         timeframeRadio,
@@ -65,14 +65,20 @@ export const IllustrationsActivity = () => {
         dateFormat: defaultDateFormat,
     });
 
-    const getProductKey = (value: string) => {
-        return Object.entries(ProductType).find(
-            ([_, v]) => v === value
-        )?.[0] as keyof typeof ProductType;
+    const ProductTypeFromValue: Record<ProductTypeOption, ProductTypeKeys> = {
+        INDEX_UNIVERSAL_LIFE: 'IUL',
+        TERM: 'Term',
+        ROP: 'ROP',
+    } as const;
+
+    const getProductKey = (value: ProductTypeOption): ProductTypeKeys => {
+        return ProductTypeFromValue[value];
     };
 
     const isProductTypeOption = (value: string): value is ProductTypeOption => {
-        return Object.values(ProductType).includes(value as ProductTypeOption);
+        return (Object.values(ProductType) as readonly string[]).includes(
+            value
+        );
     };
 
     const handleProductTypeChange = (productType: string) => {
@@ -124,7 +130,9 @@ export const IllustrationsActivity = () => {
     function isTimeFrameFilterOption(
         value: string
     ): value is TimeframeFilterOptions {
-        return value in TimeframeFilterOptions;
+        return (Object.values(TimeframeFilterOptions) as string[]).includes(
+            value
+        );
     }
 
     const handleOnRadioChange = (val: string) => {
