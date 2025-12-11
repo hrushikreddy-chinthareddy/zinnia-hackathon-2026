@@ -90,7 +90,7 @@ export const TransactionsTable = ({
                                 >
                                     <TableCell>
                                         {t(
-                                            `historyEventCard.transactionTypes.${transaction.transactionType}`
+                                            `enums.${transaction.transactionType}`
                                         )}
                                     </TableCell>
                                     <TableCell>
