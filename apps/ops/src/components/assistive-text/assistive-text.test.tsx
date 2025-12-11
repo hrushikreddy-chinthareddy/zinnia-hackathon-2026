@@ -1,5 +1,9 @@
 import { render } from '@testing-library/react';
 
+import enTranslations from 'public/locales/en/common.json';
+import esTranslations from 'public/locales/es/common.json';
+import frTranslations from 'public/locales/fr/common.json';
+
 import AssistiveText, { AssistiveTextVariant } from './assistive-text';
 
 describe('AssistiveText', () => {
@@ -130,5 +134,161 @@ describe('AssistiveText', () => {
         expect(icon).not.toBeInTheDocument();
         expect(customIconElement).toBeInTheDocument();
         expect(customIconElement).toHaveTextContent('Custom Icon');
+    });
+});
+
+describe('assistive text - Translation Tests', () => {
+    // Translation configurations
+    const translationConfigs = {
+        en: {
+            translations: enTranslations,
+        },
+        es: {
+            translations: esTranslations,
+        },
+        fr: {
+            translations: frTranslations,
+        },
+    };
+
+    describe.each([
+        ['English', 'en'],
+        ['Spanish', 'es'],
+        ['French', 'fr'],
+    ])('%s translations', (languageName, languageCode) => {
+        const config =
+            translationConfigs[languageCode as keyof typeof translationConfigs];
+
+        describe('with SYSTEMATIC_PROGRAMS_TABLE flag enabled', () => {
+            const t = (key: string) => {
+                const keys = key.split('.');
+                let value: any = config.translations;
+
+                for (const k of keys) {
+                    value = value?.[k];
+                }
+
+                return value || key;
+            };
+
+            it(`should display missing amount error msg in ${languageName} for Premium Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('premiumAutopay.amount.missingAmountErrorSP')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.premiumAutopay.amount.missingAmountErrorSP.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Premium Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('premiumAutopay.amount.invalidAmountErrorSP')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.premiumAutopay.amount.invalidAmountErrorSP.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display missing amount error msg in ${languageName} for Loan Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('loanAutopay.amount.missingAmountErrorSP')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.loanAutopay.amount.missingAmountErrorSP.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Loan Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('loanAutopay.amount.invalidAmountErrorSP')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.loanAutopay.amount.invalidAmountErrorSP.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+        });
+
+        describe('with SYSTEMATIC_PROGRAMS_TABLE flag disabled ', () => {
+            const t = (key: string) => {
+                const keys = key.split('.');
+                let value: any = config.translations;
+
+                for (const k of keys) {
+                    value = value?.[k];
+                }
+
+                return value || key;
+            };
+
+            it(`should display missing amount error msg in ${languageName} for Premium Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('premiumAutopay.amount.missingAmountError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.premiumAutopay.amount.missingAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Premium Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('premiumAutopay.amount.invalidAmountError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.premiumAutopay.amount.invalidAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display missing amount error msg in ${languageName} for Loan Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('loanAutopay.amount.missingAmountError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.loanAutopay.amount.missingAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Loan Autopay`, async () => {
+                const { getByText } = render(
+                    <AssistiveText
+                        text={t('loanAutopay.amount.invalidAmountError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.loanAutopay.amount.invalidAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+        });
     });
 });
