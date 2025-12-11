@@ -1,6 +1,6 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 
@@ -39,8 +39,6 @@ export default function PartyInfoListTemplate(
     const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
-    const contacts = Array.isArray(formData) ? formData : [];
-    const updatedActionData = [...(formContext.parentActionData || [])];
     // const { t } = useTranslation(TranslationFiles.COMMON, {
     //     keyPrefix: 'transactionAccordion',
     // });
@@ -52,6 +50,16 @@ export default function PartyInfoListTemplate(
     //         return copy;
     //     });
     // };
+
+    const contacts = useMemo(
+        () => (Array.isArray(formData) ? formData : []),
+        [formData]
+    );
+    const updatedActionData = useMemo(
+        () => [...(formContext.parentActionData || [])],
+        [formContext.parentActionData]
+    );
+
     useEffect(() => {
         const id = idSchema?.$id ?? '';
         const match = id.match(/actionData_(\d+)/);
@@ -88,17 +96,18 @@ export default function PartyInfoListTemplate(
 
         if (!hasChanged) return;
 
-        updatedActionData[partyIndex] = {
+        const newActionData = [...updatedActionData];
+        newActionData[partyIndex] = {
             ...entry,
             party: updatedParty,
         };
 
-        setCustomData({ actionData: updatedActionData });
+        setCustomData({ actionData: newActionData });
     }, [
-        contacts,
-        idSchema?.$id,
         preferredIndex,
+        idSchema?.$id,
         setCustomData,
+        contacts,
         updatedActionData,
     ]);
 
