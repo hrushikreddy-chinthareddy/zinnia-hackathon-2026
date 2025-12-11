@@ -121,6 +121,18 @@ export const IllustrationsActivity = () => {
         t
     );
 
+    function isTimeFrameFilterOption(
+        value: string
+    ): value is TimeframeFilterOptions {
+        return value in TimeframeFilterOptions;
+    }
+
+    const handleOnRadioChange = (val: string) => {
+        if (isTimeFrameFilterOption(val)) {
+            handleTimeframeRadioChange(val);
+        }
+    };
+
     const tickInterval = calculateTickInterval(timerange);
     const chartNotRenderable =
         illustrationsActivityDataError || !series?.length;
@@ -165,11 +177,7 @@ export const IllustrationsActivity = () => {
 
                         <TimeFilter
                             defaultValue={timeframeRadio}
-                            onRadioChange={(val) =>
-                                handleTimeframeRadioChange(
-                                    val as TimeframeFilterOptions
-                                )
-                            }
+                            onRadioChange={handleOnRadioChange}
                             controlledTimeValue={timeframeRadio}
                             timerange={timerange}
                             handleTimerangeChange={handleRangeChange}
