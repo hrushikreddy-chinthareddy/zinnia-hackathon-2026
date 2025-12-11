@@ -65,7 +65,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                 [
                     QualityAuditStatus.QA_CASE_ALREADY_EXISTS,
                     QualityAuditStatus.QA_CASE_CREATED,
-                ].includes(response?.data?.code || '')
+                ].includes(response?.code || '')
             ) {
                 setIsQualityAuditCreated(true);
                 setToastVariant(ToastVariant.Success);
