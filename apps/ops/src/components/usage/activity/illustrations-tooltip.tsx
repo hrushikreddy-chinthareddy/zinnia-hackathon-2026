@@ -18,7 +18,6 @@ export const tooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =
         return renderToStaticMarkup(
             <LabelComponent
                 labelData={tooltipData.labelData}
-                dateStr={''}
                 total={tooltipData.total ?? 0}
                 isTooltipColorCircle={false}
             />
