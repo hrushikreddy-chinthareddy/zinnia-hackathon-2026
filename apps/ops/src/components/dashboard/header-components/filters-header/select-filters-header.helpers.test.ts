@@ -5,12 +5,9 @@ import {
     getBrokerDealerOptions,
 } from './select-filters-header.helpers';
 
-jest.mock('@deps/utils/strings', () => {
-    const actual = jest.requireActual('@deps/utils/strings');
-    return {
-        ...actual,
-    };
-});
+jest.mock('@deps/utils/strings', () => ({
+    ...jest.requireActual('@deps/utils/strings'),
+}));
 
 describe('select-filters-header helpers', () => {
     describe('getBrokerDealerOptions', () => {

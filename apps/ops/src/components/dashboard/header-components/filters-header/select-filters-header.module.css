@@ -36,9 +36,4 @@
         width: 45%;
         max-width: 425px;
     }
-
-    /* > :last-child {
-        flex: 0;
-        margin-top: var(--measure-dimension-margin-sm);
-    } */
 }
