@@ -69,6 +69,18 @@ export const TransactionAccordionTemplate = (
               );
     }
 
+    const isIrrevocable = formContext?.customData?.contractInfo?.parties?.some(
+        (party: any) => party.isIrrevocable === true
+    );
+    if (formContext?.customData?.signatureData) {
+        formContext.customData.signatureData.signatures = isIrrevocable
+            ? formContext.customData.signatureData.signatures
+            : formContext.customData.signatureData.signatures?.filter(
+                  (signature: any) =>
+                      signature.signType !== Roles.IRREVOCABLE_BENEFICIARY
+              );
+    }
+
     formContext.parentActionData = formData;
 
     return (
