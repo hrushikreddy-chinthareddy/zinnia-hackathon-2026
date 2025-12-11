@@ -7059,6 +7059,7 @@
         },
         "additionalActions": {
             "label": "Actions supplémentaires",
+            "createAsIsIllustration": "Créer le PDF de l’illustration as-is",
             "serviceRequestForm": "Soumettre une demande de service"
         },
         "transactions": {

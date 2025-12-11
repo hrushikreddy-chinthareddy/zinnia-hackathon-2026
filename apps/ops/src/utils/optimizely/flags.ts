@@ -182,5 +182,6 @@ export enum FEATURE_FLAGS {
     FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT = 'fga_entity_zinnia_live_policy_management',
     FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT = 'fga_entity_zinnia_live_case_management',
     REVISED_HISTORY_TABLE = 'revised_history_table',
+    ILLUSTRATIONS_AS_IS_ILLUSTRATIONS = 'illustrations_as_is_illustrations',
     CASE_STATS_COUNT = 'case-stats-count',
 }
