@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Transaction } from '@zinnia/api-types/types/sor';
@@ -32,9 +31,7 @@ export const TransactionsTable = ({
     limit: number;
     onTableRowClick: (transaction: Transaction) => void;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: undefined,
-    });
+    const { t } = useTranslation();
     const currencyFormat: Intl.NumberFormatOptions = {
         style: 'currency',
         currency: 'USD',
