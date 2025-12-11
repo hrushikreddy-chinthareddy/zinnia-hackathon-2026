@@ -30,9 +30,9 @@ export const searchTaxForms = async (
         if (requestBody?.taxYear) {
             url += `&taxYear=${requestBody.taxYear}`;
         }
-        // BPB - planCode is only supported on V3
-        url += `&planCode=${requestBody.planCode}`;
-
+        if (requestBody?.planCode) {
+            url += `&planCode=${requestBody.planCode}`;
+        }
         const options: AxiosRequestConfig = {
             signal,
         };
