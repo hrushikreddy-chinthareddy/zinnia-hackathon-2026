@@ -273,6 +273,35 @@ const RoleDetailsComponent = ({
         }));
     };
 
+    const handleAddRole = () => {
+        if (isTpdRole && setRemovedTpdIndex) {
+            if (removedTpdIndex === index) {
+                setRemovedTpdIndex(null);
+                setRemoveRole(false);
+            } else {
+                setRemovedTpdIndex(index);
+                setRemoveRole(true);
+            }
+        } else {
+            setRemoveRole(!removeRole);
+        }
+    };
+
+    const handleCancelRole = () => {
+        setAddRole(true);
+        setRoleData((prevRoleData) => ({
+            ...prevRoleData,
+            signatures: prevRoleData.signatures,
+            ...defaultRoleValue.roleData,
+        }));
+        setRemoveRole(false);
+    };
+
+    const isRoleDisabled =
+        isTpdRole && removedTpdIndex !== null && removedTpdIndex !== index;
+
+    const isRoleChecked = isTpdRole ? removedTpdIndex === index : removeRole;
+
     return (
         <div
             className={
@@ -319,15 +348,7 @@ const RoleDetailsComponent = ({
                                         t('beneficiaryListing.cancel') as string
                                     }
                                     className="default-focus-icons flex justify-start rounded-xl"
-                                    onClick={() => {
-                                        setAddRole(true);
-                                        setRoleData((prevRoleData) => ({
-                                            ...prevRoleData,
-                                            signatures: prevRoleData.signatures,
-                                            ...defaultRoleValue.roleData,
-                                        }));
-                                        setRemoveRole(false);
-                                    }}
+                                    onClick={handleCancelRole}
                                 >
                                     <CancelIcon height={24} width={24} />
                                 </button>
@@ -340,32 +361,9 @@ const RoleDetailsComponent = ({
                         ) : (
                             <label className={`${labelClasses}`}>
                                 <InputCheckBox
-                                    isDisabled={
-                                        // For TPD: disable if another TPD is already marked for removal
-                                        isTpdRole &&
-                                        removedTpdIndex !== null &&
-                                        removedTpdIndex !== index
-                                    }
-                                    checked={
-                                        isTpdRole
-                                            ? removedTpdIndex === index
-                                            : removeRole
-                                    }
-                                    onChange={() => {
-                                        if (isTpdRole && setRemovedTpdIndex) {
-                                            // For TPD: toggle specific index or clear if already selected
-                                            if (removedTpdIndex === index) {
-                                                setRemovedTpdIndex(null);
-                                                setRemoveRole(false);
-                                            } else {
-                                                setRemovedTpdIndex(index);
-                                                setRemoveRole(true);
-                                            }
-                                        } else {
-                                            // For other roles: use existing logic
-                                            setRemoveRole(!removeRole);
-                                        }
-                                    }}
+                                    isDisabled={isRoleDisabled}
+                                    checked={isRoleChecked}
+                                    onChange={handleAddRole}
                                 />
                                 <Content
                                     details={'Remove' as string}

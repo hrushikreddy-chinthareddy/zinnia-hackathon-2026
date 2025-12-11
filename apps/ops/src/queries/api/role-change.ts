@@ -5,7 +5,7 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { TransactionResponse } from './bpm';
+import { deleteRoleBodyProps, TransactionResponse } from './bpm';
 import { client } from '../api-utils/client';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
@@ -111,7 +111,7 @@ export const deleteTPDRole = async (
     id: string | undefined,
     role: PolicyRole,
     partyId: string,
-    query: any
+    query: deleteRoleBodyProps
 ): Promise<TransactionResponse> => {
     const method = HttpMethod.DELETE;
     const url = `${baseAppUrl}/api/policies/${planCode}/${id}/parties/${partyId}/${role}`;

@@ -80,7 +80,6 @@ const ConfirmStep = ({
             signatures,
         };
 
-        // Determine if this is a TPD removal operation
         const isTpdRemoval = isTpdRole && removedTpdIndex !== null && addRole;
 
         if (isTpdRemoval) {
@@ -102,11 +101,9 @@ const ConfirmStep = ({
         } else {
             let currentPartyId = '';
             if (isTpdRole) {
-                // TPD post api partyID
                 if (!addRole && removedTpdIndex === null) {
                     currentPartyId = '';
                 } else if (!addRole && removedTpdIndex !== null) {
-                    // TPD put method partyId
                     currentPartyId =
                         existingRoleData?.[removedTpdIndex]?.party?.partyId ||
                         '';
@@ -146,7 +143,6 @@ const ConfirmStep = ({
                         transactionType =
                             TransactionSubmittedEventType.UPDATE_JOINT_OWNER;
                         break;
-                    // BPB - TODO - there's not really a way to remove a payor without adding at the same time?
                     case PolicyRole.PAYOR:
                         transactionType =
                             TransactionSubmittedEventType.ADD_PAYOR;

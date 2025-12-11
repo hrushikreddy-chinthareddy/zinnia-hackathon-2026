@@ -26,6 +26,7 @@ import { getRelationshipLabel } from '@deps/constants/role';
 import { FormattedEnterprisePhone } from '@deps/containers/bene-change/components/steps/summary/beneficiary-summary';
 import {
     getDisplayName,
+    getExistingPartyIndex,
     getTagVariant,
 } from '@deps/containers/bene-change/components/steps/summary/summary-step.helpers';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
@@ -145,33 +146,19 @@ const SummaryStep = ({
         });
     }
 
-    // Add party data for Remove TPD with DELETE tag variant for Third Party Designee
-    if (
-        removedTpdIndex !== null &&
-        role.toUpperCase() === Roles.THIRDPARTYDESIGNEE &&
-        existingRoleData?.[removedTpdIndex]?.party
-    ) {
+    const existingPartyIndex = getExistingPartyIndex(
+        role,
+        removedTpdIndex,
+        existingRoleData || []
+    );
+
+    if (existingPartyIndex !== null) {
         partiesToRender.push({
-            partyData: existingRoleData[removedTpdIndex].party || {},
+            partyData: existingRoleData?.[existingPartyIndex].party || {},
             tagVariant: existingTagVariant,
             tagText: existingTagText,
         });
     }
-
-    // Add party data for Remove TPD with DELETE tag variant for all roles except Third Party Designee
-    if (
-        removedTpdIndex === null &&
-        role.toUpperCase() !== Roles.THIRDPARTYDESIGNEE &&
-        existingRoleData?.[0]?.party
-    ) {
-        partiesToRender.push({
-            partyData: existingRoleData[0].party || {},
-            tagVariant: existingTagVariant,
-            tagText: existingTagText,
-        });
-    }
-
-    // Show remove TPD info only when removing TPD and there are existing TPD records
     const showRemoveTPDInfoTag =
         !addRole &&
         removedTpdIndex === null &&
@@ -231,7 +218,7 @@ const SummaryStep = ({
                 </div>
             )}
             {existingRoleData &&
-                Object.keys(existingRoleData).length > 0 &&
+                Object.keys(existingRoleData).length &&
                 (!showRemoveTPDInfoTag ? (
                     <div className="flex">
                         <div className="flex w-full flex-row pb-4">
